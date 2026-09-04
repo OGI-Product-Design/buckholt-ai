@@ -1,0 +1,66 @@
+<!-- Inline link: use inside prose. -->
+<p>
+  Read the <a href="/privacy">privacy policy</a> before continuing.
+</p>
+
+<!-- Standalone link: use independently from paragraph text. -->
+<a class="link-standalone" href="/next-page">
+  Continue
+</a>
+
+<!-- Standalone link with a documented forward-navigation icon. -->
+<a class="link-standalone" href="/next-page">
+  <span class="icon">
+    <i class="fa-regular fa-arrow-right"></i>
+  </span>
+  Continue
+</a>
+
+<!-- A link that opens content in a new tab should use the external-link icon. -->
+<a class="link-standalone" href="https://example.com" target="_blank">
+  <span class="icon">
+    <i class="fa-regular fa-arrow-up-right-from-square"></i>
+  </span>
+  Open external resource
+</a>
+
+<!-- Horizontal Link set. -->
+<ul class="link-set">
+  <li class="linkset-item">
+    <a class="link-standalone" href="/privacy">Privacy policy</a>
+  </li>
+  <li class="linkset-item">
+    <a class="link-standalone" href="/terms">Terms &amp; conditions</a>
+  </li>
+  <li class="linkset-item">
+    <a class="link-standalone" href="/cookies">Manage cookie consent</a>
+  </li>
+</ul>
+
+<!-- Stacked Link set. -->
+<ul class="link-set link-set-stacked">
+  <li class="linkset-item">
+    <a class="link-standalone" href="/privacy">
+      <span class="icon">
+        <i class="fa-regular fa-arrow-right"></i>
+      </span>
+      Privacy policy
+    </a>
+  </li>
+  <li class="linkset-item">
+    <a class="link-standalone" href="/terms">
+      <span class="icon">
+        <i class="fa-regular fa-arrow-right"></i>
+      </span>
+      Terms &amp; conditions
+    </a>
+  </li>
+  <li class="linkset-item">
+    <a class="link-standalone" href="/cookies">
+      <span class="icon">
+        <i class="fa-regular fa-arrow-right"></i>
+      </span>
+      Manage cookie consent
+    </a>
+  </li>
+</ul>
