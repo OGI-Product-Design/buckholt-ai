@@ -33,6 +33,16 @@ If the documentation or CSS does not support something, say that the information
 
 Custom CSS may be used for page/demo layout only when necessary. It must not be used to recreate or override Buckholt component styling simply to make an implementation look right.
 
-## Dependencies
+## Runtime dependencies
 
-Fonts and icon dependencies will be added separately. Until they are present, do not silently substitute another design language or icon library.
+### Proxima Nova
+
+Load the approved Adobe Fonts stylesheet in the document head:
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/aio4aoz.css">
+```
+
+Use the font family exposed by that stylesheet together with the font-family expected by `css/buckholt.css`. Do not download, commit or substitute font binaries unless explicitly instructed.
+
+Additional icon/runtime dependencies will be documented when supplied.
