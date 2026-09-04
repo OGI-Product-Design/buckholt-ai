@@ -19,15 +19,15 @@
 
 <!-- Danger modifier: can be added to any standard button type -->
 <button type="button" class="btn btn-primary btn-danger">
-  <span class="button-label">Primary</span>
+  <span class="button-label">Delete record</span>
 </button>
 
 <button type="button" class="btn btn-secondary btn-danger">
-  <span class="button-label">Secondary</span>
+  <span class="button-label">Delete record</span>
 </button>
 
 <button type="button" class="btn btn-ghost btn-danger">
-  <span class="button-label">Ghost</span>
+  <span class="button-label">Delete record</span>
 </button>
 
 <!-- Sizes -->
@@ -43,20 +43,28 @@
   <span class="button-label">Large</span>
 </button>
 
-<!-- Labelled button with icon -->
+<!-- Labelled button with a documented common-action icon -->
 <button type="button" class="btn btn-primary">
   <div class="btn-icon">
-    <i class="fa-regular fa-ghost"></i>
+    <i class="fa-regular fa-plus" aria-hidden="true"></i>
   </div>
-  <span class="button-label">Button label</span>
+  <span class="button-label">Create document</span>
 </button>
 
-<!-- Icon-only canonical code/specs structure.
-     When used in production, also provide the accessible text name and visible
-     tooltip required by the Buckholt usage guidance. -->
-<button type="button" class="btn btn-primary">
+<!-- Icon-only button.
+     Buckholt requires an accessible name and a tooltip explaining the action.
+     Bootstrap JS and tooltip initialisation are required for the tooltip behaviour. -->
+<button
+  type="button"
+  class="btn btn-ghost"
+  aria-label="Search"
+  data-bs-toggle="tooltip"
+  data-bs-title="Search"
+  data-bs-placement="right"
+  data-bs-trigger="hover"
+>
   <div class="btn-icon">
-    <i class="fa-regular fa-ghost"></i>
+    <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
   </div>
 </button>
 
@@ -73,16 +81,19 @@
   </button>
 </div>
 
-<!-- Stacked button set -->
+<!-- Stacked button set with consistent icon use -->
 <div class="button-set button-set-stacked">
   <button type="button" class="btn btn-primary">
-    <span class="button-label">Accept all</span>
+    <div class="btn-icon">
+      <i class="fa-regular fa-plus" aria-hidden="true"></i>
+    </div>
+    <span class="button-label">Create account</span>
   </button>
   <button type="button" class="btn btn-secondary">
-    <span class="button-label">Customise</span>
-  </button>
-  <button type="button" class="btn btn-ghost">
-    <span class="button-label">Reject all</span>
+    <div class="btn-icon">
+      <i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i>
+    </div>
+    <span class="button-label">Log in</span>
   </button>
 </div>
 
