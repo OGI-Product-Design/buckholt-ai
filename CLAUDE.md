@@ -1,61 +1,38 @@
-# Claude instructions for Buckholt AI
+# Buckholt AI instructions
 
-This repository is the machine-readable companion to the Buckholt design system.
+## Purpose
 
-## Primary rule
+Use the Buckholt design system accurately when building UI.
 
-**Build with Buckholt; do not imitate Buckholt.**
+## Sources of truth
 
-Where Buckholt already provides a class, token or component, use it rather than recreating the same visual treatment with custom CSS.
+Only use the following Buckholt sources unless explicitly told otherwise:
 
-## Read order
+1. `css/buckholt.css` — implementation and styling truth. Use its real selectors, states and behaviour.
+2. The Buckholt documentation extracted into `components/<component>/` — canonical HTML, usage rules, accessibility guidance, variants, icon markup and implementation notes.
 
-Before implementing Buckholt UI, read:
+Do not use or infer from old SCSS, token maps, previous AI specifications, screenshots, Figma, Bootstrap defaults or remembered Buckholt behaviour unless explicitly asked.
 
-1. `design.md` for foundation and usage guidance.
-2. The relevant file in `components/`, for example `components/button.md`.
-3. `tokens.json` when exact token facts are required.
-4. `css/buckholt.css` to confirm the final browser-facing implementation.
+## Core rule
 
-## Source roles
+**Build with Buckholt. Do not imitate Buckholt.**
 
-- SCSS source explains architecture and intent.
-- `css/buckholt.css` is the final runtime implementation truth.
-- Buckholt documentation explains intended usage and accessibility.
-- Figma is visual truth.
-- The markdown/JSON files in this repository are the reconciled AI-facing interpretation.
+Before implementing a Buckholt component:
 
-If sources conflict or a rule is missing, flag the gap instead of guessing.
+- read `components/<component>/rules.md`;
+- read `components/<component>/examples.html`;
+- use the existing classes and markup documented there;
+- rely on `css/buckholt.css` for the visual implementation;
+- do not recreate component styling with custom CSS where Buckholt already provides it.
 
-## Implementation rules
+## Missing information
 
-- Load `css/buckholt.css` in Buckholt test/prototype pages.
-- Prefer existing Buckholt classes and CSS custom properties.
-- Do not invent spacing, colour, radius, type or focus values when Buckholt already defines them.
-- Do not replace semantic tokens with arbitrary raw colours.
-- Do not recreate Buckholt components with one-off CSS simply to match a screenshot.
-- Preserve native semantics and accessibility states.
-- Do not use Bootstrap defaults as substitutes where Buckholt overrides them.
+If the documentation or CSS does not support something, say that the information is missing. Do not invent a Buckholt class, variant, state, accessibility rule, token or HTML pattern.
 
-## Typography and icons
+## Custom CSS
 
-Buckholt expects `"Proxima-soft", Arial, sans-serif`.
+Custom CSS may be used for page/demo layout only when necessary. It must not be used to recreate or override Buckholt component styling simply to make an implementation look right.
 
-If Proxima Soft is not available locally, report that the visual result is using the Arial fallback; do not silently substitute another font.
+## Dependencies
 
-Buckholt uses Font Awesome through both embedded SVG data and font-based glyphs. If a font-based icon cannot render because Font Awesome is not loaded, report the missing dependency rather than swapping to another icon library.
-
-## Current component coverage
-
-Button is the first component family with an AI-facing contract. Read `components/button.md` before implementing buttons.
-
-## Validation rule
-
-For the current test phase, avoid adding custom CSS to “fix” visual mismatches until you have checked whether the mismatch comes from:
-
-1. missing Proxima Soft;
-2. missing Font Awesome;
-3. incorrect Buckholt class usage;
-4. a gap or error in the shared Buckholt specification.
-
-If the shared specification is wrong, identify the rule that needs correcting rather than masking it in the test page.
+Fonts and icon dependencies will be added separately. Until they are present, do not silently substitute another design language or icon library.
