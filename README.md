@@ -6,17 +6,17 @@ A lean, machine-readable companion for using the Buckholt design system accurate
 
 **Build with Buckholt; do not imitate Buckholt.**
 
-This repository is deliberately evidence-led. It should teach coding agents only patterns that can be traced to the Buckholt documentation or the real compiled runtime stylesheet.
+This repository is deliberately evidence-led. It teaches coding agents only patterns that can be traced to Buckholt's documentation or the real compiled runtime stylesheet.
 
-## Sources of truth
+## Source hierarchy
 
-1. Buckholt documentation — intended usage, hierarchy, accessibility, canonical markup and design-system meaning.
-2. `css/buckholt.css` — current browser/runtime implementation: selectors, values, states, dimensions and generated behaviour.
-3. `foundations/<foundation>/` — shared design-system rules and values extracted from the documentation and reconciled with runtime CSS where relevant.
-4. `components/<component>/rules.md` — concise component guidance rebuilt from Buckholt documentation plus runtime CSS.
+1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
+2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website.
+3. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
+4. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
 5. `components/<component>/examples.html` — verified canonical markup examples.
 
-If documentation and runtime CSS disagree, record/report the discrepancy rather than silently deciding that one should replace the other. Verified discrepancies are recorded in `discrepancies/known-issues.md`.
+Extra runtime CSS is useful flexibility, but it does not become canonical Buckholt guidance unless the documentation says so. Only significant runtime differences that could mislead an implementation agent are noted in `discrepancies/known-issues.md`.
 
 Old SCSS, old token maps, screenshots, Figma and earlier interpreted AI specifications are intentionally excluded from the implementation path unless explicitly requested for investigation.
 
@@ -31,8 +31,9 @@ buckholt-ai/
 ├── foundations/
 │   ├── colour/
 │   ├── iconography/
-│   └── radius/
-│       └── rules.md
+│   ├── radius/
+│   ├── shadows/
+│   └── spacing/
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
@@ -50,15 +51,17 @@ Read `foundations/colour/` for the global palette, semantic/foundation colour ro
 Read `foundations/iconography/` for Buckholt's Font Awesome v7 usage and the full documented icon catalogue.
 
 ### Radius
-Read `foundations/radius/rules.md` before adding or overriding border radius.
+Read `foundations/radius/rules.md` before adding or overriding border radius. Follow the documented scale for design decisions; additional runtime radius values may be used where an existing Buckholt implementation requires them.
 
-The documentation states that larger components generally use larger radii and that components have an appropriate radius applied by default. The documented scale is 4, 6, 8, 16, 24 and 32px for xs, sm, md, lg, xl and `full` respectively.
+### Shadows
+Read `foundations/shadows/rules.md` before adding elevation. Buckholt documents five shadow levels (`xs` through `xl`) and feedback shadow treatments. Shadows should be purposeful, subtle and used only for genuinely elevated UI.
 
-The current runtime agrees for xs–xl, but differs at the top end: it exposes `--border-radius-xxl: 2rem`, `--border-radius-full: 625rem` and `--border-radius-round: 50%`. This mismatch is recorded in `discrepancies/known-issues.md`; agents must not silently remap the names.
+### Spacing
+Read `foundations/spacing/rules.md` before introducing margins, padding or gaps. It records the documented core spacing scale plus Buckholt's dedicated padding and margin tokens. Prefer tokens over hard-coded spacing values.
 
 ## Button coverage
 
-The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons or radius.
+The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing or other shared styling.
 
 ## Runtime dependencies
 
@@ -77,4 +80,4 @@ For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, also loa
 
 ## Agent behaviour
 
-Coding agents should read `CLAUDE.md`, relevant foundation files and the relevant component folder before implementing Buckholt UI. They should use real Buckholt classes, variables and approved icon mappings, and explicitly flag genuine conflicts instead of inventing design-system behaviour.
+Coding agents should read `CLAUDE.md`, the relevant foundation files and the relevant component folder before implementing Buckholt UI. Follow documented Buckholt intent first, use the runtime CSS to implement it accurately, and do not invent design-system behaviour from undocumented runtime extras.
