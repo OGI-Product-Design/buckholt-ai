@@ -124,3 +124,28 @@ Link rules:
 - documentation defines the intended visited Link colour. The current runtime has a known standalone visited-icon mismatch recorded in `discrepancies/known-issues.md`.
 
 The Link Overview, Style and Code & specs documentation have all been supplied.
+
+### Text block
+Read:
+- `components/text-block/rules.md`
+- `components/text-block/examples.html`
+- `foundations/typography/rules.md`
+- `foundations/typography/type-sets.md`
+- relevant Spacing, Iconography and Colour foundations
+
+Text block rules:
+- wrap written-content groups in `.text-block`;
+- include at least a heading, a paragraph, or both;
+- choose semantic `h1`–`h6` level from page structure independently of visual `.display-*`, `.headline-*` or `.title-*` class;
+- do not skip heading levels just to change visual size;
+- place each paragraph in its own `<p>` element;
+- use `.eyebrow` for contextual text above a heading;
+- use `<span class="icon">` for inline heading icons;
+- icon blocks must be followed by a heading;
+- do not combine icon blocks with eyebrow text;
+- do not combine an icon block and inline heading icon in the same Text block;
+- use inline icons, not icon blocks, with display-sized headings;
+- use the default/medium icon block with title-styled headings and `.icon-block-xl` with headline-styled headings;
+- do not recreate Text block internal spacing or width with custom CSS.
+
+The Text block Overview, Style and Code & specs documentation have all been supplied.
