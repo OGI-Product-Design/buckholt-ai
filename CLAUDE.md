@@ -105,3 +105,22 @@ Read:
 - relevant foundation files, especially colour, iconography, radius, spacing and typography
 
 The Button Usage, Style and Code & specs documentation have all been supplied.
+
+### Link
+Read:
+- `components/link/rules.md`
+- `components/link/examples.html`
+- relevant foundation files, especially colour, iconography, spacing and typography
+- `discrepancies/known-issues.md` when exact visited-state rendering matters
+
+Link rules:
+- use links for navigation, not actions that modify data, state or display;
+- use plain anchors for inline links and `.link-standalone` for standalone links;
+- do not add icons to inline links;
+- use the documented `.icon` structure and Buckholt icon mapping for standalone links when an icon is appropriate;
+- use the external-link icon for links that open content in a new tab;
+- use `.link-set` / `.linkset-item`, with `.link-set-stacked` for vertical groups;
+- do not use generic Bootstrap `link-*` utilities as canonical Buckholt component guidance simply because they exist in the runtime CSS;
+- documentation defines the intended visited Link colour. The current runtime has a known standalone visited-icon mismatch recorded in `discrepancies/known-issues.md`.
+
+The Link Overview, Style and Code & specs documentation have all been supplied.
