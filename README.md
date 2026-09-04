@@ -40,7 +40,10 @@ buckholt-ai/
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
-    └── button/
+    ├── button/
+    │   ├── rules.md
+    │   └── examples.html
+    └── link/
         ├── rules.md
         └── examples.html
 ```
@@ -65,9 +68,15 @@ Read `foundations/spacing/rules.md` before introducing margins, padding or gaps.
 ### Typography
 Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md` before choosing or changing typography. Buckholt uses Proxima Soft with the documented `Proxima-soft, Arial, sans-serif` stack, a ten-step type scale, and named type sets for display, headline, title, body, support, action, form, label and key-value roles. Prefer the documented type-set class over arbitrary font styling or Bootstrap typography helpers.
 
-## Button coverage
+## Component coverage
 
-The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
+### Button
+Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
+
+### Link
+Read `components/link/rules.md` and `components/link/examples.html`, plus colour, iconography, spacing and typography where relevant. The Link guidance covers inline and standalone links, icon use, new-tab/external-link treatment, interaction states and horizontal/stacked Link sets.
+
+A documented/runtime difference for the visited standalone-link icon is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
 
 ## Runtime dependencies
 
