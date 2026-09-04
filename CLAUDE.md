@@ -10,7 +10,7 @@ Use these Buckholt sources together:
 
 1. Buckholt documentation — intended usage, hierarchy, accessibility, canonical markup and design-system meaning.
 2. `css/buckholt.css` — current runtime implementation and styling truth for selectors, values, states, dimensions and generated behaviour.
-3. `foundations/<foundation>/` — shared design-system guidance and runtime values reconciled from documentation + CSS.
+3. `foundations/<foundation>/` — shared design-system guidance and runtime values reconciled from documentation + CSS where relevant.
 4. `components/<component>/rules.md` — component guidance rebuilt from documentation and runtime CSS.
 5. `components/<component>/examples.html` — verified canonical markup examples.
 
@@ -52,6 +52,26 @@ Implementation rules:
 - preserve the documented feedback meanings: info, success, warning and error;
 - validate contrast when creating a colour combination not already defined by Buckholt;
 - do not rely on colour alone to communicate important meaning.
+
+## Iconography foundation
+
+Before choosing an icon, read:
+
+- `foundations/iconography/rules.md`
+- `foundations/iconography/catalogue.md`
+
+Implementation rules:
+
+- Buckholt uses Font Awesome v7;
+- use the exact Buckholt icon mapping from `catalogue.md` when one exists;
+- regular is the documented style for most applications, but preserve any `solid` or `brands` mapping explicitly listed in the catalogue;
+- do not substitute a visually similar Font Awesome icon because it seems preferable;
+- use the documented role as semantic evidence when selecting between icons;
+- if an icon has no documented role, do not invent one;
+- if no Buckholt icon covers the requirement, report the gap rather than inventing a Buckholt mapping;
+- component documentation controls wrappers, accessible names, tooltips and other component-specific icon behaviour.
+
+The current catalogue contains 111 documented Buckholt icons.
 
 ## Custom CSS
 
@@ -101,6 +121,7 @@ Read:
 
 - `components/button/rules.md`
 - `components/button/examples.html`
+- `foundations/iconography/catalogue.md` when choosing Button icons
 
 Verified in the current rebuild:
 
@@ -111,7 +132,6 @@ Verified in the current rebuild:
 - resting, hover, focus, active and disabled behaviour;
 - intentional 3px clickable bottom border on primary/secondary, returning to 1px on focus/active; ghost uses the normal border width;
 - `.btn-icon` and `.button-label` structure;
-- documented common-action Font Awesome mappings;
 - icon-only button guidance and required tooltips;
 - button-set behaviour including stacked sets;
 - usage, content, alignment and accessibility guidance.
