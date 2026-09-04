@@ -8,12 +8,12 @@ AI should **build with Buckholt, not imitate Buckholt**.
 
 This repository combines:
 
-- Buckholt source/compiled CSS for the real browser-facing implementation;
 - tool-neutral design guidance in `design.md`;
 - structured token facts in `tokens.json`;
 - component-specific contracts in `components/`;
 - agent-specific instructions such as `CLAUDE.md`;
-- small validation harnesses in `test/`.
+- small validation harnesses in `test/`;
+- the real compiled Buckholt CSS as the browser-facing implementation source.
 
 ## Evidence model
 
@@ -36,26 +36,37 @@ buckholt-ai/
 ├── design.md
 ├── tokens.json
 ├── css/
-│   └── buckholt.css
+│   ├── README.md
+│   └── buckholt.css          # add current compiled file
 ├── components/
 │   └── button.md
+├── docs/
+│   └── build-log.md
 ├── assets/
 │   └── fonts/
+│       ├── README.md
 │       └── .gitkeep
 └── test/
     └── button-showcase/
+        ├── README.md
         └── index.html
 ```
+
+## Current setup status
+
+The AI specification, Claude instructions, Button component contract, build log and first Button validation page are in the repository.
+
+**One runtime file still needs to be added:** the current compiled `buckholt.css` supplied from the existing Buckholt project. The GitHub connector used to initialise this repository only supports text-content writes and cannot transfer the already-uploaded local file directly. Add that exact file at `css/buckholt.css` before running the Button showcase.
 
 ## Fonts
 
 Buckholt uses `"Proxima-soft", Arial, sans-serif`.
 
-Licensed Proxima font binaries are intentionally not committed until the organisation confirms that the licence permits repository distribution. Put approved local font files in `assets/fonts/` and add the relevant `@font-face` declarations in the consuming project.
+Licensed Proxima font binaries are intentionally not committed until the organisation confirms that the licence permits repository distribution. See `assets/fonts/README.md`.
 
 ## Font Awesome
 
-The compiled Buckholt CSS uses a mixture of embedded Font Awesome SVG data and font-based Font Awesome glyphs. A consuming application must load the appropriate Font Awesome dependency for glyph-based icons such as dropdown carets and generated icon content.
+The compiled Buckholt CSS uses a mixture of embedded Font Awesome SVG data and font-based Font Awesome glyphs. A consuming application must load the appropriate existing Font Awesome dependency for glyph-based icons. We have not guessed a package/version because the exact runtime dependency has not yet been confirmed from the application setup.
 
 ## Working rule for AI agents
 
@@ -75,4 +86,4 @@ Prefer this over recreating the button colour, spacing, radius or focus state ma
 
 The foundation layer is documented and Button is the first component family to be reconciled from SCSS, compiled CSS, Figma and Buckholt documentation.
 
-Next milestone: validate the Button specification in Claude Code using the real compiled Buckholt CSS, then correct the shared specification rather than adding one-off prompt fixes.
+Next milestone: add `css/buckholt.css`, connect the approved Proxima/Font Awesome runtime dependencies, then run the Button validation in Claude Code and correct the shared specification rather than adding one-off prompt fixes.
