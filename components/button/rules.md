@@ -31,6 +31,8 @@ Use a native `<button>` element with `.btn` plus a documented button type. Label
 </button>
 ```
 
+`.button-label` is an important structural hook. The runtime uses the presence/absence of a label to distinguish labelled and icon-only button layouts, so do not omit it from labelled buttons.
+
 ## Button types
 
 Buckholt documents three standard button types:
@@ -83,8 +85,6 @@ Documented size modifiers:
 - no size modifier — default/medium.
 - `.btn-lg` — large.
 
-Code & specs explicitly defines `.btn-sm` and `.btn-lg` as the modifiers for smaller and larger buttons.
-
 Usage guidance:
 
 - small: use where vertical space is limited or the layout is confined;
@@ -93,7 +93,7 @@ Usage guidance:
 
 Do not create custom button dimensions when one of the supported sizes should be used.
 
-## Runtime dimensions
+## Runtime dimensions and border treatment
 
 `buckholt.css` is authoritative for runtime values. The current compiled implementation defines:
 
@@ -102,7 +102,7 @@ Do not create custom button dimensions when one of the supported sizes should be
 - default horizontal padding: 16px;
 - default vertical padding: 4px;
 - default content gap: 8px;
-- default border width: 1px;
+- standard border width: 1px;
 - default radius: 8px;
 - default action type: 16px / 24px;
 - small minimum height: 32px;
@@ -111,7 +111,9 @@ Do not create custom button dimensions when one of the supported sizes should be
 - large minimum height: 48px;
 - large horizontal padding: 20px.
 
-Do not recreate the previously interpreted 3px bottom-border treatment. It is not the current compiled runtime implementation.
+The clickable primary and secondary runtime treatment intentionally uses a 3px bottom border (`1px + 0.125rem`). Focus and active states return this to the normal 1px border width. Ghost buttons use the normal border width rather than the differentiated 3px treatment.
+
+Do not override or recreate this border treatment with custom CSS; let `buckholt.css` provide it.
 
 ## Labels
 
@@ -126,7 +128,7 @@ Do not recreate the previously interpreted 3px bottom-border treatment. It is no
 
 Icons are optional and should be used sparingly.
 
-The documented structure places a `.btn-icon` before `.button-label`:
+The canonical documented structure places a `.btn-icon` before `.button-label`:
 
 ```html
 <button type="button" class="btn btn-primary">
@@ -136,6 +138,8 @@ The documented structure places a `.btn-icon` before `.button-label`:
   <span class="button-label">Button label</span>
 </button>
 ```
+
+Use the documented markup unchanged when implementing Buckholt. Although a `<span>` could be more semantically conventional than a `<div>` inside a button, changing the design-system markup is a separate Buckholt maintenance decision and should not be silently done by coding agents.
 
 Rules from the usage documentation:
 
@@ -147,7 +151,16 @@ Rules from the usage documentation:
 - do not repurpose a familiar icon for an unrelated action;
 - use the default icon variation unless the icon is a defined status icon.
 
-The documentation identifies common recognisable actions such as Add, Copy, Delete, Download, Edit, External link, Logout, Save, Search, Settings and Upload.
+The documentation defines common-action icon mappings. Verified examples include:
+
+- Add / create: `fa-regular fa-plus`
+- Search: `fa-regular fa-magnifying-glass`
+- Settings: `fa-regular fa-gear`
+- Upload: `fa-regular fa-arrow-up-from-bracket`
+- Save examples: `fa-regular fa-save`
+- Print examples: `fa-regular fa-print`
+
+When a documented common-action mapping exists, use it rather than the generic `fa-ghost` demonstration glyph.
 
 ## Icon-only buttons
 
@@ -168,10 +181,21 @@ Usage rules:
 - medium/default and small are the documented icon-only sizes;
 - primary, secondary and ghost styling can be used, with primary and ghost being common;
 - for several compact icon actions, prefer a toolbar pattern;
-- an icon-only button must have an accessible text name;
-- an icon-only button must have a visible tooltip explaining the action.
+- provide an accessible text name;
+- a tooltip explaining the action is always required.
 
-Do not treat the bare Code & specs example as sufficient accessibility by itself; apply the usage/accessibility requirements when implementing a real icon-only control.
+### Tooltip implementation
+
+Buckholt's documentation site uses Bootstrap tooltips. The documented runtime pattern uses attributes such as:
+
+```html
+data-bs-toggle="tooltip"
+data-bs-title="Save"
+data-bs-placement="right"
+data-bs-trigger="hover"
+```
+
+A standalone test that demonstrates this behaviour must also load the Bootstrap 5.1.3 JavaScript bundle and initialise `bootstrap.Tooltip` for `[data-bs-toggle="tooltip"]` elements. Do not replace the documented Buckholt tooltip with a native `title` attribute when reproducing Buckholt behaviour.
 
 ## Button sets
 
@@ -219,6 +243,8 @@ Usage guidance:
 - on left-aligned full-page layouts, place the primary action on the left/outer edge;
 - on right-aligned contained layouts, place the primary action on the right/outer edge.
 
+The compiled CSS also contains generic `*-set` alignment/wrapping selectors such as end, centre and nowrap variants. These are runtime capabilities, but do not treat a specific class such as `button-set-end` as a documented Button API unless it is explicitly present in Buckholt documentation for the pattern being implemented.
+
 ## Alignment
 
 - full-page layouts generally left-align the main action;
@@ -251,16 +277,14 @@ In modal contexts the primary action may be the default focused action. In forms
 
 ## Runtime dependencies
 
-Standalone Buckholt tests use the repository-level dependencies documented in `CLAUDE.md`: Proxima Nova, Font Awesome, and `css/buckholt.css` in the approved runtime order.
-
-For button icons use Font Awesome markup that is documented by Buckholt, such as the `fa-regular` examples in `examples.html`. Do not substitute another icon library.
+Standalone Buckholt tests use the repository-level dependencies documented in `CLAUDE.md`: Bootstrap CSS, Proxima Nova, Font Awesome and `css/buckholt.css` in the approved runtime order. Add Bootstrap JS when demonstrating tooltips or other Bootstrap-powered interactions.
 
 ## Do not
 
 - do not use a button when the interaction is navigation;
 - do not invent Button variants or classes;
 - do not recreate Buckholt Button styling with custom CSS;
-- do not override state colours to make a screenshot look right;
+- do not override state colours or border treatment to make a screenshot look right;
 - do not use multiple primary actions in one button set;
 - do not put labelled-button icons after the label;
 - do not mix icon-only and labelled controls in one button set;
