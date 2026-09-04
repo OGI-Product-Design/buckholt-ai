@@ -1,0 +1,2690 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buckholt style guide</title>
+
+  <!-- Approved runtime order from CLAUDE.md. -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+  <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../../css/buckholt.css">
+
+  <style>
+    /*
+      STYLE-GUIDE PAGE LAYOUT ONLY.
+      Nothing here styles a Buckholt component. No rule targets .btn, .btn-*,
+      .button-label, .button-set, .btn-icon, .link-standalone, .link-set,
+      .linkset-item, .text-block, .icon, .icon-block, .eyebrow or any type-set class.
+
+      Every value uses a Buckholt foundation token. No hard-coded spacing,
+      colour, radius or shadow.
+
+      Class names avoid the "-set" suffix (Buckholt binds set layout to
+      [class$=-set] / [class*="-set "]) and avoid -info/-success/-warning/-error
+      suffixes (Buckholt binds --shadow-colour to those).
+    */
+    .sg-shell {
+      display: grid;
+      grid-template-columns: 16rem minmax(0, 1fr);
+      gap: var(--spacer-06);
+      max-width: 90rem;
+      margin: 0 auto;
+      padding: var(--padding-07);
+    }
+
+    .sg-nav {
+      position: sticky;
+      top: var(--spacer-05);
+      align-self: start;
+      max-height: calc(100vh - var(--spacer-08));
+      overflow-y: auto;
+      padding-right: var(--padding-03);
+    }
+
+    .sg-nav ul {
+      list-style: none;
+      margin: 0 0 var(--margin-04);
+      padding: 0;
+    }
+
+    .sg-nav li { margin-bottom: var(--margin-01); }
+
+    .sg-nav a {
+      display: block;
+      padding: var(--padding-01) var(--padding-03);
+      border-radius: var(--border-radius-xs);
+      text-decoration: none;
+      color: var(--text-secondary);
+    }
+
+    .sg-nav a:hover {
+      background-color: var(--ui-overlay-02);
+      color: var(--text-primary);
+    }
+
+    .sg-nav-heading {
+      display: block;
+      margin-bottom: var(--margin-01);
+      color: var(--text-tertiary);
+    }
+
+    .sg-section {
+      scroll-margin-top: var(--spacer-05);
+      margin-bottom: var(--spacer-08);
+      padding-bottom: var(--padding-08);
+      border-bottom: var(--border-width) solid var(--ui-border-02);
+    }
+
+    .sg-block { margin-top: var(--spacer-06); }
+
+    .sg-panel {
+      margin-top: var(--spacer-04);
+      padding: var(--padding-07);
+      border: var(--border-width) solid var(--ui-border-02);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-01);
+    }
+
+    .sg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: var(--spacer-05);
+      margin-top: var(--spacer-04);
+      align-items: start;
+    }
+
+    .sg-cell {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacer-02);
+    }
+
+    .sg-caption {
+      display: block;
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .sg-meta {
+      display: block;
+      color: var(--text-tertiary);
+      word-break: break-word;
+    }
+
+    .sg-rules {
+      margin: var(--margin-03) 0 0;
+      padding-left: var(--padding-06);
+      max-width: var(--text-max-width);
+    }
+
+    .sg-rules li { margin-bottom: var(--margin-01); }
+
+    .sg-code {
+      display: block;
+      max-width: var(--text-max-width);
+      margin-top: var(--spacer-04);
+      padding: var(--padding-05);
+      overflow-x: auto;
+      border: var(--border-width) solid var(--ui-border-02);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-03);
+      color: var(--text-secondary);
+      white-space: pre;
+    }
+
+    .sg-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      gap: var(--spacer-04);
+      margin-top: var(--spacer-04);
+    }
+
+    .sg-swatch {
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-03);
+      min-width: 0;
+    }
+
+    .sg-chip {
+      flex: none;
+      width: var(--spacer-07);
+      height: var(--spacer-07);
+      border-radius: var(--border-radius-xs);
+      border: var(--border-width) solid var(--ui-border-02);
+    }
+
+    .sg-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+      gap: var(--spacer-04);
+      margin-top: var(--spacer-04);
+    }
+
+    .sg-icon-cell {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacer-03);
+      padding: var(--padding-03);
+      border: var(--border-width) solid var(--ui-border-02);
+      border-radius: var(--border-radius-sm);
+      background-color: var(--ui-background-01);
+      min-width: 0;
+    }
+
+    .sg-icon-glyph {
+      flex: none;
+      width: var(--spacer-06);
+      height: var(--spacer-06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-xs);
+      background-color: var(--ui-overlay-02);
+      color: var(--text-primary);
+    }
+
+    .sg-type-row {
+      padding: var(--padding-05) 0;
+      border-bottom: var(--border-width) solid var(--ui-border-02);
+    }
+
+    .sg-bar {
+      height: var(--spacer-04);
+      border-radius: var(--border-radius-xs);
+      background-color: var(--action-01);
+    }
+
+    .sg-scale-row {
+      display: grid;
+      grid-template-columns: 9rem 5rem minmax(0, 1fr);
+      gap: var(--spacer-04);
+      align-items: center;
+      padding: var(--padding-02) 0;
+    }
+
+    .sg-radius-chip {
+      width: var(--spacer-08);
+      height: var(--spacer-07);
+      background-color: var(--action-04);
+      border: var(--border-width) solid var(--action-01);
+    }
+
+    .sg-shadow-chip {
+      height: var(--spacer-07);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-01);
+    }
+
+    .sg-shadow-cell { padding: var(--padding-04); }
+
+    .sg-narrow { max-width: 22rem; }
+
+    .sg-issue {
+      margin-top: var(--spacer-04);
+      padding: var(--padding-07);
+      border: var(--border-width) solid var(--ui-border-02);
+      border-left: var(--spacer-02) solid var(--action-danger-01);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-01);
+    }
+
+    @media (max-width: 62rem) {
+      .sg-shell { grid-template-columns: minmax(0, 1fr); }
+      .sg-nav { position: static; max-height: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sg-shell">
+
+    <nav class="sg-nav" aria-label="Style guide sections">
+      <span class="label-01 sg-nav-heading">Overview</span>
+      <ul>
+        <li><a class="body-01" href="#overview">How to use this page</a></li>
+      </ul>
+      <span class="label-01 sg-nav-heading">Foundations</span>
+      <ul>
+        <li><a class="body-01" href="#colour">Colour</a></li>
+        <li><a class="body-01" href="#typography">Typography</a></li>
+        <li><a class="body-01" href="#spacing">Spacing</a></li>
+        <li><a class="body-01" href="#radius">Radius</a></li>
+        <li><a class="body-01" href="#shadows">Shadows</a></li>
+        <li><a class="body-01" href="#iconography">Iconography</a></li>
+      </ul>
+      <span class="label-01 sg-nav-heading">Components</span>
+      <ul>
+        <li><a class="body-01" href="#button">Button</a></li>
+        <li><a class="body-01" href="#link">Link</a></li>
+        <li><a class="body-01" href="#text-block">Text block</a></li>
+      </ul>
+      <span class="label-01 sg-nav-heading">Maintenance</span>
+      <ul>
+        <li><a class="body-01" href="#issues">Known runtime issues</a></li>
+      </ul>
+    </nav>
+
+    <main class="sg-main">
+
+      <section class="sg-section" id="overview">
+        <div class="text-block">
+          <span class="eyebrow">Buckholt AI</span>
+          <h1 class="display-03">Buckholt style guide</h1>
+          <p class="body-02">
+            A single page rendering every foundation and component this repository documents, styled
+            entirely by <code>css/buckholt.css</code>. It exists so drift is visible in one place: open it
+            after a runtime or documentation change and check the whole system at once.
+          </p>
+          <p class="body-02">
+            Everything here is built from the repository sources — <code>foundations/</code> for the
+            scales and tokens, <code>components/&lt;name&gt;/rules.md</code> for behaviour and
+            <code>components/&lt;name&gt;/examples.html</code> for canonical markup. Nothing is invented,
+            and no Buckholt styling is recreated or overridden. The page's own stylesheet holds layout
+            only, using Buckholt tokens for every value.
+          </p>
+          <p class="body-02">
+            Dependencies load in the order given in <code>CLAUDE.md</code>: Bootstrap 5.1.3, the Typekit
+            stylesheet for Proxima Soft, the Buckholt Font Awesome kit, then <code>css/buckholt.css</code>
+            last. The Bootstrap JavaScript bundle loads at the end of the page for the documented
+            icon-only button tooltips.
+          </p>
+          <p class="support-01">
+            Known differences between the documentation and the runtime are recorded in
+            <code>discrepancies/known-issues.md</code>, which stays the canonical record. They are
+            surfaced beside the affected component and collected again at the foot of this page.
+          </p>
+        </div>
+      </section>
+
+      <section class="sg-section" id="colour">
+        <div class="text-block">
+          <h2 class="headline-02">Colour</h2>
+          <p class="body-02">
+            Foundation roles from <code>foundations/colour/</code>, rendered from the live CSS variables
+            rather than pasted hex values — if the runtime changes, these swatches change with it.
+            Components should consume these semantic roles, not raw palette values.
+          </p>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Text</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-primary);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-primary</code><br><span class="support-01">#1a1a1a</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-secondary);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-secondary</code><br><span class="support-01">#454545</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-tertiary);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-tertiary</code><br><span class="support-01">#595959</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-muted);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-muted</code><br><span class="support-01">rgba(26, 26, 26, 0.625)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-light);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-light</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-active);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-active</code><br><span class="support-01">#1748d0</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-success</code><br><span class="support-01">#168914</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--text-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--text-error</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">UI surfaces</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-background-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-background-01</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-background-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-background-02</code><br><span class="support-01">#fbfbfb</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-background-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-background-03</code><br><span class="support-01">#f7f7f7</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-background-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-background-04</code><br><span class="support-01">#efefef</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-overlay-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-overlay-01</code><br><span class="support-01">rgba(26, 26, 26, 0.015)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-overlay-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-overlay-02</code><br><span class="support-01">rgba(26, 26, 26, 0.04)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-overlay-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-overlay-03</code><br><span class="support-01">rgba(26, 26, 26, 0.07)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-overlay-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-overlay-04</code><br><span class="support-01">rgba(26, 26, 26, 0.48)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-border-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-border-01</code><br><span class="support-01">#919191</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-border-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-border-02</code><br><span class="support-01">#dadada</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-border-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-border-03</code><br><span class="support-01">rgba(26, 26, 26, 0.07)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--ui-border-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--ui-border-04</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Actions</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-01</code><br><span class="support-01">#0f40c5</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-02</code><br><span class="support-01">#3f66d1</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-03</code><br><span class="support-01">#092676</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-04</code><br><span class="support-01">rgba(15, 64, 197, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-05);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-05</code><br><span class="support-01">rgba(26, 26, 26, 0.07)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-06);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-06</code><br><span class="support-01">#919191</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-07);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-07</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-08);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-08</code><br><span class="support-01">#04133b</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-01</code><br><span class="support-01">#0f40c5</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-02</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-03</code><br><span class="support-01">rgba(26, 26, 26, 0.625)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-04</code><br><span class="support-01">#595959</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-05);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-05</code><br><span class="support-01">#454545</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Danger actions</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-danger-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-danger-01</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-danger-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-danger-02</code><br><span class="support-01">#ae0a09</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-danger-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-danger-03</code><br><span class="support-01">#590407</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-danger-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-danger-04</code><br><span class="support-01">rgba(215, 5, 12, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--action-text-danger-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--action-text-danger-01</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Disabled and state</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-overlay-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-overlay-01</code><br><span class="support-01">rgba(26, 26, 26, 0.07)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-overlay-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-overlay-02</code><br><span class="support-01">rgba(26, 26, 26, 0.16)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-overlay-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-overlay-03</code><br><span class="support-01">rgba(26, 26, 26, 0.3)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-01</code><br><span class="support-01">#efefef</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-02);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-02</code><br><span class="support-01">#dadada</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-03);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-03</code><br><span class="support-01">#bababa</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--disabled-04);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--disabled-04</code><br><span class="support-01">#ffffff</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--focus-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--focus-01</code><br><span class="support-01">#1748d0</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--success-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--success-01</code><br><span class="support-01">#168914</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--error-01);" aria-hidden="true"></span>
+              <span class="sg-meta body-01"><code>--error-01</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Feedback — information</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-background-info);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">background — <code>--feedback-background-info</code><br><span class="support-01">#e7ecf9</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-overlay-info);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">overlay — <code>--feedback-overlay-info</code><br><span class="support-01">rgba(23, 72, 208, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-border-info);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">border — <code>--feedback-border-info</code><br><span class="support-01">#3f66d1</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-message-info);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">message — <code>--feedback-message-info</code><br><span class="support-01">#1748d0</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-body-info);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">body — <code>--feedback-body-info</code><br><span class="support-01">#04133b</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Feedback — success</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-background-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">background — <code>--feedback-background-success</code><br><span class="support-01">#e7f3e7</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-overlay-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">overlay — <code>--feedback-overlay-success</code><br><span class="support-01">rgba(22, 137, 20, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-border-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">border — <code>--feedback-border-success</code><br><span class="support-01">#168914</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-message-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">message — <code>--feedback-message-success</code><br><span class="support-01">#136e11</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-body-success);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">body — <code>--feedback-body-success</code><br><span class="support-01">#041b04</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Feedback — warning</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-background-warning);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">background — <code>--feedback-background-warning</code><br><span class="support-01">#fff3e7</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-overlay-warning);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">overlay — <code>--feedback-overlay-warning</code><br><span class="support-01">rgba(255, 122, 0, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-border-warning);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">border — <code>--feedback-border-warning</code><br><span class="support-01">#b35400</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-message-warning);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">message — <code>--feedback-message-warning</code><br><span class="support-01">#b35400</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-body-warning);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">body — <code>--feedback-body-warning</code><br><span class="support-01">#4c2400</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Feedback — error</h3>
+          <div class="sg-swatches">
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-background-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">background — <code>--feedback-background-error</code><br><span class="support-01">#fbe7e8</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-overlay-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">overlay — <code>--feedback-overlay-error</code><br><span class="support-01">rgba(215, 5, 12, 0.1)</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-border-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">border — <code>--feedback-border-error</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-message-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">message — <code>--feedback-message-error</code><br><span class="support-01">#d7050c</span></span>
+            </div>
+            <div class="sg-swatch">
+              <span class="sg-chip" style="background-color: var(--feedback-body-error);" aria-hidden="true"></span>
+              <span class="sg-meta body-01">body — <code>--feedback-body-error</code><br><span class="support-01">#2a0202</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <p class="support-01">
+            Contrast targets from the Colour documentation: 4.5:1 for text below 24px, 3:1 for text at
+            24px and above, and 3:1 for icons and other visual elements. Colour must never be the only
+            way meaning is communicated.
+          </p>
+        </div>
+      </section>
+
+      <section class="sg-section" id="typography">
+        <div class="text-block">
+          <h2 class="headline-02">Typography</h2>
+          <p class="body-02">
+            The documented type sets from <code>foundations/typography/type-sets.md</code>, each rendered
+            with its own class. Choose a set by documented content role, not by whichever size looks
+            closest, and keep the semantic HTML level independent of the visual class.
+          </p>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Display</h3></div>
+        <div class="sg-type-row">
+          <div class="display-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.display-03</code> &middot; typescale-10 &middot; 56px / 3.5rem &middot; weight Medium 500 &middot; line height 64px / 4rem &middot; letter spacing -0.25px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="display-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.display-02</code> &middot; typescale-09 &middot; 40px / 2.5rem &middot; weight Medium 500 &middot; line height 48px / 3rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="display-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.display-01</code> &middot; typescale-08 &middot; 36px / 2.25rem &middot; weight Medium 500 &middot; line height 44px / 2.75rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Headline</h3></div>
+        <div class="sg-type-row">
+          <div class="headline-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.headline-03</code> &middot; typescale-07 &middot; 32px / 2rem &middot; weight Semibold 600 &middot; line height 40px / 2.5rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="headline-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.headline-02</code> &middot; typescale-06 &middot; 28px / 1.75rem &middot; weight Semibold 600 &middot; line height 36px / 2.25rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="headline-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.headline-01</code> &middot; typescale-05 &middot; 24px / 1.5rem &middot; weight Semibold 600 &middot; line height 32px / 2rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Title</h3></div>
+        <div class="sg-type-row">
+          <div class="title-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.title-03</code> &middot; typescale-05 &middot; 24px / 1.5rem &middot; weight Medium 500 &middot; line height 32px / 2rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="title-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.title-02</code> &middot; typescale-04 &middot; 20px / 1.25rem &middot; weight Medium 500 &middot; line height 24px / 1.5rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="title-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.title-01</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Medium 500 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="title-00">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.title-00</code> &middot; typescale-02 &middot; 14px / 0.875rem &middot; weight Medium 500 &middot; line height 20px / 1.25rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Body</h3></div>
+        <div class="sg-type-row">
+          <div class="body-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.body-02</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Light 300 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="body-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.body-01</code> &middot; typescale-02 &middot; 14px / 0.875rem &middot; weight Light 300 &middot; line height 20px / 1.25rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="body-00">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.body-00</code> &middot; typescale-01 &middot; 12px / 0.75rem &middot; weight Light 300 &middot; line height 16px / 1rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Support</h3></div>
+        <div class="sg-type-row">
+          <div class="support-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.support-01</code> &middot; typescale-01 &middot; 12px / 0.75rem &middot; weight Regular 400 &middot; line height 16px / 1rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Action</h3></div>
+        <div class="sg-type-row">
+          <div class="action-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.action-02</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Regular 400 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="action-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.action-01</code> &middot; typescale-02 &middot; 14px / 0.875rem &middot; weight Regular 400 &middot; line height 20px / 1.25rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Form text</h3></div>
+        <div class="sg-type-row">
+          <div class="input-text-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.input-text-02</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Regular 400 &middot; line height 28px / 1.75rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="input-text-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.input-text-01</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Regular 400 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="placeholder-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.placeholder-02</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Light 300 &middot; line height 28px / 1.75rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="placeholder-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.placeholder-01</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Light 300 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Label</h3></div>
+        <div class="sg-type-row">
+          <div class="label-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.label-03</code> &middot; typescale-04 &middot; 20px / 1.25rem &middot; weight Medium 500 &middot; line height 28px / 1.75rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="label-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.label-02</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Medium 500 &middot; line height 24px / 1.5rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="label-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.label-01</code> &middot; typescale-02 &middot; 14px / 0.875rem &middot; weight Medium 500 &middot; line height 20px / 1.25rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Key</h3></div>
+        <div class="sg-type-row">
+          <div class="key-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.key-03</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Light 300 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="key-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.key-02</code> &middot; typescale-02 &middot; 14px / 0.875rem &middot; weight Light 300 &middot; line height 20px / 1.25rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="key-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.key-01</code> &middot; typescale-01 &middot; 12px / 0.75rem &middot; weight Light 300 &middot; line height 16px / 1rem &middot; letter spacing 0.25px</span>
+        </div>
+        <div class="sg-block"><h3 class="title-02">Value</h3></div>
+        <div class="sg-type-row">
+          <div class="value-03">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.value-03</code> &middot; typescale-07 &middot; 32px / 2rem &middot; weight Medium 500 &middot; line height 40px / 2.5rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="value-02">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.value-02</code> &middot; typescale-05 &middot; 24px / 1.5rem &middot; weight Medium 500 &middot; line height 32px / 2rem &middot; letter spacing 0px</span>
+        </div>
+        <div class="sg-type-row">
+          <div class="value-01">The quick brown fox</div>
+          <span class="sg-meta support-01"><code>.value-01</code> &middot; typescale-03 &middot; 16px / 1rem &middot; weight Medium 500 &middot; line height 24px / 1.5rem &middot; letter spacing 0.16px</span>
+        </div>
+        <div class="sg-panel">
+          <p class="support-01">
+            Buckholt's stack is <code>'Proxima-soft', Arial, sans-serif</code>. Do not substitute Bootstrap
+            <code>.display-*</code>, <code>.fs-*</code> or heading helpers for these sets, and flag a gap
+            rather than inventing a new set.
+          </p>
+        </div>
+      </section>
+
+      <section class="sg-section" id="spacing">
+        <div class="text-block">
+          <h2 class="headline-02">Spacing</h2>
+          <p class="body-02">
+            The shared scale, plus the dedicated padding and margin tokens. Bars are drawn at the token's
+            own width. Prefer these over hard-coded values, and prefer the spacing a component already
+            defines over choosing one that merely looks close.
+          </p>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Core spacing scale</h3>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-01</code>
+            <span class="support-01">0.125 rem / 2 px</span>
+            <span class="sg-bar" style="width: var(--spacer-01);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-02</code>
+            <span class="support-01">0.25 rem / 4 px</span>
+            <span class="sg-bar" style="width: var(--spacer-02);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-03</code>
+            <span class="support-01">0.5 rem / 8 px</span>
+            <span class="sg-bar" style="width: var(--spacer-03);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-04</code>
+            <span class="support-01">1 rem / 16 px</span>
+            <span class="sg-bar" style="width: var(--spacer-04);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-05</code>
+            <span class="support-01">1.5 rem / 24 px</span>
+            <span class="sg-bar" style="width: var(--spacer-05);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-06</code>
+            <span class="support-01">2 rem / 32 px</span>
+            <span class="sg-bar" style="width: var(--spacer-06);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-07</code>
+            <span class="support-01">3 rem / 48 px</span>
+            <span class="sg-bar" style="width: var(--spacer-07);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-08</code>
+            <span class="support-01">4 rem / 64 px</span>
+            <span class="sg-bar" style="width: var(--spacer-08);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--spacer-09</code>
+            <span class="support-01">8 rem / 128 px</span>
+            <span class="sg-bar" style="width: var(--spacer-09);"></span>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Padding tokens</h3>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-01</code>
+            <span class="support-01">0.25 rem / 4 px</span>
+            <span class="sg-bar" style="width: var(--padding-01);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-02</code>
+            <span class="support-01">0.375 rem / 6 px</span>
+            <span class="sg-bar" style="width: var(--padding-02);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-03</code>
+            <span class="support-01">0.5 rem / 8 px</span>
+            <span class="sg-bar" style="width: var(--padding-03);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-04</code>
+            <span class="support-01">0.75 rem / 12 px</span>
+            <span class="sg-bar" style="width: var(--padding-04);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-05</code>
+            <span class="support-01">1 rem / 16 px</span>
+            <span class="sg-bar" style="width: var(--padding-05);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-06</code>
+            <span class="support-01">1.25 rem / 20 px</span>
+            <span class="sg-bar" style="width: var(--padding-06);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-07</code>
+            <span class="support-01">1.5 rem / 24 px</span>
+            <span class="sg-bar" style="width: var(--padding-07);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-08</code>
+            <span class="support-01">2 rem / 32 px</span>
+            <span class="sg-bar" style="width: var(--padding-08);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-09</code>
+            <span class="support-01">4 rem / 64 px</span>
+            <span class="sg-bar" style="width: var(--padding-09);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--padding-10</code>
+            <span class="support-01">8 rem / 128 px</span>
+            <span class="sg-bar" style="width: var(--padding-10);"></span>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Margin tokens</h3>
+          <div class="sg-scale-row">
+            <code class="support-01">--margin-01</code>
+            <span class="support-01">0.25 rem / 4 px</span>
+            <span class="sg-bar" style="width: var(--margin-01);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--margin-02</code>
+            <span class="support-01">0.5 rem / 8 px</span>
+            <span class="sg-bar" style="width: var(--margin-02);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--margin-03</code>
+            <span class="support-01">1 rem / 16 px</span>
+            <span class="sg-bar" style="width: var(--margin-03);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--margin-04</code>
+            <span class="support-01">1.5 rem / 24 px</span>
+            <span class="sg-bar" style="width: var(--margin-04);"></span>
+          </div>
+          <div class="sg-scale-row">
+            <code class="support-01">--margin-05</code>
+            <span class="support-01">2 rem / 32 px</span>
+            <span class="sg-bar" style="width: var(--margin-05);"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="radius">
+        <div class="text-block">
+          <h2 class="headline-02">Radius</h2>
+          <p class="body-02">
+            The documented scale. Component size determines radius, and a component's own Buckholt radius
+            should be used before reaching for a utility.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="sg-radius-chip" style="border-radius: var(--border-radius-xs);"></span>
+            <span class="sg-meta support-01"><code>--border-radius-xs</code> &middot; 0.25rem / 4px</span>
+          </div>
+          <div class="sg-cell">
+            <span class="sg-radius-chip" style="border-radius: var(--border-radius-sm);"></span>
+            <span class="sg-meta support-01"><code>--border-radius-sm</code> &middot; 0.375rem / 6px</span>
+          </div>
+          <div class="sg-cell">
+            <span class="sg-radius-chip" style="border-radius: var(--border-radius-md);"></span>
+            <span class="sg-meta support-01"><code>--border-radius-md</code> &middot; 0.5rem / 8px</span>
+          </div>
+          <div class="sg-cell">
+            <span class="sg-radius-chip" style="border-radius: var(--border-radius-lg);"></span>
+            <span class="sg-meta support-01"><code>--border-radius-lg</code> &middot; 1rem / 16px</span>
+          </div>
+          <div class="sg-cell">
+            <span class="sg-radius-chip" style="border-radius: var(--border-radius-xl);"></span>
+            <span class="sg-meta support-01"><code>--border-radius-xl</code> &middot; 1.5rem / 24px</span>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">The <code>full</code> step, shown both ways</h3>
+          <p class="body-02">
+            These two chips are the discrepancy, rendered side by side. The documentation's
+            <code>full</code> is 2rem; the runtime variable carrying that name is not.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="sg-radius-chip" style="border-radius: var(--border-radius-xxl);"></span>
+              <span class="sg-meta support-01">Documented <code>full</code> = 2rem / 32px, exposed at runtime as <code>--border-radius-xxl</code></span>
+            </div>
+            <div class="sg-cell">
+              <span class="sg-radius-chip" style="border-radius: var(--border-radius-full);"></span>
+              <span class="sg-meta support-01">Runtime <code>--border-radius-full</code> = 625rem, which renders as a pill</span>
+            </div>
+            <div class="sg-cell">
+              <span class="sg-radius-chip" style="border-radius: var(--border-radius-round);"></span>
+              <span class="sg-meta support-01">Runtime <code>--border-radius-round</code> = 50%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Recorded discrepancy — <code>full</code></h3>
+            <p class="body-02">
+              The documentation defines <code>full</code> as <code>2rem</code> / 32px. The runtime variable
+              <code>--border-radius-full</code> is <code>625rem</code>, and <code>2rem</code> is exposed as
+              <code>--border-radius-xxl</code>. The two names must not be treated as equivalent while the
+              discrepancy stands. The chip above uses the documented scale name only where runtime and
+              documentation agree.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="shadows">
+        <div class="text-block">
+          <h2 class="headline-02">Shadows</h2>
+          <p class="body-02">
+            Elevation for genuinely raised UI only — dialogs and other high layers take the heavier steps,
+            tooltips and toasts the lighter ones. Do not add elevation decoratively to flat content.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell sg-shadow-cell">
+            <span class="sg-shadow-chip shadow-xs"></span>
+            <span class="sg-meta support-01"><code>--shadow-xs</code> &middot; <code>.shadow-xs</code></span>
+          </div>
+          <div class="sg-cell sg-shadow-cell">
+            <span class="sg-shadow-chip shadow-sm"></span>
+            <span class="sg-meta support-01"><code>--shadow-sm</code> &middot; <code>.shadow-sm</code></span>
+          </div>
+          <div class="sg-cell sg-shadow-cell">
+            <span class="sg-shadow-chip shadow-md"></span>
+            <span class="sg-meta support-01"><code>--shadow-md</code> &middot; <code>.shadow-md</code></span>
+          </div>
+          <div class="sg-cell sg-shadow-cell">
+            <span class="sg-shadow-chip shadow-lg"></span>
+            <span class="sg-meta support-01"><code>--shadow-lg</code> &middot; <code>.shadow-lg</code></span>
+          </div>
+          <div class="sg-cell sg-shadow-cell">
+            <span class="sg-shadow-chip shadow-xl"></span>
+            <span class="sg-meta support-01"><code>--shadow-xl</code> &middot; <code>.shadow-xl</code></span>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <p class="support-01">
+            Buckholt also swaps the shadow colour for feedback states through
+            <code>.shadow-info</code>, <code>.shadow-success</code>, <code>.shadow-warning</code> and
+            <code>.shadow-error</code>. Use those only where the matching feedback pattern calls for them.
+          </p>
+        </div>
+      </section>
+
+      <section class="sg-section" id="iconography">
+        <div class="text-block">
+          <h2 class="headline-02">Iconography</h2>
+          <p class="body-02">
+            All 111 documented icons from <code>foundations/iconography/catalogue.md</code>, grouped by
+            category. This doubles as a check that the Font Awesome kit is loading — a blank tile means the
+            kit failed or the mapping is wrong.
+          </p>
+          <p class="body-02">
+            The catalogue is authoritative for icon choice. Match the documented role to the intended
+            action, use the exact classes recorded here, and preserve the deliberate
+            <code>solid</code> and <code>brands</code> entries rather than converting everything to regular.
+          </p>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">AI <span class="support-01">(1)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-sparkles" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">AI-generated-content</span><br>
+                <code class="support-01">fa-solid fa-sparkles</code><br>
+                <span class="support-01">Marks content created or enhanced by AI.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Brands <span class="support-01">(7)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-bootstrap" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Bootstrap</span><br>
+                <code class="support-01">fa-brands fa-bootstrap</code><br>
+                <span class="support-01">Bootstrap brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Facebook</span><br>
+                <code class="support-01">fa-brands fa-facebook-f</code><br>
+                <span class="support-01">Facebook brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-google" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Google</span><br>
+                <code class="support-01">fa-brands fa-google</code><br>
+                <span class="support-01">Google brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Instagram</span><br>
+                <code class="support-01">fa-brands fa-instagram</code><br>
+                <span class="support-01">Instagram brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Linkedin</span><br>
+                <code class="support-01">fa-brands fa-linkedin</code><br>
+                <span class="support-01">LinkedIn brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">X-twitter</span><br>
+                <code class="support-01">fa-brands fa-x-twitter</code><br>
+                <span class="support-01">X (formerly Twitter) brand logo.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-brands fa-youtube" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Youtube</span><br>
+                <code class="support-01">fa-brands fa-youtube</code><br>
+                <span class="support-01">YouTube brand logo.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Controls <span class="support-01">(4)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-left-from-line" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Contract</span><br>
+                <code class="support-01">fa-regular fa-arrow-left-from-line</code><br>
+                <span class="support-01">Collapse or contract a panel.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-grid-2" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Dashboard</span><br>
+                <code class="support-01">fa-regular fa-grid-2</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-right-from-line" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Expand</span><br>
+                <code class="support-01">fa-regular fa-arrow-right-from-line</code><br>
+                <span class="support-01">Expand or open a panel.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-gear" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Settings</span><br>
+                <code class="support-01">fa-regular fa-gear</code><br>
+                <span class="support-01">Access settings or preferences.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">File <span class="support-01">(15)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-box-archive" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Archive</span><br>
+                <code class="support-01">fa-regular fa-box-archive</code><br>
+                <span class="support-01">Move an item into archive but not delete.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-copy" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Copy</span><br>
+                <code class="support-01">fa-regular fa-copy</code><br>
+                <span class="support-01">Duplicate a file or content.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document</span><br>
+                <code class="support-01">fa-regular fa-file-lines</code><br>
+                <span class="support-01">A generic document or file.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-blank</span><br>
+                <code class="support-01">fa-regular fa-file</code><br>
+                <span class="support-01">Empty or new file.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-doc" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-doc</span><br>
+                <code class="support-01">fa-regular fa-file-doc</code><br>
+                <span class="support-01">A DOC document.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-jpg" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-jpg</span><br>
+                <code class="support-01">fa-regular fa-file-jpg</code><br>
+                <span class="support-01">A JPG document.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-pdf" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-pdf</span><br>
+                <code class="support-01">fa-regular fa-file-pdf</code><br>
+                <span class="support-01">A PDF document.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-png" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-png</span><br>
+                <code class="support-01">fa-regular fa-file-png</code><br>
+                <span class="support-01">A PNG document.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-zip" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Document-zip</span><br>
+                <code class="support-01">fa-regular fa-file-zip</code><br>
+                <span class="support-01">A ZIP file.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-files" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Documents</span><br>
+                <code class="support-01">fa-regular fa-files</code><br>
+                <span class="support-01">Generic documents or files.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-down-to-bracket" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Download</span><br>
+                <code class="support-01">fa-regular fa-arrow-down-to-bracket</code><br>
+                <span class="support-01">Download a file.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-export" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Export</span><br>
+                <code class="support-01">fa-regular fa-file-export</code><br>
+                <span class="support-01">Export data or files out of the system.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-file-import" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Import</span><br>
+                <code class="support-01">fa-regular fa-file-import</code><br>
+                <span class="support-01">Bring data or files into the system.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-box-open" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Product</span><br>
+                <code class="support-01">fa-regular fa-box-open</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-up-from-bracket" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Upload</span><br>
+                <code class="support-01">fa-regular fa-arrow-up-from-bracket</code><br>
+                <span class="support-01">Upload a file.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Financial <span class="support-01">(2)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-credit-card" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Credit-card</span><br>
+                <code class="support-01">fa-regular fa-credit-card</code><br>
+                <span class="support-01">Payment or financial transaction.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-sterling-sign" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Pound</span><br>
+                <code class="support-01">fa-regular fa-sterling-sign</code><br>
+                <span class="support-01">British currency.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Formatting <span class="support-01">(8)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Bin</span><br>
+                <code class="support-01">fa-regular fa-trash-can</code><br>
+                <span class="support-01">Delete an item.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-small" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Bullet</span><br>
+                <code class="support-01">fa-regular fa-circle-small</code><br>
+                <span class="support-01">Bullet point or marker.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-small" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Bullet-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-small</code><br>
+                <span class="support-01">Bullet point or marker.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Circle</span><br>
+                <code class="support-01">fa-regular fa-circle</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Circle-solid</span><br>
+                <code class="support-01">fa-solid fa-circle</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-pencil" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Edit</span><br>
+                <code class="support-01">fa-regular fa-pencil</code><br>
+                <span class="support-01">Edit or modify content.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-list" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">List</span><br>
+                <code class="support-01">fa-regular fa-list</code><br>
+                <span class="support-01">Display items as a list.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-floppy-disk" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Save</span><br>
+                <code class="support-01">fa-regular fa-floppy-disk</code><br>
+                <span class="support-01">Save progress or data.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Instruments <span class="support-01">(1)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-wrench" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Tools</span><br>
+                <code class="support-01">fa-regular fa-wrench</code><br>
+                <span class="support-01">Tools, settings, or configuration.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Insurance <span class="support-01">(4)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-car-bolt" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Car-windscreen</span><br>
+                <code class="support-01">fa-regular fa-car-bolt</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-key" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Key</span><br>
+                <code class="support-01">fa-regular fa-key</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-paw" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Pet</span><br>
+                <code class="support-01">fa-regular fa-paw</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-input-text" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Reg-plate</span><br>
+                <code class="support-01">fa-regular fa-input-text</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Misc <span class="support-01">(1)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-ghost" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Temporary</span><br>
+                <code class="support-01">fa-regular fa-ghost</code><br>
+                <span class="support-01">Temporary placeholder icon.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Navigation <span class="support-01">(17)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-left" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Arrow-left</span><br>
+                <code class="support-01">fa-regular fa-arrow-left</code><br>
+                <span class="support-01">Navigate back or return to previous.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Arrow-right</span><br>
+                <code class="support-01">fa-regular fa-arrow-right</code><br>
+                <span class="support-01">Navigate forward or indicate a link to another page.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Caret-down</span><br>
+                <code class="support-01">fa-solid fa-caret-down</code><br>
+                <span class="support-01">Expand or collapse dropdown menus downward.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-caret-left" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Caret-left</span><br>
+                <code class="support-01">fa-solid fa-caret-left</code><br>
+                <span class="support-01">Expand or collapse dropdown menus leftward.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-caret-right" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Caret-right</span><br>
+                <code class="support-01">fa-solid fa-caret-right</code><br>
+                <span class="support-01">Expand or collapse dropdown menus rightward.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-caret-up" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Caret-up</span><br>
+                <code class="support-01">fa-solid fa-caret-up</code><br>
+                <span class="support-01">Expand or collapse dropdown menus upward.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-chevron-down" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Chevron-down</span><br>
+                <code class="support-01">fa-regular fa-chevron-down</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Chevron-left</span><br>
+                <code class="support-01">fa-regular fa-chevron-left</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Chevron-right</span><br>
+                <code class="support-01">fa-regular fa-chevron-right</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-chevron-up" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Chevron-up</span><br>
+                <code class="support-01">fa-regular fa-chevron-up</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-xmark" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Close</span><br>
+                <code class="support-01">fa-regular fa-xmark</code><br>
+                <span class="support-01">Dismiss, close, or clear an item.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-house" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Home</span><br>
+                <code class="support-01">fa-regular fa-house</code><br>
+                <span class="support-01">Represents a house or home insurance.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-bars" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Menu</span><br>
+                <code class="support-01">fa-regular fa-bars</code><br>
+                <span class="support-01">Open or show navigation menu.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-minus" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Minus</span><br>
+                <code class="support-01">fa-regular fa-minus</code><br>
+                <span class="support-01">Remove or decrease a value.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-ellipsis" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Overflow-menu-horizontal</span><br>
+                <code class="support-01">fa-regular fa-ellipsis</code><br>
+                <span class="support-01">Show additional options.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Overflow-menu-vertical</span><br>
+                <code class="support-01">fa-regular fa-ellipsis-vertical</code><br>
+                <span class="support-01">Show additional options.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-plus" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Plus</span><br>
+                <code class="support-01">fa-regular fa-plus</code><br>
+                <span class="support-01">Add or increase a value.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Operations <span class="support-01">(20)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-swap-arrows" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Change</span><br>
+                <code class="support-01">fa-regular fa-swap-arrows</code><br>
+                <span class="support-01">Swap, replace, or exchange.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-grip-dots" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Drag-horizontal</span><br>
+                <code class="support-01">fa-regular fa-grip-dots</code><br>
+                <span class="support-01">Drag to reorder horizontally.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-grip-dots-vertical" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Drag-vertical</span><br>
+                <code class="support-01">fa-regular fa-grip-dots-vertical</code><br>
+                <span class="support-01">Drag to reorder vertically.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">External-link</span><br>
+                <code class="support-01">fa-regular fa-arrow-up-right-from-square</code><br>
+                <span class="support-01">Opens in a new tab or external site.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-bars-filter" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Filter</span><br>
+                <code class="support-01">fa-regular fa-bars-filter</code><br>
+                <span class="support-01">Narrow or refine visible content based on selected criteria.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-flag" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Flag</span><br>
+                <code class="support-01">fa-regular fa-flag</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-rocket" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Launch</span><br>
+                <code class="support-01">fa-regular fa-rocket</code><br>
+                <span class="support-01">Publish or send content live.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-rocket-launch" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Launch-hover</span><br>
+                <code class="support-01">fa-regular fa-rocket-launch</code><br>
+                <span class="support-01">Hover variant for launch.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Login</span><br>
+                <code class="support-01">fa-regular fa-arrow-right-to-bracket</code><br>
+                <span class="support-01">Sign in or enter the application.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-right-from-bracket" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Logout</span><br>
+                <code class="support-01">fa-regular fa-arrow-right-from-bracket</code><br>
+                <span class="support-01">Sign out or exit the application.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrow-rotate-right" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Redo</span><br>
+                <code class="support-01">fa-regular fa-arrow-rotate-right</code><br>
+                <span class="support-01">Restores the last undone action.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-arrows-rotate" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Renew</span><br>
+                <code class="support-01">fa-regular fa-arrows-rotate</code><br>
+                <span class="support-01">Refresh, reload, or renew.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Search</span><br>
+                <code class="support-01">fa-regular fa-magnifying-glass</code><br>
+                <span class="support-01">Find or search content.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-shield" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Shield</span><br>
+                <code class="support-01">fa-regular fa-shield</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-shield-check" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Shield-check</span><br>
+                <code class="support-01">fa-regular fa-shield-check</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-shield-xmark" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Shield-cross</span><br>
+                <code class="support-01">fa-regular fa-shield-xmark</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-shield-plus" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Shield-plus</span><br>
+                <code class="support-01">fa-regular fa-shield-plus</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-sort" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Sort</span><br>
+                <code class="support-01">fa-solid fa-sort</code><br>
+                <span class="support-01">Sorting controls.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-sort-down" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Sort-down</span><br>
+                <code class="support-01">fa-solid fa-sort-down</code><br>
+                <span class="support-01">Sort descending.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-sort-up" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Sort-up</span><br>
+                <code class="support-01">fa-solid fa-sort-up</code><br>
+                <span class="support-01">Sort ascending.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Status <span class="support-01">(13)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-check" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Check</span><br>
+                <code class="support-01">fa-regular fa-check</code><br>
+                <span class="support-01">Indicates active, confirmation, or task completion.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-exclamation" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Error</span><br>
+                <code class="support-01">fa-regular fa-circle-exclamation</code><br>
+                <span class="support-01">Error state.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Error-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-exclamation</code><br>
+                <span class="support-01">Error state (emphasised).</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-question" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Help</span><br>
+                <code class="support-01">fa-regular fa-circle-question</code><br>
+                <span class="support-01">Help or more information.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Help-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-question</code><br>
+                <span class="support-01">Help or more information (emphasised).</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-info" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Info</span><br>
+                <code class="support-01">fa-regular fa-circle-info</code><br>
+                <span class="support-01">General information.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Info-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-info</code><br>
+                <span class="support-01">General information (emphasised).</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-xmark" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Misuse</span><br>
+                <code class="support-01">fa-regular fa-circle-xmark</code><br>
+                <span class="support-01">Incorrect or invalid.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Misuse-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-xmark</code><br>
+                <span class="support-01">Incorrect or invalid (emphasised).</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-circle-check" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Success</span><br>
+                <code class="support-01">fa-regular fa-circle-check</code><br>
+                <span class="support-01">Success state.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Success-solid</span><br>
+                <code class="support-01">fa-solid fa-circle-check</code><br>
+                <span class="support-01">Success state (emphasised).</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-triangle-exclamation" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Warning</span><br>
+                <code class="support-01">fa-regular fa-triangle-exclamation</code><br>
+                <span class="support-01">Warning or caution.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Warning-solid</span><br>
+                <code class="support-01">fa-solid fa-triangle-exclamation</code><br>
+                <span class="support-01">Warning or caution (emphasised).</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Technology <span class="support-01">(5)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-calculator" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Calculator</span><br>
+                <code class="support-01">fa-regular fa-calculator</code><br>
+                <span class="support-01">Mathematical calculation.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Email</span><br>
+                <code class="support-01">fa-regular fa-envelope</code><br>
+                <span class="support-01">Email or messaging.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-lock-keyhole" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Password</span><br>
+                <code class="support-01">fa-regular fa-lock-keyhole</code><br>
+                <span class="support-01">Enter or protect with password.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-phone" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Phone</span><br>
+                <code class="support-01">fa-regular fa-phone</code><br>
+                <span class="support-01">Phone or call action.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-share" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Share</span><br>
+                <code class="support-01">fa-regular fa-share</code><br>
+                <span class="support-01">Share content through available channels.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Time <span class="support-01">(3)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-calendar-day" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Calendar</span><br>
+                <code class="support-01">fa-regular fa-calendar-day</code><br>
+                <span class="support-01">Calendar date selection.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-clock-rotate-left" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Recent</span><br>
+                <code class="support-01">fa-regular fa-clock-rotate-left</code><br>
+                <span class="support-01">Recently viewed or recent history.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-clock" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Time</span><br>
+                <code class="support-01">fa-regular fa-clock</code><br>
+                <span class="support-01">Represent time.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Toggle <span class="support-01">(3)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-bell" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Notification</span><br>
+                <code class="support-01">fa-regular fa-bell</code><br>
+                <span class="support-01">Notifications or alerts.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-eye" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">View</span><br>
+                <code class="support-01">fa-regular fa-eye</code><br>
+                <span class="support-01">Show content.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-eye-slash" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">View-off</span><br>
+                <code class="support-01">fa-regular fa-eye-slash</code><br>
+                <span class="support-01">Hide content.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">Travel <span class="support-01">(2)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-car" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Car</span><br>
+                <code class="support-01">fa-regular fa-car</code><br>
+                <span class="support-01">Car or vehicle.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-location-dot" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Location</span><br>
+                <code class="support-01">fa-regular fa-location-dot</code><br>
+                <span class="support-01">Show location or place.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="sg-block">
+          <h3 class="title-02">User <span class="support-01">(5)</span></h3>
+          <div class="sg-icons">
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-universal-access" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Accessibility</span><br>
+                <code class="support-01">fa-regular fa-universal-access</code><br>
+                <span class="support-01">Represents accessibility or universal access features.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-handshake" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Agreement</span><br>
+                <code class="support-01">fa-regular fa-handshake</code><br>
+                <span class="support-01"><span class="support-01">No documented role</span></span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-user" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">User</span><br>
+                <code class="support-01">fa-regular fa-user</code><br>
+                <span class="support-01">Represents a single user profile.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-users" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">User-group</span><br>
+                <code class="support-01">fa-regular fa-users</code><br>
+                <span class="support-01">Represents a team, or group.</span>
+              </span>
+            </div>
+            <div class="sg-icon-cell">
+              <span class="sg-icon-glyph"><i class="fa-regular fa-user-group" aria-hidden="true"></i></span>
+              <span class="sg-meta" style="min-width:0;">
+                <span class="label-01">Users</span><br>
+                <code class="support-01">fa-regular fa-user-group</code><br>
+                <span class="support-01">Represents multiple users.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="button">
+        <div class="text-block">
+          <h2 class="headline-02">Button</h2>
+          <p class="body-02">
+            Buttons trigger actions; links navigate. Buckholt documents three types — primary for the
+            principal action, secondary for supporting actions, ghost for supplementary and opposing
+            actions such as Cancel. Danger is a modifier layered on any of them, not a fourth type.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Types and the danger modifier</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Standard</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary"><span class="button-label">Save changes</span></button>
+                <button type="button" class="btn btn-secondary"><span class="button-label">Save draft</span></button>
+                <button type="button" class="btn btn-ghost"><span class="button-label">Cancel</span></button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">With <code>.btn-danger</code></span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-danger"><span class="button-label">Delete record</span></button>
+                <button type="button" class="btn btn-secondary btn-danger"><span class="button-label">Delete record</span></button>
+                <button type="button" class="btn btn-ghost btn-danger"><span class="button-label">Delete record</span></button>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;button type="button" class="btn btn-primary"&gt;
+  &lt;span class="button-label"&gt;Save changes&lt;/span&gt;
+&lt;/button&gt;</code>
+          <p class="support-01">
+            <code>.button-label</code> is a structural hook as well as a wrapper — Buckholt uses its
+            presence to tell labelled and icon-only layouts apart, so it must not be omitted.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Sizes</h3>
+          <p class="body-02">
+            <code>.btn-sm</code>, no modifier, <code>.btn-lg</code> — 32px, 40px and 48px minimum height.
+            Small suits confined layouts; large suits greater emphasis such as the end of a form.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-sm"><span class="button-label">Save changes</span></button>
+                <button type="button" class="btn btn-secondary btn-sm"><span class="button-label">Save draft</span></button>
+                <button type="button" class="btn btn-ghost btn-sm"><span class="button-label">Cancel</span></button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Default</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary"><span class="button-label">Save changes</span></button>
+                <button type="button" class="btn btn-secondary"><span class="button-label">Save draft</span></button>
+                <button type="button" class="btn btn-ghost"><span class="button-label">Cancel</span></button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Large</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-lg"><span class="button-label">Save changes</span></button>
+                <button type="button" class="btn btn-secondary btn-lg"><span class="button-label">Save draft</span></button>
+                <button type="button" class="btn btn-ghost btn-lg"><span class="button-label">Cancel</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Labelled buttons with icons</h3>
+          <p class="body-02">
+            A <code>.btn-icon</code> wrapper sits before <code>.button-label</code>. Buckholt trims 4px
+            from the leading padding, and the icon inherits the label's colour and size. Icons are
+            optional, sit to the left of the label, and must relate directly to the action.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small / default / large</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-sm">
+                  <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                  <span class="button-label">Create document</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                  <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                  <span class="button-label">Create document</span>
+                </button>
+                <button type="button" class="btn btn-primary btn-lg">
+                  <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                  <span class="button-label">Create document</span>
+                </button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Across types</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-secondary">
+                  <div class="btn-icon"><i class="fa-regular fa-copy" aria-hidden="true"></i></div>
+                  <span class="button-label">Copy document</span>
+                </button>
+                <button type="button" class="btn btn-ghost">
+                  <div class="btn-icon"><i class="fa-regular fa-arrow-down-to-bracket" aria-hidden="true"></i></div>
+                  <span class="button-label">Download</span>
+                </button>
+                <button type="button" class="btn btn-ghost btn-danger">
+                  <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                  <span class="button-label">Delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;button type="button" class="btn btn-primary"&gt;
+  &lt;div class="btn-icon"&gt;
+    &lt;i class="fa-regular fa-plus" aria-hidden="true"&gt;&lt;/i&gt;
+  &lt;/div&gt;
+  &lt;span class="button-label"&gt;Create document&lt;/span&gt;
+&lt;/button&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Icon-only buttons</h3>
+          <p class="body-02">
+            An icon-only button is a <code>.btn</code> containing <code>.btn-icon</code> and no
+            <code>.button-label</code>. That absence is the runtime trigger: Buckholt selects them with
+            <code>.btn:not(:has(.button-label))</code> and squares them to 40px, or 32px at
+            <code>.btn-sm</code>. Default and small are the only documented icon-only sizes.
+          </p>
+          <ul class="sg-rules body-02">
+            <li>Use only where the icon is standardised and clearly recognisable, and use sparingly.</li>
+            <li>Prefer a toolbar pattern when several compact icon actions are needed.</li>
+            <li>Provide an accessible name, and a tooltip explaining the action is always required.</li>
+          </ul>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Default</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary" aria-label="Search" data-bs-toggle="tooltip" data-bs-title="Search" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-secondary" aria-label="Settings" data-bs-toggle="tooltip" data-bs-title="Settings" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-gear" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-ghost" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                </button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-sm" aria-label="Search" data-bs-toggle="tooltip" data-bs-title="Search" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" aria-label="Settings" data-bs-toggle="tooltip" data-bs-title="Settings" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-gear" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-ghost btn-sm" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                </button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Danger modifier</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-danger" aria-label="Delete" data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-ghost btn-danger" aria-label="Delete" data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top" data-bs-trigger="hover">
+                  <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                </button>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;button
+  type="button"
+  class="btn btn-ghost"
+  aria-label="Search"
+  data-bs-toggle="tooltip"
+  data-bs-title="Search"
+  data-bs-placement="right"
+  data-bs-trigger="hover"
+&gt;
+  &lt;div class="btn-icon"&gt;
+    &lt;i class="fa-regular fa-magnifying-glass" aria-hidden="true"&gt;&lt;/i&gt;
+  &lt;/div&gt;
+&lt;/button&gt;</code>
+          <p class="support-01">
+            The accessible name uses <code>aria-label</code>, not <code>.button-label</code>, because
+            adding that element would convert the control back to a labelled button. The documented
+            trigger is <code>hover</code> only, so the tooltip does not appear on keyboard focus —
+            the accessible name still does.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Disabled</h3>
+          <p class="body-02">
+            The native <code>disabled</code> attribute — no <code>aria-disabled</code> substitute and no
+            custom dimming. Buckholt keeps the resting colours at 65% opacity and removes interaction.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Types</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary" disabled><span class="button-label">Save changes</span></button>
+                <button type="button" class="btn btn-secondary" disabled><span class="button-label">Save draft</span></button>
+                <button type="button" class="btn btn-ghost" disabled><span class="button-label">Cancel</span></button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Danger modifier</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary btn-danger" disabled><span class="button-label">Delete record</span></button>
+                <button type="button" class="btn btn-secondary btn-danger" disabled><span class="button-label">Delete record</span></button>
+                <button type="button" class="btn btn-ghost btn-danger" disabled><span class="button-label">Delete record</span></button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Labelled with icon</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary" disabled>
+                  <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                  <span class="button-label">Create document</span>
+                </button>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Icon-only</span>
+              <div class="button-set">
+                <button type="button" class="btn btn-primary" disabled aria-label="Search">
+                  <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
+                </button>
+                <button type="button" class="btn btn-ghost" disabled aria-label="Edit">
+                  <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                </button>
+              </div>
+              <span class="support-01">Kept in a separate set — mixing icon-only and labelled controls in one set is not allowed, and would also restore 8px spacing.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Button sets</h3>
+          <p class="body-02">
+            Two or more related buttons go inside <code>.button-set</code>. Buckholt binds set layout to
+            <code>[class$=-set]</code> / <code>[class*="-set "]</code> with <code>[class|=button]</code>,
+            so <code>button-set</code> must be the first class on the element — a utility class in front
+            of it silently disables the set rules.
+          </p>
+          <ul class="sg-rules body-02">
+            <li>8px spacing, and 8px row spacing when the set wraps.</li>
+            <li>Primary sits on the outer edge; secondary and ghost sit inside.</li>
+            <li>Never two high-emphasis buttons in one set.</li>
+            <li>Beyond three calls to action, prefer ghost over repeated secondary.</li>
+            <li>Do not mix icon-only and labelled controls in the same set.</li>
+          </ul>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Standard set</span>
+            <div class="button-set">
+              <button type="button" class="btn btn-primary"><span class="button-label">Accept all</span></button>
+              <button type="button" class="btn btn-secondary"><span class="button-label">Customise</span></button>
+              <button type="button" class="btn btn-ghost"><span class="button-label">Reject all</span></button>
+            </div>
+          </div>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">More than three actions — ghost preferred</span>
+            <div class="button-set">
+              <button type="button" class="btn btn-primary"><span class="button-label">Publish</span></button>
+              <button type="button" class="btn btn-ghost"><span class="button-label">Save draft</span></button>
+              <button type="button" class="btn btn-ghost"><span class="button-label">Preview</span></button>
+              <button type="button" class="btn btn-ghost"><span class="button-label">Discard</span></button>
+            </div>
+          </div>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Consistent icon use across a set</span>
+            <div class="button-set">
+              <button type="button" class="btn btn-primary">
+                <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                <span class="button-label">Create account</span>
+              </button>
+              <button type="button" class="btn btn-secondary">
+                <div class="btn-icon"><i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i></div>
+                <span class="button-label">Log in</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Icon-only set — spacing tightens to 4px automatically</span>
+            <p class="support-01">
+              Buckholt narrows the gap with
+              <code>[class|=button]:has(.btn-icon):not(:has(.button-label))</code>, so 4px applies only
+              when the set is entirely icon-only. That is the same rule enforcing "do not mix icon-only
+              and labelled controls" — mixing them silently restores 8px.
+            </p>
+            <div class="button-set">
+              <button type="button" class="btn btn-ghost" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top" data-bs-trigger="hover">
+                <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+              </button>
+              <button type="button" class="btn btn-ghost" aria-label="Copy" data-bs-toggle="tooltip" data-bs-title="Copy" data-bs-placement="top" data-bs-trigger="hover">
+                <div class="btn-icon"><i class="fa-regular fa-copy" aria-hidden="true"></i></div>
+              </button>
+              <button type="button" class="btn btn-ghost" aria-label="Show additional options" data-bs-toggle="tooltip" data-bs-title="Show additional options" data-bs-placement="top" data-bs-trigger="hover">
+                <div class="btn-icon"><i class="fa-regular fa-ellipsis" aria-hidden="true"></i></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="sg-panel sg-narrow">
+            <span class="label-01 sg-caption">Stacked — full width</span>
+            <div class="button-set button-set-stacked">
+              <button type="button" class="btn btn-primary">
+                <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+                <span class="button-label">Create account</span>
+              </button>
+              <button type="button" class="btn btn-secondary">
+                <div class="btn-icon"><i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i></div>
+                <span class="button-label">Log in</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">States, focus and keyboard</h3>
+          <p class="body-02">
+            Native buttons, so Enter and Space activate them. Tab through the row to see Buckholt's focus
+            treatment. Resting primary and secondary carry a deliberate 3px bottom border
+            (<code>1px + 0.125rem</code>) which returns to 1px on focus and active; ghost stays 1px.
+          </p>
+          <div class="sg-panel">
+            <div class="button-set">
+              <button type="button" class="btn btn-primary"><span class="button-label">First</span></button>
+              <button type="button" class="btn btn-secondary"><span class="button-label">Second</span></button>
+              <button type="button" class="btn btn-ghost"><span class="button-label">Third</span></button>
+              <button type="button" class="btn btn-primary btn-danger"><span class="button-label">Fourth</span></button>
+              <button type="button" class="btn btn-primary" disabled><span class="button-label">Skipped when disabled</span></button>
+            </div>
+          </div>
+          <div class="sg-issue">
+            <div class="text-block">
+              <h4 class="title-02">Known issue — focus falls through to Bootstrap</h4>
+              <p class="body-02">
+                Click any button above with a mouse, then move the pointer away. Buckholt styles focus only
+                through <code>:focus-visible</code>, while Bootstrap styles plain <code>:focus</code> for
+                the same class names. A mouse click sets <code>:focus</code> but not
+                <code>:focus-visible</code>, so Bootstrap's colours win — most visibly on secondary, which
+                turns grey. Keyboard focus is unaffected. Recorded in
+                <code>discrepancies/known-issues.md</code>; the fix belongs in <code>css/buckholt.css</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="link">
+        <div class="text-block">
+          <h2 class="headline-02">Link</h2>
+          <p class="body-02">
+            Links navigate — to another page, a location on this page, an email address or a telephone
+            number. Never use a link for an action that modifies data, changes state or alters the
+            display; that is a Button. Links are intentionally lightweight, so avoid overusing them.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Inline link</h3>
+          <p class="body-02">
+            A plain anchor with no Link-specific class, underlined so it stays distinguishable from
+            surrounding text. Inline links should not be used in isolation and should never carry icons.
+          </p>
+          <div class="sg-panel">
+            <div class="text-block">
+              <p>Read the <a href="#link">privacy policy</a> before continuing.</p>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;p&gt;Read the &lt;a href="/privacy"&gt;privacy policy&lt;/a&gt; before continuing.&lt;/p&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Standalone link</h3>
+          <p class="body-02">
+            <code>.link-standalone</code> is used independently of paragraph text. It has no underline at
+            rest; the underline appears on hover, focus and active. It may take an icon where that helps
+            communicate navigation or distinguishes it from a nearby ghost button.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Plain</span>
+              <a class="link-standalone" href="#link">Continue</a>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">With forward-navigation icon</span>
+              <a class="link-standalone" href="#link">
+                <span class="icon"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>
+                Continue
+              </a>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Opens in a new tab</span>
+              <a class="link-standalone" href="https://example.com" target="_blank" rel="noopener">
+                <span class="icon"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+                Open external resource
+              </a>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;a class="link-standalone" href="/next-page"&gt;
+  &lt;span class="icon"&gt;
+    &lt;i class="fa-regular fa-arrow-right"&gt;&lt;/i&gt;
+  &lt;/span&gt;
+  Continue
+&lt;/a&gt;</code>
+          <p class="support-01">
+            The external-link icon is used whenever a link opens a new tab, whether the destination is
+            inside the product or outside it. The icon is supplementary — the label and surrounding
+            context must make the destination clear on their own.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Link sets</h3>
+          <p class="body-02">
+            <code>.link-set</code> with <code>.linkset-item</code> children groups related standalone
+            links, with 1rem horizontal and 0.5rem row spacing supplied by Buckholt. Horizontal sets suit
+            main content; <code>.link-set-stacked</code> suits side navigation and supplementary links
+            within tiles.
+          </p>
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Horizontal</span>
+            <ul class="link-set">
+              <li class="linkset-item"><a class="link-standalone" href="#link">Privacy policy</a></li>
+              <li class="linkset-item"><a class="link-standalone" href="#link">Terms &amp; conditions</a></li>
+              <li class="linkset-item"><a class="link-standalone" href="#link">Manage cookie consent</a></li>
+            </ul>
+          </div>
+          <div class="sg-panel sg-narrow">
+            <span class="label-01 sg-caption">Stacked, with icons</span>
+            <ul class="link-set link-set-stacked">
+              <li class="linkset-item">
+                <a class="link-standalone" href="#link">
+                  <span class="icon"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>
+                  Privacy policy
+                </a>
+              </li>
+              <li class="linkset-item">
+                <a class="link-standalone" href="#link">
+                  <span class="icon"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>
+                  Terms &amp; conditions
+                </a>
+              </li>
+              <li class="linkset-item">
+                <a class="link-standalone" href="#link">
+                  <span class="icon"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>
+                  Manage cookie consent
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">States</h3>
+          <p class="body-02">
+            Hover, focus and active are supplied by Buckholt — hover and active add the underline to a
+            standalone link, and active text and icon use Text primary (<code>#1a1a1a</code>). Tab into
+            the links above to check the keyboard focus treatment.
+          </p>
+          <div class="sg-issue">
+            <div class="text-block">
+              <h4 class="title-02">Known issue — visited state is not implemented</h4>
+              <p class="body-02">
+                The Link documentation defines a visited state of Expressive secondary deep
+                (<code>#5731d6</code>) for both link text and icon. The current runtime contains no
+                <code>:visited</code> rule at all, so visited links render exactly like unvisited ones.
+                The tokens that would drive it, <code>--link-visited</code> and
+                <code>--link-icon-visited</code>, are both set to <code>#1748d0</code> rather than the
+                documented colour, and nothing consumes them. Recorded in
+                <code>discrepancies/known-issues.md</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="text-block">
+        <div class="text-block">
+          <h2 class="headline-02">Text block</h2>
+          <p class="body-02">
+            Buckholt's written-content component. <code>.text-block</code> manages text width and the
+            spacing between headings and paragraphs, so that spacing should never be recreated locally. A
+            Text block must contain at least a heading, a paragraph, or both.
+          </p>
+          <p class="body-02">
+            Heading level and heading style are separate decisions: pick the semantic <code>h1</code>–
+            <code>h6</code> from page hierarchy, then pick the visual class from the type sets. Never skip
+            a level to obtain a size.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Heading treatments</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Display</span>
+              <div class="text-block">
+                <h4 class="display-03">Display heading</h4>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Headline</span>
+              <div class="text-block">
+                <h4 class="headline-03">Headline heading</h4>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Title</span>
+              <div class="text-block">
+                <h4 class="title-03">Title heading</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Headings, paragraphs and eyebrow</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Heading and paragraphs</span>
+              <div class="text-block">
+                <h4 class="headline-03">Heading text</h4>
+                <p>First paragraph of body content.</p>
+                <p>Second paragraph of body content.</p>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Eyebrow above the heading</span>
+              <div class="text-block">
+                <span class="eyebrow">Eyebrow text</span>
+                <h4 class="headline-03">Heading text</h4>
+                <p>Paragraph text.</p>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;div class="text-block"&gt;
+  &lt;span class="eyebrow"&gt;Eyebrow text&lt;/span&gt;
+  &lt;h2 class="headline-03"&gt;Heading text&lt;/h2&gt;
+  &lt;p&gt;Paragraph text.&lt;/p&gt;
+&lt;/div&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Icons</h3>
+          <p class="body-02">
+            An inline heading icon uses <code>&lt;span class="icon"&gt;</code>. An icon block sits above
+            the heading — the default size pairs with title headings and <code>.icon-block-xl</code> with
+            headline headings.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Inline heading icon</span>
+              <div class="text-block">
+                <h4 class="headline-03">
+                  <span class="icon"><i class="fa-regular fa-paw" aria-hidden="true"></i></span>
+                  Why dogs make the best pets
+                </h4>
+                <p>Dogs are loyal, loving, and always ready to brighten your day.</p>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Icon block, extra large, with a headline</span>
+              <div class="text-block">
+                <div class="icon-block icon-block-xl">
+                  <i class="fa-regular fa-shield-check" aria-hidden="true"></i>
+                </div>
+                <h4 class="headline-02">Heading text</h4>
+                <p>Paragraph text.</p>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Icon block, default, with a title</span>
+              <div class="text-block">
+                <div class="icon-block">
+                  <i class="fa-regular fa-house" aria-hidden="true"></i>
+                </div>
+                <h4 class="title-02">Heading text</h4>
+                <p>Paragraph text.</p>
+              </div>
+            </div>
+          </div>
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Eyebrow with an inline heading icon — a valid combination</span>
+            <div class="text-block">
+              <span class="eyebrow">Furry companions</span>
+              <h4 class="headline-02">
+                <span class="icon"><i class="fa-regular fa-paw" aria-hidden="true"></i></span>
+                Why dogs make the best pets
+              </h4>
+              <p>Dogs are loyal, loving, and always ready to brighten your day.</p>
+            </div>
+          </div>
+          <ul class="sg-rules body-02">
+            <li>Icon blocks must be followed by a heading.</li>
+            <li>Do not combine an icon block with eyebrow text.</li>
+            <li>Do not combine an icon block and an inline heading icon in the same Text block.</li>
+            <li>Use inline icons, not icon blocks, with display-sized headings.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sg-section" id="issues">
+        <div class="text-block">
+          <h2 class="headline-02">Known runtime issues</h2>
+          <p class="body-02">
+            Differences between the documented Buckholt behaviour and what the runtime renders. This is a
+            reading view — <code>discrepancies/known-issues.md</code> stays the canonical record, and new
+            findings should be added there first. None of them is worked around on this page.
+          </p>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Button focus falls through to Bootstrap after a mouse click</h3>
+            <p class="body-02">
+              Buckholt styles the Button focus state only through <code>:focus-visible</code>, while
+              Bootstrap 5.1.3 styles plain <code>:focus</code> for the button classes Buckholt reuses. A
+              mouse click sets <code>:focus</code> but deliberately not <code>:focus-visible</code>, so
+              Bootstrap's colours apply unopposed — secondary renders grey <code>#5c636a</code> with a
+              white label. Primary, ghost and the danger combinations are affected too. Keyboard focus is
+              correct. Fix belongs in <code>css/buckholt.css</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Link visited state is not implemented</h3>
+            <p class="body-02">
+              The documentation defines a visited state of <code>#5731d6</code> for link text and icon.
+              The runtime contains no <code>:visited</code> rule, so visited links are indistinguishable
+              from unvisited ones, and <code>--link-visited</code> / <code>--link-icon-visited</code> are
+              set to <code>#1748d0</code> rather than the documented colour.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Radius <code>full</code> name and value disagree</h3>
+            <p class="body-02">
+              The documentation defines <code>full</code> as <code>2rem</code> / 32px. The runtime
+              <code>--border-radius-full</code> is <code>625rem</code>, with <code>2rem</code> exposed as
+              <code>--border-radius-xxl</code>. Do not remap one name to the other while this stands.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Bootstrap JS bundle: required for the documented icon-only button tooltips. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      .forEach(function (el) { new bootstrap.Tooltip(el); });
+  </script>
+</body>
+</html>

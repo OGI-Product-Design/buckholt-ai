@@ -22,19 +22,20 @@ Treat these as runtime extensions unless and until the documentation explicitly 
 
 For normal Buckholt design decisions, follow the documented Radius scale. A component may still use an additional runtime radius if its own documented/runtime implementation requires it.
 
-## Link visited icon colour
+## Link visited state is not implemented
 
 The Link Style documentation defines the visited state for both link text and icon as **Expressive secondary deep (`#5731d6`)**.
 
-The current compiled runtime instead contains:
+The current compiled runtime contains no `:visited` rule at all, so a visited link is indistinguishable from an unvisited one. The tokens that would drive the state exist but are never consumed, and carry Text active blue rather than the documented colour:
 
 ```css
-a.link-standalone:visited .icon {
-  color: #1748D0;
-}
+--link-visited: #1748d0;
+--link-icon-visited: #1748d0;
 ```
 
-This means a visited standalone link can render its icon in Text active blue while its text follows the documented visited colour.
+The documented colour is present in the runtime as `--expressive-secondary-deep: #5731D6`, but nothing wires it to the link visited tokens.
+
+This supersedes an earlier note describing a specific `a.link-standalone:visited .icon { color: #1748D0 }` rule. That rule is no longer present in the current stylesheet; the gap is now broader, because visited is unstyled entirely rather than styled with the wrong colour.
 
 For design intent, treat `#5731d6` as canonical because it is the documented Link state. Do not create local one-off overrides in generated product UI merely to compensate; the underlying runtime should be corrected deliberately if the team chooses to align implementation with the documentation.
 
