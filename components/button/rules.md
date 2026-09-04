@@ -151,16 +151,17 @@ Rules from the usage documentation:
 - do not repurpose a familiar icon for an unrelated action;
 - use the default icon variation unless the icon is a defined status icon.
 
-The documentation defines common-action icon mappings. Verified examples include:
+For actual icon selection, `../../foundations/iconography/catalogue.md` is the canonical Buckholt mapping. Verified common actions that are present in the catalogue include:
 
 - Add / create: `fa-regular fa-plus`
 - Search: `fa-regular fa-magnifying-glass`
 - Settings: `fa-regular fa-gear`
 - Upload: `fa-regular fa-arrow-up-from-bracket`
-- Save examples: `fa-regular fa-save`
-- Print examples: `fa-regular fa-print`
+- Save: `fa-regular fa-floppy-disk`
 
-When a documented common-action mapping exists, use it rather than the generic `fa-ghost` demonstration glyph.
+The Button documentation may visually demonstrate other familiar Font Awesome actions, but do not promote an icon into the Buckholt component contract unless it also exists in the Buckholt icon catalogue. In particular, Print is not currently present in the catalogue, so agents should not treat `fa-regular fa-print` as a canonical Buckholt mapping.
+
+When a documented catalogue mapping exists, use it rather than the generic `fa-ghost` demonstration glyph.
 
 ## Icon-only buttons
 
@@ -196,6 +197,8 @@ data-bs-trigger="hover"
 ```
 
 A standalone test that demonstrates this behaviour must also load the Bootstrap 5.1.3 JavaScript bundle and initialise `bootstrap.Tooltip` for `[data-bs-toggle="tooltip"]` elements. Do not replace the documented Buckholt tooltip with a native `title` attribute when reproducing Buckholt behaviour.
+
+The documented trigger is currently `hover` only. That means the visual tooltip is not shown on keyboard focus, although the button must still have an accessible name such as `aria-label`. Preserve the documented value when reproducing Buckholt exactly; if keyboard-visible tooltip behaviour is being accessibility-reviewed, flag this source behaviour for Product Design rather than silently changing the component contract.
 
 ## Button sets
 
