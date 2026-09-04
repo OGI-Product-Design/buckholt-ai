@@ -16,7 +16,7 @@ This repository is deliberately evidence-led. It should teach coding agents only
 4. `components/<component>/rules.md` — concise component guidance rebuilt from Buckholt documentation plus runtime CSS.
 5. `components/<component>/examples.html` — verified canonical markup examples.
 
-If documentation and runtime CSS disagree, record/report the discrepancy rather than silently deciding that one should replace the other.
+If documentation and runtime CSS disagree, record/report the discrepancy rather than silently deciding that one should replace the other. Verified discrepancies are recorded in `discrepancies/known-issues.md`.
 
 Old SCSS, old token maps, screenshots, Figma and earlier interpreted AI specifications are intentionally excluded from the implementation path unless explicitly requested for investigation.
 
@@ -30,106 +30,37 @@ buckholt-ai/
 │   └── buckholt.css
 ├── foundations/
 │   ├── colour/
-│   │   ├── rules.md
-│   │   ├── palette.md
-│   │   ├── foundation-tokens.md
-│   │   └── contrast.md
-│   └── iconography/
-│       ├── rules.md
-│       └── catalogue.md
+│   ├── iconography/
+│   └── radius/
+│       └── rules.md
+├── discrepancies/
+│   └── known-issues.md
 └── components/
     └── button/
         ├── rules.md
         └── examples.html
 ```
 
-More foundations and components should be added only after their documentation and runtime implementation have been reconciled.
-
 ## Foundation coverage
 
 ### Colour
-
-The Colour foundation covers all four supplied Buckholt colour documentation areas:
-
-- Colour overview and three-tier architecture;
-- Global palette;
-- Foundation/semantic colour roles;
-- Colour contrast and accessibility guidance.
-
-Read:
-
-- `foundations/colour/rules.md`
-- `foundations/colour/palette.md`
-- `foundations/colour/foundation-tokens.md`
-- `foundations/colour/contrast.md`
-
-The palette and semantic values are cross-checked against the current `css/buckholt.css`. Components should use Buckholt semantic/component variables rather than copying raw hex values.
+Read `foundations/colour/` for the global palette, semantic/foundation colour roles and contrast guidance.
 
 ### Iconography
+Read `foundations/iconography/` for Buckholt's Font Awesome v7 usage and the full documented icon catalogue.
 
-The Iconography foundation covers the supplied Buckholt Iconography overview and full Icon catalogue.
+### Radius
+Read `foundations/radius/rules.md` before adding or overriding border radius.
 
-Read:
+The documentation states that larger components generally use larger radii and that components have an appropriate radius applied by default. The documented scale is 4, 6, 8, 16, 24 and 32px for xs, sm, md, lg, xl and `full` respectively.
 
-- `foundations/iconography/rules.md`
-- `foundations/iconography/catalogue.md`
-
-Buckholt uses Font Awesome v7, with regular icons for most applications and deliberate solid/brand mappings where the catalogue specifies them. The catalogue currently records **111 documented Buckholt icons** with their exact Font Awesome classes, Unicode value, category and documented role where supplied.
-
-Agents must use the catalogue before choosing an icon. Do not substitute a visually similar Font Awesome icon when Buckholt already documents the intended mapping.
+The current runtime agrees for xs–xl, but differs at the top end: it exposes `--border-radius-xxl: 2rem`, `--border-radius-full: 625rem` and `--border-radius-round: 50%`. This mismatch is recorded in `discrepancies/known-issues.md`; agents must not silently remap the names.
 
 ## Button coverage
 
-Verified coverage includes:
-
-- `.btn` base behaviour;
-- `.btn-primary`, `.btn-secondary`, `.btn-ghost`;
-- `.btn-danger` as a modifier for primary, secondary and ghost buttons;
-- `.btn-sm`, default/medium and `.btn-lg`;
-- resting, hover, focus, active and disabled behaviour;
-- the intentional 3px clickable bottom border on primary/secondary buttons, returning to 1px for focus/active; ghost stays at the normal border width;
-- `.btn-icon` and `.button-label` structure;
-- icon-only button guidance and required tooltips;
-- button-set layout including `.button-set` and `.button-set-stacked`;
-- usage guidance for hierarchy, content, alignment, sets, icons, icon-only buttons and keyboard interaction.
-
-Button icon choice should now resolve through `foundations/iconography/catalogue.md` rather than duplicating icon mappings inside Button documentation.
-
-The Button Usage, Style and Code & specs documentation have all been supplied and reconciled with `css/buckholt.css`.
+The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons or radius.
 
 ## Runtime dependencies
-
-### Bootstrap CSS
-
-```html
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-```
-
-### Proxima Nova / Proxima Soft
-
-```html
-<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
-```
-
-The compiled Buckholt stylesheet requests `"Proxima-soft", Arial, sans-serif`.
-
-### Font Awesome
-
-```html
-<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
-```
-
-Do not substitute a different icon library.
-
-### Bootstrap JavaScript for interactive Bootstrap behaviours
-
-When a page uses Bootstrap-powered behaviour such as Buckholt tooltips, also load the Bootstrap 5.1.3 bundle:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-```
-
-## Recommended standalone page order
 
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -138,7 +69,11 @@ When a page uses Bootstrap-powered behaviour such as Buckholt tooltips, also loa
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-Add the Bootstrap JS bundle before the closing `</body>` when the page uses tooltips or other Bootstrap interactions.
+For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, also load:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+```
 
 ## Agent behaviour
 
