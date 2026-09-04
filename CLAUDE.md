@@ -6,32 +6,52 @@ Use the Buckholt design system accurately when building UI.
 
 ## Sources of truth
 
-Use these Buckholt sources in this order:
+Use these Buckholt sources together:
 
-1. `css/buckholt.css` — final runtime implementation and styling truth: selectors, states, dimensions and generated behaviour.
-2. `components/<component>/rules.md` — concise component guidance rebuilt from Buckholt documentation and runtime CSS.
-3. `components/<component>/examples.html` — verified canonical markup examples.
-4. The Buckholt component documentation URLs recorded in each component's `rules.md` when more detail is required.
+1. Buckholt documentation — intended usage, hierarchy, accessibility, canonical markup and design-system meaning.
+2. `css/buckholt.css` — current runtime implementation and styling truth for selectors, values, states, dimensions and generated behaviour.
+3. `foundations/<foundation>/` — shared design-system guidance and runtime values reconciled from documentation + CSS.
+4. `components/<component>/rules.md` — component guidance rebuilt from documentation and runtime CSS.
+5. `components/<component>/examples.html` — verified canonical markup examples.
 
-Old SCSS, token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources for this repository unless explicitly requested for investigation.
+Old SCSS, old token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
 
 ## Core rule
 
 **Build with Buckholt. Do not imitate Buckholt.**
 
-Before implementing a Buckholt component:
+Before implementing Buckholt UI:
 
-- read `components/<component>/rules.md`;
-- read `components/<component>/examples.html`;
-- use the real Buckholt classes and verified markup documented there;
-- rely on `css/buckholt.css` for visual implementation and interaction states;
+- read the relevant foundation files when the component depends on colour, typography, spacing, iconography or other shared rules;
+- read `components/<component>/rules.md` and `examples.html` for the component;
+- use the real Buckholt classes, variables and verified markup;
 - do not recreate component styling with custom CSS where Buckholt already provides it.
 
 ## Evidence discipline
 
-If documentation and compiled CSS conflict, report the conflict rather than guessing. The compiled CSS remains final browser/runtime truth for what actually renders.
+If documentation and compiled CSS conflict, report the conflict rather than guessing or silently patching it. The documentation expresses intended Buckholt behaviour; the CSS expresses what the current runtime actually renders.
 
 Do not infer Buckholt classes from Bootstrap naming conventions and do not replace documented Buckholt markup with a preferred alternative unless explicitly asked to improve the design system itself.
+
+## Colour foundation
+
+Before choosing or changing colours, read:
+
+- `foundations/colour/rules.md`
+- `foundations/colour/palette.md`
+- `foundations/colour/foundation-tokens.md`
+- `foundations/colour/contrast.md`
+
+Buckholt colour has three tiers: Global palette -> Foundation roles -> Component colours.
+
+Implementation rules:
+
+- prefer component classes and semantic/foundation CSS variables;
+- do not copy raw palette hex values into component CSS when a Buckholt variable exists;
+- do not substitute Bootstrap semantic colours for Buckholt colour roles;
+- preserve the documented feedback meanings: info, success, warning and error;
+- validate contrast when creating a colour combination not already defined by Buckholt;
+- do not rely on colour alone to communicate important meaning.
 
 ## Custom CSS
 
@@ -51,15 +71,13 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 ```
 
-The compiled Buckholt CSS requests `"Proxima-soft", Arial, sans-serif`.
-
 ### Font Awesome
 
 ```html
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 ```
 
-Do not replace Font Awesome with another icon library. Use the documented icon classes in the component rules/examples rather than generic placeholders when a mapping is available.
+Do not replace Font Awesome with another icon library. Use documented icon classes when a mapping is available.
 
 ### Buckholt CSS
 
@@ -67,13 +85,13 @@ Load `css/buckholt.css` after Bootstrap CSS.
 
 ### Bootstrap JavaScript
 
-For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load the Bootstrap 5.1.3 bundle:
+For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
 
-Buckholt documentation initialises `[data-bs-toggle="tooltip"]` with `bootstrap.Tooltip`. Do not substitute a native `title` tooltip when implementing the documented Buckholt tooltip behaviour unless explicitly asked for a no-JS fallback.
+Do not substitute a native `title` tooltip when implementing documented Buckholt tooltip behaviour unless explicitly asked for a no-JS fallback.
 
 ## Current component coverage
 
@@ -98,4 +116,4 @@ Verified in the current rebuild:
 - button-set behaviour including stacked sets;
 - usage, content, alignment and accessibility guidance.
 
-The Button Usage, Style and Code & specs documentation have all been supplied. Do not treat danger or icon markup as unresolved.
+The Button Usage, Style and Code & specs documentation have all been supplied.
