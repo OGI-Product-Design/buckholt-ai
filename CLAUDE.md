@@ -8,12 +8,12 @@ Use the Buckholt design system accurately when building UI.
 
 Use these Buckholt sources in this order:
 
-1. `css/buckholt.css` — final runtime implementation and styling truth: selectors, states, dimensions, generated classes and dependencies.
-2. `components/<component>/rules.md` — concise component guidance rebuilt from the live Buckholt documentation and runtime CSS.
-3. `components/<component>/examples.html` — only markup examples that have been explicitly verified.
-4. The live Buckholt component documentation URLs recorded in each component's `rules.md` when more detail is required.
+1. `css/buckholt.css` — final runtime implementation and styling truth: selectors, states, dimensions and generated behaviour.
+2. `components/<component>/rules.md` — concise component guidance rebuilt from Buckholt documentation and runtime CSS.
+3. `components/<component>/examples.html` — verified canonical markup examples.
+4. The Buckholt component documentation URLs recorded in each component's `rules.md` when more detail is required.
 
-Old SCSS, token maps, screenshots and previous interpreted AI specifications are **not** implementation sources for this repository unless explicitly requested for investigation. Figma may be used as a visual check, but it must not override verified runtime classes or documented markup.
+Old SCSS, token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources for this repository unless explicitly requested for investigation.
 
 ## Core rule
 
@@ -29,17 +29,9 @@ Before implementing a Buckholt component:
 
 ## Evidence discipline
 
-A component rule may be marked unresolved when the live documentation cannot be retrieved or the exact runtime selector/markup has not been verified.
+If documentation and compiled CSS conflict, report the conflict rather than guessing. The compiled CSS remains final browser/runtime truth for what actually renders.
 
-When something is unresolved:
-
-- say what is missing;
-- do not infer a class from Bootstrap conventions;
-- do not invent icon markup;
-- do not invent danger/destructive modifiers;
-- do not silently fall back to a visually similar custom style.
-
-It is better to leave one example out than to teach future coding agents a false Buckholt pattern.
+Do not infer Buckholt classes from Bootstrap naming conventions and do not replace documented Buckholt markup with a preferred alternative unless explicitly asked to improve the design system itself.
 
 ## Custom CSS
 
@@ -47,19 +39,13 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 
 ## Runtime dependencies
 
-When building a standalone Buckholt page or test harness, mirror the dependency setup shown by the live Buckholt documentation.
-
-### Bootstrap
-
-Load Bootstrap 5.1.3 before Buckholt:
+### Bootstrap CSS
 
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 ```
 
 ### Proxima Nova / Proxima Soft
-
-Load the Adobe Fonts stylesheet used by the live Buckholt documentation:
 
 ```html
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
@@ -69,26 +55,25 @@ The compiled Buckholt CSS requests `"Proxima-soft", Arial, sans-serif`.
 
 ### Font Awesome
 
-Load the Font Awesome kit used by the live Buckholt documentation:
-
 ```html
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 ```
 
-Do not replace Font Awesome with another icon library. Do not guess individual Font Awesome class names when Buckholt's canonical markup has not been verified.
+Do not replace Font Awesome with another icon library. Use the documented icon classes in the component rules/examples rather than generic placeholders when a mapping is available.
 
-### Buckholt
+### Buckholt CSS
 
-Load `css/buckholt.css` after Bootstrap so Buckholt provides the final component styling.
+Load `css/buckholt.css` after Bootstrap CSS.
 
-Recommended standalone order:
+### Bootstrap JavaScript
+
+For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load the Bootstrap 5.1.3 bundle:
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
-<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="css/buckholt.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
+
+Buckholt documentation initialises `[data-bs-toggle="tooltip"]` with `bootstrap.Tooltip`. Do not substitute a native `title` tooltip when implementing the documented Buckholt tooltip behaviour unless explicitly asked for a no-JS fallback.
 
 ## Current component coverage
 
@@ -103,9 +88,14 @@ Verified in the current rebuild:
 
 - base `.btn` behaviour;
 - primary, secondary and ghost variants;
+- `.btn-danger` modifier for primary, secondary and ghost;
 - small/default/large sizing;
-- disabled and focus behaviour;
-- button-set runtime behaviour;
-- live usage, content, alignment and accessibility guidance.
+- resting, hover, focus, active and disabled behaviour;
+- intentional 3px clickable bottom border on primary/secondary, returning to 1px on focus/active; ghost uses the normal border width;
+- `.btn-icon` and `.button-label` structure;
+- documented common-action Font Awesome mappings;
+- icon-only button guidance and required tooltips;
+- button-set behaviour including stacked sets;
+- usage, content, alignment and accessibility guidance.
 
-The canonical danger modifier and exact icon markup remain unresolved until the live Button Code & specs page can be reliably retrieved. Do not guess them.
+The Button Usage, Style and Code & specs documentation have all been supplied. Do not treat danger or icon markup as unresolved.
