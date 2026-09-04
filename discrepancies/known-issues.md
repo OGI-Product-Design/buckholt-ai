@@ -1,16 +1,16 @@
-# Known Buckholt documentation/runtime discrepancies
+# Buckholt documentation/runtime notes
 
-This file records verified differences between Buckholt documentation and the current compiled `css/buckholt.css`.
+The Buckholt documentation website is the primary source of truth for intended Digital Product design-system behaviour.
 
-Do not silently resolve these differences in agent-generated UI. Report them when relevant and follow an explicit project/design-system decision if one is provided later.
+`css/buckholt.css` is the current runtime implementation. It may also contain additional helpers or values added while Buckholt was used to build the company website. Those additions can provide useful flexibility, but they should not automatically be promoted to canonical Buckholt guidance.
 
-## Radius: `full`
+Only record an issue here when a runtime difference is likely to mislead an agent implementing documented Buckholt behaviour.
 
-**Documentation**
+## Radius runtime extensions
 
-The Radius documentation defines `$border-radius-full` as `2rem` / `32px`.
+The Radius documentation defines the intended documented scale through `full` at `2rem` / `32px`.
 
-**Current runtime CSS**
+The runtime CSS additionally exposes:
 
 ```css
 --border-radius-xxl: 2rem;
@@ -18,10 +18,6 @@ The Radius documentation defines `$border-radius-full` as `2rem` / `32px`.
 --border-radius-round: 50%;
 ```
 
-**Status**
+Treat these as runtime extensions unless and until the documentation explicitly adopts them. Do not block implementation merely because they exist.
 
-Unresolved naming/value discrepancy.
-
-**Agent behaviour**
-
-Do not assume the documented `$border-radius-full` maps to the runtime `--border-radius-full`. Inspect the relevant component's documented/runtime behaviour and report the discrepancy if it affects implementation.
+For normal Buckholt design decisions, follow the documented Radius scale. A component may still use an additional runtime radius if its own documented/runtime implementation requires it.
