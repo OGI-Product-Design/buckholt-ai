@@ -33,7 +33,10 @@ buckholt-ai/
 │   ├── iconography/
 │   ├── radius/
 │   ├── shadows/
-│   └── spacing/
+│   ├── spacing/
+│   └── typography/
+│       ├── rules.md
+│       └── type-sets.md
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
@@ -59,9 +62,12 @@ Read `foundations/shadows/rules.md` before adding elevation. Buckholt documents 
 ### Spacing
 Read `foundations/spacing/rules.md` before introducing margins, padding or gaps. It records the documented core spacing scale plus Buckholt's dedicated padding and margin tokens. Prefer tokens over hard-coded spacing values.
 
+### Typography
+Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md` before choosing or changing typography. Buckholt uses Proxima Soft with the documented `Proxima-soft, Arial, sans-serif` stack, a ten-step type scale, and named type sets for display, headline, title, body, support, action, form, label and key-value roles. Prefer the documented type-set class over arbitrary font styling or Bootstrap typography helpers.
+
 ## Button coverage
 
-The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing or other shared styling.
+The first rebuilt component is Button. Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
 
 ## Runtime dependencies
 
