@@ -43,7 +43,10 @@ buckholt-ai/
     ├── button/
     │   ├── rules.md
     │   └── examples.html
-    └── link/
+    ├── link/
+    │   ├── rules.md
+    │   └── examples.html
+    └── text-block/
         ├── rules.md
         └── examples.html
 ```
@@ -77,6 +80,11 @@ Read `components/button/rules.md` and `components/button/examples.html`, plus th
 Read `components/link/rules.md` and `components/link/examples.html`, plus colour, iconography, spacing and typography where relevant. The Link guidance covers inline and standalone links, icon use, new-tab/external-link treatment, interaction states and horizontal/stacked Link sets.
 
 A documented/runtime difference for the visited standalone-link icon is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
+
+### Text block
+Read `components/text-block/rules.md` and `components/text-block/examples.html`, plus Typography, Spacing, Iconography and Colour foundations. Text block covers semantic heading structure, Buckholt display/headline/title type sets, paragraphs, eyebrow text, inline heading icons and icon blocks.
+
+Important composition rules include: use semantic heading levels independently of visual type style; do not combine icon blocks with eyebrow text or inline heading icons; use inline icons rather than icon blocks with display-sized headings.
 
 ## Runtime dependencies
 
