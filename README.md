@@ -10,12 +10,15 @@ This repository is deliberately evidence-led. It should teach coding agents only
 
 ## Sources of truth
 
-1. `css/buckholt.css` — final browser/runtime truth for selectors, states, dimensions and generated behaviour.
-2. `components/<component>/rules.md` — concise usage and implementation guidance rebuilt from Buckholt documentation plus runtime CSS.
-3. `components/<component>/examples.html` — verified canonical markup examples.
-4. The Buckholt component URLs recorded inside each `rules.md` file for deeper reference.
+1. Buckholt documentation — intended usage, hierarchy, accessibility, canonical markup and design-system meaning.
+2. `css/buckholt.css` — current browser/runtime implementation: selectors, values, states, dimensions and generated behaviour.
+3. `foundations/<foundation>/` — shared design-system rules and values extracted from the documentation and reconciled with runtime CSS.
+4. `components/<component>/rules.md` — concise component guidance rebuilt from Buckholt documentation plus runtime CSS.
+5. `components/<component>/examples.html` — verified canonical markup examples.
 
-Old SCSS, token maps, screenshots, Figma and earlier interpreted AI specifications are intentionally excluded from the implementation path unless explicitly requested for investigation. They must not override the current compiled CSS or verified documentation.
+If documentation and runtime CSS disagree, record/report the discrepancy rather than silently deciding that one should replace the other.
+
+Old SCSS, old token maps, screenshots, Figma and earlier interpreted AI specifications are intentionally excluded from the implementation path unless explicitly requested for investigation.
 
 ## Structure
 
@@ -25,17 +28,41 @@ buckholt-ai/
 ├── CLAUDE.md
 ├── css/
 │   └── buckholt.css
+├── foundations/
+│   └── colour/
+│       ├── rules.md
+│       ├── palette.md
+│       ├── foundation-tokens.md
+│       └── contrast.md
 └── components/
     └── button/
         ├── rules.md
         └── examples.html
 ```
 
-More component folders should be added only after the corresponding documentation and runtime implementation have been reconciled.
+More foundations and components should be added only after their documentation and runtime implementation have been reconciled.
+
+## Foundation coverage
+
+### Colour
+
+The Colour foundation now covers all four supplied Buckholt colour documentation areas:
+
+- Colour overview and three-tier architecture;
+- Global palette;
+- Foundation/semantic colour roles;
+- Colour contrast and accessibility guidance.
+
+Read:
+
+- `foundations/colour/rules.md`
+- `foundations/colour/palette.md`
+- `foundations/colour/foundation-tokens.md`
+- `foundations/colour/contrast.md`
+
+The palette and semantic values are cross-checked against the current `css/buckholt.css`. Components should use Buckholt semantic/component variables rather than copying raw hex values.
 
 ## Button coverage
-
-The first rebuilt component is Button.
 
 Verified coverage includes:
 
@@ -57,15 +84,11 @@ The Button Usage, Style and Code & specs documentation have all been supplied an
 
 ### Bootstrap CSS
 
-Load Bootstrap 5.1.3 before Buckholt:
-
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 ```
 
 ### Proxima Nova / Proxima Soft
-
-Use the Adobe Fonts stylesheet shown in the Buckholt documentation source:
 
 ```html
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
@@ -74,8 +97,6 @@ Use the Adobe Fonts stylesheet shown in the Buckholt documentation source:
 The compiled Buckholt stylesheet requests `"Proxima-soft", Arial, sans-serif`.
 
 ### Font Awesome
-
-Use the Font Awesome kit shown by the Buckholt documentation:
 
 ```html
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
@@ -91,8 +112,6 @@ When a page uses Bootstrap-powered behaviour such as Buckholt tooltips, also loa
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
 
-Buckholt's documentation initialises elements with `data-bs-toggle="tooltip"` using `bootstrap.Tooltip`. A standalone page that demonstrates icon-only button tooltips therefore needs the Bootstrap bundle plus tooltip initialisation.
-
 ## Recommended standalone page order
 
 ```html
@@ -106,4 +125,4 @@ Add the Bootstrap JS bundle before the closing `</body>` when the page uses tool
 
 ## Agent behaviour
 
-Coding agents should read `CLAUDE.md` and the relevant component folder before implementing Buckholt UI. They should use real Buckholt classes and verified markup, and explicitly flag genuine conflicts instead of inventing design-system behaviour.
+Coding agents should read `CLAUDE.md`, relevant foundation files and the relevant component folder before implementing Buckholt UI. They should use real Buckholt classes and variables, and explicitly flag genuine conflicts instead of inventing design-system behaviour.
