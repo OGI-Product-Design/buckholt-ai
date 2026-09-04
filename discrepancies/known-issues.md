@@ -37,3 +37,41 @@ a.link-standalone:visited .icon {
 This means a visited standalone link can render its icon in Text active blue while its text follows the documented visited colour.
 
 For design intent, treat `#5731d6` as canonical because it is the documented Link state. Do not create local one-off overrides in generated product UI merely to compensate; the underlying runtime should be corrected deliberately if the team chooses to align implementation with the documentation.
+
+## Button focus state falls through to Bootstrap on mouse click
+
+Buckholt styles the Button focus state only through `:focus-visible`:
+
+```css
+.btn:focus-visible {
+  color: var(--button-label-focus);
+  background-color: var(--button-background-focus);
+  border-color: var(--button-border-focus);
+  outline: 0;
+  box-shadow: var(--button-shadow-focus);
+}
+```
+
+Bootstrap 5.1.3, which Buckholt loads on top of, styles plain `:focus` for the button classes Buckholt reuses:
+
+```css
+.btn-check:focus+.btn,.btn:focus{outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}
+.btn-primary:focus{color:#fff;background-color:#0b5ed7;border-color:#0a58ca;box-shadow:0 0 0 .25rem rgba(49,132,253,.5)}
+.btn-secondary:focus{color:#fff;background-color:#5c636a;border-color:#565e64;box-shadow:0 0 0 .25rem rgba(130,138,145,.5)}
+.btn-danger:focus{color:#fff;background-color:#bb2d3b;border-color:#b02a37;box-shadow:0 0 0 .25rem rgba(225,83,97,.5)}
+```
+
+A mouse click sets `:focus` but deliberately not `:focus-visible`, which browsers reserve for keyboard and programmatic focus. Buckholt's focus rule therefore never matches after a click, and Bootstrap's `:focus` styling applies unopposed. Loading Buckholt after Bootstrap does not help, because Buckholt defines no plain `:focus` rule for Bootstrap's to override.
+
+Measured after a mouse click, with the pointer moved off the button:
+
+| Variant | Rendered after click | Documented Buckholt resting/focus role |
+| --- | --- | --- |
+| `.btn-primary` | `#0b5ed7` | `--action-02` (`#3f66d1`) |
+| `.btn-secondary` | `#5c636a` with white label | `--action-04` on `--action-07`, `--action-text-01` label |
+| `.btn-ghost` | transparent with `rgba(13,110,253,.25)` glow | `--action-07`, Buckholt focus ring |
+| `.btn-danger` combinations | `#bb2d3b` | `--action-danger-02` (`#ae0a09`) |
+
+While the pointer remains over the button, Buckholt's `:hover` rule still wins the background, so only the Bootstrap focus ring is visible. Once the pointer leaves, the full Bootstrap fill appears. Secondary is the most obvious case because Bootstrap's grey diverges furthest from the Buckholt palette, but every variant is affected. Keyboard focus is unaffected and renders the documented Buckholt treatment, including the `#1748d0` focus ring.
+
+Treat the Buckholt focus tokens as canonical; the Bootstrap colours are not a Buckholt state. Do not add local one-off `:focus` overrides in generated product UI to compensate, and do not override the state colours in test pages to make a screenshot look right. The runtime should be corrected deliberately, by having Buckholt style `:focus` alongside `:focus-visible` for `.btn`, or by explicitly neutralising Bootstrap's `:focus` treatment for the reused button classes.
