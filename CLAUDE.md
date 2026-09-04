@@ -63,6 +63,20 @@ Rules:
 - use the shared `--spacer-*` scale and dedicated `--padding-*` / `--margin-*` tokens as documented;
 - do not choose spacing solely because it looks close.
 
+### Typography
+Read both:
+- `foundations/typography/rules.md`
+- `foundations/typography/type-sets.md`
+
+Rules:
+- use Buckholt's documented `Proxima-soft, Arial, sans-serif` stack through the runtime;
+- choose typography by documented content role, then use the corresponding Buckholt type-set class;
+- preserve the documented size, weight, line height and letter spacing of that type set;
+- use semantic HTML according to document structure; do not choose `h1`–`h6` tags merely to get a particular visual size;
+- prefer documented Buckholt classes such as `.display-03`, `.headline-02`, `.title-01`, `.body-02`, `.support-01`, `.action-01`, `.label-02`, `.key-01` and `.value-01` where their documented role fits;
+- do not treat Bootstrap `.display-*`, `.fs-*` or generic heading helpers present in the compiled CSS as canonical Buckholt typography choices unless Buckholt documentation/component guidance explicitly uses them;
+- do not invent a new Buckholt type set if the documented set does not cover the requirement; flag the gap instead.
+
 ## Custom CSS
 
 Custom CSS may be used for page/demo layout only when necessary. It must not be used to recreate or override Buckholt component styling simply to make an implementation look right.
@@ -88,6 +102,6 @@ For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load:
 Read:
 - `components/button/rules.md`
 - `components/button/examples.html`
-- relevant foundation files, especially colour, iconography, radius and spacing
+- relevant foundation files, especially colour, iconography, radius, spacing and typography
 
 The Button Usage, Style and Code & specs documentation have all been supplied.
