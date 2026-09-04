@@ -45,8 +45,6 @@ Load Bootstrap 5.1.3 before Buckholt:
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 ```
 
-Then load `css/buckholt.css` after Bootstrap.
-
 ### Proxima Nova
 
 Load the Adobe Fonts stylesheet used by the live Buckholt documentation:
@@ -55,10 +53,25 @@ Load the Adobe Fonts stylesheet used by the live Buckholt documentation:
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 ```
 
-Use the font family expected by `css/buckholt.css`. Do not download, commit or substitute font binaries unless explicitly instructed.
-
 ### Font Awesome
 
-Buckholt uses Font Awesome. The live documentation confirms a `kit.fontawesome.com` dependency, but the exact approved kit script URL has not yet been captured in this repository.
+Load the Font Awesome kit used by the live Buckholt documentation:
 
-A DNS-prefetch line does not load Font Awesome. If a Buckholt component requires font-based Font Awesome icons and the actual kit/script is not available, report the missing dependency rather than replacing it with another icon library or invented markup.
+```html
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+```
+
+Do not replace Font Awesome with another icon library.
+
+### Buckholt
+
+Load `css/buckholt.css` after Bootstrap so Buckholt provides the final component styling.
+
+Recommended standalone order:
+
+```html
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/buckholt.css">
+```
