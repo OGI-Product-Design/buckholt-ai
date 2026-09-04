@@ -35,14 +35,30 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 
 ## Runtime dependencies
 
-### Proxima Nova
+When building a standalone Buckholt page or test harness, mirror the dependency setup shown by the live Buckholt documentation.
 
-Load the approved Adobe Fonts stylesheet in the document head:
+### Bootstrap
+
+Load Bootstrap 5.1.3 before Buckholt:
 
 ```html
-<link rel="stylesheet" href="https://use.typekit.net/aio4aoz.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 ```
 
-Use the font family exposed by that stylesheet together with the font-family expected by `css/buckholt.css`. Do not download, commit or substitute font binaries unless explicitly instructed.
+Then load `css/buckholt.css` after Bootstrap.
 
-Additional icon/runtime dependencies will be documented when supplied.
+### Proxima Nova
+
+Load the Adobe Fonts stylesheet used by the live Buckholt documentation:
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+```
+
+Use the font family expected by `css/buckholt.css`. Do not download, commit or substitute font binaries unless explicitly instructed.
+
+### Font Awesome
+
+Buckholt uses Font Awesome. The live documentation confirms a `kit.fontawesome.com` dependency, but the exact approved kit script URL has not yet been captured in this repository.
+
+A DNS-prefetch line does not load Font Awesome. If a Buckholt component requires font-based Font Awesome icons and the actual kit/script is not available, report the missing dependency rather than replacing it with another icon library or invented markup.
