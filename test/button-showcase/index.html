@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Buckholt Button showcase</title>
 
-  <!-- Runtime dependency order per CLAUDE.md: Bootstrap, Proxima Nova, Font Awesome, then Buckholt. -->
+  <!-- Approved runtime order from CLAUDE.md. -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
   <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
@@ -13,67 +13,68 @@
 
   <style>
     /*
-      SHOWCASE PAGE CSS ONLY — layout and presentation of the harness.
-      Nothing here targets .btn, .btn-*, .button-label, .button-set or .btn-icon.
-      No Buckholt button styling is recreated, overridden or corrected.
-      Class names deliberately avoid ending in "-set", because Buckholt's set
-      layout is bound to the attribute selectors [class$=-set] / [class*="-set "].
+      SHOWCASE PAGE LAYOUT ONLY.
+      Nothing here targets .btn, .btn-*, .button-label, .button-set, .btn-icon or
+      any Buckholt type-set class. No Buckholt styling is recreated or overridden.
+
+      All values use Buckholt foundation tokens: --spacer-*, --padding-*, --margin-*,
+      --ui-*, --border-radius-*. No hard-coded px/rem spacing, colour or radius.
+
+      Class names deliberately avoid the "-set" suffix, because Buckholt binds set
+      layout to the attribute selectors [class$=-set] and [class*="-set "].
     */
     .sc-page {
-      max-width: 76rem;
+      max-width: 74rem;
       margin: 0 auto;
-      padding: 2rem 1.5rem 5rem;
+      padding: var(--padding-08) var(--padding-07) var(--padding-09);
     }
 
     .sc-section {
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(26, 26, 26, 0.12);
-    }
-
-    .sc-note {
-      max-width: 54rem;
+      margin-top: var(--spacer-08);
+      padding-top: var(--padding-08);
+      border-top: var(--border-width) solid var(--ui-border-02);
     }
 
     .sc-rules {
-      max-width: 54rem;
-      margin: 0.75rem 0 0;
-      padding-left: 1.15rem;
+      margin: var(--margin-03) 0 0;
+      padding-left: var(--padding-06);
+      max-width: var(--text-max-width);
     }
 
     .sc-rules li {
-      margin-bottom: 0.25rem;
+      margin-bottom: var(--margin-01);
     }
 
     .sc-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: var(--spacer-05);
+      margin-top: var(--spacer-05);
       align-items: start;
     }
 
     .sc-cell {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: var(--spacer-02);
     }
 
     .sc-caption {
       display: block;
       margin: 0;
+      color: var(--text-secondary);
     }
 
     .sc-panel {
-      margin-top: 1.5rem;
-      padding: 1.5rem;
-      border: 1px solid rgba(26, 26, 26, 0.12);
-      border-radius: 0.5rem;
-      background-color: #ffffff;
+      margin-top: var(--spacer-05);
+      padding: var(--padding-07);
+      border: var(--border-width) solid var(--ui-border-02);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-01);
     }
 
     .sc-panel + .sc-panel {
-      margin-top: 1rem;
+      margin-top: var(--spacer-04);
     }
 
     .sc-narrow {
@@ -82,16 +83,12 @@
 
     .sc-contained {
       max-width: 34rem;
-      padding: 1.5rem;
-      border: 1px solid rgba(26, 26, 26, 0.12);
-      border-radius: 0.5rem;
-      background-color: #ffffff;
     }
 
     .sc-table {
       width: 100%;
-      max-width: 62rem;
-      margin-top: 1rem;
+      max-width: var(--text-max-width);
+      margin-top: var(--spacer-04);
       border-collapse: collapse;
     }
 
@@ -99,19 +96,20 @@
     .sc-table td {
       text-align: left;
       vertical-align: top;
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid rgba(26, 26, 26, 0.12);
+      padding: var(--padding-03) var(--padding-04);
+      border-bottom: var(--border-width) solid var(--ui-border-02);
     }
 
     .sc-code {
       display: block;
-      max-width: 54rem;
-      margin-top: 1rem;
-      padding: 1rem;
+      max-width: var(--text-max-width);
+      margin-top: var(--spacer-04);
+      padding: var(--padding-05);
       overflow-x: auto;
-      border: 1px solid rgba(26, 26, 26, 0.12);
-      border-radius: 0.5rem;
-      background-color: rgba(26, 26, 26, 0.04);
+      border: var(--border-width) solid var(--ui-border-02);
+      border-radius: var(--border-radius-md);
+      background-color: var(--ui-background-03);
+      color: var(--text-secondary);
     }
   </style>
 </head>
@@ -119,104 +117,119 @@
 <body>
   <div class="sc-page">
 
-    <header>
-      <h1 class="headline-03">Buckholt Button showcase</h1>
-      <p class="sc-note">
-        Every control on this page is styled entirely by <code>css/buckholt.css</code>, using the
-        markup verified in <code>components/button/examples.html</code> and the guidance in
-        <code>components/button/rules.md</code>. The page stylesheet contains showcase layout only —
-        no Buckholt button styling is recreated or overridden anywhere.
+    <header class="text-block">
+      <span class="eyebrow">Component showcase</span>
+      <h1 class="display-03">Buckholt Button</h1>
+      <p class="body-02">
+        Every control on this page is styled by <code>css/buckholt.css</code>, using the canonical
+        markup in <code>components/button/examples.html</code> and the guidance in
+        <code>components/button/rules.md</code>. Icons come from
+        <code>foundations/iconography/catalogue.md</code>, and the page's own layout uses Buckholt
+        spacing, colour and radius tokens rather than hard-coded values.
       </p>
-      <p class="sc-note">
-        Runtime dependencies are loaded in the order given in <code>CLAUDE.md</code>: Bootstrap 5.1.3,
-        the Adobe Fonts (Typekit) stylesheet for Proxima, the Buckholt Font Awesome kit, and then
-        <code>css/buckholt.css</code> last so Buckholt supplies the final component styling.
+      <p class="body-02">
+        Dependencies load in the order given in <code>CLAUDE.md</code> — Bootstrap 5.1.3, the Typekit
+        stylesheet for Proxima Soft, the Buckholt Font Awesome kit, then <code>css/buckholt.css</code>
+        last. The Bootstrap JavaScript bundle is loaded at the end of the page because the documented
+        icon-only tooltip pattern needs it.
       </p>
     </header>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">1. Button types</h2>
-      <p class="sc-note">
-        Buckholt documents three types. Primary is the highest emphasis and is normally used once per
-        screen or contained context; secondary is medium emphasis for supporting actions; ghost is the
-        lowest emphasis, for supplementary and opposing actions such as Cancel.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">1. Button types</h2>
+        <p class="body-02">
+          Buckholt documents three types. Primary carries the highest emphasis and is normally used once
+          per screen or contained context. Secondary is medium emphasis for supporting actions. Ghost is
+          the lowest emphasis, for supplementary and opposing actions such as Cancel.
+        </p>
+      </div>
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Primary</span>
+          <span class="label-01 sc-caption">Primary</span>
           <button type="button" class="btn btn-primary">
             <span class="button-label">Save changes</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Secondary</span>
+          <span class="label-01 sc-caption">Secondary</span>
           <button type="button" class="btn btn-secondary">
             <span class="button-label">Save draft</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Ghost</span>
+          <span class="label-01 sc-caption">Ghost</span>
           <button type="button" class="btn btn-ghost">
             <span class="button-label">Cancel</span>
           </button>
         </div>
       </div>
 
-      <code class="sc-code">&lt;button type="button" class="btn btn-primary"&gt;
+      <code class="sc-code body-01">&lt;button type="button" class="btn btn-primary"&gt;
   &lt;span class="button-label"&gt;Save changes&lt;/span&gt;
 &lt;/button&gt;</code>
+
+      <div class="text-block">
+        <p class="support-01">
+          <code>.button-label</code> is a structural hook as well as a wrapper — Buckholt uses its
+          presence to tell labelled and icon-only layouts apart, so it must not be omitted from a
+          labelled button.
+        </p>
+      </div>
     </section>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">2. Danger modifier</h2>
-      <p class="sc-note">
-        Danger is a modifier, not a fourth type. <code>.btn-danger</code> is added alongside a standard
-        type and the compiled CSS pairs it with each one
-        (<code>.btn-primary.btn-danger</code>, <code>.btn-secondary.btn-danger</code>,
-        <code>.btn-ghost.btn-danger</code>). Use it for destructive actions.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">2. Danger modifier</h2>
+        <p class="body-02">
+          Danger is a modifier rather than a fourth type. <code>.btn-danger</code> is added alongside a
+          standard type, and the runtime pairs it with each one. Use it for destructive actions.
+        </p>
+      </div>
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Primary + danger</span>
+          <span class="label-01 sc-caption">Primary + danger</span>
           <button type="button" class="btn btn-primary btn-danger">
-            <span class="button-label">Delete account</span>
+            <span class="button-label">Delete record</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Secondary + danger</span>
+          <span class="label-01 sc-caption">Secondary + danger</span>
           <button type="button" class="btn btn-secondary btn-danger">
-            <span class="button-label">Delete account</span>
+            <span class="button-label">Delete record</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Ghost + danger</span>
+          <span class="label-01 sc-caption">Ghost + danger</span>
           <button type="button" class="btn btn-ghost btn-danger">
-            <span class="button-label">Delete account</span>
+            <span class="button-label">Delete record</span>
           </button>
         </div>
       </div>
 
-      <code class="sc-code">&lt;button type="button" class="btn btn-secondary btn-danger"&gt;
-  &lt;span class="button-label"&gt;Delete account&lt;/span&gt;
+      <code class="sc-code body-01">&lt;button type="button" class="btn btn-secondary btn-danger"&gt;
+  &lt;span class="button-label"&gt;Delete record&lt;/span&gt;
 &lt;/button&gt;</code>
     </section>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">3. Sizes</h2>
-      <p class="sc-note">
-        <code>.btn-sm</code> for small, no modifier for default/medium, <code>.btn-lg</code> for large.
-        Small suits confined layouts, large suits greater emphasis such as the end of a form. Runtime
-        minimum heights are 32px, 40px and 48px.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">3. Sizes</h2>
+        <p class="body-02">
+          <code>.btn-sm</code> for small, no modifier for default/medium, <code>.btn-lg</code> for large.
+          Small suits confined layouts, large suits greater emphasis such as the end of a form. Runtime
+          minimum heights are 32px, 40px and 48px.
+        </p>
+      </div>
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Small — primary, secondary, ghost</span>
+          <span class="label-01 sc-caption">Small</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary btn-sm">
               <span class="button-label">Save changes</span>
@@ -230,7 +243,7 @@
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Default — primary, secondary, ghost</span>
+          <span class="label-01 sc-caption">Default</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary">
               <span class="button-label">Save changes</span>
@@ -244,7 +257,7 @@
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Large — primary, secondary, ghost</span>
+          <span class="label-01 sc-caption">Large</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary btn-lg">
               <span class="button-label">Save changes</span>
@@ -261,16 +274,16 @@
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Danger modifier at each size</span>
+          <span class="label-01 sc-caption">Danger modifier at each size</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary btn-danger btn-sm">
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
             <button type="button" class="btn btn-primary btn-danger">
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
             <button type="button" class="btn btn-primary btn-danger btn-lg">
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
           </div>
         </div>
@@ -279,50 +292,41 @@
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">4. Labelled buttons with icons</h2>
-      <p class="sc-note">
-        The verified structure places a <code>.btn-icon</code> wrapper before <code>.button-label</code>.
-        Buckholt trims 4px from the leading padding when an icon is the first child of a labelled button,
-        and the icon inherits the label's colour and font size.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">4. Labelled buttons with icons</h2>
+        <p class="body-02">
+          The canonical structure places a <code>.btn-icon</code> wrapper before
+          <code>.button-label</code>. Buckholt trims 4px from the leading padding when an icon is the
+          first child of a labelled button, and the icon inherits the label's colour and font size.
+        </p>
+      </div>
       <ul class="sc-rules body-02">
         <li>Icons are optional and should be used sparingly.</li>
         <li>Icons sit to the left of the label — never after it.</li>
         <li>The icon must relate directly to the action; do not repurpose a familiar icon.</li>
         <li>Keep icon usage consistent across comparable labelled buttons in the same set.</li>
+        <li>Use the regular style unless the catalogue documents an icon as solid or brands.</li>
       </ul>
 
-      <div class="sc-panel">
-        <p class="body-02 sc-note">
-          <strong>Icon choice is constrained by the evidence in this repository.</strong>
-          <code>examples.html</code> verifies exactly one Font Awesome class pair,
-          <code>fa-regular fa-ghost</code>. <code>rules.md</code> names the recognisable actions Buckholt
-          documents — Add, Copy, Delete, Download, Edit, External link, Logout, Save, Search, Settings and
-          Upload — but records no Font Awesome class for any of them. Rather than guess
-          <code>fa-plus</code>, <code>fa-trash</code> and so on, every icon slot below uses the one
-          verified glyph as a placeholder.
-        </p>
-      </div>
-
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Small</span>
+          <span class="label-01 sc-caption">Small</span>
           <button type="button" class="btn btn-primary btn-sm">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
+            <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
             <span class="button-label">Create document</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Default</span>
+          <span class="label-01 sc-caption">Default</span>
           <button type="button" class="btn btn-primary">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
+            <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
             <span class="button-label">Create document</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Large</span>
+          <span class="label-01 sc-caption">Large</span>
           <button type="button" class="btn btn-primary btn-lg">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
+            <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
             <span class="button-label">Create document</span>
           </button>
         </div>
@@ -330,138 +334,213 @@
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Secondary</span>
+          <span class="label-01 sc-caption">Secondary — Copy</span>
           <button type="button" class="btn btn-secondary">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="button-label">Copy link</span>
+            <div class="btn-icon"><i class="fa-regular fa-copy" aria-hidden="true"></i></div>
+            <span class="button-label">Copy document</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Ghost</span>
+          <span class="label-01 sc-caption">Ghost — Download</span>
           <button type="button" class="btn btn-ghost">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="button-label">Download</span>
+            <div class="btn-icon"><i class="fa-regular fa-arrow-down-to-bracket" aria-hidden="true"></i></div>
+            <span class="button-label">Download document</span>
           </button>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Ghost + danger</span>
+          <span class="label-01 sc-caption">Ghost + danger — Bin</span>
           <button type="button" class="btn btn-ghost btn-danger">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="button-label">Delete</span>
+            <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+            <span class="button-label">Delete document</span>
           </button>
         </div>
       </div>
 
-      <code class="sc-code">&lt;button type="button" class="btn btn-primary"&gt;
-  &lt;div class="btn-icon"&gt;&lt;i class="fa-regular fa-ghost"&gt;&lt;/i&gt;&lt;/div&gt;
+      <code class="sc-code body-01">&lt;button type="button" class="btn btn-primary"&gt;
+  &lt;div class="btn-icon"&gt;
+    &lt;i class="fa-regular fa-plus" aria-hidden="true"&gt;&lt;/i&gt;
+  &lt;/div&gt;
   &lt;span class="button-label"&gt;Create document&lt;/span&gt;
 &lt;/button&gt;</code>
+
+      <div class="text-block">
+        <p class="support-01">
+          Every icon above is a documented catalogue mapping: Plus, Copy, Download and Bin. The catalogue
+          is authoritative for icon choice; Button decides only the surrounding structure.
+        </p>
+      </div>
     </section>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">5. Icon-only buttons</h2>
-      <p class="sc-note">
-        An icon-only button is a <code>.btn</code> containing <code>.btn-icon</code> and
-        <strong>no</strong> <code>.button-label</code>. That absence is the actual runtime trigger:
-        Buckholt selects icon-only buttons with <code>.btn:not(:has(.button-label))</code> and squares
-        them to 40px by default and 32px at <code>.btn-sm</code>. Adding a
-        <code>.button-label</code> back would silently turn the control into a normal labelled button.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">5. Icon-only buttons</h2>
+        <p class="body-02">
+          An icon-only button is a <code>.btn</code> containing <code>.btn-icon</code> and no
+          <code>.button-label</code>. That absence is the actual runtime trigger — Buckholt selects these
+          with <code>.btn:not(:has(.button-label))</code> and squares them to 40px by default and 32px at
+          <code>.btn-sm</code>.
+        </p>
+      </div>
       <ul class="sc-rules body-02">
-        <li>Documented sizes are default/medium and small only — there is no documented large icon-only button, so none is shown.</li>
+        <li>Documented sizes are default/medium and small only, so no large icon-only button is shown.</li>
         <li>Primary, secondary and ghost may all be used; primary and ghost are the common choices.</li>
         <li>Use only where the icon is standardised and clearly recognisable, and use sparingly.</li>
         <li>Prefer a toolbar pattern when several compact icon actions are needed.</li>
-        <li>Every icon-only button must have an accessible text name <em>and</em> a visible tooltip.</li>
+        <li>Provide an accessible name, and a tooltip explaining the action is always required.</li>
       </ul>
 
       <div class="sc-panel">
-        <p class="body-02 sc-note">
-          <strong>Accessibility treatment used here.</strong> The accessible name is real text inside the
-          button, hidden visually with <code>.visually-hidden</code> — this keeps the name in the
-          accessibility tree without adding a <code>.button-label</code>, which would change the
-          button's runtime sizing. The visible tooltip comes from the native <code>title</code>
-          attribute. Buckholt's compiled CSS carries Bootstrap's <code>.tooltip</code> styles, but those
-          need Bootstrap's JavaScript bundle, which is not part of the approved runtime setup in
-          <code>CLAUDE.md</code>, so no Buckholt-styled tooltip is claimed here.
-        </p>
-        <p class="body-02 sc-note">
-          The names below read "Example action" deliberately. With only the ghost glyph verified, pairing
-          it with a specific label such as "Delete" would repurpose a familiar icon for an unrelated
-          action, which <code>rules.md</code> forbids. In production the name and tooltip must describe
-          the real action.
-        </p>
+        <div class="text-block">
+          <h3 class="title-02">Accessibility treatment</h3>
+          <p class="body-02">
+            The accessible name comes from <code>aria-label</code> on the button, and the tooltip uses the
+            documented Bootstrap attributes — <code>data-bs-toggle</code>, <code>data-bs-title</code>,
+            <code>data-bs-placement</code> and <code>data-bs-trigger</code> — initialised by the Bootstrap
+            bundle at the end of this page. Hover or long-press any icon-only button below to see it.
+          </p>
+          <p class="body-02">
+            An accessible name cannot use <code>.button-label</code> here, because adding that element
+            would convert the control back into a normal labelled button at runtime.
+          </p>
+        </div>
       </div>
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Default — primary, secondary, ghost</span>
+          <span class="label-01 sc-caption">Default — primary, secondary, ghost</span>
           <div class="button-set">
-            <button type="button" class="btn btn-primary" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-primary"
+              aria-label="Search"
+              data-bs-toggle="tooltip"
+              data-bs-title="Search"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-secondary" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              aria-label="Settings"
+              data-bs-toggle="tooltip"
+              data-bs-title="Settings"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-gear" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-ghost" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-ghost"
+              aria-label="Edit"
+              data-bs-toggle="tooltip"
+              data-bs-title="Edit"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
             </button>
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Small — primary, secondary, ghost</span>
+          <span class="label-01 sc-caption">Small — primary, secondary, ghost</span>
           <div class="button-set">
-            <button type="button" class="btn btn-primary btn-sm" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              aria-label="Search"
+              data-bs-toggle="tooltip"
+              data-bs-title="Search"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-secondary btn-sm" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              aria-label="Settings"
+              data-bs-toggle="tooltip"
+              data-bs-title="Settings"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-gear" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-ghost btn-sm" title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button
+              type="button"
+              class="btn btn-ghost btn-sm"
+              aria-label="Edit"
+              data-bs-toggle="tooltip"
+              data-bs-title="Edit"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
             </button>
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Danger modifier</span>
+          <span class="label-01 sc-caption">Danger modifier</span>
           <div class="button-set">
-            <button type="button" class="btn btn-primary btn-danger" title="Example destructive action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example destructive action</span>
+            <button
+              type="button"
+              class="btn btn-primary btn-danger"
+              aria-label="Delete"
+              data-bs-toggle="tooltip"
+              data-bs-title="Delete"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-ghost btn-danger" title="Example destructive action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example destructive action</span>
+            <button
+              type="button"
+              class="btn btn-ghost btn-danger"
+              aria-label="Delete"
+              data-bs-toggle="tooltip"
+              data-bs-title="Delete"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+            >
+              <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
             </button>
           </div>
         </div>
       </div>
 
-      <code class="sc-code">&lt;button type="button" class="btn btn-primary" title="Example action"&gt;
-  &lt;div class="btn-icon"&gt;&lt;i class="fa-regular fa-ghost"&gt;&lt;/i&gt;&lt;/div&gt;
-  &lt;span class="visually-hidden"&gt;Example action&lt;/span&gt;
+      <code class="sc-code body-01">&lt;button
+  type="button"
+  class="btn btn-ghost"
+  aria-label="Search"
+  data-bs-toggle="tooltip"
+  data-bs-title="Search"
+  data-bs-placement="right"
+  data-bs-trigger="hover"
+&gt;
+  &lt;div class="btn-icon"&gt;
+    &lt;i class="fa-regular fa-magnifying-glass" aria-hidden="true"&gt;&lt;/i&gt;
+  &lt;/div&gt;
 &lt;/button&gt;</code>
     </section>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">6. Disabled states</h2>
-      <p class="sc-note">
-        Disabling uses the native <code>disabled</code> attribute — no <code>aria-disabled</code>
-        substitute and no custom dimming. Buckholt keeps the resting colours and applies 65% opacity via
-        <code>--button-disabled-opacity</code>, and the runtime stylesheet removes interaction.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">6. Disabled states</h2>
+        <p class="body-02">
+          Disabling uses the native <code>disabled</code> attribute — no <code>aria-disabled</code>
+          substitute and no custom dimming. Buckholt keeps the resting colours and applies 65% opacity
+          through <code>--button-disabled-opacity</code>, and removes interaction.
+        </p>
+      </div>
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Types</span>
+          <span class="label-01 sc-caption">Types</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary" disabled>
               <span class="button-label">Save changes</span>
@@ -475,21 +554,21 @@
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Danger modifier</span>
+          <span class="label-01 sc-caption">Danger modifier</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary btn-danger" disabled>
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
             <button type="button" class="btn btn-secondary btn-danger" disabled>
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
             <button type="button" class="btn btn-ghost btn-danger" disabled>
-              <span class="button-label">Delete</span>
+              <span class="button-label">Delete record</span>
             </button>
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Sizes</span>
+          <span class="label-01 sc-caption">Sizes</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary btn-sm" disabled>
               <span class="button-label">Small</span>
@@ -506,43 +585,50 @@
 
       <div class="sc-grid">
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Labelled with icon</span>
+          <span class="label-01 sc-caption">Labelled with icon</span>
           <div class="button-set">
             <button type="button" class="btn btn-primary" disabled>
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
+              <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
               <span class="button-label">Create document</span>
             </button>
           </div>
         </div>
         <div class="sc-cell">
-          <span class="label-02 sc-caption">Icon-only</span>
+          <span class="label-01 sc-caption">Icon-only</span>
           <div class="button-set">
-            <button type="button" class="btn btn-primary" disabled title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button type="button" class="btn btn-primary" disabled aria-label="Search">
+              <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-secondary" disabled title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button type="button" class="btn btn-secondary" disabled aria-label="Settings">
+              <div class="btn-icon"><i class="fa-regular fa-gear" aria-hidden="true"></i></div>
             </button>
-            <button type="button" class="btn btn-ghost" disabled title="Example action">
-              <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-              <span class="visually-hidden">Example action</span>
+            <button type="button" class="btn btn-ghost" disabled aria-label="Edit">
+              <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="text-block">
+        <p class="support-01">
+          The disabled icon-only buttons keep their accessible names but carry no tooltip attributes,
+          because Buckholt removes pointer events from disabled buttons and a hover tooltip could never
+          fire.
+        </p>
       </div>
     </section>
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">7. Button sets</h2>
-      <p class="sc-note">
-        Two or more related buttons go inside <code>.button-set</code>. Buckholt binds set layout to the
-        attribute selectors <code>[class$=-set]</code> and <code>[class*="-set "]</code> combined with
-        <code>[class|=button]</code>, so <code>button-set</code> must be the first class on the element —
-        putting a utility class in front of it silently disables the set rules.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">7. Button sets</h2>
+        <p class="body-02">
+          Two or more related buttons go inside <code>.button-set</code>. Buckholt binds set layout to the
+          attribute selectors <code>[class$=-set]</code> and <code>[class*="-set "]</code> combined with
+          <code>[class|=button]</code>, so <code>button-set</code> must be the first class on the element —
+          putting a utility class in front of it silently disables the set rules.
+        </p>
+      </div>
       <ul class="sc-rules body-02">
         <li>Default spacing is 8px, with 8px row spacing when the set wraps.</li>
         <li>The primary button sits on the outer edge; secondary and ghost sit inside.</li>
@@ -552,7 +638,7 @@
       </ul>
 
       <div class="sc-panel">
-        <span class="label-02 sc-caption">Standard set — full-page layout, primary on the left/outer edge</span>
+        <span class="label-01 sc-caption">Standard set — full-page layout, primary on the outer edge</span>
         <div class="button-set">
           <button type="button" class="btn btn-primary">
             <span class="button-label">Accept all</span>
@@ -567,7 +653,7 @@
       </div>
 
       <div class="sc-panel">
-        <span class="label-02 sc-caption">More than three actions — ghost preferred over repeated secondary</span>
+        <span class="label-01 sc-caption">More than three actions — ghost preferred over repeated secondary</span>
         <div class="button-set">
           <button type="button" class="btn btn-primary">
             <span class="button-label">Publish</span>
@@ -585,37 +671,76 @@
       </div>
 
       <div class="sc-panel">
-        <span class="label-02 sc-caption">Icon-only set — spacing tightens to 4px automatically</span>
-        <p class="body-02 sc-note">
-          Buckholt narrows the gap with
-          <code>[class|=button]:has(.btn-icon):not(:has(.button-label))</code>, so the 4px spacing applies
-          only when the set is entirely icon-only. This is the same rule that enforces "do not mix
-          icon-only and labelled controls in one set" — mixing them silently restores 8px spacing.
-        </p>
+        <span class="label-01 sc-caption">Consistent icon use across a set</span>
         <div class="button-set">
-          <button type="button" class="btn btn-ghost" title="Example action one">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="visually-hidden">Example action one</span>
+          <button type="button" class="btn btn-primary">
+            <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+            <span class="button-label">Create account</span>
           </button>
-          <button type="button" class="btn btn-ghost" title="Example action two">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="visually-hidden">Example action two</span>
-          </button>
-          <button type="button" class="btn btn-ghost" title="Example action three">
-            <div class="btn-icon"><i class="fa-regular fa-ghost"></i></div>
-            <span class="visually-hidden">Example action three</span>
+          <button type="button" class="btn btn-secondary">
+            <div class="btn-icon"><i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i></div>
+            <span class="button-label">Log in</span>
           </button>
         </div>
       </div>
 
-      <div class="sc-contained">
-        <span class="label-02 sc-caption">Contained layout — primary on the right/outer edge</span>
-        <p class="body-02">
-          Modals, data rows and repeat groups commonly right-align their actions. The alignment class
-          below is present in the compiled stylesheet but is not documented in
-          <code>rules.md</code>; the documented behaviour it demonstrates is the alignment rule itself.
-        </p>
-        <div class="button-set button-set-end">
+      <div class="sc-panel">
+        <span class="label-01 sc-caption">Icon-only set — spacing tightens to 4px automatically</span>
+        <div class="text-block">
+          <p class="support-01">
+            Buckholt narrows the gap with
+            <code>[class|=button]:has(.btn-icon):not(:has(.button-label))</code>, so 4px applies only when
+            the set is entirely icon-only. That is the same rule that enforces "do not mix icon-only and
+            labelled controls in one set" — mixing them silently restores 8px spacing.
+          </p>
+        </div>
+        <div class="button-set">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            aria-label="Edit"
+            data-bs-toggle="tooltip"
+            data-bs-title="Edit"
+            data-bs-placement="top"
+            data-bs-trigger="hover"
+          >
+            <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+          </button>
+          <button
+            type="button"
+            class="btn btn-ghost"
+            aria-label="Copy"
+            data-bs-toggle="tooltip"
+            data-bs-title="Copy"
+            data-bs-placement="top"
+            data-bs-trigger="hover"
+          >
+            <div class="btn-icon"><i class="fa-regular fa-copy" aria-hidden="true"></i></div>
+          </button>
+          <button
+            type="button"
+            class="btn btn-ghost"
+            aria-label="Show additional options"
+            data-bs-toggle="tooltip"
+            data-bs-title="Show additional options"
+            data-bs-placement="top"
+            data-bs-trigger="hover"
+          >
+            <div class="btn-icon"><i class="fa-regular fa-ellipsis" aria-hidden="true"></i></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="sc-panel sc-contained">
+        <span class="label-01 sc-caption">Contained layout — primary on the outer edge</span>
+        <div class="text-block">
+          <p class="support-01">
+            Modals, data rows and repeat groups commonly right-align their actions. Buckholt documents the
+            alignment behaviour but no Button-specific alignment class, so this example shows the
+            documented ordering only and leaves alignment to the containing pattern.
+          </p>
+        </div>
+        <div class="button-set">
           <button type="button" class="btn btn-ghost">
             <span class="button-label">Cancel</span>
           </button>
@@ -628,15 +753,31 @@
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">8. Stacked / full-width button sets</h2>
-      <p class="sc-note">
-        Adding <code>.button-set-stacked</code> switches the set to a column and stretches every direct
-        child button to full width. Row spacing stays at 8px. Short forms and small screens are the
-        documented cases for full-width buttons.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">8. Stacked and full-width button sets</h2>
+        <p class="body-02">
+          Adding <code>.button-set-stacked</code> switches the set to a column and stretches every direct
+          child button to full width. Row spacing stays at 8px. Short forms and small screens are the
+          documented cases for full-width buttons.
+        </p>
+      </div>
 
       <div class="sc-panel sc-narrow">
-        <span class="label-02 sc-caption">Stacked set</span>
+        <span class="label-01 sc-caption">Stacked set with consistent icon use</span>
+        <div class="button-set button-set-stacked">
+          <button type="button" class="btn btn-primary">
+            <div class="btn-icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></div>
+            <span class="button-label">Create account</span>
+          </button>
+          <button type="button" class="btn btn-secondary">
+            <div class="btn-icon"><i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i></div>
+            <span class="button-label">Log in</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sc-panel sc-narrow">
+        <span class="label-01 sc-caption">Stacked set, labels only</span>
         <div class="button-set button-set-stacked">
           <button type="button" class="btn btn-primary">
             <span class="button-label">Accept all</span>
@@ -651,9 +792,10 @@
       </div>
 
       <div class="sc-panel sc-narrow">
-        <span class="label-02 sc-caption">Stacked set with a destructive action</span>
+        <span class="label-01 sc-caption">Stacked set with a destructive action</span>
         <div class="button-set button-set-stacked">
           <button type="button" class="btn btn-primary btn-danger">
+            <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
             <span class="button-label">Delete account</span>
           </button>
           <button type="button" class="btn btn-ghost">
@@ -665,21 +807,22 @@
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">9. Focus, keyboard and states</h2>
-      <p class="sc-note">
-        These are native <code>&lt;button&gt;</code> elements, so they are keyboard operable and activate
-        with Enter or Space. Tab through the page to see Buckholt's own focus treatment; hover and active
-        styling come from the same stylesheet. No state colour is hard-coded on this page.
-      </p>
-      <p class="sc-note body-02">
-        One runtime detail worth knowing when inspecting focus: Buckholt gives resting primary and
-        secondary buttons a thicker bottom border
-        (<code>--button-border-bottom-width: calc(1px + 0.125rem)</code>, i.e. 3px) and resets it to 1px
-        on focus and active. Ghost buttons are 1px throughout. See the findings table below.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">9. States, focus and keyboard</h2>
+        <p class="body-02">
+          These are native <code>&lt;button&gt;</code> elements, so they are keyboard operable and activate
+          with Enter or Space. Tab through the row below to see Buckholt's own focus treatment; hover and
+          active styling come from the same stylesheet. No state colour is hard-coded on this page.
+        </p>
+        <p class="body-02">
+          Buckholt gives resting primary and secondary buttons a deliberate 3px bottom border
+          (<code>1px + 0.125rem</code>) and returns it to 1px on focus and active. Ghost buttons use the
+          normal 1px border throughout. This treatment is intentional and must not be overridden.
+        </p>
+      </div>
 
       <div class="sc-panel">
-        <span class="label-02 sc-caption">Tab target row</span>
+        <span class="label-01 sc-caption">Tab target row</span>
         <div class="button-set">
           <button type="button" class="btn btn-primary">
             <span class="button-label">First</span>
@@ -702,87 +845,47 @@
 
     <!-- ============================================================ -->
     <section class="sc-section">
-      <h2 class="headline-02">10. Findings</h2>
-      <p class="sc-note">
-        Conflicts and gaps found between the documentation files and the compiled stylesheet, reported
-        rather than patched. Nothing below has been worked around with custom CSS.
-      </p>
+      <div class="text-block">
+        <h2 class="headline-02">10. Notes for maintainers</h2>
+        <p class="body-02">
+          Two small differences between the Button rules and the icon catalogue, reported rather than
+          silently resolved. Neither blocked this page.
+        </p>
+      </div>
 
-      <table class="sc-table body-02">
+      <table class="sc-table body-01">
         <thead>
           <tr>
-            <th scope="col" class="label-02">Finding</th>
-            <th scope="col" class="label-02">Detail</th>
+            <th scope="col" class="label-01">Note</th>
+            <th scope="col" class="label-01">Detail</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>CLAUDE.md</code> and <code>README.md</code> are out of date</td>
+            <td>Save icon name differs</td>
             <td>
-              Both state that "the canonical danger modifier and exact icon markup remain unresolved …
-              Do not guess them". <code>components/button/rules.md</code> and
-              <code>components/button/examples.html</code> now document both, and
-              <code>css/buckholt.css</code> implements <code>.btn-danger</code> for all three types. The
-              component files and the stylesheet agree, so this page follows them; the two top-level
-              files need updating.
+              <code>components/button/rules.md</code> gives the Save mapping as
+              <code>fa-regular fa-save</code>. <code>foundations/iconography/catalogue.md</code> records
+              Save as <code>fa-regular fa-floppy-disk</code>. These resolve to the same Font Awesome
+              glyph, so nothing renders differently, but the catalogue is authoritative for icon naming
+              and the two files should agree.
             </td>
           </tr>
           <tr>
-            <td>The 3px bottom border is in the runtime after all</td>
+            <td>Print has no catalogue entry</td>
             <td>
-              <code>rules.md</code> says "Do not recreate the previously interpreted 3px bottom-border
-              treatment. It is not the current compiled runtime implementation." The compiled CSS does
-              implement it: <code>--button-border-bottom-width: calc(1px + 0.125rem)</code> applied via
-              <code>border-bottom-width</code>, reset to 1px for ghost and on focus/active. Primary and
-              secondary buttons on this page therefore render with a 3px bottom border straight from
-              Buckholt. The stylesheet is the styling source of truth, so nothing was overridden — but
-              the sentence in <code>rules.md</code> is wrong.
+              <code>rules.md</code> lists <code>fa-regular fa-print</code> among its verified common-action
+              examples, but the 111-icon catalogue contains no Print entry. No print action is used on
+              this page.
             </td>
           </tr>
           <tr>
-            <td>Font Awesome class names are not recorded</td>
+            <td>Tooltip trigger is hover only</td>
             <td>
-              <code>rules.md</code> lists the recognisable actions Buckholt documents but gives no Font
-              Awesome class for any of them, and <code>examples.html</code> verifies only
-              <code>fa-regular fa-ghost</code>. That single glyph is used as a placeholder throughout
-              rather than guessing class names.
-            </td>
-          </tr>
-          <tr>
-            <td>No documented Buckholt tooltip</td>
-            <td>
-              <code>rules.md</code> requires a visible tooltip on every icon-only button but documents no
-              tooltip markup. Buckholt's CSS carries Bootstrap's <code>.tooltip</code> styles, which need
-              Bootstrap's JavaScript bundle — not part of the approved dependency list. The native
-              <code>title</code> attribute is used instead.
-            </td>
-          </tr>
-          <tr>
-            <td><code>.button-label</code> has no styling of its own</td>
-            <td>
-              It carries no visual rules; it exists purely as a structural hook. Buckholt tests for its
-              presence (<code>:has(.button-label)</code>) to decide whether a button is labelled or
-              icon-only, so omitting it on a labelled button silently converts that button into a fixed
-              40px square.
-            </td>
-          </tr>
-          <tr>
-            <td><code>&lt;div&gt;</code> inside <code>&lt;button&gt;</code></td>
-            <td>
-              The canonical icon markup nests a <code>&lt;div&gt;</code> inside a
-              <code>&lt;button&gt;</code>, which is not valid HTML — buttons take phrasing content. The
-              CSS selectors (<code>.btn .btn-icon</code>) would work equally well with a
-              <code>&lt;span&gt;</code>. The documented markup is used here unchanged rather than
-              silently improved, but the Buckholt source is worth correcting.
-            </td>
-          </tr>
-          <tr>
-            <td>Set alignment classes are undocumented</td>
-            <td>
-              <code>rules.md</code> describes left- and right-aligned layouts but names no class.
-              The compiled CSS provides <code>-set-center</code>, <code>-set-end</code> and
-              <code>-set-nowrap</code> attribute matches; <code>button-set-end</code> is used once above
-              and flagged inline as runtime-verified but undocumented.
+              The documented tooltip pattern sets <code>data-bs-trigger="hover"</code>, which means the
+              tooltip does not appear on keyboard focus — Bootstrap's own default is
+              <code>hover focus</code>. Keyboard and screen-reader users still get the action name from
+              <code>aria-label</code>, so this page follows the documented value unchanged.
             </td>
           </tr>
         </tbody>
@@ -790,5 +893,12 @@
     </section>
 
   </div>
+
+  <!-- Bootstrap JS bundle: required for the documented icon-only tooltip behaviour. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      .forEach(function (el) { new bootstrap.Tooltip(el); });
+  </script>
 </body>
 </html>
