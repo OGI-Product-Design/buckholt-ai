@@ -55,17 +55,30 @@ Use the Adobe Fonts stylesheet shown in the live Buckholt documentation source:
 
 ### Font Awesome
 
-Buckholt uses Font Awesome. The live documentation source confirms `kit.fontawesome.com` is part of the runtime setup, but the exact Font Awesome kit script URL still needs to be recorded in this repository.
+Use the Font Awesome kit script shown in the live Buckholt documentation source:
 
-A DNS-prefetch line such as:
+```html
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+```
+
+The optional DNS-prefetch line:
 
 ```html
 <link rel="dns-prefetch" href="//kit.fontawesome.com">
 ```
 
-does **not** load Font Awesome by itself. The actual Font Awesome kit `<script>` (or an equivalent approved Font Awesome stylesheet/package) is required for font-based icons to render.
+does not load Font Awesome by itself; the kit script above is what provides the icon runtime.
 
 Do not substitute a different icon library.
+
+## Recommended standalone page order
+
+```html
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/buckholt.css">
+```
 
 ## Agent behaviour
 
