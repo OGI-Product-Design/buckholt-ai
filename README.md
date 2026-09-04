@@ -33,15 +33,39 @@ Component folders are added as the live Buckholt documentation is extracted.
 
 ## Runtime dependencies
 
-### Proxima Nova
+The live Buckholt documentation site currently shows the following runtime environment.
 
-Use the approved Adobe Fonts stylesheet:
+### Bootstrap
+
+Buckholt documentation loads Bootstrap 5.1.3 before Buckholt:
 
 ```html
-<link rel="stylesheet" href="https://use.typekit.net/aio4aoz.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 ```
 
-Other dependencies, including icons, will be added only when their approved source is supplied.
+Load Bootstrap before `css/buckholt.css` so Buckholt can provide the final component styling.
+
+### Proxima Nova
+
+Use the Adobe Fonts stylesheet shown in the live Buckholt documentation source:
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+```
+
+### Font Awesome
+
+Buckholt uses Font Awesome. The live documentation source confirms `kit.fontawesome.com` is part of the runtime setup, but the exact Font Awesome kit script URL still needs to be recorded in this repository.
+
+A DNS-prefetch line such as:
+
+```html
+<link rel="dns-prefetch" href="//kit.fontawesome.com">
+```
+
+does **not** load Font Awesome by itself. The actual Font Awesome kit `<script>` (or an equivalent approved Font Awesome stylesheet/package) is required for font-based icons to render.
+
+Do not substitute a different icon library.
 
 ## Agent behaviour
 
