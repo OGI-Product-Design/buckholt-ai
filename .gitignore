@@ -1,0 +1,17 @@
+# Licensed/proprietary font binaries
+assets/fonts/*.otf
+assets/fonts/*.ttf
+assets/fonts/*.woff
+assets/fonts/*.woff2
+assets/fonts/*.eot
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Typical generated dependencies/build output
+node_modules/
+dist/
+build/
