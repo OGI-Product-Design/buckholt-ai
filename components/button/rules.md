@@ -1,208 +1,268 @@
-# Buckholt button
+# Buckholt Button
 
 ## Status
 
-Rebuilt from the live Buckholt button documentation and the compiled runtime stylesheet in `css/buckholt.css`.
+Complete Button guidance rebuilt from the three Buckholt Button documentation pages supplied by Product Design, checked against `../../css/buckholt.css` for runtime implementation.
 
-The live Usage page is readable and has been used for behavioural/content guidance. The separate Style and Code & specs URLs are recorded below, but their page content could not be reliably retrieved by the current crawler, so this file does **not** invent any detail that depends on those pages.
+There are no known missing Button documentation inputs for this component.
 
-## Sources
+## Sources of truth
 
-- Usage: https://buck.88mph.design/components/forms-inputs/button/
-- Style: https://buck.88mph.design/components/forms-inputs/button/style/
-- Code & specs: https://buck.88mph.design/components/forms-inputs/button/code-specs/
+- Usage: `https://buck.88mph.design/components/forms-inputs/button/`
+- Style: `https://buck.88mph.design/components/forms-inputs/button/style/`
+- Code & specs: `https://buck.88mph.design/components/forms-inputs/button/code-specs/`
 - Runtime implementation: `../../css/buckholt.css`
 
-## Core implementation
+Use the documentation for intended usage, hierarchy, anatomy, canonical markup and accessibility guidance. Use `buckholt.css` for actual runtime selectors, styling and state behaviour. Do not use old SCSS, Figma-derived assumptions or previous AI specifications.
 
-Use a native `<button>` element for button actions.
+## Purpose
 
-Buckholt's runtime button API is based on `.btn`, with verified visual variants:
+Buttons trigger actions. Their labels should clearly indicate the action that will take place when the user interacts with them.
 
-- `.btn-primary`
-- `.btn-secondary`
-- `.btn-ghost`
+Use buttons for actions. Use links for navigation.
 
-Verified size modifiers:
+## Canonical base markup
 
-- `.btn-sm` — small
-- default `.btn` — medium
-- `.btn-lg` — large
+Use a native `<button>` element with `.btn` plus a documented button type. Labelled buttons wrap their visible label in `.button-label`.
 
-Verified icon-only modifier:
+```html
+<button type="button" class="btn btn-primary">
+  <span class="button-label">Primary</span>
+</button>
+```
 
-- `.btn-icon`
+## Button types
 
-Verified response-button classes also exist in the runtime stylesheet:
+Buckholt documents three standard button types:
 
-- `.btn-response`
-- `.btn-response-lg`
-
-These response buttons are a separate button behaviour and should not be substituted for primary/secondary/ghost buttons without component-specific guidance.
-
-## Runtime dimensions
-
-The compiled stylesheet defines the default button as:
-
-- minimum height: 40px
-- minimum width: 64px
-- horizontal padding: 16px
-- vertical padding: 4px
-- content gap: 8px
-- border width: 1px
-- radius: 8px
-- type: 16px / 24px, weight 400, letter-spacing 0.16px
-- focus ring: 2px using Buckholt focus blue
-
-Small buttons:
-
-- minimum height: 32px
-- horizontal padding: 12px
-- vertical padding: 4px
-- type: 14px / 20px, weight 400, letter-spacing 0.25px
-- icon-only width: 32px
-
-Large buttons:
-
-- minimum height: 48px
-- horizontal padding: 20px
-- vertical padding: 4px
-- type: 16px / 24px, weight 400
-
-The current compiled CSS uses a normal 1px border. Do **not** recreate an older interpreted 3px bottom-border treatment.
-
-## Runtime state behaviour
-
-The compiled stylesheet is authoritative for visual states.
+- `.btn-primary` — highest emphasis; used for the principal action.
+- `.btn-secondary` — medium emphasis; used for supporting actions.
+- `.btn-ghost` — lowest emphasis; used for supplementary or opposing actions.
 
 ### Primary
 
-`.btn-primary` uses Buckholt action variables for resting, hover, active and focus states. It has white text, a filled primary background, and a focus ring supplied by the base `.btn` implementation.
+Primary buttons draw the most attention. Normally use one primary action per screen or page context. A separate contained context such as a modal or side panel can have its own primary action.
+
+A page does not need a primary button when there is no principal action.
 
 ### Secondary
 
-`.btn-secondary` uses primary action text with a white resting background and primary border. Hover uses the light action overlay; active becomes filled.
+Secondary buttons have less prominence than primary buttons. They can be used alone or alongside a primary action. In a button set containing one primary action and two other actions of equal importance, secondary buttons can be used for the two secondary actions.
 
 ### Ghost
 
-`.btn-ghost` has a transparent resting background and border. Hover uses the light action overlay; active becomes filled.
+Ghost buttons have the least prominence. They are suitable for supplementary actions and opposing/negative actions such as Cancel or Delete, especially alongside a primary action or within a group of controls.
 
-### Disabled
+## Danger modifier
 
-Buckholt disables pointer events and applies the base disabled opacity while preserving the variant's resting colour variables.
+Danger is a modifier, not a separate button type.
 
-Do not recreate these state colours manually. Load `css/buckholt.css` and use the classes above.
+Add `.btn-danger` to any standard button type:
 
-## Usage hierarchy
+```html
+<button type="button" class="btn btn-primary btn-danger">
+  <span class="button-label">Primary</span>
+</button>
 
-Buttons trigger actions; they are not navigation. Use a link when the intended result is navigation to another page.
+<button type="button" class="btn btn-secondary btn-danger">
+  <span class="button-label">Secondary</span>
+</button>
 
-The live documentation defines the hierarchy as:
+<button type="button" class="btn btn-ghost btn-danger">
+  <span class="button-label">Ghost</span>
+</button>
+```
 
-- **Primary** — high emphasis; the principal page action. Normally only one primary action per screen, with contextual exceptions such as a modal or side panel.
-- **Secondary** — medium emphasis; supporting or lower-tier actions. May appear alone or with a primary action.
-- **Ghost** — low emphasis; supplementary or opposing actions such as Cancel. Useful where several lower-emphasis actions are needed.
+Use danger styling for destructive or dangerous actions where the documentation hierarchy calls for it.
 
-A page does not require a primary button if there is no principal action.
+## Sizes
 
-## Size guidance
+Documented size modifiers:
 
-- **Small** — use where vertical space is limited or the layout is confined.
-- **Medium/default** — standard size for most UI buttons.
-- **Large** — use where greater emphasis is appropriate, such as the bottom of a form.
+- `.btn-sm` — small.
+- no size modifier — default/medium.
+- `.btn-lg` — large.
+
+Code & specs explicitly defines `.btn-sm` and `.btn-lg` as the modifiers for smaller and larger buttons.
+
+Usage guidance:
+
+- small: use where vertical space is limited or the layout is confined;
+- medium/default: standard size for most UI;
+- large: use where greater emphasis or a larger touch target is appropriate, for example at the end of a form.
+
+Do not create custom button dimensions when one of the supported sizes should be used.
+
+## Runtime dimensions
+
+`buckholt.css` is authoritative for runtime values. The current compiled implementation defines:
+
+- default minimum height: 40px;
+- default minimum width: 64px;
+- default horizontal padding: 16px;
+- default vertical padding: 4px;
+- default content gap: 8px;
+- default border width: 1px;
+- default radius: 8px;
+- default action type: 16px / 24px;
+- small minimum height: 32px;
+- small horizontal padding: 12px;
+- small type: 14px / 20px;
+- large minimum height: 48px;
+- large horizontal padding: 20px.
+
+Do not recreate the previously interpreted 3px bottom-border treatment. It is not the current compiled runtime implementation.
 
 ## Labels
 
 - Use sentence case.
-- Prefer a clear `{verb} + {noun}` label, for example `Create document`.
-- Common actions such as `Done`, `Close`, `Cancel`, `Add` and `Delete` may use a single word.
-- Do not use a noun alone when an action label can be clearer.
-- Prefer one line. If space is genuinely insufficient, wrap rather than truncate.
+- Prefer an action label that communicates what will happen.
+- Prefer `{verb} + {noun}` when useful, for example `Create document`.
+- Familiar actions such as Done, Close, Cancel, Add and Delete can be a single word.
+- Avoid noun-only labels where an action label would be clearer.
+- Prefer a single line, but wrap rather than truncate when space is genuinely limited.
 
-## Alignment
-
-- Full-page layouts: primary actions are generally left aligned.
-- Modals, data rows, repeat groups and similar contained patterns: actions are commonly right aligned.
-- Short forms or smaller screens may use full-width buttons.
-
-## Button sets
-
-The runtime stylesheet implements Buckholt sets through generic `*-set` rules.
-
-Verified button-set behaviour:
-
-- a class matching `button-*-set`/`button-set` conventions receives a default 8px gap and 8px row gap;
-- button sets receive an 8px top margin;
-- sets containing icon buttons reduce the horizontal gap to 4px;
-- `.button-set-stacked` changes the set to a column and makes its buttons full width.
-
-Usage rules from the live documentation:
-
-- group only contextually related actions;
-- do not use multiple primary/high-emphasis buttons in the same set;
-- with more than three calls to action, ghost buttons are often more appropriate than several secondary buttons;
-- do not mix icon-only buttons with labelled buttons in the same set;
-- on left-aligned full-page layouts, place the primary action to the left of lower-emphasis actions;
-- on right-aligned layouts, place the primary action to the right.
-
-## Icons
+## Icons in labelled buttons
 
 Icons are optional and should be used sparingly.
 
-For labelled buttons:
+The documented structure places a `.btn-icon` before `.button-label`:
 
-- icon size should match the label size;
-- icons go to the **left** of the label;
-- icon and label colours should match;
-- the icon must clearly relate to the action;
-- do not repurpose a familiar icon for a different action.
+```html
+<button type="button" class="btn btn-primary">
+  <div class="btn-icon">
+    <i class="fa-regular fa-ghost"></i>
+  </div>
+  <span class="button-label">Button label</span>
+</button>
+```
 
-The live documentation lists recognised actions including Add, Copy, Delete, Download, Edit, External link, Logout, Save, Search, Settings and Upload.
+Rules from the usage documentation:
 
-Within a button set, keep icon use consistent: either all comparable labelled buttons include icons or none do.
+- icons match the font size of the label;
+- icons appear to the left of the label;
+- icons directly relate to the action;
+- icon colour matches the label colour;
+- use recognisable icons for recognisable actions;
+- do not repurpose a familiar icon for an unrelated action;
+- use the default icon variation unless the icon is a defined status icon.
 
-Use the default icon variation unless the icon is a defined status icon.
+The documentation identifies common recognisable actions such as Add, Copy, Delete, Download, Edit, External link, Logout, Save, Search, Settings and Upload.
 
 ## Icon-only buttons
 
-Icon-only buttons may use primary, secondary or ghost styling, though primary and ghost are most common.
+The Code & specs page creates an icon-only button by placing `.btn-icon` inside `.btn` and omitting `.button-label`:
 
-Rules:
+```html
+<button type="button" class="btn btn-primary">
+  <div class="btn-icon">
+    <i class="fa-regular fa-ghost"></i>
+  </div>
+</button>
+```
 
-- supported only at medium/default and small sizes;
+Usage rules:
+
 - use only when the icon is standardised and clearly recognisable;
 - use sparingly;
-- for several compact actions, prefer a toolbar pattern;
-- provide an accessible text name;
-- a visible tooltip explaining the action is always required.
+- medium/default and small are the documented icon-only sizes;
+- primary, secondary and ghost styling can be used, with primary and ghost being common;
+- for several compact icon actions, prefer a toolbar pattern;
+- an icon-only button must have an accessible text name;
+- an icon-only button must have a visible tooltip explaining the action.
 
-The exact Font Awesome markup for Buckholt icons should be copied from the live Code & specs page or another verified Buckholt component example. Do not invent icon class names.
+Do not treat the bare Code & specs example as sufficient accessibility by itself; apply the usage/accessibility requirements when implementing a real icon-only control.
 
-## Keyboard and focus
+## Button sets
 
-Native buttons must remain keyboard operable.
+When two or more related buttons need to be grouped, place them inside `.button-set`.
 
-The live documentation states that users can activate a focused button with Enter or Space. Preserve Buckholt's `:focus-visible` treatment from the compiled stylesheet.
+```html
+<div class="button-set">
+  <button type="button" class="btn btn-primary">
+    <span class="button-label">Accept all</span>
+  </button>
+  <button type="button" class="btn btn-secondary">
+    <span class="button-label">Customise</span>
+  </button>
+  <button type="button" class="btn btn-ghost">
+    <span class="button-label">Reject all</span>
+  </button>
+</div>
+```
 
-## Primary action behaviour
+For a vertical full-width set, add `.button-set-stacked`:
 
-In modal contexts the primary button is typically the default focused action. In forms, pressing Enter may trigger the primary action where the currently focused control does not itself consume Enter.
+```html
+<div class="button-set button-set-stacked">
+  ...
+</div>
+```
 
-Do not implement this behaviour with custom JavaScript unless the surrounding product/framework requires it; native form semantics should be preferred.
+### Button-set structure
 
-## Danger buttons
+The Style documentation defines these layout recommendations and built-in pattern behaviours:
 
-The compiled stylesheet exposes danger action tokens, and Buckholt design material includes danger button styling, but the exact canonical danger modifier/class combination has not yet been verified from the live Code & specs page in this rebuild.
+- primary button sits on the outer edge of the set;
+- secondary and ghost buttons sit inside;
+- default spacing between buttons is 8px / 0.5rem;
+- stacked row spacing is 8px / 0.5rem;
+- sets containing icon-only buttons use 4px / 0.25rem horizontal spacing while retaining 8px / 0.5rem row spacing.
 
-Until that page is retrievable, **do not guess the danger class or markup**. If a task requests a danger button, report that the canonical modifier still needs to be verified.
+Usage guidance:
+
+- group only contextually related actions;
+- do not use multiple primary/high-emphasis buttons in the same set;
+- if there are more than three calls to action, ghost buttons may be more appropriate than several secondary buttons;
+- do not mix icon-only buttons with labelled buttons in the same button set;
+- keep icon usage consistent across comparable labelled buttons in the same set;
+- on left-aligned full-page layouts, place the primary action on the left/outer edge;
+- on right-aligned contained layouts, place the primary action on the right/outer edge.
+
+## Alignment
+
+- full-page layouts generally left-align the main action;
+- modals, data rows, repeat groups and similar contained patterns commonly right-align actions;
+- short forms or small screens may use full-width buttons.
+
+## States
+
+The documentation covers resting, hover, focus, active and disabled styling. `buckholt.css` is the runtime source of truth for the actual state values.
+
+Do not hard-code state colours into generated pages.
+
+### Disabled
+
+To disable a button, add the native `disabled` attribute to `<button>`:
+
+```html
+<button type="button" class="btn btn-primary" disabled>
+  <span class="button-label">Primary</span>
+</button>
+```
+
+The Style documentation states that disabled primary, secondary and ghost buttons retain their resting colours at 65% opacity. The runtime stylesheet prevents interaction for disabled buttons.
+
+### Focus and keyboard
+
+Preserve the focus treatment supplied by Buckholt. Native buttons remain keyboard operable and can be activated using Enter or Space when focused.
+
+In modal contexts the primary action may be the default focused action. In forms, Enter may trigger the primary form action where the focused control does not consume Enter itself. Prefer native form semantics over custom JavaScript.
+
+## Runtime dependencies
+
+Standalone Buckholt tests use the repository-level dependencies documented in `CLAUDE.md`: Proxima Nova, Font Awesome, and `css/buckholt.css` in the approved runtime order.
+
+For button icons use Font Awesome markup that is documented by Buckholt, such as the `fa-regular` examples in `examples.html`. Do not substitute another icon library.
 
 ## Do not
 
-- do not use buttons as links/navigation;
-- do not invent Bootstrap `btn-outline-*` or `btn-link` variants as Buckholt equivalents;
-- do not redraw Buckholt button styling with custom CSS;
-- do not override Buckholt state colours to make a screenshot look right;
-- do not put an icon after a labelled button's text;
-- do not mix icon-only and labelled buttons in the same button set;
+- do not use a button when the interaction is navigation;
+- do not invent Button variants or classes;
+- do not recreate Buckholt Button styling with custom CSS;
+- do not override state colours to make a screenshot look right;
+- do not use multiple primary actions in one button set;
+- do not put labelled-button icons after the label;
+- do not mix icon-only and labelled controls in one button set;
 - do not truncate button labels;
-- do not guess danger or icon markup that has not been verified.
+- do not omit accessible naming and tooltip guidance for icon-only controls.
