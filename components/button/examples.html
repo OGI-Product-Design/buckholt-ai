@@ -1,51 +1,100 @@
 <!--
-  Buckholt Button examples
-
-  These examples intentionally use only button classes and markup verified from
-  the compiled runtime CSS and readable live documentation. Icon and danger
-  examples are omitted until their canonical markup/modifier is verified from
-  the live Code & specs page.
+  Buckholt Button canonical examples.
+  Sources: Buckholt Button usage, style and code/specs documentation.
+  Runtime styling: ../../css/buckholt.css
 -->
 
-<!-- Primary -->
-<button type="button" class="btn btn-primary">Create document</button>
+<!-- Standard variants -->
+<button type="button" class="btn btn-primary">
+  <span class="button-label">Primary</span>
+</button>
 
-<!-- Secondary -->
-<button type="button" class="btn btn-secondary">Add document</button>
+<button type="button" class="btn btn-secondary">
+  <span class="button-label">Secondary</span>
+</button>
 
-<!-- Ghost -->
-<button type="button" class="btn btn-ghost">Cancel</button>
+<button type="button" class="btn btn-ghost">
+  <span class="button-label">Ghost</span>
+</button>
+
+<!-- Danger modifier: can be added to any standard button type -->
+<button type="button" class="btn btn-primary btn-danger">
+  <span class="button-label">Primary</span>
+</button>
+
+<button type="button" class="btn btn-secondary btn-danger">
+  <span class="button-label">Secondary</span>
+</button>
+
+<button type="button" class="btn btn-ghost btn-danger">
+  <span class="button-label">Ghost</span>
+</button>
 
 <!-- Sizes -->
-<button type="button" class="btn btn-primary btn-sm">Small action</button>
-<button type="button" class="btn btn-primary">Medium action</button>
-<button type="button" class="btn btn-primary btn-lg">Large action</button>
+<button type="button" class="btn btn-primary btn-sm">
+  <span class="button-label">Small</span>
+</button>
 
-<!-- Disabled -->
-<button type="button" class="btn btn-primary" disabled>Save changes</button>
-<button type="button" class="btn btn-secondary" disabled>Add item</button>
-<button type="button" class="btn btn-ghost" disabled>Cancel</button>
+<button type="button" class="btn btn-primary">
+  <span class="button-label">Default</span>
+</button>
 
-<!-- Related actions in a button set -->
+<button type="button" class="btn btn-primary btn-lg">
+  <span class="button-label">Large</span>
+</button>
+
+<!-- Labelled button with icon -->
+<button type="button" class="btn btn-primary">
+  <div class="btn-icon">
+    <i class="fa-regular fa-ghost"></i>
+  </div>
+  <span class="button-label">Button label</span>
+</button>
+
+<!-- Icon-only canonical code/specs structure.
+     When used in production, also provide the accessible text name and visible
+     tooltip required by the Buckholt usage guidance. -->
+<button type="button" class="btn btn-primary">
+  <div class="btn-icon">
+    <i class="fa-regular fa-ghost"></i>
+  </div>
+</button>
+
+<!-- Button set -->
 <div class="button-set">
-  <button type="button" class="btn btn-primary">Save changes</button>
-  <button type="button" class="btn btn-secondary">Save draft</button>
-  <button type="button" class="btn btn-ghost">Cancel</button>
+  <button type="button" class="btn btn-primary">
+    <span class="button-label">Accept all</span>
+  </button>
+  <button type="button" class="btn btn-secondary">
+    <span class="button-label">Customise</span>
+  </button>
+  <button type="button" class="btn btn-ghost">
+    <span class="button-label">Reject all</span>
+  </button>
 </div>
 
-<!-- Stacked/full-width button set -->
+<!-- Stacked button set -->
 <div class="button-set button-set-stacked">
-  <button type="button" class="btn btn-primary">Continue</button>
-  <button type="button" class="btn btn-ghost">Cancel</button>
+  <button type="button" class="btn btn-primary">
+    <span class="button-label">Accept all</span>
+  </button>
+  <button type="button" class="btn btn-secondary">
+    <span class="button-label">Customise</span>
+  </button>
+  <button type="button" class="btn btn-ghost">
+    <span class="button-label">Reject all</span>
+  </button>
 </div>
 
-<!--
-  Do not add guessed examples for:
-  - danger buttons;
-  - labelled buttons with icons;
-  - icon-only buttons;
-  - combo/split buttons;
+<!-- Disabled state -->
+<button type="button" class="btn btn-primary" disabled>
+  <span class="button-label">Primary</span>
+</button>
 
-  Add those only after the exact canonical markup is verified from:
-  https://buck.88mph.design/components/forms-inputs/button/code-specs/
--->
+<button type="button" class="btn btn-secondary" disabled>
+  <span class="button-label">Secondary</span>
+</button>
+
+<button type="button" class="btn btn-ghost" disabled>
+  <span class="button-label">Ghost</span>
+</button>
