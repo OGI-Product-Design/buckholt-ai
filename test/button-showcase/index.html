@@ -85,21 +85,6 @@
       max-width: 34rem;
     }
 
-    .sc-table {
-      width: 100%;
-      max-width: var(--text-max-width);
-      margin-top: var(--spacer-04);
-      border-collapse: collapse;
-    }
-
-    .sc-table th,
-    .sc-table td {
-      text-align: left;
-      vertical-align: top;
-      padding: var(--padding-03) var(--padding-04);
-      border-bottom: var(--border-width) solid var(--ui-border-02);
-    }
-
     .sc-code {
       display: block;
       max-width: var(--text-max-width);
@@ -846,50 +831,42 @@
     <!-- ============================================================ -->
     <section class="sc-section">
       <div class="text-block">
-        <h2 class="headline-02">10. Notes for maintainers</h2>
+        <h2 class="headline-02">10. Known runtime issue</h2>
         <p class="body-02">
-          Two small differences between the Button rules and the icon catalogue, reported rather than
-          silently resolved. Neither blocked this page.
+          One difference between the documented Buckholt Button behaviour and what the runtime actually
+          renders. It is recorded in <code>discrepancies/known-issues.md</code> and is deliberately not
+          worked around on this page.
         </p>
       </div>
 
-      <table class="sc-table body-01">
-        <thead>
-          <tr>
-            <th scope="col" class="label-01">Note</th>
-            <th scope="col" class="label-01">Detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Save icon name differs</td>
-            <td>
-              <code>components/button/rules.md</code> gives the Save mapping as
-              <code>fa-regular fa-save</code>. <code>foundations/iconography/catalogue.md</code> records
-              Save as <code>fa-regular fa-floppy-disk</code>. These resolve to the same Font Awesome
-              glyph, so nothing renders differently, but the catalogue is authoritative for icon naming
-              and the two files should agree.
-            </td>
-          </tr>
-          <tr>
-            <td>Print has no catalogue entry</td>
-            <td>
-              <code>rules.md</code> lists <code>fa-regular fa-print</code> among its verified common-action
-              examples, but the 111-icon catalogue contains no Print entry. No print action is used on
-              this page.
-            </td>
-          </tr>
-          <tr>
-            <td>Tooltip trigger is hover only</td>
-            <td>
-              The documented tooltip pattern sets <code>data-bs-trigger="hover"</code>, which means the
-              tooltip does not appear on keyboard focus — Bootstrap's own default is
-              <code>hover focus</code>. Keyboard and screen-reader users still get the action name from
-              <code>aria-label</code>, so this page follows the documented value unchanged.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="sc-panel">
+        <div class="text-block">
+          <h3 class="title-02">Focus falls through to Bootstrap after a mouse click</h3>
+          <p class="body-02">
+            Click any button above with a mouse, then move the pointer away. The button keeps a Bootstrap
+            focus treatment rather than a Buckholt one — most visibly on secondary, which turns grey
+            (<code>#5c636a</code>) with a white label instead of staying white with a blue label.
+          </p>
+          <p class="body-02">
+            Buckholt styles the Button focus state only through <code>:focus-visible</code>, while
+            Bootstrap 5.1.3 styles plain <code>:focus</code> for the same button classes Buckholt reuses.
+            A mouse click sets <code>:focus</code> but deliberately not <code>:focus-visible</code>, which
+            browsers reserve for keyboard and programmatic focus, so Buckholt's rule never matches and
+            Bootstrap's colours apply unopposed. Loading Buckholt after Bootstrap does not help, because
+            Buckholt defines no plain <code>:focus</code> rule for Bootstrap's to override.
+          </p>
+          <p class="body-02">
+            Primary, ghost and the danger combinations are affected too; secondary is simply where
+            Bootstrap's palette diverges furthest from Buckholt's. While the pointer is still over the
+            button, Buckholt's hover rule wins the background, so only the stray focus ring shows.
+          </p>
+          <p class="body-02">
+            Keyboard focus is unaffected — tab to any button in the row above and Buckholt's documented
+            treatment renders correctly, including the <code>#1748d0</code> focus ring. The fix belongs in
+            <code>css/buckholt.css</code>, not in this page or in product-level overrides.
+          </p>
+        </div>
+      </div>
     </section>
 
   </div>
