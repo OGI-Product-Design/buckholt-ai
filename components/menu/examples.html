@@ -1,48 +1,131 @@
-<!-- Buckholt Menu canonical examples -->
+<!-- Extracted verbatim from Buckholt Menu: Code & specs. Do not alter canonical DOM structure. -->
 
-<!-- Basic Menu panel -->
-<div class="menu-panel dropdown-menu show position-relative">
-  <ul class="menu-body" role="menu">
-    <li>
-      <button class="menu-item" type="button">My summary</button>
-    </li>
-    <li>
-      <button class="menu-item" type="button">Account information</button>
-    </li>
-  </ul>
+<!-- Menu base code -->
+<div class="menu">
+    <div class="menu-panel dropdown-menu">
+        <ul class="menu-body" role="menu">
+            <li>
+                <button class="menu-item" type="button">Action</button>
+            </li>
+            <li>
+                <button class="menu-item" type="button">Another action</button>
+            </li>
+            <li>
+                <button class="menu-item" type="button">Something else here</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Section header -->
+<li>
+    <h6 class="menu-section-header">Section header</h6>
+</li>
+
+<!-- Divider -->
+<li>
+    <hr class="menu-divider">
+</li>
+
+<!-- Link -->
+<div class="menu">
+    <div class="menu-panel dropdown-menu">
+        <ul class="menu-body" role="menu">
+            <li>
+                <a class="menu-item" href="#">Page link</a>
+            </li>  
+            <li>
+                <a class="menu-item" href="#">Another link</a>
+            </li>  
+            <li>
+                <a class="menu-item" href="#">Something else</a>
+            </li>                            
+        </ul>
+    </div>
 </div>
 
 <!-- Submenu -->
-<div class="menu-panel dropdown-menu show position-relative">
-  <ul class="menu-body" role="menu">
-    <li>
-      <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">
-        Share
-      </button>
-      <ul class="submenu" role="menu">
+<li>
+    <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">
+        Submenu
+    </button>
+    <ul class="submenu" role="menu">
         <li>
-          <button class="menu-item" type="button">Email</button>
+            <button class="menu-item" type="button">Option 1</button>
         </li>
         <li>
-          <button class="menu-item" type="button">Message</button>
+            <button class="menu-item" type="button">Option 2</button>
         </li>
-      </ul>
-    </li>
-    <li>
-      <button class="menu-item" type="button">Another action</button>
-    </li>
-  </ul>
-</div>
+        <li>
+            <button class="menu-item" type="button">Option 3</button>
+        </li>
+    </ul>
+</li>
 
-<!-- Group separation -->
-<div class="menu-panel dropdown-menu show position-relative">
-  <ul class="menu-body" role="menu">
-    <li><button class="menu-item" type="button">Terms of service</button></li>
-    <li><button class="menu-item" type="button">Privacy policy</button></li>
-    <li><hr class="menu-divider"></li>
-    <li><button class="menu-item" type="button">Logout</button></li>
-  </ul>
-</div>
+<!-- Single select -->
+<li>
+    <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">
+        Submenu
+    </button>
+    <ul class="submenu" role="menu">
+        <li>
+            <input type="radio" class="submenu-item-selectable" name="single" id="single-0-1" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="single-0-1" tabindex="0" role="menuitemradio" aria-checked="false">
+                Option 1
+            </label>
+        </li>
+        <li>
+            <input type="radio" class="submenu-item-selectable" name="single" id="single-0-2" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="single-0-2" tabindex="0" role="menuitemradio" aria-checked="false">
+                Option 2
+            </label>
+        </li>
+        <li>
+            <input type="radio" class="submenu-item-selectable" name="single" id="single-0-3" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="single-0-3" tabindex="0" role="menuitemradio" aria-checked="false">
+                Option 3
+            </label>
+        </li>
+    </ul>
+</li>
 
-<!-- Selectable submenu items use native radio/checkbox inputs paired with labels.
-     Follow the exact selectable-item markup from Buckholt documentation when implementing that variant. -->
+<!-- Multi select -->
+<li>
+    <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">
+        Submenu
+    </button>
+    <ul class="submenu" role="menu">
+        <li>
+            <input type="checkbox" class="submenu-item-selectable" id="multi-0-1" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="multi-0-1" tabindex="0" role="menuitemcheckbox" aria-checked="false">
+                Option 1
+            </label>
+        </li>
+        <li>
+            <input type="checkbox" class="submenu-item-selectable" id="multi-0-2" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="multi-0-2" tabindex="0" role="menuitemcheckbox" aria-checked="flase">
+                Option 2
+            </label>
+        </li>
+        <li>
+            <input type="checkbox" class="submenu-item-selectable" id="multi-0-3" tabindex="-1" aria-hidden="true">
+            <label class="menu-item" for="multi-0-3" tabindex="0" role="menuitemcheckbox" aria-checked="false">
+                Option 3
+            </label>
+        </li>
+    </ul>
+</li>
+
+<!-- Menu item icon -->
+<li>
+    <button class="menu-item" type="button">
+        <i class="fa-regular fa-pencil"></i>Edit
+    </button>
+</li>
+
+<!-- Danger hover -->
+<li>
+    <button class="menu-item menu-item-danger" type="button">
+        <i class="fa-regular fa-trash-can"></i>Delete
+    </button>
+</li>
