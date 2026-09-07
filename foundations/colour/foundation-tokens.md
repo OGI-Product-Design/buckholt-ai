@@ -119,9 +119,53 @@ These are the functional colour roles exposed by the current compiled `../../css
 
 ## Expressive roles
 
-Buckholt also exposes expressive roles derived from the primary and accent palettes. These are for tone/emphasis and should not replace semantic action or feedback tokens.
+Buckholt exposes four expressive families. The primary family is the unprefixed default; secondary, tertiary and quaternary are selected by their documented modifiers on components that support them. These are tone/emphasis roles and must not replace semantic action or feedback tokens.
 
-The runtime includes primary, secondary and tertiary expressive families with pale/light-or-soft/deep/rich values and overlay variants. Read `css/buckholt.css` when an expressive component requires the exact role.
+### Primary expressive family — default
+
+| Role | Variable | Value |
+| --- | --- | --- |
+| pale | `--expressive-pale` | `#e7ecf9` |
+| soft | `--expressive-soft` | `#b7c6ee` |
+| deep | `--expressive-deep` | `#1748d0` |
+| rich | `--expressive-rich` | `#092676` |
+| pale overlay | `--expressive-pale-overlay` | `rgba(15, 64, 197, 0.1)` |
+| soft overlay | `--expressive-soft-overlay` | `rgba(15, 64, 197, 0.3)` |
+
+There is no `.expressive-primary` runtime modifier. Primary is already the default.
+
+### Secondary expressive family
+
+| Role | Variable | Value |
+| --- | --- | --- |
+| pale | `--expressive-secondary-pale` | `#EEEAFB` |
+| soft | `--expressive-secondary-soft` | `#CDC1F1` |
+| deep | `--expressive-secondary-deep` | `#5731D6` |
+| rich | `--expressive-secondary-rich` | `#2C196B` |
+| pale overlay | `--expressive-secondary-pale-overlay` | `rgba(87, 49, 214, 0.1)` |
+| soft overlay | `--expressive-secondary-soft-overlay` | `rgba(87, 49, 214, 0.3)` |
+
+### Tertiary expressive family
+
+| Role | Variable | Value |
+| --- | --- | --- |
+| pale | `--expressive-tertiary-pale` | `#FBE8EE` |
+| soft | `--expressive-tertiary-soft` | `#F3B8CC` |
+| deep | `--expressive-tertiary-deep` | `#DB1256` |
+| rich | `--expressive-tertiary-rich` | `#570722` |
+| pale overlay | `--expressive-tertiary-pale-overlay` | `rgba(219, 18, 86, 0.1)` |
+| soft overlay | `--expressive-tertiary-soft-overlay` | `rgba(219, 18, 86, 0.3)` |
+
+### Quaternary expressive family
+
+| Role | Variable | Value |
+| --- | --- | --- |
+| pale | `--expressive-quaternary-pale` | `#E7F2F6` |
+| soft | `--expressive-quaternary-soft` | `#B7D9E3` |
+| deep | `--expressive-quaternary-deep` | `#0E80A4` |
+| rich | `--expressive-quaternary-rich` | `#053342` |
+| pale overlay | `--expressive-quaternary-pale-overlay` | `rgba(14, 128, 164, 0.1)` |
+| soft overlay | `--expressive-quaternary-soft-overlay` | `rgba(14, 128, 164, 0.3)` |
 
 ## Implementation rule
 
