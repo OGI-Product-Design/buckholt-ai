@@ -1,158 +1,84 @@
-# Buckholt Card
+# Card
 
-## Status
+## Verification
 
-Card guidance rebuilt from the supplied Buckholt Usage, Style and Code & specs documentation and checked against `../../css/buckholt.css`.
+Source-verified against the Buckholt Card Usage, Style and Code & specs HTML pages supplied on 7 September 2026. For exact DOM structure, use `examples.html`; its markup is extracted from the Code & specs source.
 
 ## Purpose
 
-Cards are adaptable containers used to group and present related content clearly and consistently. Card content varies by use case and may include Text blocks, tags, images and documented interactive elements such as Buttons and Links.
+Cards are adaptable containers for grouping related content into a distinct unit. They may contain documented Buckholt content such as Text blocks, images, Links and selection controls.
 
-Use the Card component when content benefits from being grouped as a distinct item or unit. Do not use Card merely as decoration around unrelated content.
+## Canonical structure
 
-## Base structure
+Do not reconstruct Card markup from this prose. Use `examples.html` for the exact documented structures.
 
-```html
-<div class="card">
-  <div class="card-body">
-    <div class="text-block">
-      <h3 class="title-03">Card title</h3>
-      <p>Supporting content.</p>
-    </div>
-  </div>
-</div>
-```
+The documented base Card uses `.card > .card-body > .text-block`. The Code & specs example uses an `<h4 class="title-03">` inside the Text block; preserve that exact source example in canonical markup.
 
-`.card` is the outer container and `.card-body` provides the documented internal content area. Reuse documented Buckholt components inside the body instead of rebuilding their styles locally.
+## Size
 
-## Size and layout
+The Code & specs source documents the default Card and a large Card using `.card-lg`.
 
-Card width is dictated by its container and expands to the available width by default. Height is content-dependent. Internal spacing is controlled by the Card runtime and spacing tokens.
+Do not promote `.card-sm` or another runtime helper into the canonical Card API unless Buckholt documentation explicitly establishes it.
 
-The runtime also supports documented compact/spacing variants such as `.card-sm` where the documentation calls for them. Do not invent arbitrary Card padding or fixed heights.
+## Secondary Card
 
-## Secondary style
-
-Use `.card-secondary` for the documented secondary Card treatment:
-
-```html
-<div class="card card-secondary">
-  <div class="card-body">...</div>
-</div>
-```
-
-Let Buckholt provide the background and border treatment. Do not approximate the secondary style with custom colour values.
+Add `.card-secondary` for the documented secondary treatment. Let `buckholt.css` provide its visual treatment rather than recreating it locally.
 
 ## Images
 
-Images may appear at the top of a standard Card:
+The Code & specs source places the image directly inside `.card` as:
 
 ```html
-<div class="card">
-  <img src="..." class="card-img" alt="...">
-  <div class="card-body">...</div>
-</div>
+<img src="..." class="card-img" alt="...">
 ```
 
-Provide meaningful `alt` text when the image communicates information. Use an empty `alt` when the image is purely decorative.
+For horizontal Cards, the same `.card-img` image remains a direct child of `.card`; do **not** wrap it inside a separate `<div class="card-img">`.
 
-### Horizontal cards
+Use `.card-horizontal` for the documented horizontal layout and add `.card-horizontal-right` for the image-right variation.
 
-Use `.card-horizontal` for the documented image-and-content horizontal layout. Add `.card-horizontal-right` when the image belongs on the right.
+## Card with Link
 
-```html
-<div class="card card-horizontal">
-  <div class="card-img">
-    <img src="..." alt="...">
-  </div>
-  <div class="card-body">...</div>
-</div>
-```
-
-Do not recreate horizontal Card layout with local flex CSS.
+Buckholt demonstrates a standalone Link inside `.card-body` after the Text block. Preserve the Link component's documented `.link-standalone > .icon` structure when using that exact composition.
 
 ## Clickable Card
 
-A Clickable Card is a navigational Card. Replace the outer `div` with an anchor and add `.card-clickable`.
+For whole-card navigation, Buckholt changes the outer element to an anchor and adds `.card-clickable`:
 
 ```html
-<a href="/destination" class="card card-clickable">
-  <div class="card-body">
-    <div class="text-block">
-      <h3 class="title-03">Clickable card title</h3>
-      <p>Supporting content.</p>
-    </div>
-  </div>
-</a>
+<a href="#" class="card card-clickable">...</a>
 ```
 
-The whole Card is the navigation target. Buckholt documentation says Clickable Cards should not contain separate internal calls-to-action because that creates competing interactive targets. Media and supporting icons may be used where appropriate.
-
-Use semantic link behaviour: a Clickable Card navigates somewhere. Do not use it for an action that changes state without navigation.
-
-The runtime supplies hover/focus treatment and the Card's navigation indicator. Do not recreate these locally.
+Do not add competing nested interactive controls inside a clickable Card unless Buckholt explicitly documents the composition.
 
 ## Selectable Card
 
-Use `.card-selectable` for Cards representing a radio or checkbox choice. The input belongs inside the Card before the body.
-
-Single select:
-
-```html
-<div class="card card-selectable">
-  <input class="form-check-input" type="radio" name="selection" id="selection-1">
-  <div class="card-body">...</div>
-</div>
-```
-
-Multi select:
-
-```html
-<div class="card card-selectable">
-  <input class="form-check-input" type="checkbox" id="selection-2">
-  <div class="card-body">...</div>
-</div>
-```
-
-The selectable Card is intended to be activated from anywhere within its container and must remain keyboard operable. Preserve logical focus order and native radio/checkbox semantics.
+Use `.card-selectable` with a native radio or checkbox input placed directly inside the Card before `.card-body`. Preserve native radio/checkbox semantics and keyboard behaviour.
 
 ## Emphasis tile composition
 
-Cards may contain a documented Emphasis tile. Place it in a second `.card-body`; this is the documented structure that creates the required separation from the main Card content.
+The Code & specs source demonstrates an Emphasis tile in a second `.card-body` and documents these modifiers:
 
-```html
-<div class="card">
-  <div class="card-body">...</div>
-  <div class="card-body">
-    <div class="emphasis-tile">...</div>
-  </div>
-</div>
-```
+- `.emphasis-tile`
+- `.emphasis-tile-inline`
+- `.emphasis-tile-secondary` inside `.card-secondary`
 
-The documentation also shows `.emphasis-tile-inline` where that treatment is required. Emphasis tile is its own pattern/component concern; do not reinterpret it as generic Card styling.
+The source examples for these compositions intentionally contain `...` placeholders. Do not invent the omitted Emphasis tile internals in canonical Card markup; use the Emphasis tile's own source if/when it becomes available.
 
 ## Accessibility
 
-- Use semantic headings according to page hierarchy, not simply the heading level used in documentation examples.
-- Clickable Cards must be anchors with meaningful destinations and should not contain nested interactive CTAs.
-- Selectable Cards must retain real radio/checkbox controls and keyboard interaction.
-- Give informative images useful alternative text and decorative images empty alternative text.
-- Do not rely only on border or colour to communicate selection or state where another semantic mechanism is required.
+Use meaningful alternative text when an image conveys information and empty `alt=""` when it is decorative. Clickable Cards remain links; selectable Cards retain native form controls. Heading level in a real product should follow page hierarchy, while `examples.html` preserves the exact documented Code & specs example.
 
-## Runtime notes
+## Runtime
 
-The compiled runtime includes the documented `.card`, `.card-body`, `.card-secondary`, `.card-horizontal`, `.card-horizontal-right`, `.card-clickable`, `.card-selectable` and Emphasis tile composition behaviour. It also supplies Card border, radius, background, padding and interactive state variables.
-
-Extra Bootstrap Card helpers present in the compiled stylesheet are runtime flexibility, not automatically canonical Buckholt guidance.
+Use `buckholt.css` for Card dimensions, spacing, borders, radius, image treatment and interactive states. Do not recreate Card layout or appearance in page-specific CSS.
 
 ## Agent rules
 
-- Use `.card` as the base Card container.
-- Put Card content inside `.card-body`.
-- Reuse Text block, Link, Button, Key-value and other documented components inside Cards rather than restyling them.
-- Use `.card-secondary` only for the documented secondary treatment.
-- Use `.card-horizontal` and `.card-horizontal-right` for documented horizontal image layouts.
-- Use an `<a>` with `.card-clickable` for whole-card navigation; do not place separate interactive CTAs inside it.
-- Use `.card-selectable` with a native radio or checkbox for Card choices.
-- Use a second `.card-body` when composing the documented Emphasis tile treatment.
-- Do not invent Card widths, fixed heights, padding, borders, radius, shadows or interactive states with custom CSS.
+- Use `examples.html` as the canonical Card DOM source.
+- Use `.card-body` for documented Card content areas.
+- Preserve direct-child `<img class="card-img">` markup; do not introduce a `.card-img` wrapper.
+- Use `.card-lg`, `.card-secondary`, `.card-horizontal`, `.card-horizontal-right`, `.card-clickable` and `.card-selectable` only as documented.
+- Do not promote `.card-sm` or other runtime-only helpers into canonical guidance without documentation evidence.
+- Keep native radio/checkbox controls for selectable Cards.
+- Do not fill source `...` placeholders by inference.
+- Do not recreate Card styling with custom CSS.
