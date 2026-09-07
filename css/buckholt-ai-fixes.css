@@ -21,8 +21,6 @@
    - Verify each fix against Buckholt documentation and runtime behaviour first.
    - Every fix must reference `discrepancies/known-issues.md`.
    - Do not redefine complete components here when a narrow correction is enough.
-   - Keep `css/buckholt.css` as the upstream runtime snapshot rather than using
-     this file to silently redesign Buckholt.
    - When an upstream Buckholt build fixes an issue, remove the corresponding
      override after verification.
 
@@ -30,25 +28,74 @@
    -----
    <link rel="stylesheet" href="css/buckholt.css">
    <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
-
-   Fix template
-   ------------
-
-   / * ========================================================================
-      COMPONENT — short issue name
-      Source: Buckholt <Component> documentation
-      Issue: concise description of the verified runtime difference
-      Status: verified runtime discrepancy; compatibility fix applied here
-      Tracking: discrepancies/known-issues.md
-      ======================================================================== * /
-
-   .selector {
-     property: corrected-value;
-   }
-
-   Note: the spaced comment delimiters in the template above are intentional so
-   the example remains inside this file-level comment.
    ============================================================================ */
 
-/* No compatibility fixes are added here until each one is individually
-   re-verified against the relevant Buckholt documentation and current runtime. */
+/* ============================================================================
+   BUTTON — Bootstrap mouse-focus bleed-through
+   Source: Buckholt Button documentation and runtime state variables
+   Issue: Bootstrap 5.1.3 applies its plain :focus colours after mouse clicks,
+          while Buckholt only defines its visible focus treatment on
+          :focus-visible.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.btn:focus:not(:focus-visible) {
+  color: var(--button-label);
+  background-color: var(--button-background);
+  border-color: var(--button-border);
+  box-shadow: none;
+  outline: 0;
+  background-image: none;
+}
+
+/* Preserve the documented raised bottom edge for primary/secondary resting
+   states after mouse focus. Ghost buttons remain at their normal 1px border. */
+.btn-primary:focus:not(:focus-visible),
+.btn-secondary:focus:not(:focus-visible) {
+  border-bottom-width: calc(1px + 0.125rem);
+}
+
+/* ============================================================================
+   LINK — documented visited state missing from runtime
+   Source: Buckholt Link Style documentation
+   Issue: visited text and icon should use Expressive secondary deep (#5731d6),
+          but the current runtime contains no :visited styling.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+a:visited {
+  color: var(--expressive-secondary-deep);
+}
+
+a.link-standalone:visited .icon {
+  color: var(--expressive-secondary-deep);
+}
+
+/* ============================================================================
+   PROGRESS BAR — error status icon renders black
+   Source: Buckholt Progress bar documentation
+   Issue: the data-URI SVG tries to use var(--error-01), which cannot resolve
+          inside the isolated SVG document. Encode the documented error colour
+          literally, matching the working success-icon technique.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.progress-header:has(~ .is-invalid) {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23d7050c'%3e%3cpath d='M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3e%3c/svg%3e");
+}
+
+/* ============================================================================
+   VERSA-TILE — prevent action area shrinking and wrapping
+   Source: Buckholt Versa-tile documentation and verified runtime behaviour
+   Issue: icon-only action sets can wrap because the actions column is allowed
+          to shrink while the body claims the available width.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.versatile-actions {
+  flex-shrink: 0;
+}
