@@ -1,0 +1,44 @@
+<!-- Buckholt Tooltip canonical examples -->
+
+<!-- Top -->
+<button type="button" class="btn btn-secondary"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        data-bs-title="Tooltip on top">
+  <span class="button-label">Tooltip on top</span>
+</button>
+
+<!-- Right -->
+<button type="button" class="btn btn-secondary"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        data-bs-title="Tooltip on right">
+  <span class="button-label">Tooltip on right</span>
+</button>
+
+<!-- Bottom -->
+<button type="button" class="btn btn-secondary"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="Tooltip on bottom">
+  <span class="button-label">Tooltip on bottom</span>
+</button>
+
+<!-- Left -->
+<button type="button" class="btn btn-secondary"
+        data-bs-toggle="tooltip"
+        data-bs-placement="left"
+        data-bs-title="Tooltip on left">
+  <span class="button-label">Tooltip on left</span>
+</button>
+
+<!-- Documented Buckholt initialisation -->
+<script>
+const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltips = Array.from(tooltipTriggers).map(el => {
+  return new bootstrap.Tooltip(el, {
+    offset: [0, 4],
+    delay: { show: 800, hide: 100 }
+  });
+});
+</script>
