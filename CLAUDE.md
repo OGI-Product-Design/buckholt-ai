@@ -106,6 +106,26 @@ Read:
 
 The Button Usage, Style and Code & specs documentation have all been supplied.
 
+### Heading attachment
+Read:
+- `components/heading-attachment/rules.md`
+- `components/heading-attachment/examples.html`
+- `components/text-block/rules.md`
+- the documentation for whichever component is used as the attachment
+
+Heading attachment rules:
+- Heading attachment extends Text block; do not build it as a separate heading system;
+- use `.heading` as the row wrapper and `.heading-content` for heading-related content;
+- put the attached element after `.heading-content`;
+- use one compact attachment that relates directly to the section;
+- suitable attachments include links, buttons/close controls, tags/badges or related metadata where documented;
+- do not use the attachment area for primary page actions, large controls or multiple competing actions;
+- inherit Text block colour and typography rules;
+- preserve semantic heading hierarchy independently of visual type class;
+- do not recreate the heading-row flex layout or 1rem gap with custom CSS.
+
+The Heading attachment Usage, Style and Code & specs documentation have all been supplied.
+
 ### Icon block
 Read:
 - `components/icon-block/rules.md`
@@ -128,6 +148,23 @@ Icon block rules:
 
 The Icon block Usage, Style and Code & specs documentation have all been supplied. The Usage page appears to have its `When to use` and `When not to use` headings reversed; follow the meaning of the bullet content rather than those two labels.
 
+### Key-value pair
+Read:
+- `components/key-value-pair/rules.md`
+- `components/key-value-pair/examples.html`
+- relevant Typography, Colour and Spacing foundations
+
+Key-value rules:
+- use `.key-value` with one `.key` and one `.value` for a single pair;
+- use `.key-value-stacked` for the documented vertical form;
+- use `.key-value-list` for grouped pairs and `.key-value-list-row` for a wrapping horizontal list;
+- use `.grid.key-value-grid` with `.key-value-item` for the documented grid; `--columns` is the documented column configuration point;
+- use `.key-value-table` for the documented two-column metadata presentation, while using a semantic `<table>` when true table semantics are required;
+- documented size modifiers include `.key-value-xs`, `.key-value-sm`, default, `.key-value-lg`, `.key-value-xl` and `.key-value-display`;
+- do not reproduce Key-value typography, colours, gaps or grouping layouts with custom CSS.
+
+The Key-value pair Usage, Style and Code & specs documentation have all been supplied.
+
 ### Link
 Read:
 - `components/link/rules.md`
@@ -143,9 +180,28 @@ Link rules:
 - use the external-link icon for links that open content in a new tab;
 - use `.link-set` / `.linkset-item`, with `.link-set-stacked` for vertical groups;
 - do not use generic Bootstrap `link-*` utilities as canonical Buckholt component guidance simply because they exist in the runtime CSS;
-- documentation defines the intended visited Link colour. The current runtime has a known standalone visited-icon mismatch recorded in `discrepancies/known-issues.md`.
+- documentation defines the intended visited Link colour. The current runtime has a known visited-state mismatch recorded in `discrepancies/known-issues.md`.
 
 The Link Overview, Style and Code & specs documentation have all been supplied.
+
+### Summary Meta
+Read:
+- `components/summary-meta/rules.md`
+- `components/summary-meta/examples.html`
+- `components/icon-block/rules.md`
+- `components/key-value-pair/rules.md` when Key-value content is used
+- relevant Typography and Colour foundations
+
+Summary Meta rules:
+- use `.summary-meta` as the base composition with an Icon block followed by `.summary-meta-body`;
+- use `.summary-meta-headline`, `.summary-meta-label` and `.summary-meta-text` for those documented content roles;
+- keep content short and scan-friendly, usually aligned around the documented three-line content model with an 80px Icon block;
+- use `.summary-meta-stacked` for the documented vertical/centred variant;
+- reuse Icon block and Key-value rather than rebuilding their styling inside Summary Meta;
+- choose semantic heading level from page hierarchy rather than copying the documentation's example `h4` blindly;
+- do not recreate Summary Meta layout, gap, alignment or typography with custom CSS.
+
+The Summary Meta Usage, Style and Code & specs documentation have all been supplied.
 
 ### Text block
 Read:
