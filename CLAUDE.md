@@ -27,6 +27,7 @@ Component-specific Code & specs markup outranks generic cross-component conventi
 5. `patterns/<pattern>/` — composition guidance for how Buckholt pages, forms and recurring interactions are assembled from components.
 6. `components/<component>/rules.md` and `examples.html` — component-specific guidance and canonical examples.
 7. `discrepancies/known-issues.md` — significant verified documentation/runtime differences.
+8. `verification/` — source and runtime verification status. Read `verification/runtime-verification-framework.md` before changing runtime status or adding compatibility fixes.
 
 Old SCSS, token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
 
@@ -166,9 +167,11 @@ Always read the component folder rather than relying on this file for detailed m
 - **Switch** has default, small and always-active treatments. Always-active means a permanently/enforced on condition, not simply disabled.
 - **Slider** is the documented single-value range + number-input pattern; do not invent the two-handle range variant marked as coming soon.
 - **Text area** uses the shared Form behaviour for character counting when the counter is present.
-- **Table** is currently provisional/WIP; preserve supplied semantics and do not invent data-grid features.
+- **Table** is source-partial because complete Code & specs HTML was not supplied; preserve only supported semantics and do not invent data-grid features.
 
 ## Runtime dependencies
+
+Styles must load in this order:
 
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -184,15 +187,24 @@ For Bootstrap-driven Buckholt behaviours such as tooltips, dropdown menus, alert
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
 
-Documented Buckholt behaviour scripts currently stored in the repo:
+`components/form/form.js` depends on jQuery. When Form-script enhancements are used, load jQuery before the Buckholt component scripts:
 
 ```html
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="components/dropdown/dropdown.js"></script>
 <script src="components/form/form.js"></script>
 <script src="components/tabs/tabs.js"></script>
 ```
 
-Use `dropdown.js` for the documented Dropdown enhancement, `form.js` for shared Form behaviours including Text area counting, and `tabs.js` for overflow scroll controls. Do not independently recreate those behaviours.
+Use `dropdown.js` for the documented Dropdown enhancement, `form.js` for shared Form behaviours including Text area counting, Number input step controls and Checkbox/Radio read-only handling, and `tabs.js` for overflow scroll controls. Do not independently recreate those behaviours.
+
+## Runtime verification
+
+Source verification and runtime verification are separate gates.
+
+Before marking a component `RUNTIME VERIFIED`, follow `verification/runtime-verification-framework.md` and update `verification/runtime-status.md`. Runtime mismatches must be classified before being corrected. Do not rewrite source-verified HTML to compensate for runtime defects.
+
+Verified compatibility corrections belong in `css/buckholt-ai-fixes.css` and require a corresponding entry in `discrepancies/known-issues.md`. Do not edit `css/buckholt.css` to make a test page look correct.
 
 ## Accessibility and native semantics
 
