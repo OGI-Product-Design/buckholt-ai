@@ -40,6 +40,8 @@ buckholt-ai/
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
+    ├── alert/
+    ├── breadcrumb/
     ├── button/
     ├── card/
     ├── heading-attachment/
@@ -47,6 +49,7 @@ buckholt-ai/
     ├── key-value-pair/
     ├── link/
     ├── list/
+    ├── menu/
     ├── menu-button/
     ├── modal/
     ├── progress-bar/
@@ -80,6 +83,16 @@ Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`
 
 ## Component coverage
 
+### Alert
+Read `components/alert/rules.md` and `components/alert/examples.html`, plus Colour, Iconography, Button and Link guidance where relevant. Alert covers local nondisruptive feedback, information/success/warning/error variants, optional icons and notes, context-bar actions, and dismissible behaviour.
+
+The message is required. Only make an Alert dismissible when the message is noncritical and does not represent a persistent unresolved condition.
+
+### Breadcrumb
+Read `components/breadcrumb/rules.md` and `components/breadcrumb/examples.html`, plus Link, Menu button and Menu guidance for overflow. Breadcrumb covers location-based and path-based trails, current-page semantics, generated dividers and responsive overflow behaviour.
+
+Breadcrumbs are secondary navigation and should not replace primary navigation. Long trails should use Buckholt's Overflow menu pattern rather than wrapping.
+
 ### Button
 Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
 
@@ -112,6 +125,11 @@ A documented/runtime difference for the visited Link state is recorded in `discr
 Read `components/list/rules.md` and `components/list/examples.html`. List covers semantic unordered and ordered lists, optional list headings, nested lists, unstyled lists and icon-supported list items.
 
 Keep native list semantics even when markers are visually removed. Use icons sparingly and do not communicate status through icon/colour alone.
+
+### Menu
+Read `components/menu/rules.md` and `components/menu/examples.html`, together with Menu button and Iconography guidance where relevant. Menu covers contextual action lists, submenus, selectable submenu items, dividers, destructive/disabled states and documented focus/interactions.
+
+Disable only temporarily unavailable actions; permanently unavailable or permission-restricted actions should be hidden. Keep Menu items semantic and keyboard operable.
 
 ### Menu button
 Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, together with Button, Tooltip and Iconography guidance. Menu button covers standard Menu buttons, Combo buttons and Overflow menu buttons.
@@ -157,7 +175,7 @@ Use whole-tile anchors only for navigation; otherwise keep item actions inside `
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus and modals, also load:
+For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts and modals, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
