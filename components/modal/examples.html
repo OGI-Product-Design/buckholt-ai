@@ -1,0 +1,92 @@
+<!-- Default modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <span class="button-label">Open modal</span>
+</button>
+
+<div class="modal fade" tabindex="-1" id="exampleModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02">Edit details</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <p>Update the information below.</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="text-block">
+          <p>Modal body content goes here.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary">
+            <span class="button-label">Save changes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Centred modal -->
+<div class="modal fade" tabindex="-1" id="centredModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02">Confirm action</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost"><span class="button-label">Cancel</span></button>
+          <button type="button" class="btn btn-primary"><span class="button-label">Confirm</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scrollable modal -->
+<div class="modal fade" tabindex="-1" id="longContent" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02">Long content</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-block">
+          <p>Scrollable modal content.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Size modifiers are applied to .modal-dialog -->
+<div class="modal-dialog modal-sm"></div>
+<div class="modal-dialog"></div>
+<div class="modal-dialog modal-lg"></div>
+<div class="modal-dialog modal-xl"></div>
