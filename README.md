@@ -46,8 +46,11 @@ buckholt-ai/
     ├── breadcrumb/
     ├── button/
     ├── card/
+    ├── form/
     ├── heading-attachment/
     ├── icon-block/
+    ├── input-group/
+    ├── input-row/
     ├── key-value-pair/
     ├── link/
     ├── list/
@@ -60,6 +63,7 @@ buckholt-ai/
     ├── table/
     ├── tag/
     ├── text-block/
+    ├── text-input/
     ├── toast/
     ├── tooltip/
     └── versa-tile/
@@ -117,6 +121,11 @@ Read `components/card/rules.md` and `components/card/examples.html`. Card covers
 
 Use documented nested Buckholt components inside Card rather than recreating their styles. Clickable Cards are navigation and should not contain competing internal CTAs.
 
+### Form
+Read `components/form/rules.md` and `components/form/examples.html`, plus the guidance for every input/control used inside it. Form is the composition layer for related controls, optional Text block context, one or more `.form-body` sections and completion/exit actions.
+
+A verified source/runtime mismatch exists between `.form-actions` in rendered documentation examples and `.form-buttons` in the explanatory documentation/runtime. The repo uses `.form-buttons` for runtime-correct Buckholt behaviour; see `discrepancies/known-issues.md`.
+
 ### Heading attachment
 Read `components/heading-attachment/rules.md` and `components/heading-attachment/examples.html` together with Text block. Heading attachment extends Text block by adding one closely related contextual action or supporting element beside the heading using `.heading` and `.heading-content`.
 
@@ -126,6 +135,16 @@ Keep the heading primary, use one compact attachment, and reuse documented compo
 Read `components/icon-block/rules.md` and `components/icon-block/examples.html`, plus Colour, Iconography and Radius foundations. Icon block covers the six documented sizes from extra small through extra extra large, neutral/default treatment, expressive light/dark treatments and secondary/tertiary/quaternary expressive palette modifiers.
 
 When an Icon block is composed inside a Text block, the Text block component controls the relationship to headings, eyebrow text, inline icons and spacing.
+
+### Input group
+Read `components/input-group/rules.md` and `components/input-group/examples.html`, plus the guidance for the nested input and Response button where used. Input group combines an existing Buckholt input with start/end addons or related inline response actions.
+
+Use `.input-group-text` for addons and `.btn.btn-response` for the documented grouped-action pattern. Do not confuse grouped response buttons with the single `.input-btn` contained inside Text input.
+
+### Input row
+Read `components/input-row/rules.md` and `components/input-row/examples.html`, plus the guidance for each child input. Input row uses `.row.input-row` and Bootstrap columns to place genuinely related controls side by side.
+
+Use `.col` for equal widths or documented `.col-*` grid sizing for intentional ratios. Do not invent responsive stacking beyond the Bootstrap classes present in the markup.
 
 ### Key-value pair
 Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`, plus Typography, Colour and Spacing foundations. Key-value covers single and stacked pairs, lists and row lists, configurable grids, two-column key-value tables and the documented typography size modifiers.
@@ -186,6 +205,11 @@ Choose Tag behaviour by function: do not use Tags as navigation, preserve native
 Read `components/text-block/rules.md` and `components/text-block/examples.html`, plus Typography, Spacing, Iconography and Colour foundations. Text block covers semantic heading structure, Buckholt display/headline/title type sets, paragraphs, eyebrow text, inline heading icons and icon blocks.
 
 Important composition rules include: use semantic heading levels independently of visual type style; do not combine icon blocks with eyebrow text or inline heading icons; use inline icons rather than icon blocks with display-sized headings.
+
+### Text input
+Read `components/text-input/rules.md` and `components/text-input/examples.html`, plus Form, Colour, Typography, Spacing, Radius and Iconography guidance. Text input covers the canonical `.input > .input-label + .response.text-input` structure, labels, placeholder/helper/assistive text, validation, disabled/read-only states, supporting icons and one optional input action button.
+
+The default/medium input is established. Small is documented through `.form-control-sm` but its Code & specs page explicitly marks the implementation as pending, so do not invent missing small-input behaviour.
 
 ### Toast
 Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography guidance. Toast covers immediate non-blocking feedback, info/success/warning/error treatments, optional icons/notes/context, manual or timed dismissal and Bootstrap fade/show behaviour.
