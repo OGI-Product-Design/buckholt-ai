@@ -1,23 +1,96 @@
+<!-- Extracted verbatim from Buckholt Select: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
 <div class="input">
-  <div class="input-label">
-    <label for="exampleSelect" class="form-label">Select label</label>
-  </div>
-  <div class="response select-input">
-    <select class="form-select" id="exampleSelect">
-      <option selected disabled value="">Choose an option</option>
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-      <option value="3">Option 3</option>
-    </select>
-  </div>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="input-label">
+        <label for="exampleSelect" class="form-label">Select label</label>
+    </div>
+
+    <div class="response select-input">
+        <select class="form-select" id="exampleSelect">
+            <option selected disabled value="">Choose an option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
 </div>
 
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label"><label for="exampleSelectReadonly" class="form-label">Read-only</label></div>
-  <div class="response select-input">
-    <select class="form-select readonly" id="exampleSelectReadonly" disabled>
-      <option selected>Option 1</option>
-    </select>
-  </div>
+    <div class="input-label">
+        <label for="exampleSelectHelper" class="form-label">Select label</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+
+    <div class="response select-input">
+        <select class="form-select" id="exampleSelectHelper">
+            <option selected disabled value=""></option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+</div>
+
+<!-- Code & specs example 3 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleSelectValidation" class="form-label">Select label</label>
+    </div>
+
+    <div class="response select-input">
+        <select class="form-select" id="exampleSelectValidation">
+            <option selected disabled value=""></option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Code & specs example 4 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleSelectDisabled" class="form-label">Select disabled label</label>
+    </div>
+
+    <div class="response select-input">
+        <select class="form-select" id="exampleSelectDisabled" disabled>
+            <option selected disabled value="">Choose an option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
+</div>
+
+<!-- Code & specs example 5 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleSelectDisabled" class="form-label">Select disabled label</label>
+    </div>
+
+    <div class="response select-input">
+        <select class="form-select readonly" id="exampleSelectDisabled" disabled>
+            <option selected disabled value="">Choose an option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
 </div>
