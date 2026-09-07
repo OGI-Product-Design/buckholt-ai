@@ -3469,11 +3469,6 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
           <div class="sg-panel">
             <span class="label-01 sg-caption">Label, body text and action items</span>
-            <p class="support-01">
-              The action buttons below currently wrap onto two lines. That is the runtime issue recorded
-              at the foot of this section, not the intended rendering — the documented result is a single
-              row with 4px between them.
-            </p>
             <div class="versatile">
               <div class="versatile-content">
                 <div class="versatile-body">
@@ -3555,11 +3550,6 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
           <div class="sg-panel">
             <span class="label-01 sg-caption">Person, with edit and delete actions</span>
-            <p class="support-01">
-              The action buttons below currently wrap onto two lines. That is the runtime issue recorded
-              at the foot of this section, not the intended rendering — the documented result is a single
-              row with 4px between them.
-            </p>
             <div class="versatile">
               <div class="versatile-content">
                 <div class="versatile-body">
@@ -3672,26 +3662,26 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
         <div class="sg-issue">
           <div class="text-block">
-            <h3 class="title-02">Known issue — an icon-only action set wraps inside <code>.versatile-actions</code></h3>
+            <h3 class="title-02">Fixed in this repository's runtime — action set no longer wraps</h3>
             <p class="body-02">
-              The two tiles above with edit and delete actions wrap their buttons in a
-              <code>.button-set</code>, which is the pattern that produces Buckholt's documented 4px
-              icon-only spacing. The runtime anticipates it — <code>.versatile-actions .button-set</code>
-              exists purely to zero the set's top margin — but the set cannot lay out on one row.
+              The two tiles above wrap their buttons in a <code>.button-set</code>, which is the pattern
+              that produces Buckholt's documented 4px icon-only spacing. Until recently that set collapsed
+              and wrapped onto two lines.
             </p>
             <p class="body-02">
-              <code>.versatile-body</code> declares <code>width: 100%</code> and
-              <code>.versatile-actions</code> sets no <code>flex-shrink</code>, so the actions column is
+              The cause was in <code>css/buckholt.css</code>, not in the documented markup:
+              <code>.versatile-body</code> declares <code>width: 100%</code> while
+              <code>.versatile-actions</code> set no <code>flex-shrink</code>, so the actions column was
               squeezed. Because <code>.button-set</code> carries <code>flex-wrap: wrap</code>, its
-              min-content width is a single 40px button, so it collapses to 76px where 84px is needed and
-              the second button drops to a new line — which also makes the tile 40px taller.
+              min-content width is a single 40px button, so it collapsed to 76px where 84px was needed.
             </p>
             <p class="body-02">
-              Any of <code>flex-shrink: 0</code> or <code>flex: none</code> on
-              <code>.versatile-actions</code>, or <code>flex-wrap: nowrap</code> on the nested set,
-              restores the intended result: 84px wide, 4px gap, one row. Recorded in
-              <code>discrepancies/known-issues.md</code> and deliberately not overridden here, so the page
-              shows the current runtime behaviour rather than hiding it.
+              <code>flex-shrink: 0</code> has been added to <code>.versatile-actions</code> in
+              <code>css/buckholt.css</code>. The set now renders 84px wide with a 4px gap on one row, at
+              every viewport width tested, and long labels still truncate rather than pushing the actions
+              out. <strong>This change must be carried into the upstream Buckholt build</strong>, or the
+              next compiled stylesheet drop will reintroduce the bug — see
+              <code>discrepancies/known-issues.md</code>.
             </p>
           </div>
         </div>
@@ -3772,13 +3762,15 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
         <div class="sg-issue">
           <div class="text-block">
-            <h3 class="title-02">Versa-tile icon-only action set wraps</h3>
+            <h3 class="title-02">Versa-tile icon-only action set wrapped — fixed here, needs upstreaming</h3>
             <p class="body-02">
               A <code>.button-set</code> inside <code>.versatile-actions</code> — the pattern that gives
-              the documented 4px icon-only spacing — collapses to 76px and wraps, because
+              the documented 4px icon-only spacing — collapsed to 76px and wrapped, because
               <code>.versatile-body</code> claims <code>width: 100%</code> while
-              <code>.versatile-actions</code> sets no <code>flex-shrink</code>.
-              <code>flex-shrink: 0</code> on the actions restores 4px on one row.
+              <code>.versatile-actions</code> set no <code>flex-shrink</code>.
+              <code>flex-shrink: 0</code> has been added to <code>.versatile-actions</code> in this
+              repository's <code>css/buckholt.css</code>. It is the only local change to the compiled
+              stylesheet and must be carried upstream, or the next build will reintroduce it.
             </p>
           </div>
         </div>

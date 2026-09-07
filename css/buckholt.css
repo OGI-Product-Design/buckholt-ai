@@ -9255,6 +9255,7 @@ a[data-bs-toggle=tooltip]:not(.btn):not(.carousel-control-prev):not(.carousel-co
   display: flex;
   align-items: center;
   gap: var(--versatile-actions-gap);
+  flex-shrink: 0;
 }
 .versatile-actions .button-set {
   margin: 0;

@@ -141,7 +141,9 @@ The documented Versa-tile anatomy names a "Body text" part sitting under `.versa
 
 Neither `components/versa-tile/rules.md` nor `components/versa-tile/examples.html` mentions `.versatile-text`, so an agent following the component documentation alone has no verified markup for a part the anatomy explicitly labels. Add it to the component documentation so the documented anatomy and the verified markup agree.
 
-## Versa-tile icon-only action set wraps instead of sitting on one row
+## Versa-tile icon-only action set wrapped — FIXED in this repository, needs upstreaming
+
+**Status: fixed in `css/buckholt.css` in this repository. This is currently the only local change to the compiled stylesheet, and it must be carried into the upstream Buckholt build or the next compiled drop will reintroduce the bug.**
 
 Buckholt's documented spacing for a group of icon-only buttons is 4px, produced by the Button set rule:
 
@@ -151,7 +153,7 @@ Buckholt's documented spacing for a group of icon-only buttons is 4px, produced 
 }
 ```
 
-The runtime anticipates that set being used inside a Versa-tile, because a rule exists solely to neutralise the set's top margin in that context:
+The runtime already anticipated that set being used inside a Versa-tile, because a rule exists solely to neutralise the set's top margin in that context:
 
 ```css
 .versatile-actions .button-set {
@@ -159,20 +161,32 @@ The runtime anticipates that set being used inside a Versa-tile, because a rule 
 }
 ```
 
-However, a `.button-set` placed inside `.versatile-actions` cannot lay out on a single row. `.versatile-body` declares `width: 100%` and `.versatile-actions` sets no `flex-shrink`, so the actions column is squeezed. Because `.button-set` carries `flex-wrap: wrap`, its min-content width is a single 40px button rather than the full row, so it collapses and wraps.
+But the set could not lay out on a single row. `.versatile-body` declares `width: 100%` and `.versatile-actions` set no `flex-shrink`, so the actions column was squeezed. Because `.button-set` carries `flex-wrap: wrap`, its min-content width is a single 40px button rather than the full row, so it collapsed to 76px where 84px was needed, wrapped, and made the tile 40px taller.
 
-Measured with two icon-only ghost buttons, consistently at 600px, 900px and 1400px viewports:
+The documented markup was correct and the documentation site renders these actions 4px apart on one row. The defect was in the compiled stylesheet.
 
-| Markup | Set width | Gap | One row | Tile height |
-| --- | ---: | ---: | --- | ---: |
-| Bare buttons in `.versatile-actions` | n/a | 16px | yes | 82px |
-| `.button-set` as shipped | 76px | wraps | no | 122px |
-| `.button-set` + `flex-shrink: 0` on the actions | 84px | 4px | yes | 82px |
-| `.button-set` + `flex: none` on the actions | 84px | 4px | yes | 82px |
-| `.button-set` + `flex-wrap: nowrap` on the set | 84px | 4px | yes | 82px |
+### The fix applied
 
-Bare buttons stay on one row only because each `.btn` has its own 40px minimum width, which floors the container's min-content. They inherit `--versatile-actions-gap: 1rem`, so they sit 16px apart — four times the documented icon-only spacing.
+```css
+.versatile-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--versatile-actions-gap);
+  flex-shrink: 0;   /* added */
+}
+```
 
-The documentation site renders these actions 4px apart, so the intended result is the `.button-set` row. Any of the three fixes above produces it; `flex-shrink: 0` on `.versatile-actions` is the most targeted.
+Verified at 1400px, 900px, 600px and 380px viewports:
 
-Note also that `components/versa-tile/examples.html` only shows a single labelled button inside `.versatile-actions`, so there is no verified markup for the multi-action case. Adding a documented icon-only action example would make the intended structure explicit.
+| Case | Result |
+| --- | --- |
+| Two icon-only buttons in a `.button-set` | 4px gap, one row, tile 82px |
+| Single labelled button (as in `examples.html`) | unchanged, tile 82px |
+| Very long label and body text | 4px gap, one row, label truncates with ellipsis, no overflow |
+| Tile with no actions | unchanged, tile 58px |
+
+`flex-shrink: 0` was chosen over `flex-wrap: nowrap` on the nested set because it fixes the container rather than one particular child, so any actions content benefits. `.versatile-body` already carries `min-width: 0`, so it absorbs the squeeze and its label ellipsis behaves correctly.
+
+### Related documentation gap
+
+`components/versa-tile/examples.html` only shows a single labelled button inside `.versatile-actions`, so there is no verified markup for the multi-action case. Adding a documented icon-only action example would make the intended structure explicit and prevent agents from placing bare buttons there, which silently produces 16px spacing instead of 4px.
