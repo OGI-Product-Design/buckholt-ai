@@ -1,46 +1,131 @@
-<!-- Single Checkbox -->
+<!-- Extracted verbatim from Buckholt Checkbox: Code & specs. Do not alter canonical DOM structure. -->
+
+<!-- Checkbox base code -->
 <div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="checkbox-example">
-  <label class="form-check-label" for="checkbox-example">
-    Checkbox label
-  </label>
+    <input class="form-check-input" type="checkbox" value="" id="checkbox-checkboxlabel">
+    <label class="form-check-label" for="checkbox-checkboxlabel">
+        Checkbox label
+    </label>
 </div>
 
-<!-- Checkbox group -->
+<!-- Checkbox group input -->
 <div class="input">
-  <div class="input-label">
-    <label for="checkInput-languages" class="form-label">Languages</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-
-  <div class="response check-input">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="checkbox-english">
-      <label class="form-check-label" for="checkbox-english">English</label>
+    <div class="input-label">
+        <label for="checkInputExample" class="form-label">Checkbox input label</label>
     </div>
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="checkbox-french">
-      <label class="form-check-label" for="checkbox-french">French</label>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-group-checkbox1">
+            <label class="form-check-label" for="checkbox-group-checkbox1">
+                Checkbox #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-group-checkbox2">
+            <label class="form-check-label" for="checkbox-group-checkbox2">
+                Checkbox #2
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-group-checkbox3">
+            <label class="form-check-label" for="checkbox-group-checkbox3">
+                Checkbox #3
+            </label>
+        </div>
     </div>
-  </div>
-
-  <small class="form-helper">This text might help you out</small>
-  <div class="invalid-feedback">Validation message</div>
 </div>
 
-<!-- Documented visual state examples -->
+<!-- Assistive / helper text -->
+<div class="input">
+    <div class="input-label">
+        <label for="checkInputHelper" class="form-label">Checkbox input label</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-helper-checkbox1">
+            <label class="form-check-label" for="checkbox-helper-checkbox1">
+                Checkbox #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-helper-checkbox2">
+            <label class="form-check-label" for="checkbox-helper-checkbox2">
+                Checkbox #2
+            </label>
+        </div>
+    </div>
+    <small class="form-helper">
+        Helper text
+    </small>
+</div>
+
+<!-- Validation -->
+<div class="input">
+    <div class="input-label">
+        <label for="checkInputValidation" class="form-label">Checkbox input label</label>
+    </div>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-validation-checkbox1" required>
+            <label class="form-check-label" for="checkbox-validation-checkbox1">
+                Checkbox #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-validation-checkbox2" required>
+            <label class="form-check-label" for="checkbox-validation-checkbox2">
+                Checkbox #2
+            </label>
+        </div>
+    </div>
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Disabled -->
 <div class="form-check">
-  <input class="form-check-input selected" type="checkbox" value="" id="checkbox-selected">
-  <label class="form-check-label" for="checkbox-selected">Checkbox selected</label>
+    <input class="form-check-input" type="checkbox" value="" id="checkbox-checkboxDisabled" disabled>
+    <label class="form-check-label" for="checkbox-checkboxDisabled">
+        Checkbox disabled
+    </label>
 </div>
 
+<!-- Disabled checkbox group -->
+<div class="input disabled">
+    <div class="input-label">
+        <label for="checkInputDisabledGroup" class="form-label">Disabled checkbox group</label>
+    </div>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-DisabledGroup-checkbox1" disabled>
+            <label class="form-check-label" for="checkbox-DisabledGroup-checkbox1">
+                Checkbox #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-DisabledGroup-checkbox2" disabled>
+            <label class="form-check-label" for="checkbox-DisabledGroup-checkbox2">
+                Checkbox #2
+            </label>
+        </div>
+    </div>
+    <small class="form-helper">
+        Helper text
+    </small>
+</div>
+
+<!-- Read-only -->
 <div class="form-check">
-  <input class="form-check-input indeterminate" type="checkbox" value="" id="checkbox-indeterminate">
-  <label class="form-check-label" for="checkbox-indeterminate">Checkbox indeterminate</label>
-</div>
-
-<!-- Read-only visual treatment: requires JavaScript to block changes -->
-<div class="form-check state_readonly">
-  <input class="form-check-input" type="checkbox" value="" id="checkbox-readonly">
-  <label class="form-check-label" for="checkbox-readonly">Checkbox read-only</label>
+    <input class="form-check-input" type="checkbox" value="" id="checkbox-checkboxReadonly" readonly>
+    <label class="form-check-label" for="checkbox-checkboxReadonly">
+        Checkbox read-only
+    </label>
 </div>
