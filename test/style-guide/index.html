@@ -5121,9 +5121,14 @@
           </div>
         </div>
         <p class="support-01">
-          The dismissible tag's close button uses <code>data-bs-dismiss="tag"</code>. Bootstrap only
-          implements dismiss for its own components (alert, modal, offcanvas, toast), so this needs
-          product JavaScript — the button does nothing on its own.
+          Two behaviours on this page are driven by <code>style-guide.js</code> rather than by Buckholt.
+          The dismissible tag's close button uses <code>data-bs-dismiss="tag"</code>, but Bootstrap
+          implements dismiss only for its own components (alert, modal, offcanvas, toast). The selectable
+          tag needs more than that: the runtime hides its control with
+          <code>.tag-selectable input { display: none }</code>, the wrapper is a <code>&lt;span&gt;</code>
+          rather than a <code>&lt;label&gt;</code> so nothing associates the two, and the selected
+          appearance is keyed off <code>.tag-selectable.active</code> while the documented markup carries
+          <code>aria-selected</code> instead. Both need product JavaScript.
         </p>
       </section>
 
@@ -5896,6 +5901,60 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
               The documentation defines <code>full</code> as <code>2rem</code> / 32px. The runtime
               <code>--border-radius-full</code> is <code>625rem</code>, with <code>2rem</code> exposed as
               <code>--border-radius-xxl</code>. Do not remap one name to the other while this stands.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Bootstrap declarations Buckholt never counters</h3>
+            <p class="body-02">
+              Buckholt overrides Bootstrap by <em>redeclaring</em> properties, so anything Bootstrap sets
+              that Buckholt does not redeclare survives. This is not a load-order or bundling problem —
+              the three stylesheets load in the documented order. Each row below was measured in the
+              browser before and after, and is corrected in <code>css/buckholt-ai-fixes.css</code>.
+            </p>
+          </div>
+          <table class="sg-table body-01">
+            <thead>
+              <tr>
+                <th scope="col" class="label-01">Component</th>
+                <th scope="col" class="label-01">Symptom</th>
+                <th scope="col" class="label-01">Cause</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Button</td><td>Grey fill persists after a mouse click</td><td>Bootstrap's <code>:focus</code> shadow and colours; Buckholt styles <code>:focus-visible</code> only</td></tr>
+              <tr><td>Accordion</td><td>Missing top borders, 4px outer corners, blue chevron, dark line under an open header</td><td><code>:first-of-type</code>/<code>:not(:first-of-type)</code> rules and Bootstrap's own expanded-state icon and inset shadow</td></tr>
+              <tr><td>Modal</td><td>Oversized padding and grey divider lines</td><td><code>.modal-content</code> supplies the padding; Buckholt declares none on header, body or footer</td></tr>
+              <tr><td>Toast</td><td>Icon out of line with the message</td><td><code>.toast-body{padding:.75rem}</code>; Buckholt's <code>.toast-body</code> sets typography only</td></tr>
+              <tr><td>Table</td><td>Black rule above the table body</td><td><code>.table &gt; :not(:first-child){border-top:2px solid currentColor}</code> outranks <code>.table &gt; tbody</code></td></tr>
+              <tr><td>Dropdown</td><td>Two arrows</td><td>Buckholt draws a right-edge background arrow but never suppresses <code>.dropdown-toggle::after</code></td></tr>
+              <tr><td>Alert</td><td>Close button inflated to 48&times;52</td><td><code>.btn-close</code> is content-box at 2rem; the Bootstrap-inherited <code>.alert-dismissible</code> rule re-adds padding</td></tr>
+              <tr><td>Card, Versa-tile</td><td>Clickable variants turned blue on hover</td><td><code>--card-text</code> is defined as an empty value, so <code>.card</code>'s colour declaration is dropped and <code>a:hover</code> wins</td></tr>
+              <tr><td>Button close</td><td>Doubled, thickened cross in the wrong colour</td><td>Bootstrap paints a black SVG cross with the <code>background</code> shorthand; Buckholt redeclares only <code>background-color</code> and draws its own glyph on <code>::before</code></td></tr>
+              <tr><td>Input group</td><td>Grouped action button joined to the field with square left corners</td><td>Bootstrap's <code>:not(:first-child)</code> chain matches at (0,7,0) against Buckholt's <code>.input-group .btn</code> at (0,2,0)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Selectable tag cannot be selected</h3>
+            <p class="body-02">
+              Two gaps in the documented markup, not in the compiled CSS. The runtime hides the control
+              with <code>.tag-selectable input { display: none }</code> and the canonical wrapper is a
+              <code>&lt;span&gt;</code> with no <code>for</code> association, so a click never reaches the
+              input. Separately, the selected appearance is keyed off
+              <code>.tag-selectable.active</code> while the canonical markup carries
+              <code>aria-selected</code> and nothing sets <code>.active</code>. The runtime also styles
+              <code>.tag-selectable:focus-visible</code>, implying the tag should be focusable, but the
+              markup carries no <code>tabindex</code> or <code>role</code>.
+            </p>
+            <p class="body-02">
+              <code>style-guide.js</code> stands in for all of this on this page. Upstream should either
+              make the wrapper a <code>&lt;label&gt;</code> and key the selected state off
+              <code>:has(:checked)</code>, or ship the script.
             </p>
           </div>
         </div>

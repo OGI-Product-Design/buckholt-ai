@@ -276,3 +276,54 @@ a.versatile:focus,
 a.versatile:active {
   color: inherit;
 }
+
+/* ============================================================================
+   BUTTON CLOSE — Bootstrap's SVG cross renders behind Buckholt's icon
+   Source: Buckholt Button close, Alert, Toast, Modal, Collapse and Tag
+           documentation
+   Issue: Buckholt draws the close icon itself, as a Font Awesome glyph on
+          `.btn-close::before` (`content: "\f00d"`) coloured by
+          `--btn-close-icon`. Bootstrap paints its own cross with the
+          `background` shorthand:
+            background: transparent url("data:image/svg+xml,...fill='%23000'")
+                        center/1em auto no-repeat;
+          Buckholt only redeclares `background-color`, so Bootstrap's
+          `background-image` survives and a hard-coded black SVG cross is
+          composited underneath the Buckholt glyph. The two crosses are
+          different sizes (Bootstrap 1em against Buckholt's 1rem
+          `--btn-close-icon-size`), so every close control renders as a
+          doubled, thickened cross in the wrong colour - most visible on the
+          Dropdown multi-select tags, where `--btn-close-icon` should be
+          `--expressive-deep`.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.btn-close {
+  background-image: none;
+}
+
+/* ============================================================================
+   INPUT GROUP — Bootstrap joins the grouped action button to the response
+   Source: Buckholt Input group documentation
+   Issue: Buckholt separates the grouped action from the response - it sets
+          `.input-group .btn { margin-left: 0.5rem }` and deliberately excludes
+          `.btn` from its own corner-joining selectors, so the button keeps its
+          full `--button-radius`. Bootstrap's
+            .input-group > :not(:first-child):not(.dropdown-menu):not(...)
+          matches the button at (0,7,0) against Buckholt's (0,2,0), so
+          Bootstrap's `margin-left: -1px` and zeroed left corners win: the
+          Action button is pulled flush against the input with square left
+          corners instead of sitting in its own 0.5rem-separated pill.
+          The correction mirrors Bootstrap's own selector shape so it matches
+          exactly the same elements at (0,8,0) and restores Buckholt's values
+          without `!important`.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.input-group > .btn:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  margin-left: 0.5rem;
+  border-top-left-radius: var(--button-radius);
+  border-bottom-left-radius: var(--button-radius);
+}

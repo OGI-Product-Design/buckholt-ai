@@ -36,22 +36,62 @@
   });
 
   // Selectable Tag ----------------------------------------------------------
-  // `.tag-selectable` wraps a native input and carries aria-selected, but
-  // nothing reflects the checked state back onto the tag.
-  document.querySelectorAll('.tag-selectable input').forEach(function (input) {
-    var sync = function () {
-      if (input.type === 'radio' && input.name) {
-        document.querySelectorAll('input[type="radio"][name="' + input.name + '"]').forEach(function (peer) {
-          var tag = peer.closest('.tag-selectable');
-          if (tag) tag.setAttribute('aria-selected', String(peer.checked));
-        });
-      } else {
-        var tag = input.closest('.tag-selectable');
-        if (tag) tag.setAttribute('aria-selected', String(input.checked));
-      }
+  // The documented markup is a `span.tag.tag-selectable[aria-selected]` that
+  // wraps a native radio or checkbox and a `.tag-label`. Two things stop it
+  // working on its own:
+  //   1. The runtime hides the input with `.tag-selectable input { display: none }`
+  //      and the wrapper is a `span`, not a `label`, so nothing associates the
+  //      two - clicking the tag never reaches the control.
+  //   2. The selected appearance is keyed off `.tag-selectable.active`, but the
+  //      documented markup carries `aria-selected` and nothing sets `.active`.
+  // This forwards the click to the hidden control and keeps `.active`,
+  // `aria-selected` and `input.checked` in step. The tag is also given the
+  // keyboard affordances the runtime's `.tag-selectable:focus-visible` rule
+  // implies but the documented markup does not carry.
+  document.querySelectorAll('.tag-selectable').forEach(function (tag) {
+    var input = tag.querySelector('input');
+    if (!input) return;
+
+    if (!tag.hasAttribute('tabindex')) tag.setAttribute('tabindex', '0');
+    if (!tag.hasAttribute('role')) {
+      tag.setAttribute('role', input.type === 'radio' ? 'radio' : 'checkbox');
+    }
+
+    var syncAll = function () {
+      var scope = input.type === 'radio' && input.name
+        ? document.querySelectorAll('.tag-selectable input[type="radio"][name="' + input.name + '"]')
+        : [input];
+      Array.prototype.forEach.call(scope, function (peer) {
+        var peerTag = peer.closest('.tag-selectable');
+        if (!peerTag) return;
+        peerTag.classList.toggle('active', peer.checked);
+        peerTag.setAttribute('aria-selected', String(peer.checked));
+      });
     };
-    input.addEventListener('change', sync);
-    sync();
+
+    var toggle = function () {
+      if (input.type === 'radio') {
+        input.checked = true;
+      } else {
+        input.checked = !input.checked;
+      }
+      syncAll();
+    };
+
+    tag.addEventListener('click', function (event) {
+      if (event.target.closest('.btn-close')) return;
+      event.preventDefault();
+      toggle();
+    });
+
+    tag.addEventListener('keydown', function (event) {
+      if (event.key !== ' ' && event.key !== 'Enter') return;
+      event.preventDefault();
+      toggle();
+    });
+
+    input.addEventListener('change', syncAll);
+    syncAll();
   });
 
   // Dismissible Tag ---------------------------------------------------------

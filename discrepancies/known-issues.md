@@ -292,3 +292,46 @@ It is page-level only and is not a Buckholt API. Each block should be deleted wh
 ### Page navigation icons remain undocumented
 
 `rules.md` says only that "icons may be used where documented and helpful" and `examples.html` has no icon variant. The style guide now shows one built from the shared `<span class="icon">` structure that Iconography defines and that Link, Text block and Tag all use, flagged on the page as provisional. It uses `fa-swatchbook` and `fa-code`, neither of which is in the Buckholt icon catalogue, so those are placeholders. A documented example in `examples.html` would settle both the markup and the icon choice.
+
+### Fourth pass: close icon, grouped action button, selectable tag
+
+**Every close button drew two crosses.** Buckholt draws the close icon itself, as a Font Awesome glyph on `.btn-close::before` (`content: "\f00d"`) coloured by `--btn-close-icon`. Bootstrap paints its own cross with the `background` *shorthand*:
+
+```css
+.btn-close {
+  background: transparent url("data:image/svg+xml,…fill='%23000'…") center/1em auto no-repeat;
+}
+```
+
+Buckholt redeclares only `background-color`, so Bootstrap's `background-image` survives and a hard-coded black SVG cross is composited underneath the Buckholt glyph. The two are different sizes — Bootstrap's `1em` against Buckholt's `1rem` `--btn-close-icon-size` — so every close control rendered as a doubled, thickened cross in the wrong colour. Measured `background-image` on `.alert .btn-close` and on the Dropdown multi-select tags before the fix: `url("data:image/svg+xml,…")`; after: `none`.
+
+This was most visible on the Dropdown multi-select selection chips, where `dropdown.js` builds `.tag.tag-dismissible.expressive-light` with a `.btn-close.btn-close-sm`, and `--btn-close-icon` should resolve to `--expressive-deep` (`#0f40c5`) rather than black. `background-image: none` is applied in the compatibility layer.
+
+Same root cause as the rest of the second-pass table: Buckholt overrides Bootstrap by redeclaring properties, and `background-color` does not counter a `background` shorthand.
+
+**Input group grouped action button was joined to the field.** Buckholt separates the grouped action from the response — `.input-group .btn` sets `margin-left: 0.5rem`, and Buckholt's own corner-joining selectors explicitly exclude `.btn` so the button keeps its full `--button-radius`. Bootstrap's
+
+```css
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback)
+```
+
+matches the button at specificity (0,7,0) against Buckholt's (0,2,0), so Bootstrap's `margin-left: -1px` and zeroed left corners won. Measured before the fix: `margin-left: -1px`, `border-radius: 0px 8px 8px 0px`. After: `margin-left: 8px`, `border-radius: 8px`.
+
+The correction mirrors Bootstrap's selector shape so it matches exactly the same elements at (0,8,0) and restores Buckholt's own values without `!important`.
+
+**Selectable tag cannot be selected at all.** Two separate gaps, both in the documented markup rather than in the compiled CSS:
+
+1. The runtime hides the control with `.tag-selectable input { display: none }`, and the canonical wrapper is a `<span>`, not a `<label>`, with no `for` association. A click on the tag therefore never reaches the input, so it can never be checked by pointer or by keyboard.
+2. The selected appearance is keyed off `.tag-selectable.active`, but the canonical markup carries `aria-selected` and nothing sets `.active`.
+
+The runtime also styles `.tag-selectable:focus-visible`, which implies the tag is meant to be focusable, but the documented markup carries no `tabindex` or `role`.
+
+`style-guide.js` now forwards the click to the hidden control and keeps `.active`, `aria-selected` and `input.checked` in step, and applies the keyboard affordances the `:focus-visible` rule implies. That is a page-level stand-in, not a fix: upstream should either make the wrapper a `<label>` (or add `for`/`id` association) and key the selected state off `:has(:checked)`, or ship the script that does it.
+
+### Corrections to the third pass
+
+**Response button single select was not broken.** The third-pass report that the radio variant did not respond was an artefact of the test harness: setting `input.checked` in script and reading `getComputedStyle` on the adjacent label in the same task returned the pre-invalidation value. Driving it with a real click shows `.btn-check:checked + .btn` applying correctly — background `rgba(15, 64, 197, 0.1)` and label `#0f40c5`, from `--button-background-active` and `--button-label-active`. The Dropdown single select and Selectable card were re-tested the same way and also behave correctly.
+
+The item the parity note referred to is the Tag "Single select" example, covered above.
+
+**The Slider range/number pairing works.** Re-tested by dispatching `input` on the range: the paired number field follows. It is still page-level behaviour supplied by `style-guide.js`, not by Buckholt.
