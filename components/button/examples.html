@@ -1,111 +1,112 @@
-<!--
-  Buckholt Button canonical examples.
-  Sources: Buckholt Button usage, style and code/specs documentation.
-  Runtime styling: ../../css/buckholt.css
--->
+<!-- Extracted verbatim from Buckholt Button: Code & specs. Do not alter canonical DOM structure. -->
 
-<!-- Standard variants -->
+<!-- Button base code -->
+<button type="button" class="btn">
+    <span class="button-label">Button label</span>    
+</button>
+
+<!-- Button variants -->
 <button type="button" class="btn btn-primary">
-  <span class="button-label">Primary</span>
+    <span class="button-label">Primary</span>    
 </button>
 
 <button type="button" class="btn btn-secondary">
-  <span class="button-label">Secondary</span>
+    <span class="button-label">Secondary</span>    
 </button>
 
 <button type="button" class="btn btn-ghost">
-  <span class="button-label">Ghost</span>
+    <span class="button-label">Ghost</span>    
 </button>
 
-<!-- Danger modifier: can be added to any standard button type -->
+<!-- Danger button -->
 <button type="button" class="btn btn-primary btn-danger">
-  <span class="button-label">Delete record</span>
+    <span class="button-label">Primary</span>    
 </button>
 
 <button type="button" class="btn btn-secondary btn-danger">
-  <span class="button-label">Delete record</span>
+    <span class="button-label">Secondary</span>    
 </button>
 
 <button type="button" class="btn btn-ghost btn-danger">
-  <span class="button-label">Delete record</span>
+    <span class="button-label">Ghost</span>    
 </button>
 
-<!-- Sizes -->
+<!-- Size -->
 <button type="button" class="btn btn-primary btn-sm">
-  <span class="button-label">Small</span>
+    <span class="button-label">Small</span>    
 </button>
 
-<button type="button" class="btn btn-primary">
-  <span class="button-label">Default</span>
+<button type="button" class="btn btn-secondary btn-sm">
+    <span class="button-label">Small</span>    
 </button>
 
+<button type="button" class="btn btn-ghost btn-sm">
+    <span class="button-label">Small</span>    
+</button>
+
+<!-- Size -->
 <button type="button" class="btn btn-primary btn-lg">
-  <span class="button-label">Large</span>
+    <span class="button-label">Large</span>    
 </button>
 
-<!-- Labelled button with a documented common-action icon -->
+<button type="button" class="btn btn-secondary btn-lg">
+    <span class="button-label">Large</span>    
+</button>
+
+<button type="button" class="btn btn-ghost btn-lg">
+    <span class="button-label">Large</span>    
+</button>
+
+<!-- Icons in buttons -->
 <button type="button" class="btn btn-primary">
-  <div class="btn-icon">
-    <i class="fa-regular fa-plus" aria-hidden="true"></i>
-  </div>
-  <span class="button-label">Create document</span>
+    <div class="btn-icon">
+        <i class="fa-regular fa-ghost"></i>
+    </div>
+    <span class="button-label">Button label</span>    
 </button>
 
-<!-- Icon-only button.
-     Buckholt requires an accessible name and a tooltip explaining the action.
-     Bootstrap JS and tooltip initialisation are required for the tooltip behaviour. -->
-<button
-  type="button"
-  class="btn btn-ghost"
-  aria-label="Search"
-  data-bs-toggle="tooltip"
-  data-bs-title="Search"
-  data-bs-placement="right"
-  data-bs-trigger="hover"
->
-  <div class="btn-icon">
-    <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-  </div>
+<!-- Icon-only buttons -->
+<button type="button" class="btn btn-primary">
+    <div class="btn-icon">
+        <i class="fa-regular fa-ghost"></i>
+    </div>       
 </button>
 
-<!-- Button set -->
+<!-- Button sets -->
 <div class="button-set">
-  <button type="button" class="btn btn-primary">
-    <span class="button-label">Accept all</span>
-  </button>
-  <button type="button" class="btn btn-secondary">
-    <span class="button-label">Customise</span>
-  </button>
-  <button type="button" class="btn btn-ghost">
-    <span class="button-label">Reject all</span>
-  </button>
+    <button type="button" class="btn btn-primary">
+        <span class="button-label">Accept all</span>    
+    </button>
+    <button type="button" class="btn btn-secondary">
+        <span class="button-label">Customise</span>    
+    </button>
+    <button type="button" class="btn btn-ghost">
+        <span class="button-label">Reject all</span>    
+    </button>
 </div>
 
-<!-- Stacked button set with consistent icon use -->
+<!-- Stacked buttons -->
 <div class="button-set button-set-stacked">
-  <button type="button" class="btn btn-primary">
-    <div class="btn-icon">
-      <i class="fa-regular fa-plus" aria-hidden="true"></i>
-    </div>
-    <span class="button-label">Create account</span>
-  </button>
-  <button type="button" class="btn btn-secondary">
-    <div class="btn-icon">
-      <i class="fa-regular fa-arrow-right-to-bracket" aria-hidden="true"></i>
-    </div>
-    <span class="button-label">Log in</span>
-  </button>
+    <button type="button" class="btn btn-primary">
+        <span class="button-label">Accept all</span>    
+    </button>
+    <button type="button" class="btn btn-secondary">
+        <span class="button-label">Customise</span>    
+    </button>
+    <button type="button" class="btn btn-ghost">
+        <span class="button-label">Reject all</span>    
+    </button>
 </div>
 
-<!-- Disabled state -->
+<!-- Disabled -->
 <button type="button" class="btn btn-primary" disabled>
-  <span class="button-label">Primary</span>
+    <span class="button-label">Primary</span>    
 </button>
 
 <button type="button" class="btn btn-secondary" disabled>
-  <span class="button-label">Secondary</span>
+    <span class="button-label">Secondary</span>    
 </button>
 
 <button type="button" class="btn btn-ghost" disabled>
-  <span class="button-label">Ghost</span>
+    <span class="button-label">Ghost</span>    
 </button>
