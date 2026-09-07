@@ -1,14 +1,86 @@
+<!-- Extracted verbatim from Buckholt Text area: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
 <div class="input">
-  <div class="input-label">
-    <label for="exampleTextarea" class="form-label">Additional information</label>
-    <small class="form-helper">Add any relevant detail</small>
-  </div>
+    <div class="input-label">
+        <label for="exampleTextarea" class="form-label">Example text area</label>
+    </div>
 
-  <div class="response textarea-input">
-    <textarea class="form-control" id="exampleTextarea" rows="3" placeholder="Enter information" maxlength="250"></textarea>
-    <div class="counter"><span class="counting">0</span> / 250</div>
-  </div>
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleTextarea" rows="3" maxlength="250"></textarea>
+    </div>
+</div>
 
-  <small class="form-helper">Maximum 250 characters</small>
-  <div class="invalid-feedback feedback-icon">Validation message</div>
+<!-- Code & specs example 2 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleTextareaHelper" class="form-label">Example text area</label>
+        <small class="form-helper">
+            Assistive text        
+        </small>
+    </div>
+
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleTextareaHelper" rows="3" maxlength="250"></textarea>
+    </div>
+
+    <small class="form-helper">
+        Helper text        
+    </small>
+</div>
+
+<!-- Code & specs example 3 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleTextareaCounter" class="form-label">Example text area counter</label>
+    </div>
+
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleTextareaCounter" rows="3" maxlength="250"></textarea>
+
+        <div class="counter">
+            <span class="counting">0</span> / 250
+        </div>
+    </div>
+</div>
+
+<!-- Code & specs example 4 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleTextareaValidation" class="form-label">Text area validation</label>
+    </div>
+
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleTextareaValidation" rows="3" maxlength="250"></textarea>
+    </div>
+
+    <small class="form-helper">
+        Helper text        
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Code & specs example 5 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleDisabledTextarea" class="form-label">Example disabled text area</label>
+    </div>
+
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleDisabledTextarea" rows="3" maxlength="250" disabled></textarea>
+    </div>
+</div>
+
+<!-- Code & specs example 6 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleReadonlyTextarea" class="form-label">Example read only text area</label>
+    </div>
+
+    <div class="response textarea-input">
+        <textarea class="form-control" id="exampleReadonlyTextarea" rows="3" maxlength="250" readonly></textarea>
+    </div>
 </div>
