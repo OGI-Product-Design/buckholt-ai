@@ -4,64 +4,60 @@
 
 Use the Buckholt design system accurately when building UI.
 
-## Source hierarchy
-
-1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
-2. `css/buckholt.css` — current runtime implementation. Use its real selectors, variables, states and browser behaviour. It may also contain additional helpers or values added when Buckholt was used to build the company website; those extras provide flexibility but do not automatically become canonical Buckholt guidance.
-3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load it after the runtime when building/test-rendering Buckholt UI.
-4. `foundations/<foundation>/` — shared design-system guidance extracted from the documentation and checked against runtime CSS where useful.
-5. `components/<component>/rules.md` — component guidance rebuilt from documentation plus runtime implementation evidence.
-6. `components/<component>/examples.html` — verified canonical markup examples.
-7. `discrepancies/known-issues.md` — only significant documentation/runtime differences that could mislead implementation.
-
-Old SCSS, old token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
-
 ## Core rule
 
 **Build with Buckholt. Do not imitate Buckholt.**
 
-Before implementing Buckholt UI:
+## Source hierarchy
 
-- read the relevant foundation files when the component depends on colour, typography, spacing, iconography, radius, shadows or other shared rules;
-- read `components/<component>/rules.md` and `examples.html` for the component;
-- follow the documented Buckholt intent first;
-- use the real runtime classes and variables from `css/buckholt.css` to implement that intent accurately;
-- load `css/buckholt-ai-fixes.css` after the runtime so verified documentation/runtime corrections are applied consistently;
-- do not promote undocumented runtime extras into Buckholt design guidance simply because they exist in CSS;
-- do not create additional local component overrides to compensate for a known issue already handled by the compatibility file;
-- do not recreate component styling with custom CSS where Buckholt already provides it.
+1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
+2. `css/buckholt.css` — current runtime implementation. Use real selectors, variables, states and browser behaviour. Undocumented runtime extras are implementation flexibility, not automatically canonical Buckholt guidance.
+3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load after the runtime.
+4. `foundations/<foundation>/` — shared design-system guidance.
+5. `components/<component>/rules.md` and `examples.html` — component-specific guidance and canonical examples.
+6. `discrepancies/known-issues.md` — significant verified documentation/runtime differences.
 
-## Evidence discipline
+Old SCSS, token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
 
-The documentation defines intended Buckholt behaviour. The CSS shows what the current implementation can render. If the CSS contains extra website-specific helpers, they may be used when appropriate but should be treated as implementation flexibility rather than new design-system rules.
+## Before implementing
 
-Only flag a documentation/runtime difference when it materially affects the requested Buckholt implementation. A class is not missing merely because there is no standalone `.class {}` rule; check compound, descendant and pseudo-selectors before classifying it as inert.
+- Read the relevant foundation files.
+- Read the requested component's `rules.md` and `examples.html`.
+- Follow documented Buckholt intent first.
+- Use the real classes and variables in `css/buckholt.css` rather than recreating visual styling.
+- Load `css/buckholt-ai-fixes.css` after the runtime.
+- Use supplied component scripts when the documented behaviour needs them.
+- Do not promote undocumented CSS helpers into design-system rules.
+- If Buckholt does not establish a variant, state or behaviour, report the gap instead of guessing.
 
 ## Foundations
 
-### Colour
-Read `foundations/colour/` before choosing or changing colours.
+- Colour: `foundations/colour/`
+- Iconography: `foundations/iconography/`
+- Radius: `foundations/radius/rules.md`
+- Shadows: `foundations/shadows/rules.md`
+- Spacing: `foundations/spacing/rules.md`
+- Typography: `foundations/typography/`
 
-### Iconography
-Read `foundations/iconography/rules.md` and `foundations/iconography/catalogue.md` before choosing an icon. Use the exact Buckholt mapping when one exists.
+Use Buckholt semantic roles and documented type-set classes. Keep semantic HTML hierarchy separate from visual type class. Do not treat generic Bootstrap `.fs-*`, heading helpers or unrelated utilities as canonical Buckholt typography.
 
-### Radius
-Read `foundations/radius/rules.md` before adding or changing border radius. Prefer the documented scale and the radius already applied by the component. Additional runtime values can be used where an existing Buckholt implementation requires them.
+## Component coverage
 
-### Shadows
-Read `foundations/shadows/rules.md` before adding elevation. Use documented tokens/classes, keep elevation purposeful, and map feedback shadows to the relevant state.
+Supported component folders:
 
-### Spacing
-Read `foundations/spacing/rules.md` before introducing margins, padding or gaps. Prefer Buckholt spacing tokens, and do not alter a component's internal spacing before reading its own guidance.
+`accordion`, `alert`, `avatar`, `breadcrumb`, `button`, `card`, `checkbox`, `collapse`, `dropdown`, `form`, `heading-attachment`, `icon-block`, `input-group`, `input-row`, `key-value-pair`, `link`, `list`, `lookup`, `menu`, `menu-button`, `modal`, `multi-field-input`, `nested-inputs`, `number-input`, `page-navigation`, `progress-bar`, `radio`, `response-button`, `select`, `slider`, `summary-meta`, `switch`, `table`, `tabs`, `tag`, `text-area`, `text-block`, `text-input`, `toast`, `tooltip`, `versa-tile`.
 
-### Typography
-Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`.
+Always read the component folder rather than relying on this file for detailed markup.
 
-Use Buckholt's `Proxima-soft, Arial, sans-serif` stack through the runtime. Choose typography by documented content role, keep semantic HTML hierarchy separate from visual type class, and prefer Buckholt classes such as `.display-*`, `.headline-*`, `.title-*`, `.body-*`, `.support-*`, `.action-*`, `.label-*`, `.key-*` and `.value-*` where documented. Do not treat Bootstrap `.display-*`, `.fs-*` or generic heading helpers as canonical Buckholt typography.
+### Important cross-component distinctions
 
-## Custom CSS
-
-Custom CSS may be used for page/demo layout only when necessary. It must not recreate or override Buckholt component styling simply to make an implementation look right. Verified runtime corrections belong in `css/buckholt-ai-fixes.css`, not in a page-specific stylesheet.
+- **Page navigation** uses real links to separate sibling pages. **Tabs** switch content in place using Bootstrap pill behaviour.
+- **Response button** uses native radios for single select and native checkboxes for the documented multi-select variant.
+- **Select** is a native `<select>`. Buckholt's read-only treatment uses `.readonly` plus `disabled`.
+- **Switch** has default, small and always-active treatments. Always-active means a permanently/enforced on condition, not simply disabled.
+- **Slider** is the documented single-value range + number-input pattern; do not invent the two-handle range variant marked as coming soon.
+- **Text area** uses the shared Form behaviour for character counting when the counter is present.
+- **Table** is currently provisional/WIP; preserve supplied semantics and do not invent data-grid features.
 
 ## Runtime dependencies
 
@@ -73,149 +69,32 @@ Custom CSS may be used for page/demo layout only when necessary. It must not rec
 <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
 
-For Bootstrap-driven Buckholt behaviour such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
+For Bootstrap-driven Buckholt behaviours such as tooltips, dropdown menus, alerts, accordions, modals, tabs and toasts:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
 
-## Current component coverage
+Documented Buckholt behaviour scripts currently stored in the repo:
 
-### Accordion
-Read `components/accordion/rules.md`, `components/accordion/examples.html` and Text block guidance. Use the documented Bootstrap accordion structure, keep IDs/ARIA aligned, use `.accordion-lg` only for the standalone large form, and use Bootstrap collapse rather than custom show/hide scripting.
+```html
+<script src="components/dropdown/dropdown.js"></script>
+<script src="components/form/form.js"></script>
+<script src="components/tabs/tabs.js"></script>
+```
 
-### Alert
-Read `components/alert/rules.md`, `components/alert/examples.html` and relevant Colour/Iconography/Button/Link guidance. Alert is local nondisruptive feedback; use `.alert-info`, `.alert-success`, `.alert-warning` or `.alert-error`, keep `.alert-message` required, and make dismissal available only when appropriate.
+Use `dropdown.js` for the documented Dropdown enhancement, `form.js` for shared Form behaviours including Text area counting, and `tabs.js` for overflow scroll controls. Do not independently recreate those behaviours.
 
-### Avatar
-Read `components/avatar/rules.md`, `components/avatar/examples.html`, Colour and Iconography guidance. Use one representation (`.avatar-img`, `.avatar-initials` or `.avatar-icon`), the documented sizes/palettes, and expose the real accessible identity in surrounding UI when identity matters.
+## Accessibility and native semantics
 
-### Breadcrumb
-Read `components/breadcrumb/rules.md`, `components/breadcrumb/examples.html`, plus Menu/Menu button for overflow. Breadcrumb is secondary navigation. Preserve `<nav aria-label="breadcrumb">`, semantic list markup, `aria-current="page"`, generated dividers and the documented overflow approach.
+Prefer native HTML controls and preserve documented ARIA relationships. Match every `label[for]` to its control ID, keep current/selected state singular where required, and use genuine disabled/checked/readonly semantics where the component documents them.
 
-### Button
-Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations. Preserve `.button-label` where documented, treat danger as a modifier, use accessible naming/tooltips for icon-only buttons, and consult `discrepancies/known-issues.md` for verified runtime differences.
+Icon-only controls require an accessible name and the documented Tooltip treatment where Buckholt calls for one. Colour alone must not carry meaning.
 
-### Card
-Read `components/card/rules.md` and `components/card/examples.html`. Use documented Card structures/modifiers, reuse nested Buckholt components, and do not put competing interactive CTAs inside a whole-card navigation link.
+## Custom CSS
 
-### Form
-Read `components/form/rules.md`, `components/form/examples.html`, `discrepancies/known-issues.md`, and every child-control component used inside the Form.
+Custom CSS may be used for page/demo layout only when necessary. It must not recreate or override Buckholt component styling simply to make an implementation look right. Verified runtime corrections belong in `css/buckholt-ai-fixes.css`, not a page-specific stylesheet.
 
-Rules:
-- use a real `<form class="form">` when content is a form;
-- optional introductory/section content uses Text block;
-- place controls inside one or more `.form-body` sections;
-- reuse documented Buckholt controls rather than inventing form-field markup;
-- place completion/exit actions at the bottom and reuse Button/Link;
-- use `.form-actions`: rendered documentation examples and the compiled runtime agree on it; `.form-buttons` is explanatory prose only and is not implemented;
-- let individual controls own validation, disabled/read-only and focus/error states;
-- do not recreate Form width/gaps/action spacing locally.
+## Evidence discipline
 
-### Heading attachment
-Read `components/heading-attachment/rules.md`, `components/heading-attachment/examples.html` and Text block. Use `.heading` and `.heading-content`, keep the heading primary, and attach one compact directly related Buckholt component rather than an ad-hoc toolbar.
-
-### Icon block
-Read `components/icon-block/rules.md`, `components/icon-block/examples.html` and Iconography/Colour/Radius foundations. Use `.icon-block` plus documented size/expressive modifiers and exact icon mappings; follow Text block composition rules when nested there.
-
-### Input group
-Read `components/input-group/rules.md`, `components/input-group/examples.html` and the nested input component.
-
-Rules:
-- use `.input-group` around `.response` plus addons/actions;
-- use `.input-group-text` before/after `.response` for documented start/end addons;
-- keep the canonical input component markup inside `.response`;
-- use `.btn.btn-response` for the documented grouped response-action pattern, not `.input-btn`;
-- `.input-btn` belongs inside a Text input and is a different pattern;
-- let the child input own validation, disabled/read-only and other states;
-- do not promote runtime `.input-group-sm`/`.input-group-lg` into Buckholt design guidance without documentation support;
-- do not recreate connected borders, radii or spacing locally.
-
-### Input row
-Read `components/input-row/rules.md`, `components/input-row/examples.html` and each child input component.
-
-Rules:
-- use `.row.input-row` as the outer structure;
-- put each complete input component inside a Bootstrap `.col`;
-- use `.col` for equal widths or documented `.col-*`/responsive grid classes for intentional ratios;
-- group only genuinely related fields;
-- let child controls own label, state, validation, colour and typography;
-- do not recreate row gaps locally;
-- do not invent responsive stacking beyond the Bootstrap classes actually present;
-- keep this component separate from the future higher-level `Input rows` pattern referenced by Buckholt.
-
-### Key-value pair
-Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`. Use `.key-value` with `.key` and `.value`, preserve documented stacked/list/grid/table/size forms, and use real table semantics where the data is actually tabular.
-
-### Link
-Read `components/link/rules.md`, `components/link/examples.html` and `discrepancies/known-issues.md` when exact visited rendering matters. Links are navigation, not state-changing actions; plain anchors are inline links, `.link-standalone` is the standalone form, and inline links do not take icons.
-
-### List
-Read `components/list/rules.md` and `components/list/examples.html`. Use semantic `<ul>`/`<ol>`, `.list-item`, the documented optional heading pattern, `.list-unstyled` only to remove visual markers while retaining semantics, and meaningful icons sparingly.
-
-### Lookup
-Read `components/lookup/rules.md`, `components/lookup/examples.html` and the nested Input/Input group/Button/Link/Versa-tile guidance.
-
-Rules:
-- use Lookup when the user enters a known value to retrieve related information;
-- use `.lookup` as the outer component and `.lookup-actions` for supporting lookup actions;
-- let the nested input own label, formatting, validation and states;
-- use a primary Button for the main lookup action where the documented hierarchy applies;
-- use a standalone Link only for a genuine alternative route/navigation;
-- use the documented Versa-tile summary variation to display retrieved data;
-- reuse Icon block/Button/Versa-tile rather than restyling them through Lookup;
-- keep this component distinct from the separate higher-level `Patterns / Lookup` documentation to be ingested later;
-- do not recreate `.lookup` or `.lookup-actions` spacing locally.
-
-### Menu
-Read `components/menu/rules.md` and `components/menu/examples.html`, plus Menu button and Iconography guidance. Use documented Menu structure, submenus, native radio/checkbox controls, dividers and danger/disabled rules; preserve keyboard/focus behaviour and hide permanently unavailable actions.
-
-### Menu button
-Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, plus Button, Tooltip and Iconography. Choose standard Menu button for equal-importance actions, Combo for a primary action plus alternatives, and Overflow for secondary object-scoped actions. Use Bootstrap dropdown behaviour.
-
-### Modal
-Read `components/modal/rules.md` and `components/modal/examples.html`, plus Button and Text block. Use the documented Bootstrap Modal structure/sizes/centred/scrollable forms only when appropriate, preserve close labelling and focus behaviour, and use Modal only for short genuinely interruptive tasks.
-
-### Progress bar
-Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`. Use `.progress-container` where supporting content exists, always label progress, distinguish determinate/indeterminate correctly, expose real ARIA values for determinate progress, and use documented success/error/inactive states. See known issues for the current error-icon runtime defect.
-
-### Slider
-Read `components/slider/rules.md` and `components/slider/examples.html`. Use the native range input with real min/max/step/value, paired numeric input and documented wrapper structure; synchronize values, preserve validation/disabled/read-only behaviour, and do not invent the two-handle range variant marked as coming soon.
-
-### Summary Meta
-Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value. Use `.summary-meta`, Icon block then `.summary-meta-body`, keep content short, and use `.summary-meta-stacked` for the documented vertical form.
-
-### Table
-Read `components/table/rules.md` and `components/table/examples.html`, plus nested component guidance.
-
-Table is supported but provisional/WIP. Start from `.table-container > .table-content > table.table`, preserve native table semantics and supplied header/sort/selection/data classes, reuse Buckholt components inside cells, and do not invent pagination, density, pinning or responsive data-grid behaviour not documented by Buckholt.
-
-### Tag
-Read `components/tag/rules.md` and `components/tag/examples.html`, plus Colour and Iconography. Choose read-only, dismissible, selectable or status by function; preserve native radio/checkbox state for selectable Tags; use small only for documented read-only/status forms; Tags are not navigation.
-
-### Text block
-Read `components/text-block/rules.md`, `components/text-block/examples.html`, Typography, Spacing, Iconography and Colour. Use `.text-block` for written-content groups, keep semantic heading level independent from visual type class, and follow the documented eyebrow/inline-icon/Icon-block composition rules.
-
-### Text input
-Read `components/text-input/rules.md`, `components/text-input/examples.html`, Form and relevant foundations.
-
-Rules:
-- use `.input > .input-label + .response.text-input` as the core structure and `.form-control` on the native input;
-- visible labels are required unless an approved accessibility exemption applies; placeholder is supplementary only;
-- required/optional qualifiers are documented as `<small>` inside the `<label>`;
-- assistive text belongs inside `.input-label`; helper text follows `.response`;
-- use native `disabled` and `readonly` semantics and do not confuse them;
-- use `.is-invalid` plus `.invalid-feedback` for the documented error treatment;
-- a supporting `.input-icon` may precede the input when meaningful;
-- use no more than one `.input-btn` inside a Text input and never combine that action button with a separate input icon;
-- default/medium is established; `.form-control-sm` is documented but the Code & specs page marks small implementation as pending, so do not invent missing details;
-- do not recreate input padding, borders, radius, typography, focus or validation styling locally.
-
-### Toast
-Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography. Use Toast for immediate non-blocking feedback, preserve documented semantic variants/structure, manual/timed dismissal and Bootstrap behaviour, and do not make disappearing feedback the only recoverable source of important information.
-
-### Tooltip
-Read `components/tooltip/rules.md` and `components/tooltip/examples.html`. Use Tooltips only for contextual nonessential information, put Bootstrap tooltip attributes on the real trigger, initialize with Buckholt's documented offset/delay, and keep the trigger understandable without the Tooltip.
-
-### Versa-tile
-Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance. Use `.versatile` with documented content/body/meta/actions structure, reuse Buckholt subcomponents, keep actions item-specific, use whole-tile anchors only for navigation, and rely on the verified compatibility file for the known action-set wrapping correction.
+A class is not missing merely because no standalone `.class {}` rule exists; check compound, descendant and pseudo-selectors. Extra runtime CSS is not a discrepancy by itself. Only flag a difference when documentation and runtime materially disagree in a way that could mislead implementation.
