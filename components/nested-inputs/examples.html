@@ -1,0 +1,40 @@
+<!-- Nested inputs: parent followed immediately by conditional fields -->
+<form class="form">
+  <div class="input">
+    <div class="input-label">
+      <label class="form-label">Do you have another vehicle?</label>
+    </div>
+    <div class="response check-input">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="anotherVehicle" id="another-vehicle-yes" value="yes">
+        <label class="form-check-label" for="another-vehicle-yes">Yes</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="anotherVehicle" id="another-vehicle-no" value="no">
+        <label class="form-check-label" for="another-vehicle-no">No</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="nested-inputs">
+    <div class="input">
+      <div class="input-label">
+        <label for="vehicle-make" class="form-label">Vehicle make</label>
+      </div>
+      <div class="response text-input">
+        <input type="text" class="form-control" id="vehicle-make">
+      </div>
+    </div>
+
+    <div class="input">
+      <div class="input-label">
+        <label for="vehicle-model" class="form-label">Vehicle model</label>
+      </div>
+      <div class="response text-input">
+        <input type="text" class="form-control" id="vehicle-model">
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Visibility of .nested-inputs is controlled by product logic based on the parent response. -->
