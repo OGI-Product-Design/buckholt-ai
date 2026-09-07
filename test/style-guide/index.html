@@ -121,6 +121,21 @@
 
     .sg-rules li { margin-bottom: var(--margin-01); }
 
+    .sg-table {
+      width: 100%;
+      max-width: var(--text-max-width);
+      margin-top: var(--spacer-04);
+      border-collapse: collapse;
+    }
+
+    .sg-table th,
+    .sg-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: var(--padding-03) var(--padding-04);
+      border-bottom: var(--border-width) solid var(--ui-border-02);
+    }
+
     .sg-code {
       display: block;
       max-width: var(--text-max-width);
@@ -260,15 +275,31 @@
       </ul>
       <span class="label-01 sg-nav-heading">Components</span>
       <ul>
+        <li><a class="body-01" href="#accordion">Accordion</a></li>
+        <li><a class="body-01" href="#alert">Alert</a></li>
+        <li><a class="body-01" href="#avatar">Avatar</a></li>
+        <li><a class="body-01" href="#breadcrumb">Breadcrumb</a></li>
         <li><a class="body-01" href="#button">Button</a></li>
         <li><a class="body-01" href="#card">Card</a></li>
+        <li><a class="body-01" href="#form">Form</a></li>
         <li><a class="body-01" href="#heading-attachment">Heading attachment</a></li>
         <li><a class="body-01" href="#icon-block">Icon block</a></li>
+        <li><a class="body-01" href="#input-group">Input group</a></li>
+        <li><a class="body-01" href="#input-row">Input row</a></li>
         <li><a class="body-01" href="#key-value-pair">Key-value pair</a></li>
         <li><a class="body-01" href="#link">Link</a></li>
+        <li><a class="body-01" href="#list">List</a></li>
+        <li><a class="body-01" href="#menu">Menu</a></li>
+        <li><a class="body-01" href="#menu-button">Menu button</a></li>
+        <li><a class="body-01" href="#modal">Modal</a></li>
         <li><a class="body-01" href="#progress-bar">Progress bar</a></li>
+        <li><a class="body-01" href="#slider">Slider</a></li>
         <li><a class="body-01" href="#summary-meta">Summary Meta</a></li>
+        <li><a class="body-01" href="#table">Table</a></li>
+        <li><a class="body-01" href="#tag">Tag</a></li>
         <li><a class="body-01" href="#text-block">Text block</a></li>
+        <li><a class="body-01" href="#text-input">Text input</a></li>
+        <li><a class="body-01" href="#toast">Toast</a></li>
         <li><a class="body-01" href="#tooltip">Tooltip</a></li>
         <li><a class="body-01" href="#versa-tile">Versa-tile</a></li>
       </ul>
@@ -633,6 +664,165 @@
             <div class="sg-swatch">
               <span class="sg-chip" style="background-color: var(--feedback-body-error);" aria-hidden="true"></span>
               <span class="sg-meta body-01">body — <code>--feedback-body-error</code><br><span class="support-01">#2a0202</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Expressive</h3>
+          <p class="body-02">
+            Expressive colours add tone, personality and emphasis beyond the core functional roles. They
+            support the interface rather than carrying meaning, so they must not be substituted for
+            semantic action or feedback roles just because they look similar.
+          </p>
+          <p class="body-02">
+            There are four families. Primary is the default and needs no class; the other three are
+            selected with <code>.expressive-secondary</code>, <code>.expressive-tertiary</code> and
+            <code>.expressive-quaternary</code>, which remap the unprefixed
+            <code>--expressive-*</code> variables. That indirection is why a component such as Icon block
+            can consume <code>var(--expressive-deep)</code> and pick up whichever family is active.
+          </p>
+          <div class="sg-block">
+            <span class="label-01 sg-caption">Primary (default — no modifier class)</span>
+            <div class="sg-swatches">
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-pale);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-pale</code><br><span class="support-01">#e7ecf9</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-soft);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-soft</code><br><span class="support-01">#b7c6ee</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-deep);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-deep</code><br><span class="support-01">#1748d0</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-rich);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-rich</code><br><span class="support-01">#092676</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-pale-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-pale-overlay</code><br><span class="support-01">rgba(15, 64, 197, 0.1)</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-soft-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-soft-overlay</code><br><span class="support-01">rgba(15, 64, 197, 0.3)</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="sg-block">
+            <span class="label-01 sg-caption">Secondary</span>
+            <div class="sg-swatches">
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-pale);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-pale</code><br><span class="support-01">#EEEAFB</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-soft);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-soft</code><br><span class="support-01">#CDC1F1</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-deep);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-deep</code><br><span class="support-01">#5731D6</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-rich);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-rich</code><br><span class="support-01">#2C196B</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-pale-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-pale-overlay</code><br><span class="support-01">rgba(87, 49, 214, 0.1)</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-secondary-soft-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-secondary-soft-overlay</code><br><span class="support-01">rgba(87, 49, 214, 0.3)</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="sg-block">
+            <span class="label-01 sg-caption">Tertiary</span>
+            <div class="sg-swatches">
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-pale);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-pale</code><br><span class="support-01">#FBE8EE</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-soft);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-soft</code><br><span class="support-01">#F3B8CC</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-deep);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-deep</code><br><span class="support-01">#DB1256</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-rich);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-rich</code><br><span class="support-01">#570722</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-pale-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-pale-overlay</code><br><span class="support-01">rgba(219, 18, 86, 0.1)</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-tertiary-soft-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-tertiary-soft-overlay</code><br><span class="support-01">rgba(219, 18, 86, 0.3)</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="sg-block">
+            <span class="label-01 sg-caption">Quaternary</span>
+            <div class="sg-swatches">
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-pale);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-pale</code><br><span class="support-01">#E7F2F6</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-soft);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-soft</code><br><span class="support-01">#B7D9E3</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-deep);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-deep</code><br><span class="support-01">#0E80A4</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-rich);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-rich</code><br><span class="support-01">#053342</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-pale-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-pale-overlay</code><br><span class="support-01">rgba(14, 128, 164, 0.1)</span></span>
+              </div>
+              <div class="sg-swatch">
+                <span class="sg-chip" style="background-color: var(--expressive-quaternary-soft-overlay);" aria-hidden="true"></span>
+                <span class="sg-meta body-01"><code>--expressive-quaternary-soft-overlay</code><br><span class="support-01">rgba(14, 128, 164, 0.3)</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">The family modifiers, shown on Icon block</span>
+            <div class="button-set">
+              <div class="icon-block icon-block-lg expressive-dark"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+              <div class="icon-block icon-block-lg expressive-dark expressive-secondary"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+              <div class="icon-block icon-block-lg expressive-dark expressive-tertiary"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+              <div class="icon-block icon-block-lg expressive-dark expressive-quaternary"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+            </div>
+            <p class="support-01">
+              Primary, secondary, tertiary, quaternary — each rendering <code>--expressive-rich</code>
+              through the same component class.
+            </p>
+          </div>
+
+          <div class="sg-issue">
+            <div class="text-block">
+              <h4 class="title-02">Gap — the foundation notes only three families</h4>
+              <p class="body-02">
+                <code>foundations/colour/foundation-tokens.md</code> states that "the runtime includes
+                primary, secondary and tertiary expressive families". The runtime defines four, and
+                <code>components/icon-block/examples.html</code> documents
+                <code>.expressive-quaternary</code> as a supported treatment. The foundation text
+                undercounts the palette, and gives no table for these roles at all, which is why they
+                were missing from this page until now.
+              </p>
             </div>
           </div>
         </div>
@@ -2024,6 +2214,241 @@
         </div>
       </section>
 
+      <section class="sg-section" id="accordion">
+        <div class="text-block">
+          <h2 class="headline-02">Accordion</h2>
+          <p class="body-02">
+            Collapsible content sections built on Bootstrap's collapse behaviour and styled by Buckholt.
+            <code>.accordion-button</code> carries <code>data-bs-toggle="collapse"</code> and the
+            <code>aria-expanded</code> / <code>aria-controls</code> pairing; add
+            <code>data-bs-parent</code> to make a group single-expansion.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Default, and expanded on load</span>
+            <div class="accordion" id="sgAccordion">
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#sgAccItem1" aria-expanded="false" aria-controls="sgAccItem1">
+                    Accordion item #1
+                  </button>
+                </h3>
+                <div id="sgAccItem1" class="accordion-collapse collapse">
+                  <div class="accordion-body"><div class="text-block"><p>Accordion content.</p></div></div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#sgAccItem2" aria-expanded="true" aria-controls="sgAccItem2">
+                    Expanded accordion
+                  </button>
+                </h3>
+                <div id="sgAccItem2" class="accordion-collapse collapse show">
+                  <div class="accordion-body"><div class="text-block"><p>This item is expanded on load.</p></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Large — <code>.accordion-lg</code></span>
+            <div class="accordion accordion-lg" id="sgAccordionLg">
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#sgAccLarge" aria-expanded="false" aria-controls="sgAccLarge">
+                    Large accordion
+                  </button>
+                </h3>
+                <div id="sgAccLarge" class="accordion-collapse collapse">
+                  <div class="accordion-body"><div class="text-block"><p>Large standalone accordion content.</p></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Single-expansion group — <code>data-bs-parent</code></span>
+          <div class="accordion" id="sgAccSingle">
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#sgSingle1" aria-expanded="false" aria-controls="sgSingle1">
+                  Accordion item #1
+                </button>
+              </h3>
+              <div id="sgSingle1" class="accordion-collapse collapse" data-bs-parent="#sgAccSingle">
+                <div class="accordion-body"><div class="text-block"><p>First item content.</p></div></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#sgSingle2" aria-expanded="false" aria-controls="sgSingle2">
+                  Accordion item #2
+                </button>
+              </h3>
+              <div id="sgSingle2" class="accordion-collapse collapse" data-bs-parent="#sgAccSingle">
+                <div class="accordion-body"><div class="text-block"><p>Second item content.</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="alert">
+        <div class="text-block">
+          <h2 class="headline-02">Alert</h2>
+          <p class="body-02">
+            Inline feedback tied to the surrounding content. <code>.alert</code> takes a feedback modifier
+            — <code>.alert-info</code>, <code>.alert-success</code>, <code>.alert-warning</code> or
+            <code>.alert-error</code> — with the content inside <code>.alert-content</code>.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <div class="alert alert-info" role="alert">
+            <div class="alert-content">
+              <span class="alert-icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+              <div class="alert-body"><div class="alert-message"><h6>Info alert message</h6></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <div class="alert alert-success" role="alert">
+            <div class="alert-content">
+              <span class="alert-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+              <div class="alert-body"><div class="alert-message"><h6>Success alert message</h6></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <div class="alert alert-warning" role="alert">
+            <div class="alert-content">
+              <span class="alert-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+              <div class="alert-body">
+                <div class="alert-message"><h6>Warning alert message</h6></div>
+                <span class="alert-note">Supporting context or guidance.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <div class="alert alert-error" role="alert">
+            <div class="alert-content">
+              <span class="alert-icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+              <div class="alert-body"><div class="alert-message"><h6>Error alert message</h6></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Dismissible</span>
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <div class="alert-content">
+              <span class="alert-icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+              <div class="alert-body">
+                <div class="alert-message"><h6>Alert message</h6></div>
+                <span class="alert-note">Optional supporting context.</span>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Gap — <code>.alert-body</code> and <code>.alert-note</code> have no rules</h3>
+            <p class="body-02">
+              The canonical markup uses both, but neither exists in <code>css/buckholt.css</code>, which
+              implements <code>.alert-content</code>, <code>.alert-icon</code>,
+              <code>.alert-message</code> and <code>.alert-contextbar</code>. The markup is used unchanged
+              above; see the audit in the Known runtime issues section.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="avatar">
+        <div class="text-block">
+          <h2 class="headline-02">Avatar</h2>
+          <p class="body-02">
+            Represents a person or entity as initials, an image or an icon. Size modifiers are
+            <code>.avatar-sm</code> and <code>.avatar-xs</code>, and the expressive families set the
+            background and text colour.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Initials, icon and sizes</span>
+            <div class="button-set">
+              <div class="avatar"><div class="avatar-initials">MF</div></div>
+              <div class="avatar"><div class="avatar-icon"><i class="fa-regular fa-user" aria-hidden="true"></i></div></div>
+              <div class="avatar avatar-sm"><div class="avatar-initials">MF</div></div>
+              <div class="avatar avatar-xs"><div class="avatar-initials">MF</div></div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Expressive families</span>
+            <div class="button-set">
+              <div class="avatar"><div class="avatar-initials">PR</div></div>
+              <div class="avatar expressive-secondary"><div class="avatar-initials">HS</div></div>
+              <div class="avatar expressive-tertiary expressive-dark"><div class="avatar-initials">CP</div></div>
+              <div class="avatar expressive-quaternary"><div class="avatar-initials">RD</div></div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Avatar set</span>
+            <div class="avatar-set">
+              <div class="avatar expressive-secondary"><div class="avatar-initials">MF</div></div>
+              <div class="avatar expressive-tertiary"><div class="avatar-initials">JS</div></div>
+              <div class="avatar expressive-quaternary"><div class="avatar-initials">RD</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="support-01">
+          The image variant is omitted here because it needs a real asset. Its markup is
+          <code>&lt;img class="avatar-img" src="…" alt=""&gt;</code> inside <code>.avatar</code>; the
+          runtime styles it through the element selector <code>.avatar img</code>, so
+          <code>.avatar-img</code> itself carries no rules.
+        </p>
+      </section>
+
+      <section class="sg-section" id="breadcrumb">
+        <div class="text-block">
+          <h2 class="headline-02">Breadcrumb</h2>
+          <p class="body-02">
+            Shows where the current page sits in the hierarchy. Wrap the list in a
+            <code>&lt;nav aria-label="breadcrumb"&gt;</code>, mark the current page with
+            <code>.active</code> and <code>aria-current="page"</code>, and leave it as plain text rather
+            than a link.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Standard trail</span>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="#breadcrumb">Home</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="#breadcrumb">Components</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="#breadcrumb">Navigation</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Breadcrumb</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Custom divider — <code>--breadcrumb-divider-icon</code></span>
+          <nav aria-label="breadcrumb" style="--breadcrumb-divider-icon: '>';">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="#breadcrumb">Insurance</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Car</li>
+            </ol>
+          </nav>
+        </div>
+        <p class="support-01">
+          Long trails should use the documented Overflow menu pattern rather than wrapping or inserting
+          arbitrary ellipsis text.
+        </p>
+      </section>
+
       <section class="sg-section" id="button">
         <div class="text-block">
           <h2 class="headline-02">Button</h2>
@@ -2564,6 +2989,86 @@
         </div>
       </section>
 
+      <section class="sg-section" id="form">
+        <div class="text-block">
+          <h2 class="headline-02">Form</h2>
+          <p class="body-02">
+            <code>.form</code> stacks a Text block introduction, one or more <code>.form-body</code>
+            sections of inputs, and an action area. <code>.form-body</code> caps its width at 36rem so
+            fields stay comfortably readable.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Basic form</span>
+          <form class="form" id="sgBasicForm" onsubmit="return false;">
+            <div class="text-block">
+              <h3 class="headline-03">Contact details</h3>
+              <p>Enter the details we need to contact you.</p>
+            </div>
+            <div class="form-body">
+              <div class="input">
+                <div class="input-label"><label for="sgFullName" class="form-label">Full name</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgFullName"></div>
+                <div class="invalid-feedback">Enter your full name.</div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-lg"><span class="button-label">Continue</span></button>
+              <a class="link-standalone" href="#form">Cancel</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Multiple body sections</span>
+          <form class="form" id="sgMultiForm" onsubmit="return false;">
+            <div class="text-block"><h3 class="headline-03">Account details</h3></div>
+            <div class="form-body">
+              <div class="text-block"><h4 class="headline-01">Personal details</h4></div>
+              <div class="input">
+                <div class="input-label"><label for="sgFirstName" class="form-label">First name</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgFirstName"></div>
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="text-block"><h4 class="headline-01">Contact details</h4></div>
+              <div class="input">
+                <div class="input-label"><label for="sgEmailAddr" class="form-label">Email address</label></div>
+                <div class="response text-input"><input type="email" class="form-control" id="sgEmailAddr"></div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-lg"><span class="button-label">Create account</span></button>
+              <a class="link-standalone" href="#form">Cancel</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Correction — the action wrapper is <code>.form-actions</code></h3>
+            <p class="body-02">
+              <code>components/form/examples.html</code> uses <code>.form-buttons</code>, on the basis of
+              a note in <code>discrepancies/known-issues.md</code> saying the runtime implements that
+              class. It does not. Searching <code>css/buckholt.css</code> finds
+              <strong>zero</strong> occurrences of <code>form-buttons</code> and five of
+              <code>form-actions</code>, which is fully implemented:
+            </p>
+            <p class="body-02">
+              <code>.form, .nested-inputs, .form-actions, .form-body { display: flex; flex-direction: column; gap: 2rem }</code>
+              and <code>.form-actions { gap: 2rem; margin-top: 2rem }</code>, plus
+              <code>.form-actions &gt; .btn { align-self: flex-start }</code>.
+            </p>
+            <p class="body-02">
+              Using <code>.form-buttons</code> therefore produces an unstyled action area — no 2rem gap
+              and no 2rem top margin — which is the opposite of what the note intended. The forms above
+              use <code>.form-actions</code>, which is also what the rendered documentation examples use.
+              The known-issues entry has been corrected.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="heading-attachment">
         <div class="text-block">
           <h2 class="headline-02">Heading attachment</h2>
@@ -2729,6 +3234,107 @@
                 <div class="icon-block icon-block-xl"><i class="fa-regular fa-location-dot" aria-hidden="true"></i></div>
                 <h3 class="headline-02">Where to locate us</h3>
                 <p>Supporting content for this section.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="input-group">
+        <div class="text-block">
+          <h2 class="headline-02">Input group</h2>
+          <p class="body-02">
+            Attaches an addon or action directly to a field. <code>.input-group</code> sits between the
+            label and the validation message, holding <code>.input-group-text</code> addons before or
+            after the <code>.response text-input</code>.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Start addon</span>
+            <div class="input">
+              <div class="input-label"><label for="sgUsername" class="form-label">Create new user</label></div>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <div class="response text-input"><input type="text" class="form-control" id="sgUsername" placeholder="Username"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">End addon</span>
+            <div class="input">
+              <div class="input-label"><label for="sgDistance" class="form-label">Distance</label></div>
+              <div class="input-group">
+                <div class="response text-input"><input type="text" class="form-control" id="sgDistance" placeholder="0"></div>
+                <span class="input-group-text">miles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Grouped response action — <code>.btn-response</code></span>
+            <div class="input">
+              <div class="input-label"><label for="sgLookup" class="form-label">Lookup</label></div>
+              <div class="input-group">
+                <div class="response text-input"><input type="text" class="form-control" id="sgLookup"></div>
+                <button type="button" class="btn btn-response"><span class="button-label">Action</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Error</span>
+            <div class="input">
+              <div class="input-label"><label for="sgAmount" class="form-label">Amount</label></div>
+              <div class="input-group">
+                <span class="input-group-text">&pound;</span>
+                <div class="response text-input"><input type="text" class="form-control is-invalid" id="sgAmount"></div>
+              </div>
+              <div class="invalid-feedback">Enter a valid amount.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="input-row">
+        <div class="text-block">
+          <h2 class="headline-02">Input row</h2>
+          <p class="body-02">
+            Places related inputs side by side using Bootstrap's grid with
+            <code>.row input-row</code>. Equal <code>.col</code> children share the width; a documented
+            unequal pattern narrows the second field with a column width class.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Equal width</span>
+          <div class="row input-row">
+            <div class="col">
+              <div class="input">
+                <div class="input-label"><label for="sgStart" class="form-label">Start date</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgStart"></div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input">
+                <div class="input-label"><label for="sgEnd" class="form-label">End date</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgEnd"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Unequal width — expiry date and security code</span>
+          <div class="row input-row">
+            <div class="col">
+              <div class="input">
+                <div class="input-label"><label for="sgExpiry" class="form-label">Expiry date</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgExpiry" placeholder="mm / yy"></div>
+              </div>
+            </div>
+            <div class="col col-md-4">
+              <div class="input">
+                <div class="input-label"><label for="sgCvc" class="form-label">Security code</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgCvc" placeholder="000"></div>
               </div>
             </div>
           </div>
@@ -3037,6 +3643,306 @@
         </div>
       </section>
 
+      <section class="sg-section" id="list">
+        <div class="text-block">
+          <h2 class="headline-02">List</h2>
+          <p class="body-02">
+            Semantic lists with Buckholt spacing and markers. Use <code>.list</code> on the
+            <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code> and <code>.list-item</code> on each entry;
+            <code>.list-heading</code> introduces the group and <code>.list-unstyled</code> removes the
+            markers while keeping the list semantics.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Unordered</span>
+            <ul class="list">
+              <li class="list-item">List item</li>
+              <li class="list-item">List item</li>
+              <li class="list-item">List item</li>
+            </ul>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Ordered</span>
+            <ol class="list">
+              <li class="list-item">First item</li>
+              <li class="list-item">Second item</li>
+              <li class="list-item">Third item</li>
+            </ol>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">With a heading</span>
+            <ul class="list">
+              <li class="list-heading">Shopping list</li>
+              <li class="list-item">Milk</li>
+              <li class="list-item">Bread</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Ordered with heading — numbering starts at 1</span>
+            <ol class="list">
+              <li class="list-heading" value="0">Steps</li>
+              <li class="list-item">First step</li>
+              <li class="list-item">Second step</li>
+            </ol>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Nested</span>
+            <ul class="list">
+              <li class="list-item">Parent item
+                <ul class="list">
+                  <li class="list-item">Nested item</li>
+                  <li class="list-item">Nested item</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Unstyled</span>
+            <ul class="list list-unstyled">
+              <li class="list-heading">Settings</li>
+              <li class="list-item">Account</li>
+              <li class="list-item">Notifications</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Icon list</span>
+          <ul class="list">
+            <li class="list-heading">Checks</li>
+            <li class="list-item">
+              <span class="list-icon text-success"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+              Complete
+            </li>
+            <li class="list-item">
+              <span class="list-icon text-error"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+              Needs attention
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sg-section" id="menu">
+        <div class="text-block">
+          <h2 class="headline-02">Menu</h2>
+          <p class="body-02">
+            The panel of actions a Menu button opens. <code>.menu-panel</code> carries Bootstrap's
+            <code>.dropdown-menu</code>, with a <code>.menu-body</code> list of
+            <code>.menu-item</code> buttons. The panels below add <code>show position-relative</code> so
+            they can be inspected in place rather than on a trigger.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Basic panel</span>
+            <div class="menu-panel dropdown-menu show position-relative">
+              <ul class="menu-body" role="menu">
+                <li><button class="menu-item" type="button">My summary</button></li>
+                <li><button class="menu-item" type="button">Account information</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Submenu</span>
+            <div class="menu-panel dropdown-menu show position-relative">
+              <ul class="menu-body" role="menu">
+                <li>
+                  <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">Share</button>
+                  <ul class="submenu" role="menu">
+                    <li><button class="menu-item" type="button">Email</button></li>
+                    <li><button class="menu-item" type="button">Message</button></li>
+                  </ul>
+                </li>
+                <li><button class="menu-item" type="button">Another action</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Group separation — <code>.menu-divider</code></span>
+            <div class="menu-panel dropdown-menu show position-relative">
+              <ul class="menu-body" role="menu">
+                <li><button class="menu-item" type="button">Terms of service</button></li>
+                <li><button class="menu-item" type="button">Privacy policy</button></li>
+                <li><hr class="menu-divider"></li>
+                <li><button class="menu-item" type="button">Logout</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="menu-button">
+        <div class="text-block">
+          <h2 class="headline-02">Menu button</h2>
+          <p class="body-02">
+            A Button that opens a Menu. The trigger takes <code>.menu-toggle</code> with
+            <code>data-bs-toggle="dropdown"</code>, and the panel follows it inside a
+            <code>.menu</code> wrapper. Click any trigger below to open it.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Menu button</span>
+            <div class="menu">
+              <button type="button" class="btn btn-primary menu-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="button-label">Actions</span>
+                <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
+              </button>
+              <div class="menu-panel dropdown-menu">
+                <ul class="menu-body" role="menu">
+                  <li><button class="menu-item" type="button"><i class="fa-regular fa-copy" aria-hidden="true"></i>Duplicate</button></li>
+                  <li><button class="menu-item" type="button"><i class="fa-regular fa-share" aria-hidden="true"></i>Share</button></li>
+                  <li><button class="menu-item" type="button"><i class="fa-regular fa-file-export" aria-hidden="true"></i>Export</button></li>
+                  <li><hr class="menu-divider"></li>
+                  <li><button class="menu-item menu-item-danger" type="button"><i class="fa-regular fa-trash-can" aria-hidden="true"></i>Delete</button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Combo button — <code>.btn-combo</code></span>
+            <div class="menu">
+              <div class="btn-combo">
+                <button type="button" class="btn btn-primary"><span class="button-label">Create</span></button>
+                <button type="button" class="btn btn-primary menu-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More create options">
+                  <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
+                </button>
+                <div class="menu-panel dropdown-menu dropdown-menu-end">
+                  <ul class="menu-body" role="menu">
+                    <li><button class="menu-item" type="button">Duplicate</button></li>
+                    <li><button class="menu-item" type="button">Share</button></li>
+                    <li><button class="menu-item" type="button">Export</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Overflow menu</span>
+            <div class="menu">
+              <button type="button" class="btn btn-ghost menu-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">
+                <div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>
+              </button>
+              <div class="menu-panel dropdown-menu dropdown-menu-end">
+                <ul class="menu-body" role="menu">
+                  <li><button class="menu-item" type="button">Edit</button></li>
+                  <li><button class="menu-item" type="button">Share</button></li>
+                  <li><hr class="menu-divider"></li>
+                  <li><button class="menu-item menu-item-danger" type="button">Delete</button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="support-01">
+          The <code>.menu</code> wrapper has no rules in <code>css/buckholt.css</code>; positioning comes
+          from Bootstrap's dropdown behaviour. See the audit in Known runtime issues.
+        </p>
+      </section>
+
+      <section class="sg-section" id="modal">
+        <div class="text-block">
+          <h2 class="headline-02">Modal</h2>
+          <p class="body-02">
+            A focused overlay for a single task. The header reuses a Text block with a Heading attachment
+            for the close control, the footer holds a <code>.button-set</code>, and size and behaviour
+            modifiers go on <code>.modal-dialog</code>.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Open each variant</span>
+          <div class="button-set">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sgModalDefault">
+              <span class="button-label">Default modal</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sgModalCentred">
+              <span class="button-label">Centred modal</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sgModalScroll">
+              <span class="button-label">Scrollable modal</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="sgModalDefault" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="text-block">
+                  <div class="heading">
+                    <div class="heading-content"><h2 class="headline-02">Edit details</h2></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <p>Update the information below.</p>
+                </div>
+              </div>
+              <div class="modal-body"><div class="text-block"><p>Modal body content goes here.</p></div></div>
+              <div class="modal-footer">
+                <div class="button-set">
+                  <button type="button" class="btn btn-ghost" data-bs-dismiss="modal"><span class="button-label">Cancel</span></button>
+                  <button type="button" class="btn btn-primary"><span class="button-label">Save changes</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="sgModalCentred" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="text-block">
+                  <div class="heading">
+                    <div class="heading-content"><h2 class="headline-02">Confirm action</h2></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="button-set">
+                  <button type="button" class="btn btn-ghost" data-bs-dismiss="modal"><span class="button-label">Cancel</span></button>
+                  <button type="button" class="btn btn-primary"><span class="button-label">Confirm</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="sgModalScroll" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="text-block">
+                  <div class="heading">
+                    <div class="heading-content"><h2 class="headline-02">Long content</h2></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="text-block">
+                  <p>Scrollable modal content.</p>
+                  <p>The dialog keeps its header and footer fixed while this area scrolls.</p>
+                  <p>Additional paragraph.</p>
+                  <p>Additional paragraph.</p>
+                  <p>Additional paragraph.</p>
+                  <p>Additional paragraph.</p>
+                  <p>Additional paragraph.</p>
+                  <p>Additional paragraph.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="support-01">
+          Size modifiers are applied to <code>.modal-dialog</code>: <code>.modal-sm</code>, no modifier,
+          <code>.modal-lg</code> and <code>.modal-xl</code>.
+        </p>
+      </section>
+
       <section class="sg-section" id="progress-bar">
         <div class="text-block">
           <h2 class="headline-02">Progress bar</h2>
@@ -3172,6 +4078,93 @@
         </div>
       </section>
 
+      <section class="sg-section" id="slider">
+        <div class="text-block">
+          <h2 class="headline-02">Slider</h2>
+          <p class="body-02">
+            A range control for choosing a value within known bounds. It follows the same
+            <code>.input</code> / <code>.input-label</code> structure as Text input, with the control in
+            <code>.response slider-input</code>: min and max <code>.minmax</code> labels either side of a
+            <code>.slider-wrapper</code>, and a paired number field showing the current value.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Default, with ticks</span>
+          <div class="input">
+            <div class="input-label"><label for="sgSlider" class="form-label">Slider label text</label></div>
+            <div class="response slider-input">
+              <div class="slider-container">
+                <span class="minmax">0</span>
+                <div class="slider-wrapper">
+                  <input type="range" class="form-slider" id="sgSlider" min="0" max="100" step="1" value="50">
+                  <div class="ticks">
+                    <span class="tick"></span><span class="tick"></span><span class="tick"></span>
+                    <span class="tick"></span><span class="tick"></span>
+                  </div>
+                </div>
+                <span class="minmax">100</span>
+                <input type="number" id="sgSliderOut" class="form-control" style="width: 4ch;" value="50">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">With assistive and helper text</span>
+          <div class="input">
+            <div class="input-label">
+              <label for="sgSliderSupport" class="form-label">Slider support text example</label>
+              <small class="form-helper">Assistive text</small>
+            </div>
+            <div class="response slider-input">
+              <div class="slider-container">
+                <span class="minmax">0</span>
+                <div class="slider-wrapper">
+                  <input type="range" class="form-slider" id="sgSliderSupport" min="0" max="100" step="1" value="50">
+                </div>
+                <span class="minmax">100</span>
+                <input type="number" id="sgSliderSupportOut" class="form-control" style="width: 4ch;" value="50">
+              </div>
+            </div>
+            <small class="form-helper">Helper text</small>
+          </div>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Error</span>
+            <div class="input">
+              <div class="input-label"><label for="sgSliderErr" class="form-label">Slider error example</label></div>
+              <div class="response slider-input">
+                <div class="slider-container">
+                  <span class="minmax">0</span>
+                  <div class="slider-wrapper">
+                    <input type="range" class="form-slider is-invalid" id="sgSliderErr" min="0" max="100" step="1" value="50">
+                  </div>
+                  <span class="minmax">100</span>
+                  <input type="number" id="sgSliderErrOut" class="form-control is-invalid" style="width: 4ch;" value="50">
+                </div>
+              </div>
+              <div class="invalid-feedback">Validation error message</div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Disabled</span>
+            <div class="input">
+              <div class="input-label"><label for="sgSliderDis" class="form-label">Slider disabled example</label></div>
+              <div class="response slider-input">
+                <div class="slider-container">
+                  <span class="minmax">0</span>
+                  <div class="slider-wrapper">
+                    <input type="range" class="form-slider" id="sgSliderDis" min="0" max="100" step="1" value="50" disabled>
+                  </div>
+                  <span class="minmax">100</span>
+                  <input type="number" id="sgSliderDisOut" class="form-control" style="width: 4ch;" value="50" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="summary-meta">
         <div class="text-block">
           <h2 class="headline-02">Summary Meta</h2>
@@ -3242,6 +4235,179 @@
             </p>
           </div>
         </div>
+      </section>
+
+      <section class="sg-section" id="table">
+        <div class="text-block">
+          <h2 class="headline-02">Table</h2>
+          <p class="body-02">
+            Tabular data inside <code>.table-container</code> and <code>.table-content</code>, with header
+            text wrapped in <code>.table-header-label</code>. A <code>.table-gap</code> row separates the
+            head from the body. Tables compose other components — Avatar, Tag, Button — in their cells.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Standard</span>
+          <div class="table-container">
+            <div class="table-content">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"><div class="table-header-label">Customer ID</div></th>
+                    <th scope="col"><div class="table-header-label">Policy number</div></th>
+                    <th scope="col"><div class="table-header-label">Policy type</div></th>
+                    <th scope="col"><div class="table-header-label">Premium (&pound;/mo)</div></th>
+                    <th scope="col"><div class="table-header-label">Status</div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-gap"><td colspan="100%"></td></tr>
+                  <tr>
+                    <td>CUST-10234</td><td>POL-884291</td><td>Car</td><td>72.50</td><td>Active</td>
+                  </tr>
+                  <tr>
+                    <td>CUST-84721</td><td>POL-663902</td>
+                    <td>Home <span class="data-secondary">Secondary data</span></td>
+                    <td>54.20</td><td>Active</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Selection and sorting, composing Avatar, Tag and Button</span>
+          <div class="table-container">
+            <div class="table-content">
+              <table class="table" data-cdt-table>
+                <thead>
+                  <tr>
+                    <th scope="col" class="table-checkbox-header col-fit">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="sgTableSelectAll" data-cdt-select-column="0" aria-label="Select all rows">
+                      </div>
+                    </th>
+                    <th scope="col" class="table-sort-header">
+                      <button class="table-sort" type="button" data-col="1" data-sort-type="text" aria-label="Sort by User">
+                        <div class="table-header-label">User</div>
+                        <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                      </button>
+                    </th>
+                    <th scope="col" class="table-sort-header">
+                      <button class="table-sort" type="button" data-col="2" data-sort-type="text" aria-label="Sort by Status">
+                        <div class="table-header-label">Status</div>
+                        <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                      </button>
+                    </th>
+                    <th scope="col" class="table-sort-header col-fit cell-data-right">
+                      <button class="table-sort" type="button" data-col="3" data-sort-type="number" aria-label="Sort by Value">
+                        <div class="table-header-label">Value</div>
+                        <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                      </button>
+                    </th>
+                    <th scope="col" class="col-fit cell-data-right"><div class="table-header-label"></div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-gap"><td colspan="100%"></td></tr>
+                  <tr>
+                    <td class="col-fit" data-sort-value="">
+                      <div class="form-check"><input class="form-check-input" type="checkbox" id="sgTableRow1" aria-label="Select row"></div>
+                    </td>
+                    <td data-sort-value="MF"><div class="avatar avatar-xs"><div class="avatar-initials">MF</div></div></td>
+                    <td data-sort-value="Active"><span class="tag tag-status tag-status-success"><span class="tag-label">Active</span></span></td>
+                    <td class="col-fit cell-data-right" data-sort-value="3456"><span class="data-number">3456</span></td>
+                    <td class="col-fit cell-data-right">
+                      <div class="button-set">
+                        <button type="button" class="btn btn-ghost" aria-label="Edit row">
+                          <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="support-01">
+            Sorting and select-all are driven by <code>data-cdt-*</code> attributes that need product
+            JavaScript; the controls are inert on this page. Several classes here —
+            <code>.table-sort-header</code>, <code>.table-checkbox-header</code>,
+            <code>.data-number</code> — have no rules in the runtime. See the audit below.
+          </p>
+        </div>
+      </section>
+
+      <section class="sg-section" id="tag">
+        <div class="text-block">
+          <h2 class="headline-02">Tag</h2>
+          <p class="body-02">
+            Short labels for categorisation, status and selection. <code>.tag</code> wraps a
+            <code>.tag-label</code>; group them with <code>.tag-set</code>, which Buckholt spaces at 4px.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Read-only and dismissible</span>
+            <div class="tag-set">
+              <span class="tag"><span class="tag-label">Read-only tag</span></span>
+              <span class="tag tag-dismissible">
+                <span class="tag-label">Dismissible tag</span>
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="tag" aria-label="Close"></button>
+              </span>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Selectable</span>
+            <div class="tag-set">
+              <span class="tag tag-selectable" type="option" aria-selected="false">
+                <input type="radio" name="sg-single-tag" id="sg-tag-single">
+                <span class="tag-label">Single select</span>
+              </span>
+              <span class="tag tag-selectable" type="option" aria-selected="false">
+                <input type="checkbox" id="sg-tag-multi">
+                <span class="tag-label">Multi select</span>
+              </span>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Supporting icon</span>
+            <span class="tag">
+              <span class="icon"><i class="fa-solid fa-sparkles" aria-hidden="true"></i></span>
+              <span class="tag-label">Tag with icon</span>
+            </span>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Status</span>
+          <div class="tag-set">
+            <span class="tag tag-status tag-status-info"><span class="tag-label">Info</span></span>
+            <span class="tag tag-status tag-status-success"><span class="tag-label">Success</span></span>
+            <span class="tag tag-status tag-status-warning"><span class="tag-label">Warning</span></span>
+            <span class="tag tag-status tag-status-error"><span class="tag-label">Error</span></span>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Small — documented for read-only and status only</span>
+          <div class="tag-set">
+            <span class="tag tag-sm"><span class="tag-label">Small</span></span>
+            <span class="tag tag-sm tag-status tag-status-info"><span class="tag-label">Small status</span></span>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Expressive categorisation</span>
+          <div class="tag-set">
+            <span class="tag expressive-light"><span class="tag-label">Primary</span></span>
+            <span class="tag expressive-light expressive-secondary"><span class="tag-label">Secondary</span></span>
+            <span class="tag expressive-light expressive-tertiary"><span class="tag-label">Tertiary</span></span>
+            <span class="tag expressive-light expressive-quaternary"><span class="tag-label">Quaternary</span></span>
+          </div>
+        </div>
+        <p class="support-01">
+          The dismissible tag's close button uses <code>data-bs-dismiss="tag"</code>. Bootstrap only
+          implements dismiss for its own components (alert, modal, offcanvas, toast), so this needs
+          product JavaScript — the button does nothing on its own.
+        </p>
       </section>
 
       <section class="sg-section" id="text-block">
@@ -3367,6 +4533,160 @@
             <li>Use inline icons, not icon blocks, with display-sized headings.</li>
           </ul>
         </div>
+      </section>
+
+      <section class="sg-section" id="text-input">
+        <div class="text-block">
+          <h2 class="headline-02">Text input</h2>
+          <p class="body-02">
+            The base form control. <code>.input</code> wraps an <code>.input-label</code>, the field
+            inside <code>.response text-input</code>, and an <code>.invalid-feedback</code> message.
+            Always pair the <code>&lt;label&gt;</code> with the field's <code>id</code>.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Default</span>
+            <div class="input">
+              <div class="input-label"><label for="sgText" class="form-label">Example text input</label></div>
+              <div class="response text-input">
+                <input type="text" class="form-control" id="sgText" placeholder="Placeholder">
+              </div>
+              <div class="invalid-feedback">Validation message</div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Optional label, assistive and helper text</span>
+            <div class="input">
+              <div class="input-label">
+                <label for="sgEmail" class="form-label">Email <small>(optional)</small></label>
+                <small class="form-helper">Use an address you can access.</small>
+              </div>
+              <div class="response text-input">
+                <input type="email" class="form-control" id="sgEmail" placeholder="name@example.com">
+              </div>
+              <small class="form-helper">We'll use this for account messages.</small>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Error</span>
+            <div class="input">
+              <div class="input-label"><label for="sgPostcode" class="form-label">Postcode</label></div>
+              <div class="response text-input">
+                <input type="text" class="form-control is-invalid" id="sgPostcode" value="AB">
+              </div>
+              <div class="invalid-feedback">Enter a valid postcode.</div>
+            </div>
+          </div>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Disabled</span>
+            <div class="input">
+              <div class="input-label"><label for="sgDisabled" class="form-label">Disabled</label></div>
+              <div class="response text-input">
+                <input type="text" class="form-control" id="sgDisabled" value="Disabled input field" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Read-only</span>
+            <div class="input">
+              <div class="input-label"><label for="sgReadonly" class="form-label">Read-only</label></div>
+              <div class="response text-input">
+                <input type="text" class="form-control" id="sgReadonly" value="Readonly input field" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Supporting icon</span>
+            <div class="input">
+              <div class="input-label"><label for="sgIconInput" class="form-label">Input with icon</label></div>
+              <div class="response text-input">
+                <i class="input-icon fa-regular fa-circle-info" aria-hidden="true"></i>
+                <input type="text" class="form-control" id="sgIconInput">
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Action button — not combined with an icon</span>
+            <div class="input">
+              <div class="input-label"><label for="sgPassword" class="form-label">Password</label></div>
+              <div class="response text-input">
+                <input type="password" class="form-control" id="sgPassword">
+                <button type="button" class="input-btn" aria-label="Show password">
+                  <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <code class="sg-code body-01">&lt;div class="input"&gt;
+  &lt;div class="input-label"&gt;
+    &lt;label for="exampleTextInput" class="form-label"&gt;Example text input&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div class="response text-input"&gt;
+    &lt;input type="text" class="form-control" id="exampleTextInput" placeholder="Placeholder"&gt;
+  &lt;/div&gt;
+  &lt;div class="invalid-feedback"&gt;Validation message&lt;/div&gt;
+&lt;/div&gt;</code>
+        <p class="support-01">
+          The small variant (<code>.form-control-sm</code>) is documented but its Code &amp; specs page
+          marks the implementation as pending, so it is not shown here.
+        </p>
+      </section>
+
+      <section class="sg-section" id="toast">
+        <div class="text-block">
+          <h2 class="headline-02">Toast</h2>
+          <p class="body-02">
+            Transient feedback that floats above the interface. <code>.toast</code> takes the same
+            feedback modifiers as Alert. The examples below set <code>data-bs-autohide="false"</code> and
+            <code>show</code> so they stay visible for inspection.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <div class="toast toast-info fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+              <div class="toast-content">
+                <span class="toast-icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+                <div class="toast-body">
+                  <div class="toast-message"><h6>Toast message</h6></div>
+                  <div class="toast-note">Supporting detail.</div>
+                </div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <div class="toast toast-success fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+              <div class="toast-content">
+                <span class="toast-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+                <div class="toast-body"><div class="toast-message"><h6>Success toast message</h6></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <div class="toast toast-warning fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+              <div class="toast-content">
+                <span class="toast-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+                <div class="toast-body"><div class="toast-message"><h6>Warning toast message</h6></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <div class="toast toast-error fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+              <div class="toast-content">
+                <span class="toast-icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+                <div class="toast-body"><div class="toast-message"><h6>Error toast message</h6></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="support-01">
+          <code>.toast-note</code> is used by the canonical markup but has no rules in the runtime, so the
+          supporting line inherits default styling. See the audit below.
+        </p>
       </section>
 
       <section class="sg-section" id="tooltip">
@@ -3708,6 +5028,44 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
             reading view — <code>discrepancies/known-issues.md</code> stays the canonical record, and new
             findings should be added there first. None of them is worked around on this page.
           </p>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Documented classes with no rule in the compiled stylesheet</h3>
+            <p class="body-02">
+              Auditing every class used in <code>components/*/examples.html</code> against
+              <code>css/buckholt.css</code> and Bootstrap 5.1.3 leaves 14 classes that neither stylesheet
+              defines. They are inert: the markup is documented, but nothing styles it. Most cluster in
+              the newest components, which suggests the compiled stylesheet in this repository predates
+              them and needs refreshing from the current Buckholt build.
+            </p>
+          </div>
+          <table class="sg-table body-01">
+            <thead><tr><th scope="col" class="label-01">Class</th><th scope="col" class="label-01">Used by</th></tr></thead>
+            <tbody>
+            <tr><td><code>.alert-body</code></td><td>alert</td></tr>
+            <tr><td><code>.alert-note</code></td><td>alert</td></tr>
+            <tr><td><code>.avatar-img</code></td><td>avatar</td></tr>
+            <tr><td><code>.avatar-initials</code></td><td>avatar, table</td></tr>
+            <tr><td><code>.data-number</code></td><td>table</td></tr>
+            <tr><td><code>.expressive-primary</code></td><td>summary-meta</td></tr>
+            <tr><td><code>.form-buttons</code></td><td>form</td></tr>
+            <tr><td><code>.menu</code></td><td>menu-button</td></tr>
+            <tr><td><code>.no-italics</code></td><td>table</td></tr>
+            <tr><td><code>.simple_table</code></td><td>table</td></tr>
+            <tr><td><code>.table-checkbox-header</code></td><td>table</td></tr>
+            <tr><td><code>.table-sort-header</code></td><td>table</td></tr>
+            <tr><td><code>.text-input</code></td><td>form, input-group, input-row, text-input</td></tr>
+            <tr><td><code>.toast-note</code></td><td>toast</td></tr>
+            </tbody>
+          </table>
+          <div class="text-block">
+            <p class="support-01">
+              Font Awesome classes are excluded, since the icon kit supplies those. The documented markup
+              is used unchanged throughout this page rather than substituting classes that do exist.
+            </p>
+          </div>
         </div>
 
         <div class="sg-issue">

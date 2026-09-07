@@ -191,18 +191,69 @@ Verified at 1400px, 900px, 600px and 380px viewports:
 
 `components/versa-tile/examples.html` only shows a single labelled button inside `.versatile-actions`, so there is no verified markup for the multi-action case. Adding a documented icon-only action example would make the intended structure explicit and prevent agents from placing bare buttons there, which silently produces 16px spacing instead of 4px.
 
-## Form actions wrapper naming is inconsistent
+## Form actions wrapper naming is inconsistent — corrected
 
-The Form Code & specs explanatory guidance says the action section is `.form-buttons` and describes it as the wrapper for submit/cancel actions. The current compiled runtime also styles `.form-buttons` as part of the Form layout and applies its top spacing there.
+**This entry previously stated the opposite of what the runtime does. Corrected below.**
 
-However, the rendered Form examples in the Usage/Style/Code documentation repeatedly use:
+The earlier version of this note said that the compiled runtime styles `.form-buttons` and that no `.form-actions` rule exists, and advised using `.form-buttons`. Both claims are wrong, and following that advice removes the action-area spacing entirely.
 
-```html
-<div class="form-actions">
-  ...
-</div>
+Searching `css/buckholt.css`:
+
+- `form-buttons` — **0 occurrences**
+- `form-actions` — **5 occurrences**, fully implemented:
+
+```css
+.form, .nested-inputs, .form-actions, .form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-actions {
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.form-actions > .btn {
+  align-self: flex-start;
+}
 ```
 
-No corresponding `.form-actions` Form-layout rule exists in the compiled runtime, so following the example markup literally loses the documented action-area spacing/layout.
+So the rendered documentation examples, which use `.form-actions`, agree with the runtime. Only the explanatory prose uses the name `.form-buttons`, and nothing implements it.
 
-This is an internal documentation/runtime mismatch rather than a new variant. Until upstream is reconciled, use `.form-buttons` for Buckholt implementation because it is explicitly named by the explanatory documentation and is the class the runtime actually implements. Do not add local CSS to make `.form-actions` behave like `.form-buttons`.
+**Use `.form-actions`.** A form using `.form-buttons` gets no column layout, no 2rem gap between actions and no 2rem top margin.
+
+`components/form/examples.html` currently uses `.form-buttons`, following the earlier incorrect note, and should be updated to `.form-actions`.
+
+## Documented example classes with no rule in the compiled stylesheet
+
+Auditing every class used in `components/*/examples.html` against `css/buckholt.css` and Bootstrap 5.1.3 leaves the following with no rule in either stylesheet. Font Awesome classes are excluded.
+
+| Class | Used by |
+| --- | --- |
+| `.alert-body` | alert |
+| `.alert-note` | alert |
+| `.avatar-img` | avatar |
+| `.avatar-initials` | avatar, table |
+| `.data-number` | table |
+| `.expressive-primary` | summary-meta |
+| `.form-buttons` | form |
+| `.menu` | menu-button |
+| `.no-italics` | table |
+| `.simple_table` | table |
+| `.table-checkbox-header` | table |
+| `.table-sort-header` | table |
+| `.text-input` | form, input-group, input-row, text-input |
+| `.toast-note` | toast |
+
+These are inert: the markup is documented but nothing styles it. The concentration in the newest components (Alert, Avatar, Table, Toast, Menu button, the form family) suggests the compiled stylesheet in this repository predates them and should be refreshed from the current Buckholt build. Until then, pages built from the documented markup will render those parts unstyled.
+
+`.expressive-primary` is the exception: it is inert by design because primary is the root default. See its own entry above.
+
+## Expressive palette is undercounted in the colour foundation
+
+`foundations/colour/foundation-tokens.md` says "the runtime includes primary, secondary and tertiary expressive families" and gives no table for them.
+
+The runtime defines **four** families — primary (the unprefixed default), secondary, tertiary and quaternary — each with `pale`, `soft`, `deep`, `rich` plus `pale-overlay` and `soft-overlay`, giving 24 tokens. `components/icon-block/examples.html` documents `.expressive-quaternary` as a supported treatment, so the component layer already relies on the fourth family.
+
+Because the foundation file carried prose rather than a table, the expressive palette was missing from the generated style guide entirely. It is now rendered from the runtime variables. Adding the tokens to `foundation-tokens.md` as a table, and correcting the count to four, would let the palette be generated from documentation like every other colour group.
