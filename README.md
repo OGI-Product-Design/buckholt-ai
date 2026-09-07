@@ -12,9 +12,10 @@ This repository is deliberately evidence-led. It teaches coding agents only patt
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
 2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website.
-3. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
-4. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
-5. `components/<component>/examples.html` — verified canonical markup examples.
+3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only, loaded after the runtime when a documented behaviour is known to render incorrectly.
+4. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
+5. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
+6. `components/<component>/examples.html` — verified canonical markup examples.
 
 Extra runtime CSS is useful flexibility, but it does not become canonical Buckholt guidance unless the documentation says so. Only significant runtime differences that could mislead an implementation agent are noted in `discrepancies/known-issues.md`.
 
@@ -27,7 +28,8 @@ buckholt-ai/
 ├── README.md
 ├── CLAUDE.md
 ├── css/
-│   └── buckholt.css
+│   ├── buckholt.css
+│   └── buckholt-ai-fixes.css
 ├── foundations/
 │   ├── colour/
 │   ├── iconography/
@@ -54,6 +56,7 @@ buckholt-ai/
     ├── key-value-pair/
     ├── link/
     ├── list/
+    ├── lookup/
     ├── menu/
     ├── menu-button/
     ├── modal/
@@ -124,7 +127,7 @@ Use documented nested Buckholt components inside Card rather than recreating the
 ### Form
 Read `components/form/rules.md` and `components/form/examples.html`, plus the guidance for every input/control used inside it. Form is the composition layer for related controls, optional Text block context, one or more `.form-body` sections and completion/exit actions.
 
-A verified source/runtime mismatch exists between `.form-actions` in rendered documentation examples and `.form-buttons` in the explanatory documentation/runtime. The repo uses `.form-buttons` for runtime-correct Buckholt behaviour; see `discrepancies/known-issues.md`.
+Use `.form-actions` for the action wrapper. Rendered documentation examples and the current compiled runtime agree on `.form-actions`; `.form-buttons` appears only in explanatory prose and is not implemented.
 
 ### Heading attachment
 Read `components/heading-attachment/rules.md` and `components/heading-attachment/examples.html` together with Text block. Heading attachment extends Text block by adding one closely related contextual action or supporting element beside the heading using `.heading` and `.heading-content`.
@@ -160,6 +163,11 @@ A documented/runtime difference for the visited Link state is recorded in `discr
 Read `components/list/rules.md` and `components/list/examples.html`. List covers semantic unordered and ordered lists, optional list headings, nested lists, unstyled lists and icon-supported list items.
 
 Keep native list semantics even when markers are visually removed. Use icons sparingly and do not communicate status through icon/colour alone.
+
+### Lookup
+Read `components/lookup/rules.md` and `components/lookup/examples.html`, plus the guidance for the nested Input, Input group, Button, Link and Versa-tile components.
+
+Lookup is for entering a known value to retrieve related information. Use `.lookup` around the input and `.lookup-actions` for supporting actions. The documented summary variation uses Versa-tile to present retrieved data. Keep this component distinct from Buckholt's separate higher-level `Patterns / Lookup` guidance, which should be ingested later under `patterns/lookup/`.
 
 ### Menu
 Read `components/menu/rules.md` and `components/menu/examples.html`, together with Menu button and Iconography guidance where relevant. Menu covers contextual action lists, submenus, selectable submenu items, dividers, destructive/disabled states and documented focus/interactions.
@@ -233,6 +241,7 @@ Use whole-tile anchors only for navigation; otherwise keep item actions inside `
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/buckholt.css">
+<link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
 
 For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
@@ -243,4 +252,4 @@ For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown
 
 ## Agent behaviour
 
-Coding agents should read `CLAUDE.md`, the relevant foundation files and the relevant component folder before implementing Buckholt UI. Follow documented Buckholt intent first, use the runtime CSS to implement it accurately, and do not invent design-system behaviour from undocumented runtime extras.
+Coding agents should read `CLAUDE.md`, the relevant foundation files and the relevant component folder before implementing Buckholt UI. Follow documented Buckholt intent first, use the runtime CSS to implement it accurately, and apply only the verified compatibility corrections in `css/buckholt-ai-fixes.css`. Do not invent design-system behaviour from undocumented runtime extras.
