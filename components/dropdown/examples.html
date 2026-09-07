@@ -1,149 +1,187 @@
-<!-- Standard single-select Dropdown -->
+<!-- Extracted verbatim from Buckholt Dropdown: Code & specs. Do not alter canonical DOM structure. -->
+
+<!-- Dropdown base code -->
 <div class="input">
-  <div class="input-label">
-    <label for="dropdown-example" class="form-label">Dropdown label</label>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown">
-      <button id="dropdown-example"
-              class="dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-        <span class="dropdown-label">Choose an option…</span>
-      </button>
-
-      <ul class="dropdown-menu dropdown-menu-panel"
-          role="menu"
-          aria-labelledby="dropdown-example">
-        <li id="dropdown-example-option-1" class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">Option 1</li>
-        <li id="dropdown-example-option-2" class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">Option 2</li>
-        <li id="dropdown-example-option-3" class="dropdown-item" role="option" aria-label="Option 3" aria-selected="false" tabindex="0">Option 3</li>
-      </ul>
+    <div class="input-label">
+        <label for="dropdown-example" class="form-label">Dropdown label text</label>
     </div>
-  </div>
 
-  <div class="invalid-feedback">Validation message</div>
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <button id="dropdown-example" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                <span class="dropdown-label">Choose an option…</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-example">
+                <li id="dropdown-option-1" class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">
+                    Option 1
+                </li>
+                <li id="dropdown-option-2" class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">
+                    Option 2
+                </li>
+                <li id="dropdown-option-3" class="dropdown-item" role="option" aria-label="Option 3" aria-selected="false" tabindex="0">
+                    Option 3
+                </li>
+            </ul>    
+        </div>
+    </div>
 </div>
 
-<!-- Supporting assistive and helper text -->
+<!-- Assistive / helper text -->
 <div class="input">
-  <div class="input-label">
-    <label for="dropdown-helper" class="form-label">Dropdown helper text</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown">
-      <button id="dropdown-helper" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="dropdown-label">Choose an option…</span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-helper">
-        <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 1</li>
-        <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 2</li>
-      </ul>
+    <div class="input-label">
+        <label for="dropdownHelpExample" class="form-label">Dropdown help text</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
     </div>
-  </div>
 
-  <small class="form-helper">Helper text</small>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <button id="dropdownHelpExample" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                <span class="dropdown-label">Choose an option…</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdownHelpExample">...</ul>
+        </div>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
 </div>
 
-<!-- Multiselect Dropdown with Select all -->
+<!-- Disabled -->
 <div class="input">
-  <div class="input-label">
-    <label for="dropdown-permissions" class="form-label">Permissions</label>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown">
-      <button id="dropdown-permissions"
-              class="dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              data-bs-auto-close="false"
-              aria-expanded="false">
-        <span class="dropdown-label">Choose options</span>
-      </button>
-
-      <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-permissions">
-        <li id="dropdown-permissions-option-0" class="dropdown-item" role="option" aria-label="All permissions" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-all-permissions">
-          <label class="form-check-label" for="checkbox-all-permissions">All permissions</label>
-        </li>
-        <li class="dropdown-divider"></li>
-        <li id="dropdown-permissions-option-1" class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-permission-1">
-          <label class="form-check-label" for="checkbox-permission-1">Option 1</label>
-        </li>
-        <li id="dropdown-permissions-option-2" class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-permission-2">
-          <label class="form-check-label" for="checkbox-permission-2">Option 2</label>
-        </li>
-      </ul>
+    <div class="input-label">
+        <label for="dropdownDisabledExample" class="form-label">Dropdown disabled</label>
     </div>
-  </div>
 
-  <div class="invalid-feedback">Validation message</div>
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <button id="dropdownDisabledExample" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                <span class="dropdown-label">Choose an option…</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdownDisabledExample">...</ul>    
+        </div>
+    </div>
 </div>
 
-<!-- Multiselect with collapsing selected Tags -->
+<!-- Read-only -->
 <div class="input">
-  <div class="input-label">
-    <label for="dropdown-tags" class="form-label">Collapsible tags</label>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown" data-collapse-threshold="2" data-summary-label="selected">
-      <button id="dropdown-tags" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-        <span class="dropdown-label">Choose options</span>
-      </button>
-
-      <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-tags">
-        <li id="dropdown-tags-option-1" class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-tag-1">
-          <label class="form-check-label" for="checkbox-tag-1">Option 1</label>
-        </li>
-        <li id="dropdown-tags-option-2" class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-tag-2">
-          <label class="form-check-label" for="checkbox-tag-2">Option 2</label>
-        </li>
-        <li id="dropdown-tags-option-3" class="dropdown-item" role="option" aria-label="Option 3" aria-selected="false" tabindex="0">
-          <input class="form-check-input" type="checkbox" value="" id="checkbox-tag-3">
-          <label class="form-check-label" for="checkbox-tag-3">Option 3</label>
-        </li>
-      </ul>
+    <div class="input-label">
+        <label for="dropdownReadonlyExample" class="form-label">Dropdown read-only</label>
     </div>
-  </div>
+
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <button id="dropdownReadonlyExample" class="dropdown-toggle readonly" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                <span class="dropdown-label">Choose an option…</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdownReadonlyExample">...</ul>    
+        </div>
+    </div>
 </div>
 
-<!-- Type-ahead Dropdown -->
+<!-- Multiselect -->
 <div class="input">
-  <div class="input-label">
-    <label for="dropdown-country" class="form-label">Assign to country</label>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown">
-      <input type="text"
-             class="dropdown-toggle"
-             id="dropdown-country"
-             placeholder="Type to search"
-             data-bs-toggle="dropdown"
-             aria-expanded="false"
-             value="">
-      <button type="button" class="input-btn input-clear" aria-label="Clear"></button>
-
-      <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-country">
-        <li class="dropdown-item" role="option" aria-label="Australia" aria-selected="false" tabindex="0">Australia</li>
-        <li class="dropdown-item" role="option" aria-label="Canada" aria-selected="false" tabindex="0">Canada</li>
-        <li class="dropdown-item" role="option" aria-label="France" aria-selected="false" tabindex="0">France</li>
-      </ul>
+    <div class="input-label">
+        <label for="multiselectExample" class="form-label">Dropdown label text</label>
     </div>
-  </div>
+
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <button id="multiselectExample" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                <span class="dropdown-label">Choose some options</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="multiselectExample">
+                <li id="dropdown-option-1" class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">
+                    <input class="form-check-input" type="checkbox" id="checkbox-option-1">
+                    <label class="form-check-label" for="checkbox-option-1">Option 1</label>
+                </li>
+                <li id="dropdown-option-2" class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">
+                    <input class="form-check-input" type="checkbox" id="checkbox-option-2">
+                    <label class="form-check-label" for="checkbox-option-2">Option 2</label>
+                </li>
+                <li id="dropdown-option-3" class="dropdown-item" role="option" aria-label="Option 3" aria-selected="false" tabindex="0">
+                    <input class="form-check-input" type="checkbox" id="checkbox-option-3">
+                    <label class="form-check-label" for="checkbox-option-3">Option 3</label>
+                </li>
+            </ul>    
+        </div>
+    </div>
 </div>
 
-<!-- Required runtime scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="components/dropdown/dropdown.js"></script>
+<!-- Making selections -->
+<div class="dropdown">
+    <div class="tag-set">
+        <span class="tag tag-dismissible expressive-light">
+            <span class="tag-label">Option 1</span>
+            <button type="button" class="btn-close btn-close-sm" aria-label="Close"></button>
+        </span>
+
+        <span class="tag tag-dismissible expressive-light">
+            <span class="tag-label">Option 2</span>
+            <button type="button" class="btn-close btn-close-sm" aria-label="Close"></button>
+        </span>
+    </div>
+
+    <button id="multiselectExample" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">...</button>
+    <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="multiselectExample">...</ul>   
+</div>
+
+<!-- Select all -->
+<li id="dropdown-option-0" class="dropdown-item" role="option" aria-label="All" aria-selected="false" tabindex="0">
+    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+    <label class="form-check-label" for="checkbox-all">All</label>
+</li>
+<li class="dropdown-divider"></li>
+
+<!-- Collapsible tags -->
+<div class="dropdown" data-collapse-threshold="2" data-summary-label="selected">
+    ...
+</div>
+
+<!-- Type-ahead -->
+<div class="input">
+    <div class="input-label">
+        <label for="dropdown-typeahead" class="form-label">Type-ahead</label>
+    </div>
+
+    <div class="response dropdown-input">
+        <div class="dropdown">
+            <input type="text" class="dropdown-toggle" id="dropdown-typeahead" placeholder="Type to filter options" data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="input-btn input-clear" aria-label="Clear" style="display: none;"></button>
+
+            <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="dropdown-typeahead">
+                <li id="dropdown-option-1" class="dropdown-item" role="option" aria-label="Apple" aria-selected="false" tabindex="0">
+                    Apple
+                </li>
+                <li id="dropdown-option-2" class="dropdown-item" role="option" aria-label="Banana" aria-selected="false" tabindex="0">
+                    Banana
+                </li>
+                <li id="dropdown-option-3" class="dropdown-item" role="option" aria-label="Cherry" aria-selected="false" tabindex="0">
+                    Cherry
+                </li>
+                <li id="dropdown-option-4" class="dropdown-item" role="option" aria-label="Grape" aria-selected="false" tabindex="0">
+                    Grape
+                </li>
+                <li id="dropdown-option-5" class="dropdown-item" role="option" aria-label="Kiwi" aria-selected="false" tabindex="0">
+                    Kiwi
+                </li>
+                <li id="dropdown-option-6" class="dropdown-item" role="option" aria-label="Mango" aria-selected="false" tabindex="0">
+                    Mango
+                </li>
+                <li id="dropdown-option-7" class="dropdown-item" role="option" aria-label="Orange" aria-selected="false" tabindex="0">
+                    Orange
+                </li>
+                <li id="dropdown-option-7" class="dropdown-item" role="option" aria-label="Strawberry" aria-selected="false" tabindex="0">
+                    Strawberry
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
