@@ -273,7 +273,7 @@ The consistent lesson is that Buckholt overrides Bootstrap by *redeclaring* prop
 ### Not defects
 
 - **Submenu appearing behind a neighbouring panel** was caused by the style guide placing three independently open menu panels side by side for display. The submenu now has its own row. Buckholt's own z-index is fine.
-- **Page navigation with icons** is described in the rules as "icons may be used where documented", but no canonical markup exists in `components/page-navigation/examples.html`. Not implemented rather than implemented wrongly; add a documented example if the variant is real.
+- **Page navigation with icons** was recorded here as undocumented. Superseded: the 7 September 2026 source ingest added the Code & specs example, and the icon goes directly inside the anchor. See "Page navigation icons — resolved, and my provisional example was wrong" below.
 
 ### Third pass: remaining parity items
 
@@ -289,9 +289,24 @@ The consistent lesson is that Buckholt overrides Bootstrap by *redeclaring* prop
 
 It is page-level only and is not a Buckholt API. Each block should be deleted when an upstream script provides the behaviour. The underlying gap is unchanged: these interactions are documented but unimplemented in the repository.
 
-### Page navigation icons remain undocumented
+### Page navigation icons — resolved, and my provisional example was wrong
 
-`rules.md` says only that "icons may be used where documented and helpful" and `examples.html` has no icon variant. The style guide now shows one built from the shared `<span class="icon">` structure that Iconography defines and that Link, Text block and Tag all use, flagged on the page as provisional. It uses `fa-swatchbook` and `fa-code`, neither of which is in the Buckholt icon catalogue, so those are placeholders. A documented example in `examples.html` would settle both the markup and the icon choice.
+Previously recorded here as undocumented, on the basis that `rules.md` said only "icons may be used where documented and helpful" and `examples.html` had no icon variant. The style guide showed a provisional example built from the shared `<span class="icon">` wrapper that Iconography defines and that Link, Text block and Tag all use, flagged on the page as unverified.
+
+The 7 September 2026 source ingest settles it, and settles it against that guess. Buckholt does document the variant, and places the icon **directly inside the anchor**:
+
+```html
+<li class="nav-item">
+  <a class="nav-link" href="#"><i class="fa-regular fa-ghost"></i>Nav item
+  </a>
+</li>
+```
+
+`components/page-navigation/rules.md` now states explicitly that Page navigation icons must not be wrapped in `<span class="icon">`, `.btn-icon` or any other shared icon wrapper, and `CANONICAL-MARKUP.md` lists "inserting `<span class="icon">` around an icon that Buckholt places directly in a link" as a change that is not allowed. Usage guidance puts the icon to the left of the label only.
+
+The style guide now carries the documented markup for both the base and the icon variant, including the canonical `<ul class="nav">` starting point with no `<nav>` landmark and no `aria-current` — those are noted on the page as application-level additions rather than written back into the example.
+
+The general lesson matches the new policy: a shared foundation convention is not evidence for a specific component's markup. Reporting the gap was right; filling it from a neighbouring component was not.
 
 ### Fourth pass: close icon, grouped action button, selectable tag
 

@@ -4346,67 +4346,67 @@
         <div class="text-block">
           <h2 class="headline-02">Page navigation</h2>
           <p class="body-02">
-            Moves between sibling pages in a small section. A <code>&lt;nav&gt;</code> with its own
-            <code>aria-label</code> wraps a <code>.nav</code> list; the current page takes
-            <code>.active</code> and <code>aria-current="page"</code>. Unlike Tabs, each entry is a real
-            link to another page.
+            Moves between sibling pages in a small section. The documented markup is a
+            <code>.nav</code> list of <code>.nav-item</code> entries, each holding a
+            <code>.nav-link</code>, with <code>.active</code> on the current item. Unlike Tabs, each
+            entry is a real link to another page.
           </p>
         </div>
         <div class="sg-panel">
           <span class="label-01 sg-caption">Documented base</span>
-          <nav aria-label="Section navigation">
-            <ul class="nav">
-              <li class="nav-item"><a class="nav-link active" href="#page-navigation" aria-current="page">Usage</a></li>
-              <li class="nav-item"><a class="nav-link" href="#page-navigation">Style</a></li>
-              <li class="nav-item"><a class="nav-link" href="#page-navigation">Code &amp; specs</a></li>
-            </ul>
-          </nav>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#page-navigation">
+                Nav item
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#page-navigation">
+                Nav item
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#page-navigation">
+                Nav item
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#page-navigation">
+                Nav item
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div class="sg-panel">
-          <span class="label-01 sg-caption">With icons</span>
-          <nav aria-label="Section navigation with icons">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link active" href="#page-navigation" aria-current="page">
-                  <span class="icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span>
-                  Usage
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#page-navigation">
-                  <span class="icon"><i class="fa-regular fa-swatchbook" aria-hidden="true"></i></span>
-                  Style
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#page-navigation">
-                  <span class="icon"><i class="fa-regular fa-code" aria-hidden="true"></i></span>
-                  Code &amp; specs
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <span class="label-01 sg-caption">With an icon</span>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#page-navigation">
+                <i class="fa-regular fa-ghost"></i>Nav item
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#page-navigation">
+                <i class="fa-regular fa-ghost"></i>Nav item
+              </a>
+            </li>
+          </ul>
         </div>
-
-        <div class="sg-issue">
-          <div class="text-block">
-            <h3 class="title-02">Unverified — no icon example is documented</h3>
-            <p class="body-02">
-              <code>components/page-navigation/rules.md</code> says only that "icons may be used where
-              documented and helpful", and <code>examples.html</code> contains no icon variant, so there
-              is no canonical markup for it. The example above therefore uses the shared
-              <code>&lt;span class="icon"&gt;</code> structure that Iconography defines and that Link,
-              Text block and Tag all use, which is what the Page navigation rules point to.
-            </p>
-            <p class="body-02">
-              Treat it as provisional. It also uses <code>fa-swatchbook</code> and <code>fa-code</code>,
-              neither of which is in the Buckholt icon catalogue, so those two are placeholders for
-              whatever the documentation site actually uses. Adding a documented icon example to
-              <code>examples.html</code> would settle both points.
-            </p>
-          </div>
-        </div>
+        <p class="support-01">
+          The icon goes <em>directly</em> inside the anchor, before the label. Do not wrap it in
+          <code>&lt;span class="icon"&gt;</code>, <code>.btn-icon</code> or any other shared icon
+          container — <code>components/page-navigation/rules.md</code> names that specifically, and
+          <code>CANONICAL-MARKUP.md</code> lists it as a change that is not allowed. Usage guidance
+          places the icon to the left of the label only.
+        </p>
+        <p class="support-01">
+          Both examples are the Code &amp; specs markup as documented, which starts at
+          <code>&lt;ul class="nav"&gt;</code> and carries no landmark or <code>aria-current</code>. A real
+          page should add the <code>&lt;nav aria-label&gt;</code> wrapper and
+          <code>aria-current="page"</code> on the current link; those are application-level additions and
+          are deliberately not written back into the canonical example.
+        </p>
       </section>
 
       <section class="sg-section" id="progress-bar">
