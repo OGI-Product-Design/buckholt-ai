@@ -13,7 +13,7 @@ The documented Form structure is:
 1. `.form` — the main form wrapper.
 2. optional `.text-block` — heading and/or description that explains the purpose of the form.
 3. one or more `.form-body` sections — input components and optional section-level Text blocks.
-4. an actions area at the bottom — see the known documentation/runtime naming issue below.
+4. `.form-actions` — completion/exit actions at the bottom.
 
 Canonical structure:
 
@@ -27,7 +27,7 @@ Canonical structure:
     <!-- Buckholt input components -->
   </div>
 
-  <div class="form-buttons">
+  <div class="form-actions">
     <button type="submit" class="btn btn-primary btn-lg">
       <span class="button-label">Submit</span>
     </button>
@@ -58,15 +58,9 @@ Choose the appropriate component by interaction need rather than appearance.
 
 Place completion/exit actions at the bottom of the Form and reuse Buckholt Button and Link components.
 
-There is a verified naming inconsistency in the source:
+Use `.form-actions`. The rendered Buckholt examples and the compiled runtime agree on this class. The explanatory prose on the source page also mentions `.form-buttons`, but that name is not implemented in the current runtime and should not be used as the Buckholt API.
 
-- explanatory Form code documentation calls this wrapper `.form-buttons`;
-- several rendered/documented HTML examples use `.form-actions`;
-- the compiled runtime styles `.form-buttons`, not `.form-actions`.
-
-Until upstream documentation/runtime is reconciled, use `.form-buttons` when implementing Buckholt so the documented action-area spacing is actually applied. See `discrepancies/known-issues.md`.
-
-Do not invent local action spacing to make `.form-actions` look correct.
+The discrepancy is recorded in `discrepancies/known-issues.md` so the upstream documentation wording can be corrected later.
 
 ## States and validation
 
@@ -80,7 +74,8 @@ The compiled runtime provides:
 
 ```css
 .form,
-.form-buttons,
+.nested-inputs,
+.form-actions,
 .form-body {
   display: flex;
   flex-direction: column;
@@ -91,12 +86,13 @@ The compiled runtime provides:
   max-width: 36rem;
 }
 
-.form-body + .form-body {
+.form-actions {
+  gap: 2rem;
   margin-top: 2rem;
 }
 
-.form-buttons {
-  margin-top: 2rem;
+.form-actions > .btn {
+  align-self: flex-start;
 }
 ```
 
@@ -127,7 +123,8 @@ Read as needed:
 ## Agent rules
 
 - Build Forms from documented Buckholt controls.
-- Use `.form` and `.form-body`; use `.form-buttons` for the runtime-correct actions wrapper until the known naming mismatch is resolved.
+- Use `.form`, `.form-body` and `.form-actions`.
+- Do not use `.form-buttons`; it is source-page wording, not a current runtime class.
 - Keep optional introductory/section content in Text block.
 - Reuse Button and Link for actions.
 - Do not recreate Form widths, gaps or action spacing locally.
