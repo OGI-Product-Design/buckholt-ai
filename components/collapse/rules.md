@@ -1,96 +1,60 @@
 # Collapse
 
+## Verification
+
+Source-verified against the Buckholt Collapse Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact Collapse DOM structure.
+
 ## Purpose
 
-Collapse lets users show or hide additional content on the same page without navigating away. Use it to keep an interface scannable when secondary detail does not need to remain visible all the time.
+Collapse lets users show or hide additional content on the same page without navigating away. Use it for a single disclosure where secondary detail can remain hidden until needed. Use Accordion when several related sections form a coordinated expandable set.
 
-Collapse is a single disclosure. Do not use it to recreate an Accordion group; use the Accordion component when several related sections form a coordinated expandable set.
+## Canonical markup
 
-## Canonical structure
+Do not reconstruct Collapse markup from prose. Copy the relevant structure from `examples.html` exactly.
 
-Buckholt uses Bootstrap collapse behaviour with Buckholt's own trigger/card structure:
+The base Code & specs example uses:
 
-```html
-<div class="collapse-item">
-  <a class="collapse-trigger"
-     data-bs-toggle="collapse"
-     href="#collapse-example"
-     role="button"
-     aria-expanded="false"
-     aria-controls="collapse-example">
-    Collapse trigger
-  </a>
-
-  <div class="collapse-card collapse" id="collapse-example">
-    <div class="collapse-content">
-      <div class="text-block">
-        <h6 class="collapse-title">Collapse title</h6>
-        <p>Additional content.</p>
-      </div>
-    </div>
-
-    <button type="button"
-            class="btn-close"
-            data-bs-toggle="collapse"
-            href="#collapse-example"
-            aria-label="Close"></button>
-  </div>
-</div>
+```text
+.collapse-item
+├─ a.collapse-trigger
+└─ .collapse-card.collapse
+   └─ .collapse-content
+      └─ .text-block
+         ├─ h6.collapse-title
+         └─ p
 ```
 
-The trigger's `href`/target must match the `id` of `.collapse-card`. Keep `aria-controls` aligned with the same target and let Bootstrap update the disclosure state.
+The trigger uses `data-bs-toggle="collapse"`, `href`, `role="button"`, `aria-expanded` and `aria-controls`. Its target must match the `id` on `.collapse-card`.
 
-## Trigger
+## Close-button variation
 
-The documented trigger is usually an anchor with:
+Buckholt documents a separate close-button variation. In that variation `.btn-close` is a sibling of `.collapse-content` inside `.collapse-card` and toggles the same target.
 
-- `.collapse-trigger`;
-- `data-bs-toggle="collapse"`;
-- `role="button"`;
-- `href="#target-id"`;
-- `aria-expanded`;
-- `aria-controls="target-id"`.
+Use the exact close-button structure in `examples.html`; do not add the close button to the base example by default.
 
-Use a meaningful trigger label that tells the user what content will be revealed. Do not use vague labels such as “More” when a clearer label is available.
+## Context-bar variation
 
-## Content card
+Buckholt also documents a Context bar variation. The source example contains `.collapse-contextbar` inside `.collapse-content` and composes the documented List and Standalone Link markup within it.
 
-The revealed region uses `.collapse-card.collapse`, containing `.collapse-content`. Buckholt's example composes a Text block inside the content and uses `.collapse-title` for the title.
+Do not treat Context bar content as mandatory Collapse structure.
 
-Use documented Buckholt components inside the content region rather than recreating their styles locally.
+## Initial state and Bootstrap dependency
 
-## Close action
+Collapse uses Bootstrap 5.1.3 Collapse behaviour. The normal source example is collapsed initially (`aria-expanded="false"`, no `.show`). The Context bar demonstration source is shown open with `aria-expanded="true"` and `.show`.
 
-The documented Collapse contains a `.btn-close` that toggles the same collapse target. Preserve an accessible name such as `aria-label="Close"`.
+Load the Bootstrap bundle where Collapse behaviour is required. Do not replace it with bespoke visibility JavaScript.
 
-## Initial state
+## Content and accessibility
 
-The normal documented example is collapsed initially, with `aria-expanded="false"` and without `.show` on the collapse region.
-
-If product requirements genuinely require the content initially expanded, use Bootstrap's real collapse state consistently: `.show` on the collapse region and `aria-expanded="true"` on the trigger. Do not create a separate custom visibility mechanism.
-
-## Behaviour and dependencies
-
-Collapse relies on Bootstrap 5.1.3 collapse JavaScript. Load the Bootstrap bundle used by Buckholt. Do not write custom open/close JavaScript when Bootstrap collapse already supplies the interaction.
-
-The trigger and the internal close button control the same region. IDs must be unique on the page.
-
-## Content guidance
-
-Use Collapse for supplementary content that users may need on demand while remaining in the current context. Keep the trigger and revealed content closely related.
-
-Do not hide information that is essential for completing the primary task or understanding a critical system state.
-
-## Composition
-
-Read `components/text-block/` for written content inside `.collapse-content`, and `components/button/` when using Buckholt actions inside the revealed region.
+- Keep trigger labels meaningful and closely related to the revealed content.
+- Keep `href`, `aria-controls` and the target `id` aligned.
+- Preserve keyboard-operable trigger semantics and visible focus behaviour.
+- Reuse Buckholt components inside `.collapse-content` rather than recreating their styling.
 
 ## Agent rules
 
-- Use `.collapse-item`, `.collapse-trigger`, `.collapse-card.collapse` and `.collapse-content` as documented.
-- Match trigger `href`, `aria-controls` and content `id` exactly.
-- Use Bootstrap collapse behaviour rather than custom visibility scripting.
-- Preserve `aria-expanded` and an accessible close button.
-- Use Collapse for one disclosure; use Accordion for a coordinated set of expandable sections.
-- Reuse Buckholt components inside the content region.
+- Use `examples.html` as canonical DOM evidence.
+- Use `.collapse-item`, `.collapse-trigger`, `.collapse-card.collapse` and `.collapse-content` exactly where documented.
+- Do not merge the base, Close button and Context bar variations into one invented canonical example.
+- Use Bootstrap Collapse behaviour and matching unique IDs.
 - Do not recreate Collapse spacing, card styling, transitions or close treatment with local CSS.
