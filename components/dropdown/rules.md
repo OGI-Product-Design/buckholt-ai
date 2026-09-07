@@ -1,172 +1,77 @@
 # Dropdown
 
+## Verification
+
+Source-verified against the Buckholt Dropdown Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact Dropdown DOM structure.
+
 ## Purpose
 
-Dropdown presents a predefined list of options for the user to choose from. Buckholt documents three forms:
+Dropdown presents a predefined list of options. Buckholt documents standard single select, Multiselect using checkboxes and Tags, and Type-ahead for narrowing a long predefined list.
 
-- standard single-select Dropdown;
-- Multiselect Dropdown using checkboxes and Tags;
-- Type-ahead Dropdown for narrowing a long list by typing.
+Use Dropdown when choices are predefined and an always-visible control is less suitable. Keep option text concise and easy to scan; do not nest Dropdowns or use decorative imagery in options.
 
-Use Dropdown when the available choices are predefined and the number or presentation of options makes an always-visible control less suitable. Keep options simple, concise and easy to scan; do not nest Dropdowns or put decorative imagery inside options.
+## Canonical single select
 
-## Canonical single-select structure
+Do not rebuild the DOM from this prose. The exact base structure is in `examples.html` and includes:
 
-```html
-<div class="input">
-  <div class="input-label">
-    <label for="dropdown-example" class="form-label">Dropdown label</label>
-  </div>
-
-  <div class="response dropdown-input">
-    <div class="dropdown">
-      <button id="dropdown-example"
-              class="dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-        <span class="dropdown-label">Choose an option…</span>
-      </button>
-
-      <ul class="dropdown-menu dropdown-menu-panel"
-          role="menu"
-          aria-labelledby="dropdown-example">
-        <li id="dropdown-option-1"
-            class="dropdown-item"
-            role="option"
-            aria-label="Option 1"
-            aria-selected="false"
-            tabindex="0">Option 1</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="invalid-feedback">Validation message</div>
-</div>
+```text
+.input
+├─ .input-label
+│  └─ label.form-label
+└─ .response.dropdown-input
+   └─ .dropdown
+      ├─ button.dropdown-toggle
+      │  └─ .dropdown-label
+      └─ ul.dropdown-menu.dropdown-menu-panel
+         └─ li.dropdown-item[role="option"]
 ```
 
-The `.input` structure, label, assistive/helper text and validation follow the normal Buckholt form-input model. Use unique IDs and keep the menu's `aria-labelledby` tied to its trigger.
+Preserve the exact source attributes, including IDs, `aria-expanded`, `aria-labelledby`, `aria-selected` and `tabindex`, when using a source example as canonical evidence. Do not add validation markup to the base example unless that specific Code & specs variation contains it.
 
-## Single select behaviour
+## Assistive/helper text
 
-Use a standard Dropdown when the user chooses one option from a predefined list.
+Buckholt documents assistive text inside `.input-label` using `<small class="form-helper">`, and helper text after `.response.dropdown-input`. Use the exact variation from `examples.html`.
 
-Selecting an option closes the menu, replaces the placeholder/label with the selected option text and marks the option active/selected so it can be found again when the Dropdown is reopened.
+## Disabled and read-only
 
-Option text should be short, clear and factual. Present options alphabetically where that supports scanning. Avoid multiple lines of option text.
+The documented disabled variation uses native `disabled` on `.dropdown-toggle`.
+
+The documented read-only variation uses:
+
+```text
+button.dropdown-toggle.readonly[disabled]
+```
+
+Preserve that documented combination rather than inventing a different read-only mechanism.
 
 ## Multiselect
 
-Use Multiselect when users may choose multiple predefined options, such as filtering or sorting by several criteria. Each selectable option contains a native Checkbox.
+The Code & specs source keeps the menu open with `data-bs-auto-close="false"` and places native Checkbox inputs and labels directly inside each `.dropdown-item`.
 
-Canonical structure uses the same `.dropdown` and menu but keeps the menu open with `data-bs-auto-close="false"` and places `.form-check-input` plus `.form-check-label` inside each `.dropdown-item`.
-
-Selected options are represented as Buckholt Tags inside the Dropdown field. The supplied Dropdown JavaScript creates and removes `.tag-set` and `.tag.tag-dismissible.expressive-light` elements from the native selected state.
-
-Selected options are moved to the top of the menu in alphanumeric order when reopened.
-
-### Select all
-
-Buckholt documents an optional parent Checkbox as the first option. The supplied JavaScript identifies it by an item ID ending in `-0` and maintains unselected, selected and indeterminate states based on the remaining options.
-
-Use neutral text such as “All” or a clear noun phrase such as “All permissions”; do not phrase the parent option as an action.
-
-### Collapsing tags
-
-For a Multiselect where many selections would create too many Tags, add data attributes to `.dropdown`:
-
-```html
-<div class="dropdown"
-     data-collapse-threshold="2"
-     data-summary-label="selected">
-```
-
-`data-collapse-threshold` defines when individual Tags collapse to one summary Tag. `data-summary-label` customises the word after the count, for example `5 chosen`.
-
-Use this when the expected number of selections would otherwise overwhelm the field.
+Selected options are represented as Buckholt Tags by the supplied Dropdown enhancement script. The Code & specs page separately demonstrates selected Tags, Select all, collapsible Tags and their data attributes. Use those exact snippets from `examples.html`; do not expand the documented `...` placeholders by inference.
 
 ## Type-ahead
 
-Use Type-ahead to narrow a long predefined list by typing.
-
-The trigger becomes a text input:
-
-```html
-<input type="text"
-       class="dropdown-toggle"
-       id="dropdown-country"
-       placeholder="Type to search"
-       data-bs-toggle="dropdown"
-       aria-expanded="false"
-       value="">
-<button type="button" class="input-btn input-clear" aria-label="Clear"></button>
-```
-
-The supplied JavaScript filters options, keeps matching items visible, can autocomplete a matching prefix, supports keyboard confirmation, shows the clear action when text exists and restores the full list when cleared.
-
-## Supporting text
-
-Use `<small class="form-helper">` for both assistive and helper text:
-
-- assistive text belongs inside `.input-label`, beneath the label;
-- helper text follows `.response.dropdown-input`.
-
-Placeholder text is optional and supplementary. Do not place crucial instructions only in the placeholder.
+The Type-ahead source changes the trigger to an `<input type="text" class="dropdown-toggle">` and places a sibling `.input-btn.input-clear` before the dropdown menu. Use the exact source structure and options from `examples.html`.
 
 ## Size
 
-Buckholt documents medium/default and small heights, with `.dropdown-sm` named for the small variant. However, the Code & specs page explicitly marks the small Dropdown implementation as pending. Do not invent missing small-Dropdown behaviour or styling.
-
-## States
-
-Dropdown documents focus, error, disabled and read-only states.
-
-### Disabled
-
-Use native `disabled` on `.dropdown-toggle`. Let Buckholt runtime styling represent the disabled state.
-
-### Error
-
-Use the documented Buckholt validation treatment and `.invalid-feedback`. Do not create a custom error border/message system.
-
-### Read-only
-
-Follow the documented Buckholt read-only state when source markup establishes it. Do not convert a Dropdown into a fake disabled control or invent custom interaction rules.
-
-## Accessibility and interaction
-
-Dropdown options use `role="option"`, `aria-selected` and `tabindex="0"` in the canonical markup. The trigger uses `aria-expanded`. Preserve those states and keep them synchronized with the actual UI.
-
-Buckholt documents keyboard access through `Tab` and option navigation using arrow keys, with selection via Enter/Space. The supplied JavaScript explicitly handles Enter/Space on menu items and the Type-ahead input.
+Buckholt documentation mentions medium/default and a small treatment, but Code & specs marks the small Dropdown implementation as pending. Do not invent a completed `.dropdown-sm` canonical implementation.
 
 ## JavaScript dependencies
 
-Dropdown requires both:
+Dropdown requires Bootstrap's Dropdown behaviour plus the supplied `components/dropdown/dropdown.js` for Buckholt-specific selection ordering, Tags, Select all/indeterminate state, collapsed Tags, menu positioning and Type-ahead behaviour.
 
-1. Bootstrap 5.1.3 bundle for the underlying Dropdown behaviour;
-2. Buckholt's additional `dropdown.js` enhancement script for Buckholt-specific selection, Multiselect Tags, Select-all/indeterminate state, collapsed Tags, menu positioning and Type-ahead behaviour.
-
-The supplied source is stored at `components/dropdown/dropdown.js`. Load it after Bootstrap:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="components/dropdown/dropdown.js"></script>
-```
-
-Do not omit `dropdown.js` and then recreate its documented behaviour ad hoc in page code.
-
-## Composition
-
-Read `components/checkbox/` for Multiselect Checkbox semantics, `components/tag/` for generated selected Tags, and Form/Input-row guidance when Dropdown is composed inside larger forms.
+Load Bootstrap before the Buckholt enhancement script. Do not recreate those behaviours in page-specific code.
 
 ## Agent rules
 
-- Use `.input > .input-label + .response.dropdown-input` for a labelled Dropdown.
-- Use `.dropdown`, `.dropdown-toggle`, `.dropdown-menu.dropdown-menu-panel` and `.dropdown-item` as documented.
-- Keep IDs, `aria-labelledby`, `aria-expanded` and `aria-selected` aligned.
-- Use single select for one predefined choice, Multiselect for multiple choices and Type-ahead for long filterable lists.
-- Use native Checkbox inputs inside Multiselect options.
-- Load the supplied `components/dropdown/dropdown.js` after Bootstrap when implementing Buckholt Dropdown.
-- Do not invent a replacement Tag system, Select-all algorithm, Type-ahead filter or menu-positioning script.
-- Do not promote `.dropdown-sm` into completed canonical behaviour while the documentation marks it pending.
-- Do not recreate Dropdown visual states, borders, spacing, menus or Tags with local CSS.
+- Use `examples.html` as the exact DOM authority.
+- Preserve `.input`, `.response.dropdown-input`, `.dropdown`, `.dropdown-toggle`, `.dropdown-menu.dropdown-menu-panel` and `.dropdown-item` only as shown by the relevant source variation.
+- Do not add `.invalid-feedback` to the base canonical example; validation belongs only where the source/child input rules establish it.
+- Preserve native Checkbox markup in Multiselect.
+- Preserve `.readonly` plus `disabled` for the documented read-only Dropdown variation.
+- Preserve source `...` placeholders instead of filling them in by inference.
+- Load the supplied Dropdown JavaScript after Bootstrap when the documented enhanced behaviour is required.
+- Do not promote pending small-Dropdown behaviour into canonical guidance.
+- Do not recreate Dropdown visual or interaction behaviour with local CSS/JS.
