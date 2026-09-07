@@ -1,159 +1,66 @@
 # Alert
 
+## Verification
+
+Source-verified against the Buckholt Alert Usage, Style and Code & specs HTML pages supplied on 7 September 2026. For exact DOM structure, use `examples.html`; its component markup is extracted verbatim from the Code & specs page.
+
 ## Purpose
 
-Alerts are nondisruptive messages confined to a specific area of the UI. They communicate task-generated or system-generated feedback and remain visible until dismissed by the user or until the underlying issue is resolved.
+Alerts are nondisruptive messages confined to a specific area of the UI. They communicate task-generated or system-generated feedback and remain visible until dismissed or until the underlying issue is resolved. Alerts are often used alongside field-level messages, especially for form/input errors.
 
-Alerts are often used alongside field-level messages, especially for form/input errors.
+## Anatomy
 
-## Core anatomy
+The alert message is the required element. Buckholt documents these optional additions:
 
-The message is the only required element.
+- `.alert-icon`
+- `.alert-note`
+- `.alert-contextbar`
+- `.btn-close`
 
-Optional elements are:
+Do not substitute `.context-bar` for the documented `.alert-contextbar` class.
 
-- icon;
-- supporting note;
-- context bar;
-- close button.
+## Canonical markup
 
-Use optional elements only when they add useful context, reinforce meaning or provide an appropriate action.
+Do not reconstruct Alert markup from this prose. Copy the relevant Code & specs structure from `examples.html` exactly. The documented base hierarchy uses `.alert`, `.alert-content`, `.alert-body` and `.alert-message` with `role="alert"` on the outer Alert.
 
-## Base structure
+## Status variants
 
-```html
-<div class="alert alert-info" role="alert">
-  <div class="alert-content">
-    <span class="alert-icon">
-      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-    </span>
-    <div class="alert-body">
-      <div class="alert-message">
-        <h6>Alert message</h6>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-The icon is optional. The `.alert-message` is required.
-
-## Variants
-
-Buckholt documents four semantic Alert variants:
+Buckholt documents:
 
 - `.alert-info`
 - `.alert-success`
 - `.alert-warning`
 - `.alert-error`
 
-Use the semantic variant that matches the actual feedback meaning. Do not choose a status colour merely for visual emphasis.
+The Code & specs source shows the status examples and their icon markup exactly. Do not replace those icons or wrappers in canonical examples even where another icon might appear more semantically obvious.
 
-Documented examples use:
+## Supporting content
 
-- information: `fa-solid fa-circle-info`;
-- warning: `fa-solid fa-triangle-exclamation`;
-- error: `fa-solid fa-circle-exclamation`.
+Use `.alert-note` for additional context beneath the main message. The documentation also demonstrates a smaller secondary note inside `.alert-note` using `<p><small>…</small></p>`.
 
-For any other Alert icon choice, use the documented Iconography catalogue rather than guessing.
+Use `.alert-contextbar` for supporting actions/content. The documented example places it inside `.alert-body` and uses a Buckholt Button inside it.
 
-## Supporting note
+## Close and animation
 
-Add `.alert-note` inside `.alert-body`, directly beneath `.alert-message`:
+Buckholt uses `.btn-close` with `data-bs-dismiss="alert"` and `aria-label="Close"` for a dismissible Alert. Bootstrap's JavaScript bundle is required for that dismiss behaviour.
 
-```html
-<div class="alert-body">
-  <div class="alert-message">
-    <h6>Alert message</h6>
-  </div>
-  <span class="alert-note">Supporting context.</span>
-</div>
-```
+The documented animation treatment adds `.fade.show` to the Alert.
 
-Use a note for secondary context or guidance. Keep the main message concise enough to understand at a glance.
+## Content and interaction
 
-## Context bar
+Keep the main message concise and in sentence case. Use supporting content for detail rather than overloading the message.
 
-Use `.context-bar` as the final element inside `.alert-body` when the Alert needs supporting utility such as:
+For dismissible Alerts, preserve keyboard access to actions and the close control. Feedback must not depend on colour or icon alone.
 
-- a short label;
-- a standalone link;
-- a CTA button;
-- a timestamp.
+## Runtime
 
-The context bar is optional. Include it only when it meaningfully supports the Alert without competing with the main message.
-
-Reuse documented Buckholt Button and Link components inside it rather than creating local CTA/link styling.
-
-## Dismissible Alerts
-
-Use the close button only when the Alert is dismissible and does not represent a persistent or critical system state.
-
-A dismissible Alert communicates useful information that is not essential for the user to act on immediately.
-
-Alerts that represent an unresolved condition, such as a system error requiring action, should remain visible until that condition is resolved rather than being freely dismissible.
-
-Documented close control:
-
-```html
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-```
-
-Where the documented Bootstrap dismiss behaviour is used, load the Bootstrap bundle.
-
-## Width
-
-Alert width is flexible and adapts to its surrounding layout, expanding to fill the associated container/content area. Do not invent a fixed width when the surrounding layout should determine it.
-
-## Typography and content
-
-Write Alert messages in sentence case. Keep the main message concise and direct, expressing the most important information first.
-
-Use the supporting note for extra explanation rather than making the main message unnecessarily long.
-
-## Interaction
-
-For dismissible Alerts, users can close the Alert using the close control.
-
-Buckholt documents keyboard movement between available CTA and close controls with `Tab`, activation with `Enter` or `Space`, and `Esc` as a dismissal interaction.
-
-Preserve logical focus order and native control behaviour when implementing interactive Alert content.
-
-## Accessibility
-
-- use `role="alert"` on the documented Alert container;
-- keep meaningful feedback in text, not colour/icon alone;
-- mark decorative/supporting icons `aria-hidden="true"` when their meaning is already conveyed by text;
-- provide `aria-label="Close"` on the close control;
-- use semantic buttons/links for actions;
-- preserve keyboard access and visible focus;
-- do not allow dismissing a critical/persistent state merely because a close icon is visually convenient.
-
-## Foundation relationships
-
-Read:
-
-- `foundations/colour/` for semantic feedback colours and contrast;
-- `foundations/iconography/` for status icons;
-- `foundations/spacing/rules.md` before changing internal spacing;
-- `foundations/typography/` before changing Alert text styling;
-- `foundations/radius/rules.md` before changing Alert radius;
-- `components/button/` and `components/link/` when adding context-bar actions.
-
-## Runtime notes
-
-The compiled stylesheet defines `.alert`, `.alert-content`, `.alert-message`, `.alert-icon`, `.alert-link`, `.alert-dismissible`, and the four semantic variants. The runtime uses component-level feedback variables for background, border, message and note colours.
-
-Do not replace these with generic Bootstrap Alert colours or locally hard-coded status colours.
+Use the Buckholt classes in `css/buckholt.css`; do not replace them with generic Bootstrap Alert styling or local status colours. Load Bootstrap JavaScript where dismiss behaviour is required.
 
 ## Agent rules
 
-- Alert is nondisruptive, local feedback; use Modal for genuinely interruptive tasks.
-- `.alert-message` is required; icon, note, context bar and close are optional.
-- Use exactly the semantic variants `.alert-info`, `.alert-success`, `.alert-warning`, `.alert-error`.
-- Use `.alert-note` directly under `.alert-message` for secondary context.
-- Put `.context-bar` last inside `.alert-body` and reuse Buckholt Button/Link components inside it.
-- Only make an Alert dismissible when the message is noncritical and does not represent a persistent unresolved condition.
-- Keep Alert copy concise and sentence case.
-- Preserve `role="alert"`, accessible close labelling, keyboard access and visible focus.
-- Do not recreate Alert colours, border treatment, spacing, radius or typography with custom CSS.
+- Use `examples.html` as the canonical markup source.
+- Preserve `.alert > .alert-content` and the documented body/message wrappers.
+- Use `.alert-contextbar`, not a generic `.context-bar` wrapper.
+- Use only documented status modifiers.
+- Keep `role="alert"` and the documented close-button attributes.
+- Do not invent wrappers, status icons, dismissibility or custom Alert CSS.
