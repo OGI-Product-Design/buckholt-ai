@@ -205,3 +205,49 @@ Do not promote the remaining names from that audit into this canonical file with
 The colour foundation previously said the runtime included only primary, secondary and tertiary expressive families. The runtime actually defines four: primary/default, secondary, tertiary and quaternary.
 
 `foundations/colour/foundation-tokens.md` now documents all four families and their pale, soft, deep, rich, pale-overlay and soft-overlay variables. It also explicitly notes that primary is the default and does not use an `.expressive-primary` modifier.
+
+## Visual parity audit — findings and status
+
+Raised in the Buckholt visual parity audit comparing the documentation site (BD) with `test/style-guide/` (SG).
+
+### Fixed: the style guide was not loading the documented component scripts
+
+`CLAUDE.md` lists `components/dropdown/dropdown.js`, `components/form/form.js` and `components/tabs/tabs.js`, and the Form, Checkbox, Radio and Number input rules record that `form.js` depends on jQuery. The style guide loaded none of them, so every behaviour they provide appeared broken.
+
+jQuery 3.7.1 and all three scripts are now loaded, in that order, after the Bootstrap bundle. That restores the Number input steppers, the Text area character counter, the Checkbox `indeterminate` and `selected` states, the `state_readonly` prevention, the Dropdown enhancement and the Tabs overflow controls.
+
+Note that jQuery is named only in individual component rules, not in the `CLAUDE.md` runtime dependency block. It should be added there, since `form.js` fails silently without it.
+
+### Fixed: blanket `a:visited` turned every anchor purple
+
+The compatibility layer applied the documented Link visited colour with a bare `a:visited`. That repaints anchors belonging to other components — Clickable card, Breadcrumb, Page navigation, Versa-tile, Menu — none of which document a visited state. Because same-page `href="#id"` anchors count as visited immediately, those components rendered purple on first view.
+
+The Link documentation defines visited for inline links, which are bare anchors carrying no Link-specific class, and for `.link-standalone`. The rule is now scoped to exactly those:
+
+```css
+a:not([class]):visited,
+a.link-standalone:visited { color: var(--expressive-secondary-deep); }
+```
+
+This also resolves the Clickable card complaint: its text is `#1a1a1a` as documented once the blanket rule is gone.
+
+### Fixed: Dropdown rendered two arrows
+
+Buckholt styles `.dropdown-toggle` like a select and draws its arrow as a right-edge background image, but never suppresses Bootstrap's own `.dropdown-toggle::after` border triangle. Both rendered — Bootstrap's inline after the label, Buckholt's at the right edge.
+
+This is another instance of the Bootstrap bleed-through pattern: not load order, but Bootstrap styling something Buckholt does not counter. `.dropdown-toggle::after { display: none }` is applied in the compatibility layer.
+
+### Fixed: Alert close button inflated to 48x52
+
+`.btn-close` is `box-sizing: content-box` with `width`/`height` of `2rem` and `padding: 0`, giving 32x32. The Bootstrap-inherited `.alert-dismissible .btn-close` rule re-adds `padding: 0.625rem 0.5rem`, which under content-box inflates the control to 48x52 and pins it flush into the corner.
+
+The compatibility layer restores `box-sizing: border-box` on `.btn-close` and insets the dismissible position by the Alert's own padding variables. Measured 32x32 afterwards, with the small variant still 24x24.
+
+### Not fixable in CSS: selection states that need product JavaScript
+
+- **Selectable card.** `.card-selectable.active` supplies the selected fill and border, but nothing in the repository adds `.active` when the radio or checkbox is checked. The runtime has no `:has(:checked)` equivalent. The radio itself positions correctly at `top: 1.5rem; right: 1.5rem`.
+- **Selectable tag.** `.tag-selectable` wraps a native input, but no shipped script reflects the checked state, and `data-bs-dismiss="tag"` is not a Bootstrap behaviour so the dismissible tag's close button is inert.
+- **Table select-all.** The `data-cdt-select-column` and `data-cdt-table` attributes imply a table controller that is not in the repository.
+- **Slider.** Nothing synchronises the range input with its paired number field; `form.js` covers the stepper buttons but not the slider.
+
+Either these need their scripts adding to the repository, or the documentation should state that they are product responsibilities.

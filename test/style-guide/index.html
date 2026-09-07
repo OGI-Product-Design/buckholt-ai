@@ -5850,8 +5850,17 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
     </main>
   </div>
 
-  <!-- Bootstrap JS bundle: required for the documented Tooltip behaviour. -->
+  <!-- jQuery: components/form/form.js depends on it, per the Form, Checkbox,
+       Radio and Number input rules. Must load before form.js. -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Bootstrap JS bundle: Tooltip, Modal, Collapse, Dropdown and Tab behaviour. -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Documented Buckholt component scripts, per CLAUDE.md. -->
+  <script src="../../components/dropdown/dropdown.js"></script>
+  <script src="../../components/form/form.js"></script>
+  <script src="../../components/tabs/tabs.js"></script>
   <script>
     // Buckholt's documented Tooltip initialisation.
     const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');

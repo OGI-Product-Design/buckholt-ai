@@ -74,7 +74,16 @@
    Tracking: discrepancies/known-issues.md
    ============================================================================ */
 
-a:visited {
+/* Scope this to the Link component only. The Link documentation defines the
+   visited state for inline links, which are bare anchors carrying no
+   Link-specific class, and for `.link-standalone`. A blanket `a:visited`
+   also repaints anchors that are other components in their own right -
+   Clickable card, Breadcrumb, Page navigation, Versa-tile - none of which
+   document a visited treatment. Same-page `href="#id"` anchors count as
+   visited immediately, so the blanket form turns those components purple on
+   first view. */
+a:not([class]):visited,
+a.link-standalone:visited {
   color: var(--expressive-secondary-deep);
 }
 
@@ -107,4 +116,42 @@ a.link-standalone:visited .icon {
 
 .versatile-actions {
   flex-shrink: 0;
+}
+
+/* ============================================================================
+   DROPDOWN — Bootstrap caret triangle bleeds through
+   Source: Buckholt Dropdown documentation and runtime implementation
+   Issue: Buckholt styles `.dropdown-toggle` like a select and draws its arrow
+          with a background image at the right edge. It never suppresses
+          Bootstrap's own `.dropdown-toggle::after` border triangle, so the
+          control renders two arrows - Bootstrap's inline after the label and
+          Buckholt's at the right edge.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+/* ============================================================================
+   ALERT — dismissible close button inflated
+   Source: Buckholt Button close and Alert documentation
+   Issue: `.btn-close` is `box-sizing: content-box` with `width/height: 2rem`
+          and `padding: 0`, so it is 32x32. The Bootstrap-inherited
+          `.alert-dismissible .btn-close` rule re-adds `padding: 0.625rem 0.5rem`,
+          which with content-box inflates the control to 48x52 and pins it flush
+          into the corner. Restoring border-box keeps the declared 2rem square
+          while preserving the padding as internal spacing.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.btn-close {
+  box-sizing: border-box;
+}
+
+.alert-dismissible .btn-close {
+  top: var(--alert-padding-y);
+  right: var(--alert-padding-x);
 }
