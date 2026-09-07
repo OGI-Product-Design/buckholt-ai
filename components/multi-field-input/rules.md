@@ -1,70 +1,44 @@
 # Multi-field input
 
+## Verification
+
+Source-audited against the Buckholt Multi-field input Usage, Style and Code & specs HTML pages supplied on 7 September 2026. Use `examples.html` for exact DOM structure.
+
 ## Purpose
 
-Use Multi-field input when several closely related values belong to one labelled response and should be understood as a single input group rather than separate questions.
+Use Multi-field input when several closely related values belong to one labelled response and should be understood as one combined input rather than separate questions.
 
-## Canonical structure
+## Canonical markup
 
-Multi-field input follows Buckholt's normal input structure but places more than one field inside the `.response` container. Add `.multi-input` to the response wrapper together with the relevant field-type class such as `.text-input` or `.select-input`.
+Do not reconstruct Multi-field input markup from prose. The Code & specs source in `examples.html` documents:
 
-```html
-<div class="input">
-  <div class="input-label">
-    <label for="multi-field-1" class="form-label">Input label</label>
-  </div>
+- `.input` with `.input-label` and one `.response.multi-input` wrapper;
+- multiple Text inputs using `.response.multi-input.text-input`;
+- a mixed Select + Text input example using `.response.multi-input.select-input.text-input`;
+- the stacked variant using `.multi-input-stacked` on the response wrapper.
 
-  <div class="response multi-input text-input">
-    <input type="text" class="form-control" id="multi-field-1" placeholder="Placeholder">
-    <input type="text" class="form-control" id="multi-field-2" placeholder="Placeholder">
-  </div>
-
-  <div class="invalid-feedback">Validation message</div>
-</div>
-```
-
-## Field types
-
-The documentation explicitly supports composing Multi-field input from Text input and Select fields. When mixing field types, keep each field's real Buckholt classes and semantics; do not restyle generic inputs to imitate them.
+The Code & specs source does **not** add `.invalid-feedback` to the canonical base examples. Do not insert validation markup into those examples by inference.
 
 ## Layout
 
-The default form presents fields together horizontally. Use `.multi-input-stacked` for the documented stacked arrangement:
+Default Multi-field input places the related controls together horizontally. Add `.multi-input-stacked` only for the documented stacked arrangement.
 
-```html
-<div class="response multi-input multi-input-stacked text-input">
-  ...
-</div>
-```
+Use the nested control classes exactly as shown by the source. Do not replace the combined response wrapper with an Input row or arbitrary Bootstrap columns.
 
-Do not invent new density or alignment modifiers beyond the documented classes.
+## Validation and states
 
-## States
+Usage/Style guidance may describe validation, disabled and read-only behaviour, but the child controls remain the actual native inputs. Apply their documented states when a product implementation needs them; do not silently add state markup to the canonical Code & specs examples.
 
-Multi-field inputs inherit the normal states of the fields they contain, including resting, focus, disabled, read-only and error. The child field type owns the detailed interaction and accessibility behaviour.
-
-## Validation
-
-Treat the whole Multi-field input as one labelled response, but do not duplicate error indicators across its fields.
-
-Buckholt specifically documents that:
-
-- grouped text inputs should show the error icon only in the first text field;
-- if the group begins with a Select, the error icon is displayed alongside the error message instead;
-- never show more than one error icon within one Multi-field input.
-
-Use one `.invalid-feedback` message for the group where the documented example does so.
+Where the documentation describes error-icon behaviour for grouped fields, do not duplicate multiple error indicators within one combined response.
 
 ## Accessibility
 
-- Keep a visible label for the combined response.
-- Every native field still needs its own unique `id` and any field-specific accessible relationship required by its component.
-- Do not remove the semantics of the individual native controls merely because they are visually grouped.
+Keep the visible group label and the native semantics of each control. Production IDs and accessible relationships must be unique and correct, even where documentation examples reuse illustrative labels/IDs.
 
 ## Agent rules
 
-- Read the guidance for every child field type used in the group.
-- Use `.response.multi-input` plus the applicable child-input class.
+- `examples.html` is canonical for Multi-field input DOM.
+- Use `.response.multi-input` plus the documented child input classes.
 - Use `.multi-input-stacked` only for the documented stacked variant.
-- Do not use Multi-field input simply to place unrelated questions on one row; use Input row for that composition.
-- Do not duplicate validation icons.
+- Do not add validation wrappers, additional labels, grid wrappers or other structure unless the exact source documents them.
+- Use Input row instead when separate questions merely need side-by-side layout rather than one combined response.
