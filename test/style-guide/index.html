@@ -3469,6 +3469,11 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
           <div class="sg-panel">
             <span class="label-01 sg-caption">Label, body text and action items</span>
+            <p class="support-01">
+              The action buttons below currently wrap onto two lines. That is the runtime issue recorded
+              at the foot of this section, not the intended rendering — the documented result is a single
+              row with 4px between them.
+            </p>
             <div class="versatile">
               <div class="versatile-content">
                 <div class="versatile-body">
@@ -3481,14 +3486,16 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
                   </div>
                 </div>
                 <div class="versatile-actions">
-                  <button type="button" class="btn btn-ghost" aria-label="Edit"
-                          data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
-                    <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
-                  </button>
-                  <button type="button" class="btn btn-ghost" aria-label="Delete"
-                          data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
-                    <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
-                  </button>
+                  <div class="button-set">
+                    <button type="button" class="btn btn-ghost" aria-label="Edit"
+                            data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
+                      <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                    </button>
+                    <button type="button" class="btn btn-ghost" aria-label="Delete"
+                            data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
+                      <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3531,7 +3538,9 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
       &lt;/div&gt;
     &lt;/div&gt;
     &lt;div class="versatile-actions"&gt;
-      &lt;!-- icon-only Buttons, each with an accessible name and tooltip --&gt;
+      &lt;div class="button-set"&gt;
+        &lt;!-- icon-only Buttons, each with an accessible name and tooltip --&gt;
+      &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code>
@@ -3546,6 +3555,11 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
           <div class="sg-panel">
             <span class="label-01 sg-caption">Person, with edit and delete actions</span>
+            <p class="support-01">
+              The action buttons below currently wrap onto two lines. That is the runtime issue recorded
+              at the foot of this section, not the intended rendering — the documented result is a single
+              row with 4px between them.
+            </p>
             <div class="versatile">
               <div class="versatile-content">
                 <div class="versatile-body">
@@ -3558,14 +3572,16 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
                   </div>
                 </div>
                 <div class="versatile-actions">
-                  <button type="button" class="btn btn-ghost" aria-label="Edit Rick Deckard"
-                          data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
-                    <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
-                  </button>
-                  <button type="button" class="btn btn-ghost" aria-label="Delete Rick Deckard"
-                          data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
-                    <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
-                  </button>
+                  <div class="button-set">
+                    <button type="button" class="btn btn-ghost" aria-label="Edit Rick Deckard"
+                            data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
+                      <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                    </button>
+                    <button type="button" class="btn btn-ghost" aria-label="Delete Rick Deckard"
+                            data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
+                      <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3656,6 +3672,32 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
 
         <div class="sg-issue">
           <div class="text-block">
+            <h3 class="title-02">Known issue — an icon-only action set wraps inside <code>.versatile-actions</code></h3>
+            <p class="body-02">
+              The two tiles above with edit and delete actions wrap their buttons in a
+              <code>.button-set</code>, which is the pattern that produces Buckholt's documented 4px
+              icon-only spacing. The runtime anticipates it — <code>.versatile-actions .button-set</code>
+              exists purely to zero the set's top margin — but the set cannot lay out on one row.
+            </p>
+            <p class="body-02">
+              <code>.versatile-body</code> declares <code>width: 100%</code> and
+              <code>.versatile-actions</code> sets no <code>flex-shrink</code>, so the actions column is
+              squeezed. Because <code>.button-set</code> carries <code>flex-wrap: wrap</code>, its
+              min-content width is a single 40px button, so it collapses to 76px where 84px is needed and
+              the second button drops to a new line — which also makes the tile 40px taller.
+            </p>
+            <p class="body-02">
+              Any of <code>flex-shrink: 0</code> or <code>flex: none</code> on
+              <code>.versatile-actions</code>, or <code>flex-wrap: nowrap</code> on the nested set,
+              restores the intended result: 84px wide, 4px gap, one row. Recorded in
+              <code>discrepancies/known-issues.md</code> and deliberately not overridden here, so the page
+              shows the current runtime behaviour rather than hiding it.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
             <h3 class="title-02">Gap — <code>.versatile-text</code> is undocumented</h3>
             <p class="body-02">
               The documented anatomy names a "Body text" part, and the runtime implements it as
@@ -3724,6 +3766,19 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
               <code>data:</code> URI SVG. Custom properties do not cascade into a data URI, so the fill
               falls back to black instead of <code>#d7050c</code>. The success icon uses a literal
               <code>%23168914</code> and renders correctly.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Versa-tile icon-only action set wraps</h3>
+            <p class="body-02">
+              A <code>.button-set</code> inside <code>.versatile-actions</code> — the pattern that gives
+              the documented 4px icon-only spacing — collapses to 76px and wraps, because
+              <code>.versatile-body</code> claims <code>width: 100%</code> while
+              <code>.versatile-actions</code> sets no <code>flex-shrink</code>.
+              <code>flex-shrink: 0</code> on the actions restores 4px on one row.
             </p>
           </div>
         </div>

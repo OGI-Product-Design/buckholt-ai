@@ -140,3 +140,39 @@ The documented Versa-tile anatomy names a "Body text" part sitting under `.versa
 ```
 
 Neither `components/versa-tile/rules.md` nor `components/versa-tile/examples.html` mentions `.versatile-text`, so an agent following the component documentation alone has no verified markup for a part the anatomy explicitly labels. Add it to the component documentation so the documented anatomy and the verified markup agree.
+
+## Versa-tile icon-only action set wraps instead of sitting on one row
+
+Buckholt's documented spacing for a group of icon-only buttons is 4px, produced by the Button set rule:
+
+```css
+[class$=-set][class|=button]:has(.btn-icon, …):not(:has(.button-label)) {
+  --set-gap: 0.25rem;
+}
+```
+
+The runtime anticipates that set being used inside a Versa-tile, because a rule exists solely to neutralise the set's top margin in that context:
+
+```css
+.versatile-actions .button-set {
+  margin: 0;
+}
+```
+
+However, a `.button-set` placed inside `.versatile-actions` cannot lay out on a single row. `.versatile-body` declares `width: 100%` and `.versatile-actions` sets no `flex-shrink`, so the actions column is squeezed. Because `.button-set` carries `flex-wrap: wrap`, its min-content width is a single 40px button rather than the full row, so it collapses and wraps.
+
+Measured with two icon-only ghost buttons, consistently at 600px, 900px and 1400px viewports:
+
+| Markup | Set width | Gap | One row | Tile height |
+| --- | ---: | ---: | --- | ---: |
+| Bare buttons in `.versatile-actions` | n/a | 16px | yes | 82px |
+| `.button-set` as shipped | 76px | wraps | no | 122px |
+| `.button-set` + `flex-shrink: 0` on the actions | 84px | 4px | yes | 82px |
+| `.button-set` + `flex: none` on the actions | 84px | 4px | yes | 82px |
+| `.button-set` + `flex-wrap: nowrap` on the set | 84px | 4px | yes | 82px |
+
+Bare buttons stay on one row only because each `.btn` has its own 40px minimum width, which floors the container's min-content. They inherit `--versatile-actions-gap: 1rem`, so they sit 16px apart — four times the documented icon-only spacing.
+
+The documentation site renders these actions 4px apart, so the intended result is the `.button-set` row. Any of the three fixes above produces it; `flex-shrink: 0` on `.versatile-actions` is the most targeted.
+
+Note also that `components/versa-tile/examples.html` only shows a single labelled button inside `.versatile-actions`, so there is no verified markup for the multi-action case. Adding a documented icon-only action example would make the intended structure explicit.
