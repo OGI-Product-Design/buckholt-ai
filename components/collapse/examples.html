@@ -1,53 +1,68 @@
-<!-- Default collapsed state -->
+<!-- Extracted verbatim from Buckholt Collapse: Code & specs. Do not alter canonical DOM structure. -->
+
+<!-- Collapse base code -->
 <div class="collapse-item">
-  <a class="collapse-trigger"
-     data-bs-toggle="collapse"
-     href="#collapse-example"
-     role="button"
-     aria-expanded="false"
-     aria-controls="collapse-example">
-    Collapse trigger
-  </a>
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapseexample" role="button" aria-expanded="false" aria-controls="collapseexample">Collapse trigger</a>
 
-  <div class="collapse-card collapse" id="collapse-example">
-    <div class="collapse-content">
-      <div class="text-block">
-        <h6 class="collapse-title">Collapse title</h6>
-        <p>Suspendisse potenti. Vivamus non arcu tincidunt, congue massa at, porttitor velit.</p>
-      </div>
+    <div class="collapse-card collapse" id="collapseexample">
+        <div class="collapse-content">
+            <div class="text-block">
+                <h6 class="collapse-title">Collapse title</h6>
+                <p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.</p>
+            </div>
+        </div>
     </div>
-
-    <button type="button"
-            class="btn-close"
-            data-bs-toggle="collapse"
-            href="#collapse-example"
-            aria-label="Close"></button>
-  </div>
 </div>
 
-<!-- Initially expanded state -->
+<!-- Close button -->
 <div class="collapse-item">
-  <a class="collapse-trigger"
-     data-bs-toggle="collapse"
-     href="#collapse-expanded"
-     role="button"
-     aria-expanded="true"
-     aria-controls="collapse-expanded">
-    Collapse trigger
-  </a>
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapseexampleclose" role="button" aria-expanded="false" aria-controls="collapseexampleclose">Collapse trigger</a>
 
-  <div class="collapse-card collapse show" id="collapse-expanded">
-    <div class="collapse-content">
-      <div class="text-block">
-        <h6 class="collapse-title">Collapse title</h6>
-        <p>Additional content.</p>
-      </div>
+    <div class="collapse-card collapse" id="collapseexampleclose">
+        <div class="collapse-content">
+            <div class="text-block">
+                <h6 class="collapse-title">Collapse title</h6>
+                <p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.</p>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-toggle="collapse" href="#collapseexampleclose" aria-label="Close"></button>
     </div>
+</div>
 
-    <button type="button"
-            class="btn-close"
-            data-bs-toggle="collapse"
-            href="#collapse-expanded"
-            aria-label="Close"></button>
-  </div>
+<!-- Context bar -->
+<div class="collapse-item">
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapse-contextbar" role="button" aria-expanded="true" aria-controls="collapse-contextbar">Context bar example</a>
+    <div class="collapse-card collapse show" id="collapse-contextbar">
+        <div class="collapse-content">
+            <div class="collapse-contextbar">
+                <ul class="list">
+                    <li class="list-heading">List heading</li>
+                    <li class="list-item">
+                        <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        </span>
+                        List item 1
+                    </li>
+                    <li class="list-item">
+                        <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        </span>
+                        List item 2
+                    </li>
+                    <li class="list-item">
+                        <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        </span>
+                        List item 3
+                    </li>
+                </ul>
+                <a class="link-standalone" href="#" target="_self"> 
+                    <span class="icon">
+                        <i class="fa-regular fa-arrow-down-to-bracket" aria-hidden="true"></i>
+                    </span>
+                    Standalone link
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
