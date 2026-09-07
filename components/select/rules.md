@@ -1,50 +1,36 @@
 # Select
 
+## Verification
+
+Source-audited against the Buckholt Select Usage, Style and Code & specs HTML pages supplied on 7 September 2026. Use `examples.html` for exact DOM structure.
+
 ## Purpose
 
-Use Select when users must choose one value from a predefined list and a compact native control is appropriate.
+Select uses a native `<select>` for choosing one option from a predefined list. Use it when native browser selection behaviour is suitable; use Dropdown only when the documented richer Dropdown behaviours are required.
 
-## Canonical structure
+## Canonical markup
 
-```html
-<div class="input">
-  <div class="input-label">
-    <label for="exampleSelect" class="form-label">Select label</label>
-  </div>
-  <div class="response select-input">
-    <select class="form-select" id="exampleSelect">
-      <option selected disabled value="">Choose an option</option>
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-    </select>
-  </div>
-  <div class="invalid-feedback">Validation message</div>
-</div>
-```
+`examples.html` preserves the documented base, helper, validation, disabled and read-only examples exactly.
 
-`.input` owns the whole field, `.input-label` the label/help, `.response.select-input` identifies this response type, and `.form-select` is the native select control.
+The structure uses `.input`, `.input-label`, `.response.select-input` and `select.form-select`.
 
-## Placeholder/default option
+Important source details:
 
-The documented examples use a disabled, selected empty option such as `Choose an option`. Do not preselect a real value unless the product requirement defines a genuine default.
+- the base example includes a selected disabled placeholder option;
+- helper/assistive content uses `.form-helper`;
+- validation uses `.invalid-feedback`;
+- disabled uses native `disabled` on the `<select>`;
+- read-only uses `class="form-select readonly"` **and** native `disabled`, because `<select>` has no native `readonly` attribute.
 
-## States
+Do not convert this component into a custom Dropdown or invent a separate read-only control.
 
-Use `.is-invalid` on `.form-select` for the documented error treatment and provide `.invalid-feedback`.
+## Accessibility
 
-For disabled, use the native `disabled` attribute on `<select>`.
-
-For Buckholt read-only Select, add `.readonly` and `disabled` to the `<select>`. Native HTML has no `readonly` state for select controls; Buckholt uses this documented combination to create its review/non-editable treatment.
-
-Disabled and read-only controls do not require helper text that implies editability; provide essential context through the label or surrounding content.
+Keep a real associated `<label>` and native Select semantics. Production IDs must be unique and correctly paired with their labels.
 
 ## Agent rules
 
-- Use a real `<select>` and `<option>` elements.
-- Use `.response.select-input` and `.form-select`.
-- Match the label `for` to the select `id`.
-- Use a disabled empty placeholder when no real default exists.
-- Use native `disabled` for disabled state.
-- Use `.readonly` + `disabled` for Buckholt's documented read-only treatment.
-- Use `.is-invalid` plus `.invalid-feedback` for errors.
-- Do not replace Select with Dropdown unless the interaction needs Dropdown's richer behaviour.
+- `examples.html` is canonical for Select DOM.
+- Use a native `<select class="form-select">` inside `.response.select-input`.
+- Preserve `.readonly` plus `disabled` for the documented read-only treatment.
+- Do not recreate the Select arrow, border, states or spacing with custom CSS.
