@@ -99,131 +99,110 @@ For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load:
 ## Current component coverage
 
 ### Button
-Read:
-- `components/button/rules.md`
-- `components/button/examples.html`
-- relevant foundation files, especially colour, iconography, radius, spacing and typography
+Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations.
 
-The Button Usage, Style and Code & specs documentation have all been supplied.
+### Card
+Read `components/card/rules.md` and `components/card/examples.html`.
+
+Rules:
+- use `.card` with `.card-body` as the core structure;
+- use `.card-secondary` only for the documented secondary treatment;
+- use `.card-horizontal` and `.card-horizontal-right` for documented horizontal image layouts;
+- use an `<a>` with `.card-clickable` for whole-card navigation and do not nest competing CTAs inside it;
+- use `.card-selectable` with native radio/checkbox controls for selectable Cards;
+- place a documented Emphasis tile in a second `.card-body`;
+- reuse Text block and other Buckholt components inside Card;
+- do not recreate Card padding, radius, borders, states or layout with custom CSS.
 
 ### Heading attachment
-Read:
-- `components/heading-attachment/rules.md`
-- `components/heading-attachment/examples.html`
-- `components/text-block/rules.md`
-- the documentation for whichever component is used as the attachment
+Read `components/heading-attachment/rules.md`, `components/heading-attachment/examples.html` and `components/text-block/rules.md`.
 
-Heading attachment rules:
-- Heading attachment extends Text block; do not build it as a separate heading system;
-- use `.heading` as the row wrapper and `.heading-content` for heading-related content;
-- put the attached element after `.heading-content`;
-- use one compact attachment that relates directly to the section;
-- suitable attachments include links, buttons/close controls, tags/badges or related metadata where documented;
-- do not use the attachment area for primary page actions, large controls or multiple competing actions;
-- inherit Text block colour and typography rules;
-- preserve semantic heading hierarchy independently of visual type class;
-- do not recreate the heading-row flex layout or 1rem gap with custom CSS.
-
-The Heading attachment Usage, Style and Code & specs documentation have all been supplied.
+Rules:
+- Heading attachment extends Text block; use `.heading` and `.heading-content`;
+- use one compact, directly related attachment;
+- preserve semantic heading hierarchy;
+- reuse documented components for the attachment rather than building an ad-hoc toolbar.
 
 ### Icon block
-Read:
-- `components/icon-block/rules.md`
-- `components/icon-block/examples.html`
-- `foundations/iconography/rules.md`
-- `foundations/iconography/catalogue.md`
-- relevant Colour and Radius foundations
+Read `components/icon-block/rules.md`, `components/icon-block/examples.html` and Iconography/Colour/Radius foundations.
 
-Icon block rules:
-- use `.icon-block` as the base component;
-- the default/no-modifier size is medium;
-- documented size modifiers are `.icon-block-xs`, `.icon-block-sm`, `.icon-block-lg`, `.icon-block-xl` and `.icon-block-xxl`;
-- use the Buckholt icon catalogue rather than guessing icon names or styles;
-- use `.expressive-light` or `.expressive-dark` for documented expressive treatments;
-- the primary expressive palette is the default; `.expressive-secondary`, `.expressive-tertiary` and `.expressive-quaternary` switch palette;
-- do not rely on icon shape or colour alone to communicate essential meaning;
-- use `aria-hidden="true"` when the icon is decorative/supporting adjacent text;
-- when an Icon block is inside a Text block, follow the Text block composition rules for heading relationship, spacing, eyebrow exclusion and display-heading exclusion;
-- do not recreate Icon block dimensions, radius, centring or colours with custom CSS.
-
-The Icon block Usage, Style and Code & specs documentation have all been supplied. The Usage page appears to have its `When to use` and `When not to use` headings reversed; follow the meaning of the bullet content rather than those two labels.
+Rules:
+- use `.icon-block` as the base;
+- default is medium; documented modifiers are `.icon-block-xs`, `.icon-block-sm`, `.icon-block-lg`, `.icon-block-xl`, `.icon-block-xxl`;
+- use documented expressive treatments and Buckholt icon mappings;
+- when nested in Text block, follow Text block composition rules;
+- do not recreate dimensions, radius or colours locally.
 
 ### Key-value pair
-Read:
-- `components/key-value-pair/rules.md`
-- `components/key-value-pair/examples.html`
-- relevant Typography, Colour and Spacing foundations
+Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`.
 
-Key-value rules:
-- use `.key-value` with one `.key` and one `.value` for a single pair;
-- use `.key-value-stacked` for the documented vertical form;
-- use `.key-value-list` for grouped pairs and `.key-value-list-row` for a wrapping horizontal list;
-- use `.grid.key-value-grid` with `.key-value-item` for the documented grid; `--columns` is the documented column configuration point;
-- use `.key-value-table` for the documented two-column metadata presentation, while using a semantic `<table>` when true table semantics are required;
-- documented size modifiers include `.key-value-xs`, `.key-value-sm`, default, `.key-value-lg`, `.key-value-xl` and `.key-value-display`;
-- do not reproduce Key-value typography, colours, gaps or grouping layouts with custom CSS.
-
-The Key-value pair Usage, Style and Code & specs documentation have all been supplied.
+Rules:
+- use `.key-value` with `.key` and `.value`;
+- use documented stacked/list/grid/table and size forms;
+- preserve semantic table markup when real table semantics are needed;
+- do not rebuild Key-value typography or layout locally.
 
 ### Link
-Read:
-- `components/link/rules.md`
-- `components/link/examples.html`
-- relevant foundation files, especially colour, iconography, spacing and typography
-- `discrepancies/known-issues.md` when exact visited-state rendering matters
+Read `components/link/rules.md`, `components/link/examples.html` and `discrepancies/known-issues.md` when exact visited rendering matters.
 
-Link rules:
-- use links for navigation, not actions that modify data, state or display;
+Rules:
+- links are navigation, not state-changing actions;
 - use plain anchors for inline links and `.link-standalone` for standalone links;
 - do not add icons to inline links;
-- use the documented `.icon` structure and Buckholt icon mapping for standalone links when an icon is appropriate;
-- use the external-link icon for links that open content in a new tab;
-- use `.link-set` / `.linkset-item`, with `.link-set-stacked` for vertical groups;
-- do not use generic Bootstrap `link-*` utilities as canonical Buckholt component guidance simply because they exist in the runtime CSS;
-- documentation defines the intended visited Link colour. The current runtime has a known visited-state mismatch recorded in `discrepancies/known-issues.md`.
+- use documented Link sets and icon mappings;
+- documentation defines intended visited colour.
 
-The Link Overview, Style and Code & specs documentation have all been supplied.
+### Progress bar
+Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`.
+
+Rules:
+- use `.progress-container` when label, note/helper or feedback is present;
+- always provide a meaningful progress label;
+- use `.progress` with child `.progress-bar`;
+- default/large height is 8px and `.progress-sm` is 4px;
+- determinate progress must expose real `aria-valuenow`, `aria-valuemin` and `aria-valuemax`;
+- use `.progress-bar-indeterminate` when progress cannot be measured and do not invent numeric progress;
+- use `.is-valid` for success, `.is-invalid` plus `.invalid-feedback` for error, and `.progress-inactive` for the documented inactive state;
+- do not recreate bar heights, status colours/icons, animation or feedback layout with custom CSS.
 
 ### Summary Meta
-Read:
-- `components/summary-meta/rules.md`
-- `components/summary-meta/examples.html`
-- `components/icon-block/rules.md`
-- `components/key-value-pair/rules.md` when Key-value content is used
-- relevant Typography and Colour foundations
+Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value where used.
 
-Summary Meta rules:
-- use `.summary-meta` as the base composition with an Icon block followed by `.summary-meta-body`;
-- use `.summary-meta-headline`, `.summary-meta-label` and `.summary-meta-text` for those documented content roles;
-- keep content short and scan-friendly, usually aligned around the documented three-line content model with an 80px Icon block;
-- use `.summary-meta-stacked` for the documented vertical/centred variant;
-- reuse Icon block and Key-value rather than rebuilding their styling inside Summary Meta;
-- choose semantic heading level from page hierarchy rather than copying the documentation's example `h4` blindly;
-- do not recreate Summary Meta layout, gap, alignment or typography with custom CSS.
-
-The Summary Meta Usage, Style and Code & specs documentation have all been supplied.
+Rules:
+- use `.summary-meta` with Icon block followed by `.summary-meta-body`;
+- keep content short and scan-friendly;
+- use `.summary-meta-stacked` for the vertical/centred form;
+- reuse nested components rather than restyling them.
 
 ### Text block
-Read:
-- `components/text-block/rules.md`
-- `components/text-block/examples.html`
-- `foundations/typography/rules.md`
-- `foundations/typography/type-sets.md`
-- relevant Spacing, Iconography and Colour foundations
+Read `components/text-block/rules.md`, `components/text-block/examples.html`, Typography, Spacing, Iconography and Colour foundations.
 
-Text block rules:
-- wrap written-content groups in `.text-block`;
-- include at least a heading, a paragraph, or both;
-- choose semantic `h1`–`h6` level from page structure independently of visual `.display-*`, `.headline-*` or `.title-*` class;
-- do not skip heading levels just to change visual size;
-- place each paragraph in its own `<p>` element;
-- use `.eyebrow` for contextual text above a heading;
-- use `<span class="icon">` for inline heading icons;
-- icon blocks must be followed by a heading;
-- do not combine icon blocks with eyebrow text;
-- do not combine an icon block and inline heading icon in the same Text block;
-- use inline icons, not icon blocks, with display-sized headings;
-- use the default/medium icon block with title-styled headings and `.icon-block-xl` with headline-styled headings;
-- do not recreate Text block internal spacing or width with custom CSS.
+Rules:
+- use `.text-block` for written-content groups;
+- semantic heading level is independent from visual type class;
+- use documented eyebrow/inline-icon/Icon-block composition rules;
+- do not recreate Text block width or internal spacing locally.
 
-The Text block Overview, Style and Code & specs documentation have all been supplied.
+### Tooltip
+Read `components/tooltip/rules.md` and `components/tooltip/examples.html`.
+
+Rules:
+- use Tooltips only for contextual, nonessential information;
+- put `data-bs-toggle="tooltip"` and `data-bs-title` on the real trigger;
+- use `data-bs-placement` with `top`, `right`, `bottom` or `left` where a direction is specified;
+- initialise Bootstrap Tooltips with Buckholt's documented `offset: [0, 4]` and `delay: { show: 800, hide: 100 }`;
+- do not author Bootstrap-generated `.tooltip` markup directly;
+- keep the trigger independently understandable and accessible;
+- do not hide essential instructions or validation only in a Tooltip;
+- do not recreate Tooltip positioning or styling with custom CSS.
+
+### Versa-tile
+Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance as needed.
+
+Rules:
+- use `.versatile` with `.versatile-content`, `.versatile-body`, `.versatile-meta` and optional `.versatile-actions`;
+- reuse Icon block, Key-value, Button, Link, Tag and Progress bar rather than making local equivalents;
+- actions must be specific to the item;
+- use `a.versatile` only for whole-tile navigation and avoid nested competing interactive controls;
+- use the documented Progress bar component when progress appears;
+- do not invent Versa-tile padding, border, radius, action spacing or hover styling.
