@@ -42,6 +42,54 @@ The compatibility layer neutralises Bootstrap's plain mouse-focus visual state a
 
 Do not compensate inside individual prototype pages.
 
+### The restore rule needs a hover/active guard
+
+The first version of the fix restored the resting colours with an unguarded selector:
+
+```css
+.btn:focus:not(:focus-visible) { color: …; background-color: …; border-color: …; }
+```
+
+That is more specific than `.btn:hover` (0,2,0 against 0,3,0), and it loads after Buckholt's active selectors, which are also 0,3,0. So once a button had been clicked it stopped responding to hover and gave no active feedback on subsequent presses.
+
+The restore is now guarded, while the glow removal stays unguarded because that shadow is always Bootstrap's:
+
+```css
+.btn:focus:not(:focus-visible) { box-shadow: none; outline: 0; }
+
+.btn:focus:not(:focus-visible):not(:hover):not(:active) {
+  color: var(--button-label);
+  background-color: var(--button-background);
+  border-color: var(--button-border);
+}
+
+.btn-primary:focus:not(:focus-visible):not(:active),
+.btn-secondary:focus:not(:focus-visible):not(:active) {
+  border-bottom-width: calc(1px + 0.125rem);
+}
+```
+
+The bottom-border rule takes `:not(:active)` because Buckholt drops that edge to 1px while a button is active.
+
+Verified with real pointer and keyboard interaction on primary, secondary and ghost:
+
+| State | Secondary | Primary | Ghost |
+| --- | --- | --- | --- |
+| Resting | white, 3px edge | `#0f40c5`, 3px | transparent, 1px |
+| Hover | `rgba(15,64,197,.1)` | `#3f66d1` | `rgba(15,64,197,.1)` |
+| Active | `#0f40c5` / white, 1px edge | `#092676`, 1px | `#0f40c5` / white |
+| Released, still hovered | back to hover | back to hover | back to hover |
+| Pointer away, still focused | back to resting | back to resting | back to resting |
+| Tab (keyboard) | Buckholt ring `#1748d0` at 2px | same | same |
+
+### Bootstrap is not overriding Buckholt generally
+
+A cascade audit using the DevTools protocol, mapping every winning declaration back to its source stylesheet, was run across Button (all variants), Card, Accordion button, Alert, Breadcrumb, Form control, Input addon, Modal, Menu panel, Table, Tag, Toast, Avatar, Progress, Versa-tile, Link, Slider and Close button.
+
+**Bootstrap wins zero declarations.** The document loads exactly three stylesheets plus the page's own inline block, in the correct order, and `bootstrap.bundle.min.js` contains no CSS at all, so a script tag at the end of the document cannot affect the cascade.
+
+Where Bootstrap did win, it was never a load-order or bundling problem. It was always a *selector* problem: Bootstrap styling a state that Buckholt does not define a matching rule for. The remedy is a narrow rule in the compatibility layer, not reordering or removing Bootstrap.
+
 ## Summary Meta used an inert `expressive-primary` class
 
 **Status: corrected in repository component guidance; no CSS override required.**

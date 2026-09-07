@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
   <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../../css/buckholt.css">
+  <link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
 
   <style>
     /*
@@ -329,9 +330,10 @@
           </p>
           <p class="body-02">
             Dependencies load in the order given in <code>CLAUDE.md</code>: Bootstrap 5.1.3, the Typekit
-            stylesheet for Proxima Soft, the Buckholt Font Awesome kit, then <code>css/buckholt.css</code>
-            last. The Bootstrap JavaScript bundle loads at the end of the page for the documented
-            icon-only button tooltips.
+            stylesheet for Proxima Soft, the Buckholt Font Awesome kit, then <code>css/buckholt.css</code>,
+            then <code>css/buckholt-ai-fixes.css</code> for the verified compatibility corrections. The
+            Bootstrap JavaScript bundle loads at the end of the page for the documented icon-only button
+            tooltips; it ships no CSS, so it cannot affect the cascade.
           </p>
           <p class="support-01">
             Known differences between the documentation and the runtime are recorded in

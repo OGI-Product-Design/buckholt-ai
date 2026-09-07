@@ -40,18 +40,28 @@
    Tracking: discrepancies/known-issues.md
    ============================================================================ */
 
+/* The glow is always Bootstrap's, so it is always removed. */
 .btn:focus:not(:focus-visible) {
-  color: var(--button-label);
-  background-color: var(--button-background);
-  border-color: var(--button-border);
   box-shadow: none;
   outline: 0;
 }
 
+/* Restoring the resting colours must not outrank Buckholt's own hover and
+   active states. This rule is more specific than `.btn:hover`, and it loads
+   after `.btn:active`, so without the :not(:hover):not(:active) guard a
+   button that has been clicked stops responding to hover and shows no active
+   feedback on subsequent presses. */
+.btn:focus:not(:focus-visible):not(:hover):not(:active) {
+  color: var(--button-label);
+  background-color: var(--button-background);
+  border-color: var(--button-border);
+}
+
 /* Preserve the documented raised bottom edge for primary/secondary resting
-   states after mouse focus. Ghost buttons remain at their normal 1px border. */
-.btn-primary:focus:not(:focus-visible),
-.btn-secondary:focus:not(:focus-visible) {
+   states after mouse focus. Ghost buttons remain at their normal 1px border.
+   Buckholt drops this to 1px while active, so the guard applies here too. */
+.btn-primary:focus:not(:focus-visible):not(:active),
+.btn-secondary:focus:not(:focus-visible):not(:active) {
   border-bottom-width: calc(1px + 0.125rem);
 }
 
