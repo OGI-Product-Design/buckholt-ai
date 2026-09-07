@@ -46,6 +46,9 @@ buckholt-ai/
     ├── icon-block/
     ├── key-value-pair/
     ├── link/
+    ├── list/
+    ├── menu-button/
+    ├── modal/
     ├── progress-bar/
     ├── summary-meta/
     ├── text-block/
@@ -105,6 +108,21 @@ Read `components/link/rules.md` and `components/link/examples.html`, plus colour
 
 A documented/runtime difference for the visited Link state is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
 
+### List
+Read `components/list/rules.md` and `components/list/examples.html`. List covers semantic unordered and ordered lists, optional list headings, nested lists, unstyled lists and icon-supported list items.
+
+Keep native list semantics even when markers are visually removed. Use icons sparingly and do not communicate status through icon/colour alone.
+
+### Menu button
+Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, together with Button, Tooltip and Iconography guidance. Menu button covers standard Menu buttons, Combo buttons and Overflow menu buttons.
+
+Choose the variant by action hierarchy and scope: equal-importance page actions use Menu button, direct-plus-alternatives can use Combo, and smaller-object secondary actions use Overflow.
+
+### Modal
+Read `components/modal/rules.md` and `components/modal/examples.html`, together with Button and Text block. Modal covers standard, centred, scrollable and size-modified dialogs using the documented Bootstrap structure.
+
+Use Modals only for short, interruptive tasks that genuinely require attention before returning to the underlying page.
+
 ### Progress bar
 Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`. Progress bar covers determinate and indeterminate progress, default/large and small sizes, label/note/helper content, success, error and inactive states.
 
@@ -139,7 +157,7 @@ Use whole-tile anchors only for navigation; otherwise keep item actions inside `
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, also load:
+For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus and modals, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
