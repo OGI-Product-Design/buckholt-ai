@@ -41,18 +41,17 @@ buckholt-ai/
 │   └── known-issues.md
 └── components/
     ├── button/
-    │   ├── rules.md
-    │   └── examples.html
+    ├── heading-attachment/
     ├── icon-block/
-    │   ├── rules.md
-    │   └── examples.html
+    ├── key-value-pair/
     ├── link/
-    │   ├── rules.md
-    │   └── examples.html
+    ├── summary-meta/
     └── text-block/
         ├── rules.md
         └── examples.html
 ```
+
+Each documented component folder contains `rules.md` and `examples.html`.
 
 ## Foundation coverage
 
@@ -79,15 +78,30 @@ Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`
 ### Button
 Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
 
+### Heading attachment
+Read `components/heading-attachment/rules.md` and `components/heading-attachment/examples.html` together with Text block. Heading attachment extends Text block by adding one closely related contextual action or supporting element beside the heading using `.heading` and `.heading-content`.
+
+Keep the heading primary, use one compact attachment, and reuse documented components such as Link, Button, Tag or metadata rather than building an ad-hoc toolbar.
+
 ### Icon block
 Read `components/icon-block/rules.md` and `components/icon-block/examples.html`, plus Colour, Iconography and Radius foundations. Icon block covers the six documented sizes from extra small through extra extra large, neutral/default treatment, expressive light/dark treatments and secondary/tertiary/quaternary expressive palette modifiers.
 
 When an Icon block is composed inside a Text block, the Text block component controls the relationship to headings, eyebrow text, inline icons and spacing.
 
+### Key-value pair
+Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`, plus Typography, Colour and Spacing foundations. Key-value covers single and stacked pairs, lists and row lists, configurable grids, two-column key-value tables and the documented typography size modifiers.
+
+Use the documented grouping structure rather than recreating metadata layouts with custom CSS.
+
 ### Link
 Read `components/link/rules.md` and `components/link/examples.html`, plus colour, iconography, spacing and typography where relevant. The Link guidance covers inline and standalone links, icon use, new-tab/external-link treatment, interaction states and horizontal/stacked Link sets.
 
-A documented/runtime difference for the visited standalone-link icon is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
+A documented/runtime difference for the visited Link state is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
+
+### Summary Meta
+Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value when they are composed inside it. Summary Meta combines an Icon block with short supporting content for concise, scannable contextual summaries.
+
+Use `.summary-meta-stacked` for the documented vertical/centred variant. Keep content short rather than turning Summary Meta into a general content container.
 
 ### Text block
 Read `components/text-block/rules.md` and `components/text-block/examples.html`, plus Typography, Spacing, Iconography and Colour foundations. Text block covers semantic heading structure, Buckholt display/headline/title type sets, paragraphs, eyebrow text, inline heading icons and icon blocks.
