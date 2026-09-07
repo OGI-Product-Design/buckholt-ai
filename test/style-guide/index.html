@@ -282,6 +282,9 @@
         <li><a class="body-01" href="#breadcrumb">Breadcrumb</a></li>
         <li><a class="body-01" href="#button">Button</a></li>
         <li><a class="body-01" href="#card">Card</a></li>
+        <li><a class="body-01" href="#checkbox">Checkbox</a></li>
+        <li><a class="body-01" href="#collapse">Collapse</a></li>
+        <li><a class="body-01" href="#dropdown">Dropdown</a></li>
         <li><a class="body-01" href="#form">Form</a></li>
         <li><a class="body-01" href="#heading-attachment">Heading attachment</a></li>
         <li><a class="body-01" href="#icon-block">Icon block</a></li>
@@ -290,14 +293,25 @@
         <li><a class="body-01" href="#key-value-pair">Key-value pair</a></li>
         <li><a class="body-01" href="#link">Link</a></li>
         <li><a class="body-01" href="#list">List</a></li>
+        <li><a class="body-01" href="#lookup">Lookup</a></li>
         <li><a class="body-01" href="#menu">Menu</a></li>
         <li><a class="body-01" href="#menu-button">Menu button</a></li>
         <li><a class="body-01" href="#modal">Modal</a></li>
+        <li><a class="body-01" href="#multi-field-input">Multi-field input</a></li>
+        <li><a class="body-01" href="#nested-inputs">Nested inputs</a></li>
+        <li><a class="body-01" href="#number-input">Number input</a></li>
+        <li><a class="body-01" href="#page-navigation">Page navigation</a></li>
         <li><a class="body-01" href="#progress-bar">Progress bar</a></li>
+        <li><a class="body-01" href="#radio">Radio</a></li>
+        <li><a class="body-01" href="#response-button">Response button</a></li>
+        <li><a class="body-01" href="#select">Select</a></li>
         <li><a class="body-01" href="#slider">Slider</a></li>
         <li><a class="body-01" href="#summary-meta">Summary Meta</a></li>
+        <li><a class="body-01" href="#switch">Switch</a></li>
         <li><a class="body-01" href="#table">Table</a></li>
+        <li><a class="body-01" href="#tabs">Tabs</a></li>
         <li><a class="body-01" href="#tag">Tag</a></li>
+        <li><a class="body-01" href="#text-area">Text area</a></li>
         <li><a class="body-01" href="#text-block">Text block</a></li>
         <li><a class="body-01" href="#text-input">Text input</a></li>
         <li><a class="body-01" href="#toast">Toast</a></li>
@@ -2991,6 +3005,194 @@
         </div>
       </section>
 
+      <section class="sg-section" id="checkbox">
+        <div class="text-block">
+          <h2 class="headline-02">Checkbox</h2>
+          <p class="body-02">
+            A single checkbox is a <code>.form-check</code> pairing an input with its label. A group goes
+            inside the usual <code>.input</code> structure with the boxes in
+            <code>.response check-input</code>.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Single</span>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="sgCheck1">
+              <label class="form-check-label" for="sgCheck1">Checkbox label</label>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Group, with assistive and helper text</span>
+            <div class="input">
+              <div class="input-label">
+                <label for="sgCheckLangs" class="form-label">Languages</label>
+                <small class="form-helper">Assistive text</small>
+              </div>
+              <div class="response check-input">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="sgCheckEn">
+                  <label class="form-check-label" for="sgCheckEn">English</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="sgCheckFr">
+                  <label class="form-check-label" for="sgCheckFr">French</label>
+                </div>
+              </div>
+              <small class="form-helper">This text might help you out</small>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Documented visual states</span>
+            <div class="form-check">
+              <input class="form-check-input selected" type="checkbox" value="" id="sgCheckSel">
+              <label class="form-check-label" for="sgCheckSel">Checkbox selected</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input indeterminate" type="checkbox" value="" id="sgCheckInd">
+              <label class="form-check-label" for="sgCheckInd">Checkbox indeterminate</label>
+            </div>
+            <div class="form-check state_readonly">
+              <input class="form-check-input" type="checkbox" value="" id="sgCheckRo">
+              <label class="form-check-label" for="sgCheckRo">Checkbox read-only</label>
+            </div>
+          </div>
+        </div>
+        <p class="support-01">
+          The read-only treatment is visual only — blocking changes needs product JavaScript.
+        </p>
+      </section>
+
+      <section class="sg-section" id="collapse">
+        <div class="text-block">
+          <h2 class="headline-02">Collapse</h2>
+          <p class="body-02">
+            A trigger that reveals a small card of supporting detail — lighter than an Accordion and used
+            for a single aside rather than a set of sections. <code>.collapse-trigger</code> toggles a
+            <code>.collapse-card</code>, which carries its own close button.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Collapsed by default</span>
+            <div class="collapse-item">
+              <a class="collapse-trigger" data-bs-toggle="collapse" href="#sgCollapse1" role="button"
+                 aria-expanded="false" aria-controls="sgCollapse1">Collapse trigger</a>
+              <div class="collapse-card collapse" id="sgCollapse1">
+                <div class="collapse-content">
+                  <div class="text-block">
+                    <h6 class="collapse-title">Collapse title</h6>
+                    <p>Suspendisse potenti. Vivamus non arcu tincidunt, congue massa at, porttitor velit.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-toggle="collapse" href="#sgCollapse1" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Expanded on load</span>
+            <div class="collapse-item">
+              <a class="collapse-trigger" data-bs-toggle="collapse" href="#sgCollapse2" role="button"
+                 aria-expanded="true" aria-controls="sgCollapse2">Collapse trigger</a>
+              <div class="collapse-card collapse show" id="sgCollapse2">
+                <div class="collapse-content">
+                  <div class="text-block">
+                    <h6 class="collapse-title">Collapse title</h6>
+                    <p>Additional content.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-toggle="collapse" href="#sgCollapse2" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="dropdown">
+        <div class="text-block">
+          <h2 class="headline-02">Dropdown</h2>
+          <p class="body-02">
+            A richer alternative to Select, built on Bootstrap's dropdown. The trigger is a
+            <code>.dropdown-toggle</code> carrying a <code>.dropdown-label</code>, and the options are
+            <code>.dropdown-item</code> entries in a <code>.dropdown-menu-panel</code>. Multi-select uses
+            <code>data-bs-auto-close="false"</code> so the panel stays open while choosing.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Single select</span>
+            <div class="input">
+              <div class="input-label"><label for="sgDropdown1" class="form-label">Dropdown label</label></div>
+              <div class="response dropdown-input">
+                <div class="dropdown">
+                  <button id="sgDropdown1" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="dropdown-label">Choose an option…</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="sgDropdown1">
+                    <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 1</li>
+                    <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 2</li>
+                    <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 3</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">With assistive and helper text</span>
+            <div class="input">
+              <div class="input-label">
+                <label for="sgDropdown2" class="form-label">Dropdown helper text</label>
+                <small class="form-helper">Assistive text</small>
+              </div>
+              <div class="response dropdown-input">
+                <div class="dropdown">
+                  <button id="sgDropdown2" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="dropdown-label">Choose an option…</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="sgDropdown2">
+                    <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 1</li>
+                    <li class="dropdown-item" role="option" aria-selected="false" tabindex="0">Option 2</li>
+                  </ul>
+                </div>
+              </div>
+              <small class="form-helper">Helper text</small>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Multi select, with Select all</span>
+            <div class="input">
+              <div class="input-label"><label for="sgDropdown3" class="form-label">Permissions</label></div>
+              <div class="response dropdown-input">
+                <div class="dropdown">
+                  <button id="sgDropdown3" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                    <span class="dropdown-label">Choose options</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="sgDropdown3">
+                    <li class="dropdown-item" role="option" aria-label="All permissions" aria-selected="false" tabindex="0">
+                      <input class="form-check-input" type="checkbox" value="" id="sgPermAll">
+                      <label class="form-check-label" for="sgPermAll">All permissions</label>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li class="dropdown-item" role="option" aria-label="Option 1" aria-selected="false" tabindex="0">
+                      <input class="form-check-input" type="checkbox" value="" id="sgPerm1">
+                      <label class="form-check-label" for="sgPerm1">Option 1</label>
+                    </li>
+                    <li class="dropdown-item" role="option" aria-label="Option 2" aria-selected="false" tabindex="0">
+                      <input class="form-check-input" type="checkbox" value="" id="sgPerm2">
+                      <label class="form-check-label" for="sgPerm2">Option 2</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="support-01">
+          Reflecting the chosen option back into <code>.dropdown-label</code>, and keeping
+          <code>aria-selected</code> in step, needs product JavaScript.
+        </p>
+      </section>
+
       <section class="sg-section" id="form">
         <div class="text-block">
           <h2 class="headline-02">Form</h2>
@@ -3726,6 +3928,70 @@
         </div>
       </section>
 
+      <section class="sg-section" id="lookup">
+        <div class="text-block">
+          <h2 class="headline-02">Lookup</h2>
+          <p class="body-02">
+            An input paired with a retrieval action. <code>.lookup</code> wraps a normal
+            <code>.input</code> and a <code>.lookup-actions</code> block holding the button set and any
+            alternative route. Once a record is found, the summary variation swaps the field for a
+            Versa-tile showing what was retrieved.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Base lookup</span>
+          <div class="lookup">
+            <div class="input">
+              <div class="input-label">
+                <label for="sgVehicleReg" class="form-label">Enter your registration number</label>
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">GB</span>
+                <div class="response text-input">
+                  <input type="text" class="form-control" id="sgVehicleReg" placeholder="AB12 CDE">
+                </div>
+              </div>
+            </div>
+            <div class="lookup-actions">
+              <div class="button-set">
+                <button type="button" class="btn btn-primary"><span class="button-label">Find your car</span></button>
+              </div>
+              <a class="link-standalone" href="#lookup">Find your car by make &amp; model</a>
+            </div>
+          </div>
+        </div>
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Summary variation — the retrieved record as a Versa-tile</span>
+          <div class="lookup">
+            <div class="input">
+              <div class="input-label"><label class="form-label">Your vehicle</label></div>
+              <div class="versatile">
+                <div class="versatile-content">
+                  <div class="versatile-body">
+                    <div class="icon-block"><i class="fa-regular fa-car" aria-hidden="true"></i></div>
+                    <div class="versatile-meta">
+                      <div class="versatile-label">HG10 ZTY</div>
+                      <p class="versatile-text">Citroen Saxo</p>
+                    </div>
+                  </div>
+                  <div class="versatile-actions">
+                    <div class="button-set">
+                      <button type="button" class="btn btn-ghost" aria-label="Edit vehicle"
+                              data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
+                        <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="lookup-actions">
+              <a class="link-standalone" href="#lookup">Find a different vehicle</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="menu">
         <div class="text-block">
           <h2 class="headline-02">Menu</h2>
@@ -3945,6 +4211,151 @@
         </p>
       </section>
 
+      <section class="sg-section" id="multi-field-input">
+        <div class="text-block">
+          <h2 class="headline-02">Multi-field input</h2>
+          <p class="body-02">
+            Several fields that together form one answer, under a single label and one validation
+            message. Add <code>.multi-input</code> alongside the input type on the
+            <code>.response</code>, and <code>.multi-input-stacked</code> for the vertical arrangement.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Horizontal</span>
+            <div class="input">
+              <div class="input-label"><label for="sgMulti1" class="form-label">Input label</label></div>
+              <div class="response multi-input text-input">
+                <input type="text" class="form-control" id="sgMulti1" placeholder="Placeholder">
+                <input type="text" class="form-control" id="sgMulti2" placeholder="Placeholder">
+              </div>
+              <div class="invalid-feedback">Validation message</div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Stacked</span>
+            <div class="input">
+              <div class="input-label"><label for="sgMultiS1" class="form-label">Input label</label></div>
+              <div class="response multi-input multi-input-stacked text-input">
+                <input type="text" class="form-control" id="sgMultiS1" placeholder="Placeholder">
+                <input type="text" class="form-control" id="sgMultiS2" placeholder="Placeholder">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="nested-inputs">
+        <div class="text-block">
+          <h2 class="headline-02">Nested inputs</h2>
+          <p class="body-02">
+            Conditional fields that follow a parent question and appear only for certain answers.
+            <code>.nested-inputs</code> sits immediately after the controlling input and shares the
+            Form's column layout and 2rem gap. Its visibility is product logic, so both the question and
+            the nested fields are shown together here.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <form class="form" onsubmit="return false;">
+            <div class="input">
+              <div class="input-label"><label class="form-label">Do you have another vehicle?</label></div>
+              <div class="response check-input">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgAnotherVehicle" id="sgAnotherYes" value="yes">
+                  <label class="form-check-label" for="sgAnotherYes">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgAnotherVehicle" id="sgAnotherNo" value="no">
+                  <label class="form-check-label" for="sgAnotherNo">No</label>
+                </div>
+              </div>
+            </div>
+            <div class="nested-inputs">
+              <div class="input">
+                <div class="input-label"><label for="sgVehicleMake" class="form-label">Vehicle make</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgVehicleMake"></div>
+              </div>
+              <div class="input">
+                <div class="input-label"><label for="sgVehicleModel" class="form-label">Vehicle model</label></div>
+                <div class="response text-input"><input type="text" class="form-control" id="sgVehicleModel"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="sg-section" id="number-input">
+        <div class="text-block">
+          <h2 class="headline-02">Number input</h2>
+          <p class="body-02">
+            A numeric field with stepper buttons inside <code>.response num-input</code>. The steppers are
+            <code>.input-btn step-btn</code> with <code>.step-add</code> and <code>.step-minus</code>, each
+            carrying its own accessible name.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Default</span>
+            <div class="input">
+              <div class="input-label"><label for="sgNum1" class="form-label">Example number input</label></div>
+              <div class="response num-input">
+                <input type="number" class="form-control" id="sgNum1" value="0">
+                <button type="button" class="input-btn step-btn step-add" aria-label="Increase value"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+                <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Error, with assistive and helper text</span>
+            <div class="input">
+              <div class="input-label">
+                <label for="sgNum2" class="form-label">Example number input</label>
+                <small class="form-helper">Assistive text</small>
+              </div>
+              <div class="response num-input">
+                <input type="number" class="form-control is-invalid" id="sgNum2" value="0">
+                <button type="button" class="input-btn step-btn step-add" aria-label="Increase value"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+                <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+              </div>
+              <div class="invalid-feedback">Validation message</div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Contextual icon</span>
+            <div class="input">
+              <div class="input-label"><label for="sgNum3" class="form-label">Amount</label></div>
+              <div class="response num-input">
+                <i class="input-icon fa-regular fa-sterling-sign" aria-hidden="true"></i>
+                <input type="number" class="form-control" id="sgNum3" value="0">
+                <button type="button" class="input-btn step-btn step-add" aria-label="Increase value"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+                <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="page-navigation">
+        <div class="text-block">
+          <h2 class="headline-02">Page navigation</h2>
+          <p class="body-02">
+            Moves between sibling pages in a small section. A <code>&lt;nav&gt;</code> with its own
+            <code>aria-label</code> wraps a <code>.nav</code> list; the current page takes
+            <code>.active</code> and <code>aria-current="page"</code>. Unlike Tabs, each entry is a real
+            link to another page.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <nav aria-label="Section navigation">
+            <ul class="nav">
+              <li class="nav-item"><a class="nav-link active" href="#page-navigation" aria-current="page">Usage</a></li>
+              <li class="nav-item"><a class="nav-link" href="#page-navigation">Style</a></li>
+              <li class="nav-item"><a class="nav-link" href="#page-navigation">Code &amp; specs</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
       <section class="sg-section" id="progress-bar">
         <div class="text-block">
           <h2 class="headline-02">Progress bar</h2>
@@ -4076,6 +4487,174 @@
               success icon does, renders it correctly. Recorded in
               <code>discrepancies/known-issues.md</code>; not patched here.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="radio">
+        <div class="text-block">
+          <h2 class="headline-02">Radio</h2>
+          <p class="body-02">
+            One choice from a set. Radios share a <code>name</code> and sit in
+            <code>.response check-input</code>. The group label uses a plain
+            <code>.form-label</code> with no <code>for</code>, since it labels the set rather than one
+            input.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Group</span>
+            <div class="input">
+              <div class="input-label"><label class="form-label">Radio input label</label></div>
+              <div class="response check-input">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioGroup" id="sgRadio1">
+                  <label class="form-check-label" for="sgRadio1">Radio #1</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioGroup" id="sgRadio2">
+                  <label class="form-check-label" for="sgRadio2">Radio #2</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioGroup" id="sgRadio3">
+                  <label class="form-check-label" for="sgRadio3">Radio #3</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">With assistive and helper text</span>
+            <div class="input">
+              <div class="input-label">
+                <label class="form-label">Radio input label</label>
+                <small class="form-helper">Assistive text</small>
+              </div>
+              <div class="response check-input">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioHelper" id="sgRadioH1">
+                  <label class="form-check-label" for="sgRadioH1">Radio #1</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioHelper" id="sgRadioH2">
+                  <label class="form-check-label" for="sgRadioH2">Radio #2</label>
+                </div>
+              </div>
+              <small class="form-helper">Helper text</small>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Disabled group</span>
+            <div class="input disabled">
+              <div class="input-label"><label class="form-label">Disabled radio group</label></div>
+              <div class="response check-input">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioDis" id="sgRadioD1" disabled>
+                  <label class="form-check-label" for="sgRadioD1">Radio disabled #1</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sgRadioDis" id="sgRadioD2" disabled checked>
+                  <label class="form-check-label" for="sgRadioD2">Radio disabled #2</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="response-button">
+        <div class="text-block">
+          <h2 class="headline-02">Response button</h2>
+          <p class="body-02">
+            Answer options presented as buttons. Each is a native radio or checkbox carrying
+            <code>.btn-check</code>, followed by a <code>label.btn.btn-response</code> bound to it, all
+            inside <code>.response response-btn-input</code>. The native input keeps the selection state
+            and the keyboard behaviour.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Single select — radio</span>
+            <div class="input">
+              <div class="input-label">
+                <label class="form-label">Contact preference</label>
+                <small class="form-helper">Choose one option</small>
+              </div>
+              <div class="response response-btn-input">
+                <input type="radio" class="btn-check" name="sgContactPref" id="sgContactEmail" autocomplete="off">
+                <label class="btn btn-response" for="sgContactEmail">Email</label>
+                <input type="radio" class="btn-check" name="sgContactPref" id="sgContactPhone" autocomplete="off">
+                <label class="btn btn-response" for="sgContactPhone">Phone</label>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Multi select — checkbox</span>
+            <div class="input">
+              <div class="input-label"><label class="form-label">Contact methods</label></div>
+              <div class="response response-btn-input">
+                <input type="checkbox" class="btn-check" id="sgMethodEmail" autocomplete="off">
+                <label class="btn btn-response" for="sgMethodEmail">Email</label>
+                <input type="checkbox" class="btn-check" id="sgMethodPhone" autocomplete="off">
+                <label class="btn btn-response" for="sgMethodPhone">Phone</label>
+                <input type="checkbox" class="btn-check" id="sgMethodPost" autocomplete="off">
+                <label class="btn btn-response" for="sgMethodPost">Post</label>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Large, with an icon</span>
+            <div class="input">
+              <div class="response response-btn-input">
+                <input type="radio" class="btn-check" name="sgLargeResponse" id="sgLargeResp1" autocomplete="off">
+                <label class="btn btn-response btn-response-lg" for="sgLargeResp1">
+                  <span class="icon"><i class="fa-regular fa-car" aria-hidden="true"></i></span>
+                  Response 1
+                </label>
+                <input type="radio" class="btn-check" name="sgLargeResponse" id="sgLargeResp2" autocomplete="off">
+                <label class="btn btn-response btn-response-lg" for="sgLargeResp2">
+                  <span class="icon"><i class="fa-regular fa-house" aria-hidden="true"></i></span>
+                  Response 2
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="select">
+        <div class="text-block">
+          <h2 class="headline-02">Select</h2>
+          <p class="body-02">
+            A native <code>&lt;select&gt;</code> inside <code>.response select-input</code>. Use it for a
+            straightforward single choice from a known list; Dropdown covers the richer multi-select and
+            custom-option cases.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Default</span>
+            <div class="input">
+              <div class="input-label"><label for="sgSelect" class="form-label">Select label</label></div>
+              <div class="response select-input">
+                <select class="form-select" id="sgSelect">
+                  <option selected disabled value="">Choose an option</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Read-only</span>
+            <div class="input">
+              <div class="input-label"><label for="sgSelectRo" class="form-label">Read-only</label></div>
+              <div class="response select-input">
+                <select class="form-select readonly" id="sgSelectRo" disabled>
+                  <option selected>Option 1</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -4239,6 +4818,47 @@
         </div>
       </section>
 
+      <section class="sg-section" id="switch">
+        <div class="text-block">
+          <h2 class="headline-02">Switch</h2>
+          <p class="body-02">
+            An immediate on/off control. <code>.form-check form-switch</code> with
+            <code>role="switch"</code> on the input, and the label wrapped in an
+            <code>.input-label</code>.
+          </p>
+        </div>
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Default</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="sgSwitch1">
+              <div class="input-label"><label class="form-check-label" for="sgSwitch1">Airplane mode</label></div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Small</span>
+            <div class="form-check form-switch form-switch-sm">
+              <input class="form-check-input" type="checkbox" role="switch" id="sgSwitch2" checked>
+              <div class="input-label"><label class="form-check-label" for="sgSwitch2">Compact setting</label></div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Small with status</span>
+            <div class="form-check form-switch form-switch-sm form-switch-status">
+              <input class="form-check-input" type="checkbox" role="switch" id="sgSwitch3" checked>
+              <div class="input-label"><label class="form-check-label" for="sgSwitch3">Compact setting</label></div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Always active</span>
+            <div class="form-check form-switch form-switch-active">
+              <input class="form-check-input" type="radio" role="switch" id="sgSwitch4" checked>
+              <div class="input-label"><label class="form-check-label" for="sgSwitch4">Required feature</label></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="table">
         <div class="text-block">
           <h2 class="headline-02">Table</h2>
@@ -4340,6 +4960,48 @@
         </div>
       </section>
 
+      <section class="sg-section" id="tabs">
+        <div class="text-block">
+          <h2 class="headline-02">Tabs</h2>
+          <p class="body-02">
+            Switches between panels of related content in the same context. The tab list is a
+            <code>.nav.nav-underline</code> inside <code>.tab-items-scroll</code>, flanked by
+            <code>.tab-scroll</code> buttons for overflow, with the panels in <code>.tab-content</code>.
+            Roles and <code>aria-controls</code> pair each tab with its panel.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <div class="tabs">
+            <div class="tab-items">
+              <button type="button" class="btn btn-ghost tab-scroll tab-scroll-left" aria-label="Scroll tabs left" disabled>
+                <div class="btn-icon"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></div>
+              </button>
+              <div class="tab-items-scroll">
+                <ul class="nav nav-underline" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="sgTabDashTab" data-bs-toggle="pill" data-bs-target="#sgTabDash" type="button" role="tab" aria-controls="sgTabDash" aria-selected="true">Dashboard</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sgTabMonTab" data-bs-toggle="pill" data-bs-target="#sgTabMon" type="button" role="tab" aria-controls="sgTabMon" aria-selected="false">Monitoring</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sgTabActTab" data-bs-toggle="pill" data-bs-target="#sgTabAct" type="button" role="tab" aria-controls="sgTabAct" aria-selected="false">Activity</button>
+                  </li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-ghost tab-scroll tab-scroll-right" aria-label="Scroll tabs right">
+                <div class="btn-icon"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></div>
+              </button>
+            </div>
+            <div class="tab-content">
+              <div class="tab-pane fade active show" id="sgTabDash" role="tabpanel" aria-labelledby="sgTabDashTab" tabindex="0">Dashboard content</div>
+              <div class="tab-pane fade" id="sgTabMon" role="tabpanel" aria-labelledby="sgTabMonTab" tabindex="0">Monitoring content</div>
+              <div class="tab-pane fade" id="sgTabAct" role="tabpanel" aria-labelledby="sgTabActTab" tabindex="0">Activity content</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="tag">
         <div class="text-block">
           <h2 class="headline-02">Tag</h2>
@@ -4409,6 +5071,34 @@
           The dismissible tag's close button uses <code>data-bs-dismiss="tag"</code>. Bootstrap only
           implements dismiss for its own components (alert, modal, offcanvas, toast), so this needs
           product JavaScript — the button does nothing on its own.
+        </p>
+      </section>
+
+      <section class="sg-section" id="text-area">
+        <div class="text-block">
+          <h2 class="headline-02">Text area</h2>
+          <p class="body-02">
+            Multi-line input inside <code>.response textarea-input</code>. Where a length limit applies,
+            a <code>.counter</code> sits with the field and its <code>.counting</code> span holds the
+            current count.
+          </p>
+        </div>
+        <div class="sg-panel">
+          <div class="input">
+            <div class="input-label">
+              <label for="sgTextarea" class="form-label">Additional information</label>
+              <small class="form-helper">Add any relevant detail</small>
+            </div>
+            <div class="response textarea-input">
+              <textarea class="form-control" id="sgTextarea" rows="3" placeholder="Enter information" maxlength="250"></textarea>
+              <div class="counter"><span class="counting">0</span> / 250</div>
+            </div>
+            <small class="form-helper">Maximum 250 characters</small>
+          </div>
+        </div>
+        <p class="support-01">
+          Keeping <code>.counting</code> in step with what has been typed needs product JavaScript; it is
+          static here.
         </p>
       </section>
 
