@@ -1,0 +1,109 @@
+<!-- Standard table -->
+<div class="table-container">
+  <div class="table-content">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Customer ID</div></th>
+          <th scope="col"><div class="table-header-label">Policy number</div></th>
+          <th scope="col"><div class="table-header-label">Policy type</div></th>
+          <th scope="col"><div class="table-header-label">Premium (£/mo)</div></th>
+          <th scope="col"><div class="table-header-label">Status</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="100%"></td></tr>
+        <tr>
+          <td>CUST-10234</td>
+          <td>POL-884291</td>
+          <td>Car</td>
+          <td>72.50</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>CUST-84721</td>
+          <td>POL-663902</td>
+          <td>Home <span class="data-secondary">Secondary data</span></td>
+          <td>54.20</td>
+          <td>Active</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Sortable/selection WIP pattern from current Buckholt source -->
+<div class="table-container">
+  <div class="table-content">
+    <table class="table" data-cdt-table>
+      <thead>
+        <tr>
+          <th scope="col" class="table-checkbox-header col-fit">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="table-select-all" data-cdt-select-column="0">
+            </div>
+          </th>
+          <th scope="col" class="table-sort-header">
+            <button class="table-sort" type="button" data-col="1" data-sort-type="text" aria-label="Sort by User">
+              <div class="table-header-label">User</div>
+              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+            </button>
+          </th>
+          <th scope="col" class="table-sort-header">
+            <button class="table-sort" type="button" data-col="2" data-sort-type="text" aria-label="Sort by Status">
+              <div class="table-header-label">Status</div>
+              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+            </button>
+          </th>
+          <th scope="col" class="table-sort-header col-fit cell-data-right">
+            <button class="table-sort" type="button" data-col="3" data-sort-type="number" aria-label="Sort by Value">
+              <div class="table-header-label">Value</div>
+              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+            </button>
+          </th>
+          <th scope="col" class="col-fit cell-data-right"><div class="table-header-label"></div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="100%"></td></tr>
+        <tr>
+          <td class="col-fit" data-sort-value="">
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="table-row-1"></div>
+          </td>
+          <td data-sort-value="MF">
+            <div class="avatar avatar-xs"><div class="avatar-initials">MF</div></div>
+          </td>
+          <td data-sort-value="Active">
+            <span class="tag tag-status tag-status-success"><span class="tag-label">Active</span></span>
+          </td>
+          <td class="col-fit cell-data-right" data-sort-value="3456"><span class="data-number">3456</span></td>
+          <td class="col-fit cell-data-right">
+            <div class="button-set">
+              <button type="button" class="btn btn-ghost" aria-label="Edit row">
+                <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Simple table: documented runtime treatment; formal usage guidance is still WIP -->
+<div class="table-container">
+  <div class="table-content">
+    <table class="table no-italics simple_table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Label</div></th>
+          <th scope="col"><div class="table-header-label">Value</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="100%"></td></tr>
+        <tr><td>Example</td><td>Value</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
