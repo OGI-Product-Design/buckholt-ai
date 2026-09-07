@@ -46,7 +46,6 @@
   border-color: var(--button-border);
   box-shadow: none;
   outline: 0;
-  background-image: none;
 }
 
 /* Preserve the documented raised bottom edge for primary/secondary resting
