@@ -1,139 +1,58 @@
-# Buckholt List
+# List
 
-## Status
+## Verification
 
-List guidance rebuilt from the supplied Buckholt Overview, Style and Code & specs documentation and checked against the current compiled runtime.
+Source-verified against the Buckholt List Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact List DOM structure.
 
 ## Purpose
 
-The List component presents related content in a clear, scannable sequence. Use semantic HTML list elements so the relationship between items is preserved for assistive technology.
+List presents related content in a clear, scannable sequence. Use an unordered list when order does not matter and an ordered list when sequence or ranking matters.
 
-## When to use
+Do not use List for complex data requiring sorting, filtering or structured comparison; use the appropriate Table/data pattern instead.
 
-Use a List when users need to scan related items, steps, requirements, options or grouped information.
+## Canonical markup
 
-Use an unordered list when item order does not matter. Use an ordered list when sequence or ranking matters.
+Do not reconstruct List examples from prose. Use `examples.html` exactly.
 
-Do not use a List merely to align unrelated content that would be better represented by another component such as Key-value Pair, Table or navigation pattern.
+The Code & specs source documents:
 
-## Base unordered list
+- base unordered `.list` with `.list-item` children;
+- ordered `.list`, represented with a `...` placeholder in the base ordered example;
+- nested unordered and ordered lists;
+- `.list-heading` shown as a standalone `<li>` snippet with `value="0"`;
+- `.list.list-unstyled` represented with `...`;
+- an icon-list example using `.list-icon` and Font Awesome icons.
 
-```html
-<ul class="list">
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
-</ul>
-```
+Preserve those source placeholders. Do not expand the ordered base list, unstyled list or other omitted content into invented canonical examples.
 
-## Ordered list
+## Nested lists
 
-```html
-<ol class="list">
-  <li class="list-item">First item</li>
-  <li class="list-item">Second item</li>
-  <li class="list-item">Third item</li>
-</ol>
-```
+The source nested examples place the Level 2 `<ul>` or `<ol>` directly inside the parent `.list-item`. Use those exact structures from `examples.html`.
+
+Usage/Style guidance documents distinct markers for nesting levels. Let `buckholt.css` provide markers, indentation and spacing.
 
 ## List heading
 
-Buckholt supports an optional first `.list-heading` item. Its marker is visually suppressed.
+The Code & specs snippet is:
 
 ```html
-<ul class="list">
-  <li class="list-heading">List heading</li>
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
-</ul>
+<li class="list-heading" value="0">List heading</li>
 ```
 
-For an ordered list with a heading item, the documentation sets the heading item to `value="0"` so the first real item starts at 1:
-
-```html
-<ol class="list">
-  <li class="list-heading" value="0">List heading</li>
-  <li class="list-item">First item</li>
-  <li class="list-item">Second item</li>
-</ol>
-```
-
-Use this documented pattern rather than compensating for numbering in custom CSS.
-
-## Nested items
-
-Lists may contain nested lists when hierarchy is genuinely useful. Buckholt documents distinct markers by level: unordered Level 1 uses disc bullets and Level 2 uses circles; ordered Level 1 uses numbers and Level 2 uses letters.
-
-Keep nesting shallow and avoid deeply nested structures that become difficult to scan.
-
-## Unstyled list
-
-Use `.list-unstyled` when markers add visual noise but list semantics are still appropriate, such as navigation, settings summaries, metadata or compact action groups:
-
-```html
-<ul class="list list-unstyled">
-  <li class="list-heading">List heading</li>
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
-</ul>
-```
-
-Do not replace semantic lists with arbitrary divs just because markers are not wanted.
+This is source evidence for the heading item itself, not a complete reconstructed list. When composing it into an ordered List, preserve the documented semantics and numbering behavior without altering `examples.html`.
 
 ## Icons
 
-Icons may replace standard bullets to communicate meaning such as task status, priority or item type. Use them sparingly and consistently.
+The Code & specs source places `.list-icon` before item text and uses the exact demonstrated success/error classes and icons. Preserve those icon classes in canonical examples; do not add `aria-hidden` or replace icons there unless the source contains it.
 
-Use `.list-icon` as the icon container:
-
-```html
-<ul class="list">
-  <li class="list-heading">Validation</li>
-  <li class="list-item">
-    <span class="list-icon text-success">
-      <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-    </span>
-    Complete
-  </li>
-  <li class="list-item">
-    <span class="list-icon text-error">
-      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-    </span>
-    Needs attention
-  </li>
-</ul>
-```
-
-Use the Iconography catalogue for product icon choices. Do not rely on icon shape or colour alone when the status matters; include meaningful item text.
-
-## Content guidance
-
-- Keep list items parallel in structure and tone.
-- Keep individual items concise where possible.
-- Use ordered lists only when sequence matters.
-- Use icons only when they add information rather than decoration.
-- Use `.list-heading` only when a heading belongs visually within the list itself; otherwise prefer a semantic heading outside the list.
-
-## Accessibility
-
-- Use `<ul>` for unordered collections and `<ol>` for ordered sequences.
-- Use `<li>` for each item.
-- Preserve list semantics even for `.list-unstyled`.
-- Supporting icons should use `aria-hidden="true"` when the text already communicates their meaning.
-- Do not communicate status through colour/icon alone.
-- Avoid fake lists constructed from paragraphs or line breaks.
-
-## Runtime implementation
-
-Buckholt's runtime provides the List marker, spacing, nested marker and icon-container behaviour. Do not recreate list markers or internal spacing with local CSS.
+In actual product markup, apply appropriate accessibility semantics so icon/colour are not the only carriers of meaning.
 
 ## Agent rules
 
-- Use `.list` on semantic `<ul>` or `<ol>` elements.
-- Use `.list-item` for ordinary items.
-- Use optional `.list-heading` as the documented first-item heading pattern.
-- For ordered Lists with `.list-heading`, use `value="0"` on that heading so visible numbering starts at 1.
-- Use `.list-unstyled` to remove markers while retaining semantic list markup.
-- Use `.list-icon` only when an icon genuinely carries useful meaning, and select icons from Buckholt Iconography.
-- Keep nesting shallow and use semantic nested lists.
-- Do not reproduce marker, indentation, spacing or icon layout with custom CSS.
+- Use `examples.html` as canonical DOM evidence.
+- Use semantic `<ul>`/`<ol>` and `.list-item` as documented.
+- Preserve exact nested-list structure.
+- Keep source `...` placeholders rather than filling them by inference.
+- Treat the `.list-heading` Code & specs block as the exact snippet supplied, not permission to invent surrounding list markup.
+- Preserve exact source icon wrappers/classes in canonical examples.
+- Do not recreate markers, indentation, spacing or icon layout with local CSS.
