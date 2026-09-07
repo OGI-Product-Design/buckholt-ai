@@ -8,10 +8,11 @@ Use the Buckholt design system accurately when building UI.
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
 2. `css/buckholt.css` — current runtime implementation. Use its real selectors, variables, states and browser behaviour. It may also contain additional helpers or values added when Buckholt was used to build the company website; those extras provide flexibility but do not automatically become canonical Buckholt guidance.
-3. `foundations/<foundation>/` — shared design-system guidance extracted from the documentation and checked against runtime CSS where useful.
-4. `components/<component>/rules.md` — component guidance rebuilt from documentation plus runtime implementation evidence.
-5. `components/<component>/examples.html` — verified canonical markup examples.
-6. `discrepancies/known-issues.md` — only significant documentation/runtime differences that could mislead implementation.
+3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load it after the runtime when building/test-rendering Buckholt UI.
+4. `foundations/<foundation>/` — shared design-system guidance extracted from the documentation and checked against runtime CSS where useful.
+5. `components/<component>/rules.md` — component guidance rebuilt from documentation plus runtime implementation evidence.
+6. `components/<component>/examples.html` — verified canonical markup examples.
+7. `discrepancies/known-issues.md` — only significant documentation/runtime differences that could mislead implementation.
 
 Old SCSS, old token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
 
@@ -25,14 +26,16 @@ Before implementing Buckholt UI:
 - read `components/<component>/rules.md` and `examples.html` for the component;
 - follow the documented Buckholt intent first;
 - use the real runtime classes and variables from `css/buckholt.css` to implement that intent accurately;
+- load `css/buckholt-ai-fixes.css` after the runtime so verified documentation/runtime corrections are applied consistently;
 - do not promote undocumented runtime extras into Buckholt design guidance simply because they exist in CSS;
+- do not create additional local component overrides to compensate for a known issue already handled by the compatibility file;
 - do not recreate component styling with custom CSS where Buckholt already provides it.
 
 ## Evidence discipline
 
 The documentation defines intended Buckholt behaviour. The CSS shows what the current implementation can render. If the CSS contains extra website-specific helpers, they may be used when appropriate but should be treated as implementation flexibility rather than new design-system rules.
 
-Only flag a documentation/runtime difference when it materially affects the requested Buckholt implementation.
+Only flag a documentation/runtime difference when it materially affects the requested Buckholt implementation. A class is not missing merely because there is no standalone `.class {}` rule; check compound, descendant and pseudo-selectors before classifying it as inert.
 
 ## Foundations
 
@@ -58,7 +61,7 @@ Use Buckholt's `Proxima-soft, Arial, sans-serif` stack through the runtime. Choo
 
 ## Custom CSS
 
-Custom CSS may be used for page/demo layout only when necessary. It must not recreate or override Buckholt component styling simply to make an implementation look right.
+Custom CSS may be used for page/demo layout only when necessary. It must not recreate or override Buckholt component styling simply to make an implementation look right. Verified runtime corrections belong in `css/buckholt-ai-fixes.css`, not in a page-specific stylesheet.
 
 ## Runtime dependencies
 
@@ -67,6 +70,7 @@ Custom CSS may be used for page/demo layout only when necessary. It must not rec
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/buckholt.css">
+<link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
 
 For Bootstrap-driven Buckholt behaviour such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
@@ -90,7 +94,7 @@ Read `components/avatar/rules.md`, `components/avatar/examples.html`, Colour and
 Read `components/breadcrumb/rules.md`, `components/breadcrumb/examples.html`, plus Menu/Menu button for overflow. Breadcrumb is secondary navigation. Preserve `<nav aria-label="breadcrumb">`, semantic list markup, `aria-current="page"`, generated dividers and the documented overflow approach.
 
 ### Button
-Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations. Preserve `.button-label` where documented, treat danger as a modifier, use accessible naming/tooltips for icon-only buttons, and consult `discrepancies/known-issues.md` for the verified Bootstrap mouse-focus fall-through.
+Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations. Preserve `.button-label` where documented, treat danger as a modifier, use accessible naming/tooltips for icon-only buttons, and consult `discrepancies/known-issues.md` for verified runtime differences.
 
 ### Card
 Read `components/card/rules.md` and `components/card/examples.html`. Use documented Card structures/modifiers, reuse nested Buckholt components, and do not put competing interactive CTAs inside a whole-card navigation link.
@@ -104,7 +108,7 @@ Rules:
 - place controls inside one or more `.form-body` sections;
 - reuse documented Buckholt controls rather than inventing form-field markup;
 - place completion/exit actions at the bottom and reuse Button/Link;
-- the source conflicts between `.form-actions` in rendered examples and `.form-buttons` in explanatory docs/runtime; use `.form-buttons` for runtime-correct Buckholt behaviour until upstream is reconciled;
+- use `.form-actions`: rendered documentation examples and the compiled runtime agree on it; `.form-buttons` is explanatory prose only and is not implemented;
 - let individual controls own validation, disabled/read-only and focus/error states;
 - do not recreate Form width/gaps/action spacing locally.
 
@@ -149,6 +153,20 @@ Read `components/link/rules.md`, `components/link/examples.html` and `discrepanc
 ### List
 Read `components/list/rules.md` and `components/list/examples.html`. Use semantic `<ul>`/`<ol>`, `.list-item`, the documented optional heading pattern, `.list-unstyled` only to remove visual markers while retaining semantics, and meaningful icons sparingly.
 
+### Lookup
+Read `components/lookup/rules.md`, `components/lookup/examples.html` and the nested Input/Input group/Button/Link/Versa-tile guidance.
+
+Rules:
+- use Lookup when the user enters a known value to retrieve related information;
+- use `.lookup` as the outer component and `.lookup-actions` for supporting lookup actions;
+- let the nested input own label, formatting, validation and states;
+- use a primary Button for the main lookup action where the documented hierarchy applies;
+- use a standalone Link only for a genuine alternative route/navigation;
+- use the documented Versa-tile summary variation to display retrieved data;
+- reuse Icon block/Button/Versa-tile rather than restyling them through Lookup;
+- keep this component distinct from the separate higher-level `Patterns / Lookup` documentation to be ingested later;
+- do not recreate `.lookup` or `.lookup-actions` spacing locally.
+
 ### Menu
 Read `components/menu/rules.md` and `components/menu/examples.html`, plus Menu button and Iconography guidance. Use documented Menu structure, submenus, native radio/checkbox controls, dividers and danger/disabled rules; preserve keyboard/focus behaviour and hide permanently unavailable actions.
 
@@ -165,7 +183,7 @@ Read `components/progress-bar/rules.md` and `components/progress-bar/examples.ht
 Read `components/slider/rules.md` and `components/slider/examples.html`. Use the native range input with real min/max/step/value, paired numeric input and documented wrapper structure; synchronize values, preserve validation/disabled/read-only behaviour, and do not invent the two-handle range variant marked as coming soon.
 
 ### Summary Meta
-Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value. Use `.summary-meta`, Icon block then `.summary-meta-body`, keep content short, and use `.summary-meta-stacked` for the documented vertical form. See known issues for the inert `.expressive-primary` class note.
+Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value. Use `.summary-meta`, Icon block then `.summary-meta-body`, keep content short, and use `.summary-meta-stacked` for the documented vertical form.
 
 ### Table
 Read `components/table/rules.md` and `components/table/examples.html`, plus nested component guidance.
@@ -200,4 +218,4 @@ Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colo
 Read `components/tooltip/rules.md` and `components/tooltip/examples.html`. Use Tooltips only for contextual nonessential information, put Bootstrap tooltip attributes on the real trigger, initialize with Buckholt's documented offset/delay, and keep the trigger understandable without the Tooltip.
 
 ### Versa-tile
-Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance. Use `.versatile` with documented content/body/meta/actions structure, reuse Buckholt subcomponents, keep actions item-specific, use whole-tile anchors only for navigation, and consult known issues for the locally fixed action-set wrapping defect.
+Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance. Use `.versatile` with documented content/body/meta/actions structure, reuse Buckholt subcomponents, keep actions item-specific, use whole-tile anchors only for navigation, and rely on the verified compatibility file for the known action-set wrapping correction.
