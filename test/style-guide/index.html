@@ -4353,6 +4353,7 @@
           </p>
         </div>
         <div class="sg-panel">
+          <span class="label-01 sg-caption">Documented base</span>
           <nav aria-label="Section navigation">
             <ul class="nav">
               <li class="nav-item"><a class="nav-link active" href="#page-navigation" aria-current="page">Usage</a></li>
@@ -4360,6 +4361,51 @@
               <li class="nav-item"><a class="nav-link" href="#page-navigation">Code &amp; specs</a></li>
             </ul>
           </nav>
+        </div>
+
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">With icons</span>
+          <nav aria-label="Section navigation with icons">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link active" href="#page-navigation" aria-current="page">
+                  <span class="icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span>
+                  Usage
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#page-navigation">
+                  <span class="icon"><i class="fa-regular fa-swatchbook" aria-hidden="true"></i></span>
+                  Style
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#page-navigation">
+                  <span class="icon"><i class="fa-regular fa-code" aria-hidden="true"></i></span>
+                  Code &amp; specs
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Unverified — no icon example is documented</h3>
+            <p class="body-02">
+              <code>components/page-navigation/rules.md</code> says only that "icons may be used where
+              documented and helpful", and <code>examples.html</code> contains no icon variant, so there
+              is no canonical markup for it. The example above therefore uses the shared
+              <code>&lt;span class="icon"&gt;</code> structure that Iconography defines and that Link,
+              Text block and Tag all use, which is what the Page navigation rules point to.
+            </p>
+            <p class="body-02">
+              Treat it as provisional. It also uses <code>fa-swatchbook</code> and <code>fa-code</code>,
+              neither of which is in the Buckholt icon catalogue, so those two are placeholders for
+              whatever the documentation site actually uses. Adding a documented icon example to
+              <code>examples.html</code> would settle both points.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -5868,6 +5914,11 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
   <script src="../../components/dropdown/dropdown.js"></script>
   <script src="../../components/form/form.js"></script>
   <script src="../../components/tabs/tabs.js"></script>
+
+  <!-- Page-level demonstration behaviour. Not part of Buckholt: it drives the
+       documented interactions for which this repository ships no component
+       script. See discrepancies/known-issues.md. -->
+  <script src="style-guide.js"></script>
   <script>
     // Buckholt's documented Tooltip initialisation.
     const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');

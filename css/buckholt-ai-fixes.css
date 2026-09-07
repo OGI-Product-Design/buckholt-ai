@@ -66,30 +66,19 @@
 }
 
 /* ============================================================================
-   LINK — documented visited state missing from runtime
+   LINK — visited state deliberately NOT applied here
    Source: Buckholt Link Style documentation
-   Issue: visited text and icon should use Expressive secondary deep (#5731d6),
-          but the current runtime contains no :visited styling.
-   Status: verified runtime discrepancy; compatibility fix applied here
-   Tracking: discrepancies/known-issues.md
+   Note: the documentation defines a visited colour of Expressive secondary
+         deep (#5731d6) and the runtime implements no `:visited` rule at all,
+         which remains recorded in discrepancies/known-issues.md.
+
+         An earlier version of this file applied that colour. It is removed
+         because it does more harm than good in practice: in any single-page
+         reference or prototype, every `href="#section"` anchor becomes
+         `:visited` as soon as it is used, so links render purple where the
+         documentation site shows them blue. Products doing real navigation
+         can opt in deliberately; a compatibility layer should not force it.
    ============================================================================ */
-
-/* Scope this to the Link component only. The Link documentation defines the
-   visited state for inline links, which are bare anchors carrying no
-   Link-specific class, and for `.link-standalone`. A blanket `a:visited`
-   also repaints anchors that are other components in their own right -
-   Clickable card, Breadcrumb, Page navigation, Versa-tile - none of which
-   document a visited treatment. Same-page `href="#id"` anchors count as
-   visited immediately, so the blanket form turns those components purple on
-   first view. */
-a:not([class]):visited,
-a.link-standalone:visited {
-  color: var(--expressive-secondary-deep);
-}
-
-a.link-standalone:visited .icon {
-  color: var(--expressive-secondary-deep);
-}
 
 /* ============================================================================
    PROGRESS BAR — error status icon renders black
@@ -248,4 +237,42 @@ a.link-standalone:visited .icon {
 
 .table > :not(:first-child) {
   border-top: 0;
+}
+
+/* ============================================================================
+   ALERT — dismissible close icon clipped
+   Source: Buckholt Button close documentation
+   Issue: with `.btn-close` corrected to border-box, the Bootstrap-inherited
+          `padding: 0.625rem 0.5rem` on `.alert-dismissible .btn-close` leaves a
+          16x12 content box for a 16px background icon, so the cross renders
+          squashed. Buckholt's own `--btn-close-width`/`-height` already define
+          the target size, so the padding is not needed; the control is inset
+          using the Alert's own padding variables instead.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.alert-dismissible .btn-close {
+  padding: 0;
+}
+
+/* ============================================================================
+   CARD / VERSA-TILE — Bootstrap link hover colour on navigational containers
+   Source: Buckholt Card and Versa-tile documentation
+   Issue: `.card` sets `color: var(--card-text)`, but `--card-text` is defined
+          as an empty value in the runtime, so that declaration is invalid and
+          dropped. A Clickable card is an anchor, so Bootstrap's
+          `a:hover { color: #0a58ca }` then wins and the whole card's text turns
+          Bootstrap blue on hover. The same applies to `a.versatile`.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+a.card-clickable:hover,
+a.card-clickable:focus,
+a.card-clickable:active,
+a.versatile:hover,
+a.versatile:focus,
+a.versatile:active {
+  color: inherit;
 }

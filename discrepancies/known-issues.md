@@ -274,3 +274,21 @@ The consistent lesson is that Buckholt overrides Bootstrap by *redeclaring* prop
 
 - **Submenu appearing behind a neighbouring panel** was caused by the style guide placing three independently open menu panels side by side for display. The submenu now has its own row. Buckholt's own z-index is fine.
 - **Page navigation with icons** is described in the rules as "icons may be used where documented", but no canonical markup exists in `components/page-navigation/examples.html`. Not implemented rather than implemented wrongly; add a documented example if the variant is real.
+
+### Third pass: remaining parity items
+
+**Links rendering purple — the compatibility layer's own fault.** The documented visited colour was being applied via `:visited`. In any single-page reference or prototype every `href="#section"` anchor becomes visited as soon as it is used, so links went purple where the documentation site shows blue. The rule is removed. The underlying runtime gap — no `:visited` implementation at all — remains recorded above; products doing real navigation can opt in deliberately, but a compatibility layer should not force it.
+
+**Clickable card changed colour on hover.** `.card` sets `color: var(--card-text)`, but `--card-text` is defined as an *empty value* in the runtime, so that declaration is invalid and dropped. A Clickable card is an anchor, so Bootstrap's `a:hover { color: #0a58ca }` then wins and the whole card turned Bootstrap blue. Corrected for `a.card-clickable` and `a.versatile`. The empty `--card-text` is worth fixing upstream, since anything relying on it silently inherits instead.
+
+**Alert close icon squashed.** Once `.btn-close` was corrected to border-box, the Bootstrap-inherited `padding: 0.625rem 0.5rem` left a 16x12 content box for a 16px background icon. The padding is now zeroed; Buckholt's `--btn-close-width`/`-height` already define the target size.
+
+### Interactions now driven by a page-level script
+
+`test/style-guide/style-guide.js` supplies demonstration behaviour for documented interactions that no Buckholt script covers: Selectable card `.active`, Selectable tag `aria-selected`, `data-bs-dismiss="tag"`, the Slider range/number pairing, and Table select-all including the indeterminate state.
+
+It is page-level only and is not a Buckholt API. Each block should be deleted when an upstream script provides the behaviour. The underlying gap is unchanged: these interactions are documented but unimplemented in the repository.
+
+### Page navigation icons remain undocumented
+
+`rules.md` says only that "icons may be used where documented and helpful" and `examples.html` has no icon variant. The style guide now shows one built from the shared `<span class="icon">` structure that Iconography defines and that Link, Text block and Tag all use, flagged on the page as provisional. It uses `fa-swatchbook` and `fa-code`, neither of which is in the Buckholt icon catalogue, so those are placeholders. A documented example in `examples.html` would settle both the markup and the icon choice.
