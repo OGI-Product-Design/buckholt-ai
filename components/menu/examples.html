@@ -1,0 +1,48 @@
+<!-- Buckholt Menu canonical examples -->
+
+<!-- Basic Menu panel -->
+<div class="menu-panel dropdown-menu show position-relative">
+  <ul class="menu-body" role="menu">
+    <li>
+      <button class="menu-item" type="button">My summary</button>
+    </li>
+    <li>
+      <button class="menu-item" type="button">Account information</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Submenu -->
+<div class="menu-panel dropdown-menu show position-relative">
+  <ul class="menu-body" role="menu">
+    <li>
+      <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">
+        Share
+      </button>
+      <ul class="submenu" role="menu">
+        <li>
+          <button class="menu-item" type="button">Email</button>
+        </li>
+        <li>
+          <button class="menu-item" type="button">Message</button>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <button class="menu-item" type="button">Another action</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Group separation -->
+<div class="menu-panel dropdown-menu show position-relative">
+  <ul class="menu-body" role="menu">
+    <li><button class="menu-item" type="button">Terms of service</button></li>
+    <li><button class="menu-item" type="button">Privacy policy</button></li>
+    <li><hr class="menu-divider"></li>
+    <li><button class="menu-item" type="button">Logout</button></li>
+  </ul>
+</div>
+
+<!-- Selectable submenu items use native radio/checkbox inputs paired with labels.
+     Follow the exact selectable-item markup from Buckholt documentation when implementing that variant. -->
