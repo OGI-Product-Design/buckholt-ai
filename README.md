@@ -57,7 +57,10 @@ buckholt-ai/
     ├── progress-bar/
     ├── slider/
     ├── summary-meta/
+    ├── table/
+    ├── tag/
     ├── text-block/
+    ├── toast/
     ├── tooltip/
     └── versa-tile/
 ```
@@ -169,10 +172,25 @@ Read `components/summary-meta/rules.md` and `components/summary-meta/examples.ht
 
 Use `.summary-meta-stacked` for the documented vertical/centred variant. Keep content short rather than turning Summary Meta into a general content container.
 
+### Table
+Read `components/table/rules.md` and `components/table/examples.html`, plus guidance for any Buckholt components embedded in cells.
+
+**Table is currently provisional/WIP.** The available Buckholt source contains useful HTML and base styling but not a complete Usage/Style/Code specification. Use the supplied Table implementation for genuine tabular data, preserve semantic table markup, and do not invent unsupported data-grid features. Update the guidance when the formal Table documentation is completed.
+
+### Tag
+Read `components/tag/rules.md` and `components/tag/examples.html`, plus Colour and Iconography guidance. Tag covers read-only, dismissible, selectable and semantic status variants, medium/default and small sizing, optional icons, expressive categorisation colours and Tag sets.
+
+Choose Tag behaviour by function: do not use Tags as navigation, preserve native radio/checkbox controls for selectable Tags, and use small only for the documented read-only/status variants.
+
 ### Text block
 Read `components/text-block/rules.md` and `components/text-block/examples.html`, plus Typography, Spacing, Iconography and Colour foundations. Text block covers semantic heading structure, Buckholt display/headline/title type sets, paragraphs, eyebrow text, inline heading icons and icon blocks.
 
 Important composition rules include: use semantic heading levels independently of visual type style; do not combine icon blocks with eyebrow text or inline heading icons; use inline icons rather than icon blocks with display-sized headings.
+
+### Toast
+Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography guidance. Toast covers immediate non-blocking feedback, info/success/warning/error treatments, optional icons/notes/context, manual or timed dismissal and Bootstrap fade/show behaviour.
+
+Use Toasts sparingly and do not make an auto-dismissing Toast the only place where important information can be recovered.
 
 ### Tooltip
 Read `components/tooltip/rules.md` and `components/tooltip/examples.html`. Tooltip is for contextual, nonessential information and uses Bootstrap/Popper with Buckholt's documented offset and delay.
@@ -193,7 +211,7 @@ Use whole-tile anchors only for navigation; otherwise keep item actions inside `
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts, accordions and modals, also load:
+For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
