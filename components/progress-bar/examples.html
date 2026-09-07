@@ -1,65 +1,87 @@
-<!-- Buckholt Progress bar canonical examples -->
+<!-- Extracted verbatim from Buckholt Progress: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
 
-<!-- Determinate progress -->
+<!-- Code & specs example 1 -->
 <div class="progress-container">
-  <div class="progress-header">
-    <label for="progress-basic" class="progress-label">Uploading files</label>
-    <span class="progress-note">50%</span>
-  </div>
-
-  <div id="progress-basic" class="progress" role="progressbar"
-       aria-label="Uploading files"
-       aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-    <div class="progress-bar" style="width: 50%"></div>
-  </div>
-
-  <small class="progress-helper">5 of 10 files uploaded</small>
+    <div class="progress-header">
+        <label for="Progress-bar-example" class="progress-label">Progress label</label>
+    </div>
+    <div id="Progress-bar-example" class="progress" role="progressbar" aria-label="Progress label" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: 50%"></div>
+    </div>
 </div>
 
-<!-- Small progress -->
-<div class="progress progress-sm" role="progressbar"
-     aria-label="Compact progress"
-     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 50%"></div>
-</div>
-
-<!-- Indeterminate progress -->
+<!-- Code & specs example 2 -->
 <div class="progress-container">
-  <div class="progress-header">
-    <label for="progress-indeterminate" class="progress-label">Processing</label>
-  </div>
-  <div id="progress-indeterminate" class="progress" role="progressbar" aria-label="Processing">
-    <div class="progress-bar progress-bar-indeterminate"></div>
-  </div>
-  <small class="progress-helper">This may take a moment.</small>
+    <div class="progress-header">
+        <label for="Progress-indeterminate-example" class="progress-label">Progress indeterminate</label>
+    </div>
+    <div id="Progress-indeterminate-example" class="progress" role="progressbar" aria-label="Progress indeterminate">
+        <div class="progress-bar progress-bar-indeterminate"></div>
+    </div>
 </div>
 
-<!-- Success -->
+<!-- Code & specs example 3 -->
+<div class="progress progress-sm"></div>
+
+<!-- Code & specs example 4 -->
 <div class="progress-container">
-  <div class="progress-header">
-    <label for="progress-success" class="progress-label">Upload complete</label>
-  </div>
-  <div id="progress-success" class="progress is-valid" role="progressbar"
-       aria-label="Upload complete"
-       aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-    <div class="progress-bar"></div>
-  </div>
+    <div class="progress-header">
+        <label for="Progress-help-example" class="progress-label">Progress helper text</label>
+    </div>
+    <div id="Progress-help-example" class="progress" role="progressbar" aria-label="Progress helper text" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">...</div>
+
+    <small class="progress-helper">Helper text</small>
 </div>
 
-<!-- Error -->
+<!-- Code & specs example 5 -->
 <div class="progress-container">
-  <div class="progress-header">
-    <label for="progress-error" class="progress-label">Upload failed</label>
-  </div>
-  <div id="progress-error" class="progress is-invalid" role="progressbar"
-       aria-label="Upload failed"
-       aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-    <div class="progress-bar"></div>
-  </div>
-  <div class="invalid-feedback">The upload could not be completed. Try again.</div>
+    <div class="progress-header">
+        <label for="Progress-bar-example" class="progress-label">Progress label</label>
+        <span class="progress-note">Note</span>
+    </div>
+    <div id="Progress-bar-example" class="progress" role="progressbar" aria-label="Progress label" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">...</div>
 </div>
 
-<!-- Inactive -->
-<div class="progress progress-inactive" role="progressbar" aria-label="Inactive process">
-  <div class="progress-bar"></div>
+<!-- Code & specs example 6 -->
+<div class="progress-container">
+    <div class="progress-header">
+        <label for="Progress-bar-example" class="progress-label">Progress success</label>
+    </div>
+    <div id="Progress-bar-example" class="progress is-valid" role="progressbar" aria-label="Progress success" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar"></div>
+    </div>
 </div>
+
+<!-- Code & specs example 7 -->
+<div class="progress-container">
+    <div class="progress-header">
+        <label for="Progress-bar-example" class="progress-label">Progress error</label>
+    </div>
+    <div id="Progress-bar-example" class="progress is-invalid" role="progressbar" aria-label="Progress error" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar"></div>
+    </div>
+
+    <div class="invalid-feedback">
+        Validation message
+    </div>
+</div>
+
+<!-- Code & specs example 8 -->
+<div class="progress-container">
+    <div class="progress-header">
+        <label for="Progress-bar-example" class="progress-label">Progress inactive</label>
+    </div>
+    <div id="Progress-bar-example" class="progress progress-inactive" role="progressbar" aria-label="Progress inactive" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar"></div>
+    </div>
+</div>
+
+<!-- Code & specs example 9 -->
+/* Secondary */
+<div class="progress expressive-secondary"></div>
+
+/* Tertiary */
+<div class="progress expressive-tertiary"></div>
+
+/* Quaternary */
+<div class="progress expressive-quaternary"></div>
