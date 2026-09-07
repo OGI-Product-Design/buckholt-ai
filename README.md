@@ -41,14 +41,16 @@ buckholt-ai/
 │   └── known-issues.md
 └── components/
     ├── button/
+    ├── card/
     ├── heading-attachment/
     ├── icon-block/
     ├── key-value-pair/
     ├── link/
+    ├── progress-bar/
     ├── summary-meta/
-    └── text-block/
-        ├── rules.md
-        └── examples.html
+    ├── text-block/
+    ├── tooltip/
+    └── versa-tile/
 ```
 
 Each documented component folder contains `rules.md` and `examples.html`.
@@ -78,6 +80,11 @@ Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`
 ### Button
 Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
 
+### Card
+Read `components/card/rules.md` and `components/card/examples.html`. Card covers core/secondary containers, images, horizontal cards, whole-card navigation, selectable cards and Emphasis tile composition.
+
+Use documented nested Buckholt components inside Card rather than recreating their styles. Clickable Cards are navigation and should not contain competing internal CTAs.
+
 ### Heading attachment
 Read `components/heading-attachment/rules.md` and `components/heading-attachment/examples.html` together with Text block. Heading attachment extends Text block by adding one closely related contextual action or supporting element beside the heading using `.heading` and `.heading-content`.
 
@@ -98,6 +105,11 @@ Read `components/link/rules.md` and `components/link/examples.html`, plus colour
 
 A documented/runtime difference for the visited Link state is recorded in `discrepancies/known-issues.md`; documentation remains the source of truth for intended state colour.
 
+### Progress bar
+Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`. Progress bar covers determinate and indeterminate progress, default/large and small sizes, label/note/helper content, success, error and inactive states.
+
+Always provide accessible progress labelling. Do not invent quantitative values for indeterminate processes.
+
 ### Summary Meta
 Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value when they are composed inside it. Summary Meta combines an Icon block with short supporting content for concise, scannable contextual summaries.
 
@@ -107,6 +119,16 @@ Use `.summary-meta-stacked` for the documented vertical/centred variant. Keep co
 Read `components/text-block/rules.md` and `components/text-block/examples.html`, plus Typography, Spacing, Iconography and Colour foundations. Text block covers semantic heading structure, Buckholt display/headline/title type sets, paragraphs, eyebrow text, inline heading icons and icon blocks.
 
 Important composition rules include: use semantic heading levels independently of visual type style; do not combine icon blocks with eyebrow text or inline heading icons; use inline icons rather than icon blocks with display-sized headings.
+
+### Tooltip
+Read `components/tooltip/rules.md` and `components/tooltip/examples.html`. Tooltip is for contextual, nonessential information and uses Bootstrap/Popper with Buckholt's documented offset and delay.
+
+The trigger must remain understandable and accessible without the Tooltip; do not hide essential instructions or validation inside it.
+
+### Versa-tile
+Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`. Versa-tile composes Icon block, Key-value, actions and optionally Progress bar into a compact repeatable item.
+
+Use whole-tile anchors only for navigation; otherwise keep item actions inside `.versatile-actions`.
 
 ## Runtime dependencies
 
