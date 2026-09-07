@@ -86,9 +86,15 @@ Do not phrase a Checkbox group as mutually exclusive when more than one option m
 
 ## JavaScript dependency
 
-The Checkbox Code & specs documentation explicitly identifies `form.js` as a Buckholt JavaScript enhancement dependency. That source file was not supplied in this ingestion batch, so this repository does not invent or reconstruct it.
+The supplied Buckholt `components/form/form.js` is now stored in this repository. It depends on jQuery and provides the documented Checkbox enhancement behaviour, including:
 
-Use the supplied Buckholt form JavaScript when available for documented enhanced behaviours such as non-native read-only handling and state synchronization. Do not replace those behaviours with speculative Buckholt-specific scripting.
+- converting `.indeterminate` examples to the native `indeterminate` property;
+- synchronising `.selected` examples with native checked state;
+- applying documented disabled/read-only/error demonstration states;
+- preventing clicks from changing `.form-check-input[readonly]`;
+- marking a `.input:has(.check-input)` as disabled when every checkbox/radio in it is disabled.
+
+Load this real source when those Buckholt behaviours are required. Do not reconstruct a different Checkbox-specific implementation.
 
 ## Composition
 
@@ -105,5 +111,5 @@ Read `components/form/`, `components/input-row/` and `components/dropdown/` when
 - Do not preselect options unless the product requirement provides a real default.
 - Use indeterminate only for partial parent/group selection.
 - Do not assume `readonly` works natively on checkboxes.
+- Load `components/form/form.js` for the supplied enhanced state behaviour when needed.
 - Do not recreate focus, error, disabled, selection or indeterminate styling with custom CSS.
-- Do not invent the missing `form.js`; use the real Buckholt source when it is available.
