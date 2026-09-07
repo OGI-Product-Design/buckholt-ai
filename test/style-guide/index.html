@@ -221,6 +221,7 @@
     .sg-shadow-cell { padding: var(--padding-04); }
 
     .sg-narrow { max-width: 22rem; }
+    .sg-contained { max-width: 34rem; }
 
     .sg-issue {
       margin-top: var(--spacer-04);
@@ -230,6 +231,8 @@
       border-radius: var(--border-radius-md);
       background-color: var(--ui-background-01);
     }
+
+    .sg-surface-dark { background-color: var(--ui-background-04); }
 
     @media (max-width: 62rem) {
       .sg-shell { grid-template-columns: minmax(0, 1fr); }
@@ -258,8 +261,16 @@
       <span class="label-01 sg-nav-heading">Components</span>
       <ul>
         <li><a class="body-01" href="#button">Button</a></li>
+        <li><a class="body-01" href="#card">Card</a></li>
+        <li><a class="body-01" href="#heading-attachment">Heading attachment</a></li>
+        <li><a class="body-01" href="#icon-block">Icon block</a></li>
+        <li><a class="body-01" href="#key-value-pair">Key-value pair</a></li>
         <li><a class="body-01" href="#link">Link</a></li>
+        <li><a class="body-01" href="#progress-bar">Progress bar</a></li>
+        <li><a class="body-01" href="#summary-meta">Summary Meta</a></li>
         <li><a class="body-01" href="#text-block">Text block</a></li>
+        <li><a class="body-01" href="#tooltip">Tooltip</a></li>
+        <li><a class="body-01" href="#versa-tile">Versa-tile</a></li>
       </ul>
       <span class="label-01 sg-nav-heading">Maintenance</span>
       <ul>
@@ -952,8 +963,8 @@
         <div class="sg-block">
           <h3 class="title-02">The <code>full</code> step, shown both ways</h3>
           <p class="body-02">
-            These two chips are the discrepancy, rendered side by side. The documentation's
-            <code>full</code> is 2rem; the runtime variable carrying that name is not.
+            These chips are the discrepancy, rendered side by side. The documentation's <code>full</code>
+            is 2rem; the runtime variable carrying that name is not.
           </p>
           <div class="sg-grid">
             <div class="sg-cell">
@@ -2376,6 +2387,527 @@
         </div>
       </section>
 
+      <section class="sg-section" id="card">
+        <div class="text-block">
+          <h2 class="headline-02">Card</h2>
+          <p class="body-02">
+            A container for related content, built from <code>.card</code> with a
+            <code>.card-body</code> inside. Cards compose other Buckholt components — Text block,
+            Key-value, Button — rather than restyling them, and their padding, radius, borders and
+            states come entirely from the runtime.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Core and secondary</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Core</span>
+              <div class="card">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Card title</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Secondary treatment</span>
+              <div class="card card-secondary">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Secondary card</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;div class="card"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;div class="text-block"&gt;
+      &lt;h3 class="title-03"&gt;Card title&lt;/h3&gt;
+      &lt;p&gt;Supporting content.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">With an image</h3>
+          <p class="support-01">
+            The images below are neutral placeholders supplied by this page so the layouts can be
+            inspected without external assets. Note the two different structures: the vertical card puts
+            <code>.card-img</code> on the <code>&lt;img&gt;</code> itself, while horizontal cards wrap the
+            image in a <code>.card-img</code> element.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Vertical</span>
+              <div class="card">
+                <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%23efefef'/%3E%3Cpath d='M0 360 L200 180 L340 300 L440 220 L640 360 Z' fill='%23dadada'/%3E%3Ccircle cx='470' cy='95' r='42' fill='%23dadada'/%3E%3C/svg%3E" class="card-img" alt="">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Card with image</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Horizontal, image left</span>
+              <div class="card card-horizontal">
+                <div class="card-img"><img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%23efefef'/%3E%3Cpath d='M0 360 L200 180 L340 300 L440 220 L640 360 Z' fill='%23dadada'/%3E%3Ccircle cx='470' cy='95' r='42' fill='%23dadada'/%3E%3C/svg%3E" alt=""></div>
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-02">Horizontal card</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Horizontal, image right</span>
+              <div class="card card-horizontal card-horizontal-right">
+                <div class="card-img"><img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%23efefef'/%3E%3Cpath d='M0 360 L200 180 L340 300 L440 220 L640 360 Z' fill='%23dadada'/%3E%3Ccircle cx='470' cy='95' r='42' fill='%23dadada'/%3E%3C/svg%3E" alt=""></div>
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-02">Horizontal card</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Clickable and selectable</h3>
+          <p class="body-02">
+            A whole-card link uses an <code>&lt;a&gt;</code> carrying <code>.card-clickable</code>, and
+            must not contain competing calls to action. Selectable cards pair
+            <code>.card-selectable</code> with a native radio or checkbox.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Clickable — whole-card navigation</span>
+              <a href="#card" class="card card-clickable">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Clickable card title</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Single select — radio</span>
+              <div class="card card-selectable">
+                <input class="form-check-input" type="radio" name="sg-card-selection" id="sg-card-radio-1">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Single select card title</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-selectable">
+                <input class="form-check-input" type="radio" name="sg-card-selection" id="sg-card-radio-2">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Second option</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Multi select — checkbox</span>
+              <div class="card card-selectable">
+                <input class="form-check-input" type="checkbox" id="sg-card-check-1">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-03">Multi select card title</h4>
+                    <p>Supporting content.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Emphasis tile</h3>
+          <p class="body-02">
+            An emphasis tile goes in a second <code>.card-body</code>, not inside the first.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <div class="card">
+                <div class="card-body">
+                  <div class="text-block">
+                    <h4 class="title-02">Card with emphasis tile</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="emphasis-tile">
+                    <div class="key-value key-value-stacked key-value-center">
+                      <span class="key">Emphasis tile</span>
+                      <span class="value">Content</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="heading-attachment">
+        <div class="text-block">
+          <h2 class="headline-02">Heading attachment</h2>
+          <p class="body-02">
+            An extension of Text block: <code>.heading</code> wraps a <code>.heading-content</code>
+            alongside one compact control. Use a single attachment that relates directly to the section,
+            reuse a documented component for it rather than building an ad-hoc toolbar, and keep the
+            semantic heading hierarchy intact.
+          </p>
+        </div>
+
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Close action</span>
+            <div class="text-block">
+              <div class="heading">
+                <div class="heading-content">
+                  <h3 class="headline-02">Heading text</h3>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+              </div>
+              <p>Supporting body content for the section.</p>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Standalone navigation link</span>
+            <div class="text-block">
+              <div class="heading">
+                <div class="heading-content">
+                  <h3 class="headline-02">Policies</h3>
+                </div>
+                <a class="link-standalone" href="#heading-attachment">View all</a>
+              </div>
+              <p>Supporting body content for the section.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Icon block inside the heading content</span>
+          <div class="text-block">
+            <div class="heading">
+              <div class="heading-content">
+                <div class="icon-block icon-block-xl">
+                  <i class="fa-regular fa-shield-check" aria-hidden="true"></i>
+                </div>
+                <h3 class="headline-02">Heading text</h3>
+              </div>
+              <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <p>Supporting body content for the section.</p>
+          </div>
+        </div>
+
+        <code class="sg-code body-01">&lt;div class="text-block"&gt;
+  &lt;div class="heading"&gt;
+    &lt;div class="heading-content"&gt;
+      &lt;h3 class="headline-02"&gt;Heading text&lt;/h3&gt;
+    &lt;/div&gt;
+    &lt;button type="button" class="btn-close" aria-label="Close"&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p&gt;Supporting body content for the section.&lt;/p&gt;
+&lt;/div&gt;</code>
+      </section>
+
+      <section class="sg-section" id="icon-block">
+        <div class="text-block">
+          <h2 class="headline-02">Icon block</h2>
+          <p class="body-02">
+            A contained icon used to grab attention, set tone or make sections easier to scan.
+            <code>.icon-block</code> is the base and defaults to medium; the documented size modifiers are
+            <code>xs</code>, <code>sm</code>, <code>lg</code>, <code>xl</code> and <code>xxl</code>.
+            Dimensions, radius and colour all come from the runtime.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Sizes</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Extra small</span>
+              <div class="icon-block icon-block-xs"><i class="fa-solid fa-sparkles" aria-hidden="true"></i></div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small</span>
+              <div class="icon-block icon-block-sm"><i class="fa-regular fa-car" aria-hidden="true"></i></div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Default / medium</span>
+              <div class="icon-block"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Large</span>
+              <div class="icon-block icon-block-lg"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Extra large</span>
+              <div class="icon-block icon-block-xl"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Extra extra large</span>
+              <div class="icon-block icon-block-xxl"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Expressive treatments</h3>
+          <p class="body-02">
+            Light and dark treatments across the expressive families. Primary is the default and takes no
+            family class — only secondary, tertiary and quaternary have modifiers.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Primary (default) — light, dark</span>
+              <div class="button-set">
+                <div class="icon-block expressive-light"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+                <div class="icon-block expressive-dark"><i class="fa-regular fa-rocket" aria-hidden="true"></i></div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Secondary — light, dark</span>
+              <div class="button-set">
+                <div class="icon-block expressive-light expressive-secondary"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+                <div class="icon-block expressive-dark expressive-secondary"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Tertiary — light, dark</span>
+              <div class="button-set">
+                <div class="icon-block expressive-light expressive-tertiary"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
+                <div class="icon-block expressive-dark expressive-tertiary"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Quaternary — light, dark</span>
+              <div class="button-set">
+                <div class="icon-block expressive-light expressive-quaternary"><i class="fa-regular fa-file" aria-hidden="true"></i></div>
+                <div class="icon-block expressive-dark expressive-quaternary"><i class="fa-regular fa-file" aria-hidden="true"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Inside a Text block</h3>
+          <p class="body-02">
+            Composition follows the Text block rules: the default size pairs with title headings and
+            <code>.icon-block-xl</code> with headline headings.
+          </p>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Title heading, default size</span>
+              <div class="text-block">
+                <div class="icon-block"><i class="fa-regular fa-location-dot" aria-hidden="true"></i></div>
+                <h3 class="title-03">Location</h3>
+                <p>Supporting content for this section.</p>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Headline heading, extra large</span>
+              <div class="text-block">
+                <div class="icon-block icon-block-xl"><i class="fa-regular fa-location-dot" aria-hidden="true"></i></div>
+                <h3 class="headline-02">Where to locate us</h3>
+                <p>Supporting content for this section.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="key-value-pair">
+        <div class="text-block">
+          <h2 class="headline-02">Key-value pair</h2>
+          <p class="body-02">
+            A label and its data value, bound together with a consistent relationship.
+            <code>.key-value</code> wraps a <code>.key</code> and a <code>.value</code>; the documented
+            forms cover stacked, list, row, grid and table layouts, plus a size range.
+          </p>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Single pair</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Inline (default)</span>
+              <div class="key-value">
+                <span class="key">Policy number</span>
+                <span class="value">FPM60129587462HI</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Stacked</span>
+              <div class="key-value key-value-stacked">
+                <span class="key">Policy number</span>
+                <span class="value">FPM60129587462HI</span>
+              </div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;div class="key-value key-value-stacked"&gt;
+  &lt;span class="key"&gt;Policy number&lt;/span&gt;
+  &lt;span class="value"&gt;FPM60129587462HI&lt;/span&gt;
+&lt;/div&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Lists</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Vertical list</span>
+              <div class="key-value-list">
+                <div class="key-value">
+                  <span class="key">Name</span>
+                  <span class="value">Rick Deckard</span>
+                </div>
+                <div class="key-value">
+                  <span class="key">Date of birth</span>
+                  <span class="value">23rd January 1986</span>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Row list</span>
+              <div class="key-value-list key-value-list-row">
+                <div class="key-value">
+                  <span class="key">Key</span>
+                  <span class="value">Value</span>
+                </div>
+                <div class="key-value">
+                  <span class="key">Key</span>
+                  <span class="value">Value</span>
+                </div>
+                <div class="key-value">
+                  <span class="key">Key</span>
+                  <span class="value">Value</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Grid</h3>
+          <p class="support-01">
+            The grid takes its column count from the <code>--columns</code> custom property on the
+            element, as shown in the canonical example.
+          </p>
+          <div class="grid key-value-grid" style="--columns: 3;">
+            <div class="key-value-item">
+              <div class="key-value key-value-stacked">
+                <span class="key">Name</span>
+                <span class="value">Rick Deckard</span>
+              </div>
+            </div>
+            <div class="key-value-item">
+              <div class="key-value key-value-stacked">
+                <span class="key">Date of birth</span>
+                <span class="value">23rd January 1986</span>
+              </div>
+            </div>
+            <div class="key-value-item">
+              <div class="key-value key-value-stacked">
+                <span class="key">Status</span>
+                <span class="value">Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Table</h3>
+          <p class="body-02">
+            Where real tabular semantics are needed, keep semantic table markup. The
+            <code>.key-value-table</code> form below is the documented presentational grouping, using
+            <code>&lt;hr&gt;</code> to separate groups.
+          </p>
+          <div class="sg-panel">
+            <div class="key-value-table">
+              <div class="key-value">
+                <span class="key">Name</span>
+                <span class="value">Rick Deckard</span>
+              </div>
+              <div class="key-value">
+                <span class="key">Date of birth</span>
+                <span class="value">23rd January 1986</span>
+              </div>
+              <hr>
+              <div class="key-value">
+                <span class="key">Address</span>
+                <span class="value">15 Medley Road, Rayne, Essex CM77 6TQ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Sizes</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Extra small</span>
+              <div class="key-value key-value-stacked key-value-xs">
+                <span class="key">Key</span>
+                <span class="value">Extra small</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small</span>
+              <div class="key-value key-value-stacked key-value-sm">
+                <span class="key">Key</span>
+                <span class="value">Small</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Default</span>
+              <div class="key-value key-value-stacked">
+                <span class="key">Key</span>
+                <span class="value">Default</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Large</span>
+              <div class="key-value key-value-stacked key-value-lg">
+                <span class="key">Key</span>
+                <span class="value">Large</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Extra large</span>
+              <div class="key-value key-value-stacked key-value-xl">
+                <span class="key">Key</span>
+                <span class="value">Extra large</span>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Display</span>
+              <div class="key-value key-value-stacked key-value-display">
+                <span class="key">Key</span>
+                <span class="value">Display</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="link">
         <div class="text-block">
           <h2 class="headline-02">Link</h2>
@@ -2505,6 +3037,191 @@
         </div>
       </section>
 
+      <section class="sg-section" id="progress-bar">
+        <div class="text-block">
+          <h2 class="headline-02">Progress bar</h2>
+          <p class="body-02">
+            Communicates that something is underway and, where it can be measured, how far along it is.
+            <code>.progress</code> holds a child <code>.progress-bar</code>; wrap the whole thing in
+            <code>.progress-container</code> whenever a label, note or feedback is present. Default height
+            is 8px and <code>.progress-sm</code> is 4px.
+          </p>
+        </div>
+        <ul class="sg-rules body-02">
+          <li>Always give progress a meaningful label.</li>
+          <li>Determinate progress must expose real <code>aria-valuenow</code>, <code>aria-valuemin</code> and <code>aria-valuemax</code>.</li>
+          <li>Use <code>.progress-bar-indeterminate</code> when progress cannot be measured — never invent a number.</li>
+          <li>Status uses <code>.is-valid</code> for success and <code>.is-invalid</code> with <code>.invalid-feedback</code> for error.</li>
+        </ul>
+
+        <div class="sg-block">
+          <h3 class="title-02">Determinate</h3>
+          <div class="sg-panel">
+            <div class="progress-container">
+              <div class="progress-header">
+                <label for="sg-progress-basic" class="progress-label">Uploading files</label>
+                <span class="progress-note">50%</span>
+              </div>
+              <div id="sg-progress-basic" class="progress" role="progressbar"
+                   aria-label="Uploading files"
+                   aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+              <small class="progress-helper">5 of 10 files uploaded</small>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;div class="progress-container"&gt;
+  &lt;div class="progress-header"&gt;
+    &lt;label for="progress-basic" class="progress-label"&gt;Uploading files&lt;/label&gt;
+    &lt;span class="progress-note"&gt;50%&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div id="progress-basic" class="progress" role="progressbar"
+       aria-label="Uploading files"
+       aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"&gt;
+    &lt;div class="progress-bar" style="width: 50%"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;small class="progress-helper"&gt;5 of 10 files uploaded&lt;/small&gt;
+&lt;/div&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Small, and indeterminate</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Small — 4px</span>
+              <div class="progress progress-sm" role="progressbar"
+                   aria-label="Compact progress"
+                   aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Indeterminate — no numeric value</span>
+              <div class="progress-container">
+                <div class="progress-header">
+                  <label for="sg-progress-indeterminate" class="progress-label">Processing</label>
+                </div>
+                <div id="sg-progress-indeterminate" class="progress" role="progressbar" aria-label="Processing">
+                  <div class="progress-bar progress-bar-indeterminate"></div>
+                </div>
+                <small class="progress-helper">This may take a moment.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Status and inactive</h3>
+          <div class="sg-grid">
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Success</span>
+              <div class="progress-container">
+                <div class="progress-header">
+                  <label for="sg-progress-success" class="progress-label">Upload complete</label>
+                </div>
+                <div id="sg-progress-success" class="progress is-valid" role="progressbar"
+                     aria-label="Upload complete"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Error</span>
+              <div class="progress-container">
+                <div class="progress-header">
+                  <label for="sg-progress-error" class="progress-label">Upload failed</label>
+                </div>
+                <div id="sg-progress-error" class="progress is-invalid" role="progressbar"
+                     aria-label="Upload failed"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar"></div>
+                </div>
+                <div class="invalid-feedback">The upload could not be completed. Try again.</div>
+              </div>
+            </div>
+            <div class="sg-cell">
+              <span class="label-01 sg-caption">Inactive</span>
+              <div class="progress progress-inactive" role="progressbar" aria-label="Inactive process">
+                <div class="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sg-section" id="summary-meta">
+        <div class="text-block">
+          <h2 class="headline-02">Summary Meta</h2>
+          <p class="body-02">
+            A compact identity summary: an Icon block followed by a <code>.summary-meta-body</code>.
+            Content should stay short and scan-friendly, and the nested components are reused rather than
+            restyled. <code>.summary-meta-stacked</code> gives the vertical, centred form.
+          </p>
+        </div>
+
+        <div class="sg-grid">
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Standard</span>
+            <div class="summary-meta">
+              <div class="icon-block icon-block-xxl expressive-dark expressive-primary">
+                <i class="fa-regular fa-car" aria-hidden="true"></i>
+              </div>
+              <div class="summary-meta-body">
+                <h3 class="summary-meta-headline">AK67 NLR</h3>
+                <div class="summary-meta-label">Hyundai Santa Fe</div>
+                <p class="summary-meta-text">2.0 TDI 4Motion R-Line 5dr DSG</p>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">With Key-value content</span>
+            <div class="summary-meta">
+              <div class="icon-block icon-block-xxl">
+                <i class="fa-regular fa-house" aria-hidden="true"></i>
+              </div>
+              <div class="summary-meta-body">
+                <div class="key-value">
+                  <span class="key">Policy number</span>
+                  <span class="value">FPM60129587462HI</span>
+                </div>
+                <p class="summary-meta-text">Insurance provided by <strong>Best Home Insurance</strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="sg-cell">
+            <span class="label-01 sg-caption">Stacked</span>
+            <div class="summary-meta summary-meta-stacked">
+              <div class="icon-block icon-block-xxl expressive-dark expressive-primary">
+                <i class="fa-regular fa-house" aria-hidden="true"></i>
+              </div>
+              <div class="summary-meta-body">
+                <div class="key-value">
+                  <span class="key">Policy number</span>
+                  <span class="value">FPM60129587462HI</span>
+                </div>
+                <p class="summary-meta-text">Insurance provided by <strong>Best Home Insurance</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Known issue — <code>expressive-primary</code> is inert</h3>
+            <p class="body-02">
+              The canonical Summary Meta markup above carries
+              <code>expressive-dark expressive-primary</code>, but no <code>.expressive-primary</code>
+              rule exists in the runtime. Primary is the root default, and only
+              <code>.expressive-secondary</code>, <code>.expressive-tertiary</code> and
+              <code>.expressive-quaternary</code> override it — so the class is a no-op. Rendering is
+              correct, but the markup implies a family modifier is required when it is not. Recorded in
+              <code>discrepancies/known-issues.md</code>; the documented markup is used here unchanged.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="sg-section" id="text-block">
         <div class="text-block">
           <h2 class="headline-02">Text block</h2>
@@ -2630,6 +3347,194 @@
         </div>
       </section>
 
+      <section class="sg-section" id="tooltip">
+        <div class="text-block">
+          <h2 class="headline-02">Tooltip</h2>
+          <p class="body-02">
+            Contextual, nonessential information attached to a real trigger. Tooltips are a Bootstrap
+            behaviour that Buckholt styles: put <code>data-bs-toggle="tooltip"</code> and
+            <code>data-bs-title</code> on the trigger itself, and never author the generated
+            <code>.tooltip</code> markup by hand.
+          </p>
+        </div>
+        <ul class="sg-rules body-02">
+          <li>The trigger must remain understandable and accessible on its own.</li>
+          <li>Never hide essential instructions or validation only in a Tooltip.</li>
+          <li><code>data-bs-placement</code> takes <code>top</code>, <code>right</code>, <code>bottom</code> or <code>left</code>.</li>
+          <li>Initialise with Buckholt's documented <code>offset</code> and <code>delay</code> options.</li>
+        </ul>
+
+        <div class="sg-panel">
+          <span class="label-01 sg-caption">Placements — hover each button</span>
+          <p class="support-01">
+            The documented delay is 800ms before showing, so hold the pointer still for a moment.
+          </p>
+          <div class="button-set">
+            <button type="button" class="btn btn-secondary"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Tooltip on top">
+              <span class="button-label">Tooltip on top</span>
+            </button>
+            <button type="button" class="btn btn-secondary"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="right"
+                    data-bs-title="Tooltip on right">
+              <span class="button-label">Tooltip on right</span>
+            </button>
+            <button type="button" class="btn btn-secondary"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="Tooltip on bottom">
+              <span class="button-label">Tooltip on bottom</span>
+            </button>
+            <button type="button" class="btn btn-secondary"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="left"
+                    data-bs-title="Tooltip on left">
+              <span class="button-label">Tooltip on left</span>
+            </button>
+          </div>
+        </div>
+
+        <code class="sg-code body-01">&lt;button type="button" class="btn btn-secondary"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        data-bs-title="Tooltip on top"&gt;
+  &lt;span class="button-label"&gt;Tooltip on top&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;script&gt;
+const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
+  return new bootstrap.Tooltip(el, {
+    offset: [0, 4],
+    delay: { show: 800, hide: 100 }
+  });
+});
+&lt;/script&gt;</code>
+        <p class="support-01">
+          This page initialises every tooltip with exactly those options, including the icon-only button
+          tooltips in the Button section.
+        </p>
+      </section>
+
+      <section class="sg-section" id="versa-tile">
+        <div class="text-block">
+          <h2 class="headline-02">Versa-tile</h2>
+          <p class="body-02">
+            A flexible row for listing items. <code>.versatile</code> holds a
+            <code>.versatile-content</code> wrapping a <code>.versatile-body</code> and an optional
+            <code>.versatile-actions</code>, with item detail inside <code>.versatile-meta</code>.
+            It composes Icon block, Key-value, Button, Link and Progress bar rather than making local
+            equivalents.
+          </p>
+        </div>
+        <ul class="sg-rules body-02">
+          <li>Actions must be specific to the item they sit beside.</li>
+          <li>Use <code>a.versatile</code> only for whole-tile navigation, with no competing interactive controls inside.</li>
+          <li>Use the real Progress bar component when progress appears.</li>
+          <li>Do not invent padding, border, radius, action spacing or hover styling.</li>
+        </ul>
+
+        <div class="sg-block">
+          <h3 class="title-02">Basic, with an Icon block and Key-value</h3>
+          <div class="versatile">
+            <div class="versatile-content">
+              <div class="versatile-body">
+                <div class="icon-block">
+                  <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                </div>
+                <div class="versatile-meta">
+                  <div class="versatile-label">Versa-tile label</div>
+                  <div class="key-value">
+                    <span class="key">Key</span>
+                    <span class="value">Value</span>
+                  </div>
+                </div>
+              </div>
+              <div class="versatile-actions"></div>
+            </div>
+          </div>
+          <code class="sg-code body-01">&lt;div class="versatile"&gt;
+  &lt;div class="versatile-content"&gt;
+    &lt;div class="versatile-body"&gt;
+      &lt;div class="icon-block"&gt;
+        &lt;i class="fa-regular fa-file-lines" aria-hidden="true"&gt;&lt;/i&gt;
+      &lt;/div&gt;
+      &lt;div class="versatile-meta"&gt;
+        &lt;div class="versatile-label"&gt;Versa-tile label&lt;/div&gt;
+        &lt;div class="key-value"&gt;
+          &lt;span class="key"&gt;Key&lt;/span&gt;
+          &lt;span class="value"&gt;Value&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="versatile-actions"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">With item actions</h3>
+          <div class="versatile">
+            <div class="versatile-content">
+              <div class="versatile-body">
+                <div class="versatile-meta">
+                  <div class="versatile-label">Policy item</div>
+                  <div class="key-value">
+                    <span class="key">Reference</span>
+                    <span class="value">ABC123</span>
+                  </div>
+                </div>
+              </div>
+              <div class="versatile-actions">
+                <button type="button" class="btn btn-ghost">
+                  <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                  <span class="button-label">Edit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">With progress</h3>
+          <div class="versatile">
+            <div class="versatile-content">
+              <div class="versatile-body">
+                <div class="versatile-meta">
+                  <div class="versatile-label">Processing item</div>
+                </div>
+              </div>
+              <div class="versatile-actions"></div>
+            </div>
+            <div class="progress progress-sm" role="progressbar"
+                 aria-label="Versa-tile progress"
+                 aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: 50%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3 class="title-02">Whole-tile navigation</h3>
+          <p class="body-02">
+            An anchor carrying <code>.versatile</code>. Because the whole tile is the link, it contains no
+            other interactive controls.
+          </p>
+          <a class="versatile" href="#versa-tile">
+            <div class="versatile-content">
+              <div class="versatile-body">
+                <div class="versatile-meta">
+                  <div class="versatile-label">Navigational item</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
       <section class="sg-section" id="issues">
         <div class="text-block">
           <h2 class="headline-02">Known runtime issues</h2>
@@ -2668,6 +3573,18 @@
 
         <div class="sg-issue">
           <div class="text-block">
+            <h3 class="title-02">Summary Meta uses an inert <code>expressive-primary</code> class</h3>
+            <p class="body-02">
+              <code>components/summary-meta/rules.md</code> and its <code>examples.html</code> both write
+              <code>expressive-dark expressive-primary</code>, but no <code>.expressive-primary</code>
+              rule exists. Primary is the root default and only secondary, tertiary and quaternary have
+              modifiers, so the class does nothing. Rendering is correct; the markup is misleading.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
             <h3 class="title-02">Radius <code>full</code> name and value disagree</h3>
             <p class="body-02">
               The documentation defines <code>full</code> as <code>2rem</code> / 32px. The runtime
@@ -2680,11 +3597,17 @@
     </main>
   </div>
 
-  <!-- Bootstrap JS bundle: required for the documented icon-only button tooltips. -->
+  <!-- Bootstrap JS bundle: required for the documented Tooltip behaviour. -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      .forEach(function (el) { new bootstrap.Tooltip(el); });
+    // Buckholt's documented Tooltip initialisation.
+    const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltips = Array.from(tooltipTriggers).map(el => {
+      return new bootstrap.Tooltip(el, {
+        offset: [0, 4],
+        delay: { show: 800, hide: 100 }
+      });
+    });
   </script>
 </body>
 </html>

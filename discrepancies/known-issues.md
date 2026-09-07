@@ -76,3 +76,25 @@ Measured after a mouse click, with the pointer moved off the button:
 While the pointer remains over the button, Buckholt's `:hover` rule still wins the background, so only the Bootstrap focus ring is visible. Once the pointer leaves, the full Bootstrap fill appears. Secondary is the most obvious case because Bootstrap's grey diverges furthest from the Buckholt palette, but every variant is affected. Keyboard focus is unaffected and renders the documented Buckholt treatment, including the `#1748d0` focus ring.
 
 Treat the Buckholt focus tokens as canonical; the Bootstrap colours are not a Buckholt state. Do not add local one-off `:focus` overrides in generated product UI to compensate, and do not override the state colours in test pages to make a screenshot look right. The runtime should be corrected deliberately, by having Buckholt style `:focus` alongside `:focus-visible` for `.btn`, or by explicitly neutralising Bootstrap's `:focus` treatment for the reused button classes.
+
+## Summary Meta uses an inert `expressive-primary` class
+
+`components/summary-meta/rules.md` and `components/summary-meta/examples.html` both write the Icon block as:
+
+```html
+<div class="icon-block icon-block-xxl expressive-dark expressive-primary">
+```
+
+No `.expressive-primary` rule exists in the compiled runtime. The primary expressive family is the root default:
+
+```css
+--expressive-deep: #1748d0;
+--expressive-rich: #092676;
+--expressive-pale-overlay: rgba(15, 64, 197, 0.1);
+```
+
+and only `.expressive-secondary`, `.expressive-tertiary` and `.expressive-quaternary` override it. `components/icon-block/examples.html` is consistent with the runtime here, labelling the primary treatment as plain `.icon-block.expressive-light` / `.icon-block.expressive-dark` with no family class.
+
+Rendering is therefore correct, because the intended default already applies. The problem is that the markup implies a family modifier is required when none exists, which invites agents to invent matching classes for other families or to assume `.expressive-primary` is a real API.
+
+Either add `.expressive-primary` to the runtime as an explicit no-op alias for the default, or drop it from the Summary Meta documentation so the two components describe the default the same way. Do not add a local override to compensate.
