@@ -1,0 +1,30 @@
+<!-- Buckholt Breadcrumb canonical examples -->
+
+<!-- Standard location/path trail -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="#">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="#">Components</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="#">Navigation</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Breadcrumb</li>
+  </ol>
+</nav>
+
+<!-- Custom divider using the documented CSS custom property -->
+<nav aria-label="breadcrumb" style="--breadcrumb-divider-icon: '>';">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="#">Insurance</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Car</li>
+  </ol>
+</nav>
+
+<!-- Long Breadcrumb trails should use the documented Overflow menu pattern.
+     Do not manually wrap or insert arbitrary ellipsis text. -->
