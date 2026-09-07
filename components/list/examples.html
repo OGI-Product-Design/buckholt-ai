@@ -1,61 +1,68 @@
-<!-- Unordered list -->
+<!-- Extracted verbatim from Buckholt List: Code & specs. Do not alter canonical DOM structure. -->
+
+<!-- List base code -->
 <ul class="list">
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
-  <li class="list-item">List item</li>
+    <li class="list-item">List item</li>
+    <li class="list-item">List item</li>
+    <li class="list-item">List item</li>
 </ul>
 
-<!-- Ordered list -->
 <ol class="list">
-  <li class="list-item">First item</li>
-  <li class="list-item">Second item</li>
-  <li class="list-item">Third item</li>
+    ...
+</ol>
+
+<!-- Level 2 items -->
+<ul class="list">
+    <li class="list-item">
+        List item
+        <ul>
+            <li class="list-item">Level 2 item</li>
+            <li class="list-item">Level 2 item</li>
+        </ul>
+    </li>
+    <li class="list-item">List item</li>
+    <li class="list-item">List item</li>
+</ul>
+
+<ol class="list">
+    <li class="list-item">
+        List item
+        <ol>
+            <li class="list-item">Level 2 item</li>
+            <li class="list-item">Level 2 item</li>
+        </ol>
+    </li>
+    <li class="list-item">List item</li>
+    <li class="list-item">List item</li>
 </ol>
 
 <!-- List heading -->
-<ul class="list">
-  <li class="list-heading">Shopping list</li>
-  <li class="list-item">Milk</li>
-  <li class="list-item">Bread</li>
-</ul>
+<li class="list-heading" value="0">List heading</li>
 
-<!-- Ordered list with heading; visible numbering begins at 1 -->
-<ol class="list">
-  <li class="list-heading" value="0">Steps</li>
-  <li class="list-item">First step</li>
-  <li class="list-item">Second step</li>
-</ol>
-
-<!-- Nested list -->
-<ul class="list">
-  <li class="list-item">Parent item
-    <ul class="list">
-      <li class="list-item">Nested item</li>
-      <li class="list-item">Nested item</li>
-    </ul>
-  </li>
-</ul>
-
-<!-- Unstyled list preserving semantic list structure -->
+<!-- Unstyled list -->
 <ul class="list list-unstyled">
-  <li class="list-heading">Settings</li>
-  <li class="list-item">Account</li>
-  <li class="list-item">Notifications</li>
+    ...
 </ul>
 
-<!-- Icon list -->
+<!-- Icons -->
 <ul class="list">
-  <li class="list-heading">Checks</li>
-  <li class="list-item">
-    <span class="list-icon text-success">
-      <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-    </span>
-    Complete
-  </li>
-  <li class="list-item">
-    <span class="list-icon text-error">
-      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-    </span>
-    Needs attention
-  </li>
+    <li class="list-heading">List heading</li>
+    <li class="list-item">
+        <span class="list-icon text-success">
+            <i class="fa-solid fa-circle-check"></i>
+        </span>
+        List item
+    </li>
+    <li class="list-item">
+        <span class="list-icon text-success">
+            <i class="fa-solid fa-circle-check"></i>
+        </span>
+        List item
+    </li>
+    <li class="list-item">
+        <span class="list-icon text-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+        </span>
+        List item
+    </li>
 </ul>
