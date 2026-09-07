@@ -251,3 +251,26 @@ The compatibility layer restores `box-sizing: border-box` on `.btn-close` and in
 - **Slider.** Nothing synchronises the range input with its paired number field; `form.js` covers the stepper buttons but not the slider.
 
 Either these need their scripts adding to the repository, or the documentation should state that they are product responsibilities.
+
+### Second pass: more Bootstrap bleed-through found by the parity audit
+
+Each of these follows the same pattern established by the Button focus issue. Buckholt does not declare a property, or declares it at lower specificity than Bootstrap's equivalent, so Bootstrap's value survives. None is a load-order or bundling problem. All are corrected in `css/buckholt-ai-fixes.css`.
+
+| Component | What was wrong | Cause |
+| --- | --- | --- |
+| Accordion | Second and later items lost their top border | `.accordion-item:not(:first-of-type){border-top:0}` is more specific than Buckholt's `.accordion-item` |
+| Accordion | Outer corners rendered 4px instead of the 8px `--accordion-radius` | Bootstrap's `:first-of-type` / `:last-of-type` corner rules |
+| Accordion | Open item showed a thin blue chevron | Bootstrap's `.accordion-button:not(.collapsed)::after` supplies its own `#0c63e4` icon; Buckholt sets only the rotation and never resets the image |
+| Accordion | Dark line under an open header | Bootstrap's `inset 0 -1px 0 rgba(0,0,0,.125)` on the same rule |
+| Modal | Padding far too large, plus grey divider lines | `.modal-content` already supplies 2rem padding and 1.5rem gaps; Buckholt declares no padding on header/body/footer, so Bootstrap's 1rem/1rem/.75rem and `#dee2e6` borders apply on top |
+| Toast | Icon out of line with the message | Buckholt's `.toast-body` sets typography only, so Bootstrap's `.toast-body{padding:.75rem}` indents the text. Alert has no Bootstrap equivalent, which is why the identical structure lines up there |
+| Table | Black rule above the table body | `.table > :not(:first-child){border-top:2px solid currentColor}` outranks Buckholt's `.table > tbody`, and `currentColor` resolves to the near-black text colour |
+| Dropdown | Two arrows | Buckholt draws a right-edge background arrow but never suppresses Bootstrap's `.dropdown-toggle::after` triangle |
+| Alert | Close button 48x52 and flush to the corner | `.btn-close` is content-box at 2rem with zero padding; the Bootstrap-inherited `.alert-dismissible` rule re-adds padding, inflating it |
+
+The consistent lesson is that Buckholt overrides Bootstrap by *redeclaring* properties, so any property Bootstrap sets that Buckholt does not redeclare survives. A systematic pass over the compiled build against Bootstrap 5.1.3 would likely find more of these than a component-by-component visual audit will.
+
+### Not defects
+
+- **Submenu appearing behind a neighbouring panel** was caused by the style guide placing three independently open menu panels side by side for display. The submenu now has its own row. Buckholt's own z-index is fine.
+- **Page navigation with icons** is described in the rules as "icons may be used where documented", but no canonical markup exists in `components/page-navigation/examples.html`. Not implemented rather than implemented wrongly; add a documented example if the variant is real.

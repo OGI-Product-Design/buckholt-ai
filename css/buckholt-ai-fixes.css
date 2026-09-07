@@ -155,3 +155,97 @@ a.link-standalone:visited .icon {
   top: var(--alert-padding-y);
   right: var(--alert-padding-x);
 }
+
+/* ============================================================================
+   ACCORDION — Bootstrap item and icon rules bleed through
+   Source: Buckholt Accordion documentation and runtime variables
+   Issue: Buckholt renders each `.accordion-item` as a separate card with a
+          full border and `--accordion-radius`, separated by `--accordion-spacing`.
+          Bootstrap's `:first-of-type` / `:not(:first-of-type)` / `:last-of-type`
+          rules are more specific, so they strip the top border from every item
+          after the first and force `.25rem` corner radii on the outer items.
+          Bootstrap also supplies its own blue chevron for the expanded state,
+          which Buckholt never resets - it only sets the rotation - so an open
+          item shows Bootstrap's thin `#0c63e4` chevron instead of the Buckholt
+          Font Awesome one, and Bootstrap's inset shadow draws a dark line under
+          an open header.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.accordion-item:not(:first-of-type) {
+  border-top: var(--accordion-border-width) solid var(--accordion-border);
+}
+
+.accordion-item:first-of-type,
+.accordion-item:last-of-type {
+  border-radius: var(--accordion-radius);
+}
+
+.accordion-item:first-of-type .accordion-button,
+.accordion-item:last-of-type .accordion-button,
+.accordion-item:last-of-type .accordion-button.collapsed,
+.accordion-item:last-of-type .accordion-collapse {
+  border-radius: 0;
+}
+
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: var(--accordion-icon);
+}
+
+/* ============================================================================
+   MODAL — Bootstrap section padding and dividers bleed through
+   Source: Buckholt Modal documentation and runtime variables
+   Issue: `.modal-content` already supplies `--modal-padding` (2rem) and
+          `--modal-spacing` (1.5rem) between its sections. Buckholt declares no
+          padding on `.modal-header`, `.modal-body` or `.modal-footer`, so
+          Bootstrap's own padding (1rem, 1rem, .75rem) applies on top, and its
+          `#dee2e6` header/footer divider borders appear as lines Buckholt does
+          not use.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  padding: 0;
+  border: 0;
+}
+
+/* ============================================================================
+   TOAST — icon sits out of line with the message
+   Source: Buckholt Toast documentation; compare with the identical Alert rules
+   Issue: Buckholt's `.toast-body` sets typography only. Bootstrap's
+          `.toast-body { padding: .75rem }` therefore applies, indenting the
+          message away from `.toast-icon`, which is aligned to the content box.
+          Alert has no equivalent Bootstrap rule, which is why the same
+          structure lines up correctly there.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.toast-body {
+  padding: 0;
+}
+
+/* ============================================================================
+   TABLE — black rule above the table body
+   Source: Buckholt Table documentation and runtime border variables
+   Issue: Bootstrap's `.table > :not(:first-child) { border-top: 2px solid
+          currentColor }` is more specific than Buckholt's `.table > tbody`,
+          which sets vertical alignment only. `currentColor` resolves to the
+          table text colour, so a 2px near-black rule is drawn above `tbody`.
+          Buckholt draws its own separation with the `.table-gap` row and
+          `--table-border`.
+   Status: verified runtime discrepancy; compatibility fix applied here
+   Tracking: discrepancies/known-issues.md
+   ============================================================================ */
+
+.table > :not(:first-child) {
+  border-top: 0;
+}

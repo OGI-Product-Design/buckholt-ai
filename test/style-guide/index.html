@@ -236,6 +236,12 @@
 
     .sg-shadow-cell { padding: var(--padding-04); }
 
+    .sg-menu-grid > .sg-cell { min-width: 0; }
+
+    .sg-submenu-demo { position: relative; z-index: 1; }
+
+    .sg-submenu-demo .menu-panel { max-width: 18rem; }
+
     .sg-narrow { max-width: 22rem; }
     .sg-contained { max-width: 34rem; }
 
@@ -4002,28 +4008,13 @@
             they can be inspected in place rather than on a trigger.
           </p>
         </div>
-        <div class="sg-grid">
+        <div class="sg-grid sg-menu-grid">
           <div class="sg-cell">
             <span class="label-01 sg-caption">Basic panel</span>
             <div class="menu-panel dropdown-menu show position-relative">
               <ul class="menu-body" role="menu">
                 <li><button class="menu-item" type="button">My summary</button></li>
                 <li><button class="menu-item" type="button">Account information</button></li>
-              </ul>
-            </div>
-          </div>
-          <div class="sg-cell">
-            <span class="label-01 sg-caption">Submenu</span>
-            <div class="menu-panel dropdown-menu show position-relative">
-              <ul class="menu-body" role="menu">
-                <li>
-                  <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">Share</button>
-                  <ul class="submenu" role="menu">
-                    <li><button class="menu-item" type="button">Email</button></li>
-                    <li><button class="menu-item" type="button">Message</button></li>
-                  </ul>
-                </li>
-                <li><button class="menu-item" type="button">Another action</button></li>
               </ul>
             </div>
           </div>
@@ -4037,6 +4028,22 @@
                 <li><button class="menu-item" type="button">Logout</button></li>
               </ul>
             </div>
+          </div>
+        </div>
+
+        <div class="sg-panel sg-submenu-demo">
+          <span class="label-01 sg-caption">Submenu — given its own row so the flyout has space to open</span>
+          <div class="menu-panel dropdown-menu show position-relative">
+            <ul class="menu-body" role="menu">
+              <li>
+                <button class="menu-item submenu-toggle" type="button" aria-haspopup="menu">Share</button>
+                <ul class="submenu" role="menu">
+                  <li><button class="menu-item" type="button">Email</button></li>
+                  <li><button class="menu-item" type="button">Message</button></li>
+                </ul>
+              </li>
+              <li><button class="menu-item" type="button">Another action</button></li>
+            </ul>
           </div>
         </div>
       </section>
