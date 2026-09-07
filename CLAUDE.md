@@ -46,40 +46,19 @@ Read `foundations/iconography/rules.md` and `foundations/iconography/catalogue.m
 Read `foundations/radius/rules.md` before adding or changing border radius. Prefer the documented scale and the radius already applied by the component. Additional runtime values can be used where an existing Buckholt implementation requires them.
 
 ### Shadows
-Read `foundations/shadows/rules.md` before adding elevation.
-
-Rules:
-- use shadows only for genuinely elevated UI;
-- use documented Buckholt shadow tokens/classes rather than arbitrary `box-shadow` values;
-- lighter elevation should use lighter shadows and higher layers may use heavier shadows;
-- feedback shadows must follow the corresponding Buckholt feedback state.
+Read `foundations/shadows/rules.md` before adding elevation. Use documented tokens/classes, keep elevation purposeful, and map feedback shadows to the relevant state.
 
 ### Spacing
-Read `foundations/spacing/rules.md` before introducing margins, padding or gaps.
-
-Rules:
-- prefer Buckholt spacing tokens instead of hard-coded `px`/`rem` values;
-- read the relevant component/pattern documentation before changing its internal spacing;
-- use the shared `--spacer-*` scale and dedicated `--padding-*` / `--margin-*` tokens as documented;
-- do not choose spacing solely because it looks close.
+Read `foundations/spacing/rules.md` before introducing margins, padding or gaps. Prefer Buckholt spacing tokens, and do not alter a component's internal spacing before reading its own guidance.
 
 ### Typography
-Read both:
-- `foundations/typography/rules.md`
-- `foundations/typography/type-sets.md`
+Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`.
 
-Rules:
-- use Buckholt's documented `Proxima-soft, Arial, sans-serif` stack through the runtime;
-- choose typography by documented content role, then use the corresponding Buckholt type-set class;
-- preserve the documented size, weight, line height and letter spacing of that type set;
-- use semantic HTML according to document structure; do not choose `h1`–`h6` tags merely to get a particular visual size;
-- prefer documented Buckholt classes such as `.display-03`, `.headline-02`, `.title-01`, `.body-02`, `.support-01`, `.action-01`, `.label-02`, `.key-01` and `.value-01` where their documented role fits;
-- do not treat Bootstrap `.display-*`, `.fs-*` or generic heading helpers present in the compiled CSS as canonical Buckholt typography choices unless Buckholt documentation/component guidance explicitly uses them;
-- do not invent a new Buckholt type set if the documented set does not cover the requirement; flag the gap instead.
+Use Buckholt's `Proxima-soft, Arial, sans-serif` stack through the runtime. Choose typography by documented content role, keep semantic HTML hierarchy separate from visual type class, and prefer Buckholt classes such as `.display-*`, `.headline-*`, `.title-*`, `.body-*`, `.support-*`, `.action-*`, `.label-*`, `.key-*` and `.value-*` where documented. Do not treat Bootstrap `.display-*`, `.fs-*` or generic heading helpers as canonical Buckholt typography.
 
 ## Custom CSS
 
-Custom CSS may be used for page/demo layout only when necessary. It must not be used to recreate or override Buckholt component styling simply to make an implementation look right.
+Custom CSS may be used for page/demo layout only when necessary. It must not recreate or override Buckholt component styling simply to make an implementation look right.
 
 ## Runtime dependencies
 
@@ -90,7 +69,7 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
+For Bootstrap-driven Buckholt behaviour such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -99,286 +78,126 @@ For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown me
 ## Current component coverage
 
 ### Accordion
-Read `components/accordion/rules.md`, `components/accordion/examples.html` and Text block guidance.
-
-Rules:
-- use the documented `.accordion`, `.accordion-item`, `.accordion-header`, `.accordion-button`, `.accordion-collapse` and `.accordion-body` structure;
-- default to collapsed; for an initially expanded item add `.show`, remove `.collapsed`, and set `aria-expanded="true"`;
-- medium/default is for most grouped Accordions; use `.accordion-lg` only for a standalone large collapsible card;
-- use `data-bs-parent` on each collapse only when one-open-at-a-time behaviour is intended;
-- keep unique IDs and keep `data-bs-target`, `aria-controls` and collapse IDs aligned;
-- preserve semantic heading levels according to the page hierarchy;
-- reuse Buckholt components inside `.accordion-body`;
-- use Bootstrap collapse behaviour rather than custom show/hide scripting;
-- do not recreate Accordion spacing, disclosure icon, focus state or transitions locally.
+Read `components/accordion/rules.md`, `components/accordion/examples.html` and Text block guidance. Use the documented Bootstrap accordion structure, keep IDs/ARIA aligned, use `.accordion-lg` only for the standalone large form, and use Bootstrap collapse rather than custom show/hide scripting.
 
 ### Alert
-Read `components/alert/rules.md`, `components/alert/examples.html` and relevant Colour/Iconography/Button/Link guidance.
-
-Rules:
-- Alert is local, nondisruptive feedback; use Modal for genuinely interruptive tasks;
-- use `.alert` with one of `.alert-info`, `.alert-success`, `.alert-warning`, `.alert-error` when a semantic status applies;
-- `.alert-message` is required; icon, `.alert-note`, `.context-bar` and close control are optional;
-- use `.alert-note` directly after `.alert-message` for secondary context;
-- put `.context-bar` last inside `.alert-body` and reuse Buckholt Button/Link components inside it;
-- only make an Alert dismissible when it is noncritical and does not represent a persistent unresolved condition;
-- keep Alert copy concise and sentence case;
-- preserve `role="alert"`, accessible close labelling, keyboard access and visible focus;
-- do not recreate Alert colours, spacing, border treatment, radius or typography locally.
+Read `components/alert/rules.md`, `components/alert/examples.html` and relevant Colour/Iconography/Button/Link guidance. Alert is local nondisruptive feedback; use `.alert-info`, `.alert-success`, `.alert-warning` or `.alert-error`, keep `.alert-message` required, and make dismissal available only when appropriate.
 
 ### Avatar
-Read `components/avatar/rules.md`, `components/avatar/examples.html`, Colour and Iconography guidance.
-
-Rules:
-- use `.avatar` as the base;
-- choose one representation only: `.avatar-img`, `.avatar-initials` or `.avatar-icon`;
-- medium/default is the base size; `.avatar-sm` and `.avatar-xs` are the documented smaller sizes;
-- use the primary expressive palette by default and only use `.expressive-secondary`, `.expressive-tertiary` or `.expressive-quaternary` intentionally;
-- add `.expressive-dark` for the documented dark expressive treatment;
-- use `.avatar-set` for compact groups representing shared ownership, collaboration or participation;
-- make sure the surrounding UI exposes the person's real accessible identity when identity matters;
-- do not recreate Avatar dimensions, cropping, radius, overlap or expressive colours locally.
+Read `components/avatar/rules.md`, `components/avatar/examples.html`, Colour and Iconography guidance. Use one representation (`.avatar-img`, `.avatar-initials` or `.avatar-icon`), the documented sizes/palettes, and expose the real accessible identity in surrounding UI when identity matters.
 
 ### Breadcrumb
-Read `components/breadcrumb/rules.md`, `components/breadcrumb/examples.html`, and Menu/Menu button guidance for overflow.
-
-Rules:
-- Breadcrumb is secondary navigation and must not replace primary navigation;
-- choose location-based or path-based Breadcrumb generation consistently within a product;
-- use `<nav aria-label="breadcrumb">` with `.breadcrumb` and semantic list markup;
-- use `.breadcrumb-link` for ancestor links;
-- mark the final/current `.breadcrumb-item.active` with `aria-current="page"` and do not link it;
-- dividers are generated by CSS; never insert divider text into the HTML;
-- if a custom divider is needed, use `--breadcrumb-divider-icon`; do not introduce SCSS;
-- Breadcrumbs must not wrap to a second line;
-- use Buckholt's Overflow menu pattern for long trails instead of inventing custom truncation;
-- do not recreate Breadcrumb spacing, typography or divider styling locally.
+Read `components/breadcrumb/rules.md`, `components/breadcrumb/examples.html`, plus Menu/Menu button for overflow. Breadcrumb is secondary navigation. Preserve `<nav aria-label="breadcrumb">`, semantic list markup, `aria-current="page"`, generated dividers and the documented overflow approach.
 
 ### Button
-Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations.
+Read `components/button/rules.md` and `components/button/examples.html` plus relevant foundations. Preserve `.button-label` where documented, treat danger as a modifier, use accessible naming/tooltips for icon-only buttons, and consult `discrepancies/known-issues.md` for the verified Bootstrap mouse-focus fall-through.
 
 ### Card
-Read `components/card/rules.md` and `components/card/examples.html`.
+Read `components/card/rules.md` and `components/card/examples.html`. Use documented Card structures/modifiers, reuse nested Buckholt components, and do not put competing interactive CTAs inside a whole-card navigation link.
+
+### Form
+Read `components/form/rules.md`, `components/form/examples.html`, `discrepancies/known-issues.md`, and every child-control component used inside the Form.
 
 Rules:
-- use `.card` with `.card-body` as the core structure;
-- use `.card-secondary` only for the documented secondary treatment;
-- use `.card-horizontal` and `.card-horizontal-right` for documented horizontal image layouts;
-- use an `<a>` with `.card-clickable` for whole-card navigation and do not nest competing CTAs inside it;
-- use `.card-selectable` with native radio/checkbox controls for selectable Cards;
-- place a documented Emphasis tile in a second `.card-body`;
-- reuse Text block and other Buckholt components inside Card;
-- do not recreate Card padding, radius, borders, states or layout with custom CSS.
+- use a real `<form class="form">` when content is a form;
+- optional introductory/section content uses Text block;
+- place controls inside one or more `.form-body` sections;
+- reuse documented Buckholt controls rather than inventing form-field markup;
+- place completion/exit actions at the bottom and reuse Button/Link;
+- the source conflicts between `.form-actions` in rendered examples and `.form-buttons` in explanatory docs/runtime; use `.form-buttons` for runtime-correct Buckholt behaviour until upstream is reconciled;
+- let individual controls own validation, disabled/read-only and focus/error states;
+- do not recreate Form width/gaps/action spacing locally.
 
 ### Heading attachment
-Read `components/heading-attachment/rules.md`, `components/heading-attachment/examples.html` and `components/text-block/rules.md`.
-
-Rules:
-- Heading attachment extends Text block; use `.heading` and `.heading-content`;
-- use one compact, directly related attachment;
-- preserve semantic heading hierarchy;
-- reuse documented components for the attachment rather than building an ad-hoc toolbar.
+Read `components/heading-attachment/rules.md`, `components/heading-attachment/examples.html` and Text block. Use `.heading` and `.heading-content`, keep the heading primary, and attach one compact directly related Buckholt component rather than an ad-hoc toolbar.
 
 ### Icon block
-Read `components/icon-block/rules.md`, `components/icon-block/examples.html` and Iconography/Colour/Radius foundations.
+Read `components/icon-block/rules.md`, `components/icon-block/examples.html` and Iconography/Colour/Radius foundations. Use `.icon-block` plus documented size/expressive modifiers and exact icon mappings; follow Text block composition rules when nested there.
+
+### Input group
+Read `components/input-group/rules.md`, `components/input-group/examples.html` and the nested input component.
 
 Rules:
-- use `.icon-block` as the base;
-- default is medium; documented modifiers are `.icon-block-xs`, `.icon-block-sm`, `.icon-block-lg`, `.icon-block-xl`, `.icon-block-xxl`;
-- use documented expressive treatments and Buckholt icon mappings;
-- when nested in Text block, follow Text block composition rules;
-- do not recreate dimensions, radius or colours locally.
+- use `.input-group` around `.response` plus addons/actions;
+- use `.input-group-text` before/after `.response` for documented start/end addons;
+- keep the canonical input component markup inside `.response`;
+- use `.btn.btn-response` for the documented grouped response-action pattern, not `.input-btn`;
+- `.input-btn` belongs inside a Text input and is a different pattern;
+- let the child input own validation, disabled/read-only and other states;
+- do not promote runtime `.input-group-sm`/`.input-group-lg` into Buckholt design guidance without documentation support;
+- do not recreate connected borders, radii or spacing locally.
+
+### Input row
+Read `components/input-row/rules.md`, `components/input-row/examples.html` and each child input component.
+
+Rules:
+- use `.row.input-row` as the outer structure;
+- put each complete input component inside a Bootstrap `.col`;
+- use `.col` for equal widths or documented `.col-*`/responsive grid classes for intentional ratios;
+- group only genuinely related fields;
+- let child controls own label, state, validation, colour and typography;
+- do not recreate row gaps locally;
+- do not invent responsive stacking beyond the Bootstrap classes actually present;
+- keep this component separate from the future higher-level `Input rows` pattern referenced by Buckholt.
 
 ### Key-value pair
-Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`.
-
-Rules:
-- use `.key-value` with `.key` and `.value`;
-- use documented stacked/list/grid/table and size forms;
-- preserve semantic table markup when real table semantics are needed;
-- do not rebuild Key-value typography or layout locally.
+Read `components/key-value-pair/rules.md` and `components/key-value-pair/examples.html`. Use `.key-value` with `.key` and `.value`, preserve documented stacked/list/grid/table/size forms, and use real table semantics where the data is actually tabular.
 
 ### Link
-Read `components/link/rules.md`, `components/link/examples.html` and `discrepancies/known-issues.md` when exact visited rendering matters.
-
-Rules:
-- links are navigation, not state-changing actions;
-- use plain anchors for inline links and `.link-standalone` for standalone links;
-- do not add icons to inline links;
-- use documented Link sets and icon mappings;
-- documentation defines intended visited colour.
+Read `components/link/rules.md`, `components/link/examples.html` and `discrepancies/known-issues.md` when exact visited rendering matters. Links are navigation, not state-changing actions; plain anchors are inline links, `.link-standalone` is the standalone form, and inline links do not take icons.
 
 ### List
-Read `components/list/rules.md` and `components/list/examples.html`.
-
-Rules:
-- use `.list` on semantic `<ul>` or `<ol>` elements;
-- use `.list-item` for ordinary items;
-- use optional `.list-heading` only as the documented first-item heading pattern;
-- on ordered Lists with `.list-heading`, set that heading item to `value="0"` so the first real item begins at 1;
-- use `.list-unstyled` to remove visual markers without discarding list semantics;
-- use `.list-icon` sparingly and select meaningful icons from the Iconography catalogue;
-- keep nested Lists shallow;
-- do not recreate markers, indentation or list spacing with custom CSS.
+Read `components/list/rules.md` and `components/list/examples.html`. Use semantic `<ul>`/`<ol>`, `.list-item`, the documented optional heading pattern, `.list-unstyled` only to remove visual markers while retaining semantics, and meaningful icons sparingly.
 
 ### Menu
-Read `components/menu/rules.md` and `components/menu/examples.html`, plus Menu button and Iconography guidance.
-
-Rules:
-- use Menu for contextual groups of actions;
-- use `.menu-panel`, `.menu-body` and semantic `.menu-item` controls according to the documentation;
-- use `.submenu-toggle` with `aria-haspopup="menu"` and `.submenu[role="menu"]` for nested menus;
-- preserve native radio/checkbox controls for selectable submenu items;
-- use `.menu-divider` only for meaningful grouping;
-- use danger styling only for destructive actions;
-- disable only temporarily unavailable actions; hide permanently unavailable or permission-restricted actions;
-- preserve documented focus and keyboard operability;
-- do not recreate Menu item spacing, states or surface styling locally.
+Read `components/menu/rules.md` and `components/menu/examples.html`, plus Menu button and Iconography guidance. Use documented Menu structure, submenus, native radio/checkbox controls, dividers and danger/disabled rules; preserve keyboard/focus behaviour and hide permanently unavailable actions.
 
 ### Menu button
-Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, plus Button, Tooltip and Iconography guidance.
-
-Rules:
-- choose standard Menu button when actions have equal importance;
-- choose Combo button when one direct action is primary and related alternatives need a menu;
-- choose Overflow menu for secondary actions scoped to a smaller object such as a table row or Card;
-- use `.menu` as the outer composition;
-- use `.menu-toggle` with `data-bs-toggle="dropdown"` and `aria-expanded="false"`;
-- use `.menu-panel.dropdown-menu`, `.menu-body` and semantic `.menu-item` buttons;
-- standard Menu button may use primary, secondary or ghost Button styling;
-- Combo uses `.btn-combo`, two Buttons, and primary/secondary styling;
-- Overflow uses an icon-only ghost Button with `fa-regular fa-ellipsis-vertical` and an accessible name;
-- use `.dropdown-menu-end` where the documented combo/overflow alignment requires it;
-- use `.menu-item-danger` only for destructive actions;
-- use Bootstrap dropdown behaviour rather than custom menu-opening JavaScript.
+Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, plus Button, Tooltip and Iconography. Choose standard Menu button for equal-importance actions, Combo for a primary action plus alternatives, and Overflow for secondary object-scoped actions. Use Bootstrap dropdown behaviour.
 
 ### Modal
-Read `components/modal/rules.md` and `components/modal/examples.html`, plus Button and Text block guidance.
-
-Rules:
-- use Modal only for short, interruptive tasks that genuinely require attention before returning to the page;
-- use `.modal > .modal-dialog > .modal-content` with documented `.modal-header`, `.modal-body` and `.modal-footer` zones;
-- use Text block/Heading attachment for title content and Button/Button set for actions;
-- keep trigger and Modal title terminology consistent;
-- use `.modal-sm`, default/no modifier, `.modal-lg` or `.modal-xl` according to content needs;
-- use `.modal-dialog-centered` only for the documented centred form;
-- use `.modal-dialog-scrollable` only when long content cannot reasonably be avoided;
-- use `data-bs-toggle="modal"`, `data-bs-target` and `data-bs-dismiss="modal"` for Bootstrap behaviour;
-- keep a meaningful `aria-label="Close"` on the close control;
-- do not recreate Modal backdrop, positioning, focus behaviour or sizing with custom CSS.
+Read `components/modal/rules.md` and `components/modal/examples.html`, plus Button and Text block. Use the documented Bootstrap Modal structure/sizes/centred/scrollable forms only when appropriate, preserve close labelling and focus behaviour, and use Modal only for short genuinely interruptive tasks.
 
 ### Progress bar
-Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`.
-
-Rules:
-- use `.progress-container` when label, note/helper or feedback is present;
-- always provide a meaningful progress label;
-- use `.progress` with child `.progress-bar`;
-- default/large height is 8px and `.progress-sm` is 4px;
-- determinate progress must expose real `aria-valuenow`, `aria-valuemin` and `aria-valuemax`;
-- use `.progress-bar-indeterminate` when progress cannot be measured and do not invent numeric progress;
-- use `.is-valid` for success, `.is-invalid` plus `.invalid-feedback` for error, and `.progress-inactive` for the documented inactive state;
-- do not recreate bar heights, status colours/icons, animation or feedback layout with custom CSS.
+Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`. Use `.progress-container` where supporting content exists, always label progress, distinguish determinate/indeterminate correctly, expose real ARIA values for determinate progress, and use documented success/error/inactive states. See known issues for the current error-icon runtime defect.
 
 ### Slider
-Read `components/slider/rules.md` and `components/slider/examples.html`.
-
-Rules:
-- use `.input` with `.input-label` and `.response.slider-input`;
-- use a native `input[type="range"].form-slider` with real `min`, `max`, `step` and `value` attributes;
-- use `.slider-container`, `.slider-wrapper`, `.minmax` and the paired numeric `.form-control` as documented;
-- keep the range control and numeric input synchronized;
-- optional `.ticks`/`.tick` elements are visual support only and do not replace native step semantics;
-- use `.is-invalid` on both controls for the documented error state and provide `.invalid-feedback` text;
-- use `disabled` on both controls for disabled state;
-- for read-only use `.form-slider.readonly` plus `disabled` on the range and `readonly` on the numeric input;
-- treat the filled-track gradient as dynamic value presentation, not a hard-coded decorative style;
-- the range-slider variant is documented as coming soon; do not invent a canonical two-handle Buckholt Slider;
-- do not recreate Slider track, thumb or focus styling locally.
+Read `components/slider/rules.md` and `components/slider/examples.html`. Use the native range input with real min/max/step/value, paired numeric input and documented wrapper structure; synchronize values, preserve validation/disabled/read-only behaviour, and do not invent the two-handle range variant marked as coming soon.
 
 ### Summary Meta
-Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value where used.
-
-Rules:
-- use `.summary-meta` with Icon block followed by `.summary-meta-body`;
-- keep content short and scan-friendly;
-- use `.summary-meta-stacked` for the vertical/centred form;
-- reuse nested components rather than restyling them.
+Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value. Use `.summary-meta`, Icon block then `.summary-meta-body`, keep content short, and use `.summary-meta-stacked` for the documented vertical form. See known issues for the inert `.expressive-primary` class note.
 
 ### Table
-Read `components/table/rules.md` and `components/table/examples.html`, plus any component guidance for controls/content embedded in cells.
+Read `components/table/rules.md` and `components/table/examples.html`, plus nested component guidance.
 
-Rules:
-- Table is supported but its Buckholt documentation is provisional/WIP; do not avoid it when genuine tabular data is needed;
-- start from `.table-container > .table-content > table.table` and preserve native table semantics;
-- use `<th scope="col">` for the documented column-header pattern and `.table-header-label` for visible labels;
-- preserve `.table-gap` when following the supplied canonical HTML;
-- use `.table-sort-header` with a semantic `.table-sort` button for the supplied sortable pattern;
-- use `data-cdt-table`, `data-col`, `data-sort-type` and `data-sort-value` only where the supplied WIP implementation requires them;
-- use `.col-fit`, `.cell-data-right`, `.data-number` and `.data-secondary` only for roles evidenced by the source;
-- preserve native checkbox controls for the documented selection pattern;
-- reuse Avatar, Tag, Button and other Buckholt components inside cells rather than imitating them;
-- `.simple_table` is an existing lighter runtime treatment, but its formal usage rationale is not yet documented;
-- do not invent pagination, density, pinning, responsive transformation or other data-grid behaviour that Buckholt has not specified;
-- if a requirement exceeds the current WIP surface, flag the gap while still using the documented Table foundation where applicable.
+Table is supported but provisional/WIP. Start from `.table-container > .table-content > table.table`, preserve native table semantics and supplied header/sort/selection/data classes, reuse Buckholt components inside cells, and do not invent pagination, density, pinning or responsive data-grid behaviour not documented by Buckholt.
 
 ### Tag
-Read `components/tag/rules.md` and `components/tag/examples.html`, plus Colour and Iconography guidance.
-
-Rules:
-- choose read-only, dismissible, selectable or status by function rather than appearance;
-- use `.tag` with `.tag-label` as the base structure;
-- use `.tag-dismissible` plus an accessible close control for removable Tags;
-- use `.tag-selectable` with native radio for single-select or checkbox for multi-select; keep the native state and visual selected state synchronized;
-- use `.tag-status` plus exactly one `.tag-status-info`, `.tag-status-success`, `.tag-status-warning` or `.tag-status-error` for semantic state;
-- medium is default; `.tag-sm` is documented only for read-only and status Tags;
-- do not show icons in small Tags;
-- use `.tag-set` for related groups and documented expressive modifiers for categorisation, not semantic status;
-- Tags are not navigation links and should not perform multiple competing functions;
-- do not recreate Tag spacing, radius, colours or states locally.
+Read `components/tag/rules.md` and `components/tag/examples.html`, plus Colour and Iconography. Choose read-only, dismissible, selectable or status by function; preserve native radio/checkbox state for selectable Tags; use small only for documented read-only/status forms; Tags are not navigation.
 
 ### Text block
-Read `components/text-block/rules.md`, `components/text-block/examples.html`, Typography, Spacing, Iconography and Colour foundations.
+Read `components/text-block/rules.md`, `components/text-block/examples.html`, Typography, Spacing, Iconography and Colour. Use `.text-block` for written-content groups, keep semantic heading level independent from visual type class, and follow the documented eyebrow/inline-icon/Icon-block composition rules.
+
+### Text input
+Read `components/text-input/rules.md`, `components/text-input/examples.html`, Form and relevant foundations.
 
 Rules:
-- use `.text-block` for written-content groups;
-- semantic heading level is independent from visual type class;
-- use documented eyebrow/inline-icon/Icon-block composition rules;
-- do not recreate Text block width or internal spacing locally.
+- use `.input > .input-label + .response.text-input` as the core structure and `.form-control` on the native input;
+- visible labels are required unless an approved accessibility exemption applies; placeholder is supplementary only;
+- required/optional qualifiers are documented as `<small>` inside the `<label>`;
+- assistive text belongs inside `.input-label`; helper text follows `.response`;
+- use native `disabled` and `readonly` semantics and do not confuse them;
+- use `.is-invalid` plus `.invalid-feedback` for the documented error treatment;
+- a supporting `.input-icon` may precede the input when meaningful;
+- use no more than one `.input-btn` inside a Text input and never combine that action button with a separate input icon;
+- default/medium is established; `.form-control-sm` is documented but the Code & specs page marks small implementation as pending, so do not invent missing details;
+- do not recreate input padding, borders, radius, typography, focus or validation styling locally.
 
 ### Toast
-Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography guidance.
-
-Rules:
-- use Toast for immediate, non-blocking feedback after an action/task and use it sparingly;
-- preserve `.toast > .toast-content > .toast-body` with `.toast-message` and optional `.toast-note`/`.toast-icon`;
-- use `.toast-info`, `.toast-success`, `.toast-warning` or `.toast-error` according to message meaning;
-- preserve the documented `role="alert"`, `aria-live="assertive"` and `aria-atomic="true"` pattern where applicable;
-- use a close control with `data-bs-dismiss="toast"` and an accessible label when manual dismissal is provided;
-- Toasts persist by default but may autohide after five seconds; important information that disappears must remain available elsewhere;
-- add `.fade` for the documented fade transition and use Bootstrap Toast behaviour rather than custom component scripting;
-- do not recreate Toast dimensions, shadow, radius, spacing, colours or transitions locally.
+Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography. Use Toast for immediate non-blocking feedback, preserve documented semantic variants/structure, manual/timed dismissal and Bootstrap behaviour, and do not make disappearing feedback the only recoverable source of important information.
 
 ### Tooltip
-Read `components/tooltip/rules.md` and `components/tooltip/examples.html`.
-
-Rules:
-- use Tooltips only for contextual, nonessential information;
-- put `data-bs-toggle="tooltip"` and `data-bs-title` on the real trigger;
-- use `data-bs-placement` with `top`, `right`, `bottom` or `left` where a direction is specified;
-- initialise Bootstrap Tooltips with Buckholt's documented `offset: [0, 4]` and `delay: { show: 800, hide: 100 }`;
-- do not author Bootstrap-generated `.tooltip` markup directly;
-- keep the trigger independently understandable and accessible;
-- do not hide essential instructions or validation only in a Tooltip;
-- do not recreate Tooltip positioning or styling with custom CSS.
+Read `components/tooltip/rules.md` and `components/tooltip/examples.html`. Use Tooltips only for contextual nonessential information, put Bootstrap tooltip attributes on the real trigger, initialize with Buckholt's documented offset/delay, and keep the trigger understandable without the Tooltip.
 
 ### Versa-tile
-Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance as needed.
-
-Rules:
-- use `.versatile` with `.versatile-content`, `.versatile-body`, `.versatile-meta` and optional `.versatile-actions`;
-- reuse Icon block, Key-value, Button, Link, Tag and Progress bar rather than making local equivalents;
-- actions must be specific to the item;
-- use `a.versatile` only for whole-tile navigation and avoid nested competing interactive controls;
-- use the documented Progress bar component when progress appears;
-- do not invent Versa-tile padding, border, radius, action spacing or hover styling locally.
+Read `components/versa-tile/rules.md` and `components/versa-tile/examples.html`, plus nested component guidance. Use `.versatile` with documented content/body/meta/actions structure, reuse Buckholt subcomponents, keep actions item-specific, use whole-tile anchors only for navigation, and consult known issues for the locally fixed action-set wrapping defect.
