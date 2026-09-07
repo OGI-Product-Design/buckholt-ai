@@ -1,82 +1,60 @@
-<!-- Basic heading + paragraph -->
+<!-- Extracted verbatim from Buckholt Text block: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1: Heading text -->
 <div class="text-block">
-  <h2 class="headline-03">Heading text</h2>
-  <p>Paragraph text.</p>
+    <h2 class="headline-03">Heading text</h2>
+    <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+    <p>Mauris ac sapien non felis scelerisque tincidunt.</p>
 </div>
 
-<!-- Heading only: display -->
+<!-- Code & specs example 2: Title -->
 <div class="text-block">
-  <h1 class="display-03">Display heading</h1>
+    <h1 class="display-03">Display heading</h1>
 </div>
 
-<!-- Heading only: headline -->
 <div class="text-block">
-  <h2 class="headline-03">Headline heading</h2>
+    <h2 class="headline-03">Headline heading</h2>
 </div>
 
-<!-- Heading only: title -->
 <div class="text-block">
-  <h3 class="title-03">Title heading</h3>
+    <h3 class="title-03">Title heading</h3>
 </div>
 
-<!-- Multiple paragraphs -->
+<!-- Code & specs example 3: Heading text -->
 <div class="text-block">
-  <h2 class="headline-03">Heading text</h2>
-  <p>First paragraph of body content.</p>
-  <p>Second paragraph of body content.</p>
+    <span class="eyebrow">Eyebrow text</span>
+
+    <h2 class="headline-03">Heading text</h2>
+    <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
 </div>
 
-<!-- Eyebrow -->
+<!-- Code & specs example 4: Heading text -->
 <div class="text-block">
-  <span class="eyebrow">Eyebrow text</span>
-  <h2 class="headline-03">Heading text</h2>
-  <p>Paragraph text.</p>
+    <h2 class="headline-03">
+        <span class="icon">
+            <i class="fa-regular fa-ghost" aria-hidden="true"></i>
+        </span>
+        Heading text
+    </h2>
+    <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
 </div>
 
-<!-- Inline heading icon -->
+<!-- Code & specs example 5: Heading text -->
 <div class="text-block">
-  <h2 class="headline-03">
-    <span class="icon">
-      <i class="fa-regular fa-ghost" aria-hidden="true"></i>
-    </span>
-    Heading text
-  </h2>
-  <p>Paragraph text.</p>
+    <div class="icon-block">
+        <i class="fa-regular fa-ghost"></i>
+    </div>
+
+    <h3 class="title-03">Heading text</h3>
+    <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
 </div>
 
-<!-- Headline with extra-large icon block -->
+<!-- Code & specs example 6: Heading text -->
 <div class="text-block">
-  <div class="icon-block icon-block-xl">
-    <i class="fa-regular fa-ghost" aria-hidden="true"></i>
-  </div>
-  <h2 class="headline-02">Heading text</h2>
-  <p>Paragraph text.</p>
-</div>
+    <div class="icon-block icon-block-xl">
+        <i class="fa-regular fa-ghost"></i>
+    </div>
 
-<!-- Title with default / medium icon block -->
-<div class="text-block">
-  <div class="icon-block">
-    <i class="fa-regular fa-ghost" aria-hidden="true"></i>
-  </div>
-  <h3 class="title-02">Heading text</h3>
-  <p>Paragraph text.</p>
+    <h2 class="headline-03">Heading text</h2>
+    <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
 </div>
-
-<!-- Valid combined eyebrow + inline icon example -->
-<div class="text-block">
-  <span class="eyebrow">Furry companions</span>
-  <h4 class="headline-02">
-    <span class="icon">
-      <i class="fa-regular fa-paw" aria-hidden="true"></i>
-    </span>
-    Why dogs make the best pets
-  </h4>
-  <p>Dogs are loyal, loving, and always ready to brighten your day.</p>
-</div>
-
-<!-- Important composition constraints:
-  - Do not combine eyebrow text with an icon block.
-  - Do not combine icon blocks and inline heading icons in the same Text block.
-  - Use inline icons, not icon blocks, with display-sized headings.
-  - Keep semantic heading levels in correct page hierarchy; do not choose h1-h6 for visual size alone.
--->

@@ -1,43 +1,96 @@
-<!-- Number input: default -->
+<!-- Extracted verbatim from Buckholt Number input: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
 <div class="input">
-  <div class="input-label">
-    <label for="number-input-example" class="form-label">Example number input</label>
-  </div>
-  <div class="response num-input">
-    <input type="number" class="form-control" id="number-input-example" value="0">
-    <button type="button" class="input-btn step-btn step-add" aria-label="Increase value">
-      <i class="fa-regular fa-plus" aria-hidden="true"></i>
-    </button>
-    <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value">
-      <i class="fa-regular fa-minus" aria-hidden="true"></i>
-    </button>
-  </div>
+    <div class="input-label">
+        <label for="exampleNumberInput" class="form-label">Example number input</label>
+    </div>
+
+    <div class="response num-input">
+        <input type="text" class="form-control" id="exampleNumberInput">
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
 </div>
 
-<!-- Number input: assistive/helper text and validation -->
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label">
-    <label for="number-input-helper" class="form-label">Example number input</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-  <div class="response num-input">
-    <input type="number" class="form-control is-invalid" id="number-input-helper" value="0">
-    <button type="button" class="input-btn step-btn step-add" aria-label="Increase value"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
-    <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
-  </div>
-  <small class="form-helper">Helper text</small>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="input-label">
+        <label for="exampleNumberInputHelper" class="form-label">Example number input</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+
+    <div class="response num-input">
+        <input type="text" class="form-control" id="exampleNumberInputHelper">
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
 </div>
 
-<!-- Number input: contextual icon -->
+<!-- Code & specs example 3 -->
 <div class="input">
-  <div class="input-label">
-    <label for="number-input-currency" class="form-label">Amount</label>
-  </div>
-  <div class="response num-input">
-    <i class="input-icon fa-regular fa-sterling-sign" aria-hidden="true"></i>
-    <input type="number" class="form-control" id="number-input-currency" value="0">
-    <button type="button" class="input-btn step-btn step-add" aria-label="Increase value"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
-    <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
-  </div>
+    <div class="input-label">
+        <label for="exampleNumberInputIcon" class="form-label">Input with icon</label>
+    </div>
+
+    <div class="response num-input">
+        <i class="input-icon fa-regular fa-sterling-sign"></i>
+        <input type="text" class="form-control" id="exampleNumberInputIcon">
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
+</div>
+
+<!-- Code & specs example 4 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleNumberInputValidation" class="form-label">Input with icon</label>
+    </div>
+
+    <div class="response num-input">
+        <i class="input-icon fa-regular fa-sterling-sign"></i>
+        <input type="text" class="form-control" id="exampleNumberInputValidation">
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Code & specs example 5 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleDisabledInput" class="form-label">Example disabled input</label>
+    </div>
+
+    <div class="response num-input">
+        <input type="text" class="form-control" id="exampleDisabledInput" disabled>
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
+</div>
+
+<!-- Code & specs example 6 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleReadonlyInput" class="form-label">Example read only input</label>
+    </div>
+
+    <div class="response num-input">
+        <input type="text" class="form-control" id="exampleReadonlyInput" readonly>
+        <button type="button" class="input-btn step-btn step-add"><i class="fa-regular fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="input-btn step-btn step-minus"><i class="fa-regular fa-minus" aria-hidden="true"></i></button>
+    </div>
 </div>

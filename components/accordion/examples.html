@@ -1,101 +1,68 @@
-<!-- Default collapsed accordion -->
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#accordionExampleItem1"
-        aria-expanded="false"
-        aria-controls="accordionExampleItem1">
-        Accordion item #1
-      </button>
-    </h2>
-    <div id="accordionExampleItem1" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <div class="text-block">
-          <p>Accordion content.</p>
+<!-- Extracted verbatim from Buckholt Accordion: Code & specs. Do not alter canonical DOM structure. -->
+
+<!-- Accordion item #2 -->
+<div class="accordion" id="accordionExample">  
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionItem_1" aria-expanded="false" aria-controls="accordionItem_1">
+                Accordion item #1
+            </button>
+        </h2>
+        <div id="accordionItem_1" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                <div class="text-block">
+                    <p>Nam tempor finibus lorem, nec varius arcu convallis sed. Nunc id orci a neque vehicula malesuada. Donec vehicula libero vel leo convallis, nec tincidunt felis tincidunt. Maecenas euismod tristique leo, vel malesuada ligula malesuada sed. Donec eget libero id leo congue venenatis.</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionItem_2" aria-expanded="false" aria-controls="accordionItem_2">
+                  Accordion item #2
+            </button>
+        </h2>
+        <div id="accordionItem_2" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                <div class="text-block">
+                    <p>Donec et urna vel risus feugiat pharetra. Proin id lacus vitae velit accumsan venenatis. Aenean non mi vel nisi lacinia maximus. Duis efficitur, sapien quis bibendum auctor, lectus risus feugiat sapien, ac pulvinar orci est a arcu. Integer id augue vitae urna tristique tempus.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Expanded by default -->
-<div class="accordion" id="accordionOpenExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#accordionOpenItem"
-        aria-expanded="true"
-        aria-controls="accordionOpenItem">
-        Expanded accordion
-      </button>
-    </h2>
-    <div id="accordionOpenItem" class="accordion-collapse collapse show">
-      <div class="accordion-body">
-        <div class="text-block">
-          <p>This item is expanded on load.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- Large accordion item #2 -->
+<div class="accordion accordion-lg">...</div>
 
-<!-- Large standalone accordion -->
-<div class="accordion accordion-lg" id="accordionLargeExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#accordionLargeItem"
-        aria-expanded="false"
-        aria-controls="accordionLargeItem">
-        Large accordion
-      </button>
-    </h2>
-    <div id="accordionLargeItem" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <div class="text-block">
-          <p>Large standalone accordion content.</p>
+<!-- Single open item #2 -->
+<div class="accordion" id="accordionSingleExpand">  
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionItem_1" aria-expanded="false" aria-controls="accordionItem_1">
+                Accordion item #1
+            </button>
+        </h2>
+        <div id="accordionItem_1" class="accordion-collapse collapse" data-bs-parent="#accordionSingleExpand">
+            <div class="accordion-body">
+                <div class="text-block">
+                    <p>Nam tempor finibus lorem, nec varius arcu convallis sed. Nunc id orci a neque vehicula malesuada. Donec vehicula libero vel leo convallis, nec tincidunt felis tincidunt. Maecenas euismod tristique leo, vel malesuada ligula malesuada sed. Donec eget libero id leo congue venenatis.</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-
-<!-- Single-expansion group -->
-<div class="accordion" id="accordionSingleExpand">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#accordionSingle1"
-        aria-expanded="false"
-        aria-controls="accordionSingle1">
-        Accordion item #1
-      </button>
-    </h2>
-    <div id="accordionSingle1" class="accordion-collapse collapse" data-bs-parent="#accordionSingleExpand">
-      <div class="accordion-body">
-        <div class="text-block"><p>First item content.</p></div>
-      </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionItem_2" aria-expanded="false" aria-controls="accordionItem_2">
+                  Accordion item #2
+            </button>
+        </h2>
+        <div id="accordionItem_2" class="accordion-collapse collapse" data-bs-parent="#accordionSingleExpand">
+            <div class="accordion-body">
+                <div class="text-block">
+                    <p>Donec et urna vel risus feugiat pharetra. Proin id lacus vitae velit accumsan venenatis. Aenean non mi vel nisi lacinia maximus. Duis efficitur, sapien quis bibendum auctor, lectus risus feugiat sapien, ac pulvinar orci est a arcu. Integer id augue vitae urna tristique tempus.</p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#accordionSingle2"
-        aria-expanded="false"
-        aria-controls="accordionSingle2">
-        Accordion item #2
-      </button>
-    </h2>
-    <div id="accordionSingle2" class="accordion-collapse collapse" data-bs-parent="#accordionSingleExpand">
-      <div class="accordion-body">
-        <div class="text-block"><p>Second item content.</p></div>
-      </div>
-    </div>
-  </div>
 </div>

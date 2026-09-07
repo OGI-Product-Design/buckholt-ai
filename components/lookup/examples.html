@@ -1,69 +1,43 @@
-<!-- Buckholt Lookup canonical examples -->
+<!-- Extracted verbatim from Buckholt Lookup: Code & specs. Do not alter canonical DOM structure. -->
 
-<!-- Base Lookup -->
+<!-- Lookup base code -->
 <div class="lookup">
-  <div class="input">
-    <div class="input-label">
-      <label for="vehicleRegistration" class="form-label">Enter your registration number</label>
+    <div class="input">
+        <div class="input-label">
+            <label for="lookup-example" class="form-label">Input label</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">GB</span>
+            <div class="response text-input">
+                <input type="text" class="form-control " id="lookup-example" placeholder="AB12 CDE">
+            </div>
+        </div> 
+    </div> 
+    <div class="lookup-actions">
+        <div class="button-set">
+            <button type="button" class="btn btn-primary ">
+                <span class="button-label">Button label</span>   
+            </button>
+        </div>
+        <a class="link-standalone" href="#" target="_self"> 
+           Standalone link
+        </a>
     </div>
-
-    <div class="input-group">
-      <span class="input-group-text">GB</span>
-      <div class="response text-input">
-        <input type="text" class="form-control" id="vehicleRegistration" placeholder="AB12 CDE">
-      </div>
-    </div>
-
-    <div class="invalid-feedback">Validation message</div>
-  </div>
-
-  <div class="lookup-actions">
-    <div class="button-set">
-      <button type="button" class="btn btn-primary">
-        <span class="button-label">Find your car</span>
-      </button>
-    </div>
-
-    <a class="link-standalone" href="#">Find your car by make &amp; model</a>
-  </div>
 </div>
 
 <!-- Lookup summary variation -->
 <div class="lookup">
-  <div class="input">
-    <div class="input-label">
-      <label for="lookupSummary" class="form-label">Input label</label>
-    </div>
-
-    <div class="versatile">
-      <div class="versatile-content">
-        <div class="versatile-body">
-          <div class="icon-block">
-            <i class="fa-regular fa-ghost" aria-hidden="true"></i>
-          </div>
-
-          <div class="versatile-meta">
-            <div class="versatile-label">Label</div>
-            <p class="versatile-text">Body text</p>
-          </div>
+    <div class="input">
+        <div class="input-label">
+            <label for="lookup-example" class="form-label">Input label</label>
         </div>
-
-        <div class="versatile-actions">
-          <div class="button-set">
-            <button type="button" class="btn btn-ghost" aria-label="Edit">
-              <div class="btn-icon">
-                <i class="fa-regular fa-pencil" aria-hidden="true"></i>
-              </div>
-            </button>
-          </div>
+        <div class="versatile">
+            ...
         </div>
-      </div>
+    </div> 
+    <div class="lookup-actions">
+        <a class="link-standalone" href="#" target="_self"> 
+            Standalone link
+        </a>
     </div>
-
-    <div class="invalid-feedback">Validation message</div>
-  </div>
-
-  <div class="lookup-actions">
-    <a class="link-standalone" href="#">Standalone link</a>
-  </div>
 </div>

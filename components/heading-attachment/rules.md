@@ -1,167 +1,49 @@
-# Buckholt Heading attachment
+# Heading attachment
 
-## Status
+## Verification
 
-Complete Heading attachment guidance rebuilt from the supplied Buckholt Usage, Style and Code & specs documentation and checked against `../../css/buckholt.css`.
-
-## Sources of truth
-
-- Usage: `https://buck.88mph.design/components/text-data-display/heading-attachment/`
-- Style: `https://buck.88mph.design/components/text-data-display/heading-attachment/style/`
-- Code & specs: `https://buck.88mph.design/components/text-data-display/heading-attachment/code-specs/`
-- Runtime implementation: `../../css/buckholt.css`
-
-Heading attachment extends the Text block component. Read `../text-block/rules.md` first when using it.
+Source-verified against the Buckholt Heading attachment Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact DOM structure.
 
 ## Purpose
 
-A Heading attachment allows one secondary element to appear inline with a heading. It provides a place for closely related contextual actions or supporting information while keeping the heading as the primary focus.
+Heading attachment extends Text block by placing one closely related secondary element alongside a heading. Use it for contextual actions or supporting information that belongs directly to that section.
 
-Use it when a section needs an action or indicator that users may need immediately while scanning the heading.
+## Canonical structure
 
-Common documented uses include:
+Do not reconstruct Heading attachment markup from prose. Use the exact source examples in `examples.html`.
 
-- navigation links such as View all, Browse all or See more;
-- dismiss or close actions for removable content;
-- contextual actions directly related to the section;
-- status or supporting indicators such as Tags or Badges.
+The Code & specs page documents `.text-block > .heading`, with `.heading-content` first and one attached element after it. Documented examples include:
 
-Do not use it for unrelated actions, primary page actions, large/complex controls or multiple competing actions. Move larger action groups into the content area instead.
+- a close button;
+- a Standalone Link;
+- a Tag;
+- eyebrow text inside `.heading-content`;
+- an inline heading icon wrapped in `.icon`;
+- Icon block compositions.
+
+The exact element types, Font Awesome classes, type-set classes and child order vary by example. Preserve them exactly rather than normalising them to another component convention.
+
+For example, one source example uses an inline heading icon inside `<h3 class="headline-02">`, while another uses `<div class="icon-block">` with a solid Sparkles icon and `<h3 class="title-03">`. The final Icon block example uses `.icon-block-xl` and its own documented icon. Do not substitute a generic Ghost icon, change `solid` to `regular`, or add `aria-hidden` to canonical source markup unless that exact example contains it.
 
 ## Relationship to Text block
 
-Heading attachment is not a separate heading system. It extends `.text-block` by wrapping the heading content and attachment inside `.heading`.
+Heading attachment inherits Text block's content, colour and typography rules. The attachment remains a separate documented component such as Link, close Button, Tag or Icon block.
 
-Canonical structure:
+Use one closely related attachment and keep the heading as the primary focus. Do not turn the heading row into a general toolbar.
 
-```html
-<div class="text-block">
-  <div class="heading">
-    <div class="heading-content">
-      <h3 class="headline-02">Heading text</h3>
-    </div>
-    <button type="button" class="btn-close" aria-label="Close"></button>
-  </div>
-  <p>Supporting body content.</p>
-</div>
-```
+## Spacing
 
-The attachment must appear after `.heading-content` inside `.heading`.
-
-## Supported content
-
-The heading-content area follows the normal Text block rules and may contain the same supported heading-related elements, including heading text and, where documented by Text block, eyebrow or icon treatment.
-
-The Heading attachment pattern may add one attached component such as:
-
-- Link;
-- Button / close control;
-- Tag or Badge;
-- related metadata.
-
-The attachment must relate directly to the section content and support the next logical action or interpretation.
-
-Do not add several unrelated controls into the attachment area.
-
-## Canonical close-action example
-
-```html
-<div class="text-block">
-  <div class="heading">
-    <div class="heading-content">
-      <h3 class="headline-02">Heading text</h3>
-    </div>
-    <button type="button" class="btn-close" aria-label="Close"></button>
-  </div>
-  <p>Vivamus non arcu tincidunt, congue massa at, porttitor velit.</p>
-</div>
-```
-
-If the close button is wired to a Bootstrap behaviour such as dismissing a modal, use the relevant documented Bootstrap attributes for that containing component. Do not add dismissal behaviour when no dismissible parent exists.
-
-## Icon block within heading content
-
-The documentation also shows Heading attachment composed with an Icon block inside `.heading-content`:
-
-```html
-<div class="text-block">
-  <div class="heading">
-    <div class="heading-content">
-      <div class="icon-block icon-block-xl">
-        <i class="fa-regular fa-ghost" aria-hidden="true"></i>
-      </div>
-      <h3 class="headline-02">Heading text</h3>
-    </div>
-    <button type="button" class="btn-close" aria-label="Close"></button>
-  </div>
-  <p>Supporting body content.</p>
-</div>
-```
-
-Follow both Text block and Icon block composition rules rather than treating this example as permission to invent new combinations.
-
-## Colour and typography
-
-The Style documentation states that Heading attachment inherits the same colour and typography rules as Text block.
-
-Read:
-
-- `../text-block/rules.md`
-- `../../foundations/colour/`
-- `../../foundations/typography/rules.md`
-- `../../foundations/typography/type-sets.md`
-
-Do not create a separate Heading attachment colour or type system.
-
-## Structure and spacing
-
-Runtime CSS applies the heading-row relationship:
-
-```css
-.text-block .heading {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-```
-
-This creates a 16px / 1rem separation between heading content and the attachment while keeping the attachment aligned to the top by default.
-
-The runtime also exposes heading attachment alignment helpers for the attached element. Treat these as runtime capability unless a supplied Buckholt page explicitly calls for a specific alternate alignment; do not promote them as the default design decision simply because they exist.
-
-Do not recreate the heading row with custom flex or spacing CSS.
-
-## Content rules
-
-- The heading remains the primary visual and semantic focus.
-- Use a single closely related attachment.
-- Keep the attachment compact.
-- Keep the body/content structure below the heading row consistent with Text block.
-- Do not use the attachment area as a general toolbar.
-- Choose the semantic heading level from the page hierarchy, independently of the visual Buckholt type-set class.
+`buckholt.css` provides the heading-row alignment and spacing. Do not rebuild the row with local flex or margin rules.
 
 ## Accessibility
 
-The attachment retains the accessibility contract of the component used there.
-
-Examples:
-
-- a close control needs an accessible name such as `aria-label="Close"`;
-- a Link needs meaningful destination text;
-- a Button must follow the Button component rules;
-- decorative/supporting icons should use `aria-hidden="true"` where appropriate.
-
-Do not rely on position alone to explain what an attachment does. Its label, icon and accessible name must make its purpose understandable.
+In real product markup, preserve the accessibility requirements of the attached component. Application-level accessibility improvements must not be inserted into `examples.html` and then described as original Buckholt Code & specs markup unless the source itself contains them.
 
 ## Agent rules
 
-- Start from `.text-block`; Heading attachment extends it.
-- Use `.heading` as the inline row wrapper.
-- Put heading-related content inside `.heading-content`.
-- Place exactly one closely related attachment after `.heading-content`.
-- Preserve semantic heading hierarchy independently of visual type style.
-- Reuse the documented Link, Button, Tag, Icon block or other component rather than recreating it.
-- Inherit Text block colour, typography and content rules.
-- Do not use Heading attachment for primary page actions, complex controls or crowded action groups.
-- Do not recreate the heading row, gap or alignment with custom CSS.
+- Use `examples.html` as canonical DOM evidence.
+- Start from `.text-block` and preserve `.heading > .heading-content + attachment` exactly as shown by the selected source example.
+- Do not change source heading levels, type-set classes, icon styles/names or wrappers in canonical examples.
+- Reuse the attached Buckholt component rather than recreating it.
+- Do not infer additional attachments or combinations that the source does not document.
+- Do not recreate Heading attachment spacing or alignment with local CSS.

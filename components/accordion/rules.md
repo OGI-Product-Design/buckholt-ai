@@ -1,119 +1,57 @@
 # Accordion
 
+## Verification
+
+Source-verified against the Buckholt Accordion Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact Accordion DOM structure.
+
 ## Purpose
 
-Accordion is a vertical list of headers that expand and collapse to reveal related content. Use it to reduce visual density while keeping several related sections available in the same view.
+Accordion is a vertical group of headers that expand and collapse to reveal related content. Use it to reduce visual density while keeping several related sections available in the same view.
 
 ## Usage
 
-- Default Accordions should load collapsed so users can scan the available sections before choosing what to open.
-- Medium is the default size and is appropriate for grouped Accordions such as FAQs or several related collapsed sections.
-- Large Accordions are for single, standalone collapsible cards. Avoid using large Accordions as a group because their scale reduces scanability.
-- Multiple items may remain open by default. When the experience requires only one open item at a time, use the documented single-expansion pattern with `data-bs-parent`.
-- Do not use Accordion simply to hide essential information that users need to complete the current task.
+- Default Accordions should load collapsed so users can scan available sections.
+- Medium/default is appropriate for grouped Accordions.
+- Large Accordions are for single, standalone collapsible cards rather than repeated groups.
+- Multiple items may remain open by default.
+- Use the documented `data-bs-parent` form when only one item should remain open at a time.
 
-## Canonical structure
+## Canonical markup
 
-```html
-<div class="accordion" id="exampleAccordion">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#exampleAccordionItem"
-        aria-expanded="false"
-        aria-controls="exampleAccordionItem">
-        Accordion heading
-      </button>
-    </h2>
-    <div id="exampleAccordionItem" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <div class="text-block">
-          <p>Accordion content.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-```
+Do not reconstruct Accordion markup from this prose. Use the exact Code & specs examples in `examples.html`.
 
-Use unique IDs and keep `data-bs-target`, `aria-controls` and the corresponding collapse `id` aligned.
+The source documents:
 
-## Expanded by default
+- a default `.accordion` containing multiple `.accordion-item` elements;
+- a large variant represented as `<div class="accordion accordion-lg">...</div>`;
+- a single-open variant where each `.accordion-collapse` has `data-bs-parent="#accordionSingleExpand"`.
 
-To render an item expanded initially:
+Preserve the source's `button.accordion-button`, `data-bs-toggle="collapse"`, `data-bs-target`, `aria-expanded`, `aria-controls`, matching collapse `id`, `.accordion-body` and nested `.text-block` structure.
 
-- add `.show` to `.accordion-collapse`;
-- remove `.collapsed` from `.accordion-button`;
-- set `aria-expanded="true"`.
+Do not replace source `...` placeholders in the large variant with inferred markup inside the canonical example.
 
-```html
-<button class="accordion-button" type="button"
-  data-bs-toggle="collapse"
-  data-bs-target="#openItem"
-  aria-expanded="true"
-  aria-controls="openItem">
-  Accordion heading
-</button>
-<div id="openItem" class="accordion-collapse collapse show">
-  ...
-</div>
-```
+## Initial state
 
-## Single-expansion pattern
-
-To allow only one item in a group to be open at once, add `data-bs-parent` to each `.accordion-collapse`, referencing the parent Accordion ID.
-
-```html
-<div class="accordion" id="accordionSingleExpand">
-  ...
-  <div id="accordionItem1" class="accordion-collapse collapse"
-    data-bs-parent="#accordionSingleExpand">
-    ...
-  </div>
-</div>
-```
-
-Do not add `data-bs-parent` when independent simultaneous expansion is intended.
+The supplied Code & specs examples are collapsed initially. If a real product requirement needs an item initially open, use Bootstrap's actual Collapse state consistently (`.show`, `aria-expanded="true"`, and the appropriate button state), but do not rewrite the canonical source examples to demonstrate an undocumented variant.
 
 ## Size
 
-Buckholt documents two sizes:
+Buckholt documents:
 
-- medium/default: `.accordion`
-- large: `.accordion.accordion-lg`
+- default/medium — `.accordion`
+- large — `.accordion.accordion-lg`
 
-Use `.accordion-lg` for a standalone collapsible card, not for a repeated group.
-
-## Content
-
-- Keep header labels concise and descriptive of the content revealed.
-- Use real Buckholt components inside `.accordion-body`, such as Text block, rather than recreating their styling.
-- Preserve semantic heading structure. The documentation demonstrates `.accordion-header` on heading elements; choose the actual heading level according to the surrounding page hierarchy.
+Use `.accordion-lg` only for the documented large standalone treatment.
 
 ## Behaviour and accessibility
 
-Accordion uses Bootstrap collapse behaviour.
-
-- The header control must be a keyboard-operable `<button>`.
-- Keep `aria-expanded` synchronized with the open/closed state.
-- Keep `aria-controls` pointing to the controlled panel.
-- The collapsed/expanded visual state must not be communicated only by colour; Buckholt also changes the disclosure icon state.
-- Respect reduced-motion behaviour supplied by the runtime.
-- Do not replace Bootstrap collapse behaviour with bespoke show/hide JavaScript unless a product implementation has a documented technical requirement.
-
-## Runtime notes
-
-The compiled Buckholt CSS defines Accordion spacing, button padding, typography, focus ring, active background, disclosure icon and transitions. `.accordion-lg` changes the documented scale for the large variant.
-
-Use the runtime classes rather than recreating Accordion styling locally.
+Accordion uses Bootstrap Collapse behaviour. Keep IDs unique and all target/ARIA relationships aligned. Preserve keyboard-operable native Buttons and visible focus treatment. Reuse Buckholt components inside `.accordion-body`.
 
 ## Agent rules
 
-1. Use `.accordion > .accordion-item > .accordion-header > .accordion-button` with a corresponding `.accordion-collapse > .accordion-body`.
-2. Default to collapsed unless the product requirement explicitly calls for an initially expanded section.
-3. Use `.accordion-lg` only for the documented large standalone treatment.
-4. Use `data-bs-parent` only when one-open-at-a-time behaviour is intended.
-5. Keep IDs, `data-bs-target`, `aria-controls` and `aria-expanded` correct.
-6. Reuse Buckholt components inside the body.
-7. Do not recreate Buckholt Accordion spacing, iconography, states or animation with custom CSS.
+- Use `examples.html` as canonical DOM evidence.
+- Preserve the exact default, large-placeholder and single-open source examples.
+- Do not invent an expanded-by-default canonical example merely because Bootstrap supports it.
+- Use `.accordion-lg` only for the documented large treatment.
+- Use `data-bs-parent` only for the documented one-open-at-a-time pattern.
+- Do not recreate Accordion spacing, states, disclosure icon or animation with local CSS/JS.

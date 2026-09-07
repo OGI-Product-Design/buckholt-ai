@@ -1,73 +1,104 @@
-<!-- Basic Form -->
-<form class="form" id="basicForm">
-  <div class="text-block">
-    <h2 class="headline-03">Contact details</h2>
-    <p>Enter the details we need to contact you.</p>
-  </div>
+<!-- Extracted verbatim from Buckholt Form: Code & specs. Do not alter canonical DOM structure. -->
 
-  <div class="form-body">
-    <div class="input">
-      <div class="input-label">
-        <label for="fullName" class="form-label">Full name</label>
-      </div>
-      <div class="response text-input">
-        <input type="text" class="form-control" id="fullName">
-      </div>
-      <div class="invalid-feedback">Enter your full name.</div>
+<!-- Heading text -->
+<form class="form" id="formExample">
+    <div class="text-block">
+        <h3 class="headline-03">Heading text</h3>
     </div>
-  </div>
 
-  <!-- The rendered Buckholt examples and current runtime use .form-actions. -->
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary btn-lg">
-      <span class="button-label">Continue</span>
-    </button>
-    <a class="link-standalone" href="#">Cancel</a>
-  </div>
+    <div class="form-body">
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput1" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput1">
+            </div>
+        </div>
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput2" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput2">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-primary btn-lg">
+            <span class="button-label">Button label</span>    
+         </button>
+        <a class="link-standalone" href="#" target="_self"> 
+            <span class="icon">
+                <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
+            </span>
+            Link
+        </a>
+    </div>
 </form>
 
-<!-- Form with multiple body sections -->
-<form class="form" id="multiSectionForm">
-  <div class="text-block">
-    <h2 class="headline-03">Account details</h2>
-  </div>
-
-  <div class="form-body">
+<!-- Optional text block -->
+<form class="form" id="formExample">
     <div class="text-block">
-      <h3 class="headline-01">Personal details</h3>
+        <h3 class="headline-03">Heading text</h3>
     </div>
 
-    <div class="input">
-      <div class="input-label">
-        <label for="firstName" class="form-label">First name</label>
-      </div>
-      <div class="response text-input">
-        <input type="text" class="form-control" id="firstName">
-      </div>
-      <div class="invalid-feedback">Enter your first name.</div>
+    <div class="form-body">
+        <div class="text-block">
+            <h4 class="headline-01">Optional text block</h4>
+            <p>Duis non quam et nisi tincidunt fermentum.</p>
+        </div>
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput1" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput1">
+            </div>
+        </div>
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput2" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput2">
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="form-body">
-    <div class="text-block">
-      <h3 class="headline-01">Contact details</h3>
+    <div class="form-body">
+        <div class="text-block">
+            <h4 class="headline-01">Optional text block</h4>
+            <p>Duis non quam et nisi tincidunt fermentum.</p>
+        </div>
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput1" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput1">
+            </div>
+        </div>
+        <div class="input">
+            <div class="input-label">
+                <label for="exampleTextInput2" class="form-label">Example text input</label>
+            </div>
+            <div class="response text-input">
+                <input type="text" class="form-control" id="exampleTextInput2">
+            </div>
+        </div>
     </div>
 
-    <div class="input">
-      <div class="input-label">
-        <label for="emailAddress" class="form-label">Email address</label>
-      </div>
-      <div class="response text-input">
-        <input type="email" class="form-control" id="emailAddress">
-      </div>
-      <div class="invalid-feedback">Enter a valid email address.</div>
+    <div class="form-actions">
+        <button type="button" class="btn btn-primary btn-lg">
+            <span class="button-label">Button label</span>    
+         </button>
+        <a class="link-standalone" href="#" target="_self"> 
+            <span class="icon">
+                <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
+            </span>
+            Link
+        </a>
     </div>
-  </div>
-
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary btn-lg">
-      <span class="button-label">Create account</span>
-    </button>
-    <a class="link-standalone" href="#">Cancel</a>
-  </div>
 </form>

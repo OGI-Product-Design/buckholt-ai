@@ -1,115 +1,74 @@
 # Checkbox
 
+## Verification
+
+Source-verified against the Buckholt Checkbox Usage, Style and Code & specs HTML pages supplied on 7 September 2026. For exact DOM structure, use `examples.html`; its component markup is extracted from the Code & specs source.
+
 ## Purpose
 
-Use Checkbox when users can select zero, one or multiple independent options. Do not use Checkbox for a choice where only one option may be selected; use Radio for mutually exclusive choices.
+Use Checkbox when users can select zero, one or multiple independent options. Use Radio when exactly one mutually exclusive option must be selected.
 
-A Checkbox may be used on its own or as a grouped input. In a group, use a group label to describe the related choices.
+A Checkbox may stand alone or appear in a grouped input. Checkbox labels sit to the right of their controls and vertically arranged groups are preferred where possible for scanning.
 
-## Canonical single Checkbox
+## Canonical structure
 
-```html
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="checkbox-example">
-  <label class="form-check-label" for="checkbox-example">
-    Checkbox label
-  </label>
-</div>
+Do not reconstruct Checkbox markup from this prose. Use `examples.html` for the exact Code & specs structures.
+
+The documented single Checkbox uses:
+
+```text
+.form-check
+├─ input.form-check-input[type="checkbox"]
+└─ label.form-check-label
 ```
 
-Keep the native checkbox input and associated `<label>`. The `for` and `id` values must match.
+The documented group uses `.input`, `.input-label`, `.response.check-input`, then one or more `.form-check` children.
 
-## Checkbox group input
+Assistive text is placed in `.input-label` using `.form-helper`; helper text follows `.response.check-input`.
 
-Use the normal Buckholt input composition for a group:
+## Selection states
+
+Buckholt documents unselected, selected and indeterminate states in Usage/Style guidance. Product logic must keep the native checkbox state correct. The browser `checked` property represents selection; indeterminate requires JavaScript through `HTMLInputElement.indeterminate`.
+
+Do not add undocumented visual-state classes to canonical markup unless the exact source example provides them.
+
+## Validation
+
+The Code & specs documentation uses standard Buckholt input validation with `.invalid-feedback`. It discusses Bootstrap/native validation patterns including `:invalid` / `:valid` and `.is-invalid` where required.
+
+Keep validation at the input/group level documented by Buckholt rather than inventing row-level error styling.
+
+## Disabled
+
+Use native `disabled` on the checkbox. The Code & specs source also demonstrates adding `.disabled` to the parent `.input` when the entire checkbox group is disabled.
+
+## Read-only
+
+The Code & specs source places a `readonly` attribute directly on the checkbox input:
 
 ```html
-<div class="input">
-  <div class="input-label">
-    <label for="checkInput-example" class="form-label">Group label</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-
-  <div class="response check-input">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="checkbox-one">
-      <label class="form-check-label" for="checkbox-one">Option one</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="checkbox-two">
-      <label class="form-check-label" for="checkbox-two">Option two</label>
-    </div>
-  </div>
-
-  <small class="form-helper">Helper text</small>
-  <div class="invalid-feedback">Validation message</div>
-</div>
+<input class="form-check-input" type="checkbox" value="" id="checkbox-checkboxReadonly" readonly>
 ```
 
-Assistive text belongs inside `.input-label` beneath the group label. Helper text follows `.response.check-input`.
+HTML does **not** natively enforce `readonly` on checkbox inputs. Buckholt therefore requires scripting to prevent changes while leaving the control focusable.
 
-Checkbox labels sit to the right of their inputs. Prefer vertically arranged Checkbox groups where possible for readability and scanning.
+Do not use `.state_readonly` as canonical Checkbox markup; that class is not present in the supplied Code & specs HTML.
 
-## States
+The shared `components/form/form.js` contains the documented enhancement behaviour for Checkbox/Radio state handling. Use the supplied script rather than creating a different local implementation.
 
-Buckholt documents three selection states:
+## Accessibility
 
-- unselected — default;
-- selected;
-- indeterminate — for a parent/group Checkbox when only some child options are selected.
+Keep native checkbox inputs and associated labels. Each `label[for]` must correspond to the actual input ID in a production implementation, even though some documentation demonstration snippets use group labels whose `for` values are illustrative rather than tied to one child control.
 
-The documentation examples use `.selected` and `.indeterminate` classes to demonstrate those visual states. Product logic must keep the native checkbox state synchronized with the visual state. The native `checked` property represents selection; JavaScript is required to set `HTMLInputElement.indeterminate` because indeterminate is not an HTML attribute.
-
-Checkbox also documents focus, disabled, read-only and error treatments.
-
-### Disabled
-
-Use native `disabled` semantics on the checkbox. A disabled Checkbox is unavailable for interaction.
-
-### Read-only
-
-HTML does not natively support `readonly` for checkbox inputs. Buckholt documents a read-only visual state using `.state_readonly` and states that scripting is required to prevent changes while leaving the checkbox focusable and part of the form layout.
-
-Do not treat `readonly` alone as sufficient browser behaviour for a checkbox.
-
-### Error
-
-For grouped Checkbox validation, use the Buckholt input-level `.invalid-feedback` message and the documented error treatment rather than inventing a local validation style.
-
-Disabled and read-only Checkbox groups do not require assistive/helper text because users cannot modify the value; provide necessary context through labels or surrounding content instead.
-
-## Content
-
-Use concise, scannable labels. The group label should explain the dimension being chosen; individual Checkbox labels should describe the options themselves.
-
-Do not phrase a Checkbox group as mutually exclusive when more than one option may be chosen.
-
-## JavaScript dependency
-
-The supplied Buckholt `components/form/form.js` is now stored in this repository. It depends on jQuery and provides the documented Checkbox enhancement behaviour, including:
-
-- converting `.indeterminate` examples to the native `indeterminate` property;
-- synchronising `.selected` examples with native checked state;
-- applying documented disabled/read-only/error demonstration states;
-- preventing clicks from changing `.form-check-input[readonly]`;
-- marking a `.input:has(.check-input)` as disabled when every checkbox/radio in it is disabled.
-
-Load this real source when those Buckholt behaviours are required. Do not reconstruct a different Checkbox-specific implementation.
-
-## Composition
-
-When Checkbox is used inside Form, Input row, Dropdown or another Buckholt component, let the parent component control layout and let Checkbox own its native selection semantics and labels.
-
-Read `components/form/`, `components/input-row/` and `components/dropdown/` when composing Checkbox there.
+Do not use colour alone to communicate checked/error state.
 
 ## Agent rules
 
-- Use native `<input type="checkbox">` and a matching `<label>`.
-- Use `.form-check`, `.form-check-input` and `.form-check-label` rather than recreating checkbox styling.
-- Use `.input > .input-label + .response.check-input` for a labelled group.
-- Use Checkbox only for independent/multi-select choices; use Radio for exactly one choice.
-- Do not preselect options unless the product requirement provides a real default.
-- Use indeterminate only for partial parent/group selection.
-- Do not assume `readonly` works natively on checkboxes.
-- Load `components/form/form.js` for the supplied enhanced state behaviour when needed.
-- Do not recreate focus, error, disabled, selection or indeterminate styling with custom CSS.
+- Use native `<input type="checkbox">` with `.form-check-input` and `.form-check-label`.
+- Use `.form-check` for a single Checkbox.
+- Use `.input > .input-label + .response.check-input` for a documented group.
+- Use Checkbox only for independent/multi-select choices.
+- Use native `disabled` for unavailable controls.
+- Preserve the documented `readonly` attribute in canonical markup and use the supplied JS to enforce read-only behaviour.
+- Do not invent `.state_readonly`, `.selected`, `.indeterminate` or other canonical classes unless the exact component source supplies them.
+- Do not recreate Checkbox styling or state behaviour with custom CSS.

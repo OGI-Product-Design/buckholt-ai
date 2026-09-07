@@ -1,40 +1,204 @@
-<!-- Single select -->
+<!-- Extracted verbatim from Buckholt Response button: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
 <div class="input">
-  <div class="input-label">
-    <label class="form-label">Contact preference</label>
-    <small class="form-helper">Choose one option</small>
-  </div>
-  <div class="response response-btn-input">
-    <input type="radio" class="btn-check" name="contact-preference" id="contact-email" autocomplete="off">
-    <label class="btn btn-response" for="contact-email">Email</label>
-    <input type="radio" class="btn-check" name="contact-preference" id="contact-phone" autocomplete="off">
-    <label class="btn btn-response" for="contact-phone">Phone</label>
-  </div>
-  <div class="invalid-feedback">Choose a contact preference</div>
+    <div class="input-label">
+        <label for="responseBtnInput-responsebutton" class="form-label">
+            Response button label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="responsebuttoninputlabel" id="responsebutton-response1">
+        <label class="btn btn-response" for="responsebutton-response1">
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="responsebuttoninputlabel" id="responsebutton-response2">
+        <label class="btn btn-response" for="responsebutton-response2">
+            Response 2
+        </label>
+    </div>
 </div>
 
-<!-- Multi select -->
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label">
-    <label class="form-label">Contact methods</label>
-  </div>
-  <div class="response response-btn-input">
-    <input type="checkbox" class="btn-check" id="contact-method-email" autocomplete="off">
-    <label class="btn btn-response" for="contact-method-email">Email</label>
-    <input type="checkbox" class="btn-check" id="contact-method-phone" autocomplete="off">
-    <label class="btn btn-response" for="contact-method-phone">Phone</label>
-    <input type="checkbox" class="btn-check" id="contact-method-post" autocomplete="off">
-    <label class="btn btn-response" for="contact-method-post">Post</label>
-  </div>
+    <div class="input-label">
+        <label for="responseBtnInput-multiresponselabel" class="form-label">
+            Multi response label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="checkbox" class="btn-check" id="multiresponselabel-response1">
+        <label class="btn btn-response" for="multiresponselabel-response1">
+            Response 1
+        </label>
+
+        <input type="checkbox" class="btn-check" id="multiresponselabel-response2">
+        <label class="btn btn-response" for="multiresponselabel-response2">
+            Response 2
+        </label>
+
+        <input type="checkbox" class="btn-check" id="multiresponselabel-response3">
+        <label class="btn btn-response" for="multiresponselabel-response3">
+            Response 3
+        </label>
+    </div>
 </div>
 
-<!-- Large with icon -->
+<!-- Code & specs example 3 -->
 <div class="input">
-  <div class="response response-btn-input">
-    <input type="radio" class="btn-check" name="large-response" id="large-response-1" autocomplete="off">
-    <label class="btn btn-response btn-response-lg" for="large-response-1">
-      <span class="icon"><i class="fa-regular fa-ghost" aria-hidden="true"></i></span>
-      Response 1
-    </label>
-  </div>
+    <div class="input-label">
+        <label for="responseBtnInput-sizeexamplelabel" class="form-label">
+            Size example label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="sizeexamplelabel" id="sizeexamplelabel-response1">
+        <label class="btn btn-response btn-response-lg" for="sizeexamplelabel-response1">
+            <span class="icon">
+                <i class="fa-regular fa-ghost"></i>
+            </span>
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="sizeexamplelabel" id="sizeexamplelabel-response2">
+        <label class="btn btn-response btn-response-lg" for="sizeexamplelabel-response2">
+            <span class="icon">
+                <i class="fa-regular fa-ghost"></i>
+            </span>
+            Response 2
+        </label>
+    </div>
 </div>
+
+<!-- Code & specs example 4 -->
+<div class="input">
+    <div class="input-label">
+        <label for="responseBtnInput-exampleresponselabel" class="form-label">
+            Example response label
+        </label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="exampleresponselabel" id="exampleresponselabel-response1">
+        <label class="btn btn-response" for="exampleresponselabel-response1">
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="exampleresponselabel" id="exampleresponselabel-response2">
+        <label class="btn btn-response" for="exampleresponselabel-response2">
+            Response 2
+        </label>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+</div>
+
+<!-- Code & specs example 5 -->
+<div class="input">
+    <div class="input-label">
+        <label for="responseBtnInput-responsevalidationlabel" class="form-label">
+            Response validation label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="responsevalidationlabel" id="responsevalidationlabel-response1" required>
+        <label class="btn btn-response" for="responsevalidationlabel-response1">
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="responsevalidationlabel" id="responsevalidationlabel-response2" required>
+        <label class="btn btn-response" for="responsevalidationlabel-response2">
+            Response 2
+        </label>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Code & specs example 6 -->
+<div class="input">
+    <div class="input-label">
+        <label for="responseBtnInput-responsedisabledlabel" class="form-label">
+            Response disabled label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="responsedisabledlabel" id="responsedisabledlabel-response1" disabled>
+        <label class="btn btn-response" for="responsedisabledlabel-response1">
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="responsedisabledlabel" id="responsedisabledlabel-response2" disabled>
+        <label class="btn btn-response" for="responsedisabledlabel-response2">
+            Response 2
+        </label>
+    </div>
+</div>
+
+<!-- Code & specs example 7 -->
+<div class="input">
+    <div class="input-label">
+        <label for="responseBtnInput-responsedisabledlabel" class="form-label">
+            Response disabled label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="responsedisabledlabel" id="responsedisabledlabel-response1" disabled>
+        <label class="btn btn-response readonly" for="responsedisabledlabel-response1">
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="responsedisabledlabel" id="responsedisabledlabel-response2" disabled>
+        <label class="btn btn-response" for="responsedisabledlabel-response2">
+            Response 2
+        </label>
+    </div>
+</div>
+
+<!-- Code & specs example 8 -->
+<div class="input">
+    <div class="input-label">
+        <label for="responseBtnInput-iconexamplelabel" class="form-label">
+            Icon example label
+        </label>
+    </div>
+
+    <div class="response response-btn-input">
+        <input type="radio" class="btn-check" name="iconexamplelabel" id="iconexamplelabel-response1">
+        <label class="btn btn-response btn-response-lg" for="iconexamplelabel-response1">
+            <span class="icon">
+                <i class="fa-regular fa-ghost"></i>
+            </span>
+            Response 1
+        </label>
+
+        <input type="radio" class="btn-check" name="iconexamplelabel" id="iconexamplelabel-response2">
+        <label class="btn btn-response btn-response-lg" for="iconexamplelabel-response2">
+            <span class="icon">
+                <i class="fa-regular fa-ghost"></i>
+            </span>
+            Response 2
+        </label>
+    </div>
+</div>
+
+<!-- Code & specs example 9 -->
+<div class="response response-btn-input response-btn-equal">...</div>

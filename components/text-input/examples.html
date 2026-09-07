@@ -1,90 +1,124 @@
-<!-- Default Text input -->
+<!-- Extracted verbatim from Buckholt Text input: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
 <div class="input">
-  <div class="input-label">
-    <label for="exampleTextInput" class="form-label">Example text input</label>
-  </div>
-  <div class="response text-input">
-    <input type="text" class="form-control" id="exampleTextInput" placeholder="Placeholder">
-  </div>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="input-label">
+        <label for="exampleTextInput" class="form-label">Example text input</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInput">
+    </div>
 </div>
 
-<!-- Optional label, assistive text and helper text -->
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label">
-    <label for="email" class="form-label">Email <small>(optional)</small></label>
-    <small class="form-helper">Use an address you can access.</small>
-  </div>
-  <div class="response text-input">
-    <input type="email" class="form-control" id="email" placeholder="name@example.com">
-  </div>
-  <small class="form-helper">We'll use this for account messages.</small>
-  <div class="invalid-feedback">Enter a valid email address.</div>
+    <div class="input-label">
+        <label for="exampleTextInputHelper" class="form-label">Example text input</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInputHelper">
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
 </div>
 
-<!-- Error -->
+<!-- Code & specs example 3 -->
 <div class="input">
-  <div class="input-label">
-    <label for="postcode" class="form-label">Postcode</label>
-  </div>
-  <div class="response text-input">
-    <input type="text" class="form-control is-invalid" id="postcode" value="AB">
-  </div>
-  <div class="invalid-feedback">Enter a valid postcode.</div>
+    <div class="input-label">
+        <label for="exampleTextInputicon" class="form-label">Input with icon</label>
+    </div>
+
+    <div class="response text-input">
+        <i class="input-icon fa-regular fa-ghost" aria-hidden="true"></i>
+        <input type="text" class="form-control" id="exampleTextInputicon">
+    </div>
 </div>
 
-<!-- Disabled -->
+<!-- Code & specs example 4 -->
 <div class="input">
-  <div class="input-label">
-    <label for="disabledInput" class="form-label">Disabled</label>
-  </div>
-  <div class="response text-input">
-    <input type="text" class="form-control" id="disabledInput" value="Disabled input field" disabled>
-  </div>
+    <div class="input-label">
+        <label for="exampleTextInputrequired" class="form-label">
+            Required input <small>(required)</small>
+        </label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInputrequired">
+    </div>
 </div>
 
-<!-- Read-only -->
+<!-- Code & specs example 5 -->
 <div class="input">
-  <div class="input-label">
-    <label for="readonlyInput" class="form-label">Read-only</label>
-  </div>
-  <div class="response text-input">
-    <input type="text" class="form-control" id="readonlyInput" value="Readonly input field" readonly>
-  </div>
+    <div class="input-label">
+        <label for="exampleTextInputactionbtn" class="form-label">Input action button</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInputactionbtn">
+        <button type="button" class="input-btn">
+            <i class="fa-regular fa-calendar-day" aria-hidden="true"></i>
+        </button>
+    </div>
+
 </div>
 
-<!-- Supporting icon: choose the actual product icon from the Buckholt Iconography catalogue -->
+<!-- Code & specs example 6 -->
 <div class="input">
-  <div class="input-label">
-    <label for="iconInput" class="form-label">Input with icon</label>
-  </div>
-  <div class="response text-input">
-    <i class="input-icon fa-regular fa-circle-info" aria-hidden="true"></i>
-    <input type="text" class="form-control" id="iconInput">
-  </div>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="input-label">
+        <label for="exampleTextInputclear" class="form-label">Input clear button</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInputclear">
+        <button type="button" class="input-btn input-clear" aria-label="Clear"></button>
+    </div>
+
 </div>
 
-<!-- Input action button: do not combine with a separate input icon -->
+<!-- Code & specs example 7 -->
 <div class="input">
-  <div class="input-label">
-    <label for="passwordInput" class="form-label">Password</label>
-  </div>
-  <div class="response text-input">
-    <input type="password" class="form-control" id="passwordInput">
-    <button type="button" class="input-btn" aria-label="Show password">
-      <i class="fa-regular fa-eye" aria-hidden="true"></i>
-    </button>
-  </div>
-  <div class="invalid-feedback">Validation message</div>
+    <div class="input-label">
+        <label for="exampleTextInputvalidation" class="form-label">Input label</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleTextInputvalidation" placeholder="Placeholder" required>
+    </div>
+
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
 </div>
 
-<!-- Small is documented but its Code & specs page marks the implementation as pending. -->
+<!-- Code & specs example 8 -->
 <div class="input">
-  <div class="input-label">
-    <label for="smallInput" class="form-label">Small text input</label>
-  </div>
-  <div class="response text-input">
-    <input type="text" class="form-control form-control-sm" id="smallInput">
-  </div>
+    <div class="input-label">
+        <label for="exampleDisabledTextInput" class="form-label">Example disabled text input</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleDisabledTextInput" disabled>
+    </div>
+</div>
+
+<!-- Code & specs example 9 -->
+<div class="input">
+    <div class="input-label">
+        <label for="exampleReadonlyTextInput" class="form-label">Example read only text input</label>
+    </div>
+
+    <div class="response text-input">
+        <input type="text" class="form-control" id="exampleReadonlyTextInput" readonly>
+    </div>
 </div>

@@ -1,65 +1,42 @@
 # Number input
 
+## Verification
+
+Source-audited against the Buckholt Number input Usage, Style and Code & specs HTML pages supplied on 7 September 2026. Use `examples.html` for exact DOM structure.
+
 ## Purpose
 
-Use Number input when the user needs to enter or adjust a numeric value. Buckholt combines a native number field with increment and decrement actions.
+Use Number input when users need to enter or adjust a numeric value with increment/decrement controls.
 
-## Canonical structure
+## Canonical markup
 
-```html
-<div class="input">
-  <div class="input-label">
-    <label for="number-example" class="form-label">Example number input</label>
-  </div>
+The supplied Code & specs source uses `.response.num-input` containing:
 
-  <div class="response num-input">
-    <input type="number" class="form-control" id="number-example" value="0">
-    <button type="button" class="input-btn step-btn step-add" aria-label="Increase value">
-      <i class="fa-regular fa-plus" aria-hidden="true"></i>
-    </button>
-    <button type="button" class="input-btn step-btn step-minus" aria-label="Decrease value">
-      <i class="fa-regular fa-minus" aria-hidden="true"></i>
-    </button>
-  </div>
-</div>
-```
+- an `<input type="text" class="form-control">`;
+- `.input-btn.step-btn.step-add` with `fa-regular fa-plus`;
+- `.input-btn.step-btn.step-minus` with `fa-regular fa-minus`.
 
-The `.input` wrapper contains `.input-label` and `.response`; `.num-input` identifies the response as a Number input. Buckholt documents two action buttons inside the response using `.input-btn.step-btn.step-add` and `.input-btn.step-btn.step-minus`.
+Preserve that exact source in canonical examples. Do **not** change the documented text input to `type="number"`, add a default value, or add attributes such as `aria-label` that are not present in Code & specs.
 
-## Supporting text
+`examples.html` also documents assistive/helper text, an optional `.input-icon`, validation feedback, disabled and read-only examples.
 
-Assistive text uses `<small class="form-helper">` inside `.input-label`. Helper text uses the same class after `.response`. Validation text uses `.invalid-feedback`.
+## Supporting text and states
 
-## Icons and prefixes
+Assistive text uses `.form-helper` inside `.input-label`; helper text follows the response. Validation uses `.invalid-feedback` as shown by Code & specs.
 
-The documentation shows an optional `.input-icon` before the native number field, for example a currency symbol. Use only when the icon conveys meaningful input context and use the documented Iconography mapping.
-
-## Sizes
-
-Buckholt documents medium/default and small Number inputs. Preserve the documented size class when implementing the small form rather than recreating its dimensions locally.
-
-## States
-
-Number input supports resting, focus, active, error, disabled and read-only states.
-
-- Error: apply `.is-invalid` to the native `.form-control` and provide `.invalid-feedback`.
-- Disabled: use native disabled semantics for the field and disable the step actions as required by the product implementation.
-- Read-only: the user can review but not modify the value; keep the field accessible/focusable according to the documented read-only treatment and prevent the step actions from changing it.
+Disabled is documented with `disabled` on the input. Read-only is documented with `readonly` on the input. Do not invent additional state classes or attributes in canonical markup.
 
 ## JavaScript dependency
 
-Buckholt's supplied `form.js` contains the Number input step-button behaviour. `.step-add` increments the current value by 1 and `.step-minus` decrements it by 1; an empty field is first set to `0`. The script then triggers `change` on the field.
+The supplied `components/form/form.js` contains the Number input step-button behaviour: plus/minus change the current value by 1, an empty field is first treated as `0`, and the script emits `change` after updating the value.
 
-Load `components/form/form.js` when Buckholt form enhancement behaviour is required. The supplied script depends on jQuery.
-
-Do not invent an alternative Buckholt stepper implementation when the supplied script is available.
+Load the supplied Form script when this documented enhancement is required rather than recreating a different Buckholt stepper API.
 
 ## Agent rules
 
-- Keep `type="number"` on the actual numeric control.
-- Use `.response.num-input` and the documented two step buttons.
-- Give icon-only step buttons accessible names.
-- Preserve native numeric attributes such as `min`, `max` and `step` when the product requirements define them; do not invent constraints.
-- Use `.input-icon` only for meaningful context.
-- Load the supplied `form.js` for documented step-button behaviour.
-- Do not recreate Number input borders, spacing, buttons or states with local CSS.
+- `examples.html` is canonical for Number input DOM.
+- Preserve the documented `<input type="text">` and exact step-button classes/icons.
+- Do not add invented accessibility/state attributes to canonical examples; production implementations may add required accessible names without rewriting Buckholt source evidence.
+- Reuse `.input-icon`, `.form-helper`, `.invalid-feedback`, `disabled` and `readonly` only as documented.
+- Use the supplied Form JavaScript for the documented step behaviour.
+- Do not recreate Number input styling with local CSS.

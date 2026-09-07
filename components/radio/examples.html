@@ -1,63 +1,131 @@
-<!-- Radio group -->
-<div class="input">
-  <div class="input-label">
-    <label class="form-label">Radio input label</label>
-  </div>
-  <div class="response check-input">
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="radioGroup" id="radio-example-1">
-      <label class="form-check-label" for="radio-example-1">Radio #1</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="radioGroup" id="radio-example-2">
-      <label class="form-check-label" for="radio-example-2">Radio #2</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="radioGroup" id="radio-example-3">
-      <label class="form-check-label" for="radio-example-3">Radio #3</label>
-    </div>
-  </div>
+<!-- Extracted verbatim from Buckholt Radio: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1 -->
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="" id="radio-radioLabel">
+    <label class="form-check-label" for="radio-radioLabel">
+        Radio label
+    </label>
 </div>
 
-<!-- Radio group with assistive/helper text -->
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label">
-    <label class="form-label">Radio input label</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-  <div class="response check-input">
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="radioHelper" id="radio-helper-1">
-      <label class="form-check-label" for="radio-helper-1">Radio #1</label>
+    <div class="input-label">
+        <label for="radioInputExample" class="form-label">Radio input label</label>
     </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="radioHelper" id="radio-helper-2">
-      <label class="form-check-label" for="radio-helper-2">Radio #2</label>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radio-radioLabel1">
+            <label class="form-check-label" for="radio-radioLabel1">
+                Radio #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radio-radioLabel2">
+            <label class="form-check-label" for="radio-radioLabel2">
+                Radio #2
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radio-radioLabel3">
+            <label class="form-check-label" for="radio-radioLabel3">
+                Radio #3
+            </label>
+        </div>
     </div>
-  </div>
-  <small class="form-helper">Helper text</small>
-  <div class="invalid-feedback">Validation message</div>
 </div>
 
-<!-- Disabled radio group -->
+<!-- Code & specs example 3 -->
+<div class="input">
+    <div class="input-label">
+        <label for="radioInputHelper" class="form-label">Radio input label</label>
+        <small class="form-helper">
+            Assistive text
+        </small>
+    </div>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioHelper" id="radio-helper-radio1">
+            <label class="form-check-label" for="radio-helper-radio1">
+                Radio #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioHelper" id="radio-helper-radio2">
+            <label class="form-check-label" for="radio-helper-radio2">
+                Radio #2
+            </label>
+        </div>
+    </div>
+    <small class="form-helper">
+        Helper text
+    </small>
+</div>
+
+<!-- Code & specs example 4 -->
+<div class="input">
+    <div class="input-label">
+        <label for="radioInputValidation" class="form-label">Radio input label</label>
+    </div>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioValidation" id="radio-validation-radio1" required>
+            <label class="form-check-label" for="radio-validation-radio1">
+                Radio #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioValidation" id="radio-validation-radio2" required>
+            <label class="form-check-label" for="radio-validation-radio2">
+                Radio #2
+            </label>
+        </div>
+    </div>
+    <small class="form-helper">
+        Helper text
+    </small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
+</div>
+
+<!-- Code & specs example 5 -->
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="disabled" id="radio-radioDisabled" disabled>
+    <label class="form-check-label" for="radio-radioDisabled">
+        Radio disabled
+    </label>
+</div>
+
+<!-- Code & specs example 6 -->
 <div class="input disabled">
-  <div class="input-label">
-    <label class="form-label">Disabled radio group</label>
-  </div>
-  <div class="response check-input">
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="disabledGroup" id="radio-disabled-1" disabled>
-      <label class="form-check-label" for="radio-disabled-1">Radio disabled #1</label>
+    <div class="input-label">
+        <label for="radioInputDisabledGroup" class="form-label">Disabled radio group</label>
     </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="disabledGroup" id="radio-disabled-2" disabled checked>
-      <label class="form-check-label" for="radio-disabled-2">Radio disabled #2</label>
+    <div class="response check-input">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="disabledGroup" id="radio-radioDisable1d" disabled>
+            <label class="form-check-label" for="radio-radioDisabled1">
+                Radio disabled #1
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="disabledGroup" id="radio-radioDisabled2" disabled checked>
+            <label class="form-check-label" for="radio-radioDisabled2">
+                Radio disabled #2
+            </label>
+        </div>
     </div>
-  </div>
+    <small class="form-helper">
+        Helper text
+    </small>
 </div>
 
-<!-- Read-only radio: requires components/form/form.js to block state changes -->
-<div class="form-check state_readonly">
-  <input class="form-check-input" type="radio" name="readonlyGroup" id="radio-readonly" checked readonly>
-  <label class="form-check-label" for="radio-readonly">Read-only selected</label>
+<!-- Code & specs example 7 -->
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="readonly" id="radio-radioReadonly" readonly>
+    <label class="form-check-label" for="radio-radioReadonly">
+        Radio read-only
+    </label>
 </div>

@@ -1,97 +1,120 @@
-<!-- Default slider -->
-<div class="input">
-  <div class="input-label">
-    <label for="slider-example" class="form-label">Slider label text</label>
-  </div>
+<!-- Extracted verbatim from Buckholt Slider: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
 
-  <div class="response slider-input">
-    <div class="slider-container">
-      <span class="minmax">0</span>
-      <div class="slider-wrapper">
-        <input type="range" class="form-slider" id="slider-example" min="0" max="100" step="1" value="50">
-        <div class="ticks">
-          <span class="tick"></span>
-          <span class="tick"></span>
-          <span class="tick"></span>
-          <span class="tick"></span>
-          <span class="tick"></span>
+<!-- Code & specs example 1 -->
+<div class="input">
+    <div class="input-label">
+        <label for="slider-example" class="form-label">Slider label text</label>
+    </div>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider" id="slider-example" min="0" max="100" step="1" value="50">
+                <div class="ticks">
+                    <span class="tick"></span>
+                    <span class="tick"></span>
+                    <span class="tick"></span>
+                    <span class="tick"></span>
+                    <span class="tick"></span>
+                </div>
+            </div>
+            <span class="minmax">100</span>
+            <input type="number" class="form-control" style="width: 4ch;" value="50" id="sliderOutput-example">
         </div>
-      </div>
-      <span class="minmax">100</span>
-      <input type="number" id="sliderOutput-example" class="form-control" style="width: 4ch;" value="50">
     </div>
-  </div>
-
-  <div class="invalid-feedback">Validation error message</div>
 </div>
 
-<!-- Slider with assistive/helper text -->
+<!-- Code & specs example 2 -->
 <div class="input">
-  <div class="input-label">
-    <label for="slider-support" class="form-label">Slider support text example</label>
-    <small class="form-helper">Assistive text</small>
-  </div>
-  <div class="response slider-input">
-    <div class="slider-container">
-      <span class="minmax">0</span>
-      <div class="slider-wrapper">
-        <input type="range" class="form-slider" id="slider-support" min="0" max="100" step="1" value="50">
-      </div>
-      <span class="minmax">100</span>
-      <input type="number" id="sliderOutput-support" class="form-control" style="width: 4ch;" value="50">
+    <div class="input-label">
+        <label for="slider-example-support" class="form-label">Slider support text example</label>
+        <small class="form-helper">Assistive text</small>
     </div>
-  </div>
-  <small class="form-helper">Helper text</small>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider" id="slider-example-support" min="0" max="100" step="1" value="50">
+                <div class="ticks">...</div>
+            </div>
+            <span class="minmax">100</span>
+            <input type="number" class="form-control" style="width: 4ch;" value="50" id="sliderOutput-example-support">
+        </div>
+    </div>
+    <small class="form-helper">Helper text</small>
 </div>
 
-<!-- Error -->
+<!-- Code & specs example 3 -->
 <div class="input">
-  <div class="input-label">
-    <label for="slider-error" class="form-label">Slider error example</label>
-  </div>
-  <div class="response slider-input">
-    <div class="slider-container">
-      <span class="minmax">0</span>
-      <div class="slider-wrapper">
-        <input type="range" class="form-slider is-invalid" id="slider-error" min="0" max="100" step="1" value="50">
-      </div>
-      <span class="minmax">100</span>
-      <input type="number" id="sliderOutput-error" class="form-control is-invalid" style="width: 4ch;" value="50">
+    <div class="input-label">
+        <label for="slider-example-nonum" class="form-label">Slider output example</label>
     </div>
-  </div>
-  <div class="invalid-feedback">Validation error message</div>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider form-slider-output" id="slider-example-nonum" min="0" max="100" step="1" value="50">
+                <div class="ticks">...</div>
+            </div>
+            <span class="minmax">100</span>
+            <output for="slider-example-nonum" id="rangeValue"></output>
+        </div>
+    </div>
 </div>
 
-<!-- Disabled -->
+<!-- Code & specs example 4 -->
 <div class="input">
-  <div class="input-label">
-    <label for="slider-disabled" class="form-label">Slider disabled example</label>
-  </div>
-  <div class="response slider-input">
-    <div class="slider-container">
-      <span class="minmax">0</span>
-      <div class="slider-wrapper">
-        <input type="range" class="form-slider" id="slider-disabled" min="0" max="100" step="1" value="50" disabled>
-      </div>
-      <span class="minmax">100</span>
-      <input type="number" id="sliderOutput-disabled" class="form-control" style="width: 4ch;" value="50" disabled>
+    <div class="input-label">
+        <label for="slider-example-error" class="form-label">Slider error example</label>
     </div>
-  </div>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider" id="slider-example-error" min="0" max="100" step="1" value="50">
+                <div class="ticks">...</div>
+            </div>
+            <span class="minmax">100</span>
+            <input type="number" class="form-control" style="width: 4ch;" value="50" id="sliderOutput-example-error">
+        </div>
+    </div>
+    <small class="form-helper">Helper text</small>
+
+    <div class="invalid-feedback">
+        Validation error message
+    </div>
 </div>
 
-<!-- Read-only -->
+<!-- Code & specs example 5 -->
 <div class="input">
-  <div class="input-label">
-    <label for="slider-readonly" class="form-label">Slider read-only example</label>
-  </div>
-  <div class="response slider-input">
-    <div class="slider-container">
-      <span class="minmax">0</span>
-      <div class="slider-wrapper">
-        <input type="range" class="form-slider readonly" id="slider-readonly" min="0" max="100" step="1" value="50" disabled>
-      </div>
-      <span class="minmax">100</span>
-      <input type="number" id="sliderOutput-readonly" class="form-control" style="width: 4ch;" value="50" readonly>
+    <div class="input-label">
+        <label for="slider-example-disabled" class="form-label">Slider disabled example</label>
     </div>
-  </div>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider" id="slider-example-disabled" min="0" max="100" step="1" value="50" disabled>
+            </div>
+            <span class="minmax">100</span>
+            <input type="number" class="form-control" style="width: 4ch;" value="50" id="sliderOutput-example-disabled" disabled>
+        </div>
+    </div>
+</div>
+
+<!-- Code & specs example 6 -->
+<div class="input">
+    <div class="input-label">
+        <label for="slider-example-readonly" class="form-label">Slider read-only example</label>
+    </div>
+    <div class="response slider-input">
+        <div class="slider-container">
+            <span class="minmax">0</span>
+            <div class="slider-wrapper">
+                <input type="range" class="form-slider readonly" id="slider-example-readonly" min="0" max="100" step="1" value="50" disabled>
+            </div>
+            <span class="minmax">100</span>
+            <input type="number" class="form-control" style="width: 4ch;" value="50" id="sliderOutput-example-readonly" readonly>
+        </div>
+    </div>
 </div>

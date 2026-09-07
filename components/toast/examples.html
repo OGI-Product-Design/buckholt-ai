@@ -1,41 +1,187 @@
-<!-- Basic persistent Toast -->
-<div class="toast toast-info fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <span class="toast-icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
-    <div class="toast-body">
-      <div class="toast-message"><h6>Toast message</h6></div>
-      <div class="toast-note">Supporting detail.</div>
+<!-- Extracted verbatim from Buckholt Toast: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
+
+<!-- Code & specs example 1: Toast message -->
+<div class="toast toast-info" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div class="toast-content">
+
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>  
+        </div>
+
     </div>
-  </div>
-  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 </div>
 
-<!-- Success -->
-<div class="toast toast-success fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <span class="toast-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
-    <div class="toast-body">
-      <div class="toast-message"><h6>Success toast message</h6></div>
+<!-- Code & specs example 2: Toast message -->
+<div class="toast" role="alert" data-bs-autohide="false">
+    <div class="toast-content">
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>
+            <div class="toast-note">
+                Nam tempor finibus lorem, nec varius arcu convallis vehicula malesuada.
+            </div>      
+        </div>
     </div>
-  </div>
 </div>
 
-<!-- Warning -->
-<div class="toast toast-warning fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <span class="toast-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
-    <div class="toast-body">
-      <div class="toast-message"><h6>Warning toast message</h6></div>
+<!-- Code & specs example 3: Toast message -->
+<div class="toast" role="alert" data-bs-autohide="false">
+    <div class="toast-content">
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>
+            <div class="toast-note">
+                Nam tempor finibus lorem, nec varius arcu convallis vehicula malesuada.
+                <p><small>Etiam accumsan urna a mauris dapibus, nec aliquet nunc convallis.</small></p>
+            </div>      
+        </div>
     </div>
-  </div>
 </div>
 
-<!-- Error -->
-<div class="toast toast-error fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <span class="toast-icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
-    <div class="toast-body">
-      <div class="toast-message"><h6>Error toast message</h6></div>
+<!-- Code & specs example 4: Toast message -->
+<div class="toast toast-info" role="alert" data-bs-autohide="false">
+    <div class="toast-content">
+        <span class="toast-icon">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        </span>
+
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>     
+        </div>
+
     </div>
-  </div>
+</div>
+
+<!-- Code & specs example 5: Toast message -->
+<div class="toast" role="alert">
+    <div class="toast-content">
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>
+            <div class="toast-note">
+                Nam tempor finibus lorem, nec varius arcu convallis vehicula malesuada.
+            </div>
+            <div class="toast-contextbar">
+                <button type="button" class="btn btn-secondary btn-sm">
+                    <span class="button-label">Button</span>    
+                </button>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!-- Code & specs example 6: Toast message -->
+<div class="toast" role="alert">
+    <div class="toast-content">
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>
+            <div class="toast-note">
+                Nam tempor finibus lorem, nec varius arcu convallis vehicula malesuada.
+            </div> 
+        </div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+</div>
+
+<!-- Code & specs example 7: Error toast message -->
+<div class="toast toast-info" role="alert">
+    <div class="toast-content">
+        <span class="toast-icon">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        </span>
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<div class="toast toast-success" role="alert">
+    <div class="toast-content">
+        <span class="toast-icon">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        </span>
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<div class="toast toast-warning" role="alert">
+    <div class="toast-content">
+        <span class="toast-icon">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        </span>
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<div class="toast toast-error" role="alert">
+    <div class="toast-content">
+        <span class="toast-icon">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        </span>
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!-- Code & specs example 8: Toast message -->
+<div class="toast fade show" role="alert">
+    <div class="toast-content">
+        <div class="toast-body">
+            <div class="toast-message">
+                <h6>Toast message</h6>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+<!-- Code & specs example 9: Error message -->
+<div class="toast-container">
+    <div class="toast toast-info fade show" role="alert">
+        <div class="toast-content">
+            <span class="toast-icon">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            </span>
+            <div class="toast-body">
+                <div class="toast-message">
+                    <h6>Toast message</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast toast-error fade show" role="alert">
+        <div class="toast-content">
+            <span class="toast-icon">
+                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            </span>
+            <div class="toast-body">
+                <div class="toast-message">
+                    <h6>Error message</h6>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

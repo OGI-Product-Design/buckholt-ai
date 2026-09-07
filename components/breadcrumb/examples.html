@@ -1,30 +1,46 @@
-<!-- Buckholt Breadcrumb canonical examples -->
-
-<!-- Standard location/path trail -->
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a class="breadcrumb-link" href="#">Home</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a class="breadcrumb-link" href="#">Components</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a class="breadcrumb-link" href="#">Navigation</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">Breadcrumb</li>
-  </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="#">Breadcrumb 1</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="#">Breadcrumb 2</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="#">Breadcrumb 3</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Breadcrumb 4</li>
+    </ol>
 </nav>
 
-<!-- Custom divider using the documented CSS custom property -->
-<nav aria-label="breadcrumb" style="--breadcrumb-divider-icon: '>';">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a class="breadcrumb-link" href="#">Insurance</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">Car</li>
-  </ol>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="#">Breadcrumb 1</a>
+        </li>
+        <li class="breadcrumb-item menu" data-bs-toggle="tooltip" data-bs-title="Options">
+            <a class="breadcrumb-link menu-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="menu-panel-breadcrumb-example">…</a>
+            <div class="menu-panel dropdown-menu" id="menu-panel-breadcrumb-example">
+                <ul class="menu-body" role="menu">
+                    <li>
+                        <button class="menu-item" type="button">Breadcrumb 2</button>
+                    </li>
+                    <li>
+                        <button class="menu-item" type="button">Breadcrumb 3</button>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="#">Breadcrumb 4</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Breadcrumb 5</li>
+    </ol>
 </nav>
 
-<!-- Long Breadcrumb trails should use the documented Overflow menu pattern.
-     Do not manually wrap or insert arbitrary ellipsis text. -->
+<nav style="--breadcrumb-divider-icon: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">Insurance</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Car</li>
+    </ol>
+</nav>

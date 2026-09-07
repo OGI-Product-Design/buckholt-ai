@@ -1,148 +1,69 @@
 # Form
 
+## Verification
+
+Source-verified against the Buckholt Form Usage, Style and Code & specs HTML pages supplied on 7 September 2026. `examples.html` is the canonical source for exact Form DOM structure.
+
 ## Purpose
 
-A Form is a collection of related input controls that enables users to enter data or configure options.
+A Form is a collection of related input controls that enables users to enter data or configure options. Form provides the composition layer around Buckholt inputs; each input retains its own labels, states, validation and interaction behaviour.
 
-Use Form as the composition layer around Buckholt input components. The Form controls layout, grouping and actions; the individual input components remain responsible for their own labels, states, validation and interaction behaviour.
+## Canonical structure
 
-## Structure
+Do not reconstruct Form markup from prose. Use `examples.html` exactly.
 
-The documented Form structure is:
+The documented structure is:
 
-1. `.form` — the main form wrapper.
-2. optional `.text-block` — heading and/or description that explains the purpose of the form.
-3. one or more `.form-body` sections — input components and optional section-level Text blocks.
-4. `.form-actions` — completion/exit actions at the bottom.
-
-Canonical structure:
-
-```html
-<form class="form" id="formExample">
-  <div class="text-block">
-    <h3 class="headline-03">Heading text</h3>
-  </div>
-
-  <div class="form-body">
-    <!-- Buckholt input components -->
-  </div>
-
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary btn-lg">
-      <span class="button-label">Submit</span>
-    </button>
-    <a class="link-standalone" href="#">Cancel</a>
-  </div>
-</form>
+```text
+form.form
+├─ .text-block                      optional heading/intro
+├─ .form-body                       one or more sections
+│  ├─ .text-block                   optional section intro
+│  └─ documented Buckholt inputs
+└─ .form-actions
+   ├─ documented Button
+   └─ documented Standalone Link
 ```
+
+The Code & specs source demonstrates `<form class="form" id="formExample">`, an introductory Text block with `<h3 class="headline-03">`, `.form-body` sections, and `.form-actions` containing a large primary Button followed by a Standalone Link.
+
+Canonical examples deliberately use `type="button"` because they are documentation demonstrations. Preserve that exact source in `examples.html`. In a real product implementation, use genuine submit semantics when the action actually submits the form; that application-level semantic decision must not rewrite the canonical Buckholt source example.
 
 ## Form body
 
-- `.form-body` contains the form controls.
-- Multiple `.form-body` sections may be used when the form needs distinct sections.
-- A `.text-block` may appear at the start of a Form or at the start of an additional `.form-body` to introduce that section.
-- Reuse documented Buckholt input components rather than recreating controls locally.
-- Runtime `.form-body` has a maximum width of `36rem` and a `2rem` vertical gap; do not reproduce this with local CSS.
+`.form-body` groups form controls. Multiple `.form-body` sections may be used, and the documentation demonstrates an optional `.text-block` at the beginning of sections.
 
-## Form controls
-
-Buckholt groups form controls into three interaction types:
-
-- **Free-form inputs** — unrestricted text/number entry such as Text input and Text area.
-- **Selection controls** — predefined choices such as Checkbox, Radio, File uploader, Switch and Select-style controls.
-- **Bound entry controls** — constrained values such as dates, times, number inputs and range controls.
-
-Choose the appropriate component by interaction need rather than appearance.
+Reuse documented Buckholt input markup rather than recreating controls or spacing locally.
 
 ## Form actions
 
-Place completion/exit actions at the bottom of the Form and reuse Buckholt Button and Link components.
+Use `.form-actions`. The rendered documentation examples and `buckholt.css` use this class. Source prose elsewhere mentions `.form-buttons`, but that does not match the rendered Code & specs markup or current runtime and is recorded in `discrepancies/known-issues.md`.
 
-Use `.form-actions`. The rendered Buckholt examples and the compiled runtime agree on this class. The explanatory prose on the source page also mentions `.form-buttons`, but that name is not implemented in the current runtime and should not be used as the Buckholt API.
-
-The discrepancy is recorded in `discrepancies/known-issues.md` so the upstream documentation wording can be corrected later.
-
-## States and validation
-
-Form-level documentation demonstrates states through the controls contained within the Form. Apply resting, focus/active, error, disabled and read-only behaviour through the relevant input component rather than inventing a Form-level visual state.
-
-Use the validation API documented by each control. Do not rely on colour alone for validation meaning.
+Do not use `.form-buttons` as canonical Buckholt markup.
 
 ## JavaScript enhancements
 
-The supplied Buckholt `form.js` is stored at `components/form/form.js`. It is part of the documented form-control behaviour and currently provides:
+The supplied `components/form/form.js` provides documented shared enhancements including input clearing, Checkbox/Radio behaviour, Text area character counting and Number input step controls. Use the supplied source rather than rewriting these behaviours.
 
-- input clear-button visibility and clearing;
-- Checkbox/Radio demonstration and read-only state behaviour;
-- Text area character-count behaviour;
-- Number input increment/decrement step-button behaviour.
+Where that source depends on jQuery, ensure the implementation environment loads its dependency before `form.js`.
 
-The supplied source depends on jQuery. Load jQuery before `components/form/form.js` when these enhancements are used.
+## Runtime
 
-Treat this file as real Buckholt behaviour source. Do not rewrite it into a different Buckholt-specific API unless the upstream design system changes.
-
-## Runtime behaviour
-
-The compiled runtime provides:
-
-```css
-.form,
-.nested-inputs,
-.form-actions,
-.form-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.form-body {
-  max-width: 36rem;
-}
-
-.form-actions {
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.form-actions > .btn {
-  align-self: flex-start;
-}
-```
-
-The runtime also contains `.nested-questions` and `.short-form`. Treat these as implementation helpers unless their specific use is documented by a component/pattern; do not promote them into general Form guidance solely because they exist in CSS.
+Use `buckholt.css` for Form width, gaps, action spacing and contained component styling. Do not reproduce those values with local CSS.
 
 ## Accessibility
 
-- Use a real `<form>` when content is a form.
-- Give every control the semantic labelling and accessible state required by its own component guidance.
-- Keep headings semantic; use Buckholt type-set classes for appearance rather than choosing heading levels by visual size.
-- Use real submit behaviour when the primary action submits the form; examples in the documentation may use `type="button"` only as non-functional component demonstrations.
-- Do not disable content that users still need to perceive; prefer the documented read-only treatment where review without editing is required.
-
-## Related Buckholt guidance
-
-Read as needed:
-
-- `components/text-input/`
-- `components/input-group/`
-- `components/input-row/`
-- `components/checkbox/`
-- `components/radio/`
-- `components/number-input/`
-- `components/button/`
-- `components/link/`
-- `components/text-block/`
-- `foundations/spacing/`
-- `foundations/typography/`
-- `foundations/colour/`
+- Use a real `<form>` for actual form submission workflows.
+- Preserve each child control's documented label, validation and state semantics.
+- Keep semantic heading hierarchy appropriate to the product page while preserving the Code & specs example unchanged in the canonical source file.
+- Use actual submit behaviour where the product action submits; do not alter `examples.html` to express that application-specific behaviour.
 
 ## Agent rules
 
-- Build Forms from documented Buckholt controls.
-- Use `.form`, `.form-body` and `.form-actions`.
-- Do not use `.form-buttons`; it is source-page wording, not a current runtime class.
-- Keep optional introductory/section content in Text block.
-- Reuse Button and Link for actions.
-- Load the supplied `components/form/form.js` where its documented enhancements are needed, with jQuery available first.
+- Read `examples.html` for exact Form DOM; do not reconstruct it from this prose.
+- Use `.form`, `.form-body` and `.form-actions` as documented.
+- Do not use `.form-buttons` as canonical markup.
+- Preserve optional Text block placement shown by the source.
+- Reuse exact child-component markup for inputs, Buttons and Links.
+- Do not replace the documentation's `type="button"` in canonical examples with an inferred `type="submit"`.
 - Do not recreate Form widths, gaps or action spacing locally.
-- Do not infer unsupported validation, progressive-disclosure or submission behaviour from the Form container alone.

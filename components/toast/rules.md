@@ -1,114 +1,40 @@
 # Toast
 
+## Verification
+
+Source-audited against the Buckholt Toast Usage, Style and Code & specs HTML pages supplied on 7 September 2026. Use `examples.html` for exact DOM structure.
+
 ## Purpose
-Toasts provide immediate, non-blocking feedback about updates or changes to system status after a user completes an action or task. They should keep users informed without requiring immediate action.
 
-Use Toasts sparingly. The documentation explicitly notes that they can become disruptive if overused.
+Toasts provide temporary system feedback without taking over the page. Buckholt documents message, note, small-note, icon, context-bar, dismissible, status, animation and Toast-container examples.
 
-## When to use
-Use a Toast for short-lived feedback that confirms or reports the outcome of an action while allowing the user to continue working.
+## Canonical markup
 
-Do not use a Toast as the only place for important information that the user may need later. Because Toasts can disappear automatically, equivalent information should remain available elsewhere when it needs to be revisited, such as a notification centre or activity log.
+`examples.html` preserves the exact Code & specs structures. Important source details include:
 
-For persistent inline feedback, consider Alert instead. For interruptive decisions that require attention before continuing, use Modal.
+- `.toast > .toast-content > .toast-body > .toast-message`;
+- `.toast-note` for supporting text;
+- `.toast-icon` directly before `.toast-body` where documented;
+- `.toast-contextbar` inside `.toast-body`;
+- `.btn-close` with `data-bs-dismiss="toast"` for dismissible examples;
+- `.toast-info`, `.toast-success`, `.toast-warning`, `.toast-error` status classes;
+- `.fade.show` for the documented visible animation state;
+- `.toast-container` for grouped Toasts.
 
-## Base structure
-```html
-<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <div class="toast-body">
-      <div class="toast-message">
-        <h6>Toast message</h6>
-      </div>
-      <div class="toast-note">Supporting detail.</div>
-    </div>
-  </div>
-</div>
-```
+The supplied success status example literally uses `fa-solid fa-circle-info`. Preserve that exact icon in canonical source; do not silently replace it with a check icon because another component uses one.
 
-The documented structure uses:
-- `.toast`
-- `.toast-content`
-- optional `.toast-icon`
-- `.toast-body`
-- `.toast-message`
-- optional `.toast-note`
-- optional context bar / timestamp content
-- optional close button
+## Behaviour and dependencies
 
-`.toast-message` is the primary message. `.toast-note` supplies secondary detail.
-
-## Semantic variants
-Buckholt documents four status treatments:
-- `.toast-info`
-- `.toast-success`
-- `.toast-warning`
-- `.toast-error`
-
-Use the status that matches the meaning and emotional tone of the feedback, not simply the preferred colour.
-
-Documented icon examples include:
-- info: `fa-solid fa-circle-info`
-- success: `fa-solid fa-circle-check`
-- warning: `fa-solid fa-triangle-exclamation`
-- error: `fa-solid fa-circle-exclamation`
-
-Use `aria-hidden="true"` when the visible message already communicates the status.
-
-## Example with icon
-```html
-<div class="toast toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-  <div class="toast-content">
-    <span class="toast-icon">
-      <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-    </span>
-    <div class="toast-body">
-      <div class="toast-message"><h6>Saved successfully</h6></div>
-    </div>
-  </div>
-</div>
-```
-
-## Dismissal
-The documentation says Toasts persist by default, but may be configured to dismiss automatically after five seconds. They may also include a close button for manual dismissal.
-
-Because a Toast overlays existing content, make it easy to dismiss. When autohide is used, do not put essential, unrecoverable information only in the Toast.
-
-A close control uses the documented Bootstrap dismissal pattern:
-```html
-<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-```
-
-## Animation
-Add `.fade` alongside `.toast` for the documented fade-in/fade-out transition. Bootstrap adds/uses `.show` while visible.
-
-Do not recreate Toast animation with custom component CSS.
-
-## Context and timestamp
-The documentation shows Toasts with a context bar and timestamp. Use this supporting area only for concise context that helps identify when or where the feedback came from. Do not allow supporting metadata to compete with the primary message.
-
-## Runtime behaviour
-The compiled CSS limits Toast width to a maximum of 22rem, applies Buckholt spacing/radius/shadow tokens, and maps semantic Toast variants to the feedback colour system. `.toast-container` provides positioning/stacking support and multiple Toasts are spaced vertically.
-
-Use the runtime classes; do not copy those values into local CSS.
+Toast dismissal/autohide behaviour relies on Bootstrap Toast JavaScript. Preserve the documented `data-bs-autohide` values where the source provides them and use Bootstrap rather than custom Toast lifecycle code.
 
 ## Accessibility
-- Preserve `role="alert"` for the documented feedback pattern.
-- Preserve `aria-live="assertive"` and `aria-atomic="true"` where the canonical examples use them.
-- Keep Toast content concise enough to be announced and understood quickly.
-- Close buttons need an accessible name.
-- Status must be communicated by text, not colour/icon alone.
-- If content auto-dismisses, ensure important information is available elsewhere.
 
-## Dependencies
-Toast show/hide/dismiss behaviour is Bootstrap behaviour. Load the Bootstrap 5.1.3 bundle used by Buckholt rather than creating a parallel Toast controller.
+Keep the documented `role="alert"` and source ARIA attributes. Production timing and live-region behaviour must remain appropriate to the importance of the message; do not rely on colour/icon alone for meaning.
 
 ## Agent rules
-- Use Toast for immediate non-blocking feedback after actions/tasks.
-- Use `.toast-content` and `.toast-body`; do not flatten the documented structure.
-- Choose `.toast-info`, `.toast-success`, `.toast-warning` or `.toast-error` semantically.
-- Use Iconography guidance for any additional icons.
-- Keep optional notes/context secondary to `.toast-message`.
-- Make overlay feedback dismissible/easy to clear.
-- Do not use Toast as the sole persistent record of important information.
-- Do not recreate Toast dimensions, shadow, radius, spacing, feedback colours or transitions locally.
+
+- `examples.html` is canonical for Toast DOM and source icons.
+- Use `.toast-contextbar`, not a generic action wrapper.
+- Preserve source status classes, close-button attributes and container structure.
+- Do not normalize the success icon or other source details by inference.
+- Use Bootstrap Toast behaviour and `buckholt.css`; do not recreate Toast styling/lifecycle locally.

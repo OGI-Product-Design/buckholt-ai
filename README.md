@@ -14,9 +14,10 @@ This repository is deliberately evidence-led. It teaches coding agents only patt
 2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website.
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only, loaded after the runtime when documented behaviour is known to render incorrectly.
 4. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
-5. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
-6. `components/<component>/examples.html` — verified canonical markup examples.
-7. `discrepancies/known-issues.md` — significant verified documentation/runtime differences that could mislead an implementation agent.
+5. `patterns/<pattern>/` — composition guidance that teaches agents how Buckholt components are assembled into pages, forms and recurring product interactions.
+6. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
+7. `components/<component>/examples.html` — verified canonical markup examples.
+8. `discrepancies/known-issues.md` — significant verified documentation/runtime differences that could mislead an implementation agent.
 
 Extra runtime CSS is useful flexibility, but it does not become canonical Buckholt guidance unless the documentation says so.
 
@@ -38,6 +39,12 @@ buckholt-ai/
 │   ├── shadows/
 │   ├── spacing/
 │   └── typography/
+├── patterns/
+│   ├── common-actions/
+│   ├── forms/
+│   ├── input-rows/
+│   ├── lookup/
+│   └── page-layout/
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
@@ -86,6 +93,8 @@ buckholt-ai/
 
 Each documented component folder contains `rules.md` and `examples.html`. Components with documented behaviour scripts also carry their supplied JavaScript where applicable.
 
+Patterns are guidance for composition. They do not create a competing styling/runtime layer; they teach the AI how to structure pages and combine documented Buckholt components correctly.
+
 ## Foundations
 
 Read the relevant foundation before changing shared design decisions:
@@ -98,6 +107,40 @@ Read the relevant foundation before changing shared design decisions:
 - `foundations/typography/` — Proxima Soft, type scales and named type sets.
 
 Prefer Buckholt semantic classes/tokens over hard-coded values or generic Bootstrap styling when Buckholt defines the role.
+
+## Pattern coverage
+
+### Page layout
+
+Read `patterns/page-layout/rules.md` **before creating a complete Buckholt page or substantial page section**.
+
+Page layout teaches the AI how to start from structure rather than from isolated components. It covers Buckholt's eight base CSS-Grid layouts, semantic Header / Sidebar / Main / Footer regions, and the nested main-content hierarchy:
+
+```text
+Page body
+└─ Frame
+   └─ Pane
+      └─ Panel
+         └─ Components & patterns
+```
+
+Main is the only required base-layout region. Panels group directly related content with a documented 32px item gap; Panes group Panels with a 64px gap; Frames wrap Panes with 64px padding and a 64px gap. Bootstrap `.container`, `.row` and `.col-*` provide horizontal/responsive scaffolding while Buckholt Frame/Pane/Panel control hierarchy and vertical rhythm.
+
+### Forms
+
+Read `patterns/forms/rules.md` when creating a complete form experience. It covers top-aligned labels, simple-vs-complex required/optional labelling, action placement, longer forms, progressive disclosure, inline editing, Accordion forms, multistep forms, Modal forms and side-panel forms.
+
+### Input rows
+
+Read `patterns/input-rows/rules.md` when deciding whether related fields should appear inline. Default to stacked fields; use Input rows sparingly and only where side-by-side placement clearly improves usability. Bootstrap breakpoints control responsive stacking and each input validates independently.
+
+### Lookup
+
+Read `patterns/lookup/rules.md` for the full known-value retrieval flow. It distinguishes Lookup from exploratory Search and covers input, result/refinement and summary/confirmation phases.
+
+### Common actions
+
+Read `patterns/common-actions/rules.md` when choosing labels/icons for recurring actions such as Add, Copy, Delete, Download, Edit, External link, Logout, Save, Search, Settings and Upload. Use the documented icon mapping consistently and apply visual hierarchy/destructive treatment through Button/Menu guidance.
 
 ## Component coverage
 
@@ -143,6 +186,15 @@ Use the component-supplied scripts only when their documented behaviour is neede
 
 ## Agent behaviour
 
-Coding agents should read `CLAUDE.md`, the relevant foundation files and the relevant component folder before implementing Buckholt UI. Follow documented Buckholt intent first, use the runtime CSS to implement it accurately, and apply only verified corrections from `css/buckholt-ai-fixes.css`.
+For a complete page, coding agents should read in this order:
 
-Do not invent missing components, variants, states, responsive behaviour or design tokens. If the documentation does not establish something, report the gap rather than approximating Buckholt with custom CSS.
+1. `CLAUDE.md`
+2. `patterns/page-layout/rules.md`
+3. any other relevant pattern guidance (`forms`, `input-rows`, `lookup`, `common-actions`)
+4. relevant foundations
+5. every component folder used in the page
+6. `discrepancies/known-issues.md` where applicable
+
+Start with page structure and content grouping before selecting individual components. Follow documented Buckholt intent first, use the runtime CSS to implement it accurately, and apply only verified corrections from `css/buckholt-ai-fixes.css`.
+
+Do not invent missing components, variants, states, responsive behaviour, page wrappers or design tokens. If the documentation does not establish something, report the gap rather than approximating Buckholt with custom CSS.
