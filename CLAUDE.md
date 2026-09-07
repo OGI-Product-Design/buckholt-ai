@@ -90,7 +90,7 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus, alerts, accordions and modals, also load:
+For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus, alerts, accordions, modals and toasts, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -305,6 +305,38 @@ Rules:
 - use `.summary-meta-stacked` for the vertical/centred form;
 - reuse nested components rather than restyling them.
 
+### Table
+Read `components/table/rules.md` and `components/table/examples.html`, plus any component guidance for controls/content embedded in cells.
+
+Rules:
+- Table is supported but its Buckholt documentation is provisional/WIP; do not avoid it when genuine tabular data is needed;
+- start from `.table-container > .table-content > table.table` and preserve native table semantics;
+- use `<th scope="col">` for the documented column-header pattern and `.table-header-label` for visible labels;
+- preserve `.table-gap` when following the supplied canonical HTML;
+- use `.table-sort-header` with a semantic `.table-sort` button for the supplied sortable pattern;
+- use `data-cdt-table`, `data-col`, `data-sort-type` and `data-sort-value` only where the supplied WIP implementation requires them;
+- use `.col-fit`, `.cell-data-right`, `.data-number` and `.data-secondary` only for roles evidenced by the source;
+- preserve native checkbox controls for the documented selection pattern;
+- reuse Avatar, Tag, Button and other Buckholt components inside cells rather than imitating them;
+- `.simple_table` is an existing lighter runtime treatment, but its formal usage rationale is not yet documented;
+- do not invent pagination, density, pinning, responsive transformation or other data-grid behaviour that Buckholt has not specified;
+- if a requirement exceeds the current WIP surface, flag the gap while still using the documented Table foundation where applicable.
+
+### Tag
+Read `components/tag/rules.md` and `components/tag/examples.html`, plus Colour and Iconography guidance.
+
+Rules:
+- choose read-only, dismissible, selectable or status by function rather than appearance;
+- use `.tag` with `.tag-label` as the base structure;
+- use `.tag-dismissible` plus an accessible close control for removable Tags;
+- use `.tag-selectable` with native radio for single-select or checkbox for multi-select; keep the native state and visual selected state synchronized;
+- use `.tag-status` plus exactly one `.tag-status-info`, `.tag-status-success`, `.tag-status-warning` or `.tag-status-error` for semantic state;
+- medium is default; `.tag-sm` is documented only for read-only and status Tags;
+- do not show icons in small Tags;
+- use `.tag-set` for related groups and documented expressive modifiers for categorisation, not semantic status;
+- Tags are not navigation links and should not perform multiple competing functions;
+- do not recreate Tag spacing, radius, colours or states locally.
+
 ### Text block
 Read `components/text-block/rules.md`, `components/text-block/examples.html`, Typography, Spacing, Iconography and Colour foundations.
 
@@ -313,6 +345,19 @@ Rules:
 - semantic heading level is independent from visual type class;
 - use documented eyebrow/inline-icon/Icon-block composition rules;
 - do not recreate Text block width or internal spacing locally.
+
+### Toast
+Read `components/toast/rules.md` and `components/toast/examples.html`, plus Colour and Iconography guidance.
+
+Rules:
+- use Toast for immediate, non-blocking feedback after an action/task and use it sparingly;
+- preserve `.toast > .toast-content > .toast-body` with `.toast-message` and optional `.toast-note`/`.toast-icon`;
+- use `.toast-info`, `.toast-success`, `.toast-warning` or `.toast-error` according to message meaning;
+- preserve the documented `role="alert"`, `aria-live="assertive"` and `aria-atomic="true"` pattern where applicable;
+- use a close control with `data-bs-dismiss="toast"` and an accessible label when manual dismissal is provided;
+- Toasts persist by default but may autohide after five seconds; important information that disappears must remain available elsewhere;
+- add `.fade` for the documented fade transition and use Bootstrap Toast behaviour rather than custom component scripting;
+- do not recreate Toast dimensions, shadow, radius, spacing, colours or transitions locally.
 
 ### Tooltip
 Read `components/tooltip/rules.md` and `components/tooltip/examples.html`.
@@ -336,4 +381,4 @@ Rules:
 - actions must be specific to the item;
 - use `a.versatile` only for whole-tile navigation and avoid nested competing interactive controls;
 - use the documented Progress bar component when progress appears;
-- do not invent Versa-tile padding, border, radius, action spacing or hover styling.
+- do not invent Versa-tile padding, border, radius, action spacing or hover styling locally.
