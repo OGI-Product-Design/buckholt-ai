@@ -1,0 +1,54 @@
+/* ============================================================================
+   Buckholt AI verified compatibility fixes
+   ============================================================================
+
+   Purpose
+   -------
+   This file contains only verified corrections required to make generated
+   prototypes match documented Buckholt design-system intent when the current
+   compiled runtime (`css/buckholt.css`) does not.
+
+   Source hierarchy
+   ----------------
+   1. Buckholt documentation = intended design-system behaviour.
+   2. css/buckholt.css = current upstream/runtime implementation.
+   3. This file = verified compatibility corrections only.
+
+   Rules
+   -----
+   - Load this file AFTER `css/buckholt.css`.
+   - Do not add visual tweaks merely because something "looks wrong".
+   - Verify each fix against Buckholt documentation and runtime behaviour first.
+   - Every fix must reference `discrepancies/known-issues.md`.
+   - Do not redefine complete components here when a narrow correction is enough.
+   - Keep `css/buckholt.css` as the upstream runtime snapshot rather than using
+     this file to silently redesign Buckholt.
+   - When an upstream Buckholt build fixes an issue, remove the corresponding
+     override after verification.
+
+   Usage
+   -----
+   <link rel="stylesheet" href="css/buckholt.css">
+   <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
+
+   Fix template
+   ------------
+
+   / * ========================================================================
+      COMPONENT — short issue name
+      Source: Buckholt <Component> documentation
+      Issue: concise description of the verified runtime difference
+      Status: verified runtime discrepancy; compatibility fix applied here
+      Tracking: discrepancies/known-issues.md
+      ======================================================================== * /
+
+   .selector {
+     property: corrected-value;
+   }
+
+   Note: the spaced comment delimiters in the template above are intentional so
+   the example remains inside this file-level comment.
+   ============================================================================ */
+
+/* No compatibility fixes are added here until each one is individually
+   re-verified against the relevant Buckholt documentation and current runtime. */
