@@ -1,44 +1,41 @@
-<!-- Buckholt Tooltip canonical examples -->
+<!-- Extracted verbatim from Buckholt Tooltip: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
 
-<!-- Top -->
-<button type="button" class="btn btn-secondary"
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        data-bs-title="Tooltip on top">
-  <span class="button-label">Tooltip on top</span>
+<!-- Code & specs example 1 -->
+<button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Tooltip content">
+    <span class="button-label">UI trigger</span>
 </button>
 
-<!-- Right -->
-<button type="button" class="btn btn-secondary"
-        data-bs-toggle="tooltip"
-        data-bs-placement="right"
-        data-bs-title="Tooltip on right">
-  <span class="button-label">Tooltip on right</span>
-</button>
+<!-- Code & specs example 2 -->
+<!-- Generated markup by the plugin -->
+<div class="tooltip bs-tooltip-auto" role="tooltip">
+    <div class="tooltip-arrow"></div>
+    <div class="tooltip-inner">
+        Some tooltip text!
+    </div>
+</div>
 
-<!-- Bottom -->
-<button type="button" class="btn btn-secondary"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
-        data-bs-title="Tooltip on bottom">
-  <span class="button-label">Tooltip on bottom</span>
-</button>
-
-<!-- Left -->
-<button type="button" class="btn btn-secondary"
-        data-bs-toggle="tooltip"
-        data-bs-placement="left"
-        data-bs-title="Tooltip on left">
-  <span class="button-label">Tooltip on left</span>
-</button>
-
-<!-- Documented Buckholt initialisation -->
-<script>
+<!-- Code & specs example 3 -->
 const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 const tooltips = Array.from(tooltipTriggers).map(el => {
-  return new bootstrap.Tooltip(el, {
-    offset: [0, 4],
-    delay: { show: 800, hide: 100 }
-  });
+    return new bootstrap.Tooltip(el, {
+        offset: [0, 4], // [skidding, distance]
+        delay: { show: 800, hide: 100 } // show after 800ms, hide after 100ms
+    });
 });
-</script>
+
+<!-- Code & specs example 4 -->
+<button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
+    <span class="button-label">Tooltip on top</span>
+</button>
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tooltip on right">
+    <span class="button-label">Tooltip on right</span>
+</button>
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom">
+    <span class="button-label">Tooltip on bottom</span>
+</button>
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tooltip on left">
+    <span class="button-label">Tooltip on left</span>
+</button>
