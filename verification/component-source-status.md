@@ -6,7 +6,8 @@ This file tracks source verification against rendered Buckholt documentation HTM
 
 - **HTML VERIFIED** — `components/<component>/examples.html` has been compared with the component's supplied **Code & specs HTML page**. Canonical block examples preserve the documented DOM, attributes, class placement, order and deliberate `...` placeholders rather than filling gaps by inference.
 - **RULES AUDITED** — `rules.md` has been checked against the supplied Usage, Style and Code & specs HTML pages and corrected where it could imply canonical markup not present in source.
-- **RUNTIME PENDING** — this source-verification pass does not by itself prove that every documented selector/state renders perfectly against the current `css/buckholt.css`. Runtime parity is a separate check.
+- **SOURCE PARTIAL** — the supplied bundle does not include a complete Code & specs source, so canonical HTML cannot yet be declared verified.
+- **RUNTIME PENDING** — source verification does not by itself prove every documented selector/state renders perfectly against the current `css/buckholt.css`. Runtime parity is a separate check.
 
 ## Bundle 01 — supplied 7 September 2026
 
@@ -31,6 +32,35 @@ This file tracks source verification against rendered Buckholt documentation HTM
 | List | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
 | Lookup | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
 | Menu | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+
+## Bundle 02 — supplied 7 September 2026
+
+| Component | Canonical HTML | Rules | Runtime parity |
+| --- | --- | --- | --- |
+| Menu button | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Modal | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Multi-field input | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Nested inputs | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Number input | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Page navigation | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Progress bar | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Radio | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Response button | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Select | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Slider | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Summary Meta | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Switch | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Tabs | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Tag | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Text area | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Text block | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Text input | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Toast | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Tooltip | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Versa-tile | HTML VERIFIED | RULES AUDITED | RUNTIME PENDING |
+| Table | SOURCE PARTIAL — Usage only | PROVISIONAL | RUNTIME PENDING |
+
+Bundle 02 also contained rendered HTML pages for Colour, Colour contrast, Foundation colours, Global palette and Type sets. Those are foundation evidence and are not counted as component verification in this table.
 
 ## Rules for future bundles
 
