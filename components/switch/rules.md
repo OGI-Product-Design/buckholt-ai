@@ -1,47 +1,40 @@
 # Switch
 
+## Verification
+
+Source-audited against the Buckholt Switch Usage, Style and Code & specs HTML pages supplied on 7 September 2026. Use `examples.html` for exact DOM structure.
+
 ## Purpose
 
-Use Switch for an immediate on/off setting or state. Buckholt provides default and small variants plus an always-active treatment for non-interactive enforced states.
+Switch controls an immediate on/off setting. Buckholt documents default, small, status, helper, always-active, grouped and disabled forms.
 
-## Canonical structure
+## Canonical markup
 
-```html
-<div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" role="switch" id="exampleSwitch">
-  <div class="input-label">
-    <label class="form-check-label" for="exampleSwitch">Example switch</label>
-    <small class="form-helper">Helper text</small>
-  </div>
-</div>
-```
+`examples.html` preserves the exact Code & specs variations. The base structure uses `.form-check.form-switch`, a native input with `role="switch"`, and `.input-label > .form-check-label`.
 
-The native checkbox remains the interactive control and uses `role="switch"`. Keep `id`/`for` matched.
+Documented modifiers/structures include:
 
-## Default and small
+- `.form-switch-sm` — small;
+- `.form-switch-status` combined with small in the source status example;
+- `.form-helper` inside `.input-label`;
+- `.form-switch-active` for the documented always-active treatment;
+- `.switch-set` for a group;
+- native `disabled` for disabled state.
 
-The default switch is intended for forms/full-page contexts and must include a visible label and status tag. Runtime CSS renders the status text as `Off` / `On`.
+The always-active Code & specs example literally uses `<input type="radio" role="switch" ... checked>`. Preserve that exact source markup rather than normalising it to a checkbox.
 
-Use `.form-switch-sm` for the compact variant. Small switches are intended for condensed or inline contexts; label and status text may be optional. Buckholt's small checked state includes a checkmark to retain a non-colour cue.
+## Usage
 
-Use `.form-switch-status` with the small variant when the documented status tag is required.
+Always-active means the setting is permanently/enforced on in that context, not merely a normal disabled switch. Use it only where the product meaning requires that treatment.
 
-## Disabled
+## Accessibility
 
-Use native `disabled` on the input. Disabled switches may be either on or off.
-
-## Always active
-
-Use `.form-switch-active` only for states that are permanently/enforced on and cannot be changed by the user, such as system policy or a feature that cannot be disabled. The runtime hides the switch control and displays `Always active`.
-
-Do not use always-active as a substitute for disabled. It communicates a distinct non-interactive but active condition.
+Production controls must retain associated labels and correctly represent their actual state. Do not rely on visual position/colour alone.
 
 ## Agent rules
 
-- Use `.form-check.form-switch` with native checkbox semantics and `role="switch"`.
-- Use `.form-switch-sm` only for the documented compact variant.
-- Use `.form-switch-status` only where status text is required on small Switch.
-- Use `.form-switch-active` only for genuinely enforced/permanent active state.
-- Preserve a visible label for default switches.
-- Use native `checked` and `disabled` state.
-- Do not recreate track/handle/status visuals with local CSS.
+- `examples.html` is canonical for Switch DOM.
+- Preserve the exact native input type and modifiers shown for each documented variation.
+- Do not rewrite the always-active Radio example as a Checkbox in canonical source.
+- Use `.switch-set` only for the documented grouped form.
+- Let `buckholt.css` provide Switch appearance and states.
