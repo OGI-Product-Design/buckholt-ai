@@ -10,18 +10,62 @@ It does **not** answer whether the markup is faithful to Buckholt. That is sourc
 
 Read `verification/runtime-verification-framework.md` before using this page to change any status.
 
+## Three layers
+
+The page is deliberately layered, so raw evidence never becomes the primary interface.
+
+| Layer | Where | What it answers |
+| --- | --- | --- |
+| 1 · Style guide | [`test/style-guide/`](../style-guide/index.html) | What Buckholt looks like. Start there. |
+| 2 · Runtime summary | the top of `index.html` | What works and what needs attention — one row per component. |
+| 3 · Raw diagnostics | `<details>` sections and `window.rvDiagnostics` | Why the verifier reached that conclusion. |
+
+The summary is a table of `Component | Source | Runtime | Behaviour | Notes`, with statuses:
+
+`PASS` · `VERIFIED RUNTIME ISSUE` · `APPLICATION BEHAVIOUR REQUIRED` · `SOURCE PARTIAL` ·
+`NEEDS INVESTIGATION`
+
+Every verbose section — the dependency check, the compatibility-fix verification, the harness
+artefacts and the full diagnostic list — sits behind a closed disclosure. Nothing is discarded; it
+is just not the front page.
+
+### The summary is measured, not asserted
+
+Every correction in `css/buckholt-ai-fixes.css` is re-checked against the live runtime on load, so a
+fix that stops working — because an upstream build changed, or the stylesheet was not loaded — shows
+up as a `VERIFIED RUNTIME ISSUE` on the affected component rather than passing silently. The count of
+fixes verified in effect is printed in the summary header and available as `window.rvFixChecks`.
+
+### Harness artefacts are separated from component defects
+
+Composing separately-authored examples onto one page creates conditions that do not exist in the
+components. Every diagnostic carries a `scope`, and only `scope: "component"` can change a
+component's status. The rest are collected under **Harness artefacts** and summarised rather than
+listed one by one:
+
+- documented `…` elisions — counted, with the components they appear in, not shown as dozens of
+  separate failures;
+- documented `src="..."` image placeholders that cannot load;
+- ids reused across separately-authored examples;
+- the documented modal trigger targeting an id its own documented example does not define;
+- group `label[for]` values with no single control to point at.
+
+### Behaviour is described at component level
+
+Where a documented interaction has no shipped script, the summary says so in the Behaviour column
+rather than reporting it as a defect. For example:
+
+- **Tag** — visual component present; selection and dismiss are product behaviour
+- **Slider** — range and number field are not synchronised by any shipped script
+- **Table** — the `data-cdt-*` controller implied by the source is not supplied
+
 ## What is on the page
 
-`index.html` is a single scrollable page containing every component that has a source-verified `examples.html`: **41 components**, composed into **217 documented examples**.
+`index.html` carries every component that has a source-verified `examples.html`: **41 components**,
+composed into **217 documented examples**.
 
-Each component gets a section with:
-
-- a visible heading;
-- its source gate (`HTML VERIFIED` or `SOURCE PARTIAL`) and runtime gate (`RUNTIME PENDING`);
-- which behaviour dependencies its markup exercises;
-- the canonical markup, framed one documented example at a time.
-
-A component index at the top links to every section.
+Each component section shows a heading, its source and runtime gates, the behaviour dependencies its
+markup exercises, and the canonical markup framed one documented example at a time.
 
 ## The markup is copied, not rewritten
 

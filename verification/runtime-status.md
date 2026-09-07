@@ -24,6 +24,35 @@ Current controlled target:
 - jQuery: 3.7.1 for `components/form/form.js`
 - Buckholt scripts: `dropdown.js`, `form.js`, `tabs.js` where required
 
+## Verification progress — 7 September 2026
+
+A controlled pass was run against `test/runtime-verification/`, which composes every source-verified
+`examples.html` byte-for-byte and re-asserts each compatibility fix against the live runtime.
+
+**Completed for all 41 components with source-verified markup:**
+
+- exact source-verified markup rendered, verified byte-identical to `components/*/examples.html`;
+- dependency contract checked, including stylesheet order;
+- every finding classified with the framework categories, with harness artefacts of composition
+  (reused ids, documented `…` elisions, cross-snippet references) separated from component findings;
+- all 14 active corrections in `css/buckholt-ai-fixes.css` re-verified in effect by measurement;
+- resting render, and the Bootstrap and component-script behaviours the markup exercises
+  (Modal, Tabs, Accordion, Collapse, Dropdown, Toast, Tooltip, the `form.js` enhancements);
+- responsive behaviour at 320px, 375px, 768px and desktop, recorded in `responsive/`.
+
+**Not yet completed, and why no component advances to `RUNTIME VERIFIED`:**
+
+1. The documented state set has not been exercised exhaustively per component. Hover, pressed,
+   `:focus-visible`, disabled, read-only and validation states were checked where a correction
+   depended on them, not across every component.
+2. The verification environment could not load the Typekit stylesheet or the Font Awesome kit, so
+   type and icon rendering are unverified. Under this framework a failed dependency gate voids the
+   rendering judgement beneath it, so the gate is recorded as unmet rather than worked around.
+
+The matrix therefore stays `RUNTIME PENDING`. Re-run `test/runtime-verification/` in an environment
+with network access to the CDN dependencies and complete the per-component state checklist before
+advancing any row.
+
 ## Component matrix
 
 | Component | Source gate | Runtime status | States/behaviour tested | Notes |

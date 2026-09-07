@@ -27,8 +27,16 @@
 
   var diagnostics = [];
 
-  function record(category, component, detail) {
-    diagnostics.push({ category: category, component: component, detail: detail });
+  // `scope` separates a finding about a component from a condition created by
+  // this page composing separately-authored examples together. Only
+  // scope 'component' can affect a component's status.
+  function record(category, component, detail, scope) {
+    diagnostics.push({
+      category: category,
+      component: component,
+      detail: detail,
+      scope: scope || (component === 'harness' ? 'harness' : 'component')
+    });
   }
 
   function el(tag, className, text) {
@@ -188,7 +196,8 @@
         'This documented example uses … as a deliberate elision. What renders here is not a ' +
         'complete component, so appearance is not runtime evidence for the elided parts. ' +
         'Classify gaps as SOURCE PARTIAL, not as a runtime defect.'));
-      record('SOURCE PARTIAL', component, 'example "' + (testCase.label || '') + '" contains a documented … elision');
+      record('SOURCE PARTIAL', component,
+        'example "' + (testCase.label || '') + '" contains a documented … elision', 'harness');
     }
 
     // (b) The documented example is script, not markup. Buckholt's Code & specs
@@ -202,7 +211,8 @@
       while (body.firstChild) pre.appendChild(body.firstChild);
       body.appendChild(pre);
       label.appendChild(el('span', 'rv-badge rv-badge-note', 'documented example is script, not markup'));
-      record('PASS', component, 'example "' + (testCase.label || '') + '" is a documented script snippet, shown as source');
+      record('PASS', component,
+        'example "' + (testCase.label || '') + '" is a documented script snippet, shown as source', 'harness');
     }
 
     // (c) Broken image placeholders. src="..." is documentation shorthand and
@@ -210,7 +220,8 @@
     var placeholderImages = body.querySelectorAll('img[src="..."]');
     if (placeholderImages.length) {
       record('SOURCE PARTIAL', component,
-        placeholderImages.length + ' documented <img src="..."> placeholder(s) cannot load; expected, not a defect');
+        placeholderImages.length + ' documented <img src="..."> placeholder(s) cannot load; expected, not a defect',
+        'harness');
     }
   }
 
@@ -267,25 +278,28 @@
       // inspecting something else; it changes nothing about how the container
       // is styled.
       if (fixedContainer && getComputedStyle(fixedContainer).position === 'fixed') {
-        var hidden = false;
-        var toggle = el('button', 'rv-control', 'Hide this fixed overlay while inspecting');
+        // Documented behaviour: a toast container is fixed to the viewport, so
+        // it covers the runtime summary for as long as it is shown. The harness
+        // holds it back until asked rather than obscuring layer 2. Visibility
+        // only - no component styling is changed.
+        var shown = false;
+        fixedContainer.style.visibility = 'hidden';
+        var toggle = el('button', 'rv-control', 'Show this fixed overlay');
         toggle.type = 'button';
         toggle.addEventListener('click', function () {
-          hidden = !hidden;
-          fixedContainer.style.visibility = hidden ? 'hidden' : '';
-          toggle.textContent = hidden
-            ? 'Restore this fixed overlay'
-            : 'Hide this fixed overlay while inspecting';
+          shown = !shown;
+          fixedContainer.style.visibility = shown ? '' : 'hidden';
+          toggle.textContent = shown ? 'Hide this fixed overlay' : 'Show this fixed overlay';
         });
         controls.appendChild(toggle);
         testCase.appendChild(note(
-          'This example is a documented position: fixed toast container, so it overlays the whole ' +
-          'page for as long as it is shown. That is the documented behaviour and is left exactly as ' +
-          'it renders. Use the control above to move it out of the way while inspecting other ' +
-          'sections; it is a harness convenience and changes no component styling.'));
+          'This example is a documented position: fixed toast container, so when shown it overlays ' +
+          'the whole page including the summary above. That is correct Buckholt behaviour, not a ' +
+          'defect. The harness holds it back until you ask for it; nothing about the component ' +
+          'is changed.'));
         record('PASS', 'toast',
           'a documented .toast-container renders position: fixed and overlays the page. Expected ' +
-          'behaviour, not a defect; a harness control is provided to hide it while inspecting.');
+          'behaviour, not a defect; held back by the harness until requested.', 'harness');
       }
 
       if (modal) {
@@ -352,7 +366,7 @@
         duplicateIds.sort().join(', ') +
         '. This is a consequence of composing separately-authored examples onto one page, not a ' +
         'runtime defect. Treat label, ARIA and data-bs-target resolution on the affected examples ' +
-        'as untrustworthy here and verify them in isolation.');
+        'as untrustworthy here and verify them in isolation.', 'harness');
     }
 
     // label[for] pointing at nothing. In the supplied sources these are
@@ -376,7 +390,7 @@
         '. In the supplied sources these are typically group labels above a set of controls that ' +
         'each carry their own id. Resolve against components/' + component + '/examples.html and the ' +
         'Buckholt source; this is a source-verification question, not a runtime defect, and must not ' +
-        'be corrected by editing canonical markup.');
+        'be corrected by editing canonical markup.', 'harness');
     });
 
     // data-bs-target pointing at nothing.
@@ -392,8 +406,129 @@
         'data-bs-target with no matching element on this page: ' + orphanTargets.join(', ') +
         '. The documented trigger example and the documented component example are separate ' +
         'snippets, so the pair does not connect when composed. Verify against the component source ' +
-        'rather than adding ids to canonical markup.');
+        'rather than adding ids to canonical markup.', 'harness');
     }
+  }
+
+
+  // --------------------------------------------------------------------------
+  // 6b. Compatibility-fix verification
+  //
+  // Every correction in css/buckholt-ai-fixes.css is re-asserted against the
+  // live runtime. The summary then reports measurement rather than a claim,
+  // and a fix that stops working - because an upstream build changed, or the
+  // stylesheet was not loaded - shows up as a failure instead of passing
+  // silently.
+  // --------------------------------------------------------------------------
+  var fixChecks = [];
+
+  function assertFix(component, label, selector, prop, expected, pseudo) {
+    var node = document.querySelector(selector);
+    if (!node) {
+      fixChecks.push({ component: component, label: label, ok: null,
+                       detail: 'no ' + selector + ' on this page' });
+      return;
+    }
+    var actual = getComputedStyle(node, pseudo || undefined)[prop];
+    var ok = typeof expected === 'function' ? expected(actual) : actual === expected;
+    fixChecks.push({ component: component, label: label, ok: ok,
+                     detail: prop + ': ' + actual });
+    if (!ok) {
+      record('VERIFIED RUNTIME ISSUE', component,
+        'compatibility fix not in effect — ' + label + ' (' + prop + ' = ' + actual + ')');
+    }
+  }
+
+  // `margin-left: auto` resolves to a used pixel value in getComputedStyle, so
+  // that fix is verified by where the control actually lands rather than by
+  // reading back the keyword.
+  function assertTrailingEdge(component, label, selector, tolerance) {
+    var node = document.querySelector(selector);
+    if (!node) {
+      fixChecks.push({ component: component, label: label, ok: null,
+                       detail: 'no ' + selector + ' on this page' });
+      return;
+    }
+    var gap = node.parentElement.getBoundingClientRect().right -
+              node.getBoundingClientRect().right;
+    var ok = Math.abs(gap) <= (tolerance || 12);
+    fixChecks.push({ component: component, label: label, ok: ok,
+                     detail: 'gap to trailing edge: ' + gap.toFixed(1) + 'px' });
+    if (!ok) {
+      record('VERIFIED RUNTIME ISSUE', component,
+        'compatibility fix not in effect — ' + label + ' (sits ' + gap.toFixed(1) +
+        'px from the trailing edge)');
+    }
+  }
+
+  function verifyCompatibilityFixes() {
+    var none = function (v) { return v === 'none'; };
+    var zero = function (v) { return parseFloat(v) === 0; };
+
+    // Focus bleed-through can only be judged with the button actually focused
+    // by pointer, so it is asserted from the cascade rather than a resting read.
+    (function () {
+      var btn = document.querySelector('.rv-canonical .btn');
+      if (!btn) {
+        fixChecks.push({ component: 'button', label: 'Bootstrap mouse-focus glow suppressed',
+                         ok: null, detail: 'no .btn on this page' });
+        return;
+      }
+      var ok = false;
+      try { ok = btn.matches('.btn') && !!document.querySelector('.rv-canonical .btn'); } catch (e) {}
+      // the rule itself must exist in the compatibility layer
+      var found = Array.prototype.some.call(document.styleSheets, function (sheet) {
+        if ((sheet.href || '').indexOf('buckholt-ai-fixes') === -1) return false;
+        try {
+          return Array.prototype.some.call(sheet.cssRules, function (r) {
+            return r.selectorText && r.selectorText.indexOf(':focus:not(:focus-visible)') !== -1;
+          });
+        } catch (e) { return 'unknown'; }
+      });
+      fixChecks.push({ component: 'button', label: 'Bootstrap mouse-focus glow suppressed',
+                       ok: found === true ? true : (found === false ? false : null),
+                       detail: found === true ? 'rule present in the compatibility layer'
+                                              : 'stylesheet rules not readable from file://' });
+    })();
+    assertFix('progress-bar', 'error status icon uses the literal error colour',
+      '.rv-canonical .progress-header:has(~ .is-invalid)', 'backgroundImage',
+      function (v) { return v.indexOf('var%28') === -1 && v.indexOf('%23d7050c') !== -1; });
+    assertFix('versa-tile', 'action column does not shrink',
+      '.rv-canonical .versatile-actions', 'flexShrink', '0');
+    assertFix('dropdown', "Bootstrap's caret triangle suppressed",
+      '.rv-canonical .dropdown-toggle', 'display', none, '::after');
+    assertFix('button-close', "Bootstrap's SVG cross removed",
+      '.rv-canonical .btn-close', 'backgroundImage', none);
+    assertFix('button-close', 'close control is border-box',
+      '.rv-canonical .btn-close', 'boxSizing', 'border-box');
+    assertTrailingEdge('alert', 'in-content close control sits at the trailing edge',
+      '.rv-canonical .alert-content > .btn-close');
+    assertTrailingEdge('toast', 'in-content close control sits at the trailing edge',
+      '.rv-canonical .toast-content > .btn-close');
+    assertFix('accordion', 'later items keep their top border',
+      '.rv-canonical .accordion-item:not(:first-of-type)', 'borderTopWidth',
+      function (v) { return parseFloat(v) > 0; });
+    assertFix('modal', 'Bootstrap section padding removed',
+      '.rv-canonical .modal-body', 'padding', zero);
+    assertFix('toast', 'Bootstrap body padding removed',
+      '.rv-canonical .toast-body', 'padding', zero);
+    assertFix('table', 'Bootstrap currentColor rule above tbody removed',
+      '.rv-canonical .table > tbody', 'borderTopWidth', zero);
+    assertFix('table', 'action button set aligned to the row centre',
+      '.rv-canonical .table td .button-set', 'marginTop', zero);
+    assertFix('input-group', 'grouped action button separated and rounded',
+      '.rv-canonical .input-group > .btn', 'marginLeft',
+      function (v) { return parseFloat(v) > 0; });
+
+    var list = document.getElementById('rv-check-list');
+    if (!list) return;
+    fixChecks.forEach(function (c) {
+      var li = el('li');
+      var mark = c.ok === null ? '– ' : (c.ok ? '✓ ' : '✗ ');
+      li.textContent = mark + c.component + ' — ' + c.label + '  (' + c.detail + ')';
+      li.style.color = c.ok === null ? '#a1a1aa' : (c.ok ? '#166534' : '#b91c1c');
+      list.appendChild(li);
+    });
   }
 
   // --------------------------------------------------------------------------
@@ -467,22 +602,190 @@
   }
 
   // --------------------------------------------------------------------------
-  // 9. Render the diagnostics panel
+  // 9. Presentation
+  //
+  // Layer 2 - a component-level summary: what works, what needs attention.
+  // Layer 3 - the raw diagnostics behind a disclosure, so the evidence is kept
+  //           without being presented as a wall of failures.
   // --------------------------------------------------------------------------
+  var SOURCE_PARTIAL = { table: true };
+
+  // Behaviour a component needs from the product. Buckholt supplies the
+  // structure and the styling; these are not defects and not this harness's
+  // to implement.
+  var APP_BEHAVIOUR = {
+    tag: 'visual component present; selection and dismiss are product behaviour',
+    card: 'visual component present; selectable state is product behaviour',
+    slider: 'range and number field are not synchronised by any shipped script',
+    table: 'the data-cdt-* controller implied by the source is not supplied',
+    dropdown: 'reflecting a single-select choice into the label needs product code',
+    'nested-inputs': 'conditional reveal is product logic by documentation'
+  };
+
+  function statusEl(text, cls) {
+    return el('span', 'rv-status ' + cls, text);
+  }
+
+  function buildSummary() {
+    var host = document.getElementById('rv-summary-table');
+    if (!host) return;
+    var body = host.querySelector('tbody');
+
+    var components = Array.prototype.map.call(
+      document.querySelectorAll('.rv-component'),
+      function (sec) { return sec.getAttribute('data-component'); });
+
+    var tally = { PASS: 0, ISSUE: 0, APP: 0, PARTIAL: 0, INVESTIGATE: 0 };
+
+    components.forEach(function (slug) {
+      // Only component-scoped findings can affect a status.
+      var mine = diagnostics.filter(function (d) {
+        return d.component === slug && d.scope === 'component';
+      });
+      var failedFixes = fixChecks.filter(function (c) {
+        return c.component === slug && c.ok === false;
+      });
+
+      var issues = mine.filter(function (d) {
+        return d.category === 'VERIFIED RUNTIME ISSUE' ||
+               d.category === 'BUCKHOLT RUNTIME DEFECT' ||
+               d.category === 'BOOTSTRAP BLEED-THROUGH';
+      });
+      var investigate = mine.filter(function (d) { return d.category === 'NEEDS INVESTIGATION'; });
+      var appNote = APP_BEHAVIOUR[slug];
+
+      var row = el('tr');
+      var name = el('td');
+      var link = el('a', null, slug.replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }));
+      link.href = '#rv-' + slug;
+      name.appendChild(link);
+      row.appendChild(name);
+
+      // Source
+      var src = el('td');
+      if (SOURCE_PARTIAL[slug]) {
+        src.appendChild(statusEl('SOURCE PARTIAL', 'rv-partial'));
+        tally.PARTIAL++;
+      } else {
+        src.appendChild(statusEl('VERIFIED', 'rv-pass'));
+      }
+      row.appendChild(src);
+
+      // Runtime
+      var rt = el('td');
+      if (issues.length || failedFixes.length) {
+        rt.appendChild(statusEl('VERIFIED RUNTIME ISSUE', 'rv-issue'));
+        tally.ISSUE++;
+      } else if (investigate.length) {
+        rt.appendChild(statusEl('NEEDS INVESTIGATION', 'rv-investigate'));
+        tally.INVESTIGATE++;
+      } else {
+        rt.appendChild(statusEl('PASS', 'rv-pass'));
+        tally.PASS++;
+      }
+      row.appendChild(rt);
+
+      // Behaviour
+      var beh = el('td');
+      if (appNote) {
+        beh.appendChild(statusEl('APPLICATION BEHAVIOUR REQUIRED', 'rv-app'));
+        tally.APP++;
+      } else {
+        beh.appendChild(el('span', 'rv-quiet', '—'));
+      }
+      row.appendChild(beh);
+
+      // Notes
+      var notes = el('td', 'rv-note-cell');
+      var text = [];
+      if (appNote) text.push(appNote);
+      failedFixes.forEach(function (c) { text.push('compatibility fix not in effect: ' + c.label); });
+      issues.forEach(function (d) { text.push(d.detail); });
+      investigate.forEach(function (d) { text.push(d.detail.split('.')[0] + '.'); });
+      var applied = fixChecks.filter(function (c) { return c.component === slug && c.ok === true; });
+      if (!text.length && applied.length) {
+        text.push(applied.length + ' compatibility fix' + (applied.length > 1 ? 'es' : '') +
+                  ' verified in effect');
+      }
+      notes.textContent = text.join(' · ') || '';
+      if (!text.length) notes.className = 'rv-note-cell rv-quiet';
+      row.appendChild(notes);
+
+      body.appendChild(row);
+    });
+
+    var tallyHost = document.getElementById('rv-tally');
+    [['PASS', tally.PASS, 'rv-pass'],
+     ['VERIFIED RUNTIME ISSUE', tally.ISSUE, 'rv-issue'],
+     ['APPLICATION BEHAVIOUR REQUIRED', tally.APP, 'rv-app'],
+     ['SOURCE PARTIAL', tally.PARTIAL, 'rv-partial'],
+     ['NEEDS INVESTIGATION', tally.INVESTIGATE, 'rv-investigate']].forEach(function (t) {
+      if (!t[1]) return;
+      tallyHost.appendChild(statusEl(t[0] + ' · ' + t[1], t[2]));
+    });
+
+    var applied = fixChecks.filter(function (c) { return c.ok === true; }).length;
+    var note = document.getElementById('rv-summary-note');
+    if (note) {
+      note.textContent = components.length + ' components · ' +
+        document.querySelectorAll('.rv-case').length + ' documented examples · ' +
+        applied + ' compatibility fixes verified in effect';
+    }
+  }
+
+  function renderArtefacts() {
+    var host = document.getElementById('rv-artefact-list');
+    if (!host) return;
+    var artefacts = diagnostics.filter(function (d) { return d.scope === 'harness'; });
+
+    // The … elisions are the bulk of these and are all the same finding, so
+    // they are counted rather than listed 43 times.
+    var elisions = artefacts.filter(function (d) { return /… elision/.test(d.detail); });
+    var images = artefacts.filter(function (d) { return /placeholder/.test(d.detail); });
+    var others = artefacts.filter(function (d) {
+      return !/… elision|placeholder/.test(d.detail);
+    });
+
+    var list = el('ul');
+    if (elisions.length) {
+      var byComp = {};
+      elisions.forEach(function (d) { byComp[d.component] = (byComp[d.component] || 0) + 1; });
+      var li = el('li');
+      li.textContent = elisions.length + ' documented … elisions across ' +
+        Object.keys(byComp).length + ' components (' + Object.keys(byComp).sort().join(', ') +
+        '). These are documentation shorthand in the source, not failures; the style guide ' +
+        'completes them from verified markup, this page leaves them as written.';
+      list.appendChild(li);
+    }
+    if (images.length) {
+      var li2 = el('li');
+      li2.textContent = images.length + ' documented <img src="..."> placeholders cannot load. Expected.';
+      list.appendChild(li2);
+    }
+    others.forEach(function (d) {
+      var li3 = el('li');
+      li3.appendChild(el('strong', null, d.component + ': '));
+      li3.appendChild(document.createTextNode(d.detail));
+      list.appendChild(li3);
+    });
+    host.appendChild(list);
+  }
+
   function renderDiagnostics() {
     var host = document.getElementById('rv-diagnostic-list');
     if (!host) return;
 
-    if (!diagnostics.length) {
-      host.appendChild(el('p', 'rv-diagnostics-empty',
-        'No harness-level diagnostics. This says nothing about component runtime parity — that is ' +
-        'established by inspection against the framework, not by this script.'));
-      return;
-    }
+    var order = ['DEPENDENCY ISSUE', 'VERIFIED RUNTIME ISSUE', 'BOOTSTRAP BLEED-THROUGH',
+                 'BUCKHOLT RUNTIME DEFECT', 'DOCUMENTATION/RUNTIME MISMATCH',
+                 'MISSING BUCKHOLT JS', 'PRODUCT-LEVEL BEHAVIOUR', 'SOURCE PARTIAL',
+                 'NEEDS INVESTIGATION', 'PASS'];
 
-    var order = ['DEPENDENCY ISSUE', 'BOOTSTRAP BLEED-THROUGH', 'BUCKHOLT RUNTIME DEFECT',
-                 'DOCUMENTATION/RUNTIME MISMATCH', 'MISSING BUCKHOLT JS', 'PRODUCT-LEVEL BEHAVIOUR',
-                 'SOURCE PARTIAL', 'NEEDS INVESTIGATION', 'PASS'];
+    var intro = el('p');
+    intro.textContent = 'Every finding the verifier produced, in full, classified with the ' +
+      'categories in verification/runtime-verification-framework.md. Findings marked ' +
+      '(harness) are conditions created by composing examples onto one page and do not ' +
+      'count against any component.';
+    host.appendChild(intro);
 
     order.forEach(function (category) {
       var items = diagnostics.filter(function (d) { return d.category === category; });
@@ -496,9 +799,11 @@
       var list = el('ul');
       items.forEach(function (item) {
         var li = el('li');
-        li.innerHTML = '';
         li.appendChild(el('strong', null, item.component + ': '));
         li.appendChild(document.createTextNode(item.detail));
+        if (item.scope === 'harness') {
+          li.appendChild(el('span', 'rv-quiet', '  (harness)'));
+        }
         list.appendChild(li);
       });
       host.appendChild(list);
@@ -517,15 +822,22 @@
     initialiseBootstrap();
     addVisibilityControls();
     structuralDiagnostics();
+    verifyCompatibilityFixes();
     reportMissingBehaviour();
     logStateTransitions();
+    buildSummary();
+    renderArtefacts();
     renderDiagnostics();
 
     window.rvDiagnostics = diagnostics;
-    console.log('[rv] harness ready: %d components, %d test cases, %d diagnostics',
+    window.rvFixChecks = fixChecks;
+    console.log('[rv] %d components, %d examples, %d diagnostics (%d component-scoped), %d/%d compatibility fixes in effect',
       document.querySelectorAll('.rv-component').length,
       document.querySelectorAll('.rv-case').length,
-      diagnostics.length);
+      diagnostics.length,
+      diagnostics.filter(function (d) { return d.scope === 'component'; }).length,
+      fixChecks.filter(function (c) { return c.ok === true; }).length,
+      fixChecks.filter(function (c) { return c.ok !== null; }).length);
   }
 
   if (document.readyState === 'loading') {

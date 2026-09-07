@@ -95,6 +95,58 @@
                                      background: #f4f4f5; border-radius: 4px;
                                      font-size: 0.8125rem; line-height: 1.5; }
 
+    /* Layer 2 - runtime summary */
+    .rv-summary { margin: 1.5rem 0 0; border: 1px solid #d4d4d8; border-radius: 6px;
+                  background: #fff; overflow: hidden; }
+    .rv-summary-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem;
+                       padding: 0.85rem 1.25rem; border-bottom: 1px solid #e4e4e7; }
+    .rv-summary-head h2 { margin: 0; font-size: 0.8125rem; text-transform: uppercase;
+                          letter-spacing: 0.06em; color: #71717a; font-weight: 600; }
+    .rv-summary-head p { margin: 0; font-size: 0.8125rem; color: #71717a; }
+    .rv-tally { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.85rem 1.25rem;
+                border-bottom: 1px solid #f0f0f2; }
+    .rv-scroll { overflow-x: auto; }
+    table.rv-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    table.rv-table th, table.rv-table td { text-align: left; vertical-align: top;
+      padding: 0.5rem 1.25rem; border-bottom: 1px solid #f0f0f2; white-space: nowrap; }
+    table.rv-table th { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em;
+                        color: #71717a; font-weight: 600; background: #fafafa; }
+    table.rv-table td.rv-note-cell { white-space: normal; color: #52525b; min-width: 18rem; }
+    table.rv-table tr:last-child td { border-bottom: 0; }
+    table.rv-table a { color: #1748d0; text-decoration: none; }
+    table.rv-table a:hover { text-decoration: underline; }
+
+    .rv-status { display: inline-block; padding: 0.1rem 0.45rem; border-radius: 999px;
+                 font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.02em;
+                 border: 1px solid transparent; }
+    .rv-pass      { background: #e7f5e8; color: #166534; border-color: #bbe3bd; }
+    .rv-issue     { background: #fdeaea; color: #991b1b; border-color: #f3c4c4; }
+    .rv-app       { background: #eaf0fd; color: #1748d0; border-color: #c5d5f8; }
+    .rv-partial   { background: #fdf3e2; color: #92400e; border-color: #f3d9a8; }
+    .rv-investigate { background: #f4f4f5; color: #3f3f46; border-color: #d4d4d8; }
+    .rv-quiet     { color: #a1a1aa; }
+
+    /* Layer 3 - raw diagnostics, disclosed */
+    details.rv-disclosure { margin: 1rem 0 0; border: 1px solid #d4d4d8; border-radius: 6px;
+                            background: #fff; }
+    details.rv-disclosure > summary { cursor: pointer; padding: 0.75rem 1.25rem;
+      font-size: 0.8125rem; font-weight: 600; color: #3f3f46; list-style: revert; }
+    details.rv-disclosure > summary::marker { color: #a1a1aa; }
+    details.rv-disclosure[open] > summary { border-bottom: 1px solid #e4e4e7; }
+    .rv-disclosure-body { padding: 0.75rem 1.25rem 1rem; }
+    .rv-disclosure-body p { margin: 0 0 0.5rem; font-size: 0.8125rem; color: #52525b; line-height: 1.5; }
+    .rv-disclosure-body ul { margin: 0 0 0.75rem; padding-left: 1.1rem;
+                             font-size: 0.8125rem; line-height: 1.55; }
+    .rv-disclosure-body li + li { margin-top: 0.15rem; }
+
+    .rv-layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+                 gap: 0.75rem; margin: 1.5rem 0 0; }
+    .rv-layer { padding: 0.85rem 1rem; border: 1px solid #d4d4d8; border-radius: 6px; background: #fff; }
+    .rv-layer h3 { margin: 0 0 0.25rem; font-size: 0.6875rem; text-transform: uppercase;
+                   letter-spacing: 0.06em; color: #71717a; font-weight: 600; }
+    .rv-layer p { margin: 0; font-size: 0.8125rem; color: #52525b; line-height: 1.5; }
+    .rv-layer a { color: #1748d0; }
+
     .rv-foot { margin: 4rem 0 0; padding-top: 1.5rem; border-top: 2px solid #d4d4d8;
                font-size: 0.8125rem; color: #71717a; line-height: 1.6; }
   </style>
@@ -103,36 +155,78 @@
   <div class="rv-shell">
 
     <header class="rv-head">
-      <h1>Buckholt runtime verification harness</h1>
+      <h1>Buckholt runtime verification</h1>
       <p>
-        Every block below is the source-verified canonical markup from
-        <code>components/&lt;component&gt;/examples.html</code>, copied verbatim, rendered against the
-        documented runtime contract. Nothing inside a canonical block has been rewritten, normalised or
-        repaired. The grey framing, headings, badges and test controls are harness chrome added by
-        <code>runtime-verification.js</code> and sit outside the canonical markup.
-      </p>
-      <p>
-        This page answers one question: does the documented HTML render and behave correctly against
-        <code>css/buckholt.css</code>, <code>css/buckholt-ai-fixes.css</code>, Bootstrap 5.1.3, Proxima
-        Soft and the Buckholt Font Awesome kit? It does not answer whether the markup is faithful to
-        Buckholt - that is source verification, already recorded in
+        Does the source-verified Buckholt markup render and behave correctly against the documented
+        runtime? This page answers that, and only that. It does not answer whether the markup is
+        faithful to Buckholt - that is source verification, recorded in
         <code>verification/component-source-status.md</code>.
       </p>
-      <p>
-        Classify anything that looks wrong with the categories in
-        <code>verification/runtime-verification-framework.md</code> before changing anything. Do not
-        patch a defect on this page.
-      </p>
 
-      <div class="rv-panel" id="rv-dependencies">
-        <h2>Dependency check</h2>
-        <ul id="rv-dependency-list"></ul>
+      <div class="rv-layers">
+        <div class="rv-layer">
+          <h3>1 · Style guide</h3>
+          <p>What Buckholt looks like.
+            <a href="../style-guide/index.html">test/style-guide/</a> is the visual catalogue. Start
+            there; this page is not a showroom.</p>
+        </div>
+        <div class="rv-layer">
+          <h3>2 · Runtime summary</h3>
+          <p>What works and what needs attention, one row per component. Below.</p>
+        </div>
+        <div class="rv-layer">
+          <h3>3 · Raw diagnostics</h3>
+          <p>Why the verifier reached that conclusion. Disclosed, not dumped - open the sections
+            below, or read <code>window.rvDiagnostics</code> in the console.</p>
+        </div>
       </div>
 
-      <div class="rv-panel" id="rv-diagnostics">
-        <h2>Harness diagnostics</h2>
-        <div id="rv-diagnostic-list"></div>
+      <div class="rv-summary" id="rv-summary">
+        <div class="rv-summary-head">
+          <h2>Runtime summary</h2>
+          <p id="rv-summary-note"></p>
+        </div>
+        <div class="rv-tally" id="rv-tally"></div>
+        <div class="rv-scroll"><table class="rv-table" id="rv-summary-table">
+          <thead><tr><th scope="col">Component</th><th scope="col">Source</th><th scope="col">Runtime</th><th scope="col">Behaviour</th><th scope="col">Notes</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
       </div>
+
+      <details class="rv-disclosure" id="rv-dependencies">
+        <summary>Dependency check</summary>
+        <div class="rv-disclosure-body">
+          <p>The runtime contract must hold before any rendering judgement below it means anything.
+            A failure here voids the whole page.</p>
+          <ul id="rv-dependency-list"></ul>
+        </div>
+      </details>
+
+      <details class="rv-disclosure" id="rv-checks">
+        <summary>Compatibility-fix verification</summary>
+        <div class="rv-disclosure-body">
+          <p>Each verified correction in <code>css/buckholt-ai-fixes.css</code> is re-asserted here
+            against the live runtime, so the summary reflects measurement rather than a claim.</p>
+          <ul id="rv-check-list"></ul>
+        </div>
+      </details>
+
+      <details class="rv-disclosure" id="rv-artefacts">
+        <summary>Harness artefacts — not component defects</summary>
+        <div class="rv-disclosure-body">
+          <p>Composing separately-authored examples onto one page creates conditions that do not
+            exist in the components themselves. They are listed so they are never mistaken for
+            defects, and they are excluded from every component's status.</p>
+          <div id="rv-artefact-list"></div>
+        </div>
+      </details>
+
+      <details class="rv-disclosure" id="rv-diagnostics">
+        <summary>Raw diagnostics</summary>
+        <div class="rv-disclosure-body">
+          <div id="rv-diagnostic-list"></div>
+        </div>
+      </details>
     </header>
 
     <nav class="rv-index" aria-label="Component index">
