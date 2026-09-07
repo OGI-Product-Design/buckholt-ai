@@ -68,6 +68,19 @@ Form-level documentation demonstrates states through the controls contained with
 
 Use the validation API documented by each control. Do not rely on colour alone for validation meaning.
 
+## JavaScript enhancements
+
+The supplied Buckholt `form.js` is stored at `components/form/form.js`. It is part of the documented form-control behaviour and currently provides:
+
+- input clear-button visibility and clearing;
+- Checkbox/Radio demonstration and read-only state behaviour;
+- Text area character-count behaviour;
+- Number input increment/decrement step-button behaviour.
+
+The supplied source depends on jQuery. Load jQuery before `components/form/form.js` when these enhancements are used.
+
+Treat this file as real Buckholt behaviour source. Do not rewrite it into a different Buckholt-specific API unless the upstream design system changes.
+
 ## Runtime behaviour
 
 The compiled runtime provides:
@@ -113,6 +126,9 @@ Read as needed:
 - `components/text-input/`
 - `components/input-group/`
 - `components/input-row/`
+- `components/checkbox/`
+- `components/radio/`
+- `components/number-input/`
 - `components/button/`
 - `components/link/`
 - `components/text-block/`
@@ -127,5 +143,6 @@ Read as needed:
 - Do not use `.form-buttons`; it is source-page wording, not a current runtime class.
 - Keep optional introductory/section content in Text block.
 - Reuse Button and Link for actions.
+- Load the supplied `components/form/form.js` where its documented enhancements are needed, with jQuery available first.
 - Do not recreate Form widths, gaps or action spacing locally.
 - Do not infer unsupported validation, progressive-disclosure or submission behaviour from the Form container alone.
