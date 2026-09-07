@@ -90,13 +90,27 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus, alerts and modals, also load:
+For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus, alerts, accordions and modals, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
 
 ## Current component coverage
+
+### Accordion
+Read `components/accordion/rules.md`, `components/accordion/examples.html` and Text block guidance.
+
+Rules:
+- use the documented `.accordion`, `.accordion-item`, `.accordion-header`, `.accordion-button`, `.accordion-collapse` and `.accordion-body` structure;
+- default to collapsed; for an initially expanded item add `.show`, remove `.collapsed`, and set `aria-expanded="true"`;
+- medium/default is for most grouped Accordions; use `.accordion-lg` only for a standalone large collapsible card;
+- use `data-bs-parent` on each collapse only when one-open-at-a-time behaviour is intended;
+- keep unique IDs and keep `data-bs-target`, `aria-controls` and collapse IDs aligned;
+- preserve semantic heading levels according to the page hierarchy;
+- reuse Buckholt components inside `.accordion-body`;
+- use Bootstrap collapse behaviour rather than custom show/hide scripting;
+- do not recreate Accordion spacing, disclosure icon, focus state or transitions locally.
 
 ### Alert
 Read `components/alert/rules.md`, `components/alert/examples.html` and relevant Colour/Iconography/Button/Link guidance.
@@ -111,6 +125,19 @@ Rules:
 - keep Alert copy concise and sentence case;
 - preserve `role="alert"`, accessible close labelling, keyboard access and visible focus;
 - do not recreate Alert colours, spacing, border treatment, radius or typography locally.
+
+### Avatar
+Read `components/avatar/rules.md`, `components/avatar/examples.html`, Colour and Iconography guidance.
+
+Rules:
+- use `.avatar` as the base;
+- choose one representation only: `.avatar-img`, `.avatar-initials` or `.avatar-icon`;
+- medium/default is the base size; `.avatar-sm` and `.avatar-xs` are the documented smaller sizes;
+- use the primary expressive palette by default and only use `.expressive-secondary`, `.expressive-tertiary` or `.expressive-quaternary` intentionally;
+- add `.expressive-dark` for the documented dark expressive treatment;
+- use `.avatar-set` for compact groups representing shared ownership, collaboration or participation;
+- make sure the surrounding UI exposes the person's real accessible identity when identity matters;
+- do not recreate Avatar dimensions, cropping, radius, overlap or expressive colours locally.
 
 ### Breadcrumb
 Read `components/breadcrumb/rules.md`, `components/breadcrumb/examples.html`, and Menu/Menu button guidance for overflow.
@@ -252,6 +279,22 @@ Rules:
 - use `.progress-bar-indeterminate` when progress cannot be measured and do not invent numeric progress;
 - use `.is-valid` for success, `.is-invalid` plus `.invalid-feedback` for error, and `.progress-inactive` for the documented inactive state;
 - do not recreate bar heights, status colours/icons, animation or feedback layout with custom CSS.
+
+### Slider
+Read `components/slider/rules.md` and `components/slider/examples.html`.
+
+Rules:
+- use `.input` with `.input-label` and `.response.slider-input`;
+- use a native `input[type="range"].form-slider` with real `min`, `max`, `step` and `value` attributes;
+- use `.slider-container`, `.slider-wrapper`, `.minmax` and the paired numeric `.form-control` as documented;
+- keep the range control and numeric input synchronized;
+- optional `.ticks`/`.tick` elements are visual support only and do not replace native step semantics;
+- use `.is-invalid` on both controls for the documented error state and provide `.invalid-feedback` text;
+- use `disabled` on both controls for disabled state;
+- for read-only use `.form-slider.readonly` plus `disabled` on the range and `readonly` on the numeric input;
+- treat the filled-track gradient as dynamic value presentation, not a hard-coded decorative style;
+- the range-slider variant is documented as coming soon; do not invent a canonical two-handle Buckholt Slider;
+- do not recreate Slider track, thumb or focus styling locally.
 
 ### Summary Meta
 Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value where used.
