@@ -73,7 +73,7 @@ Examples:
 
 ```html
 <div class="icon-block icon-block-xs">
-  <i class="fa-regular fa-sparkles" aria-hidden="true"></i>
+  <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
 </div>
 
 <div class="icon-block icon-block-sm">
@@ -93,7 +93,7 @@ Examples:
 </div>
 
 <div class="icon-block icon-block-xxl">
-  <i class="fa-regular fa-pizza-slice" aria-hidden="true"></i>
+  <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
 </div>
 ```
 
@@ -124,11 +124,11 @@ The primary expressive palette is used by default.
 
 ```html
 <div class="icon-block expressive-light">
-  <i class="fa-regular fa-rocket-launch" aria-hidden="true"></i>
+  <i class="fa-regular fa-rocket" aria-hidden="true"></i>
 </div>
 
 <div class="icon-block expressive-dark">
-  <i class="fa-regular fa-ufo" aria-hidden="true"></i>
+  <i class="fa-regular fa-rocket" aria-hidden="true"></i>
 </div>
 ```
 
@@ -140,11 +140,11 @@ To use another documented expressive palette, combine the treatment with one of:
 
 ```html
 <div class="icon-block expressive-light expressive-secondary">
-  <i class="fa-regular fa-cloud" aria-hidden="true"></i>
+  <i class="fa-regular fa-flag" aria-hidden="true"></i>
 </div>
 
 <div class="icon-block expressive-dark expressive-tertiary">
-  <i class="fa-regular fa-pizza-slice" aria-hidden="true"></i>
+  <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
 </div>
 
 <div class="icon-block expressive-light expressive-quaternary">
