@@ -1,113 +1,75 @@
 # Avatar
 
+## Verification
+
+Source-verified against the Buckholt Avatar Usage, Style and Code & specs HTML pages supplied on 7 September 2026. For exact DOM structure, use `examples.html`.
+
 ## Purpose
 
-Avatar provides a compact representation of a user. Buckholt supports image, initials and icon treatments, plus compact Avatar sets for showing several people together.
+Avatar represents a user or account visually. Buckholt supports image, initials and icon treatments and documents Avatar sets as a usage concept for compact groups of users.
 
 ## Base forms
 
-### Initials
+Buckholt's Code & specs page documents three base forms:
 
 ```html
 <div class="avatar">
-  <div class="avatar-initials">MF</div>
+    <div class="avatar-icon">
+        <i class="fa-regular fa-user"></i>
+    </div>
 </div>
-```
 
-### Image
-
-```html
 <div class="avatar">
-  <img class="avatar-img" src="..." alt="...">
+    <div class="avatar-initials">
+        MF
+    </div>
 </div>
-```
 
-### Icon
-
-```html
 <div class="avatar">
-  <div class="avatar-icon">
-    <i class="fa-regular fa-user"></i>
-  </div>
+    <img class="avatar-img" src="..." alt="...">
 </div>
 ```
 
-Choose the representation according to available identity data and context. Do not mix image, initials and icon content inside the same Avatar.
+Use exactly one of `.avatar-icon`, `.avatar-initials` or `.avatar-img` inside `.avatar`.
 
 ## Size
 
 Buckholt documents three sizes:
 
-- medium/default: `.avatar`
-- small: `.avatar.avatar-sm`
-- extra small: `.avatar.avatar-xs`
+- medium/default — `.avatar`
+- small — `.avatar.avatar-sm`
+- extra small — `.avatar.avatar-xs`
 
-Use the default medium size unless the surrounding component or layout calls for a smaller Avatar.
+The Code & specs examples use `.avatar-sm` and `.avatar-xs` exactly as shown in `examples.html`.
 
 ## Expressive colours
 
-The primary expressive palette is used by default for non-image Avatars. To select another palette, add one of:
+The primary expressive palette is applied by default. Buckholt documents:
 
+- `.expressive-dark`
 - `.expressive-secondary`
 - `.expressive-tertiary`
 - `.expressive-quaternary`
 
-To use the dark version of the selected expressive palette, add `.expressive-dark` on the same `.avatar` element.
+The palette modifiers may be combined with `.expressive-dark` as shown in the exact source examples.
 
-Examples:
+## Avatar sets
 
-```html
-<div class="avatar expressive-secondary">
-  <div class="avatar-initials">HS</div>
-</div>
+The Usage page documents Avatar sets as a way to group multiple Avatars into a compact visual element for shared ownership, collaboration or participation.
 
-<div class="avatar expressive-tertiary expressive-dark">
-  <div class="avatar-initials">CP</div>
-</div>
-```
+The supplied Code & specs page does **not** provide canonical Avatar-set HTML. Therefore this repository must not invent an `.avatar-set` DOM structure and call it Buckholt canonical markup. If Avatar-set implementation is required, use an additional Buckholt source that explicitly provides its HTML or report the gap.
 
-Use Colour foundation guidance rather than hard-coding equivalent expressive colours.
+## Content and accessibility
 
-## Avatar set
-
-Use `.avatar-set` to group several Avatars into one compact visual element when communicating shared ownership, collaboration or participation.
-
-```html
-<div class="avatar-set">
-  <div class="avatar">
-    <img class="avatar-img" src="..." alt="">
-  </div>
-  <div class="avatar expressive-quaternary">
-    <div class="avatar-initials">RD</div>
-  </div>
-</div>
-```
-
-Avatar sets are for concise identity indication, not a replacement for a full people list when names/details are required.
-
-## Images and accessibility
-
-The documentation examples often show an empty `alt` on profile imagery because the surrounding UI is expected to provide identity/context separately. Treat image alternative text according to meaning:
-
-- if the Avatar image is purely decorative because the person's name is already adjacent and programmatically available, use empty `alt=""`;
-- if the image itself is needed to identify the person in context, provide meaningful alternative text;
-- do not duplicate the same nearby visible name unnecessarily in alt text.
-
-Initials and icons are visual identity representations. Ensure the surrounding interface supplies the person's actual accessible name where identity matters.
-
-When using a generic user icon, select a documented icon from the Iconography foundation where a mapping exists. Do not invent a product-specific icon meaning simply to vary the visual.
-
-## Runtime notes
-
-The compiled Buckholt runtime supplies Avatar dimensions, clipping, radius, image fitting, initials/icon alignment, expressive colour variables and Avatar-set overlap/alignment. Do not recreate those visual rules locally.
+- Images, initials and icons are visual identity treatments; the surrounding interface should still communicate the person's actual identity where that matters.
+- Keep initials to the documented compact representation (up to two initials in Usage guidance).
+- Use image alternative text according to the actual semantic context; do not change the canonical Code & specs placeholder markup in `examples.html`.
 
 ## Agent rules
 
-1. Use `.avatar` as the base element.
-2. Use exactly one content form: `.avatar-img`, `.avatar-initials` or `.avatar-icon`.
-3. Use `.avatar-sm` or `.avatar-xs` only for the documented smaller sizes.
-4. Use the default expressive palette unless a documented secondary, tertiary or quaternary palette is intentionally needed.
-5. Add `.expressive-dark` on the Avatar for the documented dark expressive treatment.
-6. Use `.avatar-set` for compact groups of Avatars.
-7. Make sure the surrounding UI exposes the user's actual identity accessibly; an Avatar alone should not be the only accessible naming mechanism where identity matters.
-8. Do not recreate Avatar sizing, cropping, radius, overlap or expressive colours with custom CSS.
+- Use `examples.html` as the canonical Avatar DOM source.
+- Use exactly one content form inside `.avatar`: `.avatar-icon`, `.avatar-initials` or `.avatar-img`.
+- Use `.avatar-sm` and `.avatar-xs` only for the documented smaller sizes.
+- Use the documented expressive modifiers exactly as shown.
+- Do not invent canonical Avatar-set markup; Usage documents the concept but the supplied Code & specs source does not supply its HTML.
+- Do not recreate Avatar sizing, cropping, radius or expressive colours with local CSS.
