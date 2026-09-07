@@ -40,7 +40,9 @@ buckholt-ai/
 ├── discrepancies/
 │   └── known-issues.md
 └── components/
+    ├── accordion/
     ├── alert/
+    ├── avatar/
     ├── breadcrumb/
     ├── button/
     ├── card/
@@ -53,6 +55,7 @@ buckholt-ai/
     ├── menu-button/
     ├── modal/
     ├── progress-bar/
+    ├── slider/
     ├── summary-meta/
     ├── text-block/
     ├── tooltip/
@@ -83,10 +86,20 @@ Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`
 
 ## Component coverage
 
+### Accordion
+Read `components/accordion/rules.md` and `components/accordion/examples.html`, plus Text block guidance for content. Accordion covers default collapsed behaviour, optional initial expansion, medium/default and large sizes, and optional single-expansion behaviour using Bootstrap collapse.
+
+Use the large variant only for standalone collapsible cards, keep IDs/ARIA relationships correct, and reuse documented Buckholt components inside Accordion bodies.
+
 ### Alert
 Read `components/alert/rules.md` and `components/alert/examples.html`, plus Colour, Iconography, Button and Link guidance where relevant. Alert covers local nondisruptive feedback, information/success/warning/error variants, optional icons and notes, context-bar actions, and dismissible behaviour.
 
 The message is required. Only make an Alert dismissible when the message is noncritical and does not represent a persistent unresolved condition.
+
+### Avatar
+Read `components/avatar/rules.md` and `components/avatar/examples.html`, plus Colour and Iconography guidance where relevant. Avatar supports image, initials and icon representations, medium/default plus small and extra-small sizes, expressive palettes and compact Avatar sets.
+
+Use one identity representation per Avatar and ensure the surrounding interface exposes the person's actual accessible identity when it matters.
 
 ### Breadcrumb
 Read `components/breadcrumb/rules.md` and `components/breadcrumb/examples.html`, plus Link, Menu button and Menu guidance for overflow. Breadcrumb covers location-based and path-based trails, current-page semantics, generated dividers and responsive overflow behaviour.
@@ -146,6 +159,11 @@ Read `components/progress-bar/rules.md` and `components/progress-bar/examples.ht
 
 Always provide accessible progress labelling. Do not invent quantitative values for indeterminate processes.
 
+### Slider
+Read `components/slider/rules.md` and `components/slider/examples.html`. Slider uses a native range input plus a numeric input for selecting one continuous value, with optional ticks/support text and documented error, disabled and read-only states.
+
+Keep range and numeric values synchronized. The two-value range-slider variant is documented as coming soon, so do not invent it as canonical Buckholt behaviour.
+
 ### Summary Meta
 Read `components/summary-meta/rules.md` and `components/summary-meta/examples.html`, plus Icon block and Key-value when they are composed inside it. Summary Meta combines an Icon block with short supporting content for concise, scannable contextual summaries.
 
@@ -175,7 +193,7 @@ Use whole-tile anchors only for navigation; otherwise keep item actions inside `
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts and modals, also load:
+For Buckholt behaviours that use Bootstrap JavaScript such as tooltips, dropdown menus, alerts, accordions and modals, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
