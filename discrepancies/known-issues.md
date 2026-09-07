@@ -190,3 +190,19 @@ Verified at 1400px, 900px, 600px and 380px viewports:
 ### Related documentation gap
 
 `components/versa-tile/examples.html` only shows a single labelled button inside `.versatile-actions`, so there is no verified markup for the multi-action case. Adding a documented icon-only action example would make the intended structure explicit and prevent agents from placing bare buttons there, which silently produces 16px spacing instead of 4px.
+
+## Form actions wrapper naming is inconsistent
+
+The Form Code & specs explanatory guidance says the action section is `.form-buttons` and describes it as the wrapper for submit/cancel actions. The current compiled runtime also styles `.form-buttons` as part of the Form layout and applies its top spacing there.
+
+However, the rendered Form examples in the Usage/Style/Code documentation repeatedly use:
+
+```html
+<div class="form-actions">
+  ...
+</div>
+```
+
+No corresponding `.form-actions` Form-layout rule exists in the compiled runtime, so following the example markup literally loses the documented action-area spacing/layout.
+
+This is an internal documentation/runtime mismatch rather than a new variant. Until upstream is reconciled, use `.form-buttons` for Buckholt implementation because it is explicitly named by the explanatory documentation and is the class the runtime actually implements. Do not add local CSS to make `.form-actions` behave like `.form-buttons`.
