@@ -90,7 +90,7 @@ Custom CSS may be used for page/demo layout only when necessary. It must not be 
 <link rel="stylesheet" href="css/buckholt.css">
 ```
 
-For Buckholt patterns that use Bootstrap behaviour such as tooltips, also load:
+For Buckholt patterns that use Bootstrap behaviour such as tooltips, dropdown menus and modals, also load:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -151,6 +151,51 @@ Rules:
 - do not add icons to inline links;
 - use documented Link sets and icon mappings;
 - documentation defines intended visited colour.
+
+### List
+Read `components/list/rules.md` and `components/list/examples.html`.
+
+Rules:
+- use `.list` on semantic `<ul>` or `<ol>` elements;
+- use `.list-item` for ordinary items;
+- use optional `.list-heading` only as the documented first-item heading pattern;
+- on ordered Lists with `.list-heading`, set that heading item to `value="0"` so the first real item begins at 1;
+- use `.list-unstyled` to remove visual markers without discarding list semantics;
+- use `.list-icon` sparingly and select meaningful icons from the Iconography catalogue;
+- keep nested Lists shallow;
+- do not recreate markers, indentation or list spacing with custom CSS.
+
+### Menu button
+Read `components/menu-button/rules.md` and `components/menu-button/examples.html`, plus Button, Tooltip and Iconography guidance.
+
+Rules:
+- choose standard Menu button when actions have equal importance;
+- choose Combo button when one direct action is primary and related alternatives need a menu;
+- choose Overflow menu for secondary actions scoped to a smaller object such as a table row or Card;
+- use `.menu` as the outer composition;
+- use `.menu-toggle` with `data-bs-toggle="dropdown"` and `aria-expanded="false"`;
+- use `.menu-panel.dropdown-menu`, `.menu-body` and semantic `.menu-item` buttons;
+- standard Menu button may use primary, secondary or ghost Button styling;
+- Combo uses `.btn-combo`, two Buttons, and primary/secondary styling;
+- Overflow uses an icon-only ghost Button with `fa-regular fa-ellipsis-vertical` and an accessible name;
+- use `.dropdown-menu-end` where the documented combo/overflow alignment requires it;
+- use `.menu-item-danger` only for destructive actions;
+- use Bootstrap dropdown behaviour rather than custom menu-opening JavaScript.
+
+### Modal
+Read `components/modal/rules.md` and `components/modal/examples.html`, plus Button and Text block guidance.
+
+Rules:
+- use Modal only for short, interruptive tasks that genuinely require attention before returning to the page;
+- use `.modal > .modal-dialog > .modal-content` with documented `.modal-header`, `.modal-body` and `.modal-footer` zones;
+- use Text block/Heading attachment for title content and Button/Button set for actions;
+- keep trigger and Modal title terminology consistent;
+- use `.modal-sm`, default/no modifier, `.modal-lg` or `.modal-xl` according to content needs;
+- use `.modal-dialog-centered` only for the documented centred form;
+- use `.modal-dialog-scrollable` only when long content cannot reasonably be avoided;
+- use `data-bs-toggle="modal"`, `data-bs-target` and `data-bs-dismiss="modal"` for Bootstrap behaviour;
+- keep a meaningful `aria-label="Close"` on the close control;
+- do not recreate Modal backdrop, positioning, focus behaviour or sizing with custom CSS.
 
 ### Progress bar
 Read `components/progress-bar/rules.md` and `components/progress-bar/examples.html`.
