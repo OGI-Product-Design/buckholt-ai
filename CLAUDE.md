@@ -8,6 +8,16 @@ Use the Buckholt design system accurately when building UI.
 
 **Build with Buckholt. Do not imitate Buckholt.**
 
+## Mandatory canonical-markup rule
+
+Read `CANONICAL-MARKUP.md` before implementing or modifying component markup.
+
+When Buckholt Code & specs provides HTML for the exact component or variation, **preserve that DOM structure exactly**. Do not improve, normalize or reinterpret it. Do not add wrappers or classes borrowed from another component. Do not substitute a documented icon because another catalogue/convention suggests something different.
+
+Component-specific Code & specs markup outranks generic cross-component conventions. For example, if Page navigation places `<i class="...">` directly inside `.nav-link`, do not wrap it in `<span class="icon">` simply because Link or another component uses that wrapper.
+
+`examples.html` may clean indentation only; documented hierarchy, classes, element order, attributes and icon placement must remain source-faithful. If no exact markup evidence exists for a variation, report the gap instead of inventing canonical markup.
+
 ## Source hierarchy
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
@@ -24,6 +34,7 @@ Old SCSS, token maps, screenshots, Figma and previous interpreted AI specificati
 
 For an isolated component:
 
+- Read `CANONICAL-MARKUP.md`.
 - Read the relevant foundation files.
 - Read the requested component's `rules.md` and `examples.html`.
 - Follow documented Buckholt intent first.
@@ -33,14 +44,15 @@ For an isolated component:
 
 For a complete page or substantial page section:
 
-1. Read `patterns/page-layout/rules.md` **before selecting components**.
-2. Identify required page regions and choose the closest documented Buckholt layout.
-3. Structure Main using Page body → Frame → Pane → Panel.
-4. Use Bootstrap `.container`, `.row` and `.col-*` only for the horizontal/responsive grid responsibility documented by Buckholt.
-5. Read any relevant higher-level pattern guidance (`forms`, `input-rows`, `lookup`, `common-actions`).
-6. Read the relevant foundations.
-7. Read every component folder used in the page.
-8. Check `discrepancies/known-issues.md` where relevant.
+1. Read `CANONICAL-MARKUP.md`.
+2. Read `patterns/page-layout/rules.md` **before selecting components**.
+3. Identify required page regions and choose the closest documented Buckholt layout.
+4. Structure Main using Page body → Frame → Pane → Panel.
+5. Use Bootstrap `.container`, `.row` and `.col-*` only for the horizontal/responsive grid responsibility documented by Buckholt.
+6. Read any relevant higher-level pattern guidance (`forms`, `input-rows`, `lookup`, `common-actions`).
+7. Read the relevant foundations.
+8. Read every component folder used in the page.
+9. Check `discrepancies/known-issues.md` where relevant.
 
 Do not begin a full page by placing isolated components into arbitrary wrappers. Establish Buckholt's page structure, grouping and spacing first, then compose components inside it.
 
@@ -186,6 +198,8 @@ Use `dropdown.js` for the documented Dropdown enhancement, `form.js` for shared 
 
 Prefer native HTML controls and preserve documented ARIA relationships. Match every `label[for]` to its control ID, keep current/selected state singular where required, and use genuine disabled/checked/readonly semantics where the component documents them.
 
+Do not silently add accessibility attributes to repository canonical examples when they are absent from the documented Code & specs example. Application-level accessibility additions may be appropriate, but keep them distinct from source-exact Buckholt markup.
+
 Icon-only controls require an accessible name and the documented Tooltip treatment where Buckholt calls for one. Colour alone must not carry meaning.
 
 ## Custom CSS
@@ -197,3 +211,5 @@ For complete pages, do not use custom spacing wrappers as a substitute for the d
 ## Evidence discipline
 
 A class is not missing merely because no standalone `.class {}` rule exists; check compound, descendant and pseudo-selectors. Extra runtime CSS is not a discrepancy by itself. Only flag a difference when documentation and runtime materially disagree in a way that could mislead implementation.
+
+For markup, exact component-specific Code & specs evidence is authoritative. Never infer a canonical DOM structure from another component's conventions.
