@@ -25,7 +25,7 @@ Avoid turning it into a dense content container. The content should remain short
 
 ```html
 <div class="summary-meta">
-  <div class="icon-block icon-block-xxl expressive-dark expressive-primary">
+  <div class="icon-block icon-block-xxl expressive-dark">
     <i class="fa-regular fa-ghost" aria-hidden="true"></i>
   </div>
   <div class="summary-meta-body">
@@ -35,6 +35,8 @@ Avoid turning it into a dense content container. The content should remain short
   </div>
 </div>
 ```
+
+Primary expressive colour is the Icon block default. Do not add `.expressive-primary`; no such runtime modifier exists. Use `.expressive-secondary`, `.expressive-tertiary` or `.expressive-quaternary` only when intentionally selecting those documented alternate families.
 
 The example icon is documentation/example content. Choose a meaningful icon from the Buckholt Iconography catalogue when a documented mapping exists.
 
@@ -79,7 +81,7 @@ Add `.summary-meta-stacked` to arrange the Icon block and content vertically:
 
 ```html
 <div class="summary-meta summary-meta-stacked">
-  <div class="icon-block icon-block-xxl expressive-dark expressive-primary">
+  <div class="icon-block icon-block-xxl expressive-dark">
     <i class="fa-regular fa-house" aria-hidden="true"></i>
   </div>
   <div class="summary-meta-body">
@@ -150,6 +152,7 @@ Do not recreate this layout with local flex, gap, typography or alignment CSS.
 - Use `.summary-meta` as the base composition.
 - Put the Icon block before `.summary-meta-body` in canonical markup.
 - Use `.summary-meta-stacked` only for the documented vertical/centred variant.
+- Primary expressive colour is the default; never add `.expressive-primary`.
 - Keep content concise and scan-friendly.
 - Use `.summary-meta-headline`, `.summary-meta-label` and `.summary-meta-text` where those content roles apply.
 - Reuse the documented Icon block and Key-value components rather than rebuilding them inside Summary Meta.
