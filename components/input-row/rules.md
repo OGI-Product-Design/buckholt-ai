@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Input row is a layout component/pattern that places related input fields side by side in one row. It reduces vertical scrolling, strengthens the visual relationship between connected values and can make related data entry faster, such as expiry date + security code.
+Input row is a layout pattern that places related input fields side by side in a single row. It reduces vertical scrolling, keeps connected information visually grouped, and supports faster entry for related values such as payment details.
 
-Use Input row only when the fields genuinely belong together. Do not place unrelated questions side by side merely to save space.
+Use Input row only when the fields genuinely belong together. Default to stacked inputs unless side-by-side placement clearly improves usability.
 
 ## Base structure
 
@@ -12,93 +12,84 @@ Input row uses Bootstrap's grid plus Buckholt's `.input-row` class:
 
 ```html
 <div class="row input-row">
-  <div class="col">
-    <div class="input">
-      <!-- documented Buckholt input -->
+    <div class="col">
+        <div class="input">
+            ...
+        </div>
     </div>
-  </div>
-
-  <div class="col">
-    <div class="input">
-      <!-- documented Buckholt input -->
+    <div class="col">
+        <div class="input">
+            ...
+        </div>
     </div>
-  </div>
 </div>
 ```
 
-The documentation explicitly requires `.input-row` on the Bootstrap `.row` so the correct field spacing is applied.
+Add `.input-row` to the Bootstrap `.row` so Buckholt applies the documented spacing between fields.
 
 ## Column sizing
 
-Use Bootstrap grid classes documented by Buckholt:
+Use Bootstrap grid classes exactly as documented by Buckholt:
 
-- `.col` for equal-width fields;
-- numbered `.col-*` classes for intentional relative widths in the 12-column grid;
-- responsive grid classes such as the documented `.col-md-*` form only when that breakpoint behaviour is intended.
+- `.col` for equal-width fields.
+- numbered `.col-*` classes for specific relative widths within the 12-column grid.
+- Buckholt documents numbered classes from `.col-2` through `.col-12`.
 
-Example:
+Documented unequal-width example:
 
 ```html
 <div class="row input-row">
-  <div class="col">
-    <!-- wider field -->
-  </div>
-  <div class="col col-md-4">
-    <!-- narrower field -->
-  </div>
+    <div class="col">
+        <div class="input">
+            ...
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="input">
+            ...
+        </div>
+    </div>
 </div>
 ```
 
-Do not invent fixed pixel widths where the documented grid solves the relationship.
+Do not substitute responsive classes such as `.col-md-*` into canonical Buckholt markup unless another Buckholt source explicitly documents that variant.
+
+## Spacing
+
+Buckholt recommends **8px / 0.5rem** between input fields to provide clear separation while keeping related fields visually grouped.
 
 ## Content
 
-Each column contains a complete Buckholt input component. The input itself remains responsible for:
+Each field remains an independent input with its own label, helper text and validation. Do not apply one shared validation state across unrelated child fields.
 
-- label and assistive text;
-- response control;
-- helper text;
-- validation;
-- disabled/read-only behaviour;
-- colour, typography and control-specific states.
-
-Input row should not restyle its children.
+Use Input row for closely related, short/simple inputs that are normally completed together. Avoid it for unrelated fields, complex or long inputs, or situations where side-by-side placement harms readability on smaller screens.
 
 ## Writing and typography
 
-Headings and labels use sentence case. The Input row documentation delegates detailed colour and typography behaviour to the individual input components such as Text input, Number input, Select and Dropdown.
-
-## Responsive behaviour
-
-Input row is built on Bootstrap's grid, so the selected column classes determine responsive behaviour. Do not assume or invent automatic stacking rules beyond what the chosen Bootstrap classes actually express.
+Labels use sentence case. Detailed colour and typography guidance is delegated to the individual input components such as Text input, Number input, Select and Dropdown.
 
 ## Accessibility
 
-- Preserve each input's complete semantic label/control relationship.
-- Keep the visual row order consistent with DOM/tab order.
-- Do not group fields horizontally when doing so makes the relationship or reading order ambiguous.
-- Error/helper text belongs to the individual field and should remain associated with that field.
+- Preserve each input's label/control relationship.
+- Keep visual order consistent with DOM/tab order.
+- Every text field should normally have its own visible label; only omit a visible label where context is unmistakable and accessibility guidance supports it.
+- Keep validation and helper text associated with the individual field.
 
-## Relationship to future patterns
-
-The Buckholt Input row component page links to an **Input rows** pattern. Keep this component focused on the documented side-by-side layout primitive; do not invent higher-level multi-row form patterns here. Those belong in `patterns/` when their documentation is ingested.
-
-## Related Buckholt guidance
+## Related guidance
 
 Read:
 
+- `patterns/input-rows/` for higher-level usage guidance;
 - the specific input component used in each column;
 - `components/form/` when the row is part of a Form;
-- `components/text-input/` for Text inputs;
-- `components/input-group/` when a field is itself an Input group;
 - `foundations/spacing/`.
 
 ## Agent rules
 
 - Use `.row.input-row` as the outer structure.
-- Put each complete input inside a Bootstrap `.col`.
-- Use `.col` for equal widths or documented Bootstrap `.col-*` sizing for intentional ratios.
-- Keep related fields together; unrelated questions should remain separate.
-- Let child components own their colour, typography, labels, validation and states.
-- Do not recreate Input row gaps with local CSS.
-- Do not invent responsive stacking behaviour not expressed by the selected grid classes.
+- Put each complete input inside a Bootstrap column.
+- Use `.col` for equal widths or documented numbered `.col-*` classes for intentional ratios.
+- Do not invent `.col-md-*` or other responsive variants as canonical Buckholt markup.
+- Keep related fields together; unrelated questions should remain stacked.
+- Let child components own labels, helper text, validation and states.
+- Do not recreate Input row spacing with local CSS.
