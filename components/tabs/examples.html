@@ -1,31 +1,76 @@
-<div class="tabs">
-  <div class="tab-items">
-    <button type="button" class="btn btn-ghost tab-scroll tab-scroll-left" aria-label="Scroll tabs left" disabled>
-      <div class="btn-icon"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></div>
-    </button>
+<!-- Extracted verbatim from Buckholt Tabs: Code & specs HTML supplied 7 September 2026. Do not alter canonical DOM structure. -->
 
-    <div class="tab-items-scroll">
-      <ul class="nav nav-underline" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="tabs-example-dashboard-tab" data-bs-toggle="pill" data-bs-target="#tabs-example-dashboard" type="button" role="tab" aria-controls="tabs-example-dashboard" aria-selected="true">Dashboard</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tabs-example-monitoring-tab" data-bs-toggle="pill" data-bs-target="#tabs-example-monitoring" type="button" role="tab" aria-controls="tabs-example-monitoring" aria-selected="false">Monitoring</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tabs-example-activity-tab" data-bs-toggle="pill" data-bs-target="#tabs-example-activity" type="button" role="tab" aria-controls="tabs-example-activity" aria-selected="false">Activity</button>
-        </li>
-      </ul>
+<!-- Code & specs example 1: Tab panel 3 -->
+<div class="tabs element_block align wp-block-acf-tabs">
+    <div class="tab-items">
+        <div class="tab-items-scroll">
+            <ul class="nav nav-underline" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tabs-tab-1-tab" data-bs-toggle="pill" data-bs-target="#tabs-tab-1" type="button" role="tab" aria-controls="tabs-tab-1" aria-selected="true">
+                        Tab 1                        
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tabs-tab-2-tab" data-bs-toggle="pill" data-bs-target="#tabs-tab-2" type="button" role="tab" aria-controls="tabs-tab-2" aria-selected="false">
+                        Tab 2 
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tabs-tab-3-tab" data-bs-toggle="pill" data-bs-target="#tabs-tab-3" type="button" role="tab" aria-controls="tabs-tab-3" aria-selected="false">
+                        Tab 3
+                    </button>
+                </li>
+            </ul>
+        </div>
     </div>
 
-    <button type="button" class="btn btn-ghost tab-scroll tab-scroll-right" aria-label="Scroll tabs right">
-      <div class="btn-icon"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></div>
-    </button>
-  </div>
-
-  <div class="tab-content">
-    <div class="tab-pane fade active show" id="tabs-example-dashboard" role="tabpanel" aria-labelledby="tabs-example-dashboard-tab" tabindex="0">Dashboard content</div>
-    <div class="tab-pane fade" id="tabs-example-monitoring" role="tabpanel" aria-labelledby="tabs-example-monitoring-tab" tabindex="0">Monitoring content</div>
-    <div class="tab-pane fade" id="tabs-example-activity" role="tabpanel" aria-labelledby="tabs-example-activity-tab" tabindex="0">Activity content</div>
-  </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active show" id="tabs-tab-1" role="tabpanel" aria-labelledby="tabs-tab-1-tab" tabindex="0">
+            <div class="text-block">
+                <h4 class="title-01">Tab panel 1</h4>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tabs-tab-2" role="tabpanel" aria-labelledby="tabs-tab-2-tab" tabindex="0">
+            <div class="text-block">
+                <h4 class="title-01">Tab panel 2</h4>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tabs-tab-3" role="tabpanel" aria-labelledby="tabs-tab-3-tab" tabindex="0">
+            <div class="text-block">
+                <h4 class="title-01">Tab panel 3</h4>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Code & specs example 2 -->
+<div class="tabs element_block align wp-block-acf-tabs">
+    <div class="tab-items">
+        <button type="button" class="btn btn-ghost tab-scroll tab-scroll-left" aria-label="Scroll tabs left" disabled>
+            <div class="btn-icon">
+                <i class="fa-regular fa-chevron-left" aria-hidden="true"></i>
+            </div>
+        </button>
+        <div class="tab-items-scroll">
+            <ul class="nav nav-underline" role="tablist">
+                ...
+            </ul>
+        </div>
+        <button type="button" class="btn btn-ghost tab-scroll tab-scroll-right" aria-label="Scroll tabs right">
+            <div class="btn-icon">
+                <i class="fa-regular fa-chevron-right" aria-hidden="true"></i>
+            </div>
+        </button>
+    </div>
+
+    <div class="tab-content">
+        ...
+    </div>
+</div>
+
+<!-- Code & specs example 3 -->
+<li class="nav-item">
+    <button class="nav-link">
+        <i class="fa-regular fa-ghost"></i>Tab 1                        
+    </button>
+</li>
