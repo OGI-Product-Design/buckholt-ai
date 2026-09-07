@@ -104,9 +104,23 @@ Loading it straight off the filesystem (`file://`) is enough for visual inspecti
 
 Open the console as well. The harness logs a summary, a `console.table` of every diagnostic, and each focus and Bootstrap state transition as you interact. `window.rvDiagnostics` holds the same data for scripted inspection.
 
-## `test/style-guide/` is untouched
+## This is not the page to look at Buckholt with
 
-The earlier `test/style-guide/` reference page is unchanged and stays where it is. The two coexist deliberately: the style guide is an authored reading view with prose and maintainer notes, this harness is a mechanical composition of canonical source. Neither replaces the other.
+`test/style-guide/` is the human-facing visual catalogue: foundations first, then every component grouped by what it does, showing the meaningful variants and states. That is where you go to see what Buckholt looks like.
+
+This harness is the opposite by design. It is a mechanical composition of unmodified canonical source, so it deliberately shows deliberately-incomplete snippets, isolated fragments, `…` elisions and diagnostic badges. That makes it good evidence and a poor showroom.
+
+The two coexist and neither replaces the other:
+
+| | `test/style-guide/` | `test/runtime-verification/` |
+| --- | --- | --- |
+| Audience | anyone who needs to see Buckholt | whoever is verifying it |
+| Markup | canonical, composed and completed for display | canonical, byte-for-byte, never touched |
+| Elisions | filled in from verified markup of the same component | left in place and badged |
+| Badges and diagnostics | none | the whole point |
+| States | the meaningful ones, made visible | whatever the raw snippet renders |
+
+Neither page may be used to justify changing canonical source. If something looks wrong on the style guide, reproduce it here first and classify it.
 
 ## Before adding a compatibility fix
 

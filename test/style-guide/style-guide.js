@@ -4,19 +4,33 @@
   This file is PAGE-LEVEL ONLY. It is not part of Buckholt and must not be
   treated as a Buckholt API or copied into product code.
 
-  Each block below drives a documented interaction for which this repository
-  ships no component script. Buckholt's own scripts - components/form/form.js,
-  components/dropdown/dropdown.js and components/tabs/tabs.js - are loaded
-  separately and own everything they cover; nothing here duplicates them.
+  Buckholt's own scripts — components/form/form.js, components/dropdown/dropdown.js
+  and components/tabs/tabs.js — are loaded separately and own everything they
+  cover. Nothing here duplicates them.
 
-  Every gap this file stands in for is recorded in
-  discrepancies/known-issues.md. When a Buckholt script provides one of these
-  behaviours, delete the corresponding block here.
+  Each block below either initialises a documented Bootstrap component, or
+  drives a documented interaction for which this repository ships no script.
+  Those gaps are recorded and classified in test/runtime-verification/ and in
+  discrepancies/known-issues.md; when an upstream script provides one of them,
+  delete the corresponding block here.
 */
 (function () {
   'use strict';
 
-  // Selectable Card ---------------------------------------------------------
+  // Tooltip -----------------------------------------------------------------
+  // Buckholt documents the initialisation options in components/tooltip:
+  // an offset of [0, 4] and an 800ms show delay. Those are used rather than
+  // Bootstrap's defaults.
+  if (typeof window.bootstrap !== 'undefined') {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (trigger) {
+      new window.bootstrap.Tooltip(trigger, {
+        offset: [0, 4],
+        delay: { show: 800, hide: 100 }
+      });
+    });
+  }
+
+  // Selectable card ---------------------------------------------------------
   // The runtime styles `.card-selectable.active` but nothing adds `.active`
   // when the nested radio or checkbox changes.
   document.querySelectorAll('.card-selectable .form-check-input').forEach(function (input) {
@@ -35,19 +49,13 @@
     sync();
   });
 
-  // Selectable Tag ----------------------------------------------------------
-  // The documented markup is a `span.tag.tag-selectable[aria-selected]` that
-  // wraps a native radio or checkbox and a `.tag-label`. Two things stop it
-  // working on its own:
-  //   1. The runtime hides the input with `.tag-selectable input { display: none }`
-  //      and the wrapper is a `span`, not a `label`, so nothing associates the
-  //      two - clicking the tag never reaches the control.
-  //   2. The selected appearance is keyed off `.tag-selectable.active`, but the
-  //      documented markup carries `aria-selected` and nothing sets `.active`.
-  // This forwards the click to the hidden control and keeps `.active`,
-  // `aria-selected` and `input.checked` in step. The tag is also given the
-  // keyboard affordances the runtime's `.tag-selectable:focus-visible` rule
-  // implies but the documented markup does not carry.
+  // Selectable tag ----------------------------------------------------------
+  // The documented markup is a `span.tag.tag-selectable[aria-selected]` wrapping
+  // a native control and a `.tag-label`. Two things stop it working on its own:
+  // the runtime hides the control with `.tag-selectable input { display: none }`
+  // and the wrapper is a `span` rather than a `label`, so a click never reaches
+  // it; and the selected appearance is keyed off `.tag-selectable.active` while
+  // the markup carries `aria-selected`.
   document.querySelectorAll('.tag-selectable').forEach(function (tag) {
     var input = tag.querySelector('input');
     if (!input) return;
@@ -94,10 +102,10 @@
     syncAll();
   });
 
-  // Dismissible Tag ---------------------------------------------------------
-  // The documented markup uses data-bs-dismiss="tag". Bootstrap implements
-  // dismiss only for its own components, so the button is otherwise inert.
-  document.querySelectorAll('[data-bs-dismiss="tag"]').forEach(function (button) {
+  // Dismissible tag ---------------------------------------------------------
+  // Bootstrap implements dismiss only for its own components, so a Tag's close
+  // button is otherwise inert.
+  document.querySelectorAll('.tag-dismissible .btn-close').forEach(function (button) {
     button.addEventListener('click', function () {
       var tag = button.closest('.tag');
       if (tag) tag.remove();
@@ -107,9 +115,9 @@
   // Slider ------------------------------------------------------------------
   // The documented Slider pairs a range input with a number field. form.js
   // covers the Number input steppers but not this pairing.
-  document.querySelectorAll('.slider-input').forEach(function (wrapper) {
+  document.querySelectorAll('.slider-input, .response:has(input[type="range"])').forEach(function (wrapper) {
     var range = wrapper.querySelector('input[type="range"]');
-    var number = wrapper.querySelector('input[type="number"]');
+    var number = wrapper.querySelector('input[type="number"], .form-slider-output input');
     if (!range || !number) return;
 
     range.addEventListener('input', function () { number.value = range.value; });
@@ -151,4 +159,28 @@
       master.indeterminate = checked > 0 && checked < boxes.length;
     });
   });
+
+  // Toast container ---------------------------------------------------------
+  // A `.toast-container` is fixed to the viewport, so the stacked example is
+  // held back until it is asked for rather than floating over the whole page.
+  var toastContainer = document.getElementById('sgToastContainer');
+  document.querySelectorAll('[data-sg-toasts]').forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      if (!toastContainer) return;
+      toastContainer.hidden = false;
+      toastContainer.querySelectorAll('.toast').forEach(function (toast) {
+        toast.classList.add('show');
+      });
+    });
+  });
+
+  if (toastContainer) {
+    toastContainer.addEventListener('click', function (event) {
+      if (!event.target.closest('.btn-close')) return;
+      var toast = event.target.closest('.toast');
+      if (toast) toast.classList.remove('show');
+      var remaining = toastContainer.querySelectorAll('.toast.show').length;
+      if (!remaining) toastContainer.hidden = true;
+    });
+  }
 })();
