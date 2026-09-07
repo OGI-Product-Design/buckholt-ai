@@ -106,6 +106,28 @@ Read:
 
 The Button Usage, Style and Code & specs documentation have all been supplied.
 
+### Icon block
+Read:
+- `components/icon-block/rules.md`
+- `components/icon-block/examples.html`
+- `foundations/iconography/rules.md`
+- `foundations/iconography/catalogue.md`
+- relevant Colour and Radius foundations
+
+Icon block rules:
+- use `.icon-block` as the base component;
+- the default/no-modifier size is medium;
+- documented size modifiers are `.icon-block-xs`, `.icon-block-sm`, `.icon-block-lg`, `.icon-block-xl` and `.icon-block-xxl`;
+- use the Buckholt icon catalogue rather than guessing icon names or styles;
+- use `.expressive-light` or `.expressive-dark` for documented expressive treatments;
+- the primary expressive palette is the default; `.expressive-secondary`, `.expressive-tertiary` and `.expressive-quaternary` switch palette;
+- do not rely on icon shape or colour alone to communicate essential meaning;
+- use `aria-hidden="true"` when the icon is decorative/supporting adjacent text;
+- when an Icon block is inside a Text block, follow the Text block composition rules for heading relationship, spacing, eyebrow exclusion and display-heading exclusion;
+- do not recreate Icon block dimensions, radius, centring or colours with custom CSS.
+
+The Icon block Usage, Style and Code & specs documentation have all been supplied. The Usage page appears to have its `When to use` and `When not to use` headings reversed; follow the meaning of the bullet content rather than those two labels.
+
 ### Link
 Read:
 - `components/link/rules.md`
