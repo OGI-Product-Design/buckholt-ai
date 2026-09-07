@@ -98,3 +98,45 @@ and only `.expressive-secondary`, `.expressive-tertiary` and `.expressive-quater
 Rendering is therefore correct, because the intended default already applies. The problem is that the markup implies a family modifier is required when none exists, which invites agents to invent matching classes for other families or to assume `.expressive-primary` is a real API.
 
 Either add `.expressive-primary` to the runtime as an explicit no-op alias for the default, or drop it from the Summary Meta documentation so the two components describe the default the same way. Do not add a local override to compensate.
+
+## Progress bar error status icon renders black instead of the error colour
+
+The Progress bar status icons are supplied as `background-image` data URIs on `.progress-header`. The success icon encodes its fill as a literal value; the error icon tries to reference a custom property:
+
+```css
+.progress-header:has(~ .is-valid) {
+  background-image: url("data:image/svg+xml,%3csvg ... fill='%23168914' ...");
+}
+.progress-header:has(~ .is-invalid) {
+  background-image: url("data:image/svg+xml,%3csvg ... fill='var%28--error-01%29' ...");
+}
+```
+
+A `data:` URI is a separate document. CSS custom properties defined on the host page do not cascade into it, so `var(--error-01)` is not a resolvable paint value inside that SVG and the fill falls back to the SVG default, black.
+
+Measured by rasterising each icon and sampling the first opaque pixel:
+
+| Icon | Encoded fill | Rendered |
+| --- | --- | --- |
+| Success | `fill='%23168914'` | `rgb(21, 137, 20)` — correct |
+| Error | `fill='var%28--error-01%29'` | `rgb(0, 0, 0)` — black |
+| Error with a literal fill | `fill='%23d7050c'` | `rgb(215, 5, 12)` — correct |
+
+The Buckholt documentation site shows this icon in the error colour, so the intended behaviour is clear and the runtime does not match it.
+
+The fix is to encode the literal colour in the error icon exactly as the success icon does, replacing `fill='var%28--error-01%29'` with `fill='%23d7050c'`. Note that this loses the indirection through `--error-01`; the same constraint already applies to the success icon, which hard-codes `#168914` rather than referencing `--success-01`. Any other data-URI icon in the stylesheet that references a custom property will have the same problem. Do not add a local override in product UI to compensate.
+
+## Versa-tile body text class is undocumented
+
+The documented Versa-tile anatomy names a "Body text" part sitting under `.versatile-label`. The runtime implements it:
+
+```css
+.versatile-text {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+```
+
+Neither `components/versa-tile/rules.md` nor `components/versa-tile/examples.html` mentions `.versatile-text`, so an agent following the component documentation alone has no verified markup for a part the anatomy explicitly labels. Add it to the component documentation so the documented anatomy and the verified markup agree.

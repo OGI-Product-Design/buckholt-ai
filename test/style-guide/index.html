@@ -3148,6 +3148,28 @@
             </div>
           </div>
         </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Known issue — the error status icon renders black, not red</h3>
+            <p class="body-02">
+              Compare the two status icons above: success is green, but error is black. The documentation
+              site shows it in the error colour. The success icon encodes its fill as a literal value,
+              while the error icon tries to use a custom property:
+            </p>
+            <p class="body-02">
+              <code>fill='%23168914'</code> for success, against
+              <code>fill='var%28--error-01%29'</code> for error.
+            </p>
+            <p class="body-02">
+              A <code>data:</code> URI is a separate document, so custom properties from the host page do
+              not cascade into it. <code>var(--error-01)</code> is not a resolvable paint value there and
+              the fill falls back to black. Encoding the literal <code>%23d7050c</code>, exactly as the
+              success icon does, renders it correctly. Recorded in
+              <code>discrepancies/known-issues.md</code>; not patched here.
+            </p>
+          </div>
+        </div>
       </section>
 
       <section class="sg-section" id="summary-meta">
@@ -3438,81 +3460,175 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
         </ul>
 
         <div class="sg-block">
-          <h3 class="title-02">Basic, with an Icon block and Key-value</h3>
-          <div class="versatile">
-            <div class="versatile-content">
-              <div class="versatile-body">
-                <div class="icon-block">
-                  <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+          <h3 class="title-02">Anatomy</h3>
+          <p class="body-02">
+            The container holds an optional Icon block, the content, and optional action items. A Progress
+            bar, when present, sits after <code>.versatile-content</code> and spans the full width at the
+            foot of the tile.
+          </p>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Label, body text and action items</span>
+            <div class="versatile">
+              <div class="versatile-content">
+                <div class="versatile-body">
+                  <div class="icon-block">
+                    <i class="fa-regular fa-ghost" aria-hidden="true"></i>
+                  </div>
+                  <div class="versatile-meta">
+                    <div class="versatile-label">Versa-tile label</div>
+                    <p class="versatile-text">Body text</p>
+                  </div>
                 </div>
-                <div class="versatile-meta">
-                  <div class="versatile-label">Versa-tile label</div>
-                  <div class="key-value">
-                    <span class="key">Key</span>
-                    <span class="value">Value</span>
+                <div class="versatile-actions">
+                  <button type="button" class="btn btn-ghost" aria-label="Edit"
+                          data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
+                    <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                  </button>
+                  <button type="button" class="btn btn-ghost" aria-label="Delete"
+                          data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
+                    <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Label, Key-value and Progress bar</span>
+            <div class="versatile">
+              <div class="versatile-content">
+                <div class="versatile-body">
+                  <div class="icon-block">
+                    <i class="fa-regular fa-ghost" aria-hidden="true"></i>
+                  </div>
+                  <div class="versatile-meta">
+                    <div class="versatile-label">Versa-tile label</div>
+                    <div class="key-value">
+                      <span class="key">Key</span>
+                      <span class="value">Value</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="versatile-actions"></div>
+              <div class="progress progress-sm" role="progressbar"
+                   aria-label="Versa-tile progress"
+                   aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
             </div>
           </div>
+
           <code class="sg-code body-01">&lt;div class="versatile"&gt;
   &lt;div class="versatile-content"&gt;
     &lt;div class="versatile-body"&gt;
       &lt;div class="icon-block"&gt;
-        &lt;i class="fa-regular fa-file-lines" aria-hidden="true"&gt;&lt;/i&gt;
+        &lt;i class="fa-regular fa-ghost" aria-hidden="true"&gt;&lt;/i&gt;
       &lt;/div&gt;
       &lt;div class="versatile-meta"&gt;
         &lt;div class="versatile-label"&gt;Versa-tile label&lt;/div&gt;
-        &lt;div class="key-value"&gt;
-          &lt;span class="key"&gt;Key&lt;/span&gt;
-          &lt;span class="value"&gt;Value&lt;/span&gt;
-        &lt;/div&gt;
+        &lt;p class="versatile-text"&gt;Body text&lt;/p&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-    &lt;div class="versatile-actions"&gt;&lt;/div&gt;
+    &lt;div class="versatile-actions"&gt;
+      &lt;!-- icon-only Buttons, each with an accessible name and tooltip --&gt;
+    &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code>
         </div>
 
         <div class="sg-block">
-          <h3 class="title-02">With item actions</h3>
-          <div class="versatile">
-            <div class="versatile-content">
-              <div class="versatile-body">
-                <div class="versatile-meta">
-                  <div class="versatile-label">Policy item</div>
-                  <div class="key-value">
-                    <span class="key">Reference</span>
-                    <span class="value">ABC123</span>
+          <h3 class="title-02">Content</h3>
+          <p class="body-02">
+            Content varies with usage. It may include an Icon block, Key-value pairs and lists, tags, and
+            interactive elements such as buttons and links — all reused as their own components.
+          </p>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Person, with edit and delete actions</span>
+            <div class="versatile">
+              <div class="versatile-content">
+                <div class="versatile-body">
+                  <div class="icon-block">
+                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                  </div>
+                  <div class="versatile-meta">
+                    <div class="versatile-label">Rick Deckard</div>
+                    <p class="versatile-text">Additional driver</p>
+                  </div>
+                </div>
+                <div class="versatile-actions">
+                  <button type="button" class="btn btn-ghost" aria-label="Edit Rick Deckard"
+                          data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="top">
+                    <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                  </button>
+                  <button type="button" class="btn btn-ghost" aria-label="Delete Rick Deckard"
+                          data-bs-toggle="tooltip" data-bs-title="Delete" data-bs-placement="top">
+                    <div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="support-01">
+              The action names are specific to the item — "Edit Rick Deckard" rather than a bare "Edit" —
+              so they still make sense when read out of context in a list of tiles.
+            </p>
+          </div>
+
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">Vehicle policy, with a row of Key-value pairs</span>
+            <div class="versatile">
+              <div class="versatile-content">
+                <div class="versatile-body">
+                  <div class="icon-block">
+                    <i class="fa-regular fa-car" aria-hidden="true"></i>
+                  </div>
+                  <div class="versatile-meta">
+                    <div class="versatile-label">999/227/Y059/TES</div>
+                    <div class="key-value-list key-value-list-row">
+                      <div class="key-value key-value-stacked key-value-sm">
+                        <span class="key">Registration</span>
+                        <span class="value">HG10 ZTY</span>
+                      </div>
+                      <div class="key-value key-value-stacked key-value-sm">
+                        <span class="key">Model</span>
+                        <span class="value">Citroen Saxo</span>
+                      </div>
+                      <div class="key-value key-value-stacked key-value-sm">
+                        <span class="key">End date</span>
+                        <span class="value">23/01/26</span>
+                      </div>
+                      <div class="key-value key-value-stacked key-value-sm">
+                        <span class="key">Status</span>
+                        <span class="value">Policy</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="versatile-actions">
-                <button type="button" class="btn btn-ghost">
-                  <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
-                  <span class="button-label">Edit</span>
-                </button>
-              </div>
             </div>
           </div>
-        </div>
 
-        <div class="sg-block">
-          <h3 class="title-02">With progress</h3>
-          <div class="versatile">
-            <div class="versatile-content">
-              <div class="versatile-body">
-                <div class="versatile-meta">
-                  <div class="versatile-label">Processing item</div>
+          <div class="sg-panel">
+            <span class="label-01 sg-caption">With a labelled action button</span>
+            <div class="versatile">
+              <div class="versatile-content">
+                <div class="versatile-body">
+                  <div class="versatile-meta">
+                    <div class="versatile-label">Policy item</div>
+                    <div class="key-value">
+                      <span class="key">Reference</span>
+                      <span class="value">ABC123</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="versatile-actions">
+                  <button type="button" class="btn btn-ghost">
+                    <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+                    <span class="button-label">Edit</span>
+                  </button>
                 </div>
               </div>
-              <div class="versatile-actions"></div>
-            </div>
-            <div class="progress progress-sm" role="progressbar"
-                 aria-label="Versa-tile progress"
-                 aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: 50%"></div>
             </div>
           </div>
         </div>
@@ -3526,12 +3642,29 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
           <a class="versatile" href="#versa-tile">
             <div class="versatile-content">
               <div class="versatile-body">
+                <div class="icon-block">
+                  <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                </div>
                 <div class="versatile-meta">
                   <div class="versatile-label">Navigational item</div>
+                  <p class="versatile-text">Opens the item detail</p>
                 </div>
               </div>
             </div>
           </a>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Gap — <code>.versatile-text</code> is undocumented</h3>
+            <p class="body-02">
+              The documented anatomy names a "Body text" part, and the runtime implements it as
+              <code>.versatile-text</code> (no margin, single line, ellipsis on overflow). Neither
+              <code>components/versa-tile/rules.md</code> nor its <code>examples.html</code> mentions the
+              class, so the examples above are the runtime spelling of a documented part rather than
+              verified markup. Worth adding to the component documentation.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -3579,6 +3712,29 @@ const tooltips = Array.from(tooltipTriggers).map(el =&gt; {
               <code>expressive-dark expressive-primary</code>, but no <code>.expressive-primary</code>
               rule exists. Primary is the root default and only secondary, tertiary and quaternary have
               modifiers, so the class does nothing. Rendering is correct; the markup is misleading.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Progress bar error status icon renders black</h3>
+            <p class="body-02">
+              The error status icon encodes its fill as <code>fill='var%28--error-01%29'</code> inside a
+              <code>data:</code> URI SVG. Custom properties do not cascade into a data URI, so the fill
+              falls back to black instead of <code>#d7050c</code>. The success icon uses a literal
+              <code>%23168914</code> and renders correctly.
+            </p>
+          </div>
+        </div>
+
+        <div class="sg-issue">
+          <div class="text-block">
+            <h3 class="title-02">Versa-tile <code>.versatile-text</code> is undocumented</h3>
+            <p class="body-02">
+              The documented anatomy names a "Body text" part and the runtime implements
+              <code>.versatile-text</code>, but neither the Versa-tile rules nor its examples mention the
+              class.
             </p>
           </div>
         </div>
