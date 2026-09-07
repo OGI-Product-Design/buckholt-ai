@@ -1,0 +1,97 @@
+<!-- Default slider -->
+<div class="input">
+  <div class="input-label">
+    <label for="slider-example" class="form-label">Slider label text</label>
+  </div>
+
+  <div class="response slider-input">
+    <div class="slider-container">
+      <span class="minmax">0</span>
+      <div class="slider-wrapper">
+        <input type="range" class="form-slider" id="slider-example" min="0" max="100" step="1" value="50">
+        <div class="ticks">
+          <span class="tick"></span>
+          <span class="tick"></span>
+          <span class="tick"></span>
+          <span class="tick"></span>
+          <span class="tick"></span>
+        </div>
+      </div>
+      <span class="minmax">100</span>
+      <input type="number" id="sliderOutput-example" class="form-control" style="width: 4ch;" value="50">
+    </div>
+  </div>
+
+  <div class="invalid-feedback">Validation error message</div>
+</div>
+
+<!-- Slider with assistive/helper text -->
+<div class="input">
+  <div class="input-label">
+    <label for="slider-support" class="form-label">Slider support text example</label>
+    <small class="form-helper">Assistive text</small>
+  </div>
+  <div class="response slider-input">
+    <div class="slider-container">
+      <span class="minmax">0</span>
+      <div class="slider-wrapper">
+        <input type="range" class="form-slider" id="slider-support" min="0" max="100" step="1" value="50">
+      </div>
+      <span class="minmax">100</span>
+      <input type="number" id="sliderOutput-support" class="form-control" style="width: 4ch;" value="50">
+    </div>
+  </div>
+  <small class="form-helper">Helper text</small>
+</div>
+
+<!-- Error -->
+<div class="input">
+  <div class="input-label">
+    <label for="slider-error" class="form-label">Slider error example</label>
+  </div>
+  <div class="response slider-input">
+    <div class="slider-container">
+      <span class="minmax">0</span>
+      <div class="slider-wrapper">
+        <input type="range" class="form-slider is-invalid" id="slider-error" min="0" max="100" step="1" value="50">
+      </div>
+      <span class="minmax">100</span>
+      <input type="number" id="sliderOutput-error" class="form-control is-invalid" style="width: 4ch;" value="50">
+    </div>
+  </div>
+  <div class="invalid-feedback">Validation error message</div>
+</div>
+
+<!-- Disabled -->
+<div class="input">
+  <div class="input-label">
+    <label for="slider-disabled" class="form-label">Slider disabled example</label>
+  </div>
+  <div class="response slider-input">
+    <div class="slider-container">
+      <span class="minmax">0</span>
+      <div class="slider-wrapper">
+        <input type="range" class="form-slider" id="slider-disabled" min="0" max="100" step="1" value="50" disabled>
+      </div>
+      <span class="minmax">100</span>
+      <input type="number" id="sliderOutput-disabled" class="form-control" style="width: 4ch;" value="50" disabled>
+    </div>
+  </div>
+</div>
+
+<!-- Read-only -->
+<div class="input">
+  <div class="input-label">
+    <label for="slider-readonly" class="form-label">Slider read-only example</label>
+  </div>
+  <div class="response slider-input">
+    <div class="slider-container">
+      <span class="minmax">0</span>
+      <div class="slider-wrapper">
+        <input type="range" class="form-slider readonly" id="slider-readonly" min="0" max="100" step="1" value="50" disabled>
+      </div>
+      <span class="minmax">100</span>
+      <input type="number" id="sliderOutput-readonly" class="form-control" style="width: 4ch;" value="50" readonly>
+    </div>
+  </div>
+</div>
