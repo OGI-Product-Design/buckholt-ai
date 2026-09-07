@@ -43,6 +43,9 @@ buckholt-ai/
     ├── button/
     │   ├── rules.md
     │   └── examples.html
+    ├── icon-block/
+    │   ├── rules.md
+    │   └── examples.html
     ├── link/
     │   ├── rules.md
     │   └── examples.html
@@ -75,6 +78,11 @@ Read `foundations/typography/rules.md` and `foundations/typography/type-sets.md`
 
 ### Button
 Read `components/button/rules.md` and `components/button/examples.html`, plus the relevant foundations when choosing colour, icons, radius, spacing, typography or other shared styling.
+
+### Icon block
+Read `components/icon-block/rules.md` and `components/icon-block/examples.html`, plus Colour, Iconography and Radius foundations. Icon block covers the six documented sizes from extra small through extra extra large, neutral/default treatment, expressive light/dark treatments and secondary/tertiary/quaternary expressive palette modifiers.
+
+When an Icon block is composed inside a Text block, the Text block component controls the relationship to headings, eyebrow text, inline icons and spacing.
 
 ### Link
 Read `components/link/rules.md` and `components/link/examples.html`, plus colour, iconography, spacing and typography where relevant. The Link guidance covers inline and standalone links, icon use, new-tab/external-link treatment, interaction states and horizontal/stacked Link sets.
