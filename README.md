@@ -167,10 +167,13 @@ Read the component's `rules.md` and `examples.html` before implementation. Impor
 <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
 
-> **No separate Bootstrap stylesheet.** `buckholt.css` is a complete, self-contained
-> Bootstrap 5.3 build with Buckholt as the theme, and the live Buckholt documentation
-> site loads only its own compiled CSS. Bootstrap **JavaScript** is still required for
-> the ten components with `data-bs-*` hooks; its correct version is not yet verified.
+> **Do not load Bootstrap CSS separately.** `buckholt.css` is a complete, self-contained
+> Bootstrap 5.3 build with Buckholt as the theme. The live Buckholt documentation site has
+> its Bootstrap stylesheet commented out and loads only its own compiled CSS — this is the
+> verified contract.
+>
+> Bootstrap **JavaScript is a separate dependency and is required**: the live site loads
+> the 5.1.3 bundle, active, for the ten components with `data-bs-*` hooks. Keep it.
 > See `CLAUDE.md` → Runtime dependencies.
 
 

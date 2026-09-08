@@ -34,8 +34,10 @@
    <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 
    No separate Bootstrap stylesheet. Bootstrap JavaScript is a separate
-   question and is still required for the ten components with `data-bs-*`
-   hooks - see CLAUDE.md.
+   dependency and IS required - the live documentation site loads the 5.1.3
+   bundle, active, for the ten components with `data-bs-*` hooks. Verified with
+   Bootstrap CSS removed: tabs, tooltips, toasts, modals, dropdowns and
+   accordions all still work. See CLAUDE.md.
    ============================================================================ */
 
 

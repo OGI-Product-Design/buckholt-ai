@@ -198,16 +198,25 @@ control, and pushed a redundant 24px indent into every `.form-check`. Nine of th
 corrections that used to sit in `css/buckholt-ai-fixes.css` existed only to undo that
 damage; they were deleted when the stylesheet was removed.
 
-### JavaScript — required, version not yet verified
+### JavaScript — verified
 
-Bootstrap JavaScript is a **separate question from CSS and is still required.** Ten
-components carry `data-bs-*` hooks and depend on it: Accordion, Alert (dismiss),
+Bootstrap JavaScript is a **separate dependency from Bootstrap CSS, and it is required.**
+The live Buckholt documentation site loads the **5.1.3 bundle**, active and uncommented,
+while its Bootstrap stylesheet is commented out. This repository matches that exactly.
+
+Ten components carry `data-bs-*` hooks and depend on it: Accordion, Alert (dismiss),
 Breadcrumb (tooltip), Collapse, Dropdown, Menu button, Modal, Tabs, Toast, Tooltip. The
 other 31 components need no Bootstrap JavaScript at all.
 
-> **Unverified:** `buckholt.css` is a Bootstrap 5.3 build, but the bundle below is 5.1.3.
-> The correct JS version has not been confirmed against the documentation site. Do not
-> change it on assumption — verify first, the same way the CSS contract was verified.
+Measured with Bootstrap CSS removed, every one of those behaviours still works: tabs
+switch panes, tooltips render on hover, toasts show, modals open, dropdowns open,
+accordions collapse. CSS and JavaScript are genuinely independent here.
+
+> **Note, not a defect:** `buckholt.css` is a Bootstrap **5.3** build
+> (`[data-bs-theme=buckholt]`, `--bs-emphasis-color`, `--bs-focus-ring`) while the bundle
+> is **5.1.3**. That pairing is what the live documentation site itself ships, so it is
+> the verified contract. Do not "correct" the JS to 5.3 — that would diverge from the
+> reference implementation.
 
 For those ten components:
 
