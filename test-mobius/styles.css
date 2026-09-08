@@ -1,0 +1,340 @@
+/* ============================================================================
+   Mobius client search exploration — application layout only
+   ============================================================================
+
+   Scope. This file positions Buckholt components. It does not restyle them.
+   Every selector is prefixed `mx-`, and where one reaches a Buckholt class it
+   does so only through an `mx-` ancestor and only to do something Buckholt does
+   not define for that component — each such rule is called out below.
+
+   Values. Every spacing, colour, radius and border width is a Buckholt token,
+   or a `calc()` composed from them. The only exceptions are two max-widths
+   expressed in rem, which are reading-measure constraints rather than spacing.
+   The spacing decisions follow the documented scale:
+
+     strong relationship   --spacer-02 / --spacer-03    4-8px
+     related group         --spacer-04 / --spacer-05    16-24px
+     separate section      --spacer-06                  32px
+     separate task         --spacer-08                  64px
+
+   ============================================================================ */
+
+/* The application bar is sticky, so every in-page scroll — the anchor link out
+   of the stacked preview and the scroll-into-view on selection alike — is
+   offset to clear it. Composed from spacing tokens, not measured pixels. */
+html {
+  scroll-padding-top: calc(var(--spacer-08) + var(--spacer-03));   /* 72px */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+.mx-body {
+  background-color: var(--ui-background-03);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Application bar and the persistent client context strip
+   --------------------------------------------------------------------------- */
+
+.mx-appbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: var(--ui-background-01);
+  border-bottom: var(--border-width) solid var(--ui-border-02);
+}
+
+.mx-appbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  padding: var(--padding-04) var(--padding-07);
+}
+
+.mx-appbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  flex: none;
+}
+
+.mx-appbar-product { color: var(--text-primary); }
+
+.mx-appbar-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 28rem;
+}
+
+.mx-appbar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-04);
+  margin-left: auto;
+  flex: none;
+}
+
+.mx-appbar-meta { color: var(--text-tertiary); white-space: nowrap; }
+
+.mx-context {
+  background-color: var(--ui-background-04);
+  border-bottom: var(--border-width) solid var(--ui-border-02);
+}
+
+.mx-context-inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacer-03) var(--spacer-05);
+  padding: var(--padding-04) var(--padding-07);
+}
+
+.mx-context-back { flex: none; }
+
+.mx-context-identity {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacer-03);
+  min-width: 0;
+}
+
+/* Type comes from the documented `.label-01` class in the markup; only the
+   colour role is set here. */
+.mx-context-name { color: var(--text-primary); }
+
+.mx-context-sep { color: var(--text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   Master / detail workspace
+   --------------------------------------------------------------------------- */
+
+.mx-workspace { row-gap: var(--spacer-06); }
+
+/* Refine controls sit closer to the results they act on than to the heading
+   above, so the relationship reads correctly. */
+.mx-refine { margin-bottom: var(--spacer-05); }
+
+.mx-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-06);          /* separate people */
+}
+
+.mx-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);          /* a heading and its records are one thing */
+}
+
+.mx-group-records {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-02);          /* repeated items in a set: tight */
+}
+
+.mx-results-empty {
+  margin-top: var(--spacer-05);
+  color: var(--text-tertiary);
+}
+
+/*
+   APPLICATION-LAYER ADDITION — selection state on a Versa-tile.
+
+   Buckholt documents a selected state for Card (`.card-selectable.active`) and
+   Tag (`.tag-selectable.active`) but not for Versa-tile. Versa-tile is the
+   right component for a dense, scannable record row, so the selection
+   affordance is supplied here at the application layer, using Buckholt's own
+   action colour and border-width tokens.
+
+   The wrapper is a native <button>, so its own chrome is cleared first. These
+   rules style the application's wrapper and the tile's background state; they
+   add nothing to the component's own styling.
+*/
+.mx-result {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--border-radius-md);
+}
+
+.mx-result:focus-visible {
+  outline: var(--border-width-02) solid var(--action-01);
+  outline-offset: var(--spacer-01);
+}
+
+.mx-result[aria-pressed="true"] > .versatile {
+  box-shadow: 0 0 0 var(--border-width-02) var(--action-01);
+  background-color: var(--action-04);
+}
+
+.mx-result:not([aria-pressed="true"]):hover > .versatile {
+  background-color: var(--action-05);
+}
+
+/* ---------------------------------------------------------------------------
+   Detail pane
+   --------------------------------------------------------------------------- */
+
+/* The application bar is sticky and 69px tall in the search view, so the pinned
+   detail card clears it by one spacing step. Composed from tokens rather than
+   measured in arbitrary pixels. */
+.mx-detail-sticky {
+  position: sticky;
+  top: calc(var(--spacer-08) + var(--spacer-04));   /* 80px */
+}
+
+/* The detail pane is a Buckholt Card. Card supplies the surface, the 2rem
+   padding and the 1.5rem body rhythm, so nothing here recreates a surface;
+   these rules only place things inside it. */
+
+/* Only meaningful once the panes have stacked; above lg both are on screen. */
+.mx-detail-back { display: none; align-self: flex-start; }
+
+/* A section heading and the content it introduces belong closer together than
+   Card's own body gap, which separates the sections from one another. */
+.mx-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.mx-empty .card-body { align-items: center; text-align: center; }
+
+.mx-empty .text-block { max-width: 26rem; }
+
+/* The client reference and the policy fingerprint are the identifying signals,
+   so they must be readable in full — a truncated reference is exactly the thing
+   the broker is trying to tell apart. Buckholt's Versa-tile label and text are
+   single-line by default; in this composition they are allowed to wrap rather
+   than truncate. Layout only; no Buckholt styling is replaced. */
+.mx-result .versatile-label,
+.mx-result .versatile-text,
+.mx-policy .versatile-label,
+.mx-policy .versatile-text {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* ---------------------------------------------------------------------------
+   Policies
+   --------------------------------------------------------------------------- */
+
+.mx-policy-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+
+.mx-quiet { color: var(--text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   Long identifiers
+   ---------------------------------------------------------------------------
+   Buckholt sets no `overflow-wrap` on `.key`, `.value` or `.versatile-label`,
+   and this screen is made almost entirely of unbroken tokens — client
+   references, policy numbers, registrations, email addresses. Applied at the
+   containers that own the content rather than to Buckholt classes globally,
+   which is what responsive/component-guidance.md ("Long labels and values")
+   recommends.
+   --------------------------------------------------------------------------- */
+
+.mx-results,
+.mx-detail,
+#viewClient {
+  overflow-wrap: anywhere;
+}
+
+/* Buckholt already sets `overflow-wrap: break-word` on these, which wraps the
+   text but does not reduce the element's min-content width — so a grid or flex
+   track still sizes to the longest token and pushes the page sideways at 320px.
+   `anywhere` is the value that also shrinks the intrinsic minimum. Scoped to
+   this screen's containers; nothing is changed globally. */
+.mx-results .versatile-label,
+.mx-detail .key,
+.mx-detail .value,
+.mx-detail .summary-meta-body,
+#viewClient .key,
+#viewClient .value,
+#viewClient .summary-meta-body {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Client summary
+   --------------------------------------------------------------------------- */
+
+.mx-client-head { row-gap: var(--spacer-05); }
+
+/* Buckholt has no documented alignment modifier for a button set, so alignment
+   is done here, at the application layer, by the column that holds it — not by
+   inventing a `.button-set-*` class. The set itself carries the runtime's
+   `.button-set-no-offset`. */
+.mx-client-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+/* Buckholt's key-value grid takes its column count from `--columns`. The
+   canonical example sets it inline; this composition sets it from the
+   stylesheet instead so it can respond to width, using the same documented
+   knob rather than overriding the grid. */
+.mx-stats { --columns: 3; }
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   ---------------------------------------------------------------------------
+   Documented Buckholt behaviour is used first: the Bootstrap `.col-*`
+   breakpoint classes in the markup do the stacking, as patterns/input-rows
+   documents, and the Tabs strip scrolls via `.tab-items-scroll`. The rules
+   below are application-level layout only, and follow the repository's
+   non-canonical guidance in responsive/component-guidance.md.
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 61.99rem) {
+  /* Below lg the two columns stack, so nothing should be pinned. */
+  .mx-detail-sticky { position: static; }
+  .mx-detail-back { display: inline-flex; }
+}
+
+@media (max-width: 47.99rem) {
+  /* The bar wraps to two rows here, so the scroll offset grows with it. */
+  html { scroll-padding-top: var(--spacer-09); }
+
+  /* Buckholt floors `.progress` at `min-width: 22rem` (352px), which no policy
+     tile can hold once the workspace has stacked. Relaxed here in a narrowly
+     scoped application rule and never globally, exactly as
+     responsive/component-guidance.md ("Progress bar") recommends. The bar keeps
+     its meaning; it loses some precision. */
+  .mx-policy .progress { min-width: 0; }
+
+  .mx-appbar-inner {
+    flex-wrap: wrap;
+    gap: var(--spacer-03);
+    padding: var(--padding-04) var(--padding-05);
+  }
+  .mx-appbar-search { order: 3; flex: 1 0 100%; max-width: none; }
+  .mx-context-inner { padding: var(--padding-04) var(--padding-05); }
+}
+
+@media (max-width: 30rem) {
+  .mx-appbar-meta { display: none; }
+
+  /* Three columns compress past readability on a phone. */
+  .mx-stats { --columns: 1; }
+
+  /* On a phone the actions sit under the identity, so align them with it. */
+  .mx-client-actions { justify-content: flex-start; }
+}
