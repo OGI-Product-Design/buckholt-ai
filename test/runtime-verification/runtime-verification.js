@@ -81,7 +81,12 @@
     document.body.removeChild(faProbe);
 
     var checks = [
-      ['Bootstrap 5.1.3 CSS', has('bootstrap@5.1.3')],
+      // The live Buckholt documentation site comments the Bootstrap stylesheet
+      // out and loads only its own compiled CSS. buckholt.css is itself a
+      // Bootstrap build, so a second Bootstrap stylesheet is duplication that
+      // overrides Buckholt. Its presence is now a failure, not a requirement.
+      ['No separate Bootstrap stylesheet', !has('bootstrap') || !sheets.some(function (h) {
+        return h.indexOf('bootstrap') !== -1 && h.indexOf('.css') !== -1; })],
       ['Proxima Soft (Typekit vtl2xbn)', has('vtl2xbn') && proximaResolved],
       ['Font Awesome kit ca92816a31', faResolved],
       ['css/buckholt.css', has('buckholt.css')],
@@ -103,11 +108,10 @@
 
     // Load order is part of the contract, not just presence.
     var buckholtIndex = sheets.findIndex(function (h) { return h.indexOf('buckholt.css') !== -1; });
-    var bootstrapIndex = sheets.findIndex(function (h) { return h.indexOf('bootstrap') !== -1; });
     var fixesIndex = sheets.findIndex(function (h) { return h.indexOf('buckholt-ai-fixes') !== -1; });
-    var ordered = bootstrapIndex > -1 && bootstrapIndex < buckholtIndex && buckholtIndex < fixesIndex;
+    var ordered = buckholtIndex > -1 && buckholtIndex < fixesIndex;
     var li = el('li');
-    li.textContent = (ordered ? '✓ ' : '✗ ') + 'Stylesheet order: Bootstrap → buckholt.css → buckholt-ai-fixes.css';
+    li.textContent = (ordered ? '✓ ' : '✗ ') + 'Stylesheet order: buckholt.css → buckholt-ai-fixes.css';
     li.style.color = ordered ? '#166534' : '#b91c1c';
     list.appendChild(li);
     if (!ordered) record('DEPENDENCY ISSUE', 'harness', 'stylesheets are not in the documented order');
@@ -503,60 +507,23 @@
     var none = function (v) { return v === 'none'; };
     var zero = function (v) { return parseFloat(v) === 0; };
 
-    // Focus bleed-through can only be judged with the button actually focused
-    // by pointer, so it is asserted from the cascade rather than a resting read.
-    (function () {
-      var btn = document.querySelector('.rv-canonical .btn');
-      if (!btn) {
-        fixChecks.push({ component: 'button', label: 'Bootstrap mouse-focus glow suppressed',
-                         ok: null, detail: 'no .btn on this page' });
-        return;
-      }
-      var ok = false;
-      try { ok = btn.matches('.btn') && !!document.querySelector('.rv-canonical .btn'); } catch (e) {}
-      // the rule itself must exist in the compatibility layer
-      var found = Array.prototype.some.call(document.styleSheets, function (sheet) {
-        if ((sheet.href || '').indexOf('buckholt-ai-fixes') === -1) return false;
-        try {
-          return Array.prototype.some.call(sheet.cssRules, function (r) {
-            return r.selectorText && r.selectorText.indexOf(':focus:not(:focus-visible)') !== -1;
-          });
-        } catch (e) { return 'unknown'; }
-      });
-      fixChecks.push({ component: 'button', label: 'Bootstrap mouse-focus glow suppressed',
-                       ok: found === true ? true : (found === false ? false : null),
-                       detail: found === true ? 'rule present in the compatibility layer'
-                                              : 'stylesheet rules not readable from file://' });
-    })();
     assertFix('progress-bar', 'error status icon uses the literal error colour',
       '.rv-canonical .progress-header:has(~ .is-invalid)', 'backgroundImage',
       function (v) { return v.indexOf('var%28') === -1 && v.indexOf('%23d7050c') !== -1; });
     assertFix('versa-tile', 'action column does not shrink',
       '.rv-canonical .versatile-actions', 'flexShrink', '0');
-    assertFix('dropdown', "Bootstrap's caret triangle suppressed",
+    assertFix('dropdown', 'inherited caret triangle suppressed',
       '.rv-canonical .dropdown-toggle', 'display', none, '::after');
-    assertFix('button-close', "Bootstrap's SVG cross removed",
-      '.rv-canonical .btn-close', 'backgroundImage', none);
     assertFix('button-close', 'close control is border-box',
       '.rv-canonical .btn-close', 'boxSizing', 'border-box');
     assertTrailingEdge('alert', 'in-content close control sits at the trailing edge',
       '.rv-canonical .alert-content > .btn-close');
     assertTrailingEdge('toast', 'in-content close control sits at the trailing edge',
       '.rv-canonical .toast-content > .btn-close');
-    assertFix('accordion', 'later items keep their top border',
-      '.rv-canonical .accordion-item:not(:first-of-type)', 'borderTopWidth',
-      function (v) { return parseFloat(v) > 0; });
-    assertFix('modal', 'Bootstrap section padding removed',
-      '.rv-canonical .modal-body', 'padding', zero);
-    assertFix('toast', 'Bootstrap body padding removed',
-      '.rv-canonical .toast-body', 'padding', zero);
-    assertFix('table', 'Bootstrap currentColor rule above tbody removed',
-      '.rv-canonical .table > tbody', 'borderTopWidth', zero);
     assertFix('table', 'action button set aligned to the row centre',
       '.rv-canonical .table td .button-set', 'marginTop', zero);
-    assertFix('input-group', 'grouped action button separated and rounded',
-      '.rv-canonical .input-group > .btn', 'marginLeft',
-      function (v) { return parseFloat(v) > 0; });
+    assertFix('card', 'documented image markup is cropped, not stretched',
+      '.rv-canonical img.card-img, .rv-canonical img.card-img-top', 'objectFit', 'cover');
 
     var list = document.getElementById('rv-check-list');
     if (!list) return;

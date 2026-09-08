@@ -6,7 +6,6 @@
   <title>Buckholt style guide</title>
 
   <!-- Approved runtime order from CLAUDE.md. -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
   <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../../css/buckholt.css">
@@ -429,10 +428,14 @@
             shares one document.
           </p>
           <p class="body-02">
-            Dependencies load in the documented order: Bootstrap 5.1.3, the Typekit stylesheet for
-            Proxima Soft, the Buckholt Font Awesome kit, then <code>css/buckholt.css</code>, then
-            <code>css/buckholt-ai-fixes.css</code>. Behaviour comes from the Bootstrap bundle, jQuery
-            and the Buckholt component scripts.
+            Styles load in the verified order: the Typekit stylesheet for Proxima Soft, the Buckholt
+            Font Awesome kit, then <code>css/buckholt.css</code>, then
+            <code>css/buckholt-ai-fixes.css</code>. There is <strong>no separate Bootstrap
+            stylesheet</strong> &mdash; <code>buckholt.css</code> is itself a complete Bootstrap 5.3
+            build with Buckholt as the theme, and the live Buckholt documentation site loads only its
+            own compiled CSS. Behaviour still comes from the Bootstrap bundle, jQuery and the Buckholt
+            component scripts; the JavaScript dependency is a separate question and its correct version
+            is not yet verified.
           </p>
           <p class="support-01">
             This is the reference view. Source and runtime evidence — verification status, classified

@@ -171,17 +171,45 @@ Always read the component folder rather than relying on this file for detailed m
 
 ## Runtime dependencies
 
-Styles must load in this order:
+### CSS — verified
+
+**Do not load a separate Bootstrap stylesheet.** Styles load in this order:
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/buckholt.css">
 <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
 
-For Bootstrap-driven Buckholt behaviours such as tooltips, dropdown menus, alerts, accordions, modals, tabs and toasts:
+`css/buckholt.css` is **not an overlay on Bootstrap. It is a complete, self-contained
+Bootstrap build** with Buckholt as the theme: it carries its own reboot, containers, grid
+(85 `.col-*` rules), spacing utilities (140 rules — more than Bootstrap ships),
+`.visually-hidden`, and its own version of every component Buckholt documents. It is built
+on Bootstrap **5.3** (`[data-bs-theme=buckholt]`, `--bs-emphasis-color`, `--bs-focus-ring`).
+
+This matches the live Buckholt documentation site, whose `<head>` comments the Bootstrap
+stylesheet out and loads only its own compiled CSS.
+
+Loading `bootstrap.min.css` as well adds a second, older copy of the same framework that
+**overrides Buckholt**: it replaced Buckholt's table text colour with Bootstrap's, imposed
+Bootstrap's 3.8px radius on modal corners, added a competing SVG cross to every close
+control, and pushed a redundant 24px indent into every `.form-check`. Nine of the fourteen
+corrections that used to sit in `css/buckholt-ai-fixes.css` existed only to undo that
+damage; they were deleted when the stylesheet was removed.
+
+### JavaScript — required, version not yet verified
+
+Bootstrap JavaScript is a **separate question from CSS and is still required.** Ten
+components carry `data-bs-*` hooks and depend on it: Accordion, Alert (dismiss),
+Breadcrumb (tooltip), Collapse, Dropdown, Menu button, Modal, Tabs, Toast, Tooltip. The
+other 31 components need no Bootstrap JavaScript at all.
+
+> **Unverified:** `buckholt.css` is a Bootstrap 5.3 build, but the bundle below is 5.1.3.
+> The correct JS version has not been confirmed against the documentation site. Do not
+> change it on assumption — verify first, the same way the CSS contract was verified.
+
+For those ten components:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

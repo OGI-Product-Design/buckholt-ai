@@ -12,10 +12,27 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
-The layer holds **14 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
-**22 CSS rules** and checked by **15 runtime assertions**. The three numbers differ because a single
-correction can need several selectors and can be worth asserting from more than one angle; they are
-not alternative counts of the same thing.
+The layer holds **7 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
+**8 CSS rules** and checked by **8 runtime assertions**.
+
+**Dependency-model correction, 8 September 2026.** The repository used to load
+`bootstrap@5.1.3/dist/css/bootstrap.min.css` underneath `css/buckholt.css`. That was wrong.
+`buckholt.css` is a complete, self-contained Bootstrap **5.3** build with Buckholt as the theme —
+its own reboot, containers, grid, utilities and every documented component — and the live Buckholt
+documentation site comments the Bootstrap stylesheet out and loads only its own compiled CSS. The
+extra stylesheet was a second, older copy of the same framework, and it overrode Buckholt: it
+replaced the table text colour, imposed Bootstrap's 3.8px radius on modal corners, drew a competing
+SVG cross on every close control, and added a redundant 24px indent to every `.form-check`.
+
+**Seven of the original fourteen corrections existed only to undo that damage and have been
+deleted**, along with the sections that documented them: Button mouse-focus, Accordion item rules,
+Modal section padding, Toast body padding, the Table `currentColor` rule, Card/Versa-tile link
+hover, and the Input-group button radius. Two more were reduced to the half that survives (Close
+button, Card image).
+
+The corrections that remain are **defects in Buckholt's own compiled output**. Where a cause still
+names a Bootstrap selector, that selector is inside `buckholt.css` itself — every one is worth
+raising upstream.
 
 **Statuses used:** `ACTIVE FIX` (corrected in the compatibility layer) · `OPEN` (verified, not
 corrected) · `PRODUCT RESPONSIBILITY` (Buckholt supplies structure and styling, the application
@@ -25,16 +42,12 @@ supplies behaviour).
 
 ## Contents
 
-**Bootstrap declarations Buckholt does not counter** — [Button focus](#button--bootstrap-mouse-focus-bleed-through) ·
-[Dropdown caret](#dropdown--two-arrows) · [Close button](#button-close--geometry-and-bootstraps-competing-svg-cross) ·
-[Accordion](#accordion--bootstrap-item-and-icon-rules-bleed-through) · [Modal](#modal--bootstrap-section-padding-and-dividers) ·
-[Toast body](#toast--icon-out-of-line-with-the-message) · [Table rule](#table--black-rule-above-the-table-body) ·
-[Card hover](#card--versa-tile--bootstrap-link-hover-colour) · [Input group](#input-group--grouped-action-button-joined-to-the-response) ·
-[Card image corners](#card--image-stretched-and-bootstrap-rounds-its-bottom-corners)
-
-**Buckholt runtime defects** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
-[Versa-tile actions](#versa-tile--icon-only-action-set-wraps) · [Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
-[Table action alignment](#table--action-button-set-sits-below-the-row-centre)
+**Buckholt runtime defects (`ACTIVE FIX`)** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
+[Versa-tile actions](#versa-tile--icon-only-action-set-wraps) · [Dropdown caret](#dropdown--two-arrows) ·
+[Close button sizing](#button-close--geometry-and-bootstraps-competing-svg-cross) ·
+[Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
+[Table action alignment](#table--action-button-set-sits-below-the-row-centre) ·
+[Card image](#card--image-stretched-and-bootstrap-rounds-its-bottom-corners)
 
 **Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
@@ -59,110 +72,35 @@ bundling problem: the three stylesheets load in the documented order.
 A systematic diff of the compiled build against Bootstrap 5.1.3 would likely find more of these than
 component-by-component visual review will.
 
-## Button — Bootstrap mouse-focus bleed-through
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** after a mouse click, `.btn-primary` reports `box-shadow: rgba(49,132,253,.5) 0 0 0 4px`
-  and `background-color: rgb(11,94,215)` instead of Buckholt's `rgb(15,64,197)`.
-- **Runtime cause:** Buckholt defines its visible focus treatment on `:focus-visible` only; Bootstrap
-  still applies its plain `:focus` colours and glow after a pointer click.
-- **Compatibility fix:** rule 1. The `:not(:hover):not(:active)` guard is essential — the rule is more
-  specific than `.btn:hover` and loads after `.btn:active`, so without it a clicked button stops
-  responding to hover.
-- **Upstream action:** add a `:focus` reset alongside the `:focus-visible` treatment.
-
 ## Dropdown — two arrows
 
-- **Status:** `ACTIVE FIX`
-- **Evidence:** `.dropdown-toggle::after` computes `display: inline-block`.
-- **Runtime cause:** Buckholt draws its arrow as a right-edge background image but never suppresses
-  Bootstrap's `::after` border triangle, so both render.
-- **Compatibility fix:** rule 4.
-- **Upstream action:** suppress `.dropdown-toggle::after`.
+- **Status:** `ACTIVE FIX` — re-verified with `buckholt.css` as the only framework stylesheet.
+- **Evidence:** with Bootstrap's stylesheet removed, `.dropdown-toggle::after` still computes
+  `display: inline`.
+- **Runtime cause:** Buckholt draws its arrow as a right-edge background image, but its own compiled
+  Bootstrap layer still carries `.dropdown-toggle::after`, the border triangle. Both render. The
+  triangle is inside `buckholt.css`, so this is a Buckholt defect, not a layering artefact.
+- **Compatibility fix:** correction 3.
+- **Upstream action:** suppress `.dropdown-toggle::after` in the Buckholt build.
 
-## Button close — geometry and Bootstrap's competing SVG cross
+## Button close — content-box sizing
 
-- **Status:** `ACTIVE FIX`
-- **Evidence:** every `.btn-close` reports a `data:image/svg+xml` background image and
-  `box-sizing: content-box`. Under Bootstrap's `.alert-dismissible .btn-close` padding the control
-  measures 48×52 instead of 32×32.
-- **Runtime cause:** two independent Bootstrap declarations survive. `box-sizing: content-box` means
-  any context that re-adds padding inflates a control Buckholt sizes at exactly `2rem`. Separately,
-  Bootstrap's `background` *shorthand* paints a hard-coded black SVG cross; Buckholt redeclares
-  `background-color` only, so the SVG survives underneath Buckholt's own Font Awesome glyph on
-  `.btn-close::before`. The two crosses are different sizes — Bootstrap's `1em` against Buckholt's
-  `1rem` `--btn-close-icon-size` — so every close control renders as a doubled, thickened cross in the
-  wrong colour. Most visible on the Dropdown multi-select chips, where `--btn-close-icon` should
-  resolve to `--expressive-deep`.
-- **Compatibility fix:** rule 5. With it, the generated chips match the canonical dismissible Tag
-  exactly — 24×24, inset 4px, differing only in the documented `.expressive-light` colour.
-- **Upstream action:** redeclare `background-image` (not just `background-color`) and reconsider
-  `content-box`.
+- **Status:** `ACTIVE FIX` — **reduced**. Re-verified with `buckholt.css` as the only framework
+  stylesheet.
+- **Evidence:** with Bootstrap's stylesheet removed, `.btn-close` still computes
+  `box-sizing: content-box`, so padding is added outside the declared `2rem` box instead of inside
+  it.
+- **Runtime cause:** Buckholt sets `--btn-close-width/height: 2rem` and applies them as
+  `width`/`height`, but its own compiled Bootstrap layer still carries
+  `.btn-close { box-sizing: content-box }`.
+- **What went away:** the competing SVG cross, the `.alert-dismissible` padding and the negative
+  margins all came from the *separate* Bootstrap stylesheet. With it removed, `.btn-close` reports
+  `background-image: none` and the doubled cross is gone. Only the sizing half of the original fix
+  remains.
+- **Compatibility fix:** correction 4.
+- **Upstream action:** set `box-sizing: border-box` on `.btn-close` in the Buckholt build.
 
-## Accordion — Bootstrap item and icon rules bleed through
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** item 2 reports `border-top: 0`; item 1 `border-radius: 4px 4px 8px 8px`; the open
-  button `box-shadow: rgba(0,0,0,.125) 0 -1px 0 inset` and Bootstrap's own chevron on `::after`.
-- **Runtime cause:** Bootstrap's `:first-of-type` / `:not(:first-of-type)` / `:last-of-type` rules are
-  more specific than Buckholt's `.accordion-item`. Buckholt sets only the chevron *rotation*, never
-  the image, and never resets Bootstrap's inset shadow.
-- **Compatibility fix:** rule 7.
-- **Upstream action:** raise the specificity of the Buckholt item rules and reset the expanded icon.
-
-## Modal — Bootstrap section padding and dividers
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** header 16px + 1px border, body 16px, footer 12px + 1px border.
-- **Runtime cause:** `.modal-content` already supplies `--modal-padding` (2rem) and `--modal-spacing`
-  (1.5rem). Buckholt declares no padding on the three sections, so Bootstrap's applies on top along
-  with its `#dee2e6` dividers.
-- **Compatibility fix:** rule 8.
-- **Upstream action:** zero the section padding and borders in the runtime.
-
-## Toast — icon out of line with the message
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** `.toast-body` reports `padding: 12px`.
-- **Runtime cause:** Buckholt's `.toast-body` sets typography only, so Bootstrap's
-  `.toast-body { padding: .75rem }` indents the message away from `.toast-icon`. Alert has no
-  equivalent Bootstrap rule, which is why the identical structure lines up there.
-- **Compatibility fix:** rule 9.
-- **Upstream action:** declare the padding on `.toast-body`.
-
-## Table — black rule above the table body
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** `tbody` reports `border-top: 2px rgb(33,37,41)`.
-- **Runtime cause:** Bootstrap's `.table > :not(:first-child) { border-top: 2px solid currentColor }`
-  outranks Buckholt's `.table > tbody`, which sets vertical alignment only. Buckholt draws its own
-  separation with the `.table-gap` row.
-- **Compatibility fix:** rule 10.
-- **Upstream action:** reset the inherited border.
-
-## Card / Versa-tile — Bootstrap link hover colour
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** a hovered `a.card-clickable` reports `rgb(10,88,202)` instead of `rgb(26,26,26)`.
-- **Runtime cause:** `.card` sets `color: var(--card-text)`, but `--card-text` is defined as an *empty
-  value*, so the declaration is invalid and dropped. A Clickable card is an anchor, so Bootstrap's
-  `a:hover` wins.
-- **Compatibility fix:** rule 12.
-- **Upstream action:** give `--card-text` a value. See also
-  [Empty `--card-text`](#card--card-text-is-defined-as-an-empty-value).
-
-## Input group — grouped action button joined to the response
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** the action button reports `margin-left: -1px` and `border-radius: 0 8px 8px 0`.
-- **Runtime cause:** Buckholt sets `.input-group .btn { margin-left: 0.5rem }` and deliberately
-  excludes `.btn` from its own corner-joining selectors, but Bootstrap's
-  `.input-group > :not(:first-child):not(…)` chain matches at (0,7,0) against Buckholt's (0,2,0).
-- **Compatibility fix:** rule 13, mirroring Bootstrap's selector shape at (0,8,0) so it matches
-  exactly the same elements without `!important`.
-- **Upstream action:** raise the specificity of `.input-group .btn`.
-
-## Card — image stretched, and Bootstrap rounds its bottom corners
+## Card — documented image markup is stretched
 
 - **Status:** `ACTIVE FIX`
 - **Evidence:** the documented image card reports `object-fit: fill` with a natural ratio of 1.78
@@ -173,11 +111,13 @@ component-by-component visual review will.
   image is stretched rather than cropped. Separately, Bootstrap's `.card-img, .card-img-bottom`
   rounds the *bottom* corners; Buckholt redeclares only the top pair, so an image above a
   `.card-body` keeps Bootstrap's 3px rounding and separates from the body it should meet flush.
-- **Compatibility fix:** rule 14. The fitting the runtime already specifies is applied to the element
-  the documented markup uses, and the bottom corners are squared only where the image is followed by
-  more card content. `.card-img-bottom` is untouched, and the canonical markup is not changed.
+- **What went away:** the bottom-corner rounding came from the *separate* Bootstrap stylesheet. With
+  it removed the image reports `border-bottom-left-radius: 0` on its own, and only the `object-fit`
+  half of the original fix remains.
+- **Compatibility fix:** correction 7. The fitting the runtime already specifies is applied to the
+  element the documented markup uses. The canonical markup is not changed.
 - **Upstream action:** make the runtime rule match a bare `<img class="card-img">` as well as a
-  wrapper, and scope the bottom-corner reset.
+  wrapper.
 
 ---
 
@@ -218,7 +158,7 @@ Not Bootstrap's doing. The runtime does not implement documented intent.
   renders correctly.
 - **Runtime cause:** a `data:` URI is an isolated document, so a custom property cannot resolve inside
   it and the fill falls back to black.
-- **Compatibility fix:** rule 2 — the same SVG with the documented error colour encoded literally.
+- **Compatibility fix:** correction 1 — the same SVG with the documented error colour encoded literally.
 - **Upstream action:** encode the colour literally, as the success icon already does.
 
 ## Versa-tile — icon-only action set wraps
@@ -228,7 +168,7 @@ Not Bootstrap's doing. The runtime does not implement documented intent.
   be 68×32 on one row.
 - **Runtime cause:** `.versatile-body` claims `width: 100%` while `.versatile-actions` sets no
   `flex-shrink`, so the actions column is compressed.
-- **Compatibility fix:** rule 3.
+- **Compatibility fix:** correction 2.
 - **Upstream action:** add `flex-shrink: 0` to `.versatile-actions`.
 
 ## Alert / Toast — close control flows inline
@@ -242,7 +182,7 @@ Not Bootstrap's doing. The runtime does not implement documented intent.
   push it: both wrappers are flex rows, neither `.alert-body` nor `.toast-body` is given `flex`, and
   the runtime positions the close control only through `.alert-dismissible` — a class the canonical
   examples never use.
-- **Compatibility fix:** rule 6, `margin-left: auto` on a `.btn-close` that is a direct child of the
+- **Compatibility fix:** correction 5, `margin-left: auto` on a `.btn-close` that is a direct child of the
   content wrapper. The sibling placement and Collapse, which uses the same sibling pattern, are
   untouched.
 - **Upstream action:** either give the body `flex: 1`, or position the close control without requiring
@@ -259,7 +199,7 @@ Not Bootstrap's doing. The runtime does not implement documented intent.
   action. Buckholt already recognises the offset must be cancelled inside a component that positions
   its own actions, shipping `.versatile-actions .button-set { margin: 0 }`, but has no table
   equivalent.
-- **Compatibility fix:** rule 11, mirroring the Versa-tile reset scoped to table cells.
+- **Compatibility fix:** correction 6, mirroring the Versa-tile reset scoped to table cells.
 - **Upstream action:** add the table-cell reset alongside the Versa-tile one.
 
 ---

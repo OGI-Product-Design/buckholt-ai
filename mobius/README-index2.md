@@ -21,8 +21,10 @@ assets/opengi-logo.png
 
 ## What this page loads
 
-Styles, in the documented order: Bootstrap 5.1.3 → Typekit → the Font Awesome kit →
-`css/buckholt.css` → `css/buckholt-ai-fixes.css` → `index2.css`.
+Styles, in the verified order: Typekit → the Font Awesome kit → `css/buckholt.css` →
+`css/buckholt-ai-fixes.css` → `index2.css`. **No separate Bootstrap stylesheet** —
+`buckholt.css` is itself a complete Bootstrap 5.3 build, and the live Buckholt
+documentation site loads only its own compiled CSS.
 
 Behaviour: **the Bootstrap bundle only.** jQuery, `components/form/form.js`,
 `components/dropdown/dropdown.js` and `components/tabs/tabs.js` are deliberately not loaded,
@@ -32,11 +34,11 @@ button is a Bootstrap dropdown, not Buckholt's select-style Dropdown); and no
 `.tab-scroll-left`/`-right` controls, so `tabs.js` returns immediately. They are still required
 on `test/style-guide/` and `test/runtime-verification/`, which do contain that markup.
 
-Nothing on this page loads or compiles SCSS. Bootstrap's published `bootstrap.min.css` and
-`bootstrap.bundle.min.js` each end with a `sourceMappingURL` comment, so browser DevTools fetch
-`bootstrap.min.css.map` / `bootstrap.bundle.min.js.map` and resolve them back to Bootstrap's own
-`scss/` and `@popperjs/core/lib` sources. Those entries appear in the DevTools **Sources** tree
-only while DevTools is open; the page requests the compiled `.css` and `.js` and nothing else.
+Nothing on this page loads or compiles SCSS. The Bootstrap **JavaScript** bundle ends with a
+`sourceMappingURL` comment, so browser DevTools fetch `bootstrap.bundle.min.js.map` and resolve
+it back to Bootstrap's own sources. Those entries appear in the DevTools **Sources** tree only
+while DevTools is open; the page requests the compiled `.js` and nothing else. The Bootstrap
+stylesheet — and with it the `scss/` tree — is no longer loaded at all.
 
 > The prototype loads the Font Awesome **Pro** kit that `CLAUDE.md` documents. Buckholt's markup
 > uses `fa-regular` throughout and the regular face is a Pro style, so on a Free kit the icons

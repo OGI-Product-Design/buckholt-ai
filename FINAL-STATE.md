@@ -52,8 +52,9 @@ Rules that make the hierarchy hold:
 6. **`components/<name>/examples.html`** — the exact DOM to copy.
 7. **`css/buckholt.css`** — to confirm a selector or state exists, never to invent DOM.
 
-Then load the runtime in the documented order: Bootstrap 5.1.3 → Typekit → the Font Awesome kit →
-`buckholt.css` → `buckholt-ai-fixes.css`; and for behaviour, the Bootstrap bundle → jQuery →
+Then load the runtime in the verified order: Typekit → the Font Awesome kit → `buckholt.css` →
+`buckholt-ai-fixes.css` — **no separate Bootstrap stylesheet**, because `buckholt.css` is itself a
+complete Bootstrap 5.3 build and the live documentation site loads only its own compiled CSS; and for behaviour, the Bootstrap bundle → jQuery →
 `dropdown.js`, `form.js`, `tabs.js`. **jQuery must precede `form.js`** or several documented
 enhancements fail silently.
 
@@ -66,7 +67,7 @@ it.
 | Area | State |
 | --- | --- |
 | **Source verified** | 41 components have canonical markup compared against the supplied Code & specs HTML. `verification/component-source-status.md` |
-| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 14 documented compatibility corrections re-asserted live. `test/runtime-verification/` |
+| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 7 documented runtime corrections re-asserted live. `test/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
 | **Responsive** | Audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |
@@ -92,7 +93,7 @@ advancing any row.
 
 Short list; the detail is in the linked files.
 
-- **14 active compatibility corrections** are in force, each with an upstream action recorded —
+- **7 active runtime corrections** are in force, each with an upstream action recorded —
   `discrepancies/known-issues.md` and `css/buckholt-ai-fixes.css`.
 - **Table has no Code & specs source.** It stays `SOURCE PARTIAL`; the missing variants must not be
   invented.
@@ -122,7 +123,7 @@ components/<name>/           rules.md (usage) + examples.html (canonical markup,
 foundations/                 colour, typography, spacing, radius, shadows, iconography
 patterns/                    page-layout, forms, input-rows, lookup, common-actions
 css/buckholt.css             upstream runtime — never edited
-css/buckholt-ai-fixes.css    14 verified compatibility corrections, each justified in place
+css/buckholt-ai-fixes.css    7 verified corrections to buckholt.css, each justified in place
 
 discrepancies/               known-issues.md — current-state issue register
 verification/                source status, runtime status, and the classification framework

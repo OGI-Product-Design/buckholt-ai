@@ -35,11 +35,19 @@ A controlled pass was run against `test/runtime-verification/`, which composes e
 - dependency contract checked, including stylesheet order;
 - every finding classified with the framework categories, with harness artefacts of composition
   (reused ids, documented `…` elisions, cross-snippet references) separated from component findings;
-- all 14 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
-  measurement, via 15 runtime assertions;
+- all 7 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
+  measurement, via 8 runtime assertions;
 - resting render, and the Bootstrap and component-script behaviours the markup exercises
   (Modal, Tabs, Accordion, Collapse, Dropdown, Toast, Tooltip, the `form.js` enhancements);
 - responsive behaviour at 320px, 375px, 768px and desktop, recorded in `responsive/`.
+
+**Dependency-model correction, 8 September 2026.** Every result above was originally measured with a
+separate `bootstrap@5.1.3` stylesheet loaded underneath `buckholt.css`. That stylesheet has been
+removed: `buckholt.css` is a complete Bootstrap 5.3 build, and the live Buckholt documentation site
+loads only its own compiled CSS. The full style guide was re-rendered against the corrected runtime —
+zero page errors, zero horizontal overflow, 37 of 48 sections pixel-identical, and no component
+collapsed. Seven of the fourteen corrections proved to be undoing the extra stylesheet and were
+deleted. Runtime status for every component is unchanged: still `RUNTIME PENDING`.
 
 **Not yet completed, and why no component advances to `RUNTIME VERIFIED`:**
 

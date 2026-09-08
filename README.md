@@ -161,12 +161,18 @@ Read the component's `rules.md` and `examples.html` before implementation. Impor
 ## Runtime dependencies
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/buckholt.css">
 <link rel="stylesheet" href="css/buckholt-ai-fixes.css">
 ```
+
+> **No separate Bootstrap stylesheet.** `buckholt.css` is a complete, self-contained
+> Bootstrap 5.3 build with Buckholt as the theme, and the live Buckholt documentation
+> site loads only its own compiled CSS. Bootstrap **JavaScript** is still required for
+> the ten components with `data-bs-*` hooks; its correct version is not yet verified.
+> See `CLAUDE.md` → Runtime dependencies.
+
 
 For Bootstrap-driven Buckholt behaviour such as tooltips, dropdown menus, alerts, accordions, modals, tabs and toasts, also load:
 

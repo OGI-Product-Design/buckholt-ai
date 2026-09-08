@@ -113,7 +113,7 @@ Layout is the documented Page-layout pattern end to end:
 | Avatar | The signed-in user |
 | Typography | `eyebrow`, `headline-02`, `title-02`, `body-02`, `support-01`, `label-01` |
 
-Every class in the rendered page resolves to `buckholt.css`, `bootstrap.min.css`, Font Awesome, or
+Every class in the rendered page resolves to `buckholt.css`, Font Awesome, or
 an `mx-` application class. That is asserted by a harness run, not by eye.
 
 **Deliberately not used.** Table — it is the component the current screen uses, it is the only
