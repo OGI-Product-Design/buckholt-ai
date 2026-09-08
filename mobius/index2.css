@@ -1,0 +1,309 @@
+/* ============================================================================
+   Mobius PAS — Buckholt UI reskin (index2)
+   Application layout only
+   ============================================================================
+
+   Scope. This file positions things. It does not restyle Buckholt components.
+   Every selector is prefixed `mx2-`, or reaches a Buckholt class only through
+   an `mx2-` ancestor, and only to do something Buckholt does not define. Each
+   such rule is called out.
+
+   The three regions Buckholt does not document as components — the application
+   bar, the client context banner and the page footer — are built here from
+   Buckholt colour, spacing, radius and typography tokens. They are identified
+   as non-Buckholt in the markup and in README-index2.md.
+
+   Values. Every length is a Buckholt spacing or padding token, or a `calc()`
+   composed from them.
+   ============================================================================ */
+
+.mx2-body {
+  background-color: var(--ui-background-03);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Horizontal containment
+   ---------------------------------------------------------------------------
+   This screen is a dense desktop application view: a seven-column Table and a
+   six-item Tab strip. Buckholt gives both their own scroll frames — `.table-
+   content` is `overflow-x: auto` and `.tab-items-scroll` is `overflow-x: auto`
+   — and Table's rules forbid restructuring the table to fit a narrow viewport.
+
+   Two things are needed for those frames to actually work:
+
+   1. `.tab-items-scroll` is `flex: 1 1 auto` inside `.tab-items` but sets no
+      `min-width: 0`. A flex item's automatic minimum size is its content, so
+      the scroller grows to fit the whole nav instead of scrolling. Setting
+      `min-width: 0` lets the documented scroller do its job. Reported as a
+      Buckholt runtime finding in README-index2.md; corrected here rather than
+      in the compatibility layer because this is a page, not a fix release.
+
+   2. Below about 1000px the Table's intrinsic width still reaches the page
+      through the nested flex chain. Clipping the page horizontally keeps every
+      wide component inside its own documented scroller. Nothing becomes
+      unreachable: the table and the tab strip each scroll on their own.
+   --------------------------------------------------------------------------- */
+
+html, .mx2-body { overflow-x: hidden; }
+
+.mx2-body .tab-items-scroll { min-width: 0; }
+
+/* ---------------------------------------------------------------------------
+   Application bar — NOT a Buckholt component
+   --------------------------------------------------------------------------- */
+
+.mx2-appbar {
+  background-color: var(--ui-background-01);
+  border-bottom: var(--border-width) solid var(--ui-border-02);
+}
+
+.mx2-appbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  padding: var(--padding-04) var(--padding-06);
+}
+
+.mx2-brand { display: inline-flex; flex: none; }
+
+.mx2-appbar-search { flex: 0 1 22rem; min-width: 0; }
+
+.mx2-appbar-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-04);
+  margin-left: auto;
+  flex: none;
+}
+
+/* The clock is a Buckholt ghost Button whose label carries two lines, which the
+   component does not assume. Layout only — no Button styling is replaced. */
+.mx2-clock .button-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.mx2-clock-date { color: var(--text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   Client context banner — NOT a Buckholt component
+   --------------------------------------------------------------------------- */
+
+.mx2-clientbar { background-color: var(--action-01); }
+
+.mx2-clientbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  padding: var(--padding-03) var(--padding-06);
+  position: relative;
+}
+
+.mx2-clientbar-text {
+  margin: 0;
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-on-color, #ffffff);
+}
+
+/* The Button inside the banner sits on a dark ground, which Buckholt's
+   secondary Button does not have a documented treatment for. Only the colour
+   roles are re-pointed; geometry, radius and states stay the component's. */
+.mx2-clientbar-btn.btn-secondary {
+  --btn-color: #ffffff;
+  --btn-border: rgba(255, 255, 255, 0.6);
+  --btn-background: transparent;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Screen 1 — search results
+   --------------------------------------------------------------------------- */
+
+/* The filter row's actions sit level with the bottom of the three Selects
+   beside them, matching the existing screen. The Link and the Button are both
+   documented components; only their alignment is set here. */
+.mx2-filter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacer-05);
+  padding-top: var(--spacer-07);
+}
+
+.mx2-filters { margin-bottom: var(--spacer-02); }
+
+.mx2-tablefoot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+
+.mx2-tablefoot p,
+.mx2-tablefoot-single { margin: 0; }
+
+.mx2-tablefoot-single { margin-top: var(--spacer-04); }
+
+/* ---------------------------------------------------------------------------
+   Expandable table rows
+   ---------------------------------------------------------------------------
+   NOT DOCUMENTED. Buckholt Table documents no expandable-row pattern, so the
+   disclosure row is plain table semantics: a following <tr> toggled with
+   `hidden`. The trigger is a documented ghost Button and the content inside is
+   documented Buckholt components. Nothing about Table's own styling is changed.
+   --------------------------------------------------------------------------- */
+
+.mx2-expander { --btn-padding-x: var(--padding-02); }
+
+.mx2-row-open > td { background-color: var(--action-05); }
+
+.mx2-detail-row > td { padding-top: 0; }
+
+.mx2-detail-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacer-05);
+  padding: var(--padding-05) 0;
+}
+
+.mx2-detail-grid { flex: 1 1 24rem; }
+
+/* Field order in the disclosure follows the existing screen, so the grid takes
+   its column count from the number of fields it holds. */
+.mx2-detail-grid { --columns: 2; }
+.mx2-detail-row .mx2-detail-grid:has(> :nth-child(4)) { --columns: 4; }
+
+.mx2-subheading { margin-top: var(--spacer-04); }
+
+/* ---------------------------------------------------------------------------
+   Screen 2 — client homepage
+   --------------------------------------------------------------------------- */
+
+.mx2-summary-row { row-gap: var(--spacer-06); }
+
+.mx2-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-06);
+}
+
+/* Buckholt Cards are `height: 100%` by default so a row of them comes out
+   equal-height. Stacked in a column that is as tall as the main content, that
+   makes each card stretch. `--card-height` is the component's own knob for
+   this, so it is set rather than the height overridden. */
+.mx2-side .card { --card-height: auto; }
+
+/* Client Details shows six fields in three columns, as the existing screen
+   does, using the grid's own documented `--columns` knob. */
+.mx2-details-grid { --columns: 3; }
+
+/* The statistic tiles stack; Additional Info pairs two of them. */
+.mx2-stat-grid   { --columns: 1; }
+.mx2-stat-grid-2 { --columns: 2; }
+
+/* Buckholt documents no control alongside an Accordion trigger. The Add button
+   is a sibling of the trigger inside `.accordion-header`, so it is positioned
+   over the trigger's trailing space rather than nested inside it. */
+.mx2-header-action {
+  position: absolute;
+  right: calc(var(--spacer-08) + var(--spacer-04));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.accordion-header:has(.mx2-header-action) { position: relative; }
+
+/* The help glyph sits inline after the panel title, as it does in Mobius. */
+.mx2-help {
+  margin-left: var(--spacer-03);
+  color: var(--action-01);
+  font-size: 0.875rem;
+}
+
+.mx2-centre-action {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacer-05);
+}
+
+/* ---------------------------------------------------------------------------
+   Footer — NOT a Buckholt component
+   --------------------------------------------------------------------------- */
+
+.mx2-footer {
+  padding: var(--padding-05) var(--padding-06) var(--padding-07);
+  text-align: center;
+}
+
+.mx2-footer p { margin: 0; color: var(--text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   Long identifiers
+   ---------------------------------------------------------------------------
+   Buckholt sets `overflow-wrap: break-word` on `.key` and `.value`, which wraps
+   the text but does not reduce the element's min-content width, so a grid track
+   still sizes to the longest token. `anywhere` also shrinks the intrinsic
+   minimum. Applied at this screen's containers, as
+   responsive/component-guidance.md ("Long labels and values") recommends.
+   --------------------------------------------------------------------------- */
+
+.mx2-detail-grid .key, .mx2-detail-grid .value,
+.mx2-details-grid .key, .mx2-details-grid .value {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   ---------------------------------------------------------------------------
+   The Bootstrap `.col-*` breakpoint classes in the markup do the stacking, and
+   the Tabs strip scrolls via `.tab-items-scroll`. Buckholt Table's own guidance
+   is not to remove semantic structure for narrow screens, so the table scrolls
+   inside `.table-content` rather than being restructured. The rules below are
+   application-level layout only and follow the repository's non-canonical
+   guidance in responsive/component-guidance.md.
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 61.99rem) {
+  .mx2-details-grid { --columns: 2; }
+  .mx2-detail-row .mx2-detail-grid:has(> :nth-child(4)) { --columns: 2; }
+}
+
+@media (max-width: 47.99rem) {
+  .mx2-appbar-inner {
+    flex-wrap: wrap;
+    gap: var(--spacer-03);
+    padding: var(--padding-04) var(--padding-05);
+  }
+  .mx2-appbar-search { order: 3; flex: 1 0 100%; }
+
+  /* The bar's tools cannot sit on one line beside the logo on a phone. */
+  .mx2-appbar-tools {
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--spacer-03);
+  }
+  .mx2-clock-date { display: none; }
+  .mx2-clientbar-inner { flex-wrap: wrap; padding: var(--padding-03) var(--padding-05); }
+  .mx2-clientbar-text { text-align: left; }
+  .mx2-filter-actions { justify-content: flex-start; }
+
+  /* Buckholt floors `.progress`-style minimums nowhere here, but the disclosure
+     panel's two-up grid is unreadable on a phone. */
+  .mx2-detail-inner { flex-direction: column; }
+}
+
+@media (max-width: 30rem) {
+  .mx2-details-grid,
+  .mx2-detail-grid,
+  .mx2-stat-grid-2 { --columns: 1; }
+  .mx2-clock-date { display: none; }
+}

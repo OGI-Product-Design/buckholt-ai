@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mobius PAS — Buckholt UI implementation</title>
+
+  <!-- Documented Buckholt runtime contract, in the documented order. -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+  <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../css/buckholt.css">
+  <link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+
+  <!-- Application-layer layout for the parts of the Mobius shell that Buckholt
+       does not document as components. Never restyles a Buckholt component. -->
+  <link rel="stylesheet" href="index2.css">
+</head>
+<body class="mx2-body">
+
+  <!--
+    ============================================================================
+    APPLICATION BAR
+    ----------------------------------------------------------------------------
+    NOT A BUCKHOLT COMPONENT. Buckholt's Page layout pattern documents an
+    optional semantic <header> region but supplies no application-bar component,
+    so the bar itself is application-layer layout. Everything inside it is a
+    documented Buckholt component: Text input, Tag, Menu button, Avatar.
+    ============================================================================
+  -->
+  <header class="mx2-appbar">
+    <div class="mx2-appbar-inner">
+
+      <a class="mx2-brand" href="#" aria-label="Open GI home">
+        <img src="assets/opengi-logo.png" alt="Open GI" width="92" height="33">
+      </a>
+
+      <!-- Buckholt Text input -->
+      <div class="mx2-appbar-search">
+        <div class="input">
+          <div class="input-label visually-hidden">
+            <label for="mx2Search" class="form-label">Search</label>
+          </div>
+          <div class="response text-input">
+            <input type="text" class="form-control" id="mx2Search" value="John Smith" autocomplete="off">
+          </div>
+        </div>
+      </div>
+
+      <div class="mx2-appbar-tools">
+        <!-- Buckholt Tag. The Mobius environment indicator also carries a target
+             glyph; foundations/iconography documents no environment icon, so
+             none is substituted. -->
+        <span class="tag"><span class="tag-label">Test</span></span>
+
+        <!-- Timewarp clock. Plain content using documented type-set classes and
+             the documented Edit icon. -->
+        <button type="button" class="btn btn-ghost btn-sm mx2-clock" aria-label="Edit system time">
+          <div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>
+          <span class="button-label">
+            <span class="mx2-clock-time">10:00</span>
+            <span class="support-01 mx2-clock-date">08 September 2026</span>
+          </span>
+        </button>
+
+        <!-- Buckholt Menu button -->
+        <div class="menu">
+          <button type="button" class="btn btn-secondary menu-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="button-label">Dashboard</span>
+            <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
+          </button>
+          <div class="menu-panel dropdown-menu dropdown-menu-end">
+            <ul class="menu-body" role="menu">
+              <li><button class="menu-item" type="button">Dashboard</button></li>
+              <li><button class="menu-item" type="button">Settings</button></li>
+              <li><hr class="menu-divider"></li>
+              <li><button class="menu-item" type="button">Log out</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Buckholt Avatar -->
+        <div class="avatar">
+          <div class="avatar-initials">LA</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!--
+    ============================================================================
+    CLIENT CONTEXT BANNER (client homepage only)
+    ----------------------------------------------------------------------------
+    NOT A BUCKHOLT COMPONENT. Buckholt documents no page-width client-context
+    banner. Implemented at the application layer using Buckholt colour and
+    spacing tokens only; the control inside it is a documented Button.
+    ============================================================================
+  -->
+  <div class="mx2-clientbar" id="mx2ClientBar" hidden>
+    <div class="mx2-clientbar-inner">
+      <button type="button" class="btn btn-secondary btn-sm mx2-clientbar-btn">
+        <div class="btn-icon"><i class="fa-regular fa-circle-question" aria-hidden="true"></i></div>
+        <span class="button-label">Client Support</span>
+      </button>
+      <p class="mx2-clientbar-text" id="mx2ClientBarText"></p>
+    </div>
+  </div>
+
+  <main>
+    <section class="page-body">
+      <div class="page-frame">
+        <!-- Mobius is a full-bleed application screen, so the Bootstrap fluid
+             container carries the horizontal structure. -->
+        <div class="container-fluid">
+
+          <!-- ==================================================================
+               SCREEN 1 — SEARCH RESULTS FOR: JOHN SMITH
+               ================================================================== -->
+          <div class="page-pane" id="mx2ViewResults">
+
+            <!-- Buckholt Heading attachment -->
+            <div class="page-panel">
+              <div class="text-block">
+                <div class="heading">
+                  <div class="heading-content">
+                    <h1 class="title-02">SEARCH RESULTS FOR: <em>JOHN SMITH</em></h1>
+                  </div>
+                  <button type="button" class="btn btn-secondary">
+                    <span class="button-label">Create New Client</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Buckholt Card -->
+            <div class="page-panel">
+              <div class="card">
+                <div class="card-body">
+
+                  <div class="text-block">
+                    <div class="heading">
+                      <div class="heading-content">
+                        <h2 class="title-03">
+                          Search Results
+                          <span class="mx2-help" data-bs-toggle="tooltip"
+                                data-bs-title="Refine the result set using the filters below.">
+                            <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+                            <span class="visually-hidden">Refine the result set using the filters below.</span>
+                          </span>
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Buckholt Input row pattern + Buckholt Select -->
+                  <div class="row input-row mx2-filters">
+                    <div class="col-12 col-md-6 col-xl-3">
+                      <div class="input">
+                        <div class="input-label">
+                          <label for="mx2Brand" class="form-label">Brand</label>
+                        </div>
+                        <div class="response select-input">
+                          <select class="form-select" id="mx2Brand">
+                            <option selected value="">Select</option>
+                            <option value="krypton">Krypton</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-3">
+                      <div class="input">
+                        <div class="input-label">
+                          <label for="mx2Lob" class="form-label">Line of business</label>
+                        </div>
+                        <div class="response select-input">
+                          <select class="form-select" id="mx2Lob">
+                            <option selected value="">Select</option>
+                            <option value="cv">Open Market Commercial Vehicle</option>
+                            <option value="motor">Open Market Motor</option>
+                            <option value="shop">Shop</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-3">
+                      <div class="input">
+                        <div class="input-label">
+                          <label for="mx2Status" class="form-label">Policy Status</label>
+                        </div>
+                        <div class="response select-input">
+                          <select class="form-select" id="mx2Status" disabled>
+                            <option selected value="">Select</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- A Link and a Button side by side is not a Buckholt Button
+                         set, so they are aligned by the application-layer column
+                         rather than by borrowing `.button-set`. -->
+                    <div class="col-12 col-md-6 col-xl-3 mx2-filter-actions">
+                      <a href="#" class="link-standalone" id="mx2Clear">Clear</a>
+                      <button type="button" class="btn btn-primary" id="mx2Apply">
+                        <span class="button-label">Apply</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Buckholt Table -->
+                  <div class="table-container">
+                    <div class="table-content">
+                      <table class="table no-italics" id="mx2ResultsTable">
+                        <thead>
+                          <tr>
+                            <th scope="col" class="col-fit"><div class="table-header-label"><span class="visually-hidden">Expand</span></div></th>
+                            <th scope="col" class="table-sort-header">
+                              <button class="table-sort" type="button" data-col="1" data-sort-type="text" aria-label="Sort by Name">
+                                <div class="table-header-label">Name</div>
+                                <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                              </button>
+                            </th>
+                            <th scope="col" class="table-sort-header">
+                              <button class="table-sort" type="button" data-col="2" data-sort-type="text" aria-label="Sort by Reference">
+                                <div class="table-header-label">Reference</div>
+                                <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                              </button>
+                            </th>
+                            <th scope="col" class="table-sort-header">
+                              <button class="table-sort" type="button" data-col="3" data-sort-type="text" aria-label="Sort by Address">
+                                <div class="table-header-label">Address</div>
+                                <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                              </button>
+                            </th>
+                            <th scope="col" class="table-sort-header">
+                              <button class="table-sort" type="button" data-col="4" data-sort-type="text" aria-label="Sort by Postcode">
+                                <div class="table-header-label">Postcode</div>
+                                <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                              </button>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="mx2ResultRows">
+                          <tr class="table-gap"><td colspan="100%"></td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="mx2-tablefoot">
+                    <a href="#" class="link-standalone" id="mx2LoadMore">Load More</a>
+                    <p class="body-01" id="mx2Showing"></p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================================================================
+               SCREEN 2 — CLIENT HOMEPAGE
+               ================================================================== -->
+          <div class="page-pane" id="mx2ViewClient" hidden>
+
+            <!-- Buckholt Heading attachment -->
+            <div class="page-panel">
+              <div class="text-block">
+                <div class="heading">
+                  <div class="heading-content">
+                    <h1 class="title-02">CLIENT HOMEPAGE</h1>
+                  </div>
+                  <button type="button" class="btn btn-secondary" id="mx2Back">
+                    <span class="button-label">Back</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Buckholt Tabs -->
+            <div class="page-panel">
+              <div class="tabs">
+                <div class="tab-items">
+                  <div class="tab-items-scroll">
+                    <ul class="nav nav-underline" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="mx2-summary-tab" data-bs-toggle="pill" data-bs-target="#mx2-summary" type="button" role="tab" aria-controls="mx2-summary" aria-selected="true">Summary</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mx2-business-tab" data-bs-toggle="pill" data-bs-target="#mx2-business" type="button" role="tab" aria-controls="mx2-business" aria-selected="false">Business Details</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mx2-transactions-tab" data-bs-toggle="pill" data-bs-target="#mx2-transactions" type="button" role="tab" aria-controls="mx2-transactions" aria-selected="false">Transactions</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mx2-activity-tab" data-bs-toggle="pill" data-bs-target="#mx2-activity" type="button" role="tab" aria-controls="mx2-activity" aria-selected="false">Activity</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mx2-complaints-tab" data-bs-toggle="pill" data-bs-target="#mx2-complaints" type="button" role="tab" aria-controls="mx2-complaints" aria-selected="false">Complaints</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mx2-checks-tab" data-bs-toggle="pill" data-bs-target="#mx2-checks" type="button" role="tab" aria-controls="mx2-checks" aria-selected="false">Client Checks</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="tab-content">
+                  <div class="tab-pane fade active show" id="mx2-summary" role="tabpanel" aria-labelledby="mx2-summary-tab" tabindex="0">
+
+                    <div class="row mx2-summary-row">
+                      <!-- Bootstrap owns the horizontal structure; Buckholt owns hierarchy. -->
+                      <div class="col-12 col-xl-9">
+
+                        <!-- Buckholt Accordion — one item per Mobius collapsible panel.
+                             No data-bs-parent: Mobius panels collapse independently. -->
+                        <div class="accordion" id="mx2MainPanels">
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2ClientHeader" aria-expanded="true" aria-controls="mx2ClientHeader">Client Header</button>
+                              <!-- NOT DOCUMENTED: Buckholt does not document a
+                                   control alongside the Accordion trigger. Kept as a
+                                   sibling of the trigger so buttons are never nested. -->
+                              <button type="button" class="btn btn-secondary btn-sm mx2-header-action">
+                                <span class="button-label">Add</span>
+                              </button>
+                            </h2>
+                            <div id="mx2ClientHeader" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <div class="text-block"><p>No client header set.</p></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2ClientDetails" aria-expanded="true" aria-controls="mx2ClientDetails">Client Details</button>
+                            </h2>
+                            <div id="mx2ClientDetails" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <!-- Buckholt Key-value pair, grid variant -->
+                                <div class="grid key-value-grid mx2-details-grid" id="mx2Details"></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2ClientPolicies" aria-expanded="true" aria-controls="mx2ClientPolicies">Client Policies</button>
+                            </h2>
+                            <div id="mx2ClientPolicies" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <div class="table-container">
+                                  <div class="table-content">
+                                    <table class="table no-italics">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col" class="col-fit"><div class="table-header-label"><span class="visually-hidden">Expand</span></div></th>
+                                          <th scope="col"><div class="table-header-label">Quote/Policy Number</div></th>
+                                          <th scope="col"><div class="table-header-label">Policy Start Date</div></th>
+                                          <th scope="col"><div class="table-header-label">Renewal Date</div></th>
+                                          <th scope="col"><div class="table-header-label">Policy Status</div></th>
+                                          <th scope="col"><div class="table-header-label">Product Name</div></th>
+                                          <th scope="col"><div class="table-header-label">Risk Info</div></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="mx2ClientPolicyRows">
+                                        <tr class="table-gap"><td colspan="100%"></td></tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <p class="body-01 mx2-tablefoot-single" id="mx2PoliciesShowing"></p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2LinkedClients" aria-expanded="true" aria-controls="mx2LinkedClients">
+                                Linked Clients
+                                <span class="mx2-help" data-bs-toggle="tooltip" data-bs-title="Clients you have linked to this record.">
+                                  <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+                                </span>
+                              </button>
+                            </h2>
+                            <div id="mx2LinkedClients" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <div class="text-block">
+                                  <p>There are no linked clients. Please search using the Add Client Link button.</p>
+                                </div>
+                                <div class="mx2-centre-action">
+                                  <button type="button" class="btn btn-secondary">
+                                    <span class="button-label">Add Client Link</span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2SuggestedLinks" aria-expanded="true" aria-controls="mx2SuggestedLinks">
+                                Suggested Links
+                                <span class="mx2-help" data-bs-toggle="tooltip" data-bs-title="Records that may be the same client.">
+                                  <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+                                </span>
+                              </button>
+                            </h2>
+                            <div id="mx2SuggestedLinks" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <div class="table-container">
+                                  <div class="table-content">
+                                    <table class="table no-italics">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col"><div class="table-header-label">Name</div></th>
+                                          <th scope="col"><div class="table-header-label">Email</div></th>
+                                          <th scope="col"><div class="table-header-label">DOB/Date Established</div></th>
+                                          <th scope="col"><div class="table-header-label">Postcode</div></th>
+                                          <th scope="col" class="col-fit cell-data-right"><div class="table-header-label"><span class="visually-hidden">Actions</span></div></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="mx2SuggestedRows">
+                                        <tr class="table-gap"><td colspan="100%"></td></tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <p class="mx2-tablefoot-single">
+                                  <a href="#" class="link-standalone">Load more suggested links...</a>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mx2ConnectedClients" aria-expanded="true" aria-controls="mx2ConnectedClients">
+                                Connected Clients
+                                <span class="mx2-help" data-bs-toggle="tooltip" data-bs-title="Clients formally connected to this record.">
+                                  <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+                                </span>
+                              </button>
+                            </h2>
+                            <div id="mx2ConnectedClients" class="accordion-collapse collapse show">
+                              <div class="accordion-body">
+                                <div class="table-container">
+                                  <div class="table-content">
+                                    <table class="table no-italics">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col"><div class="table-header-label">Name</div></th>
+                                          <th scope="col"><div class="table-header-label">Link Type</div></th>
+                                          <th scope="col"><div class="table-header-label">Email</div></th>
+                                          <th scope="col"><div class="table-header-label">DOB/Date Established</div></th>
+                                          <th scope="col"><div class="table-header-label">Postcode</div></th>
+                                          <th scope="col" class="col-fit cell-data-right"><div class="table-header-label"><span class="visually-hidden">Actions</span></div></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="mx2ConnectedRows">
+                                        <tr class="table-gap"><td colspan="100%"></td></tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div class="mx2-centre-action">
+                                  <button type="button" class="btn btn-secondary">
+                                    <span class="button-label">Add Client Connection</span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <!-- Right-hand column: Buckholt Cards -->
+                      <div class="col-12 col-xl-3 mx2-side">
+
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="text-block">
+                              <div class="heading"><div class="heading-content"><h3 class="title-03">Statistics</h3></div></div>
+                            </div>
+                            <div class="grid key-value-grid mx2-stat-grid" id="mx2Statistics"></div>
+                            <a href="#" class="link-standalone">Show statistics for more clients</a>
+                          </div>
+                        </div>
+
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="text-block">
+                              <div class="heading"><div class="heading-content"><h3 class="title-03">Additional Info</h3></div></div>
+                            </div>
+                            <div class="grid key-value-grid mx2-stat-grid" id="mx2OpenClaims"></div>
+                            <div class="grid key-value-grid mx2-stat-grid-2" id="mx2AdditionalInfo"></div>
+                            <div class="button-set button-set-no-offset">
+                              <button type="button" class="btn btn-primary">
+                                <span class="button-label">Add New Quote</span>
+                              </button>
+                              <button type="button" class="btn btn-secondary">
+                                <span class="button-label">View Claims</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="text-block">
+                              <div class="heading"><div class="heading-content"><h3 class="title-03">Open Customer Portal Access</h3></div></div>
+                            </div>
+                            <!-- Buckholt Switch -->
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" role="switch" id="mx2Portal">
+                              <div class="input-label">
+                                <label class="form-check-label" for="mx2Portal">Client Access To Open Customer Portal</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- The reference screens evidence content for the Summary tab
+                       only. The remaining panes are left empty rather than
+                       inventing content the existing screen does not show. -->
+                  <div class="tab-pane fade" id="mx2-business"      role="tabpanel" aria-labelledby="mx2-business-tab"      tabindex="0"></div>
+                  <div class="tab-pane fade" id="mx2-transactions"  role="tabpanel" aria-labelledby="mx2-transactions-tab"  tabindex="0"></div>
+                  <div class="tab-pane fade" id="mx2-activity"      role="tabpanel" aria-labelledby="mx2-activity-tab"      tabindex="0"></div>
+                  <div class="tab-pane fade" id="mx2-complaints"    role="tabpanel" aria-labelledby="mx2-complaints-tab"    tabindex="0"></div>
+                  <div class="tab-pane fade" id="mx2-checks"        role="tabpanel" aria-labelledby="mx2-checks-tab"        tabindex="0"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mx2-footer">
+    <p class="support-01" id="mx2Build"></p>
+  </footer>
+
+  <!-- Documented behaviour dependencies. jQuery must precede form.js. -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../components/form/form.js"></script>
+  <script src="../components/dropdown/dropdown.js"></script>
+  <script src="../components/tabs/tabs.js"></script>
+
+  <script src="index2-data.js"></script>
+  <script src="index2.js"></script>
+</body>
+</html>
