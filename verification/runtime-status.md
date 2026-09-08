@@ -35,8 +35,8 @@ A controlled pass was run against `test/runtime-verification/`, which composes e
 - dependency contract checked, including stylesheet order;
 - every finding classified with the framework categories, with harness artefacts of composition
   (reused ids, documented `…` elisions, cross-snippet references) separated from component findings;
-- all 13 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
-  measurement, via 14 runtime assertions;
+- all 14 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
+  measurement, via 15 runtime assertions;
 - resting render, and the Bootstrap and component-script behaviours the markup exercises
   (Modal, Tabs, Accordion, Collapse, Dropdown, Toast, Tooltip, the `form.js` enhancements);
 - responsive behaviour at 320px, 375px, 768px and desktop, recorded in `responsive/`.

@@ -461,7 +461,45 @@
     }
   }
 
+  // Buckholt draws the close icon as `\f00d` from `var(--fa-font-regular)` -
+  // the Font Awesome *regular* (400) face. In Font Awesome Free that face does
+  // not carry `\f00d`, so the control renders a `.notdef` tofu box instead of
+  // a cross. Since the compatibility layer removes Bootstrap's competing SVG,
+  // nothing covers for it, and the failure is silent. This detects it by
+  // comparing the glyph's advance width against a codepoint no font defines:
+  // if they match, `\f00d` is falling back to `.notdef` too.
+  function assertCloseGlyph() {
+    var probe = function (text) {
+      var span = el('span');
+      span.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;' +
+        'font:var(--fa-font-regular);font-size:100px;';
+      span.textContent = text;
+      document.body.appendChild(span);
+      var w = span.getBoundingClientRect().width;
+      document.body.removeChild(span);
+      return w;
+    };
+    var cross = probe('\uf00d');          // the documented close glyph
+    var undefinedGlyph = probe('\uE9F7');  // private use, defined by nothing
+    var ok = cross > 0 && Math.abs(cross - undefinedGlyph) > 0.5;
+
+    fixChecks.push({
+      component: 'button-close', label: 'documented close glyph renders',
+      ok: ok, detail: ok ? 'FA regular face provides \\f00d'
+                         : 'FA regular face does not provide \\f00d — the control renders a tofu box'
+    });
+    if (!ok) {
+      record('DEPENDENCY ISSUE', 'harness',
+        'The close control has no icon. Buckholt draws it as \\f00d from ' +
+        'var(--fa-font-regular), the Font Awesome regular (400) face, and this kit\'s ' +
+        'regular face does not carry that glyph — it is Pro-only in Font Awesome 6. ' +
+        'Every .btn-close will show a .notdef box. Use a Font Awesome kit whose ' +
+        'regular face includes \\f00d, or raise it upstream: the icon has no fallback.');
+    }
+  }
+
   function verifyCompatibilityFixes() {
+    assertCloseGlyph();
     var none = function (v) { return v === 'none'; };
     var zero = function (v) { return parseFloat(v) === 0; };
 
@@ -730,7 +768,7 @@
       note.textContent = components.length + ' components · ' +
         document.querySelectorAll('.rv-case').length + ' documented examples · ' +
         applied + ' of ' + fixChecks.filter(function (c) { return c.ok !== null; }).length +
-        ' runtime assertions passing across 13 documented corrections';
+        ' runtime assertions passing across 14 documented corrections';
     }
   }
 

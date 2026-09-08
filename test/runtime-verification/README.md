@@ -39,9 +39,9 @@ Three different counts appear around the compatibility layer and they are not in
 
 | Count | What it counts |
 | --- | --- |
-| **13** | documented corrections — the numbered issues in `css/buckholt-ai-fixes.css` |
-| **20** | CSS rules — some corrections need several selectors (Accordion needs five) |
-| **14** | runtime assertions — some corrections are asserted more than once (Button close is checked for both its geometry and its background image; Alert and Toast are asserted separately against one shared rule) |
+| **14** | documented corrections — the numbered issues in `css/buckholt-ai-fixes.css` |
+| **22** | CSS rules — some corrections need several selectors (Accordion needs five) |
+| **15** | runtime assertions — some corrections are asserted more than once (Button close is checked for both its geometry and its background image; Alert and Toast are asserted separately against one shared rule) |
 
 The summary header reports the assertion count; `window.rvFixChecks` holds the detail.
 

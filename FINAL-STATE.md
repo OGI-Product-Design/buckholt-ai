@@ -66,12 +66,12 @@ it.
 | Area | State |
 | --- | --- |
 | **Source verified** | 41 components have canonical markup compared against the supplied Code & specs HTML. `verification/component-source-status.md` |
-| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 13 documented compatibility corrections re-asserted live (14 assertions, all passing). `test/runtime-verification/` |
+| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 14 documented compatibility corrections re-asserted live. `test/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
 | **Responsive** | Audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |
 | **Source partial** | Table only — supplied from a Usage page, with no Code & specs source. |
-| **Unresolved** | Eight evidence gaps, recorded rather than inferred. `discrepancies/known-issues.md` |
+| **Unresolved** | Nine evidence gaps, recorded rather than inferred — including a hard dependency on a Font Awesome kit whose *regular* face carries the documented glyphs. `discrepancies/known-issues.md` |
 
 ### The runtime-verification caveat
 
@@ -92,7 +92,7 @@ advancing any row.
 
 Short list; the detail is in the linked files.
 
-- **13 active compatibility corrections** are in force, each with an upstream action recorded —
+- **14 active compatibility corrections** are in force, each with an upstream action recorded —
   `discrepancies/known-issues.md` and `css/buckholt-ai-fixes.css`.
 - **Table has no Code & specs source.** It stays `SOURCE PARTIAL`; the missing variants must not be
   invented.
@@ -104,6 +104,10 @@ Short list; the detail is in the linked files.
   not supplied* in the register.
 - **Four components need application responsive guidance** where Buckholt is silent —
   `responsive/component-guidance.md`.
+- **Font Awesome must be a Pro kit.** Buckholt's documented markup uses `fa-regular` throughout, and
+  the close control draws `\f00d` from `var(--fa-font-regular)`. In Font Awesome 6 the regular face
+  is a Pro style, so a Free kit renders most Buckholt icons — including every close control — as
+  `.notdef` boxes. The harness now detects and reports this.
 
 None of these is inferred or resolved by guesswork. Where evidence was missing, the gap is the
 finding.
@@ -118,7 +122,7 @@ components/<name>/           rules.md (usage) + examples.html (canonical markup,
 foundations/                 colour, typography, spacing, radius, shadows, iconography
 patterns/                    page-layout, forms, input-rows, lookup, common-actions
 css/buckholt.css             upstream runtime — never edited
-css/buckholt-ai-fixes.css    13 verified compatibility corrections, each justified in place
+css/buckholt-ai-fixes.css    14 verified compatibility corrections, each justified in place
 
 discrepancies/               known-issues.md — current-state issue register
 verification/                source status, runtime status, and the classification framework

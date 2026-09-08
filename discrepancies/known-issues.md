@@ -12,8 +12,8 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
-The layer holds **13 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
-**20 CSS rules** and checked by **14 runtime assertions**. The three numbers differ because a single
+The layer holds **14 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
+**22 CSS rules** and checked by **15 runtime assertions**. The three numbers differ because a single
 correction can need several selectors and can be worth asserting from more than one angle; they are
 not alternative counts of the same thing.
 
@@ -29,11 +29,14 @@ supplies behaviour).
 [Dropdown caret](#dropdown--two-arrows) · [Close button](#button-close--geometry-and-bootstraps-competing-svg-cross) ·
 [Accordion](#accordion--bootstrap-item-and-icon-rules-bleed-through) · [Modal](#modal--bootstrap-section-padding-and-dividers) ·
 [Toast body](#toast--icon-out-of-line-with-the-message) · [Table rule](#table--black-rule-above-the-table-body) ·
-[Card hover](#card--versa-tile--bootstrap-link-hover-colour) · [Input group](#input-group--grouped-action-button-joined-to-the-response)
+[Card hover](#card--versa-tile--bootstrap-link-hover-colour) · [Input group](#input-group--grouped-action-button-joined-to-the-response) ·
+[Card image corners](#card--image-stretched-and-bootstrap-rounds-its-bottom-corners)
 
 **Buckholt runtime defects** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
 [Versa-tile actions](#versa-tile--icon-only-action-set-wraps) · [Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
 [Table action alignment](#table--action-button-set-sits-below-the-row-centre)
+
+**Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
 **Source / runtime discrepancies** — [Link visited](#link--visited-state-not-implemented) ·
 [Radius `full`](#radius--full-name-and-value-disagree) · [Empty `--card-text`](#card--card-text-is-defined-as-an-empty-value) ·
@@ -158,6 +161,48 @@ component-by-component visual review will.
 - **Compatibility fix:** rule 13, mirroring Bootstrap's selector shape at (0,8,0) so it matches
   exactly the same elements without `!important`.
 - **Upstream action:** raise the specificity of `.input-group .btn`.
+
+## Card — image stretched, and Bootstrap rounds its bottom corners
+
+- **Status:** `ACTIVE FIX`
+- **Evidence:** the documented image card reports `object-fit: fill` with a natural ratio of 1.78
+  rendered at 2.10, and `border-bottom-left-radius: 3px` against a 15px top radius.
+- **Runtime cause:** two separate problems. The runtime writes `.card-img` as a *container* — it
+  sizes the box and puts the fitting on a child, `.card-img img { object-fit: cover }` — but the
+  canonical example puts the class on the image itself, so the child rule never matches and the
+  image is stretched rather than cropped. Separately, Bootstrap's `.card-img, .card-img-bottom`
+  rounds the *bottom* corners; Buckholt redeclares only the top pair, so an image above a
+  `.card-body` keeps Bootstrap's 3px rounding and separates from the body it should meet flush.
+- **Compatibility fix:** rule 14. The fitting the runtime already specifies is applied to the element
+  the documented markup uses, and the bottom corners are squared only where the image is followed by
+  more card content. `.card-img-bottom` is untouched, and the canonical markup is not changed.
+- **Upstream action:** make the runtime rule match a bare `<img class="card-img">` as well as a
+  wrapper, and scope the bottom-corner reset.
+
+---
+
+# Dependency requirements
+
+## Font Awesome — the regular face must carry the documented glyphs
+
+- **Status:** `OPEN` — a requirement on the kit, not a repository defect
+- **Evidence:** rendering the canonical Alert, Tag and Link against **Font Awesome Free 6**, the
+  close control shows a `.notdef` tofu box rather than a cross, as do `fa-regular fa-ghost` and
+  `fa-regular fa-arrow-right`.
+- **Cause:** Buckholt draws the close icon as `content: "\f00d"` with `font: var(--fa-font-regular)`
+  — the Font Awesome **regular (400)** face — and the documented component markup uses `fa-regular`
+  throughout. In Font Awesome 6 the regular face is a **Pro** style; the Free regular face carries
+  only a small subset and not these glyphs.
+- **Consequence:** with a Free kit, most Buckholt icons render as boxes. This became visible rather
+  than hidden once the compatibility layer removed Bootstrap's competing SVG cross, which had been
+  accidentally covering for the missing close glyph — and only that one.
+- **Requirement:** the documented runtime contract names kit `ca92816a31`. That kit must be a Pro kit,
+  or one whose regular face includes the documented glyphs.
+- **Detection:** `test/runtime-verification/` measures the glyph's advance width against a codepoint
+  no font defines and reports a `DEPENDENCY ISSUE` if they match, so this can no longer fail
+  silently.
+- **Upstream action:** confirm the kit tier is intended, or give `.btn-close::before` a fallback so a
+  Free kit degrades to a visible cross rather than a box.
 
 ---
 
@@ -299,11 +344,18 @@ provides the behaviour. `test/runtime-verification/` deliberately does **not** i
 - **Upstream action:** make the wrapper a `<label>` (or add `for`/`id`) and key the selected state off
   `:has(:checked)`, or ship the script.
 
-## Card — selectable state
+## Card — selectable state and hit target
 
 - **Status:** `PRODUCT RESPONSIBILITY`
-- **Evidence:** `.card-selectable.active` supplies the selected fill and border; nothing adds
-  `.active` when the nested radio or checkbox changes. The runtime has no `:has(:checked)` equivalent.
+- **Evidence:** two gaps. `.card-selectable.active` supplies the selected fill and border, but nothing
+  adds `.active` when the nested control changes — the runtime has no `:has(:checked)` equivalent.
+  And the runtime sets `cursor: pointer` on the whole card, declaring the whole card to be the hit
+  target, while the canonical wrapper is a `<div>` rather than a `<label>` with no `for` association:
+  measured, the clickable area is the 16×16 control, **0.43% of the card**. Clicking the card body
+  selects nothing.
+- **Upstream action:** make the wrapper a `<label>` (or add `for`/`id`), and key the selected state
+  off `:has(:checked)` — or ship the script. `cursor: pointer` on a 0.43% hit target is a promise the
+  markup cannot keep.
 
 ## Slider — range/number synchronisation
 

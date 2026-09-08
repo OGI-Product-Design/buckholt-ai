@@ -31,8 +31,29 @@
   }
 
   // Selectable card ---------------------------------------------------------
-  // The runtime styles `.card-selectable.active` but nothing adds `.active`
-  // when the nested radio or checkbox changes.
+  // Two gaps, both product responsibilities.
+  //
+  // 1. The runtime sets `cursor: pointer` on the whole `.card-selectable`, so
+  //    the whole card is meant to be the hit target. But the canonical wrapper
+  //    is a `<div>`, not a `<label>`, and the nested control has no `for`
+  //    association - so only the 16x16 control is clickable, 0.43% of the card.
+  // 2. The runtime styles `.card-selectable.active`, but nothing adds `.active`
+  //    when the control changes.
+  document.querySelectorAll('.card-selectable').forEach(function (card) {
+    var input = card.querySelector('.form-check-input');
+    if (!input) return;
+    card.addEventListener('click', function (event) {
+      if (event.target === input) return;             // let the control handle itself
+      if (event.target.closest('a, button')) return;  // don't hijack real controls
+      if (input.type === 'radio') {
+        input.checked = true;
+      } else {
+        input.checked = !input.checked;
+      }
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+
   document.querySelectorAll('.card-selectable .form-check-input').forEach(function (input) {
     var sync = function () {
       if (input.type === 'radio' && input.name) {

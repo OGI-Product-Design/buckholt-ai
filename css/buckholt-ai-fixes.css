@@ -147,6 +147,19 @@
              dismissible markup that the runtime implements. Buckholt's own
              canonical Alert examples do not use `.alert-dismissible` - they
              are handled by rule 6.
+
+   IMPORTANT DEPENDENCY. Removing Bootstrap's cross leaves Buckholt's glyph as
+             the only icon, and that glyph is not universally available.
+             `.btn-close::before` asks for `\f00d` from `var(--fa-font-regular)`
+             - the Font Awesome *regular* (400) face. In Font Awesome Free the
+             regular face does not carry `\f00d`, so the control renders a
+             `.notdef` tofu box instead of a cross. Verified by rendering the
+             canonical Alert and Tag against Font Awesome Free 6.
+
+             The documented runtime contract names kit `ca92816a31`. That kit
+             must be a Pro kit, or one whose regular face includes `\f00d`. If
+             a close control shows a box, the kit is the cause, not this rule -
+             `test/runtime-verification/` detects and reports it.
    ============================================================================ */
 
 .btn-close {
@@ -350,6 +363,47 @@ a.versatile:active {
   margin-left: 0.5rem;
   border-top-left-radius: var(--button-radius);
   border-bottom-left-radius: var(--button-radius);
+}
+
+
+/* ============================================================================
+   14. CARD — image stretched, and Bootstrap rounds its bottom corners
+   Cause:    two separate problems on the documented image card.
+
+             (a) The runtime writes `.card-img` as a *container*: it sizes the
+             box (`width: 100%; height: var(--card-image-max-height)`) and puts
+             the fitting on a child, `.card-img img { object-fit: cover }`. The
+             canonical example puts the class on the image itself -
+             `<img src="..." class="card-img">` - so the child rule never
+             matches and the image is stretched to the box instead of cropped
+             to it.
+
+             (b) Bootstrap's `.card-img, .card-img-bottom` rounds the *bottom*
+             corners. Buckholt redeclares only the top pair, so an image
+             sitting above a `.card-body` keeps Bootstrap's 3px bottom
+             rounding and separates from the body it should meet flush.
+   Measured: the image reports `object-fit: fill` with a natural ratio of 1.78
+             rendered at 2.10, and `border-bottom-left-radius: 3px` against a
+             15px top radius.
+   Fix:      apply the fitting the runtime already specifies for an image in
+             this slot to the element the documented markup actually uses, and
+             square the bottom corners only where the image is followed by more
+             card content. `.card-img-bottom` is untouched.
+   Note:     this compensates for a structure mismatch. The canonical markup is
+             evidence and is not changed.
+   Upstream: make the runtime rule match a bare `<img class="card-img">` as
+             well as a wrapper, and scope the bottom-corner reset.
+   ============================================================================ */
+
+img.card-img,
+img.card-img-top {
+  object-fit: cover;
+}
+
+.card-img:not(:last-child),
+.card-img-top {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 
