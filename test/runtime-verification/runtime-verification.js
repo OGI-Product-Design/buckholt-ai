@@ -729,7 +729,8 @@
     if (note) {
       note.textContent = components.length + ' components · ' +
         document.querySelectorAll('.rv-case').length + ' documented examples · ' +
-        applied + ' compatibility fixes verified in effect';
+        applied + ' of ' + fixChecks.filter(function (c) { return c.ok !== null; }).length +
+        ' runtime assertions passing across 13 documented corrections';
     }
   }
 

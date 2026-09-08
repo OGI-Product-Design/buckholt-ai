@@ -12,6 +12,11 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
+The layer holds **13 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
+**20 CSS rules** and checked by **14 runtime assertions**. The three numbers differ because a single
+correction can need several selectors and can be worth asserting from more than one angle; they are
+not alternative counts of the same thing.
+
 **Statuses used:** `ACTIVE FIX` (corrected in the compatibility layer) · `OPEN` (verified, not
 corrected) · `PRODUCT RESPONSIBILITY` (Buckholt supplies structure and styling, the application
 supplies behaviour).

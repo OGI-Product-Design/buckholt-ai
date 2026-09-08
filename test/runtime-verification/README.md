@@ -33,8 +33,17 @@ is just not the front page.
 
 Every correction in `css/buckholt-ai-fixes.css` is re-checked against the live runtime on load, so a
 fix that stops working — because an upstream build changed, or the stylesheet was not loaded — shows
-up as a `VERIFIED RUNTIME ISSUE` on the affected component rather than passing silently. The count of
-fixes verified in effect is printed in the summary header and available as `window.rvFixChecks`.
+up as a `VERIFIED RUNTIME ISSUE` on the affected component rather than passing silently.
+
+Three different counts appear around the compatibility layer and they are not interchangeable:
+
+| Count | What it counts |
+| --- | --- |
+| **13** | documented corrections — the numbered issues in `css/buckholt-ai-fixes.css` |
+| **20** | CSS rules — some corrections need several selectors (Accordion needs five) |
+| **14** | runtime assertions — some corrections are asserted more than once (Button close is checked for both its geometry and its background image; Alert and Toast are asserted separately against one shared rule) |
+
+The summary header reports the assertion count; `window.rvFixChecks` holds the detail.
 
 ### Harness artefacts are separated from component defects
 
