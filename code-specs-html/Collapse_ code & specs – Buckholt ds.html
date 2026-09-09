@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Collapse: code &amp; specs &#8211;  Buckholt ds</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="pingback" href="https://buck.88mph.design/xmlrpc.php" />
+
+    <!-- Bootstrap -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> -->
+    <!-- FONTS -->
+    <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="114x114" href="https://buck.88mph.design/wp-content/themes/buckholt/images/favicon/apple-icon-114x114.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://buck.88mph.design/wp-content/themes/buckholt/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="196x196" href="https://buck.88mph.design/wp-content/themes/buckholt/images/favicon/favicon-196x196.png">
+    <meta name="msapplication-TileImage" content="https://buck.88mph.design/wp-content/themes/buckholt/images/favicon/ms-icon-144x144.png">
+
+    <meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//kit.fontawesome.com' />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://buck.88mph.design/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fbuck.88mph.design%2Fcomponents%2Ftext-data-display%2Fcollapse%2Fcode-specs%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://buck.88mph.design/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fbuck.88mph.design%2Fcomponents%2Ftext-data-display%2Fcollapse%2Fcode-specs%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://buck.88mph.design/wp-includes/blocks/paragraph/style.min.css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="wp-block-code-inline-css">
+.wp-block-code{box-sizing:border-box}.wp-block-code code{direction:ltr;display:block;font-family:inherit;overflow-wrap:break-word;text-align:initial;white-space:break-spaces}
+/*# sourceURL=https://buck.88mph.design/wp-includes/blocks/code/style.min.css */
+</style>
+<style id="wp-block-group-inline-css">
+.wp-block-group{box-sizing:border-box}:where(.wp-block-group.wp-block-group-is-layout-constrained){position:relative}
+/*# sourceURL=https://buck.88mph.design/wp-includes/blocks/group/style.min.css */
+</style>
+<style id="wp-block-separator-inline-css">
+@charset "UTF-8";.wp-block-separator{border:none;border-top:2px solid}:root :where(.wp-block-separator.is-style-dots){height:auto;line-height:1;text-align:center}:root :where(.wp-block-separator.is-style-dots):before{color:currentColor;content:"···";font-family:serif;font-size:1.5em;letter-spacing:2em;padding-left:2em}.wp-block-separator.is-style-dots{background:none!important;border:none!important}
+/*# sourceURL=https://buck.88mph.design/wp-includes/blocks/separator/style.min.css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="acf-page-intro-style-inline-css">
+/* Page intro __________________________________________________________________*/
+.page_intro {
+    max-width: var(--max-width);
+}
+/*# sourceURL=https://buck.88mph.design/wp-content/themes/buckholt/blocks/page_intro/page_intro.css */
+</style>
+<style id="acf-componentgroup-style-inline-css">
+/* Component group _____________________________________________________________*/
+.component_group {
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+}
+
+.component_group .row:not(.input-row) {
+    --bs-gutter-x: 0.25rem;
+    --bs-gutter-y: 0.25rem;
+}
+
+/* .component_group .columns .row:not(.input-row) {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+} */
+
+.component_group .component_card {
+    border: none;
+    background-color: var(--ui-overlay-02);
+    border-radius: 0;
+    min-height: 12.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.component_group .col .component_card {
+    min-width: 16rem;
+}
+
+.component_group .col:nth-child(-n + 2) .component_card {
+    min-width: 22rem;
+}
+
+.component_group .text_block {
+    max-width: 26rem;
+}
+
+.component_group .component_card .card:not(.card-horizontal, .carousel .card, .card:has(.emphasis-tile)) {
+    max-width: 400px;
+}
+/*# sourceURL=https://buck.88mph.design/wp-content/themes/buckholt/blocks/componentgroup/componentgroup.css */
+</style>
+<style id="acf-componentgroupitem-style-inline-css">
+
+/*# sourceURL=https://buck.88mph.design/wp-content/themes/buckholt/blocks/componentgroupitem/componentgroupitem.css */
+</style>
+<style id="acf-code-style-inline-css">
+/* Code ________________________________________________________________________*/
+.code_block {
+    position: relative;
+}
+
+.code_content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.code_content pre[class*=language-] {
+    background-color: var(--neutral-100);
+    color: var(--white-tint-70);
+    border-radius: 0.5rem;
+    margin: 0 !important;
+    padding: 1.5rem 2rem;
+}
+
+/* Used to create a display for component example and attach relevant code. Add .code-example class to WP group */
+.code-example {
+    border: 1px solid var(--ui-border-02);
+    overflow: hidden;
+    border-radius: var(--border-radius-md);
+    position: relative;
+}
+
+.code-example .page-panel {
+    gap: 0;
+}
+
+.code-example .code_content pre,
+.code-example .component_group {
+    border-radius: 0;
+}
+
+.code-example .component_card {
+    background: none;
+}
+
+.code-example::after {
+    content: '';
+    background: url(/wp-content/themes/buckholt/blocks/swatches/chequered.png);
+    background-repeat: repeat;
+    height: 100%;
+    width: calc(100% + 1rem);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.75;
+}
+
+.code-example .card,
+.code-example .component_group {
+    overflow: unset;
+}
+
+
+.code_block .badge {
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--ui-background-03);
+    color: var(--text-secondary);
+}
+/*# sourceURL=https://buck.88mph.design/wp-content/themes/buckholt/blocks/code/code.css */
+</style>
+
+<style id="font-awesome-svg-styles-default-inline-css">
+.svg-inline--fa {
+  display: inline-block;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -.125em;
+}
+/*# sourceURL=font-awesome-svg-styles-default-inline-css */
+</style>
+<link rel='stylesheet' id='font-awesome-svg-styles-css' href='https://buck.88mph.design/wp-content/uploads/font-awesome/v7.1.0/css/svg-with-js.css' media='all' />
+<style id="font-awesome-svg-styles-inline-css">
+   .wp-block-font-awesome-icon svg::before,
+   .wp-rich-text-font-awesome-icon svg::before {content: unset;}
+/*# sourceURL=font-awesome-svg-styles-inline-css */
+</style>
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<script id="jquery-core-js" src="https://buck.88mph.design/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://buck.88mph.design/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script defer crossorigin="anonymous" id="font-awesome-official-js" src="https://kit.fontawesome.com/ca92816a31.js"></script>
+<link rel="https://api.w.org/" href="https://buck.88mph.design/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://buck.88mph.design/wp-json/wp/v2/pages/17102" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://buck.88mph.design/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 7.1" />
+<link rel="canonical" href="https://buck.88mph.design/components/text-data-display/collapse/code-specs/" />
+<link rel='shortlink' href='https://buck.88mph.design/?p=17102' />
+
+    <!-- prism -->
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/prism.css">
+
+    <!-- Slick carousel -->
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/slick.css"/>
+
+    <!-- Style Sheet -->
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/compiled.css?v=2.3">
+
+    <!-- Wordpress style Sheet -->
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/style.css?v=2.8">
+
+    <!-- Sidebar styling -->
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/sidebar.css?v=1.7">
+
+    <!-- Theme style Sheet -->
+    <!-- <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/theme.css">
+    <link rel="stylesheet" type="text/css" href="https://buck.88mph.design/wp-content/themes/buckholt/css/apricot.css"> -->
+
+</head>
+
+<body class="wp-singular page-template page-template-page-template-standard page-template-page-template-standard-php page page-id-17102 page-child parent-pageid-15695 wp-theme-buckholt layout page-code-specs" data-layout="layout-01" data-layout-surface="panelled">
+
+    <!-- <header class="site_header" role="banner">
+        header
+    </header> -->
+
+<!-- End of Header section ---------------------------------------------------->
+
+<aside id="sidebar" class="dark_mode">
+    <div class="sidebar_container">
+        <div class="sidebar_content">
+            <div class="sidebar_header">
+                <a href="/" class="home_link">
+                    <div class="logo ogi">
+                        <img src="https://buck.88mph.design/wp-content/themes/buckholt/images/ogi-wh.png" alt="ogi logo">
+                        <span class="dsname">
+                            Buckholt ds                        </span>
+                    </div>
+                </a>
+
+                <button type="button" class="btn btn-ghost menu-btn" data-bs-toggle="tooltip" data-bs-title="Collapse" data-bs-placement="right" data-bs-trigger="hover"> 
+                    <div class="btn-icon" >
+                        <i class="fa-regular fa-arrow-left-from-line menu-open"></i>
+                    </div>
+                </button>
+                <button type="button" class="btn btn-ghost menu-btn" data-bs-toggle="tooltip" data-bs-title="Expand" data-bs-placement="right" data-bs-trigger="hover"> 
+                    <div class="btn-icon" >
+                        <i class="fa-regular fa-arrow-right-from-line menu-close"></i>
+                    </div>
+                </button>
+            </div>
+            <div class="sidebar_body">
+
+                <form role="search" method="get" class="buckholt-search" action="https://buck.88mph.design/">
+    <div class="input">
+        <div class="response text-input dropdown-input">
+        <div class="dropdown w-100">
+            <input
+                type="search"
+                class="form-search form-search-dropdown"
+                placeholder="Search Buckholt…"
+                value=""
+                name="s"
+                autocomplete="off"
+                aria-expanded="false"
+            />
+            <button class="dropdown-toggle d-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown button
+            </button>
+            <ul class="dropdown-menu dropdown-menu-panel" role="listbox"></ul>
+        </div>
+
+        <button type="submit" class="input-btn">
+            <i class="fa-regular fa-magnifying-glass"></i>
+        </button>
+        <button type="button" class="input-btn input-clear" aria-label="Clear"></button>
+        </div>
+    </div>
+</form>
+
+<button type="button" class="btn btn-ghost btn-search align-self-center">
+    <div class="btn-icon">
+        <i class="fa-regular fa-magnifying-glass"></i>
+    </div>
+</button>
+
+                <nav class="main_nav">
+                    <ul class="nav flex-column"><li id="menu-item-5046" class="menu-item-type-post_type menu-item-object-page menu-item-has-children nav-item menu-item-5046"><a href="#" class="nav-link submenu_toggle" role="button" aria-expanded="false" data-bs-toggle="tooltip" data-bs-title="Styles" data-bs-placement="right" data-bs-trigger="hover"><i class="fa-regular fa-fw fa-pen-swirl"></i><span class="nav-link-text">Styles</span></a>
+<div class="sub-menu">
+	<div class="sub_menu_header">
+            <h6 class="sub_menu_title">
+                <i class="fa-regular fa-fw fa-pen-swirl"></i>
+                Styles
+            </h6>
+            <button class="btn btn-icon btn-ghost submenu_close" data-bs-toggle="tooltip" data-bs-title="Close Submenu" data-bs-placement="right" data-bs-trigger="hover">
+                <i class="fa-regular fa-chevron-left" aria-hidden="true"></i>
+            </button>
+        </div>
+	<ul class="sub-menu-items">
+	<li id="menu-item-5298" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-5298"><a href="https://buck.88mph.design/styles/colour/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Colour" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Colour</span></a></li>
+	<li id="menu-item-12461" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-12461"><a href="https://buck.88mph.design/styles/iconography/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Iconography" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Iconography</span></a></li>
+	<li id="menu-item-7168" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-7168"><a href="https://buck.88mph.design/styles/radius/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Radius" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Radius</span></a></li>
+	<li id="menu-item-7287" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-7287"><a href="https://buck.88mph.design/styles/shadows/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Shadows" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Shadows</span></a></li>
+	<li id="menu-item-7158" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-7158"><a href="https://buck.88mph.design/styles/spacing/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Spacing" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Spacing</span></a></li>
+	<li id="menu-item-5047" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-5047"><a href="https://buck.88mph.design/styles/typography/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Typography" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Typography</span></a></li>
+	</ul>
+</div>
+</li>
+<li id="menu-item-11265" class="menu-item-type-post_type menu-item-object-page current-page-ancestor menu-item-has-children nav-item menu-item-11265"><a href="#" class="nav-link submenu_toggle" role="button" aria-expanded="false" data-bs-toggle="tooltip" data-bs-title="Components" data-bs-placement="right" data-bs-trigger="hover"><i class="fa-regular fa-fw fa-diamonds-4"></i><span class="nav-link-text">Components</span></a>
+<div class="sub-menu">
+	<div class="sub_menu_header">
+            <h6 class="sub_menu_title">
+                <i class="fa-regular fa-fw fa-diamonds-4"></i>
+                Components
+            </h6>
+            <button class="btn btn-icon btn-ghost submenu_close" data-bs-toggle="tooltip" data-bs-title="Close Submenu" data-bs-placement="right" data-bs-trigger="hover">
+                <i class="fa-regular fa-chevron-left" aria-hidden="true"></i>
+            </button>
+        </div>
+	<ul class="sub-menu-items">
+	<li id="menu-item-10316" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-10316"><a href="https://buck.88mph.design/components/text-data-display/accordion/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Accordion" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Accordion</span></a></li>
+	<li id="menu-item-15658" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15658"><a href="https://buck.88mph.design/components/imagery/avatar/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Avatar" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Avatar</span></a></li>
+	<li id="menu-item-9577" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-9577"><a href="https://buck.88mph.design/components/messaging/alert/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Alert" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Alert</span></a></li>
+	<li id="menu-item-15751" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15751"><a href="https://buck.88mph.design/components/navigation/breadcrumb/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Breadcrumb" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Breadcrumb</span></a></li>
+	<li id="menu-item-611" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-611"><a href="https://buck.88mph.design/components/forms-inputs/button/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Button" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Button</span></a></li>
+	<li id="menu-item-7919" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-7919"><a href="https://buck.88mph.design/components/text-data-display/card/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Card" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Card</span></a></li>
+	<li id="menu-item-16559" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-16559"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Carousel" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Carousel</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-10796" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-10796"><a href="https://buck.88mph.design/components/forms-inputs/checkbox/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Checkbox" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Checkbox</span></a></li>
+	<li id="menu-item-15705" class="menu-item-type-post_type menu-item-object-page current-page-ancestor nav-item menu-item-15705"><a href="https://buck.88mph.design/components/text-data-display/collapse/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Collapse" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Collapse</span></a></li>
+	<li id="menu-item-15706" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15706"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Date picker" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Date picker</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-12376" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-12376"><a href="https://buck.88mph.design/components/forms-inputs/dropdown/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Dropdown" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Dropdown</span></a></li>
+	<li id="menu-item-11215" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-11215"><a href="https://buck.88mph.design/components/forms-inputs/form/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Form" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Form</span></a></li>
+	<li id="menu-item-18622" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-18622"><a href="https://buck.88mph.design/components/text-data-display/heading-attachment/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Heading attachment" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Heading attachment</span></a></li>
+	<li id="menu-item-6834" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-6834"><a href="https://buck.88mph.design/components/imagery/icon-block/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Icon block" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Icon block</span></a></li>
+	<li id="menu-item-13864" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-13864"><a href="https://buck.88mph.design/components/forms-inputs/input-group/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Input group" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Input group</span></a></li>
+	<li id="menu-item-14166" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-14166"><a href="https://buck.88mph.design/components/forms-inputs/input-row/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Input row" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Input row</span></a></li>
+	<li id="menu-item-15718" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15718"><a href="https://buck.88mph.design/components/text-data-display/key-value/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Key-value pair" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Key-value pair</span></a></li>
+	<li id="menu-item-858" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-858"><a href="https://buck.88mph.design/components/navigation/link/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Link" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Link</span></a></li>
+	<li id="menu-item-13680" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-13680"><a href="https://buck.88mph.design/components/text-data-display/list/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="List" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">List</span></a></li>
+	<li id="menu-item-19041" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-19041"><a href="https://buck.88mph.design/components/forms-inputs/lookup/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Lookup" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Lookup</span></a></li>
+	<li id="menu-item-12977" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-12977"><a href="https://buck.88mph.design/components/overlays-layering/menu/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Menu" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Menu</span></a></li>
+	<li id="menu-item-13248" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-13248"><a href="https://buck.88mph.design/components/overlays-layering/menu-button/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Menu button" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Menu button</span></a></li>
+	<li id="menu-item-9827" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-9827"><a href="https://buck.88mph.design/components/messaging/modal/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Modal" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Modal</span></a></li>
+	<li id="menu-item-14746" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-14746"><a href="https://buck.88mph.design/components/forms-inputs/multi-field-input/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Multi-field input" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Multi-field input</span></a></li>
+	<li id="menu-item-18851" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-18851"><a href="https://buck.88mph.design/components/forms-inputs/nested-inputs/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Nested inputs" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Nested inputs</span></a></li>
+	<li id="menu-item-6832" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-6832"><a href="https://buck.88mph.design/components/forms-inputs/number-input/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Number input" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Number input</span></a></li>
+	<li id="menu-item-15719" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15719"><a href="https://buck.88mph.design/components/navigation/page-navigation/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Page navigation" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Page navigation</span></a></li>
+	<li id="menu-item-15709" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15709"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Popover" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Popover</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-14927" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-14927"><a href="https://buck.88mph.design/components/status-indicators/progress/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Progress bar" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Progress bar</span></a></li>
+	<li id="menu-item-10967" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-10967"><a href="https://buck.88mph.design/components/forms-inputs/radio/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Radio" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Radio</span></a></li>
+	<li id="menu-item-9079" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-9079"><a href="https://buck.88mph.design/components/forms-inputs/response-button/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Response button" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Response button</span></a></li>
+	<li id="menu-item-15688" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15688"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Search" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Search</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-5556" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-5556"><a href="https://buck.88mph.design/components/forms-inputs/select/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Select" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Select</span></a></li>
+	<li id="menu-item-15239" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15239"><a href="https://buck.88mph.design/components/forms-inputs/slider/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Slider" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Slider</span></a></li>
+	<li id="menu-item-16558" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-16558"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Stepper" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Stepper</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-15753" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15753"><a href="https://buck.88mph.design/components/text-data-display/summary-meta/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Summary-meta" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Summary-meta</span></a></li>
+	<li id="menu-item-6211" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-6211"><a href="https://buck.88mph.design/components/forms-inputs/switch/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Switch" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Switch</span></a></li>
+	<li id="menu-item-15752" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15752"><a href="https://buck.88mph.design/components/navigation/tabs/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Tabs" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Tabs</span></a></li>
+	<li id="menu-item-15704" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15704"><a href="https://buck.88mph.design/components/text-data-display/table/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Table" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Table</span></a></li>
+	<li id="menu-item-8449" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-8449"><a href="https://buck.88mph.design/components/status-indicators/tag/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Tag" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Tag</span></a></li>
+	<li id="menu-item-5937" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-5937"><a href="https://buck.88mph.design/components/forms-inputs/text-area/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Text area" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Text area</span></a></li>
+	<li id="menu-item-6322" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-6322"><a href="https://buck.88mph.design/components/text-data-display/text-block/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Text block" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Text block</span></a></li>
+	<li id="menu-item-4491" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-4491"><a href="https://buck.88mph.design/components/forms-inputs/text-input/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Text input" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Text input</span></a></li>
+	<li id="menu-item-9080" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-9080"><a href="https://buck.88mph.design/components/messaging/toast/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Toast" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Toast</span></a></li>
+	<li id="menu-item-14747" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-14747"><a href="https://buck.88mph.design/components/overlays-layering/tooltip/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Tooltip" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Tooltip</span></a></li>
+	<li id="menu-item-15703" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15703"><a href="https://buck.88mph.design/components/text-data-display/versa-tile/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Versa-tile" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Versa-tile</span></a></li>
+	</ul>
+</div>
+</li>
+<li id="menu-item-11259" class="menu-item-type-post_type menu-item-object-page menu-item-has-children nav-item menu-item-11259"><a href="#" class="nav-link submenu_toggle" role="button" aria-expanded="false" data-bs-toggle="tooltip" data-bs-title="Patterns" data-bs-placement="right" data-bs-trigger="hover"><i class="fa-regular fa-fw fa-table-layout"></i><span class="nav-link-text">Patterns</span></a>
+<div class="sub-menu">
+	<div class="sub_menu_header">
+            <h6 class="sub_menu_title">
+                <i class="fa-regular fa-fw fa-table-layout"></i>
+                Patterns
+            </h6>
+            <button class="btn btn-icon btn-ghost submenu_close" data-bs-toggle="tooltip" data-bs-title="Close Submenu" data-bs-placement="right" data-bs-trigger="hover">
+                <i class="fa-regular fa-chevron-left" aria-hidden="true"></i>
+            </button>
+        </div>
+	<ul class="sub-menu-items">
+	<li id="menu-item-18432" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-18432"><a href="https://buck.88mph.design/patterns/common-actions/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Common actions" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Common actions</span></a></li>
+	<li id="menu-item-11267" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-11267"><a href="https://buck.88mph.design/patterns/forms/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Forms" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Forms</span></a></li>
+	<li id="menu-item-14314" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-14314"><a href="https://buck.88mph.design/patterns/input-rows/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Input rows" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Input rows</span></a></li>
+	<li id="menu-item-15754" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15754"><a href="https://buck.88mph.design/patterns/lookup/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Lookup" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Lookup</span></a></li>
+	<li id="menu-item-15727" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15727"><a href="https://buck.88mph.design/patterns/page-layout/" class="nav-link submenu_link" data-bs-toggle="tooltip" data-bs-title="Page layout" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Page layout</span></a></li>
+	<li id="menu-item-15755" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15755"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Repeat group" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Repeat group</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	<li id="menu-item-15687" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15687"><a href="#" class="nav-link submenu_link disabled" data-bs-toggle="tooltip" data-bs-title="Search" data-bs-placement="right" data-bs-trigger="hover"><span class="nav-link-text">Search</span><div class="badge expressive-secondary" aria-label="Planned">Planned</div></a></li>
+	</ul>
+</div>
+</li>
+<li id="menu-item-15641" class="menu-item-type-post_type menu-item-object-page nav-item menu-item-15641"><a href="https://buck.88mph.design/blog/" class="nav-link" data-bs-toggle="tooltip" data-bs-title="Blog" data-bs-placement="right" data-bs-trigger="hover"><i class="fa-regular fa-fw fa-message-quote"></i><span class="nav-link-text">Blog</span></a></li>
+</ul>                </nav>
+            </div>
+        </div>
+        
+        <div class="portal">
+            <svg width="352" height="352" viewBox="0 0 352 352" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M176 0C78.7876 0 0 78.8286 0 176C0 273.171 78.7876 352 176 352C273.212 352 352 273.212 352 176C352 78.7876 273.212 0 176 0ZM176 281.625C117.689 281.625 70.4164 234.352 70.4164 176C70.4164 117.648 117.689 70.3754 176 70.3754C234.311 70.3754 281.625 117.648 281.625 176C281.625 234.352 234.352 281.625 176 281.625Z" fill="url(#paint0_linear_6_2645)"/>
+                <defs>
+                <linearGradient id="paint0_linear_6_2645" x1="176" y1="-6.17103e-06" x2="279.429" y2="278.805" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="var(--primary-70)"/>
+                    <stop offset="1" stop-color="var(--primary-100)"/>
+                </linearGradient>
+                </defs>
+            </svg>
+            </div>
+
+            <div class="gradient-bg">
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+                    <feBlend in="SourceGraphic" in2="goo" />
+                </filter>
+                </defs>
+            </svg>
+            <div class="gradients-container">
+                <div class="g1"></div>
+                <div class="g2"></div>
+                <div class="g3"></div>
+                <div class="g4"></div>
+                <div class="g5"></div>
+            </div>
+        </div>
+
+    </div>
+</aside>
+<main role="main" id="main">
+    <section class="hero">
+        <div class="container">
+            <div class="hero_content">
+                <div class="text-block">
+                    <h1 class="display-03"><!--
+                    -->Collapse: code &amp; specs</h1>
+
+                    
+                     
+                </div>
+
+                 
+
+                
+
+
+            </div>
+        </div>
+    </section>
+
+    <section class="page-body">
+        <div class="page-frame">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9"> <!-- Bootstrap columns -->
+                        <div class="page-pane">
+                            
+    <ul id="page_nav" class="nav">
+                    <li class="nav-item">
+                <a class="nav-link " href="https://buck.88mph.design/components/text-data-display/collapse/">
+                    <i class="fa-regular fa-sliders"></i>Usage                </a>        
+            </li>
+                    <li class="nav-item">
+                <a class="nav-link " href="https://buck.88mph.design/components/text-data-display/collapse/style/">
+                    <i class="fa-regular fa-palette"></i>Style                </a>        
+            </li>
+                    <li class="nav-item">
+                <a class="nav-link active" href="https://buck.88mph.design/components/text-data-display/collapse/code-specs/">
+                    <i class="fa-regular fa-code"></i>Code &#038; specs                </a>        
+            </li>
+            </ul>
+
+
+
+    <div class="page_intro title-03">
+        This page documents the expected code output and structure necessary to display a collapse correctly in the UI.    </div>
+
+
+
+<style>
+.collapse-item {
+    width: 26rem;
+}
+</style>
+
+
+
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+    <div class="text-block">
+                    <!-- Anchor link -->
+            <a class="anchor" id=collapse-base-code ></a>
+        
+                            
+        
+                    <h2 class="headline-03"><!--
+                
+                -->Collapse base code
+                                    <a class="anchor-link" href="#collapse-base-code" aria-label="Link to this section: Collapse base code"><i class="fa-regular fa-link"></i></a>
+                            </h2>
+        
+        <p>The collapse works by using a trigger, usually <code>&lt;a&gt;</code>, with the <code>data-bs-toggle="collapse"</code> attribute and <code>role="button"</code>, with the <code>href</code> pointing towards the <code>collapse-card</code> classes <code>id</code>.</p>
+    </div>
+
+
+
+<div class="wp-block-group code-example"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+
+<div
+    class="component_group element_block align wp-block-acf-componentgroup">
+
+    <div class="row">
+
+<div class="col">
+    <div class="component_card card">
+        <div class="card-content">
+
+
+<div class="collapse-item">
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapsetitle" role="button" aria-expanded="false" aria-controls="collapsetitle">Collapse trigger</a>
+
+    <div class="collapse-card collapse" id="collapsetitle">
+        <div class="collapse-content">
+            
+                            <div class="text-block">
+                                            <h6 class="collapse-title">Collapse title</h6>
+                    
+                                            <p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.</p>
+                                    </div>
+            
+                    </div>
+            </div>
+</div>
+</div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+
+<div class="code_block element_block">
+            <span class="badge">html</span>
+    
+    <div class="code_content language-html line-numbers">
+
+<pre class="wp-block-code"><code>&lt;div class="collapse-item">
+    &lt;a class="collapse-trigger" data-bs-toggle="collapse" href="#collapseexample" role="button" aria-expanded="false" aria-controls="collapseexample">Collapse trigger&lt;/a>
+
+    &lt;div class="collapse-card collapse" id="collapseexample">
+        &lt;div class="collapse-content">
+            &lt;div class="text-block">
+                &lt;h6 class="collapse-title">Collapse title&lt;/h6>
+                &lt;p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.&lt;/p>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></code></pre>
+
+</div>
+</div></div></div>
+</div></div>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+    <div class="text-block">
+                    <!-- Anchor link -->
+            <a class="anchor" id=collapse-base-code ></a>
+        
+                            
+        
+                    <h2 class="headline-03"><!--
+                
+                -->Close button
+                                    <a class="anchor-link" href="#collapse-base-code" aria-label="Link to this section: Close button"><i class="fa-regular fa-link"></i></a>
+                            </h2>
+        
+        <p>Add the close button using a <code>&lt;button&gt;</code> with the class <code>btn-close</code> directly underneath the <code>.collapse-content</code></p>
+    </div>
+
+
+
+<div class="wp-block-group code-example"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+
+<div
+    class="component_group element_block align wp-block-acf-componentgroup">
+
+    <div class="row">
+
+<div class="col">
+    <div class="component_card card">
+        <div class="card-content">
+
+
+<div class="collapse-item">
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapsetitle" role="button" aria-expanded="false" aria-controls="collapsetitle">Collapse close example</a>
+
+    <div class="collapse-card collapse" id="collapsetitle">
+        <div class="collapse-content">
+            
+                            <div class="text-block">
+                                            <h6 class="collapse-title">Collapse title</h6>
+                    
+                                            <p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.</p>
+                                    </div>
+            
+                    </div>
+                    <button type="button" class="btn-close" data-bs-toggle="collapse" href="#collapsetitle" aria-label="Close"></button>
+            </div>
+</div>
+</div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+
+<div class="code_block element_block">
+            <span class="badge">html</span>
+    
+    <div class="code_content language-html line-numbers">
+
+<pre class="wp-block-code"><code>&lt;div class="collapse-item">
+    &lt;a class="collapse-trigger" data-bs-toggle="collapse" href="#collapseexampleclose" role="button" aria-expanded="false" aria-controls="collapseexampleclose">Collapse trigger&lt;/a>
+
+    &lt;div class="collapse-card collapse" id="collapseexampleclose">
+        &lt;div class="collapse-content">
+            &lt;div class="text-block">
+                &lt;h6 class="collapse-title">Collapse title&lt;/h6>
+                &lt;p>Collapse content. Etiam id velit feugiat, scelerisque velit a, scelerisque nunc. Vestibulum ante ipsum primis in faucibus orci luctus.&lt;/p>
+            &lt;/div>
+        &lt;/div>
+        &lt;button type="button" class="btn-close" data-bs-toggle="collapse" href="#collapseexampleclose" aria-label="Close">&lt;/button>
+    &lt;/div>
+&lt;/div></code></pre>
+
+</div>
+</div></div></div>
+</div></div>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+    <div class="text-block">
+                    <!-- Anchor link -->
+            <a class="anchor" id=context-bar ></a>
+        
+                            
+        
+                    <h2 class="headline-03"><!--
+                
+                -->Context bar
+                                    <a class="anchor-link" href="#context-bar" aria-label="Link to this section: Context bar"><i class="fa-regular fa-link"></i></a>
+                            </h2>
+        
+        <p>The <code>collapse-contextbar</code> provides correct spacing and padding to allow most types of component to be used in a collapse.</p>
+    </div>
+
+
+
+<div class="wp-block-group code-example"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+
+<div
+    class="component_group element_block align wp-block-acf-componentgroup">
+
+    <div class="row">
+
+<div class="col">
+    <div class="component_card card">
+        <div class="card-content">
+
+
+<div class="collapse-item">
+    <a class="collapse-trigger" data-bs-toggle="collapse" href="#collapse-block_7b876e057bfee1b2b03c9fa0fb7c1158" role="button" aria-expanded="false" aria-controls="collapse-block_7b876e057bfee1b2b03c9fa0fb7c1158">Context bar example</a>
+
+    <div class="collapse-card collapse" id="collapse-block_7b876e057bfee1b2b03c9fa0fb7c1158">
+        <div class="collapse-content">
+            
+            
+                            <div class="collapse-contextbar">
+                    
+
+<ul class="list">
+            <li class="list-heading" >
+            List heading        </li>
+    
+                    <li class="list-item">
+                                            <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </span>
+                                        List item 1
+                                    </li>
+                    <li class="list-item">
+                                            <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </span>
+                                        List item 2
+                                    </li>
+                    <li class="list-item">
+                                            <span class="list-icon text-success">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </span>
+                                        List item 3
+                                    </li>
+    </ul>
+
+
+
+    <a class="link-standalone" href="#" target="_self" > 
+                    <span class="icon">
+                <i class="fa-regular fa-arrow-down-to-bracket"></i>
+            </span>Standalone link    </a>
+
+
+
+                </div>
+                    </div>
+            </div>
+</div>
+</div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+
+<div class="code_block element_block">
+            <span class="badge">html</span>
+    
+    <div class="code_content language-html line-numbers">
+
+<pre class="wp-block-code"><code>&lt;div class="collapse-item">
+    &lt;a class="collapse-trigger" data-bs-toggle="collapse" href="#collapse-contextbar" role="button" aria-expanded="true" aria-controls="collapse-contextbar">Context bar example&lt;/a>
+    &lt;div class="collapse-card collapse show" id="collapse-contextbar">
+        &lt;div class="collapse-content">
+            &lt;div class="collapse-contextbar">
+                &lt;ul class="list">
+                    &lt;li class="list-heading">List heading&lt;/li>
+                    &lt;li class="list-item">
+                        &lt;span class="list-icon text-success">
+                            &lt;i class="fa-solid fa-circle-check" aria-hidden="true">&lt;/i>
+                        &lt;/span>
+                        List item 1
+                    &lt;/li>
+                    &lt;li class="list-item">
+                        &lt;span class="list-icon text-success">
+                            &lt;i class="fa-solid fa-circle-check" aria-hidden="true">&lt;/i>
+                        &lt;/span>
+                        List item 2
+                    &lt;/li>
+                    &lt;li class="list-item">
+                        &lt;span class="list-icon text-success">
+                            &lt;i class="fa-solid fa-circle-check" aria-hidden="true">&lt;/i>
+                        &lt;/span>
+                        List item 3
+                    &lt;/li>
+                &lt;/ul>
+                &lt;a class="link-standalone" href="#" target="_self"> 
+                    &lt;span class="icon">
+                        &lt;i class="fa-regular fa-arrow-down-to-bracket" aria-hidden="true">&lt;/i>
+                    &lt;/span>
+                    Standalone link
+                &lt;/a>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></code></pre>
+
+</div>
+</div></div></div>
+</div></div>
+
+
+
+<p class="wp-block-paragraph"></p>
+                        </div>
+                    </div>
+
+                                            <div class="col-3">
+                            <div id="ToC"></div>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<!-- Start of Footer section ---------------------------------------------------->
+    
+    <!-- <footer class="site_footer">
+        Footer
+    </footer> -->
+
+    <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/buckholt/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+    <script type="text/javascript">
+        var templateUrl = 'https://buck.88mph.design';
+        var post_id = '17102';
+    </script>
+    <script id="buckholt-search-js-extra">
+var wp_data = {"ajax_url":"https://buck.88mph.design/wp-admin/admin-ajax.php","home_url":"https://buck.88mph.design/"};
+//# sourceURL=buckholt-search-js-extra
+</script>
+<script id="buckholt-search-js" src="https://buck.88mph.design/wp-content/themes/buckholt/js/buckholt-search.js"></script>
+<script id="srs_simple_hits_counter_js-js" src="https://buck.88mph.design/wp-content/plugins/srs-simple-hits-counter/js/srs_simple_hits_counter_js.js?ver=7.1"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://buck.88mph.design/wp-includes/js/wp-emoji-release.min.js?ver=7.1"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://buck.88mph.design/wp-includes/js/wp-emoji-loader.min.js
+</script>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap tooltips initialise -->
+    <script>
+        const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltips = Array.from(tooltipTriggers).map(el => {
+            return new bootstrap.Tooltip(el, {
+                offset: [0, 4], // [skidding, distance]
+                delay: { show: 800, hide: 100 } // show after 800ms, hide after 100ms
+            });
+        });
+    </script>
+
+    <!-- Prism -->
+    <script src="https://buck.88mph.design/wp-content/themes/buckholt/js/prism.js"></script>
+
+    <!-- Slick carousel -->
+    <script type="text/javascript" src="https://buck.88mph.design/wp-content/themes/buckholt/js/slick.min.js"></script>
+
+    <!-- Custom JS -->
+    <script type="module" src="https://buck.88mph.design/wp-content/themes/buckholt/js/buckholt.js"></script>
+
+    <!-- Feedback form -->
+    <script src="https://cdn.jotfor.ms/s/static/latest/static/feedback2.js"></script>
+    <script>
+        var componentID = new JotformFeedback({
+            type: 1,
+            width: 550,
+            height: 575,
+            fontColor: "#FFFFFF",
+            background: "#0f40c5",
+            isCardForm: false,
+            formId: "253023046648353",
+            buttonText: "Share feedback",
+            buttonSide: "right",
+            buttonAlign: "bottom",
+            base: "https://form.jotform.com/",
+        }).componentID;
+    </script>
+    <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
+    <script>window.jotformEmbedHandler("iframe[id='" + componentID + "_iframe']", "https://form.jotform.com/")</script>
+
+</body>
+</html>
