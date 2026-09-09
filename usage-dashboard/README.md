@@ -14,19 +14,19 @@ this repository.
 
 ## What it shows
 
-Period 2 (10 Aug – 8 Sep 2026) read against Period 1 (11 Jul – 9 Aug 2026), across four sections:
+**Last 30 days (10 Aug–8 Sep)** compared with **Previous 30 days (11 Jul–9 Aug)**, across four sections:
 
 1. **Platform health** — session volume, segment mix, active users, page load, session duration,
    and the four metrics that were asked for and deliberately not shown.
-2. **Broker intents** — nine workflows comparable across both periods, by volume and by growth.
+2. **Key pages & actions** — nine workflows comparable across both periods, by volume and by growth.
 3. **Flags** — six findings, each carrying the confidence the evidence actually supports.
 4. **Data notes** — everything that could change how a figure should be read.
 
 ### The argument the page is built around
 
-Every intent grew faster than Islands sessions did. That is not one metric moving; it is nine
+Every measured page or action grew faster than Islands sessions did. That is not one metric moving; it is nine
 independently-measured ones moving the same way, which is why the **By growth** view exists: a dot
-plot against a dashed reference rule at +0.5%, where every intent lands to the right of the line.
+plot against a dashed reference rule at +0.5%, where every measured page or action lands to the right of the line.
 
 ### What the page refuses to do
 
@@ -34,13 +34,13 @@ The reports are emphatic that none of the workflow figures confirm completion, a
 that through rather than footnoting it:
 
 - the framing alert is the first thing under the title, not a caption at the bottom;
-- **Diary** has no Period 1 figure, so it is absent from the growth chart and annotated
+- **Diary** has no Previous 30 days figure, so it is absent from the growth chart and annotated
   *first measured* on the volume chart — never plotted at zero;
 - **session duration is deliberately not charted**, because two of its three figures are artifacts
   of how a session ends and a chart would invite a comparison none of them supports;
 - **Add New Quote outside Islands** is shown as two numbers, not a bar chart, because a three-session
   swing drives Pizza's whole percentage move;
-- the four unmeasurable metrics get their own panel. An absent metric is a finding.
+- the four unavailable metrics remain explicit in one collapsed **Data notes** disclosure. They are never shown as zero.
 
 ---
 
@@ -105,7 +105,7 @@ at the top of the file, because Buckholt documents no data-visualisation layer.
 ### Rules it holds itself to
 
 - One axis per chart. Never two y-scales.
-- Colour identifies an entity, never its rank — sorting the intents chart never repaints anything.
+- Colour identifies an entity, never its rank — sorting the pages/actions chart never repaints anything.
 - A missing figure is drawn as an explicit absence, never as zero.
 - Thin marks; 4px rounded data-ends anchored to a square baseline; 2px rules; markers at or above
   8px; a 2px surface gap between adjacent fills.
@@ -119,7 +119,7 @@ at the top of the file, because Buckholt documents no data-visualisation layer.
 |---|---|---|
 | Share of combined sessions | Stacked bar, 2 periods | A part-to-whole shift; 3 series, so a legend plus direct labels |
 | Sessions by segment | Small multiples, own scale each | Islands runs ~50× Pizza; a shared scale would flatten two segments into the axis and a second y-scale would be worse |
-| Broker intent volume | Horizontal bars + Period 1 reference tick | One measure, ten categories. Period 1 is a reference mark in an ink token, not a second coloured series |
+| Key page/action volume | Horizontal bars + Previous 30 days reference tick | One measure, ten categories. Previous 30 days is a reference mark in an ink token, not a second coloured series |
 | Growth against the baseline | Dot plot with a dashed reference rule | The claim is about a line, so the chart is built around one |
 | Average page load | Horizontal bars, segment colours | One measure across three entities |
 | Cancel Policy vs Renewal | Grouped bars, 2 periods | The two periods are an ordinal ramp of one hue, not two identities |
