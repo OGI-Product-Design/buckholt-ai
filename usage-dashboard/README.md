@@ -77,7 +77,7 @@ major sections read as separate regions.
 
 ### Components used
 
-Alert, Button, Card, Heading attachment, Icon block, Key-value pair, List, Switch, Table, Tabs, Tag,
+Accordion, Alert, Button, Card, Heading attachment, Icon block, Key-value pair, List, Switch, Table, Tabs, Tag,
 Text block — all as documented, none restyled.
 
 ### Custom CSS
