@@ -456,3 +456,27 @@
 @media (prefers-reduced-motion: reduce) {
   .ud-tooltip { transition: none; }
 }
+
+/* Native disclosure keeps secondary methodology available without competing
+   with the findings. The browser's summary semantics provide keyboard support. */
+.ud-data-notes {
+  border-block: var(--border-width) solid var(--ui-border);
+  padding-block: var(--spacing-04);
+}
+
+.ud-data-notes > summary {
+  cursor: pointer;
+}
+
+.ud-data-notes > summary .support-01 {
+  display: block;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-01);
+}
+
+.ud-data-notes-content {
+  display: grid;
+  gap: var(--page-panel-gap);
+  margin-top: var(--page-panel-gap);
+  max-width: 64rem;
+}
