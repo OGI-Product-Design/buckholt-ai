@@ -22,7 +22,7 @@ not already cover the case.
 
 - Anything Buckholt documents. If Buckholt or its runtime already handles it, record the evidence
   in `component-guidance.md` and stop.
-- Media queries added to `css/buckholt.css`. That file is the upstream runtime snapshot and is
+- Media queries added to `css/buckholt.css`. That file is the runtime implementation as shipped and is
   never edited.
 - Compatibility corrections. Those go in `css/buckholt-ai-fixes.css`, which is for verified
   mismatches between documented intent and runtime behaviour — not for behaviour Buckholt never

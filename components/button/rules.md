@@ -81,7 +81,7 @@ Native Buttons are activated with mouse click and with Enter or Space when focus
 
 ## Runtime
 
-Use the repository runtime order documented in `CLAUDE.md`: Bootstrap CSS first, Proxima Soft, Font Awesome, then `css/buckholt.css` and the verified compatibility stylesheet. Load Bootstrap JavaScript only where Bootstrap-powered behaviour such as Tooltips is needed.
+Use the repository runtime order documented in `CLAUDE.md`: Proxima Soft, Font Awesome, then `css/buckholt.css` and the verified compatibility stylesheet. **Do not load a separate Bootstrap stylesheet** — `css/buckholt.css` is itself a complete Bootstrap build. Load Bootstrap JavaScript only where Bootstrap-powered behaviour such as Tooltips is needed.
 
 Do not recreate Button colour, border, spacing, radius, typography or state styling in page-specific CSS.
 

@@ -66,8 +66,9 @@ supplies behaviour).
 
 ## Contents
 
-**Local build regressions (`ACTIVE FIX`)** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
-[Versa-tile actions](#versa-tile--icon-only-action-set-wraps)
+**Local build regressions** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
+[Versa-tile actions](#versa-tile--icon-only-action-set-wraps) ·
+[Empty `--card-text`](#card----card-text-is-defined-as-an-empty-value)
 
 **Unresolved, fix retained (`ACTIVE FIX`)** — [Alert/Toast close placement](#alert--toast--the-documented-in-content-close-placement-does-not-align-the-same-way) ·
 [Table action alignment](#table--action-button-set-sits-below-the-row-centre)
@@ -81,12 +82,13 @@ supplies behaviour).
 **Source / runtime discrepancies** — [Frame padding](#page-layout--frame-padding-is-not-64px-on-all-sides) ·
 [Harness overflow at 375/320](#runtime-verification-harness--horizontal-overflow-at-375px-and-320px) ·
 [Link visited](#link--visited-state-not-implemented) ·
-[Radius `full`](#radius--full-name-and-value-disagree) · [Empty `--card-text`](#card--card-text-is-defined-as-an-empty-value) ·
-[Group labels](#form-groups--label-for-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
+[Radius `full`](#radius--full-name-and-value-disagree) ·
+[Modal trigger id](#modal--the-documented-trigger-targets-an-id-no-documented-modal-carries) ·
+[Group labels](#form-groups--labelfor-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
 
 **Required behaviour not supplied** — [Selectable Tag](#tag--selection-and-dismiss) ·
-[Selectable Card](#card--selectable-state) · [Slider](#slider--rangenumber-synchronisation) ·
-[Table controller](#table--data-cdt-controller) · [Dropdown single select](#dropdown--single-select-label)
+[Selectable Card](#card--selectable-state-and-hit-target) · [Slider](#slider--rangenumber-synchronisation) ·
+[Table controller](#table--data-cdt--controller) · [Dropdown single select](#dropdown--single-select-label)
 
 **Source coverage** — [Table](#table--source-partial)
 
@@ -132,6 +134,27 @@ produced our file, not against the design system.
   actions column not re-tested.
 - **Compatibility fix:** correction 2.
 - **Upstream action:** none against Buckholt. Report the regression against our build.
+
+
+## Card — `--card-text` is defined as an empty value
+
+- **Status:** `OPEN` — **local build regression**, deliberately not corrected. Reclassified
+  9 September 2026 against the live stylesheet.
+- **Evidence:** `css/buckholt.css:6820` declares `--card-text: ;` — defined with no value — and
+  `:6867` uses it as `color: var(--card-text)`. The declaration is invalid at computed-value time
+  and is dropped, so anything relying on the token silently inherits instead.
+- **Live:** `compiled.css?v=2.3:5930` declares `--card-text: #1a1a1a` and `:5976` uses it the same
+  way. The live build resolves correctly. **This is a defect in the build we hold, not a Buckholt
+  defect** — the same family as the two SCSS `null` leaks and the nine `var()`-inside-`data:`-URI
+  occurrences recorded in [`build-provenance.md`](build-provenance.md).
+- **Correction to an earlier entry:** this was previously recorded as `OPEN` with the note "a
+  symptom is corrected — see Card hover". That is no longer true. The Card hover correction was one
+  of the nine rules deleted when the separate Bootstrap stylesheet was removed, so no correction for
+  this exists in `css/buckholt-ai-fixes.css`.
+- **Not corrected here:** adding CSS for it would mean patching a build defect rather than fixing
+  the build. The live value is known and recorded, so it can be fixed at source.
+- **Upstream action:** none against Buckholt. Report the regression against the build that produced
+  `css/buckholt.css`; the live build already carries `#1a1a1a`.
 
 ---
 
@@ -366,14 +389,25 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   while this stands.
 - **Upstream action:** reconcile the token name with its value.
 
-## Card — `--card-text` is defined as an empty value
+## Modal — the documented trigger targets an id no documented modal carries
 
-- **Status:** `OPEN` (a symptom is corrected — see [Card hover](#card--versa-tile--bootstrap-link-hover-colour))
-- **Evidence:** `.card` declares `color: var(--card-text)` and the property is defined with no value,
-  so the declaration is invalid at computed-value time and dropped.
-- **Consequence:** anything relying on `--card-text` silently inherits instead. The hover symptom is
-  corrected; the underlying token is not.
-- **Upstream action:** give `--card-text` a value.
+- **Status:** `OPEN` — found 9 September 2026 during final verification. Not corrected.
+- **Evidence:** `components/modal/examples.html:33` declares
+  `<button data-bs-toggle="modal" data-bs-target="#exampleModal">`, but no element in that file
+  carries `id="exampleModal"` — the documented modal is `<div class="modal fade" tabindex="-1">`
+  with no id at all. The trigger and the modal it is meant to open are not connected in the source.
+- **Consequence:** clicking the trigger where the canonical markup is rendered verbatim throws
+  inside Bootstrap — `Uncaught TypeError: Cannot read properties of undefined (reading 'classList')`
+  at `_isAnimated` / `_initializeBackDrop`, because `getElementFromSelector()` returns null.
+  Reproduced on `test/runtime-verification/`, which renders the example unmodified. The page loads
+  and renders cleanly; the error occurs only on that click.
+- **Not a defect in either build.** This is documented markup, not CSS. It is the same class of
+  source gap as the `label[for]` entry below.
+- **Not corrected:** adding an id would mean editing canonical markup to make a documented example
+  work, which `CANONICAL-MARKUP.md` forbids. `test/style-guide/` is unaffected — it composes and
+  assigns page-unique ids (`#sgModalDefault` and siblings), and its modals open and close correctly.
+- **Upstream action:** give the documented modal the `id` its own trigger targets, or document the
+  pairing explicitly.
 
 ## Form groups — `label[for]` with no matching control
 

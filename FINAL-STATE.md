@@ -29,13 +29,15 @@ disagreement is recorded rather than smoothed over.
 | 1 | Buckholt documentation | Intended design-system behaviour. The source of truth. |
 | 2 | `components/*/examples.html` and `rules.md` | Canonical markup and usage. `examples.html` is **source evidence**, preserved exactly — including deliberate `…` elisions. |
 | 3 | `foundations/`, `patterns/` | Shared scales, tokens and composition guidance. |
-| 4 | `css/buckholt.css` | Current runtime implementation. Byte-identical to the upstream drop and **never edited**. |
+| 4 | `css/buckholt.css` | Current runtime implementation, **never edited**. It is *not* the live documentation site's `compiled.css?v=2.3` — see `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent. |
 | 5 | `css/buckholt-ai-fixes.css` | Verified compatibility corrections only, where the runtime does not deliver documented intent. |
 | 6 | `responsive/` | **Non-canonical.** Application-level guidance where Buckholt is silent. |
 
 Rules that make the hierarchy hold:
 
 - A runtime defect is never "fixed" by rewriting canonical markup.
+- A rendering difference is classified before it is corrected — **local build regression**,
+  **upstream markup/CSS mismatch**, or **unresolved** — never called a Buckholt defect by default.
 - Silence in the documentation is not permission to invent a specification — it is recorded as
   silence.
 - A generic convention never overrides a component's own Code & specs markup.
@@ -72,7 +74,8 @@ it.
 | **Responsive** | `test/style-guide/` audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow (re-confirmed 9 September 2026). `test/runtime-verification/` **does** overflow at 375 and 320 — it renders canonical markup unwrapped, without the containers a real page supplies; recorded as an open finding in `discrepancies/known-issues.md`. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |
 | **Source partial** | Table only — supplied from a Usage page, with no Code & specs source. |
-| **Unresolved** | Nine evidence gaps, recorded rather than inferred — including a hard dependency on a Font Awesome kit whose *regular* face carries the documented glyphs. `discrepancies/known-issues.md` |
+| **Build provenance** | **`css/buckholt.css` is not the live build.** Direct diff against `compiled.css?v=2.3`: 3,538 selectors shared, 83 live-only, 192 local-only, 160 differing. The **grid breakpoints differ** — live `896/1088/1312/1520/1720`, ours `576/768/992/1200/1400` — so every responsive rule fires at a different width from the live design system. Not normalised; open for Buckholt. `discrepancies/build-provenance.md` |
+| **Unresolved** | 10 entries marked `OPEN`, plus the Alert/Toast entry whose horizontal half is corrected and whose 4px vertical half is not; and 5 `PRODUCT RESPONSIBILITY` items, recorded rather than inferred — including a hard dependency on a Font Awesome kit whose *regular* face carries the documented glyphs. `discrepancies/known-issues.md` |
 
 ### The runtime-verification caveat
 

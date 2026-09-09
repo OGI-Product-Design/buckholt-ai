@@ -14,17 +14,12 @@
    192 local-only, 160 shared-but-differing. Some of what this file corrects
    renders correctly on the live site.
 
-   It is NOT a Bootstrap compatibility layer. It used to be: fourteen rules,
-   nine of which existed only because the repository loaded a separate
-   Bootstrap 5.1.3 stylesheet underneath Buckholt. The live Buckholt
-   documentation site does not do that - its <head> has the Bootstrap
-   stylesheet commented out and loads only its own compiled CSS. That
-   stylesheet has been removed here to match, and the nine rules it required
-   were deleted with it.
-
-   Two further rules - `.dropdown-toggle::after { display: none }` and
-   `.btn-close { box-sizing: border-box }` - were deleted on 2026-09-09 after
-   both builds were measured and both rules proved inert in both.
+   It is NOT a Bootstrap compatibility layer. It was one - fourteen rules, nine
+   of them undoing a separate Bootstrap 5.1.3 stylesheet this repository used to
+   load underneath Buckholt. That stylesheet was removed to match the live site,
+   which loads only its own compiled CSS, and two further rules were deleted on
+   2026-09-09 after both builds were measured and proved them inert in both.
+   The full account is in `discrepancies/known-issues.md`.
 
    How each rule is classified
    ---------------------------

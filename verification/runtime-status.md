@@ -15,7 +15,8 @@ Read `verification/runtime-verification-framework.md` before changing a status.
 
 Current controlled target:
 
-- Bootstrap CSS: 5.1.3
+- Bootstrap CSS: **none — do not load a separate Bootstrap stylesheet.** `css/buckholt.css` is
+  itself a complete Bootstrap build with Buckholt as the theme.
 - Proxima Soft: Adobe Typekit `vtl2xbn.css`
 - Font Awesome kit: `ca92816a31`
 - Buckholt runtime: repository `css/buckholt.css`
@@ -47,7 +48,8 @@ removed: `buckholt.css` is a complete Bootstrap 5.3 build, and the live Buckholt
 loads only its own compiled CSS. The full style guide was re-rendered against the corrected runtime —
 zero page errors, zero horizontal overflow, 37 of 48 sections pixel-identical, and no component
 collapsed. Seven of the fourteen corrections proved to be undoing the extra stylesheet and were
-deleted. Runtime status for every component is unchanged: still `RUNTIME PENDING`.
+deleted; see `discrepancies/known-issues.md` for the full account. Runtime status for every
+component is unchanged: still `RUNTIME PENDING`.
 
 **Build-provenance correction, 9 September 2026 — read `discrepancies/build-provenance.md`.**
 `css/buckholt.css` is **not** the same build as the live documentation site's

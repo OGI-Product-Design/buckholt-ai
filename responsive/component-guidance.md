@@ -5,11 +5,22 @@
 > implements it.
 
 Audited at 320px, 375px, 768px and 1400px against `test/style-guide/index.html` on 7 September 2026,
-with the documented runtime contract loaded (Bootstrap 5.1.3, Proxima Soft, the Buckholt Font
-Awesome kit, `css/buckholt.css`, `css/buckholt-ai-fixes.css`, the Bootstrap bundle, jQuery and the
-three Buckholt component scripts).
+with Proxima Soft, the Buckholt Font Awesome kit, `css/buckholt.css`, `css/buckholt-ai-fixes.css`,
+the Bootstrap 5.1.3 **JavaScript** bundle, jQuery and the three Buckholt component scripts loaded.
 
-At every audited width the style guide reports **zero document-level horizontal overflow**.
+At every audited width the style guide reports **zero document-level horizontal overflow**,
+re-confirmed 9 September 2026.
+
+> **Two caveats on the per-component observations below.**
+>
+> 1. **They predate the dependency-model correction.** The 7 September audit ran with a separate
+>    `bootstrap.min.css` loaded underneath Buckholt, which was removed on 8 September. The
+>    zero-overflow headline has been re-confirmed since, at all four widths, under the corrected
+>    contract — but the individual component notes have not each been re-derived.
+> 2. **They were measured on the local breakpoint scale.** `css/buckholt.css` uses stock Bootstrap
+>    breakpoints (`576/768/992/1200/1400`); the live `compiled.css?v=2.3` uses
+>    `896/1088/1312/1520/1720`. Any width at which a rule is said to engage is therefore the local
+>    width, not necessarily the live one. See `discrepancies/build-provenance.md`.
 
 ## Summary
 

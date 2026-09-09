@@ -180,9 +180,9 @@ this table rather than inventing one.
 Root cause: the build that produced our file switched from compile-time literals to runtime
 custom properties, and the SVG data URIs were caught in that switch.
 
-### 6.2 SCSS `null` reaching the compiled output — two occurrences
+### 6.2 Tokens that resolve in live but not in ours — three occurrences
 
-Live has zero.
+Two SCSS `null` leaks and one empty custom property. Live has none of them.
 
 **`css/buckholt.css:7919` — `.avatar { --avatar-border-width: null }`**
 
@@ -198,6 +198,14 @@ Practical impact is small: `box-sizing` is `border-box` so the outer box is 48px
 way, and the default `--avatar-border` is `transparent`. It becomes visible only if an
 application sets `--avatar-border` to a real colour without also setting a width — live
 then shows a 2px ring and ours shows nothing. Not patched.
+
+**`css/buckholt.css:6820` — `.card { --card-text: ; }`**
+
+Defined with no value, so `color: var(--card-text)` at `:6867` is invalid at computed-value time
+and dropped; anything relying on the token silently inherits instead. Live declares
+`--card-text: #1a1a1a` at `:5930` and uses it identically at `:5976`. Not patched — the live value
+is known, so it can be fixed at source. Recorded in
+[`known-issues.md`](known-issues.md#card----card-text-is-defined-as-an-empty-value).
 
 **`css/buckholt.css:7575` — `[class$=-set] { --set-row-gap: null }`**
 

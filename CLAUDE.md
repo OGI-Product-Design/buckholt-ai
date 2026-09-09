@@ -221,11 +221,10 @@ stylesheet out and loads only its own compiled CSS.
 > `discrepancies/build-provenance.md` — it may be a defect in the build we hold.
 
 Loading `bootstrap.min.css` as well adds a second, older copy of the same framework that
-**overrides Buckholt**: it replaced Buckholt's table text colour with Bootstrap's, imposed
-Bootstrap's 3.8px radius on modal corners, added a competing SVG cross to every close
-control, and pushed a redundant 24px indent into every `.form-check`. Nine of the fourteen
-corrections that used to sit in `css/buckholt-ai-fixes.css` existed only to undo that
-damage; they were deleted when the stylesheet was removed.
+**overrides Buckholt** — it replaced Buckholt's table text colour, imposed Bootstrap's 3.8px
+modal radius, drew a competing SVG cross on every close control and indented every
+`.form-check`. The correction layer is now **5 rules**; the full account of what was removed
+and why is in `discrepancies/known-issues.md`.
 
 ### JavaScript — verified
 
