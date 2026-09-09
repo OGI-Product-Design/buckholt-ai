@@ -79,6 +79,7 @@ supplies behaviour).
 **Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
 **Source / runtime discrepancies** — [Frame padding](#page-layout--frame-padding-is-not-64px-on-all-sides) ·
+[Harness overflow at 375/320](#runtime-verification-harness--horizontal-overflow-at-375px-and-320px) ·
 [Link visited](#link--visited-state-not-implemented) ·
 [Radius `full`](#radius--full-name-and-value-disagree) · [Empty `--card-text`](#card--card-text-is-defined-as-an-empty-value) ·
 [Group labels](#form-groups--label-for-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
@@ -168,6 +169,16 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
 - **Compatibility fix:** correction 3, `margin-left: auto` on a `.btn-close` that is a direct
   child of the content wrapper. It addresses the horizontal offset only. The sibling placement
   and Collapse, which uses the same sibling pattern, are untouched.
+- **What the repository does, 9 September 2026.** `test/style-guide/` composes its own examples
+  rather than transcribing canonical markup verbatim (its three dismissible Alert/Toast examples
+  were never byte-exact — they add `.alert-info`/`.toast-info` that the canonical examples do not
+  carry, and the stacked-container example adds a close button that canonical Toast example 9 does
+  not have). Those four instances now use the **sibling placement**, which is equally documented
+  and which the CSS supports: measured `0.0px` label offset and an 8px trailing gap, down from
+  `+4.0px` and a 56px-tall component. `components/*/examples.html` and
+  `test/runtime-verification/` keep **both** documented placements verbatim, so the difference
+  stays measurable and correction 3 stays exercised. The correction is still required and is not
+  removed.
 - **Upstream action:** reconcile the two documented placements, or add a rule supporting the
   in-content one.
 
@@ -253,6 +264,32 @@ disagree with each other.
 # Source / runtime discrepancies
 
 Documentation and runtime materially disagree. Neither is silently rewritten.
+
+## Runtime-verification harness — horizontal overflow at 375px and 320px
+
+- **Status:** `OPEN` — measured, not corrected. Pre-existing: identical at commit `8f327f3`, and
+  `test/runtime-verification/index.html` has not changed since.
+- **Evidence:** at both 375px and 320px the document reports `scrollWidth: 512` against the
+  viewport width. 17 elements exceed the viewport: one is harness chrome (`table.rv-table`, the
+  results table) and **16 sit inside `.rv-canonical`** — Buckholt markup. Giving the harness table
+  its own scroll container does not help; `scrollWidth` stays 512.
+- **Narrowest reproduction:** a `.card-body` computes **384px wide inside a 222px `.card`** at
+  320px. Its ancestor chain carries no `min-width` above `0`/`auto` and no `max-width` below the
+  shell's 1152px, so the width is coming from the component itself. `.key-value-item` and
+  `.progress` overflow the same way.
+- **Scope — this is not the style guide.** `test/style-guide/` reports **zero** document-level
+  horizontal overflow at 1440, 768, 375 and 320, re-confirmed 9 September 2026. The claims in
+  `responsive/component-guidance.md` and `verification/runtime-status.md` are explicitly scoped to
+  the style guide and remain accurate; `FINAL-STATE.md` stated it unscoped and has been corrected.
+- **Why it is not simply a defect:** the harness renders each documented example verbatim and
+  deliberately unwrapped — no `.container`, no grid column, none of the responsive scaffolding a
+  real page supplies. Whether these components are expected to survive a 320px viewport
+  unwrapped is exactly what has not been established.
+- **Not fixed here:** correcting it would mean adding CSS or altering canonical markup, neither of
+  which is warranted before the behaviour is classified. Needs its own investigation against the
+  live build, bearing in mind that the local breakpoint scale differs from live
+  ([`build-provenance.md`](build-provenance.md)) — so the width at which any responsive rule
+  engages is itself in question.
 
 ## Link — visited state not implemented
 

@@ -6324,6 +6324,7 @@
         <div class="text-block">
           <h2 class="headline-02">Alert</h2>
           <p class="body-02">Inline feedback tied to the surrounding content. The colour and the left bar come from a status modifier — <code>.alert-info</code>, <code>.alert-success</code>, <code>.alert-warning</code> or <code>.alert-error</code>. A bare <code>.alert</code> is deliberately transparent: it defines the anatomy and leaves the status to say what it means. The anatomy examples below carry <code>.alert-info</code> so the shape is visible.</p>
+          <p class="support-01">Buckholt documents the close control in two places: as a sibling of <code>.alert-content</code> / <code>.toast-content</code>, and inside it. Only the sibling placement is supported by the CSS &mdash; the wrapper claims <code>width: 100%</code> and pushes the button to the trailing edge, and its 32px box matches the content row exactly, so the label stays vertically centred. Placed inside, the button becomes a third item in a 24px row: the row grows to 32px and the label sits 4px high. These compositions therefore use the sibling placement. Both documented placements are kept verbatim in <code>test/runtime-verification/</code>, where the difference is measured. See <code>discrepancies/known-issues.md</code>.</p>
         </div>
         <div class="sg-panel">
           <span class="label-01 sg-caption">Status</span>
@@ -6481,8 +6482,8 @@
                             <h6>Alert message</h6>
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           </div>
         </div>
@@ -6492,6 +6493,7 @@
         <div class="text-block">
           <h2 class="headline-02">Toast</h2>
           <p class="body-02">Transient feedback that is not tied to a place in the page. Same status family as Alert, and the same rule: the status modifier carries the colour and the left bar. Buckholt hides a toast until it carries <code>.show</code>, so these are shown in their visible state.</p>
+          <p class="support-01">Buckholt documents the close control in two places: as a sibling of <code>.alert-content</code> / <code>.toast-content</code>, and inside it. Only the sibling placement is supported by the CSS &mdash; the wrapper claims <code>width: 100%</code> and pushes the button to the trailing edge, and its 32px box matches the content row exactly, so the label stays vertically centred. Placed inside, the button becomes a third item in a 24px row: the row grows to 32px and the label sits 4px high. These compositions therefore use the sibling placement. Both documented placements are kept verbatim in <code>test/runtime-verification/</code>, where the difference is measured. See <code>discrepancies/known-issues.md</code>.</p>
         </div>
         <div class="sg-panel">
           <span class="label-01 sg-caption">Status</span>
@@ -6651,8 +6653,8 @@
                             <h6>Toast message</h6>
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
           </div>
         </div>
@@ -7095,8 +7097,8 @@
             <h6>Toast message</h6>
           </div>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
 
     <div class="toast toast-error fade show" role="alert">
@@ -7109,8 +7111,8 @@
             <h6>Error message</h6>
           </div>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 

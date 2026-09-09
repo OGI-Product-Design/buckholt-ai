@@ -145,6 +145,14 @@
              to fix this: `align-items: center` on the content row drops the
              icon 36px in the multi-line case, and `align-self: center` on the
              body shifts the icon 4px in the single-line case.
+   Still needed:
+             yes. `test/style-guide/` moved its four composed Alert/Toast examples
+             to the sibling placement on 2026-09-09 and no longer depends on this
+             rule, but `test/runtime-verification/` renders BOTH documented
+             placements verbatim, and the canonical Alert and Toast
+             `examples.html` under `components/` keep the in-content one.
+             Removing this rule would leave those instances with the close
+             control against the message text.
    Upstream: reconcile the two documented placements, or add a rule supporting
              the in-content one.
    ============================================================================ */
