@@ -84,6 +84,8 @@ supplies behaviour).
 [Link visited](#link--visited-state-not-implemented) ·
 [Radius `full`](#radius--full-name-and-value-disagree) ·
 [Modal trigger id](#modal--the-documented-trigger-targets-an-id-no-documented-modal-carries) ·
+[Tabs/Table doc-site classes](#canonical-tabs-and-table-carry-documentation-site-wrapper-classes) ·
+[Unimplemented documented classes](#documented-classes-with-no-implementation-in-either-build) ·
 [Group labels](#form-groups--labelfor-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
 
 **Required behaviour not supplied** — [Selectable Tag](#tag--selection-and-dismiss) ·
@@ -408,6 +410,44 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   assigns page-unique ids (`#sgModalDefault` and siblings), and its modals open and close correctly.
 - **Upstream action:** give the documented modal the `id` its own trigger targets, or document the
   pairing explicitly.
+
+## Canonical Tabs and Table carry documentation-site wrapper classes
+
+- **Status:** `OPEN` — found 9 September 2026 during the canonical parity sweep. Not corrected.
+- **Evidence:** `components/tabs/examples.html:4` and `:47` open with
+  `<div class="tabs element_block align wp-block-acf-tabs">`, and
+  `components/table/examples.html:96` uses `<table class="table no-italics simple_table">`.
+  `wp-block-acf-tabs` is a WordPress Advanced Custom Fields block wrapper; `element_block`,
+  `align` and `simple_table` follow the documentation site's own naming rather than Buckholt's
+  hyphenated component convention.
+- **Neither build styles them.** `.wp-block-acf-tabs`, `.element_block`, `.align` and
+  `.simple_table` appear in **neither** `css/buckholt.css` **nor** the live `compiled.css?v=2.3`.
+  They render nothing.
+- **Reading:** most likely residue from the page the Code & specs example was captured on, rather
+  than part of the component's intended markup. That cannot be confirmed without the original
+  bundle.
+- **Not corrected:** `CANONICAL-MARKUP.md` forbids removing documented markup because it looks
+  wrong, and an incorrect removal is unrecoverable now the source bundles are gone. Consuming
+  applications should omit them; this repository preserves them as transcribed.
+- **Upstream action:** confirm whether these wrappers are part of the documented component or
+  artefacts of the documentation page.
+
+## Documented classes with no implementation in either build
+
+- **Status:** `OPEN` — informational. Recorded 9 September 2026. Nothing corrected.
+- **Evidence:** several classes used in canonical markup carry no rule in `css/buckholt.css` **or**
+  the live `compiled.css?v=2.3`. They divide into three groups:
+
+  | Group | Classes | Assessment |
+  |---|---|---|
+  | **JavaScript hooks** | `.step-add`, `.step-btn`, `.step-minus`, `.counting` (`form.js`), `.tab-scroll-left`, `.tab-scroll-right` (`tabs.js`), `.dropdown-label` (`dropdown.js`) | **Not a gap.** The supplied component scripts bind to them. |
+  | **Structural / semantic hooks** | `.alert-body`, `.alert-note`, `.toast-note`, `.avatar-img`, `.avatar-initials`, `.data-number`, `.no-italics`, `.table-sort-header`, `.table-checkbox-header`, `.expressive-primary`, `.multi-input`, `.textarea-input`, `.submenu-item-selectable` | Carry meaning in the DOM but no styling. Harmless; an application may target them. |
+  | **Documentation-site residue** | `.wp-block-acf-tabs`, `.element_block`, `.align`, `.simple_table` | See the entry above. |
+
+- **Why this is not a defect list:** per `CLAUDE.md`'s evidence discipline, a class is not missing
+  merely because no rule exists. These are identical in both builds, so none is a local build
+  regression. The list exists so a future agent does not "fix" a rendering by inventing rules for
+  them, and does not delete them from canonical markup for being unstyled.
 
 ## Form groups — `label[for]` with no matching control
 

@@ -66,3 +66,11 @@ Before declaring a newly ingested component complete:
 4. only then call the example canonical.
 
 If this comparison has not been performed, say that the component still requires source-parity verification rather than presenting it as fully verified.
+
+> **The Code & specs bundles are not in this repository.** They were supplied as chat attachments
+> on 7 September 2026 and never committed, so step 1 above **cannot currently be performed**. The
+> existing `HTML VERIFIED` marks in `verification/component-source-status.md` record a comparison
+> that was made at the time and cannot now be repeated or independently checked. Do not treat
+> `examples.html` as self-verifying, and do not "re-verify" it against `css/buckholt.css` — the
+> runtime is not the markup source. See that file's warning for what a 9 September 2026 sweep
+> could and could not establish.
