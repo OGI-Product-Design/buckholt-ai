@@ -93,7 +93,7 @@ Layout is the documented Page-layout pattern end to end:
 
 | Component | Where |
 | --- | --- |
-| Page layout (pattern) | Both views; Panel 32px / Pane 64px / Frame 64px, verified in the runtime |
+| Page layout (pattern) | Both views; Panel 32px gap / Pane 64px gap / Frame 64px gap, verified in the runtime |
 | Input rows (pattern) | The refine controls, `.row.input-row` with `col-12 col-sm-6` |
 | Text input | Application-bar search (`.input-icon` + `.input-btn`), "Narrow by" with helper text |
 | Select | "Holdings" filter |
@@ -238,7 +238,9 @@ Measured in Chromium against the real `buckholt.css`, not asserted:
 - **Every icon** appears in `foundations/iconography/catalogue.md`.
 - **Every control has an accessible name**; every `label[for]`, `aria-controls`, `aria-labelledby`
   and `aria-describedby` resolves to a real element; no duplicate IDs.
-- **Spacing is the documented scale**: Panel 32px, Pane 64px, Frame 64px padding and gap; every
+- **Spacing is the documented scale**: Panel 32px gap, Pane 64px gap, Frame 64px gap with 64px
+  vertical / 48px horizontal padding (the horizontal value is 4rem minus half the container
+  gutter); every
   application value a `--spacer-*` or `--padding-*` token, or a `calc()` of them.
 
 ## Files

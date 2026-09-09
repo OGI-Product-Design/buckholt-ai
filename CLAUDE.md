@@ -99,8 +99,22 @@ Responsibilities and spacing:
 
 - `.page-panel` groups directly related components/patterns; no padding; **2rem / 32px gap** between items.
 - `.page-pane` groups related Panels; no padding; **4rem / 64px gap** between Panels.
-- `.page-frame` groups one or more Panes; **4rem / 64px padding** and **4rem / 64px gap** between Panes; may include one optional frame header.
+- `.page-frame` groups one or more Panes; **64px vertical / 48px horizontal padding** and **4rem / 64px gap** between Panes; may include one optional frame header.
 - `.page-body` is the top-level structured content wrapper inside Main.
+
+The Frame's padding is **not** 64px on all sides. Measured identically in `css/buckholt.css` and the
+live `compiled.css?v=2.3`, at 1440px, 1000px and 768px: `padding-top`/`padding-bottom` **64px**,
+`padding-left`/`padding-right` **48px**. The horizontal value is `--page-body-spacing-x` (4rem) minus
+half the Bootstrap container gutter (`2rem * 0.5` = 1rem), which a `.container` child re-adds as its
+own padding — so content inside the expected container still sits 64px from the frame edge. Both
+builds define `.page-frame > .container`, confirming the container is that expected child. Reproduce
+`padding: 4rem` literally, or omit the container, and the result is 16px out on each side.
+
+> `patterns/page-layout/rules.md` states "Padding: **4rem / 64px**". That file transcribes documented
+> Buckholt intent and is deliberately not rewritten from runtime measurement; the disagreement is
+> recorded in `discrepancies/known-issues.md`. Separately, below 768px `css/buckholt.css` narrows the
+> Frame's horizontal padding to 16px — a local-build-only override the live build does not have. See
+> `discrepancies/build-provenance.md`.
 
 Bootstrap and Buckholt have separate responsibilities:
 

@@ -78,7 +78,8 @@ supplies behaviour).
 
 **Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
-**Source / runtime discrepancies** — [Link visited](#link--visited-state-not-implemented) ·
+**Source / runtime discrepancies** — [Frame padding](#page-layout--frame-padding-is-not-64px-on-all-sides) ·
+[Link visited](#link--visited-state-not-implemented) ·
 [Radius `full`](#radius--full-name-and-value-disagree) · [Empty `--card-text`](#card--card-text-is-defined-as-an-empty-value) ·
 [Group labels](#form-groups--label-for-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
 
@@ -265,6 +266,38 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
 - **Application guidance:** a product doing real navigation can opt in deliberately, scoped to inline
   links and `.link-standalone`.
 - **Upstream action:** implement `:visited` in the runtime, scoped to the Link component.
+
+## Page layout — Frame padding is not 64px on all sides
+
+- **Status:** `OPEN` — documentation and runtime disagree; nothing corrected, no CSS added.
+- **Documented:** `patterns/page-layout/rules.md` line 72 states the Frame's padding as
+  **4rem / 64px**, without distinguishing axes.
+- **Measured:** `padding-top` / `padding-bottom` **64px**, `padding-left` / `padding-right`
+  **48px** — identically in `css/buckholt.css` and in the live `compiled.css?v=2.3`, at 1440px,
+  1000px and 768px. Both builds derive the horizontal value the same way:
+
+  | | declaration |
+  |---|---|
+  | live | `padding: var(--page-body-spacing-y) calc(var(--page-body-spacing-x) - 1rem)` |
+  | ours | `--page-frame-padding-x: calc(var(--page-body-spacing-x) - calc(2rem * 0.5))` |
+
+  `--page-body-spacing-x` is `4rem` in both, and the subtracted `1rem` is exactly half the
+  Bootstrap container gutter (`--bs-gutter-x: 2rem`), which `.container` re-adds as its own
+  `padding-left`/`padding-right`. Both builds also define `.page-frame > .container`.
+- **Reading:** the 64px figure is probably correct as *intent* — content inside the expected
+  `.container` child does sit 64px from the frame edge (measured 48 + 16). The documentation is
+  imprecise rather than wrong: it describes the effective content inset, not the Frame's own
+  padding. An implementation that reproduces `padding: 4rem` literally, or that omits the
+  `.container`, will be 16px out on each side.
+- **Not changed:** `patterns/page-layout/rules.md` transcribes documented Buckholt intent and is
+  not rewritten from runtime measurement. `CLAUDE.md`, `README.md` and `mobius/README.md`
+  summarise runtime behaviour and have been corrected to state both axes.
+- **Build difference:** below 768px `css/buckholt.css` sets `--page-body-spacing-x: 2rem`,
+  narrowing the Frame's horizontal padding to **16px**. The live build has no such override and
+  stays at 48px at every width. Recorded in
+  [`build-provenance.md`](build-provenance.md); the breakpoint scale itself also differs.
+- **Upstream action:** confirm whether 4rem describes the Frame's padding or the content inset,
+  and whether the sub-768px narrowing is intended.
 
 ## Radius — `full` name and value disagree
 

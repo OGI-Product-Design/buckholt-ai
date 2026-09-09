@@ -121,9 +121,18 @@ configuration**. Those are two separate axes and they point in opposite directio
 
 Page-layout spacing is **identical**: `.page-frame` 64px vertical / 48px horizontal padding
 and 64px gap, `.page-pane` 64px gap, `.page-panel` 32px gap — measured at 1440px and 1000px
-in both. (Note: CLAUDE.md describes the Frame as having "4rem / 64px padding". That is
-correct vertically; the horizontal padding is 48px in **both** builds. A documentation
-imprecision, not a build difference.)
+in both.
+
+The Frame's horizontal padding is **48px**, not 64px, in **both** builds — a documentation
+imprecision rather than a build difference. `CLAUDE.md`, `README.md` and `mobius/README.md` were
+corrected on 9 September 2026; `patterns/page-layout/rules.md` still states "4rem / 64px" and was
+deliberately left alone, because it transcribes documented Buckholt intent. See
+[`known-issues.md` → Page layout — Frame padding](known-issues.md).
+
+One genuine build difference does sit here: below 768px `css/buckholt.css` sets
+`--page-body-spacing-x: 2rem`, narrowing the Frame's horizontal padding to **16px**. The live
+build has no such override and stays at 48px at every width. (Note that 768px is a breakpoint on
+the local scale; the live scale would place the equivalent boundary at 896px.)
 
 Differences that do change rendering:
 

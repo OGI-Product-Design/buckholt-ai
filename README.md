@@ -126,7 +126,7 @@ Page body
          └─ Components & patterns
 ```
 
-Main is the only required base-layout region. Panels group directly related content with a documented 32px item gap; Panes group Panels with a 64px gap; Frames wrap Panes with 64px padding and a 64px gap. Bootstrap `.container`, `.row` and `.col-*` provide horizontal/responsive scaffolding while Buckholt Frame/Pane/Panel control hierarchy and vertical rhythm.
+Main is the only required base-layout region. Panels group directly related content with a documented 32px item gap; Panes group Panels with a 64px gap; Frames wrap Panes with 64px vertical / 48px horizontal padding and a 64px gap (the horizontal value is 4rem minus half the container gutter, so a `.container` child's content still sits 64px from the frame edge). Bootstrap `.container`, `.row` and `.col-*` provide horizontal/responsive scaffolding while Buckholt Frame/Pane/Panel control hierarchy and vertical rhythm.
 
 ### Forms
 
