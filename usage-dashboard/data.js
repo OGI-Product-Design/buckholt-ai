@@ -19,8 +19,8 @@
    ============================================================================ */
 
 const PERIODS = {
-  p1: { id: 'p1', short: 'P1', label: 'Period 1', range: '11 Jul – 9 Aug 2026' },
-  p2: { id: 'p2', short: 'P2', label: 'Period 2', range: '10 Aug – 8 Sep 2026' }
+  p1: { id: 'p1', short: 'P1', label: 'Previous 30 days (11 Jul–9 Aug)', range: '11 Jul – 9 Aug 2026' },
+  p2: { id: 'p2', short: 'P2', label: 'Last 30 days (10 Aug–8 Sep)', range: '10 Aug – 8 Sep 2026' }
 };
 
 /* Segment colours. Fixed per segment, everywhere on the page, for every chart.
@@ -65,19 +65,18 @@ const LCP_MS = {
   pizza:      { p1: null, p2: 2731 }
 };
 
-/* Metrics that were asked for and deliberately not shown. These are rendered on
-   the page as first-class content: an unmeasured metric is a finding, not a gap
-   to be quietly dropped from a table. */
+/* Metrics that were asked for and deliberately not shown. They are kept in the
+   collapsed Data notes section: explicit absences, never zeroes. */
 const NOT_SHOWN = [
   {
     metric: 'Crash rate',
     status: 'No result either period',
-    detail: 'No result came back in Period 1 or Period 2.'
+    detail: 'No result came back in Previous 30 days or Last 30 days.'
   },
   {
     metric: 'Network error rate',
     status: 'Excluded — not comparable',
-    detail: 'Period 2 returned 0.05%, but that figure reflects one specific known issue across 5 sessions, not a general error rate. Period 1 has no figure at all. Showing the two together would imply a trend that does not exist.'
+    detail: 'Last 30 days returned 0.05%, but that figure reflects one specific known issue across 5 sessions, not a general error rate. Previous 30 days has no figure at all. Showing the two together would imply a trend that does not exist.'
   },
   {
     metric: 'Average API response',
@@ -92,7 +91,7 @@ const NOT_SHOWN = [
 ];
 
 /* ---------------------------------------------------------------------------
-   Broker intents — Islands, sessions containing at least one occurrence
+   Key pages and actions — Islands, sessions containing at least one occurrence
    --------------------------------------------------------------------------- */
 
 /* `kind` records what the number actually counts. The reports are emphatic that
@@ -102,7 +101,7 @@ const INTENTS = [
   { id: 'record',      label: 'Find/open a record',        p1: 6027, p2: 6201, kind: 'page-view', counts: 'Record Summary Viewed custom event' },
   { id: 'homepage',    label: 'Client homepage viewed',    p1: 2155, p2: 2282, kind: 'page-view', counts: 'Client Homepage Viewed custom event — see the instrumentation flag' },
   { id: 'attachments', label: 'Attachments',               p1: 3279, p2: 3398, kind: 'click',     counts: 'Click only — not confirmed a document was opened or downloaded' },
-  { id: 'diary',       label: 'Diary',                     p1: null, p2: 736,  kind: 'click',     counts: 'Click only. Not built in Period 1, so no comparison exists.' },
+  { id: 'diary',       label: 'Diary',                     p1: null, p2: 736,  kind: 'click',     counts: 'Click only. Not built in Previous 30 days, so no comparison exists.' },
   { id: 'retrieve',    label: 'Retrieve Quote',            p1: 657,  p2: 673,  kind: 'click',     counts: 'Click only — not confirmed a quote was actually retrieved' },
   { id: 'newquote',    label: 'Add New Quote',             p1: 613,  p2: 646,  kind: 'click',     counts: 'Click only — not confirmed a quote was actually started' },
   { id: 'mta',         label: 'MTA / Retrieve MTA',        p1: 441,  p2: 495,  kind: 'click',     counts: 'Click only — not confirmed an MTA was saved' },
@@ -153,7 +152,7 @@ const FLAGS = [
     confidence: 'repeats',
     title: 'Documents dominate the working session',
     body: 'Attachments is touched in 40% of Islands sessions, roughly 5× Retrieve Quote volume — consistent with Period 1.',
-    evidence: '3,398 of 8,499 Islands sessions in Period 2; 3,279 of 8,453 in Period 1.',
+    evidence: '3,398 of 8,499 Islands sessions in Period 2; 3,279 of 8,453 in Previous 30 days.',
     action: 'Worth checking whether the attachment list is searchable, or whether brokers are scrolling to find files.'
   },
   {
@@ -176,9 +175,9 @@ const FLAGS = [
     id: 'homepage-loop',
     confidence: 'open',
     title: 'Client Homepage Viewed may be firing in a loop',
-    body: 'The raw event fired approximately 155 times per session in Period 1, against 23 times per session on Record Summary Viewed. That strongly suggests a re-render or route-change loop rather than 155 genuine visits.',
+    body: 'The raw event fired approximately 155 times per session in Previous 30 days, against 23 times per session on Record Summary Viewed. That strongly suggests a re-render or route-change loop rather than 155 genuine visits.',
     evidence: 'The raw fire count was not re-checked in Period 2, so this remains unconfirmed either way. Session counts are used throughout this dashboard and are safe regardless.',
-    action: 'Re-check the fire rate. The raw count (334,785 in Period 1) should not be used in any reporting.'
+    action: 'Re-check the fire rate. The raw count (334,785 in Previous 30 days) should not be used in any reporting.'
   }
 ];
 
@@ -190,10 +189,10 @@ const DATA_NOTES = [
   'Fresh queries only. No dashboard widgets. Sessions, not raw event fires.',
   'Jaunt is excluded throughout by construction — it is API-driven and not comparable to UI usage.',
   'Segment filter logic: Islands = User ID contains IS91 or IS01; Pizza = PZ01 or PZ91; Greenlight = BR01 or BR91.',
-  'Six to eight of Period 2’s intent metrics ran on a ~1-day-offset rolling window (≈9 Aug – 9 Sep) rather than the exact 10 Aug – 8 Sep dates. Unlikely to matter at 30-day scale; noted for completeness.',
+  'Six to eight of Last 30 days’ page/action metrics ran on a ~1-day-offset rolling window (≈9 Aug – 9 Sep) rather than the exact 10 Aug – 8 Sep dates. Unlikely to matter at 30-day scale; noted for completeness.',
   'Pizza’s session-duration figure used a different filter (duration > 0s) from Islands and Greenlight (all sessions). Affects that one row only.',
   'Islands segment ID confirmed as 1370959 throughout both periods. A second ID (1333928) appears unused and is worth retiring on the LogRocket side to avoid future ambiguity.',
-  'Active users, and duration and LCP for Pizza and Greenlight, were not built in Period 1 — LogRocket cannot split those chart types by segment without a duplicate metric per brand.'
+  'Active users, and duration and LCP for Pizza and Greenlight, were not built in Previous 30 days — LogRocket cannot split those chart types by segment without a duplicate metric per brand.'
 ];
 
 /* ---------------------------------------------------------------------------
@@ -212,10 +211,32 @@ function share(part, whole) {
   return (part / whole) * 100;
 }
 
+/** Session-weighted mean across segments with a measured value. Returns null
+ * rather than silently substituting one segment when any input is absent. */
+function weightedAverageBySessions(period, values) {
+  var segmentIds = ['islands', 'greenlight', 'pizza'];
+  var complete = segmentIds.every(function (segmentId) {
+    return SESSIONS[segmentId][period] !== null && values[segmentId][period] !== null;
+  });
+  if (!complete) return null;
+
+  var weightedTotal = segmentIds.reduce(function (total, segmentId) {
+    return total + (SESSIONS[segmentId][period] * values[segmentId][period]);
+  }, 0);
+  var sessionsTotal = segmentIds.reduce(function (total, segmentId) {
+    return total + SESSIONS[segmentId][period];
+  }, 0);
+  return weightedTotal / sessionsTotal;
+}
+
 const DERIVED = {
   /* Islands session growth. Every intent is read against this line. */
   islandsSessionChange: change(SESSIONS.islands.p1, SESSIONS.islands.p2),      // +0.54%
   combinedSessionChange: change(SESSIONS.combined.p1, SESSIONS.combined.p2),   // −1.38%
+  platformLcp: {
+    p1: weightedAverageBySessions('p1', LCP_MS),
+    p2: weightedAverageBySessions('p2', LCP_MS)
+  },
 
   segmentShare: {
     p1: {
