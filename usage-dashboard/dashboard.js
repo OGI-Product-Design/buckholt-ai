@@ -548,7 +548,7 @@
           [PERIODS.p1.label, d.p1 === null ? 'not built' : fmtInt(d.p1) + ' sessions'],
           ['Change', d.change === null ? 'first measured' : fmtPct(d.change)]
         ],
-        note: d.counts
+        note: d.kind === 'page-view' ? 'Page view event.' : 'Session containing the labelled click.'
       }, mark);
 
       svg.appendChild(g);
@@ -641,7 +641,7 @@
           ['Against sessions', fmtPct(d.change - baseline) + ' points'],
           [PERIODS.p1.short + ' → ' + PERIODS.p2.short, fmtInt(d.p1) + ' → ' + fmtInt(d.p2)]
         ],
-        note: d.counts
+        note: d.kind === 'page-view' ? 'Page view event.' : 'Session containing the labelled click.'
       }, dot);
 
       svg.appendChild(g);
@@ -770,7 +770,7 @@
           title: row.label + ' · ' + period.label,
           colour: colours[pi],
           rows: [['Sessions', fmtInt(value)], ['Dates', period.range]],
-          note: 'Click only. Not confirmed that a policy was cancelled or a renewal processed.'
+          note: 'Session containing the labelled click.'
         }, mark);
 
         svg.appendChild(g);
@@ -854,7 +854,7 @@
           [PERIODS.p2.label, fmtInt(row.p2) + ' of ' + fmtInt(total) + ' · ' + fmtShare(frac * 100)],
           [PERIODS.p1.label, fmtInt(row.p1) + ' of ' + fmtInt(SESSIONS.islands.p1) + ' · ' + fmtShare((row.p1 / SESSIONS.islands.p1) * 100)]
         ],
-        note: 'Click only. Not confirmed that a document was opened, or that a quote was retrieved.'
+        note: 'Share of Islands sessions containing the labelled click.'
       }, mark);
 
       svg.appendChild(g);
@@ -935,6 +935,12 @@
 
   function start() {
     wireControls();
+    var platformLcp = document.getElementById('platformLcp');
+    if (platformLcp) {
+      platformLcp.textContent = DERIVED.platformLcp.p2 === null
+        ? 'not available'
+        : fmtInt(Math.round(DERIVED.platformLcp.p2)) + 'ms';
+    }
     renderAll();
     /* Webfont metrics change label widths, so lay the charts out again once the
        real face has loaded rather than measuring against the fallback. */
