@@ -1,0 +1,458 @@
+/* ============================================================================
+   Mobius PAS usage dashboard — page layout and chart primitives
+   ============================================================================
+
+   Scope. This file does two things and nothing else:
+
+     1. positions Buckholt components on the page;
+     2. defines the chart layer, which Buckholt does not document.
+
+   It never restyles a Buckholt component. Every selector is prefixed `ud-`, and
+   where one reaches a Buckholt class it does so through a `ud-` ancestor, only
+   to do something Buckholt does not define for that component, and each such
+   rule is called out in a comment.
+
+   Values. Every colour, spacing, radius, border width and type size is a
+   Buckholt token, or a calc() composed from Buckholt tokens. The chart
+   geometry constants (mark thickness, data-end radius, marker diameter, the
+   2px surface gap between fills) are the exception: those come from the chart
+   layer's own specification, not from Buckholt, because Buckholt does not
+   document a data-visualisation layer. They are declared once, at the top, as
+   named custom properties rather than scattered as literals.
+
+   Colour. The chart palette is drawn entirely from Buckholt's expressive
+   families and feedback tokens, then validated against the white card surface
+   for the lightness band, chroma floor, colour-vision-deficiency separation,
+   normal-vision separation and contrast. Nothing here is a hand-picked hex.
+   The validation results are recorded in README.md.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Chart layer tokens
+   --------------------------------------------------------------------------- */
+
+.ud-body {
+  /* -- Series identity. One colour per segment, fixed everywhere on the page.
+        Colour follows the brand, never its rank or size, so a sort never
+        repaints a segment. Buckholt expressive-family deep steps. */
+  --ud-seg-islands: var(--expressive-deep);                     /* #1748d0 */
+  --ud-seg-greenlight: var(--expressive-tertiary-deep);         /* #DB1256 */
+  --ud-seg-pizza: var(--expressive-quaternary-deep);            /* #0E80A4 */
+
+  /* -- The earlier period, inside a single-segment panel. Each is the lighter
+        step of its own segment's hue: an ordinal ramp within one identity, not
+        a second identity. Validated monotone, single-hue, and clear of the
+        surface at 2:1 or better. */
+  --ud-seg-islands-light: var(--primary-30);                    /* #87a0e2 */
+  --ud-seg-greenlight-light: var(--accent-02-30);               /* #ED89AB */
+  --ud-seg-pizza-light: var(--accent-03-30);                    /* #87C0D1 */
+
+  /* -- The single-series colour, for charts that measure one thing. */
+  --ud-series-single: var(--expressive-deep);
+  --ud-series-single-soft: var(--primary-30);
+
+  /* -- Chart chrome. Recessive by construction. */
+  --ud-chart-surface: var(--ui-background-01);
+  --ud-ink: var(--text-primary);
+  --ud-ink-secondary: var(--text-secondary);
+  --ud-ink-muted: var(--text-tertiary);
+  --ud-gridline: var(--ui-border-03);
+  --ud-baseline: var(--ui-border-02);
+
+  /* -- Chart geometry. The chart layer's own specification. */
+  --ud-mark-radius: 4px;          /* rounded data-end, baseline stays square */
+  --ud-line-width: 2px;           /* rule and connector thickness */
+  --ud-marker-size: 10px;         /* dot diameter, at or above the 8px floor */
+  --ud-fill-gap: 2px;             /* surface gap between adjacent fills */
+
+  background-color: var(--ui-background-03);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Application bar
+   --------------------------------------------------------------------------- */
+
+.ud-appbar {
+  background-color: var(--ui-background-01);
+  border-bottom: 1px solid var(--ui-border-02);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.ud-appbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  flex-wrap: wrap;
+  padding: var(--padding-04) var(--padding-08);
+}
+
+.ud-appbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+}
+
+.ud-appbar-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.ud-appbar-meta {
+  color: var(--text-tertiary);
+}
+
+/* Pushes the controls to the trailing edge of the bar, and lets them wrap onto
+   their own line rather than pushing the bar wider than the viewport. */
+.ud-appbar-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacer-03) var(--spacer-05);
+}
+
+/* Below the narrowest documented column width the bar's 32px side padding costs
+   more than it earns, so it steps down to 16px. Both values are Buckholt
+   padding tokens. */
+@media (max-width: 575.98px) {
+  .ud-appbar-inner {
+    padding: var(--padding-04) var(--padding-05);
+  }
+}
+
+/* The Switch sits on a bar rather than in a form column, so its label needs to
+   stay on one line. This sets no Switch colour, size, spacing or state — it
+   only prevents a two-word label wrapping inside a horizontal bar. */
+.ud-appbar-controls .form-check-label {
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Page rhythm
+   --------------------------------------------------------------------------- */
+
+/* Frames alternate surface so the four major sections of the page read as
+   separate regions. Buckholt gives the Frame its padding and its 64px gap; this
+   only supplies the background, which Buckholt leaves to the product. */
+.ud-frame-alt {
+  background-color: var(--ui-background-01);
+  border-top: 1px solid var(--ui-border-02);
+  border-bottom: 1px solid var(--ui-border-02);
+}
+
+/* Bootstrap's row gutters are horizontal only by default, so a row that wraps
+   at a narrow width has no vertical space between its wrapped columns. This
+   supplies the vertical gutter from Buckholt's own Panel gap, so a wrapped row
+   keeps the documented 32px item rhythm rather than a Bootstrap spacing
+   utility's value. It sets a Bootstrap grid variable; it styles nothing. */
+.ud-row-gutter {
+  --bs-gutter-y: var(--page-panel-gap);
+}
+
+/* Section headings sit above a pane. `.text-block` owns the internal spacing;
+   this only constrains the measure so a paragraph does not run the full width
+   of a 1440px frame. */
+.ud-measure {
+  max-width: 56rem;
+}
+
+.ud-eyebrow-rule {
+  color: var(--text-tertiary);
+}
+
+/* ---------------------------------------------------------------------------
+   4. Stat tile
+   --------------------------------------------------------------------------- */
+
+.ud-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+
+.ud-stat-figure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacer-03);
+  flex-wrap: wrap;
+}
+
+/* The change indicator and the sentence that explains it are separate items on
+   one row, so the indicator keeps its own colour and icon without dragging the
+   sentence's baseline around. */
+.ud-stat-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacer-02) var(--spacer-03);
+  margin: 0;
+  color: var(--text-tertiary);
+}
+
+/* A change indicator. Direction is carried by an icon and by the sign in the
+   text, never by colour alone. */
+.ud-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacer-02);
+  white-space: nowrap;
+}
+
+.ud-delta-up { color: var(--text-success); }
+.ud-delta-down { color: var(--text-error); }
+.ud-delta-flat,
+.ud-delta-none { color: var(--text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   5. Chart frame
+   --------------------------------------------------------------------------- */
+
+.ud-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.ud-chart-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.ud-chart-caption {
+  color: var(--text-tertiary);
+}
+
+.ud-chart-plot {
+  position: relative;
+  width: 100%;
+}
+
+/* The chart layer sizes each SVG in real pixels and re-renders on resize, so
+   label type keeps its true size at every width. The width attribute is
+   therefore authoritative here; CSS only stops it overflowing its column. */
+.ud-chart-plot svg {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Legend. Present whenever a chart carries two or more series. */
+.ud-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-03) var(--spacer-05);
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ud-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  color: var(--text-secondary);
+}
+
+.ud-legend-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 0.125rem;
+  flex: 0 0 auto;
+}
+
+/* Chart text wears text tokens. A series colour never carries a label. */
+.ud-axis-label,
+.ud-value-label,
+.ud-tick-label {
+  font-family: inherit;
+}
+
+.ud-axis-label { fill: var(--text-secondary); font-size: 0.75rem; }
+.ud-tick-label { fill: var(--text-tertiary); font-size: 0.75rem; }
+.ud-value-label { fill: var(--text-primary); font-size: 0.75rem; font-weight: 500; }
+.ud-value-label-inverse { fill: var(--text-light); font-size: 0.75rem; font-weight: 500; }
+.ud-panel-label { fill: var(--text-primary); font-size: 0.875rem; font-weight: 500; }
+
+.ud-gridline { stroke: var(--ud-gridline); stroke-width: 1; }
+.ud-baseline-rule { stroke: var(--ud-baseline); stroke-width: 1; }
+.ud-reference-rule {
+  stroke: var(--text-tertiary);
+  stroke-width: var(--ud-line-width);
+  stroke-dasharray: 4 4;
+}
+.ud-connector { stroke-width: var(--ud-line-width); }
+
+/* Hover target. Larger than the mark it serves. */
+.ud-hit { fill: transparent; cursor: default; }
+.ud-hit:hover ~ .ud-mark,
+.ud-mark.is-hovered { opacity: 0.82; }
+
+/* ---------------------------------------------------------------------------
+   6. Tooltip
+   --------------------------------------------------------------------------- */
+
+.ud-tooltip {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - var(--spacer-03)));
+  transition: opacity 120ms ease-out;
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.16);
+  padding: var(--padding-04) var(--padding-05);
+  max-width: 20rem;
+}
+
+.ud-tooltip[data-visible="true"] { opacity: 1; }
+
+.ud-tooltip-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  color: var(--text-primary);
+  margin-bottom: var(--spacer-02);
+}
+
+.ud-tooltip-swatch {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 0.125rem;
+  flex: 0 0 auto;
+}
+
+.ud-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacer-05);
+  color: var(--text-secondary);
+}
+
+.ud-tooltip-row dt { font-weight: 400; margin: 0; }
+.ud-tooltip-row dd { margin: 0; color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.ud-tooltip-note {
+  margin: var(--spacer-03) 0 0;
+  color: var(--text-tertiary);
+}
+
+/* ---------------------------------------------------------------------------
+   7. Table view
+   --------------------------------------------------------------------------- */
+
+/* Every chart has a table behind it. This is the accessible equivalent, not a
+   decorative extra, so it is real markup that is hidden, never absent. */
+.ud-tableview[hidden] { display: none; }
+
+/* Figures in a column must align vertically. */
+.ud-tableview .table td.ud-num,
+.ud-tableview .table th.ud-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   8. Texture — the accessibility channel
+   --------------------------------------------------------------------------- */
+
+/* Off by default. Turned on by the viewer, by print, or by forced colours.
+   Never decorative: it is the second channel that lets a stacked fill be read
+   without relying on hue at all. Applied as a tone-on-tone overlay so the
+   underlying series colour is unchanged. */
+.ud-body[data-texture="on"] .ud-mark-textured {
+  mask-image: none;
+}
+
+.ud-texture-overlay { display: none; }
+.ud-body[data-texture="on"] .ud-texture-overlay { display: block; }
+
+@media print {
+  .ud-texture-overlay { display: block; }
+  .ud-appbar { position: static; }
+  .ud-tableview[hidden] { display: block; }
+  .ud-toggle-tableview { display: none; }
+}
+
+@media (forced-colors: active) {
+  .ud-texture-overlay { display: block; }
+  .ud-legend-swatch,
+  .ud-tooltip-swatch { border: 1px solid CanvasText; }
+}
+
+/* ---------------------------------------------------------------------------
+   9. Small-multiple panels
+   --------------------------------------------------------------------------- */
+
+/* Three panels across wherever they fit, so the segments read as one comparison
+   rather than two rows. Below that they stack, one per row. */
+.ud-multiples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--spacer-05);
+}
+
+.ud-multiple {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+
+.ud-multiple-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacer-03);
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------------------------
+   10. Flags
+   --------------------------------------------------------------------------- */
+
+.ud-flag-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.ud-flag-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-02);
+}
+
+.ud-flag-evidence dt {
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.ud-flag-evidence dd {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   11. Not-shown register
+   --------------------------------------------------------------------------- */
+
+.ud-notshown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+/* ---------------------------------------------------------------------------
+   12. Reduced motion
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ud-tooltip { transition: none; }
+}

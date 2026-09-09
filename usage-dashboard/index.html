@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mobius PAS usage — Period 2, August–September 2026</title>
+  <meta name="description" content="Mobius PAS usage for 10 August – 8 September 2026, compared against 11 July – 9 August 2026. Built with the Buckholt design system.">
+
+  <!-- Documented Buckholt runtime contract, in the documented order. -->
+  <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+  <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../css/buckholt.css">
+  <link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+
+  <!-- This dashboard only. Page layout and the chart layer. Never a component. -->
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="ud-body" data-texture="off">
+
+<!-- ==========================================================================
+     Application bar
+     ========================================================================== -->
+<header class="ud-appbar">
+  <div class="ud-appbar-inner">
+    <div class="ud-appbar-brand">
+      <div class="icon-block icon-block-sm expressive-dark">
+        <i class="fa-regular fa-chart-mixed" aria-hidden="true"></i>
+      </div>
+      <div class="ud-appbar-title">
+        <span class="label-01">Mobius PAS</span>
+        <span class="support-01 ud-appbar-meta">Usage dashboard</span>
+      </div>
+    </div>
+
+    <div class="ud-appbar-controls">
+      <span class="tag tag-sm">
+        <span class="tag-label">10 Aug – 8 Sep</span>
+      </span>
+
+      <div class="form-check form-switch form-switch-sm">
+        <input class="form-check-input" type="checkbox" role="switch" id="udTexture">
+        <div class="input-label">
+          <label class="form-check-label" for="udTexture">Pattern fills</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-body">
+
+    <!-- ======================================================================
+         Frame 1 — the report, and what it will and will not tell you
+         ====================================================================== -->
+    <div class="page-frame">
+      <div class="container">
+
+        <div class="page-pane">
+          <div class="page-panel">
+            <div class="text-block ud-measure">
+              <span class="eyebrow">Product analytics · LogRocket</span>
+              <h1 class="display-01">Mobius PAS usage</h1>
+              <p>Period 2 covers 10 August to 8 September 2026, read against Period 1, 11 July
+                 to 9 August 2026. Both periods were built the same way: fresh queries only, no
+                 dashboard widgets, and sessions rather than raw event fires. Jaunt is excluded
+                 throughout — it is API-driven and not comparable to interface usage.</p>
+            </div>
+          </div>
+
+          <div class="page-panel">
+            <div class="alert alert-warning" role="alert">
+              <div class="alert-content">
+                <span class="alert-icon">
+                  <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
+                <div class="alert-body">
+                  <div class="alert-message">
+                    <h6>Every workflow figure on this page measures intent to act, not the outcome of acting</h6>
+                  </div>
+                  <div class="alert-note">
+                    A broker clicking “Cancel Policy” is counted. A policy actually being cancelled
+                    is not, because no completion event exists for any of these workflows — not for
+                    quote-to-policy conversion, payment, renewal, MTA or cancellation. Two rows are
+                    page views; everything else is a click on a button or a link. Read every number
+                    below as a count of sessions that reached toward a workflow.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------------------
+             Platform health
+             ------------------------------------------------------------------ -->
+        <div class="page-pane">
+
+          <div class="page-panel">
+            <div class="text-block">
+              <div class="heading">
+                <div class="heading-content">
+                  <h2 class="headline-03">Platform health</h2>
+                </div>
+                <span class="tag tag-sm">
+                  <span class="tag-label">3 segments</span>
+                </span>
+              </div>
+              <p class="ud-measure">Combined session volume fell 1.4%, but Islands — nine sessions in
+                ten — was flat. The whole of the decline sits in Pizza and Greenlight.</p>
+            </div>
+          </div>
+
+          <!-- Stat tiles -->
+          <div class="page-panel">
+            <div class="row ud-row-gutter">
+              <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="ud-stat">
+                      <div class="key-value key-value-stacked key-value-lg">
+                        <span class="key">Combined sessions</span>
+                        <span class="value">9,318</span>
+                      </div>
+                      <p class="ud-stat-note support-01">
+                        <span class="ud-delta ud-delta-down">
+                          <i class="fa-solid fa-arrow-trend-down" aria-hidden="true"></i> −1.4%
+                        </span>
+                        <span>from 9,448 in Period 1</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="ud-stat">
+                      <div class="key-value key-value-stacked key-value-lg">
+                        <span class="key">Islands sessions</span>
+                        <span class="value">8,499</span>
+                      </div>
+                      <p class="ud-stat-note support-01">
+                        <span class="ud-delta ud-delta-up">
+                          <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> +0.5%
+                        </span>
+                        <span>from 8,453 — the line every intent is read against</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="ud-stat">
+                      <div class="key-value key-value-stacked key-value-lg">
+                        <span class="key">Active users</span>
+                        <span class="value">274</span>
+                      </div>
+                      <p class="ud-stat-note support-01">
+                        <span class="ud-delta ud-delta-none">
+                          <i class="fa-solid fa-circle-info" aria-hidden="true"></i> First measured
+                        </span>
+                        <span>no Period 1 figure exists, so there is no trend</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="ud-stat">
+                      <div class="key-value key-value-stacked key-value-lg">
+                        <span class="key">Islands page load</span>
+                        <span class="value">1,340ms</span>
+                      </div>
+                      <p class="ud-stat-note support-01">
+                        <span class="ud-delta ud-delta-down">
+                          <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> +3.0%
+                        </span>
+                        <span>from 1,301ms — slower is worse</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Share and per-segment sessions -->
+          <div class="page-panel">
+            <div class="row ud-row-gutter">
+
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <figure class="ud-chart-figure">
+                      <figcaption class="text-block">
+                        <h3 class="title-02">Share of combined sessions</h3>
+                        <p class="body-01 ud-chart-caption">Islands went from 89.5% to 91.2% of
+                          combined volume. The mix shifted toward Islands because the other two
+                          brands shrank, not because Islands grew.</p>
+                      </figcaption>
+
+                      <ul class="ud-legend support-01">
+                        <li class="ud-legend-item">
+                          <span class="ud-legend-swatch" style="background-color: var(--ud-seg-islands)"></span>Islands
+                        </li>
+                        <li class="ud-legend-item">
+                          <span class="ud-legend-swatch" style="background-color: var(--ud-seg-greenlight)"></span>Greenlight
+                        </li>
+                        <li class="ud-legend-item">
+                          <span class="ud-legend-swatch" style="background-color: var(--ud-seg-pizza)"></span>Pizza
+                        </li>
+                      </ul>
+
+                      <div class="ud-chart-plot" data-chart="share"></div>
+                    </figure>
+
+                    <button type="button" class="btn btn-ghost btn-sm ud-toggle-tableview"
+                            aria-expanded="false" aria-controls="tableShare">
+                      <span class="button-label">Show the figures</span>
+                    </button>
+
+                    <div class="ud-tableview" id="tableShare" hidden>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table class="table">
+                            <caption class="visually-hidden">Sessions and share of combined volume, by segment and period</caption>
+                            <thead>
+                              <tr>
+                                <th scope="col"><div class="table-header-label">Segment</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">P1 sessions</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">P1 share</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">P2 sessions</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">P2 share</div></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="table-gap"><td colspan="100%"></td></tr>
+                              <tr><td>Islands</td><td class="ud-num">8,453</td><td class="ud-num">89.5%</td><td class="ud-num">8,499</td><td class="ud-num">91.2%</td></tr>
+                              <tr><td>Greenlight</td><td class="ud-num">715</td><td class="ud-num">7.6%</td><td class="ud-num">645</td><td class="ud-num">6.9%</td></tr>
+                              <tr><td>Pizza</td><td class="ud-num">280</td><td class="ud-num">3.0%</td><td class="ud-num">174</td><td class="ud-num">1.9%</td></tr>
+                              <tr><td>Combined</td><td class="ud-num">9,448</td><td class="ud-num">100%</td><td class="ud-num">9,318</td><td class="ud-num">100%</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <figure class="ud-chart-figure">
+                      <figcaption class="text-block">
+                        <h3 class="title-02">Sessions by segment</h3>
+                        <p class="body-01 ud-chart-caption">Each panel has its own scale from zero.
+                          Islands runs roughly fifty times the volume of Pizza, so a shared scale
+                          would flatten the smaller two into the axis — heights are not comparable
+                          between panels.</p>
+                      </figcaption>
+
+                      <ul class="ud-legend support-01">
+                        <li class="ud-legend-item">Left bar: Period 1 · 11 Jul – 9 Aug</li>
+                        <li class="ud-legend-item">Right bar: Period 2 · 10 Aug – 8 Sep</li>
+                      </ul>
+
+                      <div class="ud-multiples">
+                        <div class="ud-multiple">
+                          <div class="ud-multiple-head">
+                            <span class="label-01">Islands</span>
+                            <span class="support-01 ud-delta ud-delta-up">
+                              <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> +0.5%
+                            </span>
+                          </div>
+                          <div class="ud-chart-plot" data-chart="segment-islands"></div>
+                        </div>
+                        <div class="ud-multiple">
+                          <div class="ud-multiple-head">
+                            <span class="label-01">Greenlight</span>
+                            <span class="support-01 ud-delta ud-delta-down">
+                              <i class="fa-solid fa-arrow-trend-down" aria-hidden="true"></i> −9.8%
+                            </span>
+                          </div>
+                          <div class="ud-chart-plot" data-chart="segment-greenlight"></div>
+                        </div>
+                        <div class="ud-multiple">
+                          <div class="ud-multiple-head">
+                            <span class="label-01">Pizza</span>
+                            <span class="support-01 ud-delta ud-delta-down">
+                              <i class="fa-solid fa-arrow-trend-down" aria-hidden="true"></i> −37.9%
+                            </span>
+                          </div>
+                          <div class="ud-chart-plot" data-chart="segment-pizza"></div>
+                        </div>
+                      </div>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Page load, and session duration -->
+          <div class="page-panel">
+            <div class="row ud-row-gutter">
+
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <figure class="ud-chart-figure">
+                      <figcaption class="text-block">
+                        <h3 class="title-02">Average page load</h3>
+                        <p class="body-01 ud-chart-caption">Largest Contentful Paint, Period 2. The
+                          tick on the Islands bar is its Period 1 figure, 1,301ms. Pizza loads at
+                          roughly double Islands’ speed — one of three possible readings of Pizza’s
+                          decline, and the only one that is directly measured.</p>
+                      </figcaption>
+                      <div class="ud-chart-plot" data-chart="lcp"></div>
+                    </figure>
+
+                    <button type="button" class="btn btn-ghost btn-sm ud-toggle-tableview"
+                            aria-expanded="false" aria-controls="tableLcp">
+                      <span class="button-label">Show the figures</span>
+                    </button>
+
+                    <div class="ud-tableview" id="tableLcp" hidden>
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table class="table">
+                            <caption class="visually-hidden">Average page load by segment and period</caption>
+                            <thead>
+                              <tr>
+                                <th scope="col"><div class="table-header-label">Segment</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">Period 1</div></th>
+                                <th scope="col" class="ud-num"><div class="table-header-label">Period 2</div></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="table-gap"><td colspan="100%"></td></tr>
+                              <tr><td>Islands</td><td class="ud-num">1,301ms</td><td class="ud-num">1,340ms</td></tr>
+                              <tr><td>Greenlight</td><td class="ud-num">not built</td><td class="ud-num">1,859ms</td></tr>
+                              <tr><td>Pizza</td><td class="ud-num">not built</td><td class="ud-num">2,731ms</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <h3 class="title-02">Average session duration</h3>
+                      <p class="body-01 ud-chart-caption">Deliberately not charted. Two of the three
+                        figures are artifacts of how a session ends, and drawing them beside each
+                        other would invite a comparison none of them supports.</p>
+                    </div>
+
+                    <div class="key-value-table">
+                      <div class="key-value">
+                        <span class="key">Islands · Period 1</span>
+                        <span class="value">64.8 min</span>
+                      </div>
+                      <div class="key-value">
+                        <span class="key">Islands · Period 2</span>
+                        <span class="value">67.3 min</span>
+                      </div>
+                      <hr>
+                      <div class="key-value">
+                        <span class="key">Greenlight · Period 2</span>
+                        <span class="value">150.0 min</span>
+                      </div>
+                      <div class="key-value">
+                        <span class="key">Pizza · Period 2</span>
+                        <span class="value">20.1 min</span>
+                      </div>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert">
+                      <div class="alert-content">
+                        <span class="alert-icon">
+                          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        </span>
+                        <div class="alert-body">
+                          <div class="alert-message">
+                            <h6>Treat these as session length, not engagement</h6>
+                          </div>
+                          <div class="alert-note">
+                            Greenlight’s 150-minute average is almost certainly idle sessions held
+                            open rather than two and a half hours of work, and the same caution
+                            applies to Islands’ 65 minutes. Pizza’s figure was additionally built on
+                            a different filter — sessions longer than 0s, where Islands and
+                            Greenlight count all sessions — so it is not comparable with the other
+                            two rows even before the artifact is considered.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Not shown -->
+          <div class="page-panel">
+            <div class="card card-secondary">
+              <div class="card-body">
+                <div class="text-block">
+                  <h3 class="title-02">
+                    <span class="icon"><i class="fa-regular fa-eye-slash" aria-hidden="true"></i></span>
+                    Asked for, and deliberately not shown
+                  </h3>
+                  <p class="body-01 ud-chart-caption">Four metrics were sought and are absent. An
+                    absent metric is a finding, so each one is stated here rather than dropped
+                    quietly out of a table.</p>
+                </div>
+
+                <div class="ud-notshown">
+                  <div class="key-value key-value-stacked">
+                    <span class="key">Crash rate — no result either period</span>
+                    <span class="value body-01">No result came back in Period 1 or Period 2.</span>
+                  </div>
+                  <div class="key-value key-value-stacked">
+                    <span class="key">Network error rate — excluded, not comparable</span>
+                    <span class="value body-01">Period 2 returned 0.05%, but that reflects one
+                      specific known issue across five sessions, not a general error rate. Period 1
+                      has no figure at all. Showing them together would imply a trend that does not
+                      exist.</span>
+                  </div>
+                  <div class="key-value key-value-stacked">
+                    <span class="key">Average API response — no buildable mean</span>
+                    <span class="value body-01">No mean can be built in either period. Only median
+                      and 95th percentile per URL are possible, and that has not been built.</span>
+                  </div>
+                  <div class="key-value key-value-stacked">
+                    <span class="key">Convert quote → policy — no event exists</span>
+                    <span class="value body-01">No bind or success event exists anywhere in the
+                      data. See the flags below.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         Frame 2 — Broker intents
+         ====================================================================== -->
+    <div class="page-frame ud-frame-alt">
+      <div class="container">
+        <div class="page-pane">
+
+          <div class="page-panel">
+            <div class="text-block">
+              <div class="heading">
+                <div class="heading-content">
+                  <span class="eyebrow">Islands · sessions containing at least one occurrence</span>
+                  <h2 class="headline-03">Broker intents</h2>
+                </div>
+                <span class="tag tag-sm tag-status tag-status-info">
+                  <span class="icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+                  <span class="tag-label">Intent, not outcome</span>
+                </span>
+              </div>
+              <p class="ud-measure">Nine intents can be compared across both periods, and every one
+                of them grew faster than Islands sessions did. That is the finding: not one metric
+                moving, but nine independently-measured ones moving the same way. Brokers who used
+                the platform did more per session — the same people, working harder in the tool,
+                rather than more people arriving.</p>
+            </div>
+          </div>
+
+          <div class="page-panel">
+            <div class="card">
+              <div class="card-body">
+
+                <div class="tabs">
+                  <div class="tab-items">
+                    <div class="tab-items-scroll">
+                      <ul class="nav nav-underline" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="intent-volume-tab" data-bs-toggle="pill"
+                                  data-bs-target="#intent-volume" type="button" role="tab"
+                                  aria-controls="intent-volume" aria-selected="true"
+                                  data-intent-sort="volume">
+                            By volume
+                          </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="intent-growth-tab" data-bs-toggle="pill"
+                                  data-bs-target="#intent-growth" type="button" role="tab"
+                                  aria-controls="intent-growth" aria-selected="false"
+                                  data-intent-sort="growth">
+                            By growth
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="tab-content">
+                    <div class="tab-pane fade active show" id="intent-volume" role="tabpanel"
+                         aria-labelledby="intent-volume-tab" tabindex="0">
+                      <figure class="ud-chart-figure">
+                        <figcaption class="text-block">
+                          <h3 class="title-01">Sessions reaching each workflow, Period 2</h3>
+                          <p class="body-01 ud-chart-caption">The bar is Period 2. The tick on each
+                            bar is the same intent in Period 1, so the gap between them is the
+                            period’s movement. Two rows are page views; the other eight are clicks
+                            on a control.</p>
+                        </figcaption>
+                        <div class="ud-chart-plot" data-chart="intent-volume"></div>
+                      </figure>
+                    </div>
+
+                    <div class="tab-pane fade" id="intent-growth" role="tabpanel"
+                         aria-labelledby="intent-growth-tab" tabindex="0">
+                      <figure class="ud-chart-figure">
+                        <figcaption class="text-block">
+                          <h3 class="title-01">Growth against the session baseline</h3>
+                          <p class="body-01 ud-chart-caption">The dashed rule is Islands session
+                            growth, +0.5%. Every intent sits to the right of it. Diary is absent
+                            rather than plotted at zero: it was not built in Period 1, so it has no
+                            growth figure to draw.</p>
+                        </figcaption>
+                        <div class="ud-chart-plot" data-chart="intent-growth"></div>
+                      </figure>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" class="btn btn-ghost btn-sm ud-toggle-tableview"
+                        aria-expanded="false" aria-controls="tableIntents">
+                  <span class="button-label">Show the figures</span>
+                </button>
+
+                <div class="ud-tableview" id="tableIntents" hidden>
+                  <div class="table-container">
+                    <div class="table-content">
+                      <table class="table">
+                        <caption class="visually-hidden">Broker intents by period, with what each figure counts</caption>
+                        <thead>
+                          <tr>
+                            <th scope="col"><div class="table-header-label">Intent</div></th>
+                            <th scope="col" class="ud-num"><div class="table-header-label">Period 1</div></th>
+                            <th scope="col" class="ud-num"><div class="table-header-label">Period 2</div></th>
+                            <th scope="col" class="ud-num"><div class="table-header-label">Change</div></th>
+                            <th scope="col"><div class="table-header-label">What it counts</div></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="table-gap"><td colspan="100%"></td></tr>
+                          <tr>
+                            <td>Find/open a record <span class="data-secondary">Page view</span></td>
+                            <td class="ud-num">6,027</td><td class="ud-num">6,201</td><td class="ud-num">+2.9%</td>
+                            <td>Record Summary Viewed custom event</td>
+                          </tr>
+                          <tr>
+                            <td>Attachments</td>
+                            <td class="ud-num">3,279</td><td class="ud-num">3,398</td><td class="ud-num">+3.6%</td>
+                            <td>Click only — not confirmed a document was opened</td>
+                          </tr>
+                          <tr>
+                            <td>Client homepage viewed <span class="data-secondary">Page view</span></td>
+                            <td class="ud-num">2,155</td><td class="ud-num">2,282</td><td class="ud-num">+5.9%</td>
+                            <td>Client Homepage Viewed custom event — see the instrumentation flag</td>
+                          </tr>
+                          <tr>
+                            <td>Diary</td>
+                            <td class="ud-num">not built</td><td class="ud-num">736</td><td class="ud-num">—</td>
+                            <td>Click only. First measured this period, so no comparison exists</td>
+                          </tr>
+                          <tr>
+                            <td>Retrieve Quote</td>
+                            <td class="ud-num">657</td><td class="ud-num">673</td><td class="ud-num">+2.4%</td>
+                            <td>Click only — not confirmed a quote was retrieved</td>
+                          </tr>
+                          <tr>
+                            <td>Add New Quote</td>
+                            <td class="ud-num">613</td><td class="ud-num">646</td><td class="ud-num">+5.4%</td>
+                            <td>Click only — not confirmed a quote was started</td>
+                          </tr>
+                          <tr>
+                            <td>MTA / Retrieve MTA</td>
+                            <td class="ud-num">441</td><td class="ud-num">495</td><td class="ud-num">+12.2%</td>
+                            <td>Click only — not confirmed an MTA was saved</td>
+                          </tr>
+                          <tr>
+                            <td>Cancel Policy</td>
+                            <td class="ud-num">380</td><td class="ud-num">424</td><td class="ud-num">+11.6%</td>
+                            <td>Click only — not confirmed a policy was cancelled</td>
+                          </tr>
+                          <tr>
+                            <td>Payments (Transactions)</td>
+                            <td class="ud-num">285</td><td class="ud-num">325</td><td class="ud-num">+14.0%</td>
+                            <td>Click only, navigation to the area — not a payment taken</td>
+                          </tr>
+                          <tr>
+                            <td>Renewal</td>
+                            <td class="ud-num">74</td><td class="ud-num">85</td><td class="ud-num">+14.9%</td>
+                            <td>Click only — not confirmed a renewal was processed</td>
+                          </tr>
+                          <tr>
+                            <td>Islands sessions <span class="data-secondary">The baseline</span></td>
+                            <td class="ud-num">8,453</td><td class="ud-num">8,499</td><td class="ud-num">+0.5%</td>
+                            <td>Every intent above grew faster than this</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="page-panel">
+            <div class="card card-secondary">
+              <div class="card-body">
+                <div class="text-block">
+                  <h3 class="title-02">Add New Quote outside Islands</h3>
+                  <p class="body-01 ud-chart-caption">Directional only, and not charted. A swing of
+                    three sessions drives Pizza’s entire percentage move, which is exactly the sort
+                    of figure a bar chart makes look solid.</p>
+                </div>
+
+                <div class="key-value-table">
+                  <div class="key-value">
+                    <span class="key">Greenlight</span>
+                    <span class="value">48 → 40 <span class="support-01 ud-delta ud-delta-down">−16.7%</span></span>
+                  </div>
+                  <div class="key-value">
+                    <span class="key">Pizza</span>
+                    <span class="value">7 → 4 <span class="support-01 ud-delta ud-delta-down">−42.9%</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         Frame 3 — Flags
+         ====================================================================== -->
+    <div class="page-frame">
+      <div class="container">
+        <div class="page-pane">
+
+          <div class="page-panel">
+            <div class="text-block">
+              <div class="heading">
+                <div class="heading-content">
+                  <h2 class="headline-03">Flags</h2>
+                </div>
+                <span class="tag tag-sm">
+                  <span class="tag-label">6 open</span>
+                </span>
+              </div>
+              <p class="ud-measure">Each flag carries the confidence the evidence actually supports.
+                Three are confirmed, two are not, and one is a question about the instrumentation
+                rather than about brokers.</p>
+            </div>
+          </div>
+
+          <div class="page-panel">
+            <div class="row ud-row-gutter">
+
+              <!-- Flag 1 — highest confidence -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">Payment-plan account page returns HTTP 500</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-error">
+                          <span class="icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+                          <span class="tag-label">Confirmed · high</span>
+                        </span>
+                      </div>
+                      <p>The policy-details endpoint fails on the payment-plan account page. Brokers
+                        see it as an error modal that forces them to navigate away. Seen again
+                        13 August – 7 September, still untriaged.</p>
+                    </div>
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Evidence</dt>
+                      <dd>Confirmed by replay in two prior periods plus this period’s error data —
+                        three independent checks.</dd>
+                      <dt class="support-01">Next</dt>
+                      <dd>The strongest-evidenced issue in the report. Ready to raise with engineering.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flag 5 — biggest gap -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">The money path cannot be measured at all</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-error">
+                          <span class="icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+                          <span class="tag-label">Unresolved</span>
+                        </span>
+                      </div>
+                      <p>No bind event and no payment-confirmation event exist anywhere in the data,
+                        so quote-to-policy conversion and payment success are both unmeasurable.
+                        Everything on this page stops at the click.</p>
+                    </div>
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Evidence</dt>
+                      <dd>Unresolved in both periods. This is the single biggest gap in the report.</dd>
+                      <dt class="support-01">Next</dt>
+                      <dd>It will not close without new instrumentation. Two custom events would make
+                        it answerable in the next edition.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flag 2 — with its chart -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">Cancel Policy is clicked ~5× as often as Renewal</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-warning">
+                          <span class="icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+                          <span class="tag-label">Confirmed · 2 periods</span>
+                        </span>
+                      </div>
+                      <p>Second period running at essentially the same ratio — 5.1× then 5.0× — with
+                        both intents growing at a similar rate.</p>
+                    </div>
+
+                    <figure class="ud-chart-figure">
+                      <ul class="ud-legend support-01">
+                        <li class="ud-legend-item">
+                          <span class="ud-legend-swatch" style="background-color: var(--ud-series-single-soft)"></span>Period 1
+                        </li>
+                        <li class="ud-legend-item">
+                          <span class="ud-legend-swatch" style="background-color: var(--ud-series-single)"></span>Period 2
+                        </li>
+                      </ul>
+                      <div class="ud-chart-plot" data-chart="cancel-renewal"></div>
+                    </figure>
+
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Next</dt>
+                      <dd>Confirm directly what the Cancel Policy control does on the screens where
+                        it is clicked. Real cancellation volume at five times renewal volume would
+                        be a striking business fact; a mislabelled navigation click would not.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flag 3 — with its chart -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">Documents dominate the working session</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-info">
+                          <span class="icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+                          <span class="tag-label">Repeats from P1</span>
+                        </span>
+                      </div>
+                      <p>Attachments is touched in two Islands sessions in five — roughly five times
+                        Retrieve Quote volume, and consistent with Period 1.</p>
+                    </div>
+
+                    <figure class="ud-chart-figure">
+                      <div class="ud-chart-plot" data-chart="reach"></div>
+                      <figcaption class="support-01 ud-chart-caption">Share of Islands sessions
+                        reaching each workflow at least once, Period 2. Both bars share one scale —
+                        every Islands session — so the five-to-one ratio can be read rather than
+                        taken on trust. The tick on each bar is Period 1.</figcaption>
+                    </figure>
+
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Next</dt>
+                      <dd>Worth checking whether the attachment list is searchable, or whether
+                        brokers are scrolling to find files.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flag 4 -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">Pizza fell sharply, on a very small base</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-warning">
+                          <span class="icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+                          <span class="tag-label">Low confidence</span>
+                        </span>
+                      </div>
+                      <p>Sessions down 37.9%, quote-starts down from seven to four, and page load at
+                        2,731ms against Islands’ 1,340ms.</p>
+                    </div>
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Evidence</dt>
+                      <dd>Three readings fit equally well: genuine declining adoption, PZ01/PZ91
+                        identification missing users, or performance driving people away.</dd>
+                      <dt class="support-01">Next</dt>
+                      <dd>Not enough volume to tell which. Confirm identification before drawing any
+                        adoption conclusion.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flag 6 -->
+              <div class="col-12 col-xl-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="heading">
+                        <div class="heading-content">
+                          <h3 class="title-02">Client Homepage Viewed may be firing in a loop</h3>
+                        </div>
+                        <span class="tag tag-sm tag-status tag-status-info">
+                          <span class="icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+                          <span class="tag-label">Open question</span>
+                        </span>
+                      </div>
+                      <p>The raw event fired about 155 times per session in Period 1, against 23
+                        times per session on Record Summary Viewed. That points at a re-render or
+                        route-change loop rather than 155 genuine visits.</p>
+                    </div>
+                    <dl class="ud-flag-evidence body-01">
+                      <dt class="support-01">Evidence</dt>
+                      <dd>The raw fire count was not re-checked in Period 2, so this is unconfirmed
+                        either way. Session counts are used throughout this dashboard and are safe
+                        regardless.</dd>
+                      <dt class="support-01">Next</dt>
+                      <dd>Re-check the fire rate. The raw count — 334,785 in Period 1 — should not be
+                        used in any reporting.</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         Frame 4 — Data notes
+         ====================================================================== -->
+    <div class="page-frame ud-frame-alt">
+      <div class="container">
+        <div class="page-pane">
+          <div class="page-panel">
+            <div class="row ud-row-gutter">
+
+              <div class="col-12 col-xl-7">
+                <div class="text-block">
+                  <h2 class="headline-03">Data notes</h2>
+                  <p class="ud-measure">Everything that could change how a figure on this page
+                    should be read.</p>
+                </div>
+
+                <ul class="list">
+                  <li class="list-item">Fresh queries only. No dashboard widgets. Sessions, not raw
+                    event fires.</li>
+                  <li class="list-item">Jaunt is excluded throughout by construction — it is
+                    API-driven and not comparable to interface usage.</li>
+                  <li class="list-item">Segment filter logic: Islands = User ID contains IS91 or
+                    IS01; Pizza = PZ01 or PZ91; Greenlight = BR01 or BR91.</li>
+                  <li class="list-item">Six to eight of Period 2’s intent metrics ran on a
+                    ~1-day-offset rolling window (≈9 Aug – 9 Sep) rather than the exact 10 Aug – 8 Sep
+                    dates. Unlikely to matter at 30-day scale; noted for completeness.</li>
+                  <li class="list-item">Pizza’s session-duration figure used a different filter
+                    (duration &gt; 0s) from Islands and Greenlight (all sessions). Affects that one
+                    row only.</li>
+                  <li class="list-item">Islands segment ID confirmed as 1370959 throughout both
+                    periods. A second ID (1333928) appears unused and is worth retiring on the
+                    LogRocket side to avoid future ambiguity.</li>
+                  <li class="list-item">Active users, and duration and page load for Pizza and
+                    Greenlight, were not built in Period 1 — LogRocket cannot split those chart types
+                    by segment without a duplicate metric per brand.</li>
+                </ul>
+              </div>
+
+              <div class="col-12 col-xl-5">
+                <div class="card card-secondary">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <div class="icon-block">
+                        <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                      </div>
+                      <h3 class="title-02">Sources</h3>
+                      <p class="body-01">Every figure on this page is transcribed from three
+                        reports. Nothing is modelled, smoothed or estimated; shares and ratios are
+                        computed in <code>data.js</code> from the transcribed numbers so the
+                        arithmetic stays visible.</p>
+                    </div>
+
+                    <ul class="list">
+                      <li class="list-item">Mobius PAS Usage — Period 1, 11 Jul – 9 Aug 2026</li>
+                      <li class="list-item">Mobius PAS Usage — Period 2, 10 Aug – 8 Sep 2026</li>
+                      <li class="list-item">Mobius PAS Usage — combined edition</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Documented Buckholt JavaScript dependency: the Bootstrap 5.1.3 bundle, for Tabs. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
