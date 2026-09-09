@@ -67,7 +67,7 @@ it.
 | Area | State |
 | --- | --- |
 | **Source verified** | 41 components have canonical markup compared against the supplied Code & specs HTML. `verification/component-source-status.md` |
-| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 7 documented runtime corrections re-asserted live. `test/runtime-verification/` |
+| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 5 documented runtime corrections re-asserted live. `test/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
 | **Responsive** | Audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |

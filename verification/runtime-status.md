@@ -35,8 +35,8 @@ A controlled pass was run against `test/runtime-verification/`, which composes e
 - dependency contract checked, including stylesheet order;
 - every finding classified with the framework categories, with harness artefacts of composition
   (reused ids, documented `…` elisions, cross-snippet references) separated from component findings;
-- all 7 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
-  measurement, via 8 runtime assertions;
+- all 5 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
+  measurement, via 6 runtime assertions;
 - resting render, and the Bootstrap and component-script behaviours the markup exercises
   (Modal, Tabs, Accordion, Collapse, Dropdown, Toast, Tooltip, the `form.js` enhancements);
 - responsive behaviour at 320px, 375px, 768px and desktop, recorded in `responsive/`.
@@ -48,6 +48,20 @@ loads only its own compiled CSS. The full style guide was re-rendered against th
 zero page errors, zero horizontal overflow, 37 of 48 sections pixel-identical, and no component
 collapsed. Seven of the fourteen corrections proved to be undoing the extra stylesheet and were
 deleted. Runtime status for every component is unchanged: still `RUNTIME PENDING`.
+
+**Build-provenance correction, 9 September 2026 — read `discrepancies/build-provenance.md`.**
+`css/buckholt.css` is **not** the same build as the live documentation site's
+`compiled.css?v=2.3`. Direct diff of the two files: 3,538 selectors shared, 83 live-only, 192
+local-only, 160 shared but differing. Two of the seven corrections proved inert in **both** builds
+and were deleted (Dropdown caret, `.btn-close` box-sizing), leaving five. Two of the five are
+regressions in our build only and render correctly on the live site.
+
+The finding that bears on everything above: **the grid breakpoints differ.** Live uses
+`896 / 1088 / 1312 / 1520 / 1720`; ours uses stock Bootstrap `576 / 768 / 992 / 1200 / 1400`.
+Container widths are identical but reached at different viewports. **All responsive results
+recorded here and in `responsive/` were measured against the local scale.** If the live scale is
+authoritative, that work must be re-run. This is an open question for Buckholt; the breakpoint
+configuration has not been changed.
 
 **Not yet completed, and why no component advances to `RUNTIME VERIFIED`:**
 

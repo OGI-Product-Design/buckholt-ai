@@ -504,18 +504,20 @@
 
   function verifyCompatibilityFixes() {
     assertCloseGlyph();
-    var none = function (v) { return v === 'none'; };
     var zero = function (v) { return parseFloat(v) === 0; };
 
+    // Five corrections. Two more - the Dropdown caret and .btn-close box-sizing -
+    // were deleted on 2026-09-09 after measuring both this build and the live
+    // compiled.css?v=2.3 and finding them inert in both. See
+    // discrepancies/build-provenance.md.
     assertFix('progress-bar', 'error status icon uses the literal error colour',
       '.rv-canonical .progress-header:has(~ .is-invalid)', 'backgroundImage',
-      function (v) { return v.indexOf('var%28') === -1 && v.indexOf('%23d7050c') !== -1; });
+      function (v) {
+        var s = String(v).toLowerCase();
+        return s.indexOf('var%28') === -1 && s.indexOf('%23d7050c') !== -1;
+      });
     assertFix('versa-tile', 'action column does not shrink',
       '.rv-canonical .versatile-actions', 'flexShrink', '0');
-    assertFix('dropdown', 'inherited caret triangle suppressed',
-      '.rv-canonical .dropdown-toggle', 'display', none, '::after');
-    assertFix('button-close', 'close control is border-box',
-      '.rv-canonical .btn-close', 'boxSizing', 'border-box');
     assertTrailingEdge('alert', 'in-content close control sits at the trailing edge',
       '.rv-canonical .alert-content > .btn-close');
     assertTrailingEdge('toast', 'in-content close control sits at the trailing edge',

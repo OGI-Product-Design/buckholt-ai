@@ -4,7 +4,15 @@
 
    What this file is
    -----------------
-   Six verified corrections for defects in `css/buckholt.css` itself.
+   Five corrections measured against `css/buckholt.css`. Two of them are
+   regressions in THIS BUILD of `buckholt.css`, not defects in Buckholt. Two
+   are unresolved. One is an upstream markup/CSS mismatch.
+
+   Read `discrepancies/build-provenance.md` first. `css/buckholt.css` is NOT
+   the same build as the live documentation site's `compiled.css?v=2.3`. The
+   two files were diffed on 2026-09-09: 3,538 selectors shared, 83 live-only,
+   192 local-only, 160 shared-but-differing. Some of what this file corrects
+   renders correctly on the live site.
 
    It is NOT a Bootstrap compatibility layer. It used to be: fourteen rules,
    nine of which existed only because the repository loaded a separate
@@ -14,17 +22,20 @@
    stylesheet has been removed here to match, and the nine rules it required
    were deleted with it.
 
-   Every rule below was re-measured with `buckholt.css` as the only framework
-   stylesheet. Each one still changes the rendering, so each corrects a defect
-   in Buckholt's own compiled output.
+   Two further rules - `.dropdown-toggle::after { display: none }` and
+   `.btn-close { box-sizing: border-box }` - were deleted on 2026-09-09 after
+   both builds were measured and both rules proved inert in both.
 
-   Why Bootstrap selectors still appear in the causes
-   --------------------------------------------------
-   `buckholt.css` is itself a compiled Bootstrap build - it carries Bootstrap's
-   reboot, grid, utilities and component layers with Buckholt as the theme. So
-   a rule like `.dropdown-toggle::after` or `.btn-close { box-sizing }` is
-   inside Buckholt's own stylesheet. These are upstream Buckholt bugs, not
-   layering artefacts, and every one of them is worth raising at source.
+   How each rule is classified
+   ---------------------------
+   LOCAL BUILD REGRESSION  the live build renders this correctly; ours does
+                           not. Fix belongs in the Buckholt build we hold.
+   UPSTREAM MISMATCH       both builds behave identically; the defect is a
+                           disagreement between Buckholt's CSS and Buckholt's
+                           own documented markup.
+   UNRESOLVED              the behaviour is confirmed in both builds, but the
+                           documented markup does not establish the fix. The
+                           rule stays until Buckholt clarifies.
 
    Runtime contract
    ----------------
@@ -41,33 +52,58 @@
    ============================================================================ */
 
 
+
 /* ============================================================================
    1. PROGRESS BAR - error status icon renders black
-   Cause:    the runtime encodes the error icon's fill as
+   CLASSIFICATION: LOCAL BUILD REGRESSION
+   Cause:    our build encodes the error icon's fill as
              `fill='var%28--error-01%29'` inside a `data:` URI. A data URI is
              an isolated document, so the custom property cannot resolve and
-             the fill falls back to black. The success icon uses a literal
-             `%23168914` and renders correctly.
-   Measured: with `buckholt.css` alone the header background image still
-             carries `fill='var%28--error-01%29'`.
-   Fix:      the same SVG with the documented error colour encoded literally.
-   Upstream: encode the error colour literally, as the success icon already
-             does.
+             the fill falls back to black.
+   Live:     `compiled.css?v=2.3` encodes it literally, `fill='%23D7050C'`,
+             and renders correctly. The live file contains ZERO `var%28`
+             occurrences; ours contains nine. This is one symptom of a build
+             that switched from compile-time literals to runtime custom
+             properties without excluding the SVG data URIs.
+   Measured: local build `var%28--error-01%29`; live build `%23D7050C`.
+   Fix:      the live build's own literal, byte for byte.
+   Scope:    UNDER-SCOPED. This patches 1 of 9 occurrences. The other eight
+             are listed in `discrepancies/build-provenance.md` with the live
+             literal for each. They are not patched here because no page in
+             this repository exercises them; if one does, patch from that
+             table rather than inventing a value.
+   Upstream: not a Buckholt defect. Report the regression against the build
+             that produced `css/buckholt.css`.
    ============================================================================ */
 
 .progress-header:has(~ .is-invalid) {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23d7050c'%3e%3cpath d='M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23D7050C'%3e%3cpath d='M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3e%3c/svg%3e");
 }
 
 
 /* ============================================================================
    2. VERSA-TILE - icon-only action set wraps
-   Cause:    `.versatile-body` claims `width: 100%` while `.versatile-actions`
-             sets no `flex-shrink`, so the actions column is compressed and its
-             icon-only button set wraps onto two rows.
-   Measured: with `buckholt.css` alone `.versatile-actions` computes
-             `flex-shrink: 1` and the set wraps; with this rule it is one row.
-   Upstream: give `.versatile-actions` `flex-shrink: 0`.
+   CLASSIFICATION: LOCAL BUILD REGRESSION
+   Cause:    our build declares `.versatile-body { width: 100% }`. With
+             `.versatile-actions` setting no `flex-shrink`, the actions column
+             is compressed and its icon-only button set wraps onto two rows.
+   Live:     `compiled.css?v=2.3` has no `width: 100%` on `.versatile-body`
+             and does not wrap.
+   Measured: identical markup, no elision, `.button-set` height -
+               local build, as-is                        88px  (wrapped)
+               local build + `.versatile-body{width:auto}` 40px  (one row)
+               local build + `.versatile-actions{shrink:0}` 40px (one row)
+               live build,  as-is                        40px  (one row)
+   Note:     an earlier audit classified this a local markup issue caused by
+             the elided `...` in the canonical example. That was wrong - the
+             measurements above use plain markup with no elision. The cause is
+             the build difference.
+   Context:  our build also adds `min-width: 0` to `.versatile-content` and
+             `.versatile-body`, and `overflow: hidden; white-space: nowrap` to
+             `.versatile-label` and `.versatile-text` - a truncation redesign
+             that live does not have. `width: 100%` looks like part of that
+             work with the actions column not re-tested.
+   Upstream: not a Buckholt defect. Report against the local build.
    ============================================================================ */
 
 .versatile-actions {
@@ -76,64 +112,41 @@
 
 
 /* ============================================================================
-   3. DROPDOWN - two arrows
-   Cause:    Buckholt styles `.dropdown-toggle` like a select and draws its
-             arrow as a right-edge background image, but its compiled Bootstrap
-             layer still carries `.dropdown-toggle::after`, the border
-             triangle. Both render: the triangle inline after the label, the
-             Buckholt caret at the right edge.
-   Measured: with `buckholt.css` alone `::after` computes
-             `display: inline`; with this rule, `none`.
-   Upstream: suppress the inherited `::after` in the Buckholt build.
-   ============================================================================ */
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-
-/* ============================================================================
-   4. BUTTON CLOSE - content-box sizing
-   Cause:    Buckholt sets `--btn-close-width/height: 2rem` and applies them as
-             `width`/`height`, but its compiled Bootstrap layer still carries
-             `.btn-close { box-sizing: content-box }`. The padding is therefore
-             added outside the declared size instead of inside it.
-   Measured: with `buckholt.css` alone `.btn-close` computes
-             `box-sizing: content-box`; with this rule, `border-box`, and the
-             control matches its documented 2rem box.
-   Note:     this is all that remains of what was a much larger close-button
-             fix. The competing SVG cross and the padding/margin overrides came
-             from the separate Bootstrap stylesheet and are gone with it.
-   Upstream: set `box-sizing: border-box` on `.btn-close` in the Buckholt
-             build.
-   ============================================================================ */
-
-.btn-close {
-  box-sizing: border-box;
-}
-
-
-/* ============================================================================
-   5. ALERT / TOAST - close control flows inline instead of sitting at the
+   3. ALERT / TOAST - close control flows inline instead of sitting at the
       trailing edge
-   Cause:    Buckholt documents two placements for the close control. As a
-             sibling of `.alert-content` / `.toast-content` it lands correctly,
-             because that wrapper claims `width: 100%` and pushes the button
-             to the edge. Inside the content wrapper - the placement used by
-             the documented Alert "Animations" and Toast example 8 - there is
-             no rule to push it: `.alert-content` and `.toast-content` are
-             flex rows, neither `.alert-body` nor `.toast-body` is given
-             `flex`, and the runtime positions the close control only through
-             `.alert-dismissible`, a class the canonical examples do not use.
-             The button therefore sits immediately after the message text.
-   Measured: with `buckholt.css` alone the in-content close button reports
-             `margin-left: 0` and sits against the message; with this rule it
-             sits at the trailing edge, matching the sibling placement.
-   Fix:      the minimal flex idiom for "push to the end". Nothing about the
-             body's own layout changes, and the sibling placement and Collapse
-             - which uses the same sibling pattern - are untouched.
-   Upstream: push the in-content close control to the trailing edge without
-             requiring `.alert-dismissible`.
+   CLASSIFICATION: UNRESOLVED - documentation does not establish a fix
+   Cause:    Buckholt documents the close control in two places. As a sibling
+             of `.alert-content` / `.toast-content` it lands correctly, because
+             that wrapper claims `width: 100%` and pushes the button to the
+             edge. Inside the content wrapper - the placement used by the
+             documented Alert "Animations" and Toast "Code & specs example 8"
+             - no rule in EITHER build pushes it, so it sits against the
+             message text.
+   Live:     `.alert-content` and `.toast-content` are BYTE-IDENTICAL between
+             the two builds, and the full `.btn-close` selector set is
+             identical. Neither build has a rule for the in-content placement.
+   Measured: in-content close button, distance from the alert's right edge -
+               local build 313px, live build 313px. Same behaviour.
+   Why unresolved:
+             The obvious fix is to use the sibling placement everywhere. But
+             `components/alert/examples.html` and `components/toast/
+             examples.html` document BOTH placements as canonical, and neither
+             `rules.md` says where the control belongs. Moving the in-content
+             instances would mean rewriting canonical markup on the strength of
+             CSS behaviour, which CANONICAL-MARKUP.md forbids. So the rule
+             stays and the question goes to Buckholt.
+   Related:  this is also the cause of the 4px vertical offset of the alert /
+             toast label when a close button is present. `.alert-content` has
+             `padding: 0.25rem 0.5rem`, so a single-line body is exactly 32px -
+             the height of `.btn-close`. Placed outside, the two boxes agree
+             (measured 0.0px). Placed inside, the button becomes a third item
+             in a 24px row, the row grows to 32px, the body stretches and the
+             text sits at its top (measured +4.0px). Do NOT add `align-items`
+             to fix this: `align-items: center` on the content row drops the
+             icon 36px in the multi-line case, and `align-self: center` on the
+             body shifts the icon 4px in the single-line case.
+   Upstream: reconcile the two documented placements, or add a rule supporting
+             the in-content one.
    ============================================================================ */
 
 .alert-content > .btn-close,
@@ -143,18 +156,31 @@
 
 
 /* ============================================================================
-   6. TABLE - action button set sits below the row's centre line
+   4. TABLE - action button set sits below the row's centre line
+   CLASSIFICATION: UNRESOLVED - documentation does not establish a fix
    Cause:    Buckholt gives every button set a flow offset,
              `[class$=-set][class|=button] { margin-top: 0.5rem }`, so a set
              placed in a table cell is pushed below every other cell's
-             content. Buckholt already recognises that this offset must be
-             cancelled inside a component that positions its own actions - it
-             ships `.versatile-actions .button-set { margin: 0 }` - but has no
-             equivalent for a table cell.
-   Measured: with `buckholt.css` alone the cell's button set carries
-             `margin-top: 8px`; with this rule, `0`.
-   Upstream: cancel the button-set flow offset inside table cells, mirroring
-             the existing Versa-tile reset.
+             content.
+   Live:     both builds carry the offset and both measure `margin-top: 8px`
+             in a table cell. Not a regression.
+   Measured: local build 8px; live build 8px.
+   Why unresolved:
+             Our build ships an opt-out class the live build does not have -
+             `[class$=-set][class|=button].button-set-no-offset { margin: 0 }`
+             - and it works (measured 8px -> 0px). But it is undocumented:
+             it appears in no `components/`, `patterns/`, `foundations/` or
+             `CANONICAL-MARKUP.md` file, and `components/table/examples.html`
+             line 81 uses a plain `<div class="button-set">`. Adopting it would
+             mean promoting an undocumented runtime helper AND editing
+             canonical Table markup, both of which CLAUDE.md forbids. So the
+             CSS rule stays and the question goes to Buckholt.
+   Precedent: Buckholt already cancels this offset inside a component that
+             positions its own actions - `.versatile-actions .button-set
+             { margin: 0 }`, present in both builds - but has no equivalent
+             for a table cell.
+   Upstream: document `.button-set-no-offset`, or cancel the offset inside
+             table cells as the Versa-tile reset already does.
    ============================================================================ */
 
 .table td .button-set {
@@ -163,22 +189,24 @@
 
 
 /* ============================================================================
-   7. CARD - documented image markup is stretched
-   Cause:    the runtime writes `.card-img` as a *container*: it sizes the box
-             (`width: 100%; height: var(--card-image-max-height)`) and puts the
+   5. CARD - documented image markup is stretched
+   CLASSIFICATION: UPSTREAM MISMATCH - present in both builds
+   Cause:    both builds write `.card-img` as a *container*: they size the box
+             (`width: 100%; height: var(--card-image-max-height)`) and put the
              fitting on a child, `.card-img img { object-fit: cover }`. The
              canonical example puts the class on the image itself -
              `<img src="..." class="card-img">` - so the child rule never
              matches and the image is stretched to the box instead of cropped
              to it.
-   Measured: with `buckholt.css` alone the image reports `object-fit: fill`;
-             with this rule, `cover`.
-   Note:     this compensates for a structure mismatch. The canonical markup is
-             source evidence and is not changed. The bottom-corner half of the
-             original fix came from the separate Bootstrap stylesheet and is
-             gone with it.
+   Live:     same structure, same result. `compiled.css?v=2.3` differs only by
+             adding `aspect-ratio: var(--card-aspect-ratio)` to the container.
+   Measured: `object-fit: fill` in BOTH builds; with this rule, `cover`.
+   Note:     this compensates for a structure mismatch between Buckholt's CSS
+             and Buckholt's own documented markup. The canonical markup is
+             source evidence and is not changed.
+   Retained: temporarily, pending Buckholt's answer on which side is wrong.
    Upstream: make the runtime rule match a bare `<img class="card-img">` as
-             well as a wrapper.
+             well as a wrapper, or correct the documented example.
    ============================================================================ */
 
 img.card-img,

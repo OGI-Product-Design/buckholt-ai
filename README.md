@@ -11,13 +11,14 @@ This repository is deliberately evidence-led. It teaches coding agents only patt
 ## Source hierarchy
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
-2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website.
+2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website. **It is not the same build as the live documentation site's `compiled.css?v=2.3`; see `discrepancies/build-provenance.md`.**
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only, loaded after the runtime when documented behaviour is known to render incorrectly.
 4. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
 5. `patterns/<pattern>/` — composition guidance that teaches agents how Buckholt components are assembled into pages, forms and recurring product interactions.
 6. `components/<component>/rules.md` — component guidance rebuilt from Buckholt documentation plus runtime implementation evidence.
 7. `components/<component>/examples.html` — verified canonical markup examples.
 8. `discrepancies/known-issues.md` — significant verified documentation/runtime differences that could mislead an implementation agent.
+9. `discrepancies/build-provenance.md` — how `css/buckholt.css` differs from the live `compiled.css?v=2.3`, including the grid-breakpoint difference.
 
 Extra runtime CSS is useful flexibility, but it does not become canonical Buckholt guidance unless the documentation says so.
 
@@ -46,6 +47,7 @@ buckholt-ai/
 │   ├── lookup/
 │   └── page-layout/
 ├── discrepancies/
+│   ├── build-provenance.md
 │   └── known-issues.md
 └── components/
     ├── accordion/

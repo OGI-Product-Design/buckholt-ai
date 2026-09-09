@@ -21,12 +21,12 @@ Component-specific Code & specs markup outranks generic cross-component conventi
 ## Source hierarchy
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
-2. `css/buckholt.css` — current runtime implementation. Use real selectors, variables, states and browser behaviour. Undocumented runtime extras are implementation flexibility, not automatically canonical Buckholt guidance.
+2. `css/buckholt.css` — current runtime implementation. Use real selectors, variables, states and browser behaviour. Undocumented runtime extras are implementation flexibility, not automatically canonical Buckholt guidance. **It is not the live build — read `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent.**
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load after the runtime.
 4. `foundations/<foundation>/` — shared design-system guidance.
 5. `patterns/<pattern>/` — composition guidance for how Buckholt pages, forms and recurring interactions are assembled from components.
 6. `components/<component>/rules.md` and `examples.html` — component-specific guidance and canonical examples.
-7. `discrepancies/known-issues.md` — significant verified documentation/runtime differences.
+7. `discrepancies/known-issues.md` — significant verified documentation/runtime differences, and `discrepancies/build-provenance.md` — how `css/buckholt.css` differs from the live build.
 8. `verification/` — source and runtime verification status. Read `verification/runtime-verification-framework.md` before changing runtime status or adding compatibility fixes.
 
 Old SCSS, token maps, screenshots, Figma and previous interpreted AI specifications are **not** implementation sources unless explicitly requested for investigation.
@@ -191,6 +191,21 @@ on Bootstrap **5.3** (`[data-bs-theme=buckholt]`, `--bs-emphasis-color`, `--bs-f
 This matches the live Buckholt documentation site, whose `<head>` comments the Bootstrap
 stylesheet out and loads only its own compiled CSS.
 
+> **`css/buckholt.css` is not the same build as the live site's `compiled.css?v=2.3`.**
+> Established 9 September 2026 by direct diff: 3,538 selectors shared, 83 live-only, 192
+> local-only, 160 shared but differing. It appears to be a later Buckholt source built with a
+> different Bootstrap configuration.
+>
+> **The grid breakpoints differ.** Live `896 / 1088 / 1312 / 1520 / 1720`; ours
+> `576 / 768 / 992 / 1200 / 1400`. Container widths are identical (540/720/960/1140/1320) but
+> reached at different viewports, so **every responsive rule fires at a different width from the
+> live design system**. Do not change the breakpoint configuration — which scale is current is a
+> question for Buckholt.
+>
+> Ours also carries two SCSS `null` leaks and nine `var()` calls inside `data:` URIs that live
+> does not have. Before recording a rendering difference as a Buckholt defect, check
+> `discrepancies/build-provenance.md` — it may be a defect in the build we hold.
+
 Loading `bootstrap.min.css` as well adds a second, older copy of the same framework that
 **overrides Buckholt**: it replaced Buckholt's table text colour with Bootstrap's, imposed
 Bootstrap's 3.8px radius on modal corners, added a competing SVG cross to every close
@@ -242,6 +257,8 @@ Source verification and runtime verification are separate gates.
 Before marking a component `RUNTIME VERIFIED`, follow `verification/runtime-verification-framework.md` and update `verification/runtime-status.md`. Runtime mismatches must be classified before being corrected. Do not rewrite source-verified HTML to compensate for runtime defects.
 
 Verified compatibility corrections belong in `css/buckholt-ai-fixes.css` and require a corresponding entry in `discrepancies/known-issues.md`. Do not edit `css/buckholt.css` to make a test page look correct.
+
+Classify every correction before adding one. A rendering difference is one of: a **local build regression** (the live build renders it correctly), an **upstream markup/CSS mismatch** (both builds behave identically and Buckholt's CSS disagrees with Buckholt's own documented markup), or **unresolved** (behaviour confirmed in both builds, but the documentation does not establish a fix). Do not call something a Buckholt defect without checking which of the three it is.
 
 ## Accessibility and native semantics
 

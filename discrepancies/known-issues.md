@@ -12,8 +12,21 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
-The layer holds **7 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
-**8 CSS rules** and checked by **8 runtime assertions**.
+The layer holds **5 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
+**6 CSS rules**.
+
+> ## ⚠ Read `build-provenance.md` first
+>
+> **`css/buckholt.css` is not the same build as the live documentation site's
+> `compiled.css?v=2.3`.** Established 9 September 2026 by direct diff of the two files:
+> 3,538 selectors shared, 83 live-only, 192 local-only, 160 shared but differing. The
+> **grid breakpoints differ** — live `896/1088/1312/1520/1720`, ours `576/768/992/1200/1400`
+> — so every responsive rule fires at a different width from the live design system.
+>
+> Two of the corrections below are regressions in **our build only** and render correctly
+> on the live site. Two others are unresolved because Buckholt's documentation does not
+> establish the fix. See [`build-provenance.md`](build-provenance.md) for the full diff and
+> the open questions for Buckholt.
 
 **Dependency-model correction, 8 September 2026.** The repository used to load
 `bootstrap@5.1.3/dist/css/bootstrap.min.css` underneath `css/buckholt.css`. That was wrong.
@@ -30,9 +43,20 @@ Modal section padding, Toast body padding, the Table `currentColor` rule, Card/V
 hover, and the Input-group button radius. Two more were reduced to the half that survives (Close
 button, Card image).
 
-The corrections that remain are **defects in Buckholt's own compiled output**. Where a cause still
-names a Bootstrap selector, that selector is inside `buckholt.css` itself — every one is worth
-raising upstream.
+**Fix-layer correction, 9 September 2026.** With the live `compiled.css?v=2.3` available, all seven
+remaining corrections were re-measured against **both** builds. Two proved inert in both and were
+deleted with their sections: the Dropdown caret (`.dropdown-toggle::after` computes `content: none`
+in both, so no box is generated) and the `.btn-close` box-sizing rule (`content-box` in both, but
+Buckholt sets `padding: 0`, so the control renders 32×32 either way). The remaining five were
+reclassified — they are no longer all "defects in Buckholt's own compiled output":
+
+| Correction | Classification |
+|---|---|
+| 1 Progress bar error icon | Local build regression — live renders correctly |
+| 2 Versa-tile action wrap | Local build regression — live renders correctly |
+| 3 Alert/Toast close placement | Unresolved — documentation shows two placements |
+| 4 Table button-set offset | Unresolved — `.button-set-no-offset` is undocumented |
+| 5 Card image `object-fit` | Upstream mismatch — present in both builds |
 
 **Statuses used:** `ACTIVE FIX` (corrected in the compatibility layer) · `OPEN` (verified, not
 corrected) · `PRODUCT RESPONSIBILITY` (Buckholt supplies structure and styling, the application
@@ -42,12 +66,15 @@ supplies behaviour).
 
 ## Contents
 
-**Buckholt runtime defects (`ACTIVE FIX`)** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
-[Versa-tile actions](#versa-tile--icon-only-action-set-wraps) · [Dropdown caret](#dropdown--two-arrows) ·
-[Close button sizing](#button-close--geometry-and-bootstraps-competing-svg-cross) ·
-[Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
-[Table action alignment](#table--action-button-set-sits-below-the-row-centre) ·
-[Card image](#card--image-stretched-and-bootstrap-rounds-its-bottom-corners)
+**Local build regressions (`ACTIVE FIX`)** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
+[Versa-tile actions](#versa-tile--icon-only-action-set-wraps)
+
+**Unresolved, fix retained (`ACTIVE FIX`)** — [Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
+[Table action alignment](#table--action-button-set-sits-below-the-row-centre)
+
+**Upstream markup/CSS mismatch (`ACTIVE FIX`)** — [Card image](#card--documented-image-markup-is-stretched)
+
+**Build provenance (`OPEN`)** — [`build-provenance.md`](build-provenance.md)
 
 **Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
@@ -63,61 +90,137 @@ supplies behaviour).
 
 ---
 
-# Bootstrap declarations Buckholt does not counter
+# Local build regressions
 
-The single largest cause of visual drift. Buckholt overrides Bootstrap by *redeclaring* properties,
-so anything Bootstrap sets that Buckholt does not redeclare survives. This is not a load-order or
-bundling problem: the three stylesheets load in the documented order.
+Defects present in **our copy** of `css/buckholt.css` and **not** in the live
+`compiled.css?v=2.3`. These are not Buckholt defects. Report them against the build that
+produced our file, not against the design system.
 
-A systematic diff of the compiled build against Bootstrap 5.1.3 would likely find more of these than
-component-by-component visual review will.
+## Progress bar — error status icon renders black
 
-## Dropdown — two arrows
+- **Status:** `ACTIVE FIX` — **local build regression**, re-verified 9 September 2026 against
+  the live stylesheet.
+- **Evidence:** our build carries `fill='var%28--error-01%29'`; the live build carries
+  `fill='%23D7050C'` and renders correctly. A `data:` URI is an isolated document, so a custom
+  property cannot resolve inside it and the fill falls back to black.
+- **Cause:** the build that produced our file switched from compile-time literals to runtime
+  custom properties without excluding the SVG data URIs. The live file contains **zero**
+  `var%28` occurrences; ours contains **nine**.
+- **Compatibility fix:** correction 1 — the live build's own literal, byte for byte.
+- **Scope:** under-scoped. Patches 1 of 9 occurrences; the other eight are tabulated with their
+  live literals in [`build-provenance.md` §6.1](build-provenance.md). They are not patched
+  because no page here exercises them.
+- **Upstream action:** none against Buckholt. Report the regression against our build.
 
-- **Status:** `ACTIVE FIX` — re-verified with `buckholt.css` as the only framework stylesheet.
-- **Evidence:** with Bootstrap's stylesheet removed, `.dropdown-toggle::after` still computes
-  `display: inline`.
-- **Runtime cause:** Buckholt draws its arrow as a right-edge background image, but its own compiled
-  Bootstrap layer still carries `.dropdown-toggle::after`, the border triangle. Both render. The
-  triangle is inside `buckholt.css`, so this is a Buckholt defect, not a layering artefact.
-- **Compatibility fix:** correction 3.
-- **Upstream action:** suppress `.dropdown-toggle::after` in the Buckholt build.
+## Versa-tile — icon-only action set wraps
 
-## Button close — content-box sizing
+- **Status:** `ACTIVE FIX` — **local build regression**, re-verified 9 September 2026 against
+  the live stylesheet.
+- **Evidence:** identical markup, no elision, `.button-set` height — our build **88px
+  (wrapped)**; live build **40px (one row)**. Removing `width: 100%` from `.versatile-body`
+  in our build also gives 40px, isolating the cause.
+- **Cause:** our build declares `.versatile-body { width: 100% }`; live does not. With
+  `.versatile-actions` setting no `flex-shrink`, the actions column is compressed and wraps.
+- **Correction to an earlier entry:** this was previously recorded as a local markup issue
+  caused by the elided `...` in the canonical example. That was wrong — the measurements above
+  use plain markup with no elision.
+- **Context:** our build also adds `min-width: 0` to `.versatile-content`/`.versatile-body` and
+  `overflow: hidden; white-space: nowrap` to `.versatile-label`/`.versatile-text` — a
+  truncation redesign live does not have. `width: 100%` looks like part of that work with the
+  actions column not re-tested.
+- **Compatibility fix:** correction 2.
+- **Upstream action:** none against Buckholt. Report the regression against our build.
 
-- **Status:** `ACTIVE FIX` — **reduced**. Re-verified with `buckholt.css` as the only framework
+---
+
+# Unresolved — behaviour confirmed, documentation does not establish a fix
+
+Confirmed identically in **both** builds. The obvious remedy in each case would mean editing
+canonical Buckholt markup or promoting an undocumented runtime helper, which
+`CANONICAL-MARKUP.md` and `CLAUDE.md` forbid. The CSS rule stays until Buckholt clarifies.
+
+## Alert / Toast — close control flows inline
+
+- **Status:** `ACTIVE FIX` — **unresolved**. Re-verified 9 September 2026 against the live
   stylesheet.
-- **Evidence:** with Bootstrap's stylesheet removed, `.btn-close` still computes
-  `box-sizing: content-box`, so padding is added outside the declared `2rem` box instead of inside
-  it.
-- **Runtime cause:** Buckholt sets `--btn-close-width/height: 2rem` and applies them as
-  `width`/`height`, but its own compiled Bootstrap layer still carries
-  `.btn-close { box-sizing: content-box }`.
-- **What went away:** the competing SVG cross, the `.alert-dismissible` padding and the negative
-  margins all came from the *separate* Bootstrap stylesheet. With it removed, `.btn-close` reports
-  `background-image: none` and the doubled cross is gone. Only the sizing half of the original fix
-  remains.
-- **Compatibility fix:** correction 4.
-- **Upstream action:** set `box-sizing: border-box` on `.btn-close` in the Buckholt build.
+- **Evidence:** `.alert-content` and `.toast-content` are **byte-identical** between the two
+  builds, and the full `.btn-close` selector set is identical. Neither build has a rule for the
+  in-content placement. Measured distance from the alert's right edge: **313px in both**.
+- **Runtime cause:** Buckholt documents two placements. As a *sibling* of the content wrapper
+  the button lands correctly, because that wrapper claims `width: 100%`. *Inside* it — the
+  placement used by the documented Alert "Animations" and Toast "Code & specs example 8" —
+  nothing pushes it, and the runtime positions the close control only through
+  `.alert-dismissible`, a class the canonical examples never use.
+- **Why unresolved:** the fix would be to use the sibling placement everywhere. But
+  `components/alert/examples.html` and `components/toast/examples.html` document **both**
+  placements as canonical, and neither `rules.md` states where the control belongs. Moving the
+  in-content instances would mean rewriting canonical markup on the strength of CSS behaviour.
+- **Related — the 4px vertical offset.** The same placement causes the alert/toast label to sit
+  4px above centre when a close button is present. `.alert-content` has `padding: 0.25rem
+  0.5rem`, so a single-line body is exactly 32px — the height of `.btn-close`. Placed outside,
+  the two boxes agree (**0.0px**, measured across single-line, multi-line, with icon and
+  without). Placed inside, the button becomes a third item in a 24px row, the row grows to
+  32px, the body stretches and the text sits at its top (**+4.0px**). Adding `align-items` is
+  **not** the answer: `align-items: center` on the content row drops the icon 36px in the
+  multi-line case, and `align-self: center` on the body shifts the icon 4px in the single-line
+  case.
+- **Compatibility fix:** correction 3, `margin-left: auto` on a `.btn-close` that is a direct
+  child of the content wrapper. It addresses the horizontal offset only. The sibling placement
+  and Collapse, which uses the same sibling pattern, are untouched.
+- **Upstream action:** reconcile the two documented placements, or add a rule supporting the
+  in-content one.
+
+## Table — action button set sits below the row centre
+
+- **Status:** `ACTIVE FIX` — **unresolved**. Re-verified 9 September 2026 against the live
+  stylesheet.
+- **Evidence:** `margin-top: 8px` on a button set in a table cell in **both** builds. Not a
+  regression.
+- **Runtime cause:** Buckholt gives every button set a flow offset,
+  `[class$=-set][class|=button] { margin-top: 0.5rem }`. Table cells are not normal flow —
+  `.table > :not(caption) > * > *` sets `vertical-align: middle` — so the offset displaces the
+  action.
+- **Why unresolved:** our build ships an opt-out the live build does not have,
+  `[class$=-set][class|=button].button-set-no-offset { margin: 0 }`, and it works (measured 8px
+  → 0px). But it is **undocumented** — absent from every `components/`, `patterns/`,
+  `foundations/` and `CANONICAL-MARKUP.md` file — and `components/table/examples.html` line 81
+  uses a plain `<div class="button-set">`. Adopting it would mean promoting an undocumented
+  runtime helper *and* editing canonical Table markup.
+- **Precedent:** Buckholt already cancels the offset inside a component that positions its own
+  actions, shipping `.versatile-actions .button-set { margin: 0 }` in **both** builds, but has
+  no table equivalent.
+- **Compatibility fix:** correction 4, mirroring the Versa-tile reset scoped to table cells.
+- **Upstream action:** document `.button-set-no-offset`, or add the table-cell reset alongside
+  the Versa-tile one.
+
+---
+
+# Upstream markup / CSS mismatch
+
+Present identically in **both** builds. Buckholt's CSS and Buckholt's own documented markup
+disagree with each other.
 
 ## Card — documented image markup is stretched
 
-- **Status:** `ACTIVE FIX`
-- **Evidence:** the documented image card reports `object-fit: fill` with a natural ratio of 1.78
-  rendered at 2.10, and `border-bottom-left-radius: 3px` against a 15px top radius.
-- **Runtime cause:** two separate problems. The runtime writes `.card-img` as a *container* — it
-  sizes the box and puts the fitting on a child, `.card-img img { object-fit: cover }` — but the
-  canonical example puts the class on the image itself, so the child rule never matches and the
-  image is stretched rather than cropped. Separately, Bootstrap's `.card-img, .card-img-bottom`
-  rounds the *bottom* corners; Buckholt redeclares only the top pair, so an image above a
-  `.card-body` keeps Bootstrap's 3px rounding and separates from the body it should meet flush.
-- **What went away:** the bottom-corner rounding came from the *separate* Bootstrap stylesheet. With
-  it removed the image reports `border-bottom-left-radius: 0` on its own, and only the `object-fit`
-  half of the original fix remains.
-- **Compatibility fix:** correction 7. The fitting the runtime already specifies is applied to the
-  element the documented markup uses. The canonical markup is not changed.
+- **Status:** `ACTIVE FIX` — **upstream mismatch**, present in both builds. Re-verified
+  9 September 2026 against the live stylesheet.
+- **Evidence:** `object-fit: fill` measured in **both** builds; the documented image card
+  renders a 1.78 natural ratio at 2.10. With correction 5, `cover`.
+- **Runtime cause:** both builds write `.card-img` as a *container* — they size the box
+  (`width: 100%; height: var(--card-image-max-height)`) and put the fitting on a child,
+  `.card-img img { object-fit: cover }`. The canonical example puts the class on the image
+  itself, `<img src="..." class="card-img">`, so the child rule never matches and the image is
+  stretched rather than cropped.
+- **Difference between builds:** live differs only by the container lacking
+  `aspect-ratio: var(--card-aspect-ratio)`, which ours adds. Behaviour is otherwise identical.
+- **What went away:** the bottom-corner rounding came from the *separate* Bootstrap stylesheet.
+  With it removed the image reports `border-bottom-left-radius: 0` on its own, and only the
+  `object-fit` half of the original fix remains.
+- **Compatibility fix:** correction 5. The fitting the runtime already specifies is applied to
+  the element the documented markup uses. The canonical markup is not changed.
+- **Retained:** temporarily, pending Buckholt's answer on which side is wrong.
 - **Upstream action:** make the runtime rule match a bare `<img class="card-img">` as well as a
-  wrapper.
+  wrapper, or correct the documented example.
 
 ---
 
@@ -143,64 +246,6 @@ component-by-component visual review will.
   silently.
 - **Upstream action:** confirm the kit tier is intended, or give `.btn-close::before` a fallback so a
   Free kit degrades to a visible cross rather than a box.
-
----
-
-# Buckholt runtime defects
-
-Not Bootstrap's doing. The runtime does not implement documented intent.
-
-## Progress bar — error status icon renders black
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** the header background image carries `fill='var%28--error-01%29'`; rasterised, the
-  glyph samples `rgb(0,0,0)` instead of `#d7050c`. The success icon uses a literal `%23168914` and
-  renders correctly.
-- **Runtime cause:** a `data:` URI is an isolated document, so a custom property cannot resolve inside
-  it and the fill falls back to black.
-- **Compatibility fix:** correction 1 — the same SVG with the documented error colour encoded literally.
-- **Upstream action:** encode the colour literally, as the success icon already does.
-
-## Versa-tile — icon-only action set wraps
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** the actions column measures 51.9×72 with its two buttons on separate rows; it should
-  be 68×32 on one row.
-- **Runtime cause:** `.versatile-body` claims `width: 100%` while `.versatile-actions` sets no
-  `flex-shrink`, so the actions column is compressed.
-- **Compatibility fix:** correction 2.
-- **Upstream action:** add `flex-shrink: 0` to `.versatile-actions`.
-
-## Alert / Toast — close control flows inline
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** placed inside `.alert-content` / `.toast-content` — the placement used by the
-  documented Alert "Animations" and Toast example 8 — the close button sits 351.6px (Alert) and
-  178.3px (Toast) from the trailing edge instead of 8px.
-- **Runtime cause:** Buckholt documents two placements. As a *sibling* of the content wrapper the
-  button lands correctly, because that wrapper claims `width: 100%`. *Inside* it there is no rule to
-  push it: both wrappers are flex rows, neither `.alert-body` nor `.toast-body` is given `flex`, and
-  the runtime positions the close control only through `.alert-dismissible` — a class the canonical
-  examples never use.
-- **Compatibility fix:** correction 5, `margin-left: auto` on a `.btn-close` that is a direct child of the
-  content wrapper. The sibling placement and Collapse, which uses the same sibling pattern, are
-  untouched.
-- **Upstream action:** either give the body `flex: 1`, or position the close control without requiring
-  `.alert-dismissible`.
-
-## Table — action button set sits below the row centre
-
-- **Status:** `ACTIVE FIX`
-- **Evidence:** the action cell's button set carries `margin: 8px 0 0`, putting its centre 3.8px below
-  the row centre while every other cell in the same row sits within 1.3px of it.
-- **Runtime cause:** Buckholt gives every button set a flow offset,
-  `[class$=-set][class|=button] { margin-top: 0.5rem }`. Table cells are not normal flow —
-  `.table > :not(caption) > * > *` sets `vertical-align: middle` — so the offset displaces the
-  action. Buckholt already recognises the offset must be cancelled inside a component that positions
-  its own actions, shipping `.versatile-actions .button-set { margin: 0 }`, but has no table
-  equivalent.
-- **Compatibility fix:** correction 6, mirroring the Versa-tile reset scoped to table cells.
-- **Upstream action:** add the table-cell reset alongside the Versa-tile one.
 
 ---
 
