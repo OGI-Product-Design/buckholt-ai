@@ -403,6 +403,11 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   at `_isAnimated` / `_initializeBackDrop`, because `getElementFromSelector()` returns null.
   Reproduced on `test/runtime-verification/`, which renders the example unmodified. The page loads
   and renders cleanly; the error occurs only on that click.
+- **Confirmed against the source, 9 September 2026.** With `code-specs-html/` now in the
+  repository, this is verified rather than inferred: the Modal page documents the trigger and the
+  modal in **separate code blocks** — block 1 carries `data-bs-target="#exampleModal"`, and no
+  documented block anywhere on the page carries `id="exampleModal"`. The repository transcription
+  is faithful; the gap is genuinely in Buckholt's documentation.
 - **Not a defect in either build.** This is documented markup, not CSS. It is the same class of
   source gap as the `label[for]` entry below.
 - **Not corrected:** adding an id would mean editing canonical markup to make a documented example
@@ -423,12 +428,14 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
 - **Neither build styles them.** `.wp-block-acf-tabs`, `.element_block`, `.align` and
   `.simple_table` appear in **neither** `css/buckholt.css` **nor** the live `compiled.css?v=2.3`.
   They render nothing.
-- **Reading:** most likely residue from the page the Code & specs example was captured on, rather
-  than part of the component's intended markup. That cannot be confirmed without the original
-  bundle.
-- **Not corrected:** `CANONICAL-MARKUP.md` forbids removing documented markup because it looks
-  wrong, and an incorrect removal is unrecoverable now the source bundles are gone. Consuming
-  applications should omit them; this repository preserves them as transcribed.
+- **Settled against the source, 9 September 2026.** `code-specs-html/` is now in the repository,
+  and these classes are **inside the documented `<pre class="wp-block-code">` block itself** —
+  Tabs blocks 0 and 1 both open with `<div class="tabs element_block align wp-block-acf-tabs">`.
+  They are not something this repository picked up from the surrounding page. The transcription is
+  correct; the question is whether Buckholt intends them.
+- **Not corrected:** they are documented markup, and `CANONICAL-MARKUP.md` forbids removing
+  documented markup because it looks wrong. Consuming applications should omit them; this
+  repository preserves them as documented.
 - **Upstream action:** confirm whether these wrappers are part of the documented component or
   artefacts of the documentation page.
 
@@ -451,7 +458,9 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
 
 ## Form groups — `label[for]` with no matching control
 
-- **Status:** `OPEN`
+- **Status:** `OPEN` — **confirmed against the source, 9 September 2026.** The unmatched sets are
+  identical in `code-specs-html/` and in this repository (Checkbox 4, Radio 5, Response button 7),
+  so the transcription is faithful and the gap is upstream.
 - **Evidence:** canonical Checkbox, Radio, Response button and Lookup sources contain group labels
   such as `<label for="checkInputExample">` where no element carries that id — the group's controls
   each have their own.

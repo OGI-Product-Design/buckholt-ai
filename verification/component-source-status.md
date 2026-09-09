@@ -2,35 +2,34 @@
 
 This file tracks source verification against rendered Buckholt documentation HTML supplied by Product Design.
 
-## ⚠ The source bundles are no longer in the repository
+## Source parity is machine-checked
 
-**Read this before trusting or re-running source verification.**
+`code-specs-html/` holds the 40 supplied Buckholt **Code & specs** pages. They are committed, so
+source verification is repeatable rather than a one-time act of trust:
 
-Every `HTML VERIFIED` mark below was set by comparing `components/<component>/examples.html`
-against the **supplied Buckholt Code & specs HTML pages** in two bundles dated 7 September 2026.
-Those bundles were supplied as chat attachments and were **never committed**. They are not in this
-repository, its history, or any working directory.
+```
+python3 test/source-parity/check-source-parity.py
+```
 
-**Consequence: source verification cannot currently be re-run or independently re-checked.** A
-later agent comparing `examples.html` to "the source" would only be comparing the file to itself.
+Last run 9 September 2026 — **PASS in both directions**:
 
-A parity sweep on 9 September 2026 therefore did what *is* possible without the bundles — internal
-consistency, cross-referencing and runtime comparison — and found:
+| Direction | Checked | Result |
+| --- | --- | --- |
+| **Forward** — every documented block appears in `examples.html` | 218 HTML blocks | 0 missing |
+| **Reverse** — every repository block appears in the documented source | 289 blocks | 0 invented |
 
-- **No inferred canonical markup detectable.** No component borrows another's wrapper convention,
-  and no undocumented helper has been promoted into canonical guidance. Where `rules.md` names a
-  class absent from both the examples and the runtime (`.context-bar`, `.state_readonly`,
-  `.indeterminate`, `.selected`, `.dropdown-sm`, `.form-buttons`, `.trigger-question`), it does so
-  **to prohibit it** — which is the correct discipline.
-- **Duplicate ids across examples are expected**, not defects: each file holds several separately
-  transcribed examples, so a repeated id reflects the source. They must not be normalised.
-- **Three gaps recorded** in `discrepancies/known-issues.md`: the Modal trigger targeting an id no
-  documented modal carries, `label[for]` group labels with no matching control, and Tabs/Table
-  carrying documentation-site wrapper classes.
+The reverse direction is the one that proves nothing was inferred, borrowed from another component
+or quietly improved. Three non-HTML documented blocks are reported and skipped, not failed: the
+Breadcrumb Sass snippet, a Progress CSS comment and the Tooltip initialisation JavaScript. SCSS is
+not an implementation source.
 
-**To restore full source verification, re-supply the Code & specs bundles and commit them**, or a
-manifest of per-component hashes, so the comparison is repeatable rather than a one-time act of
-trust.
+**Table has no Code & specs page in the bundle**, which is why it alone is `SOURCE PARTIAL`; its
+examples come from the supplied WIP/Usage material and are excluded from the checker's mapping.
+
+Three gaps found in the documented source itself — faithful transcription, upstream problem — are
+recorded in `discrepancies/known-issues.md`: the Modal trigger targeting an id no documented modal
+carries, `label[for]` group labels with no matching control, and Tabs carrying documentation-site
+wrapper classes inside its own documented block.
 
 ## Status meanings
 

@@ -20,7 +20,7 @@ Component-specific Code & specs markup outranks generic cross-component conventi
 
 ## Source hierarchy
 
-1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning.
+1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied **Code & specs pages are committed in `code-specs-html/`** and are the authoritative markup evidence. `python3 test/source-parity/check-source-parity.py` verifies `components/*/examples.html` against them in both directions; run it after any change to a canonical example.
 2. `css/buckholt.css` — current runtime implementation. Use real selectors, variables, states and browser behaviour. Undocumented runtime extras are implementation flexibility, not automatically canonical Buckholt guidance. **It is not the live build — read `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent.**
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load after the runtime.
 4. `foundations/<foundation>/` — shared design-system guidance.

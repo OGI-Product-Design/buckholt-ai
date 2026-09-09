@@ -27,11 +27,12 @@ disagreement is recorded rather than smoothed over.
 | | Layer | Authority |
 | --- | --- | --- |
 | 1 | Buckholt documentation | Intended design-system behaviour. The source of truth. |
-| 2 | `components/*/examples.html` and `rules.md` | Canonical markup and usage. `examples.html` is **source evidence**, preserved exactly — including deliberate `…` elisions. |
-| 3 | `foundations/`, `patterns/` | Shared scales, tokens and composition guidance. |
-| 4 | `css/buckholt.css` | Current runtime implementation, **never edited**. It is *not* the live documentation site's `compiled.css?v=2.3` — see `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent. |
-| 5 | `css/buckholt-ai-fixes.css` | Verified compatibility corrections only, where the runtime does not deliver documented intent. |
-| 6 | `responsive/` | **Non-canonical.** Application-level guidance where Buckholt is silent. |
+| 2 | `code-specs-html/` | The supplied Buckholt Code & specs pages. Primary markup evidence, committed so parity is repeatable. |
+| 3 | `components/*/examples.html` and `rules.md` | Canonical markup and usage, verified against layer 2 in both directions. `examples.html` is **source evidence**, preserved exactly — including deliberate `…` elisions. |
+| 4 | `foundations/`, `patterns/` | Shared scales, tokens and composition guidance. |
+| 5 | `css/buckholt.css` | Current runtime implementation, **never edited**. It is *not* the live documentation site's `compiled.css?v=2.3` — see `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent. |
+| 6 | `css/buckholt-ai-fixes.css` | Verified compatibility corrections only, where the runtime does not deliver documented intent. |
+| 7 | `responsive/` | **Non-canonical.** Application-level guidance where Buckholt is silent. |
 
 Rules that make the hierarchy hold:
 
@@ -68,7 +69,7 @@ it.
 
 | Area | State |
 | --- | --- |
-| **Source verified** | 41 components were compared against the supplied Code & specs HTML on 7 September 2026. **Those bundles were never committed and are no longer available**, so that comparison cannot be re-run or independently re-checked. A 9 September sweep found no inferred canonical markup and no undocumented helper promoted into guidance, and recorded three gaps. `verification/component-source-status.md` |
+| **Source verified** | **Machine-checked, passing.** The 40 supplied Code & specs pages are committed in `code-specs-html/`. `test/source-parity/check-source-parity.py` verifies both directions: 218 documented HTML blocks all present in the repository, and all 289 repository example blocks present in the documented source — so nothing was dropped and nothing was invented. Table alone is `SOURCE PARTIAL` (no Code & specs page supplied). `verification/component-source-status.md` |
 | **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 5 documented runtime corrections re-asserted live. `test/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
 | **Responsive** | `test/style-guide/` audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow (re-confirmed 9 September 2026). `test/runtime-verification/` **does** overflow at 375 and 320 — it renders canonical markup unwrapped, without the containers a real page supplies; recorded as an open finding in `discrepancies/known-issues.md`. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
