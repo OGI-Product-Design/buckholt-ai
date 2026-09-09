@@ -69,7 +69,7 @@ supplies behaviour).
 **Local build regressions (`ACTIVE FIX`)** — [Progress bar icon](#progress-bar--error-status-icon-renders-black) ·
 [Versa-tile actions](#versa-tile--icon-only-action-set-wraps)
 
-**Unresolved, fix retained (`ACTIVE FIX`)** — [Alert/Toast close placement](#alert--toast--close-control-flows-inline) ·
+**Unresolved, fix retained (`ACTIVE FIX`)** — [Alert/Toast close placement](#alert--toast--the-documented-in-content-close-placement-does-not-align-the-same-way) ·
 [Table action alignment](#table--action-button-set-sits-below-the-row-centre)
 
 **Upstream markup/CSS mismatch (`ACTIVE FIX`)** — [Card image](#card--documented-image-markup-is-stretched)
@@ -141,46 +141,67 @@ Confirmed identically in **both** builds. The obvious remedy in each case would 
 canonical Buckholt markup or promoting an undocumented runtime helper, which
 `CANONICAL-MARKUP.md` and `CLAUDE.md` forbid. The CSS rule stays until Buckholt clarifies.
 
-## Alert / Toast — close control flows inline
+## Alert / Toast — the documented in-content close placement does not align the same way
 
-- **Status:** `ACTIVE FIX` — **unresolved**. Re-verified 9 September 2026 against the live
-  stylesheet.
-- **Evidence:** `.alert-content` and `.toast-content` are **byte-identical** between the two
-  builds, and the full `.btn-close` selector set is identical. Neither build has a rule for the
-  in-content placement. Measured distance from the alert's right edge: **313px in both**.
-- **Runtime cause:** Buckholt documents two placements. As a *sibling* of the content wrapper
-  the button lands correctly, because that wrapper claims `width: 100%`. *Inside* it — the
-  placement used by the documented Alert "Animations" and Toast "Code & specs example 8" —
-  nothing pushes it, and the runtime positions the close control only through
-  `.alert-dismissible`, a class the canonical examples never use.
-- **Why unresolved:** the fix would be to use the sibling placement everywhere. But
-  `components/alert/examples.html` and `components/toast/examples.html` document **both**
-  placements as canonical, and neither `rules.md` states where the control belongs. Moving the
-  in-content instances would mean rewriting canonical markup on the strength of CSS behaviour.
-- **Related — the 4px vertical offset.** The same placement causes the alert/toast label to sit
-  4px above centre when a close button is present. `.alert-content` has `padding: 0.25rem
-  0.5rem`, so a single-line body is exactly 32px — the height of `.btn-close`. Placed outside,
-  the two boxes agree (**0.0px**, measured across single-line, multi-line, with icon and
-  without). Placed inside, the button becomes a third item in a 24px row, the row grows to
-  32px, the body stretches and the text sits at its top (**+4.0px**). Adding `align-items` is
-  **not** the answer: `align-items: center` on the content row drops the icon 36px in the
-  multi-line case, and `align-self: center` on the body shifts the icon 4px in the single-line
-  case.
-- **Compatibility fix:** correction 3, `margin-left: auto` on a `.btn-close` that is a direct
-  child of the content wrapper. It addresses the horizontal offset only. The sibling placement
-  and Collapse, which uses the same sibling pattern, are untouched.
-- **What the repository does, 9 September 2026.** `test/style-guide/` composes its own examples
-  rather than transcribing canonical markup verbatim (its three dismissible Alert/Toast examples
-  were never byte-exact — they add `.alert-info`/`.toast-info` that the canonical examples do not
-  carry, and the stacked-container example adds a close button that canonical Toast example 9 does
-  not have). Those four instances now use the **sibling placement**, which is equally documented
-  and which the CSS supports: measured `0.0px` label offset and an 8px trailing gap, down from
-  `+4.0px` and a 56px-tall component. `components/*/examples.html` and
-  `test/runtime-verification/` keep **both** documented placements verbatim, so the difference
-  stays measurable and correction 3 stays exercised. The correction is still required and is not
-  removed.
-- **Upstream action:** reconcile the two documented placements, or add a rule supporting the
-  in-content one.
+- **Status:** `ACTIVE FIX` (horizontal) + `OPEN` (vertical) — **unresolved**. Re-verified
+  9 September 2026 against the live stylesheet.
+- **This is not a build regression.** `.alert-content` and `.toast-content` are
+  **byte-identical** between `css/buckholt.css` and the live `compiled.css?v=2.3`, and the full
+  `.btn-close` selector set is identical. Both builds measure the same. The live Buckholt
+  documentation site behaves exactly as this repository does.
+
+### Buckholt documents two placements, and they are not interchangeable
+
+| | Documented in | Label offset | Trailing gap | Component height |
+|---|---|---|---|---|
+| **Sibling** of `.alert-content` / `.toast-content` | Alert "Close button", Toast example 6 | **0.0px** | 8px | 48px |
+| **Inside** `.alert-content` / `.toast-content` | Alert "Animations", Toast example 8 | **+4.0px** | 313px (16px with correction 3) | 56px |
+
+Measured across single-line, multi-line, with icon and without; identical in both builds.
+
+**Why the in-content placement does not vertically align.** `.alert-content` has
+`padding: 0.25rem 0.5rem`, so a single-line body measures 24 + 4 + 4 = **32px — exactly the
+height of `.btn-close`**. Buckholt sized these to match. Placed as a sibling, the two 32px boxes
+sit side by side and agree. Placed inside, the button becomes a **third item in a 24px flex row**:
+the row grows to the button's 32px, `.alert-body` stretches to fill it (the wrapper sets no
+`align-items`, so the default `stretch` applies), and the 24px text line sits at the top of that
+box — 4px high. The 8px the component grows by is the same 8px.
+
+**The vertical offset is not corrected, and should not be.** Neither candidate works:
+`align-items: center` on the content row drops the icon 36px in the multi-line case;
+`align-self: center` on the body shifts the icon 4px in the single-line case. Both trade one
+misalignment for another. No CSS has been added for it.
+
+### What the repository does
+
+- **Canonical examples are unchanged.** `components/alert/examples.html`,
+  `components/toast/examples.html` and `test/runtime-verification/index.html` preserve **both**
+  documented structures exactly. That is what keeps the difference measurable.
+- **`test/style-guide/` uses the sibling placement.** It is a composed demonstration page — its
+  own preamble says so and points at `test/runtime-verification/` for the exact unmodified markup
+  — and its four Alert/Toast instances were never byte-exact transcriptions anyway (the two
+  "Dismissible" examples add `.alert-info` / `.toast-info` that the canonical examples do not
+  carry; the stacked-container example adds a close button that canonical Toast example 9 does not
+  have). Choosing between two documented placements for our own composition is not a rewrite of
+  canonical markup.
+- **Correction 3 compensates the canonical case only.** Its selector matches the in-content
+  placement and nothing else. Measured 9 September 2026:
+
+  | Page | Correction 3 matches | Sibling instances |
+  |---|---|---|
+  | `test/style-guide/` | **0** | 4 |
+  | `test/runtime-verification/` | **2** (canonical Alert + Toast) | 2 |
+
+  It addresses the horizontal offset only, is still required, and is not removed.
+
+### Why it stays unresolved
+
+Both placements are canonical and neither `rules.md` states where the control belongs, so there is
+no documented basis for preferring one **in the canonical examples**. Rewriting them from CSS
+behaviour is what `CANONICAL-MARKUP.md` forbids.
+
+- **Upstream action:** reconcile the two documented placements, or add a rule that supports the
+  in-content one — horizontally *and* vertically.
 
 ## Table — action button set sits below the row centre
 
