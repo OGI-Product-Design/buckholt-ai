@@ -11,7 +11,7 @@ This repository is deliberately evidence-led. It teaches coding agents only patt
 ## Source hierarchy
 
 1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied Code & specs pages are committed in **`code-specs-html/`**; `test/source-parity/check-source-parity.py` checks the canonical examples against them.
-2. `css/buckholt.css` — current runtime implementation. Use it for real selectors, variables, states and browser behaviour, while recognising that it may contain extra helpers or values added when Buckholt was also used to build the company website. **It is not the same build as the live documentation site's `compiled.css?v=2.3`; see `discrepancies/build-provenance.md`.**
+2. `css/buckholt.css` — what this repository loads at runtime. It is a **newer, different build** from the live documentation site's `compiled.css?v=2.3`. **The reference for this work is the Code & specs documentation plus the live build**; where they disagree, the reference wins, and the newer local CSS must not be used to reinterpret older canonical documentation. See `discrepancies/build-provenance.md`.
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only, loaded after the runtime when documented behaviour is known to render incorrectly.
 4. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
 5. `patterns/<pattern>/` — composition guidance that teaches agents how Buckholt components are assembled into pages, forms and recurring product interactions.

@@ -1,14 +1,47 @@
-# Build provenance — `css/buckholt.css` is not the live build
+# Build provenance — the reference build, and how the local build differs
 
-**Status: OPEN. Needs Buckholt/Mark to clarify.**
-**Established: 2026-09-09, by direct diff of the two files.**
+**Status: SETTLED. Mark confirmed the reference build on 9 September 2026.**
+**Established: by direct diff of the two files, same date.**
 
-`css/buckholt.css` in this repository is **not** the stylesheet the live Buckholt
-documentation site serves. Until this file said so, every verification in this repository
-implicitly assumed it was.
+## The evidence model
 
-Nothing here has been "fixed". No breakpoint, token or rule in `css/buckholt.css` has been
-changed — the file remains unmodified, as does the live copy used for the diff.
+```
+Buckholt Code & specs documentation  +  live compiled.css?v=2.3
+    = the current reference for this work
+
+newer/local css/buckholt.css
+    = newer/different implementation evidence
+    = must NOT override or reinterpret older canonical documentation
+```
+
+Mark's words: **"live is your version."** The live documentation build is the reference. The
+breakpoint scale that ships with it — `896 / 1088 / 1312 / 1520 / 1720` — is the current one. The
+alternate scale in `css/buckholt.css` came from the newer build and **is not canonical documentation
+behaviour**.
+
+## What that means in practice
+
+- `css/buckholt.css` remains what this repository loads at runtime. It is not deleted: the
+  architecture does not require that, and it is useful evidence of where Buckholt is heading.
+- Where the two builds disagree, **the live build and the documentation decide.** Do not use the
+  newer local CSS to reinterpret older canonical documentation.
+- Corrections 1 and 2 in `css/buckholt-ai-fixes.css` exist to bring the local build back into line
+  with the reference build. That is their whole justification.
+- Anything below marked as differing is a record of local-build divergence, **not an open
+  question**. The open question — which build is current — is answered.
+
+## Resolved and closed
+
+| Question | Answer |
+|---|---|
+| Which breakpoint scale is current? | **Live: `896/1088/1312/1520/1720`.** The local stock-Bootstrap scale is not canonical. |
+| Which CSS build is current? | **Live `compiled.css?v=2.3`.** |
+| `data-bh-theme` vs `data-bs-theme`, dark mode | **Ignore.** Mark's instruction. Retained below for historical provenance only; not an open item. |
+| `.button-set-no-offset` | **Undocumented experimental class, not a Table feature.** Never canonical guidance. |
+| WordPress wrappers (`wp-block-acf-tabs`, `element_block`, `align`) | **WordPress-added, not Buckholt API.** Ignore. |
+
+Nothing here has been "fixed". No breakpoint, token or rule in `css/buckholt.css` has been changed —
+the file remains unmodified, as does the live copy used for the diff.
 
 ---
 
@@ -38,7 +71,7 @@ products, and not the same file.
 
 ---
 
-## 2. The breakpoint difference — the item to raise first
+## 2. The breakpoint difference — settled: live is the reference
 
 ```
 live:  896 / 1088 / 1312 / 1520 / 1720
@@ -63,8 +96,9 @@ from the live design system. All responsive verification recorded in `verificati
 measured at 1440 / 768 / 375 / 320 against the **local** scale. If the live scale is
 authoritative, that work needs re-running.
 
-**Do not change the breakpoint configuration to match.** Which scale is current is a
-question for Buckholt, and `css/buckholt.css` is not ours to edit.
+**Do not change the breakpoint configuration.** `css/buckholt.css` is not ours to edit, and the
+question of which scale is current is answered: the live scale is the reference. Any responsive
+guidance in this repository that was measured on the local scale is flagged where it appears.
 
 ---
 
@@ -216,33 +250,34 @@ compiled output only. Not patched.
 
 ## 7. What this changes about the fixes layer
 
-`css/buckholt-ai-fixes.css` was re-measured against both builds. Two rules were deleted as
-inert in both; the rest were reclassified. See that file's header and the entries in
-`known-issues.md`.
+`css/buckholt-ai-fixes.css` holds **six** corrections, each verified against the component's own
+documented markup and the current reference CSS:
 
-| Rule | Ours | Live | Outcome |
-|---|---|---|---|
-| Progress error icon | `var%28--error-01%29` | `%23D7050C` | Kept — **local build regression** |
-| Versa-tile wrap | 88px (wrapped) | 40px (one row) | Kept — **local build regression** |
-| `.dropdown-toggle::after` | `content: none` | `content: none` | **Deleted** — inert in both |
-| `.btn-close` box-sizing | renders 32×32 | renders 32×32 | **Deleted** — inert in both |
-| Alert/Toast close position | 313px | 313px | Kept — **unresolved**, documentation shows two placements |
-| Table button-set offset | 8px | 8px | Kept — **unresolved**, `.button-set-no-offset` is undocumented |
-| `img.card-img` | `object-fit: fill` | `object-fit: fill` | Kept — **upstream mismatch**, present in both |
+| Correction | Classification |
+|---|---|
+| 1 Progress error icon | Local build regression — the reference build renders it correctly |
+| 2 Versa-tile wrapping | Local build regression — the reference build renders it correctly |
+| 3 Alert close control | Runtime gap vs documented intent — horizontal corrected, 4px vertical open |
+| 4 Toast close control | Runtime gap vs documented intent — audited separately from Alert |
+| 5 Table button-set offset | Unresolved — no documented Table API cancels the offset |
+| 6 Card image fitting | Documentation / newer-CSS version mismatch |
 
----
+Two rules were deleted on 9 September 2026 after both builds were measured and proved them inert in
+both: `.dropdown-toggle::after { display: none }` and `.btn-close { box-sizing: border-box }`.
 
-## 8. Questions for Buckholt
+## 8. Still open for Buckholt
 
-1. **Which breakpoint scale is current** — 896/1088/1312/1520/1720, or stock Bootstrap?
-   This is the one that changes the most work.
-2. **`data-bh-theme` vs `data-bs-theme`** — which attribute should applications target?
-3. **Is dark mode intended to ship?** Ours emits it; live suppresses it.
-4. **The nine `var()`-in-`data:`-URI occurrences** — a regression between the two builds.
-5. **`--avatar-border-width: null`** and **`--set-row-gap: null`** — SCSS null in compiled output.
-6. **Which build should this repository hold**, and is there a versioned distribution of it?
-7. **Alert "Animations" / Toast "example 8"** place `.btn-close` inside the content wrapper,
-   a position no rule in either build supports. Should the CSS gain a rule, or the examples
-   change?
-8. **Is `.button-set-no-offset` supported API?** It exists in our build only and is
-   documented nowhere.
+Everything else has been answered — see **Resolved and closed** at the top.
+
+1. **The three local-build token defects**, with their reference values already known:
+   nine `var()` calls inside `data:` URIs, `--avatar-border-width: null`, `--card-text` empty.
+   Fixable at source in the newer build.
+2. **Alert and Toast close control** — position the documented in-content control vertically as
+   well as horizontally, and reconcile each page's "Close button" code block with its own prose.
+   Alert and Toast are separate components and may be answered separately.
+3. **Table button-set offset** — cancel the flow offset inside table cells, mirroring the existing
+   Versa-tile reset, or document a supported way to do it. `.button-set-no-offset` is experimental
+   and is not it.
+4. **Card documentation** — refresh it against the newer CSS.
+5. **Which build this repository should hold**, and whether there is a versioned distribution of
+   the reference build.

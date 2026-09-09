@@ -205,25 +205,38 @@ on Bootstrap **5.3** (`[data-bs-theme=buckholt]`, `--bs-emphasis-color`, `--bs-f
 This matches the live Buckholt documentation site, whose `<head>` comments the Bootstrap
 stylesheet out and loads only its own compiled CSS.
 
-> **`css/buckholt.css` is not the same build as the live site's `compiled.css?v=2.3`.**
-> Established 9 September 2026 by direct diff: 3,538 selectors shared, 83 live-only, 192
-> local-only, 160 shared but differing. It appears to be a later Buckholt source built with a
-> different Bootstrap configuration.
+> ### The reference build
 >
-> **The grid breakpoints differ.** Live `896 / 1088 / 1312 / 1520 / 1720`; ours
-> `576 / 768 / 992 / 1200 / 1400`. Container widths are identical (540/720/960/1140/1320) but
-> reached at different viewports, so **every responsive rule fires at a different width from the
-> live design system**. Do not change the breakpoint configuration — which scale is current is a
-> question for Buckholt.
+> ```
+> Buckholt Code & specs documentation  +  live compiled.css?v=2.3
+>     = the current reference for this work
 >
-> Ours also carries two SCSS `null` leaks and nine `var()` calls inside `data:` URIs that live
-> does not have. Before recording a rendering difference as a Buckholt defect, check
-> `discrepancies/build-provenance.md` — it may be a defect in the build we hold.
+> newer/local css/buckholt.css
+>     = newer/different implementation evidence
+>     = must NOT override or reinterpret older canonical documentation
+> ```
+>
+> Confirmed by Mark, 9 September 2026: **live is the reference build.** `css/buckholt.css` is what
+> this repository loads, but it is a **newer, different** build — direct diff: 3,538 selectors
+> shared, 83 live-only, 192 local-only, 160 differing. Where the two disagree, the live build and
+> the documentation decide.
+>
+> **Grid breakpoints — use the live scale as the reference: `896 / 1088 / 1312 / 1520 / 1720`.**
+> The local build ships stock Bootstrap `576 / 768 / 992 / 1200 / 1400`. Container widths are
+> identical (540/720/960/1140/1320) but reached at different viewports. The local scale is **not**
+> canonical documentation behaviour. Do not change the breakpoint configuration; do flag any
+> responsive figure that was measured on the local scale.
+>
+> The local build also carries two SCSS `null` leaks, an empty `--card-text`, and nine `var()`
+> calls inside `data:` URIs that the reference build does not. Before recording a rendering
+> difference as a Buckholt defect, check `discrepancies/build-provenance.md` — it may be a defect
+> in the build we hold. `.button-set-no-offset` is likewise local-only, undocumented and
+> experimental; it is **not** Table API and must not enter canonical guidance.
 
 Loading `bootstrap.min.css` as well adds a second, older copy of the same framework that
 **overrides Buckholt** — it replaced Buckholt's table text colour, imposed Bootstrap's 3.8px
 modal radius, drew a competing SVG cross on every close control and indented every
-`.form-check`. The correction layer is now **5 rules**; the full account of what was removed
+`.form-check`. The correction layer is now **6 rules** (Alert and Toast are corrected separately, as different components); the full account of what was removed
 and why is in `discrepancies/known-issues.md`.
 
 ### JavaScript — verified

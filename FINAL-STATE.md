@@ -30,9 +30,10 @@ disagreement is recorded rather than smoothed over.
 | 2 | `code-specs-html/` | The supplied Buckholt Code & specs pages. Primary markup evidence, committed so parity is repeatable. |
 | 3 | `components/*/examples.html` and `rules.md` | Canonical markup and usage, verified against layer 2 in both directions. `examples.html` is **source evidence**, preserved exactly — including deliberate `…` elisions. |
 | 4 | `foundations/`, `patterns/` | Shared scales, tokens and composition guidance. |
-| 5 | `css/buckholt.css` | Current runtime implementation, **never edited**. It is *not* the live documentation site's `compiled.css?v=2.3` — see `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent. |
-| 6 | `css/buckholt-ai-fixes.css` | Verified compatibility corrections only, where the runtime does not deliver documented intent. |
-| 7 | `responsive/` | **Non-canonical.** Application-level guidance where Buckholt is silent. |
+| 5 | live `compiled.css?v=2.3` | **The reference build** (Mark, 9 Sep 2026). With layer 2, it defines current Buckholt behaviour. |
+| 6 | `css/buckholt.css` | What the repository loads, **never edited**. A *newer, different* build — evidence of direction, not authority. It must not override or reinterpret layers 1–2 and 5. |
+| 7 | `css/buckholt-ai-fixes.css` | Verified compatibility corrections only, where the runtime does not deliver documented intent. |
+| 8 | `responsive/` | **Non-canonical.** Application-level guidance where Buckholt is silent. |
 
 Rules that make the hierarchy hold:
 
@@ -70,13 +71,13 @@ it.
 | Area | State |
 | --- | --- |
 | **Source verified** | **Machine-checked, passing.** The 40 supplied Code & specs pages are committed in `code-specs-html/`. `test/source-parity/check-source-parity.py` verifies both directions: 218 documented HTML blocks all present in the repository, and all 289 repository example blocks present in the documented source — so nothing was dropped and nothing was invented. Table alone is `SOURCE PARTIAL` (no Code & specs page supplied). `verification/component-source-status.md` |
-| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 5 documented runtime corrections re-asserted live. `test/runtime-verification/` |
+| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 6 documented runtime corrections re-asserted live. `test/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
 | **Responsive** | `test/style-guide/` audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow (re-confirmed 9 September 2026). `test/runtime-verification/` **does** overflow at 375 and 320 — it renders canonical markup unwrapped, without the containers a real page supplies; recorded as an open finding in `discrepancies/known-issues.md`. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |
 | **Source partial** | Table only — supplied from a Usage page, with no Code & specs source. |
-| **Build provenance** | **`css/buckholt.css` is not the live build.** Direct diff against `compiled.css?v=2.3`: 3,538 selectors shared, 83 live-only, 192 local-only, 160 differing. The **grid breakpoints differ** — live `896/1088/1312/1520/1720`, ours `576/768/992/1200/1400` — so every responsive rule fires at a different width from the live design system. Not normalised; open for Buckholt. `discrepancies/build-provenance.md` |
-| **Unresolved** | 12 entries marked `OPEN`, plus the Alert/Toast entry whose horizontal half is corrected and whose 4px vertical half is not; and 5 `PRODUCT RESPONSIBILITY` items, recorded rather than inferred — including a hard dependency on a Font Awesome kit whose *regular* face carries the documented glyphs. `discrepancies/known-issues.md` |
+| **Build provenance** | **Settled.** Mark confirmed the reference build: Code & specs documentation + live `compiled.css?v=2.3`. The reference breakpoint scale is `896/1088/1312/1520/1720`. `css/buckholt.css` is a newer, different build — it is what the repository loads, but it must not reinterpret older canonical documentation. `discrepancies/build-provenance.md` |
+| **Unresolved** | 12 entries marked `OPEN` — including the Alert and Toast 4px vertical offsets, whose horizontal halves are corrected — and 5 `PRODUCT RESPONSIBILITY` items, recorded rather than inferred — including a hard dependency on a Font Awesome kit whose *regular* face carries the documented glyphs. `discrepancies/known-issues.md` |
 
 ### The runtime-verification caveat
 

@@ -12,8 +12,9 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
-The layer holds **5 documented corrections** — the entries below marked `ACTIVE FIX` — expressed as
-**6 CSS rules**.
+The layer holds **6 documented corrections**, expressed as **6 CSS rules**: four entries marked
+`ACTIVE FIX`, plus Alert and Toast, whose horizontal half is corrected and whose 4px vertical half
+remains `OPEN`. Alert and Toast are separate components and are corrected by separate rules.
 
 > ## ⚠ Read `build-provenance.md` first
 >
@@ -70,12 +71,13 @@ supplies behaviour).
 [Versa-tile actions](#versa-tile--icon-only-action-set-wraps) ·
 [Empty `--card-text`](#card----card-text-is-defined-as-an-empty-value)
 
-**Unresolved, fix retained (`ACTIVE FIX`)** — [Alert/Toast close placement](#alert--toast--the-documented-in-content-close-placement-does-not-align-the-same-way) ·
-[Table action alignment](#table--action-button-set-sits-below-the-row-centre)
+**Runtime gap vs documented intent (`ACTIVE FIX` + `OPEN`)** —
+[Alert close control](#alert--4px-vertical-offset-of-the-label-when-the-documented-close-control-is-present) ·
+[Toast close control](#toast--4px-vertical-offset-of-the-label-when-the-documented-close-control-is-present)
 
-**Upstream markup/CSS mismatch (`ACTIVE FIX`)** — [Card image](#card--documented-image-markup-is-stretched)
+**Unresolved, fix retained (`ACTIVE FIX`)** — [Table action alignment](#table--action-button-set-sits-below-the-row-centre)
 
-**Build provenance (`OPEN`)** — [`build-provenance.md`](build-provenance.md)
+**Documentation / newer-CSS version mismatch (`ACTIVE FIX`)** — [Card image](#card--documented-image-markup-is-stretched)
 
 **Dependency requirements** — [Font Awesome Pro required](#font-awesome--the-regular-face-must-carry-the-documented-glyphs)
 
@@ -83,8 +85,6 @@ supplies behaviour).
 [Harness overflow at 375/320](#runtime-verification-harness--horizontal-overflow-at-375px-and-320px) ·
 [Link visited](#link--visited-state-not-implemented) ·
 [Radius `full`](#radius--full-name-and-value-disagree) ·
-[Modal trigger id](#modal--the-documented-trigger-targets-an-id-no-documented-modal-carries) ·
-[Tabs/Table doc-site classes](#canonical-tabs-and-table-carry-documentation-site-wrapper-classes) ·
 [Unimplemented documented classes](#documented-classes-with-no-implementation-in-either-build) ·
 [Group labels](#form-groups--labelfor-with-no-matching-control) · [Text area counter](#text-area--counter-updates-on-keyup-only)
 
@@ -93,6 +93,10 @@ supplies behaviour).
 [Table controller](#table--data-cdt--controller) · [Dropdown single select](#dropdown--single-select-label)
 
 **Source coverage** — [Table](#table--source-partial)
+
+**Build provenance** — [`build-provenance.md`](build-provenance.md). The reference build is now
+settled (see below); what remains there is a record of how the local build differs, not an open
+question.
 
 ---
 
@@ -166,119 +170,109 @@ Confirmed identically in **both** builds. The obvious remedy in each case would 
 canonical Buckholt markup or promoting an undocumented runtime helper, which
 `CANONICAL-MARKUP.md` and `CLAUDE.md` forbid. The CSS rule stays until Buckholt clarifies.
 
-## Alert / Toast — the documented in-content close placement does not align the same way
+## Alert — 4px vertical offset of the label when the documented close control is present
 
-- **Status:** `ACTIVE FIX` (horizontal) + `OPEN` (vertical) — **unresolved**. Re-verified
-  9 September 2026 against the live stylesheet.
-- **This is not a build regression.** `.alert-content` and `.toast-content` are
-  **byte-identical** between `css/buckholt.css` and the live `compiled.css?v=2.3`, and the full
-  `.btn-close` selector set is identical. Both builds measure the same. The live Buckholt
-  documentation site behaves exactly as this repository does.
+- **Status:** `OPEN` (vertical) — the horizontal half is corrected by **correction 3**.
+  Audited independently of Toast on 9 September 2026 against Alert's own Code & specs page.
+- **Documented intent.** `code-specs-html/Alert_ code & specs`, section "Close button":
 
-### Buckholt documents two placements, and they are not interchangeable
+  > "The close button is positioned as the last element **inside the `.alert-content` container**
+  > using the `.btn-close` class."
 
-| | Documented in | Label offset | Trailing gap | Component height |
-|---|---|---|---|---|
-| **Sibling** of `.alert-content` / `.toast-content` | Alert "Close button", Toast example 6 | **0.0px** | 8px | 48px |
-| **Inside** `.alert-content` / `.toast-content` | Alert "Animations", Toast example 8 | **+4.0px** | 313px (16px with correction 3) | 56px |
+  So the in-content placement is what Buckholt intends. The page's "Animations" code block matches
+  that prose; the "Close button" section's own code block places the control as a sibling instead,
+  so Buckholt's two documented blocks disagree with each other while the prose does not.
+- **Measured against the current reference CSS** (live `compiled.css?v=2.3`), using Alert's own
+  documented block:
 
-Measured across single-line, multi-line, with icon and without; identical in both builds.
-
-**Why the in-content placement does not vertically align.** `.alert-content` has
-`padding: 0.25rem 0.5rem`, so a single-line body measures 24 + 4 + 4 = **32px — exactly the
-height of `.btn-close`**. Buckholt sized these to match. Placed as a sibling, the two 32px boxes
-sit side by side and agree. Placed inside, the button becomes a **third item in a 24px flex row**:
-the row grows to the button's 32px, `.alert-body` stretches to fill it (the wrapper sets no
-`align-items`, so the default `stretch` applies), and the 24px text line sits at the top of that
-box — 4px high. The 8px the component grows by is the same 8px.
-
-**The vertical offset is not corrected, and should not be.** Neither candidate works:
-`align-items: center` on the content row drops the icon 36px in the multi-line case;
-`align-self: center` on the body shifts the icon 4px in the single-line case. Both trade one
-misalignment for another. No CSS has been added for it.
-
-### What the repository does
-
-- **Canonical examples are unchanged.** `components/alert/examples.html`,
-  `components/toast/examples.html` and `test/runtime-verification/index.html` preserve **both**
-  documented structures exactly. That is what keeps the difference measurable.
-- **`test/style-guide/` uses the sibling placement.** It is a composed demonstration page — its
-  own preamble says so and points at `test/runtime-verification/` for the exact unmodified markup
-  — and its four Alert/Toast instances were never byte-exact transcriptions anyway (the two
-  "Dismissible" examples add `.alert-info` / `.toast-info` that the canonical examples do not
-  carry; the stacked-container example adds a close button that canonical Toast example 9 does not
-  have). Choosing between two documented placements for our own composition is not a rewrite of
-  canonical markup.
-- **Correction 3 compensates the canonical case only.** Its selector matches the in-content
-  placement and nothing else. Measured 9 September 2026:
-
-  | Page | Correction 3 matches | Sibling instances |
+  | | close vs right edge | close vs text |
   |---|---|---|
-  | `test/style-guide/` | **0** | 4 |
-  | `test/runtime-verification/` | **2** (canonical Alert + Toast) | 2 |
+  | reference CSS alone | **432px** — against the message text | +4.0px |
+  | with correction 3 | **16px** — trailing edge, as documented | +4.0px |
 
-  It addresses the horizontal offset only, is still required, and is not removed.
+  Identical in the local build. Neither build has any rule for a `.btn-close` inside
+  `.alert-content`; the runtime positions the control only through `.alert-dismissible`, which the
+  canonical examples never use.
+- **Why the 4px happens.** `.alert-content` has `padding: 0.25rem 0.5rem`, so a single-line body is
+  exactly 32px — the height of `.btn-close`. Inside the wrapper the button becomes a third item in
+  a 24px row: the row grows to 32px, `.alert-body` stretches (no `align-items`, so `stretch`
+  applies) and the text sits at its top.
+- **Not corrected, and should not be.** `align-items: center` on the content row drops the icon 36px
+  in the multi-line case; `align-self: center` on the body shifts the icon 4px in the single-line
+  case. Both trade one misalignment for another. No CSS has been added for it.
+- **The style guide shows this**, using the documented in-content structure rather than the other
+  documented code variant, so the gap is visible rather than hidden.
+- **Upstream action:** position the documented in-content close control vertically as well as
+  horizontally, and reconcile the "Close button" code block with its own prose.
 
-### Why it stays unresolved
+## Toast — 4px vertical offset of the label when the documented close control is present
 
-Both placements are canonical and neither `rules.md` states where the control belongs, so there is
-no documented basis for preferring one **in the canonical examples**. Rewriting them from CSS
-behaviour is what `CANONICAL-MARKUP.md` forbids.
+- **Status:** `OPEN` (vertical) — the horizontal half is corrected by **correction 4**.
+  Audited independently of Alert, against Toast's own Code & specs page. **Alert and Toast are
+  different components** (confirmed by Mark, 9 September 2026); that they behave alike here is a
+  measured result, not an assumption, and their corrections are kept as separate rules so they can
+  diverge.
+- **Documented intent.** `code-specs-html/Toast_ code & specs`, section "Close button":
 
-- **Upstream action:** reconcile the two documented placements, or add a rule that supports the
-  in-content one — horizontally *and* vertically.
+  > "The close button is positioned as the last element **inside the `.toast-content` container**
+  > using the `.btn-close` class."
+
+- **Measured against the current reference CSS**, using Toast's own documented block:
+
+  | | close vs right edge | close vs text |
+  |---|---|---|
+  | reference CSS alone | **186px** | +4.0px |
+  | with correction 4 | **16px** | +4.0px |
+
+  Identical in the local build. `.toast-content` carries the same padding and the same absence of
+  `align-items` as `.alert-content`, which is why the 4px is the same figure — but it was measured
+  on Toast, not inherited from the Alert finding.
+- **Not corrected:** as for Alert. Do not merge the two selectors back together.
+- **Upstream action:** as for Alert, for Toast.
 
 ## Table — action button set sits below the row centre
 
-- **Status:** `ACTIVE FIX` — **unresolved**. Re-verified 9 September 2026 against the live
-  stylesheet.
+- **Status:** `ACTIVE FIX` — **unresolved**. Re-verified 9 September 2026.
 - **Evidence:** `margin-top: 8px` on a button set in a table cell in **both** builds. Not a
-  regression.
+  regression and not specific to the local build.
 - **Runtime cause:** Buckholt gives every button set a flow offset,
   `[class$=-set][class|=button] { margin-top: 0.5rem }`. Table cells are not normal flow —
   `.table > :not(caption) > * > *` sets `vertical-align: middle` — so the offset displaces the
   action.
-- **Why unresolved:** our build ships an opt-out the live build does not have,
-  `[class$=-set][class|=button].button-set-no-offset { margin: 0 }`, and it works (measured 8px
-  → 0px). But it is **undocumented** — absent from every `components/`, `patterns/`,
-  `foundations/` and `CANONICAL-MARKUP.md` file — and `components/table/examples.html` line 81
-  uses a plain `<div class="button-set">`. Adopting it would mean promoting an undocumented
-  runtime helper *and* editing canonical Table markup.
+- **Why unresolved:** Buckholt's documented Table markup uses a plain `<div class="button-set">`,
+  and no documented Table guidance addresses the offset. There is no documented Table API for
+  cancelling it.
+- **`.button-set-no-offset` is not the answer.** Mark confirmed on 9 September 2026 that it is an
+  **undocumented experimental class and not a Table feature**. It exists in the local
+  `css/buckholt.css` only. It must not be used here, added to canonical guidance, or described as
+  intended Table API. It is recorded in [`build-provenance.md`](build-provenance.md) as a
+  local-build difference and nothing more.
 - **Precedent:** Buckholt already cancels the offset inside a component that positions its own
-  actions, shipping `.versatile-actions .button-set { margin: 0 }` in **both** builds, but has
-  no table equivalent.
-- **Compatibility fix:** correction 4, mirroring the Versa-tile reset scoped to table cells.
-- **Upstream action:** document `.button-set-no-offset`, or add the table-cell reset alongside
-  the Versa-tile one.
-
----
-
-# Upstream markup / CSS mismatch
-
-Present identically in **both** builds. Buckholt's CSS and Buckholt's own documented markup
-disagree with each other.
+  actions — `.versatile-actions .button-set { margin: 0 }`, present in both builds — but has no
+  table equivalent.
+- **Compatibility fix:** correction 5, mirroring the Versa-tile reset scoped to table cells.
+- **Upstream action:** cancel the button-set flow offset inside table cells, mirroring the existing
+  Versa-tile reset.
 
 ## Card — documented image markup is stretched
 
-- **Status:** `ACTIVE FIX` — **upstream mismatch**, present in both builds. Re-verified
-  9 September 2026 against the live stylesheet.
-- **Evidence:** `object-fit: fill` measured in **both** builds; the documented image card
-  renders a 1.78 natural ratio at 2.10. With correction 5, `cover`.
-- **Runtime cause:** both builds write `.card-img` as a *container* — they size the box
+- **Status:** `ACTIVE FIX` — **documentation / newer-CSS version mismatch**. Reclassified
+  9 September 2026 on Mark's confirmation.
+- **Mark's answer:** the Card image area has been updated recently and **the documentation has not
+  caught up with the newer CSS**. This is version skew between two moving parts — **not** an
+  upstream Buckholt defect, and not a local build regression.
+- **Evidence:** both builds write `.card-img` as a *container* — they size the box
   (`width: 100%; height: var(--card-image-max-height)`) and put the fitting on a child,
-  `.card-img img { object-fit: cover }`. The canonical example puts the class on the image
-  itself, `<img src="..." class="card-img">`, so the child rule never matches and the image is
-  stretched rather than cropped.
-- **Difference between builds:** live differs only by the container lacking
-  `aspect-ratio: var(--card-aspect-ratio)`, which ours adds. Behaviour is otherwise identical.
-- **What went away:** the bottom-corner rounding came from the *separate* Bootstrap stylesheet.
-  With it removed the image reports `border-bottom-left-radius: 0` on its own, and only the
-  `object-fit` half of the original fix remains.
-- **Compatibility fix:** correction 5. The fitting the runtime already specifies is applied to
-  the element the documented markup uses. The canonical markup is not changed.
-- **Retained:** temporarily, pending Buckholt's answer on which side is wrong.
-- **Upstream action:** make the runtime rule match a bare `<img class="card-img">` as well as a
-  wrapper, or correct the documented example.
+  `.card-img img { object-fit: cover }`. The documented example puts the class on the image itself,
+  `<img src="..." class="card-img">`, so the child rule never matches. Measured `object-fit: fill`
+  in both builds; with correction 6, `cover`.
+- **Difference between builds:** the local build adds `aspect-ratio: var(--card-aspect-ratio)` to
+  the container; behaviour is otherwise identical.
+- **Compatibility fix:** correction 6 applies the fitting the runtime already specifies to the
+  element the documented markup actually uses.
+- **Do not invent canonical markup to reconcile this.** The documented example stays as documented;
+  the correction bridges the gap until the documentation catches up.
+- **Upstream action:** refresh the Card documentation against the current CSS.
 
 ---
 
@@ -391,54 +385,6 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   while this stands.
 - **Upstream action:** reconcile the token name with its value.
 
-## Modal — the documented trigger targets an id no documented modal carries
-
-- **Status:** `OPEN` — found 9 September 2026 during final verification. Not corrected.
-- **Evidence:** `components/modal/examples.html:33` declares
-  `<button data-bs-toggle="modal" data-bs-target="#exampleModal">`, but no element in that file
-  carries `id="exampleModal"` — the documented modal is `<div class="modal fade" tabindex="-1">`
-  with no id at all. The trigger and the modal it is meant to open are not connected in the source.
-- **Consequence:** clicking the trigger where the canonical markup is rendered verbatim throws
-  inside Bootstrap — `Uncaught TypeError: Cannot read properties of undefined (reading 'classList')`
-  at `_isAnimated` / `_initializeBackDrop`, because `getElementFromSelector()` returns null.
-  Reproduced on `test/runtime-verification/`, which renders the example unmodified. The page loads
-  and renders cleanly; the error occurs only on that click.
-- **Confirmed against the source, 9 September 2026.** With `code-specs-html/` now in the
-  repository, this is verified rather than inferred: the Modal page documents the trigger and the
-  modal in **separate code blocks** — block 1 carries `data-bs-target="#exampleModal"`, and no
-  documented block anywhere on the page carries `id="exampleModal"`. The repository transcription
-  is faithful; the gap is genuinely in Buckholt's documentation.
-- **Not a defect in either build.** This is documented markup, not CSS. It is the same class of
-  source gap as the `label[for]` entry below.
-- **Not corrected:** adding an id would mean editing canonical markup to make a documented example
-  work, which `CANONICAL-MARKUP.md` forbids. `test/style-guide/` is unaffected — it composes and
-  assigns page-unique ids (`#sgModalDefault` and siblings), and its modals open and close correctly.
-- **Upstream action:** give the documented modal the `id` its own trigger targets, or document the
-  pairing explicitly.
-
-## Canonical Tabs and Table carry documentation-site wrapper classes
-
-- **Status:** `OPEN` — found 9 September 2026 during the canonical parity sweep. Not corrected.
-- **Evidence:** `components/tabs/examples.html:4` and `:47` open with
-  `<div class="tabs element_block align wp-block-acf-tabs">`, and
-  `components/table/examples.html:96` uses `<table class="table no-italics simple_table">`.
-  `wp-block-acf-tabs` is a WordPress Advanced Custom Fields block wrapper; `element_block`,
-  `align` and `simple_table` follow the documentation site's own naming rather than Buckholt's
-  hyphenated component convention.
-- **Neither build styles them.** `.wp-block-acf-tabs`, `.element_block`, `.align` and
-  `.simple_table` appear in **neither** `css/buckholt.css` **nor** the live `compiled.css?v=2.3`.
-  They render nothing.
-- **Settled against the source, 9 September 2026.** `code-specs-html/` is now in the repository,
-  and these classes are **inside the documented `<pre class="wp-block-code">` block itself** —
-  Tabs blocks 0 and 1 both open with `<div class="tabs element_block align wp-block-acf-tabs">`.
-  They are not something this repository picked up from the surrounding page. The transcription is
-  correct; the question is whether Buckholt intends them.
-- **Not corrected:** they are documented markup, and `CANONICAL-MARKUP.md` forbids removing
-  documented markup because it looks wrong. Consuming applications should omit them; this
-  repository preserves them as documented.
-- **Upstream action:** confirm whether these wrappers are part of the documented component or
-  artefacts of the documentation page.
-
 ## Documented classes with no implementation in either build
 
 - **Status:** `OPEN` — informational. Recorded 9 September 2026. Nothing corrected.
@@ -449,7 +395,7 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   |---|---|---|
   | **JavaScript hooks** | `.step-add`, `.step-btn`, `.step-minus`, `.counting` (`form.js`), `.tab-scroll-left`, `.tab-scroll-right` (`tabs.js`), `.dropdown-label` (`dropdown.js`) | **Not a gap.** The supplied component scripts bind to them. |
   | **Structural / semantic hooks** | `.alert-body`, `.alert-note`, `.toast-note`, `.avatar-img`, `.avatar-initials`, `.data-number`, `.no-italics`, `.table-sort-header`, `.table-checkbox-header`, `.expressive-primary`, `.multi-input`, `.textarea-input`, `.submenu-item-selectable` | Carry meaning in the DOM but no styling. Harmless; an application may target them. |
-  | **Documentation-site residue** | `.wp-block-acf-tabs`, `.element_block`, `.align`, `.simple_table` | See the entry above. |
+  | **WordPress wrappers** | `.wp-block-acf-tabs`, `.element_block`, `.align`, `.simple_table` | **Not Buckholt API.** Mark confirmed 9 September 2026 that these are WordPress-added wrappers; ignore them. Preserved in canonical markup because they sit inside the documented code block, but they carry no Buckholt meaning and applications should omit them. |
 
 - **Why this is not a defect list:** per `CLAUDE.md`'s evidence discipline, a class is not missing
   merely because no rule exists. These are identical in both builds, so none is a local build

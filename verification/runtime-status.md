@@ -36,7 +36,7 @@ A controlled pass was run against `test/runtime-verification/`, which composes e
 - dependency contract checked, including stylesheet order;
 - every finding classified with the framework categories, with harness artefacts of composition
   (reused ids, documented `…` elisions, cross-snippet references) separated from component findings;
-- all 5 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
+- all 6 documented corrections in `css/buckholt-ai-fixes.css` re-verified in effect by
   measurement, via 6 runtime assertions;
 - resting render, and the Bootstrap and component-script behaviours the markup exercises
   (Modal, Tabs, Accordion, Collapse, Dropdown, Toast, Tooltip, the `form.js` enhancements);
@@ -61,9 +61,12 @@ regressions in our build only and render correctly on the live site.
 The finding that bears on everything above: **the grid breakpoints differ.** Live uses
 `896 / 1088 / 1312 / 1520 / 1720`; ours uses stock Bootstrap `576 / 768 / 992 / 1200 / 1400`.
 Container widths are identical but reached at different viewports. **All responsive results
-recorded here and in `responsive/` were measured against the local scale.** If the live scale is
-authoritative, that work must be re-run. This is an open question for Buckholt; the breakpoint
-configuration has not been changed.
+recorded here and in `responsive/` were measured against the local scale.**
+
+**Mark confirmed on 9 September 2026 that the live build is the reference**, so the live scale is
+the current one and those responsive figures do not describe reference behaviour at the widths they
+name. The breakpoint configuration has not been changed — `css/buckholt.css` is not ours to edit —
+but the responsive work should be re-run against the reference scale before it is relied on.
 
 **Not yet completed, and why no component advances to `RUNTIME VERIFIED`:**
 

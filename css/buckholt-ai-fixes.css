@@ -4,15 +4,36 @@
 
    What this file is
    -----------------
-   Five corrections measured against `css/buckholt.css`. Two of them are
-   regressions in THIS BUILD of `buckholt.css`, not defects in Buckholt. Two
-   are unresolved. One is an upstream markup/CSS mismatch.
+   Six corrections, each verified against BOTH the component's own documented
+   Code & specs markup in `code-specs-html/` and the current reference CSS.
 
-   Read `discrepancies/build-provenance.md` first. `css/buckholt.css` is NOT
-   the same build as the live documentation site's `compiled.css?v=2.3`. The
-   two files were diffed on 2026-09-09: 3,538 selectors shared, 83 live-only,
-   192 local-only, 160 shared-but-differing. Some of what this file corrects
-   renders correctly on the live site.
+   Reference model (confirmed by Mark, 9 September 2026)
+   -----------------------------------------------------
+       Buckholt Code & specs documentation + live `compiled.css?v=2.3`
+           = the current reference for this work
+
+       newer/local `css/buckholt.css`
+           = newer/different implementation evidence
+           = must NOT override or reinterpret older canonical documentation
+
+   `css/buckholt.css` is what this repository loads at runtime, but it is not
+   the reference. Where the two builds differ, the live build and the
+   documentation decide. Corrections 1 and 2 exist precisely to bring the local
+   build back into line with the reference build.
+
+   How each correction is classified
+   ---------------------------------
+   LOCAL BUILD REGRESSION   the reference build renders this correctly; the
+                            local build does not. The fix restores reference
+                            behaviour.
+   RUNTIME GAP vs DOCUMENTED INTENT
+                            the documentation states the intended structure and
+                            result; neither build delivers it. The fix delivers
+                            what the documentation states.
+   DOCUMENTATION / NEWER-CSS VERSION MISMATCH
+                            the CSS moved on and the documentation has not
+                            caught up. Not an upstream defect; not ours to
+                            reconcile by inventing markup.
 
    It is NOT a Bootstrap compatibility layer. It was one - fourteen rules, nine
    of them undoing a separate Bootstrap 5.1.3 stylesheet this repository used to
@@ -20,17 +41,6 @@
    which loads only its own compiled CSS, and two further rules were deleted on
    2026-09-09 after both builds were measured and proved them inert in both.
    The full account is in `discrepancies/known-issues.md`.
-
-   How each rule is classified
-   ---------------------------
-   LOCAL BUILD REGRESSION  the live build renders this correctly; ours does
-                           not. Fix belongs in the Buckholt build we hold.
-   UPSTREAM MISMATCH       both builds behave identically; the defect is a
-                           disagreement between Buckholt's CSS and Buckholt's
-                           own documented markup.
-   UNRESOLVED              the behaviour is confirmed in both builds, but the
-                           documented markup does not establish the fix. The
-                           rule stays until Buckholt clarifies.
 
    Runtime contract
    ----------------
@@ -41,13 +51,8 @@
 
    No separate Bootstrap stylesheet. Bootstrap JavaScript is a separate
    dependency and IS required - the live documentation site loads the 5.1.3
-   bundle, active, for the ten components with `data-bs-*` hooks. Verified with
-   Bootstrap CSS removed: tabs, tooltips, toasts, modals, dropdowns and
-   accordions all still work. See CLAUDE.md.
+   bundle, active, for the ten components with `data-bs-*` hooks. See CLAUDE.md.
    ============================================================================ */
-
-
-
 /* ============================================================================
    1. PROGRESS BAR - error status icon renders black
    CLASSIFICATION: LOCAL BUILD REGRESSION
@@ -107,97 +112,121 @@
 
 
 /* ============================================================================
-   3. ALERT / TOAST - the documented in-content close control does not sit at
-      the trailing edge
-   CLASSIFICATION: UNRESOLVED - behaviour confirmed in both builds
-   NOT a local build regression. `.alert-content` and `.toast-content` are
-   BYTE-IDENTICAL between `css/buckholt.css` and the live `compiled.css?v=2.3`,
-   and the full `.btn-close` selector set is identical. Measured distance from
-   the component's right edge: 313px local, 313px live. The live documentation
-   site behaves exactly as this repository does.
+   3. ALERT - the documented close control does not sit at the trailing edge
+   CLASSIFICATION: RUNTIME GAP vs DOCUMENTED INTENT
+   Audited independently of Toast. Alert and Toast are different components;
+   the fact that they behave alike here is a measured result, not an assumption.
 
-   The two documented placements
-   -----------------------------
-   Buckholt documents `.btn-close` in two positions, and they are not
-   interchangeable:
+   Documented intent
+   -----------------
+   `code-specs-html/Alert_ code & specs`, section "Close button", states in
+   prose:
 
-     SIBLING of the content wrapper - Alert "Close button", Toast "Code & specs
-       example 6". The wrapper claims `width: 100%` and pushes the button to
-       the trailing edge unaided, and its 32px box matches the content row, so
-       the label stays vertically centred. Measured 0.0px label offset, 8px
-       trailing gap, 48px component height.
+       "The close button is positioned as the last element inside the
+        .alert-content container using the .btn-close class."
 
-     INSIDE the content wrapper - Alert "Animations", Toast "Code & specs
-       example 8". No rule in either build pushes it, so it sits against the
-       message text. It is also a third item in a 24px flex row: the row grows
-       to the button's 32px, `.alert-body` stretches (the wrapper sets no
-       `align-items`, so `stretch` applies) and the 24px text line sits at its
-       top. Measured +4.0px label offset, 56px component height.
+   So INSIDE `.alert-content` is the documented structure. The page's
+   "Animations" code block matches that prose. The "Close button" section's own
+   code block places it as a sibling instead, so the two documented blocks
+   disagree with each other while the prose does not.
 
-   This rule addresses the horizontal offset only. The 4px vertical offset is
-   inherent to the in-content placement and is NOT corrected here. Do not try:
-   `align-items: center` on the content row drops the icon 36px in the
-   multi-line case, and `align-self: center` on the body shifts the icon 4px in
-   the single-line case. Both trade one misalignment for another.
+   Measured (Alert's own documented block, against the live reference CSS)
+   ----------------------------------------------------------------------
+       no fixes   close sits 432px from the alert's right edge - against the
+                  message text, not the trailing edge
+       this rule  16px - at the trailing edge, as documented
+   Identical in the local build. Neither build positions it unaided: neither
+   has any rule for a `.btn-close` inside `.alert-content`, and the runtime
+   positions the control only through `.alert-dismissible`, a class the
+   canonical examples never use.
 
-   What this rule compensates, and what it does not
-   ------------------------------------------------
-   The selector matches ONLY the in-content placement, so it reaches the
-   canonical examples and nothing else. Measured 2026-09-09:
+   NOT corrected: the 4px vertical offset
+   --------------------------------------
+   `.alert-content` has `padding: 0.25rem 0.5rem`, so a single-line body is
+   exactly 32px - the height of `.btn-close`. Inside the wrapper the button is
+   a third item in a 24px row: the row grows to 32px, `.alert-body` stretches
+   (the wrapper sets no `align-items`, so `stretch` applies) and the text sits
+   at its top. Measured +4.0px in both builds, with and without this rule.
+   Do NOT add `align-items`: `center` on the content row drops the icon 36px in
+   the multi-line case, and `align-self: center` on the body shifts the icon 4px
+   in the single-line case. Recorded as an open runtime gap.
 
-     test/style-guide/            0 matches  (4 sibling-placement instances)
-     test/runtime-verification/   2 matches  (canonical Alert + Toast)
-
-   `test/style-guide/` composes its own examples and uses the sibling
-   placement, so it does not depend on this rule. The canonical Alert and Toast
-   `examples.html` under `components/`, and `test/runtime-verification/` which
-   renders them verbatim, keep the in-content placement - and those are what
-   this rule exists for. Removing it would leave them with the close control
-   against the message text.
-
-   Why it is not resolved by changing markup
-   -----------------------------------------
-   Both placements are canonical and neither `rules.md` states where the
-   control belongs, so there is no documented basis for preferring one in the
-   canonical examples. Rewriting them from CSS behaviour is what
-   CANONICAL-MARKUP.md forbids. The question goes to Buckholt.
-
-   Upstream: reconcile the two documented placements, or add a rule that
-             supports the in-content one - horizontally and vertically.
+   Upstream: position the documented in-content close control - horizontally and
+             vertically - and reconcile the "Close button" code block with its
+             own prose.
    ============================================================================ */
 
-.alert-content > .btn-close,
+.alert-content > .btn-close {
+  margin-left: auto;
+}
+
+
+/* ============================================================================
+   4. TOAST - the documented close control does not sit at the trailing edge
+   CLASSIFICATION: RUNTIME GAP vs DOCUMENTED INTENT
+   Audited independently of Alert, against Toast's own Code & specs page.
+
+   Documented intent
+   -----------------
+   `code-specs-html/Toast_ code & specs`, section "Close button", states:
+
+       "The close button is positioned as the last element inside the
+        .toast-content container using the .btn-close class."
+
+   Same intent as Alert, established from Toast's own documentation rather than
+   inherited from it. Toast's "Animations" section documents the `.fade` class
+   and happens to show the in-content placement; its "Close button" code block
+   shows the sibling placement, the same internal disagreement Alert has.
+
+   Measured (Toast's own documented block, against the live reference CSS)
+   ----------------------------------------------------------------------
+       no fixes   close sits 186px from the toast's right edge
+       this rule  16px - at the trailing edge, as documented
+   Identical in the local build.
+
+   The 4px vertical offset applies here too, for the same reason, and is
+   likewise NOT corrected - `.toast-content` carries the same padding and no
+   `align-items`. See correction 3.
+
+   Kept separate from Alert deliberately: the two components are documented
+   separately and may diverge. Do not merge these selectors back together.
+
+   Upstream: as correction 3, for Toast.
+   ============================================================================ */
+
 .toast-content > .btn-close {
   margin-left: auto;
 }
 
 
 /* ============================================================================
-   4. TABLE - action button set sits below the row's centre line
+   5. TABLE - action button set sits below the row's centre line
    CLASSIFICATION: UNRESOLVED - documentation does not establish a fix
    Cause:    Buckholt gives every button set a flow offset,
              `[class$=-set][class|=button] { margin-top: 0.5rem }`, so a set
-             placed in a table cell is pushed below every other cell's
-             content.
-   Live:     both builds carry the offset and both measure `margin-top: 8px`
-             in a table cell. Not a regression.
-   Measured: local build 8px; live build 8px.
+             placed in a table cell is pushed below every other cell's content.
+             Table cells are not normal flow - `.table > :not(caption) > * > *`
+             sets `vertical-align: middle` - so the offset displaces the action.
+   Both builds: `margin-top: 8px` in a table cell. Not a regression, and not
+             specific to the local build.
    Why unresolved:
-             Our build ships an opt-out class the live build does not have -
-             `[class$=-set][class|=button].button-set-no-offset { margin: 0 }`
-             - and it works (measured 8px -> 0px). But it is undocumented:
-             it appears in no `components/`, `patterns/`, `foundations/` or
-             `CANONICAL-MARKUP.md` file, and `components/table/examples.html`
-             line 81 uses a plain `<div class="button-set">`. Adopting it would
-             mean promoting an undocumented runtime helper AND editing
-             canonical Table markup, both of which CLAUDE.md forbids. So the
-             CSS rule stays and the question goes to Buckholt.
-   Precedent: Buckholt already cancels this offset inside a component that
+             Buckholt's documented Table markup uses a plain
+             `<div class="button-set">` and no documented Table guidance
+             addresses the offset. There is no documented Table API for
+             cancelling it, so this rule remains a correction rather than a
+             documented option.
+   Note:     `.button-set-no-offset` exists in the local `buckholt.css` only.
+             Mark confirmed on 2026-09-09 that it is an UNDOCUMENTED
+             EXPERIMENTAL class and NOT a Table feature. It must not be used
+             here, added to canonical guidance, or described as intended Table
+             API. It is recorded in `discrepancies/build-provenance.md` as a
+             local-build difference and nothing more.
+   Precedent: Buckholt already cancels the offset inside a component that
              positions its own actions - `.versatile-actions .button-set
-             { margin: 0 }`, present in both builds - but has no equivalent
-             for a table cell.
-   Upstream: document `.button-set-no-offset`, or cancel the offset inside
-             table cells as the Versa-tile reset already does.
+             { margin: 0 }`, present in both builds - but has no table
+             equivalent.
+   Upstream: cancel the button-set flow offset inside table cells, mirroring the
+             existing Versa-tile reset.
    ============================================================================ */
 
 .table td .button-set {
@@ -206,24 +235,28 @@
 
 
 /* ============================================================================
-   5. CARD - documented image markup is stretched
-   CLASSIFICATION: UPSTREAM MISMATCH - present in both builds
-   Cause:    both builds write `.card-img` as a *container*: they size the box
+   6. CARD - documented image markup is stretched
+   CLASSIFICATION: DOCUMENTATION / NEWER-CSS VERSION MISMATCH
+   Mark confirmed on 2026-09-09 that the Card image area has been updated
+   recently and the documentation has not caught up with the newer CSS. This is
+   therefore a version-skew between two moving parts, NOT an upstream Buckholt
+   defect and NOT a local build regression.
+
+   Cause:    both builds write `.card-img` as a *container* - they size the box
              (`width: 100%; height: var(--card-image-max-height)`) and put the
              fitting on a child, `.card-img img { object-fit: cover }`. The
-             canonical example puts the class on the image itself -
-             `<img src="..." class="card-img">` - so the child rule never
-             matches and the image is stretched to the box instead of cropped
-             to it.
-   Live:     same structure, same result. `compiled.css?v=2.3` differs only by
-             adding `aspect-ratio: var(--card-aspect-ratio)` to the container.
-   Measured: `object-fit: fill` in BOTH builds; with this rule, `cover`.
-   Note:     this compensates for a structure mismatch between Buckholt's CSS
-             and Buckholt's own documented markup. The canonical markup is
-             source evidence and is not changed.
-   Retained: temporarily, pending Buckholt's answer on which side is wrong.
-   Upstream: make the runtime rule match a bare `<img class="card-img">` as
-             well as a wrapper, or correct the documented example.
+             documented example puts the class on the image itself,
+             `<img src="..." class="card-img">`, so the child rule never matches
+             and the image is stretched rather than cropped.
+   Measured: `object-fit: fill` in BOTH builds; with this rule, `cover`. The
+             local build differs from the reference only by adding
+             `aspect-ratio: var(--card-aspect-ratio)` to the container.
+   Fix:      apply the fitting the runtime already specifies to the element the
+             documented markup actually uses.
+   Do NOT:   invent canonical markup to reconcile the two. The documented
+             example stays as documented; this rule bridges the gap until the
+             documentation catches up.
+   Upstream: refresh the Card documentation against the current CSS.
    ============================================================================ */
 
 img.card-img,
