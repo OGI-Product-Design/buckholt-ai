@@ -770,7 +770,7 @@
         }).join('') +
       '</ul>' +
       (extra > 0
-        ? '<p class="ori-selected-panel-more">+ ' + plural(extra, 'more product') + '</p>'
+        ? '<p class="body-02 ori-selected-panel-more">+ ' + plural(extra, 'more product') + '</p>'
         : '');
   }
 

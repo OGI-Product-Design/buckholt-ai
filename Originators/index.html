@@ -37,21 +37,23 @@
       What can I search?
     </a>
 
-    <div class="ori-appbar-spacer"></div>
+    <!-- One tight row: the dividers butt against each cell's own padding, so
+         no gap sits between a divider and the text beside it. -->
+    <div class="ori-appbar-right">
+      <span class="ori-appbar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
 
-    <span class="ori-appbar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
+      <div class="ori-appbar-clock">
+        <span class="ori-appbar-time">13:24</span>
+        <span class="ori-appbar-date">07 August 2023</span>
+      </div>
 
-    <div class="ori-appbar-clock">
-      <span class="ori-appbar-time">13:24</span>
-      <span class="ori-appbar-date">07 August 2023</span>
+      <button type="button" class="ori-appbar-account">
+        Accounts
+        <i class="fa-regular fa-chevron-down" aria-hidden="true"></i>
+      </button>
+
+      <span class="ori-appbar-avatar" aria-hidden="true">AC</span>
     </div>
-
-    <button type="button" class="ori-appbar-account">
-      Accounts
-      <i class="fa-regular fa-chevron-down" aria-hidden="true"></i>
-    </button>
-
-    <span class="ori-appbar-avatar" aria-hidden="true">AC</span>
   </header>
 
   <aside id="sidebar" class="ori-sidenav">
@@ -150,7 +152,7 @@
                 </div>
 
                 <div class="ori-toolbar-actions">
-                  <p class="ori-selection-count" id="ori-selection-count" aria-live="polite">0 products selected</p>
+                  <p class="body-02 ori-selection-count" id="ori-selection-count" aria-live="polite">0 products selected</p>
 
                   <button type="button" class="btn btn-primary" id="ori-reassign" disabled>
                     <span class="button-label">Reassign originator</span>

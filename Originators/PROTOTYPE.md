@@ -362,12 +362,71 @@ when both apply.
 > account-holder and combined bodies, and the two alerts appearing together, are not
 > drawn in any frame.
 
-### 16. Page background
+### 16. Typography — where a type-set class is and is not used
+
+Audited on 29 September 2026 across Main and all three modals. Every text element
+renders in Proxima-soft through the Buckholt runtime; no custom font stack exists
+inside Main, and nothing hard-codes a font size there.
+
+Elements fall into three groups:
+
+**Carrying a documented type-set class** — `headline-02` for the two section
+headings and all three modal titles, `title-02` for the card name and the Selected
+products heading, `body-02` for the selection counter and the "+ N more products"
+line, `support-01` for the row count.
+
+**Styled by their own Buckholt component, and deliberately left bare** —
+`.nav-link`, `.button-label`, `.tag-label`, `.form-label`, `.form-helper`,
+`.form-check-label`, `.dropdown-label`, `.dropdown-item`, `.table-header-label`,
+`<td>`, `.alert-note` and the `<h6>` inside an Alert. Buckholt's component CSS sets
+their type, and none of their Code & specs examples carries a type-set class. Adding
+one would be exactly what `CANONICAL-MARKUP.md` forbids.
+
+**Bare `<p>` inside `.text-block`, which is the canonical markup** — the two helper
+paragraphs, the card's sort code and account number line, the Reassign subtitle, the
+Delete modal body and the two empty-state bodies. Text block's Code & specs examples
+use a bare `<p>`, which inherits the body type (16px / 24px / 300 / 0.16px — the same
+as `body-02`). Adding a class here would deviate from the documented example.
+
+Two standalone paragraphs sat outside all three groups — the selection counter and
+the "+ N more products" line — and now carry `body-02` explicitly. They already
+rendered at those metrics by inheritance; the class makes it auditable rather than
+implicit.
+
+The static app bar and left navigation are the one place font sizes are hard-coded.
+That is the non-Buckholt carve-out: they are drawn from the screenshots and are not
+Buckholt components, so no type-set class applies to them.
+
+### 17. App bar spacing measured from OR-00-01
+
+The right-hand cells originally sat in the app bar's own 24px flex gap, so each
+divider had 24px of slack before the next cell's 24px padding — 48px of white space
+on the left of "Accounts" against 24px on its right. They are now one tight row
+(`.ori-appbar-right`, `margin-left: auto`, no internal gap), so each divider butts
+against the neighbouring cell's own padding.
+
+The rest of the bar was re-measured from OR-00-01 at 2x at the same time:
+
+| | Measured | Used |
+| --- | --- | --- |
+| Header height | 76px | `4.75rem` |
+| Bar padding | 16px both sides | `1rem` |
+| Logo ink starts | 16px | no logo padding |
+| Search box | 154.5 – 474.5, height 34px | `20rem` wide, `2.125rem` tall |
+| Dividers | 1572 / 1710 / 1842, full header height | `align-self: stretch` on the group |
+| "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding |
+| Avatar | 1859 – 1903.5 | `2.75rem`, `margin-left: 1rem` |
+
+Rendered dividers land within 2px of the design at the third, and within about 10px
+at the first two — the remainder is the offline fallback font sizing "Live" and
+"07 August 2023" differently from Proxima-soft.
+
+### 18. Page background
 
 Buckholt's `--body-background` is `#fbfbfb`; the screens draw `#ffffff` behind Main.
 Buckholt's value is left alone rather than overridden for a 4/255 difference.
 
-### 17. Prototype breakpoints are on the local build's scale
+### 19. Prototype breakpoints are on the local build's scale
 
 `originators.css` breaks at 991.98px and 575.98px — the **local** Bootstrap scale
 that `css/buckholt.css` ships, and the scale the modal's `.col` classes use. The live

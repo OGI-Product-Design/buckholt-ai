@@ -41,6 +41,16 @@
    Buckholt design-system guidance.
    ============================================================================ */
 
+/* Measured from OR-00-01 at 2x (a 1920px frame). The right-hand cells form one
+   tight row: each divider butts against the next cell's own padding, so there
+   is no flex gap between a divider and the text beside it.
+
+     logo ink        16 – 108.5      search box   154.5 – 474.5  (320 wide)
+     divider 1     1572              divider 2   1710
+     "Accounts"    1732.5 – 1816.5   divider 3   1842
+     avatar        1859 – 1903.5     page edge   1920
+     header height   76              search box height 34 */
+
 .ori-appbar {
   --ori-brand-blue: #2249b1;
   --ori-brand-navy: #241860;
@@ -48,9 +58,8 @@
 
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  height: 4.6875rem;                 /* 75px, measured from OR-00-01 */
-  padding: 0 1.5rem;
+  height: 4.75rem;                   /* 76px */
+  padding: 0 1rem;                   /* 16px, measured both sides */
   background-color: #ffffff;
   border-bottom: 1px solid var(--ori-chrome-border);
 }
@@ -58,19 +67,20 @@
 .ori-appbar-logo {
   display: flex;
   align-items: center;
+  margin-right: 2.75rem;             /* logo ink ends ~108.5, search starts 154.5 */
   font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ori-brand-blue);
   text-decoration: none;
-  padding: 0 1rem;
   white-space: nowrap;
 }
 
 .ori-appbar-search {
   position: relative;
-  width: 19.75rem;
+  width: 20rem;                      /* 320px */
+  flex: 0 0 auto;
 }
 
 .ori-appbar-search i {
@@ -85,7 +95,7 @@
 
 .ori-appbar-search input {
   width: 100%;
-  height: 2.375rem;
+  height: 2.125rem;                  /* 34px */
   padding: 0 0.875rem 0 2.375rem;
   font: inherit;
   font-size: 0.9375rem;
@@ -102,6 +112,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  margin-left: 1.25rem;
   font-size: 0.9375rem;
   color: #0f40c5;
   text-decoration: none;
@@ -110,16 +121,25 @@
 
 .ori-appbar-help:hover { text-decoration: underline; }
 
-.ori-appbar-spacer { flex: 1 1 auto; }
+/* The divided cells. `margin-left: auto` pushes the group right; there is no
+   gap inside it, so each divider sits directly against the neighbouring
+   cell's padding. */
+.ori-appbar-right {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;               /* dividers run the full header height */
+  margin-left: auto;
+  min-width: 0;
+}
 
 .ori-appbar-status {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  padding-right: 1rem;
   font-size: 0.9375rem;
   color: #1a1a1a;
   white-space: nowrap;
-  padding-right: 1.5rem;
 }
 
 .ori-appbar-status i { font-size: 0.75rem; color: #168914; }
@@ -128,12 +148,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.125rem;
   padding: 0 1.5rem;
   border-left: 1px solid var(--ori-chrome-border);
   border-right: 1px solid var(--ori-chrome-border);
-  align-self: stretch;
-  justify-content: center;
   white-space: nowrap;
 }
 
@@ -145,14 +164,12 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0 1.5rem;
+  border: 0;
   border-right: 1px solid var(--ori-chrome-border);
-  align-self: stretch;
+  font: inherit;
   font-size: 0.9375rem;
   color: #0f40c5;
   background: none;
-  border-top: 0;
-  border-bottom: 0;
-  border-left: 0;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -161,8 +178,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  align-self: center;
+  width: 2.75rem;                    /* 44px */
+  height: 2.75rem;
   margin-left: 1rem;
   border-radius: 50%;
   background-color: #5731d6;
@@ -428,14 +446,15 @@
   .ori-appbar-help,
   .ori-appbar-status,
   .ori-appbar-clock { display: none; }
+  .ori-appbar-logo { margin-right: 1.5rem; }
   .ori-appbar-search { width: auto; flex: 1 1 auto; min-width: 0; }
 }
 
 @media (max-width: 575.98px) {
-  .ori-appbar { gap: 0.75rem; padding: 0 0.75rem; }
-  .ori-appbar-logo { padding: 0; font-size: 1.25rem; }
+  .ori-appbar { padding: 0 0.75rem; }
+  .ori-appbar-logo { margin-right: 0.75rem; font-size: 1.25rem; }
   .ori-appbar-account { display: none; }
-  .ori-appbar-avatar { margin-left: 0; }
+  .ori-appbar-avatar { margin-left: 0.75rem; }
   .ori-toolbar-filters > .input { width: 100%; }
   .ori-toolbar-filters { width: 100%; }
   .ori-section-head { flex-direction: column; align-items: stretch; gap: 1.5rem; }
