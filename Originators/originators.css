@@ -289,6 +289,18 @@
 .ori-card-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .ori-card-actions { display: flex; align-items: center; gap: 0.25rem; }
 
+/* The row count is table metadata, so it sits close under the table rather
+   than at the Panel's 32px item rhythm. Measured on OR-00-01: the count's line
+   box starts about 21px below the table's last row border. `--spacer-05` (24px)
+   is the nearest documented Buckholt spacing token; the scale has no 20px step. */
+.ori-table-region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);
+}
+
+.ori-row-count { margin: 0; }
+
 /* Product-assignments toolbar: filters left, selection actions right. */
 .ori-toolbar {
   display: flex;
