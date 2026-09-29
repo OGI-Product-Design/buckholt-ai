@@ -216,28 +216,45 @@ the prototype uses `fa-regular fa-building-columns`.
 
 **Ask:** add it to the catalogue with a documented role.
 
-### C6. Toast and Alert message sits 4px above centre
+### C6. Toast's close control is taller than its content row
 
-`.toast-content` and `.alert-content` are flex rows with no `align-items`, so the
-body stretches to the 32px `.btn-close` while its own 24px line sits at the top. The
-message renders 4px above the icon and the close control.
+`.toast` gives 8px of padding and `.toast-content` 4px on each side, leaving a 24px
+content row. The default `.btn-close` is **32px**. Two consequences:
 
-This is already recorded as an open gap in `css/buckholt-ai-fixes.css` correction 4,
-which fixed the close control's horizontal placement and deliberately left the
-vertical offset — `align-items: center` on the row drops the icon 36px when there is
-a multi-line note, and `align-self: center` on the body shifts the icon 4px.
+1. A toast built from the documented markup is **56px tall**. Every Originators frame
+   draws **48px**, which is what the 24px `.btn-close-sm` produces.
+2. `.toast-content` is a flex row with no `align-items`, so the 32px control stretches
+   `.toast-body` while its own 24px line sits at the top — the message renders 4px
+   above the icon and the close control. This is the offset already recorded as open
+   in `css/buckholt-ai-fixes.css` correction 4, which fixed the close control's
+   horizontal placement and left the vertical half.
 
-**Ask:** fix it upstream. Centring the body's own content avoids both failure modes
-and is what the prototype does:
+The cause is the same for both, and it is not the missing `align-items`: it is that
+the close control is 8px taller than everything else in the row.
 
-```css
-.toast-body { display: flex; flex-direction: column; justify-content: center; }
-```
+**Ask:** make `.toast .btn-close` 24px, matching the content row and the frames, or
+document `.btn-close-sm` as the Toast close control. Either removes the offset
+without the `align-items` change that correction 4 rejected, which drops the icon
+36px when a multi-line `.toast-note` is present.
 
-Needs checking against a multi-line `.toast-note` and a `.toast-contextbar` before it
-goes into the fixes file.
+**Alert has the same geometry** — `.alert-content` carries the same padding and no
+`align-items` — and should be answered at the same time, though Alert is used inline
+and its height is less constrained.
 
-### C7. Toast's success example uses the wrong icon
+The prototype uses `.btn-close-sm`. Toast's Code & specs examples show the plain
+`.btn-close`, so this is not a documented combination; the evidence that the frames
+use it is the 48px height.
+
+### C7. `--toast-max-width` is 22rem; every frame draws 20rem
+
+`.toast` sets `width: var(--toast-max-width)` with `--toast-max-width: 22rem` (352px).
+All six Originators frames that show a toast draw it **320px** wide, consistently and
+regardless of message length.
+
+**Ask:** confirm which is right. The prototype sets 20rem, scoped to its own toast
+container.
+
+### C8. Toast's success example uses the wrong icon
 
 Toast's Code & specs page shows `fa-solid fa-circle-info` inside its `.toast-success`
 example. Iconography maps Success-solid to `fa-solid fa-circle-check`, which is what
