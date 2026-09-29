@@ -168,6 +168,7 @@
   border-right: 1px solid var(--ori-chrome-border);
   font: inherit;
   font-size: 0.9375rem;
+  font-weight: 600;                  /* strong, matching the clock time */
   color: #0f40c5;
   background: none;
   cursor: pointer;
