@@ -173,16 +173,26 @@
 
     var deleteButton;
     if (blockedReason) {
+      /* Buckholt's documented disabled state is the native attribute on the
+         control, so that is what this uses. A disabled button receives no
+         pointer events, so the Tooltip cannot live on it — Bootstrap's own
+         guidance for this case is to put the trigger on a wrapper, which is
+         what `.ori-blocked-action` is. Keyboard focus does not reach a disabled
+         control at all, so OR-10's "appears on hover and on keyboard focus"
+         cannot be met while the control is natively disabled. Recorded in
+         PROTOTYPE.md and SPEC-CHANGES.md. */
       deleteButton =
-        '<button type="button" class="btn btn-ghost ori-icon-btn" aria-disabled="true"' +
+        '<span class="ori-blocked-action" tabindex="0" role="button" aria-disabled="true"' +
+          ' aria-label="Delete ' + escapeHtml(o.holder) + ' — ' + escapeHtml(blockedReason) + '"' +
           ' data-bs-toggle="tooltip" data-bs-placement="top"' +
-          ' data-bs-title="' + escapeHtml(blockedReason) + '"' +
-          ' aria-label="Delete ' + escapeHtml(o.holder) + ' (unavailable)">' +
-          '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
-        '</button>';
+          ' data-bs-title="' + escapeHtml(blockedReason) + '">' +
+          '<button type="button" class="btn btn-ghost" disabled tabindex="-1">' +
+            '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
+          '</button>' +
+        '</span>';
     } else {
       deleteButton =
-        '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="delete"' +
+        '<button type="button" class="btn btn-ghost" data-action="delete"' +
           ' data-id="' + o.id + '"' +
           ' data-bs-toggle="tooltip" data-bs-placement="top"' +
           ' data-bs-title="Delete originator"' +
@@ -207,8 +217,8 @@
         '<div class="card-footer">' +
           '<div class="ori-card-footer-row">' +
             '<div class="ori-card-badges">' + badges + '</div>' +
-            '<div class="ori-card-actions">' +
-              '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="edit"' +
+            '<div class="button-set button-set-end">' +
+              '<button type="button" class="btn btn-ghost" data-action="edit"' +
                 ' data-id="' + o.id + '"' +
                 ' data-bs-toggle="tooltip" data-bs-placement="top"' +
                 ' data-bs-title="Edit originator"' +
@@ -222,9 +232,23 @@
       '</div>';
   }
 
+  /* Bootstrap's grid does the horizontal structure, per patterns/page-layout:
+     "Bootstrap .container, .row, .col-* -> width, horizontal structure,
+     responsive columns/breakpoints." `.page-panel` sets `--bs-gutter-x` to the
+     32px panel gap, and `.row` brings `--bs-gutter-y: 2rem`, so the 32px gap
+     between cards in both directions is Buckholt's own spacing.
+
+     `col-xxl-4` gives three per row at the 1920px frame the screens are drawn
+     at, which is what OR-01 "Layout" describes: two sit at a fixed width left
+     aligned, three stretch to share the row. */
   function renderCards() {
     disposeTooltips($('ori-cards'));
-    $('ori-cards').innerHTML = state.originators.map(cardMarkup).join('');
+    $('ori-cards').innerHTML =
+      '<div class="row">' +
+        state.originators.map(function (o) {
+          return '<div class="col-12 col-md-6 col-xxl-4">' + cardMarkup(o) + '</div>';
+        }).join('') +
+      '</div>';
     initTooltips($('ori-cards'));
   }
 
@@ -407,14 +431,11 @@
      Buckholt Toast, Code & specs example 7 (status) plus the documented close
      control. Shown with Bootstrap's native timing, per OR-06's rule.
 
-     The close control is `.btn-close-sm` (24px) rather than the default 32px.
-     Measured across all six frames that show a toast, the drawn toast is
-     320 x 48: 8px toast padding + 4px content padding each side leaves a 24px
-     content row, which only the small close control fits. The default 32px
-     control makes the toast 56px tall and, because it is the tallest thing in
-     the row, stretches `.toast-body` and pushes the message 4px above centre —
-     the open runtime gap in `buckholt-ai-fixes.css` correction 4. Matching the
-     drawn size removes both symptoms at the cause.
+     No close control, at Laurence's request on 29 September 2026 — the designs
+     are being updated to match. That makes this Code & specs example 7 exactly:
+     `.toast.toast-success > .toast-content > .toast-icon + .toast-body`. The
+     toast is 320 x 48, as every frame draws it, because the 24px icon row plus
+     4px content padding and 8px toast padding each side comes to 48 on its own.
      ------------------------------------------------------------------------ */
 
   function showToast(message) {
@@ -431,7 +452,6 @@
         '<div class="toast-body">' +
           '<div class="toast-message"><h6>' + escapeHtml(message) + '</h6></div>' +
         '</div>' +
-        '<button type="button" class="btn-close btn-close-sm" data-bs-dismiss="toast" aria-label="Close"></button>' +
       '</div>';
 
     $('ori-toasts').appendChild(el);
@@ -889,9 +909,9 @@
 
     /* Card actions. */
     $('ori-cards').addEventListener('click', function (e) {
+      if (e.target.closest('.ori-blocked-action')) { e.preventDefault(); return; }
       var btn = e.target.closest('button');
       if (!btn) return;
-      if (btn.getAttribute('aria-disabled') === 'true') { e.preventDefault(); return; }
       var action = btn.dataset.action;
       if (action === 'edit') openOriginatorModal(btn.dataset.id);
       if (action === 'delete') { pendingDeleteId = btn.dataset.id; deleteModal.show(); }

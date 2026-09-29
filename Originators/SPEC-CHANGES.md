@@ -98,8 +98,24 @@ And in the steps table, OR-10-02 and OR-10-03 responses become:
 > The bin stays grey, the pointer shows the "not allowed" cursor, and a tooltip
 > reads "…". Clicking does nothing.
 
-*Reason:* the shape changing under the pointer read badly, and the native cursor
-already says "you cannot do this" without moving anything. Agreed 29 September 2026.
+*Reason:* the shape changing under the pointer read badly. Agreed 29 September 2026.
+
+**And a decision is needed on keyboard focus.** The bin now uses Buckholt's
+documented disabled state — the native `disabled` attribute — which is what the
+design system asks for. A natively disabled control cannot take keyboard focus and
+receives no pointer events, so the tooltip has to sit on a wrapper, and OR-10's
+*"It appears on hover and on keyboard focus"* cannot be met as written: a keyboard
+user gets the control's accessible name, which includes the reason, but not the
+tooltip.
+
+Either:
+
+- the control stays natively disabled and OR-10 drops the keyboard-focus clause,
+  relying on the accessible name to carry the reason; or
+- the keyboard-focus clause stands and the control is enabled but inert, which is
+  what the prototype did before and is not Buckholt's documented disabled state.
+
+The prototype currently takes the first. Say which you want.
 
 ### A6. "Up to four cards sit in a row" — **needs a decision**
 
@@ -275,3 +291,17 @@ Recorded here so nothing is chased twice.
 - **Blocked delete conditions.** The bin is blocked when the originator is the
   default **or** has products assigned, and resting when both are false. Confirmed
   29 September 2026; the prototype already did this.
+- **Toast has no close control.** Agreed 29 September 2026; the designs are being
+  updated. The prototype's toast is now Code & specs example 7 exactly, and the
+  `.btn-close-sm` it briefly used — not a documented combination on a Toast — is
+  gone. This also removes the question of what size a Toast's close control should
+  be, for this feature at least; the Buckholt ticket C6 stands for anyone who uses
+  one.
+- **Buttons in Button sets, and the native `disabled` attribute.** Both raised
+  29 September 2026 and both now correct throughout: every `.btn` in the page and
+  the modals sits in a `.button-set`, and every disabled control uses the native
+  attribute. See PROTOTYPE.md 4 and 13.
+- **Cards on the Bootstrap grid.** Raised 29 September 2026. The bespoke flex row is
+  gone; cards sit in `.row > .col-12.col-md-6.col-xxl-4 > .card`. One consequence is
+  worth a look — see PROTOTYPE.md 11: without the width floor the old row carried,
+  the card footer wraps to two lines at some mid viewports.

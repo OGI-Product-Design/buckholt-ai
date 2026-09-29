@@ -106,15 +106,17 @@
                   <p>Multiple originators can be configured. The default originator is used for any product that is not explicitly assigned to another originator.</p>
                 </div>
 
-                <button type="button" class="btn btn-secondary" id="ori-add-originator">
-                  <div class="btn-icon">
-                    <i class="fa-regular fa-plus" aria-hidden="true"></i>
-                  </div>
-                  <span class="button-label">Add originator</span>
-                </button>
+                <div class="button-set">
+                  <button type="button" class="btn btn-secondary" id="ori-add-originator">
+                    <div class="btn-icon">
+                      <i class="fa-regular fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <span class="button-label">Add originator</span>
+                  </button>
+                </div>
               </div>
 
-              <div class="ori-originator-list" id="ori-cards"></div>
+              <div id="ori-cards"></div>
             </div>
 
             <!-- Panel: Product assignments ---------------------------------- -->
@@ -154,17 +156,18 @@
                 <div class="ori-toolbar-actions">
                   <p class="body-02 ori-selection-count" id="ori-selection-count" aria-live="polite">0 products selected</p>
 
-                  <button type="button" class="btn btn-primary" id="ori-reassign" disabled>
-                    <span class="button-label">Reassign originator</span>
-                  </button>
-
-                  <!-- Link rules: "Do not use a Link for an action that modifies data,
-                       changes state or triggers an event; use Button instead."
-                       Ghost Button gives the drawn text-only treatment and the
-                       documented disabled state. -->
-                  <button type="button" class="btn btn-ghost" id="ori-clear-selection" disabled>
-                    <span class="button-label">Clear selection</span>
-                  </button>
+                  <!-- Two related actions, so a Button set. Link rules: "Do not use a
+                       Link for an action that modifies data, changes state or triggers
+                       an event; use Button instead." Ghost Button gives the drawn
+                       text-only treatment and the documented disabled state. -->
+                  <div class="button-set">
+                    <button type="button" class="btn btn-primary" id="ori-reassign" disabled>
+                      <span class="button-label">Reassign originator</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost" id="ori-clear-selection" disabled>
+                      <span class="button-label">Clear selection</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 

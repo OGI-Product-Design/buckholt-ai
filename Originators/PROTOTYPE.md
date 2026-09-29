@@ -173,25 +173,29 @@ No new colour, no overridden rule.
 
 ### 4. Blocked delete (OR-10-02, OR-10-03) — **diverges from the screens**
 
-The bin must stay hoverable, focusable and tooltip-bearing while doing nothing, so it
-carries `aria-disabled="true"` rather than `disabled`, and the click is prevented in
-script. It is `--text-muted`, shows no hover surface, and signals the block natively
-through `cursor: not-allowed` plus the Tooltip. Only Buckholt's own button variables
-are rebound.
+The bin uses Buckholt's documented disabled state: the native `disabled` attribute
+on the control, which brings the documented treatment (resting colours at reduced
+opacity) with no local styling at all.
 
-OR-10-02 and OR-10-03 draw the bin **swapping to a red prohibited icon** on hover and
-keyboard focus. That was built first and then dropped at Laurence's request on
-29 September 2026: the shape changing under the pointer read badly, and the native
-cursor already says "you cannot do this" without moving anything. `fa-ban` is no
-longer used anywhere.
+A disabled control receives no pointer events and cannot take keyboard focus, so the
+Tooltip cannot live on it. It sits on a wrapper instead — Bootstrap's own guidance
+for this case — which keeps the explanation on hover and gives the control an
+accessible name that includes the reason.
 
-> **Figma / spec change needed:** OR-10-02 and OR-10-03 should show a muted bin with
-> `cursor: not-allowed` and the tooltip, not an icon swap. The "Blocked delete"
-> section of OR-10 needs the same change.
+> **Accessibility consequence, needs a decision.** OR-10 says the tooltip "appears on
+> hover and on keyboard focus". With the control natively disabled, keyboard focus
+> never reaches it, so a keyboard user gets the accessible name but not the tooltip.
+> The wrapper is focusable to soften this, but a genuinely disabled control is
+> invisible to keyboard navigation by design. Either the control is disabled and the
+> spec drops the keyboard-focus requirement, or the requirement stands and the
+> control is enabled-but-inert. Recorded in `SPEC-CHANGES.md`.
 
-> **Gap to raise with Buckholt:** Buckholt documents disabled, but not "available but
-> blocked, with an explanation" — a distinct state this feature needs, and one where
-> the native `not-allowed` cursor is doing work no Buckholt token covers.
+OR-10-02 and OR-10-03 also draw the bin **swapping to a red prohibited icon** on
+hover and keyboard focus. That was dropped at Laurence's request on 29 September
+2026: the shape changing under the pointer read badly. `fa-ban` is no longer used.
+
+> **Figma / spec change needed:** OR-10-02 and OR-10-03 should show a disabled bin
+> with the tooltip, not an icon swap.
 
 ### 5. Heading attachment is deliberately **not** used
 
@@ -247,65 +251,72 @@ the documented example rather than intent. The prototype follows the screens and
 Iconography catalogue. The canonical example in `components/toast/examples.html` was
 **not** changed.
 
-### 11. Card row sizing
+### 11. Card row sizing — Bootstrap grid
 
-OR-01 "Layout" says two cards sit at a fixed width left-aligned, three stretch to
-share the row equally, and up to four sit in a row. Measured on OR-00-01, the drawn
-card is 506px — which is, within 8px, the width a card takes at three-up in the
-1557px content area. One rule covers both stated cases: grow to fill, capped at a
-third of the row.
+The originator cards sit in `.row > .col-12.col-md-6.col-xxl-4 > .card`, per
+`patterns/page-layout`: *"Bootstrap `.container`, `.row`, `.col-*` → width,
+horizontal structure, responsive columns/breakpoints."* `.page-panel` sets
+`--bs-gutter-x` to the 32px panel gap and `.row` brings `--bs-gutter-y: 2rem`, so
+the gap between cards in both directions is Buckholt's own spacing.
 
-Four per row is **not reachable** at 1920px with the drawn card width
-(4 × 506 + 3 × 32 = 2120px against 1557px available). See "Spec issues" below. The
-prototype implements 1 to 3 cards exactly as drawn; a fourth wraps to a second row
-at the same width.
+At the 1920px frame the screens are drawn at, `col-xxl-4` gives a 498px card against
+the drawn 506 — and OR-01 "Layout" is satisfied as written: two sit at that width
+left-aligned, three stretch to share the row.
 
-The rule also carries a 24rem floor. Below that the card footer cannot hold the
-Default badge, the product-count chip and the two icon actions on one line, and the
-badges wrap under each other — which the screens never show. `min-width` beats
-`max-width` in CSS, so narrower viewports fit fewer cards per row instead of
-breaking the footer. Measured: one row of three at 498px each at 1920px, two at
-384px from 1440px down to 992px, full width below that, and no footer wrapping at
-any width.
+An earlier version used a bespoke flex row with a `min-width` floor. That is gone.
 
-### 12. Toast size, and the 4px message offset
+> **Consequence, worth knowing.** The floor was holding the card above the width its
+> footer needs. Without it, at viewports where a third of the row is under about
+> 390px — roughly 1400 to 1650 on this build's scale, and again at 992 to 1200 where
+> the column is a half — the Default badge, the product-count chip and the two icon
+> actions no longer fit on one line and the badges wrap, making the card taller.
+> Nothing breaks; the card just grows. Fixing it inside the grid means either
+> different column classes at those widths or shorter badge text, both of which are
+> design decisions. Flagged rather than patched.
 
-Measured across all six frames that show a toast, the drawn toast is **320 × 48**.
-Buckholt's `--toast-max-width` is 22rem (352), so the prototype sets 20rem on the
-toast, scoped to its container.
+### 12. Toast size, and no close control
 
-The height follows from the close control, and explains a gap that was previously
-recorded as unexplained. 8px toast padding and 4px content padding on each side
-leave a 24px content row. The default `.btn-close` is **32px** — taller than the row,
-so it both makes the toast 56px and, being the tallest item in a flex row with no
-`align-items`, stretches `.toast-body` while its own 24px line sits at the top. That
-is the 4px offset recorded in `css/buckholt-ai-fixes.css` correction 4.
+The toast carries **no close control**, at Laurence's request on 29 September 2026;
+the designs are being updated to match. That makes it Code & specs example 7
+exactly — `.toast.toast-success > .toast-content > .toast-icon + .toast-body` — and
+removes the `.btn-close-sm` this prototype briefly used, which was not a documented
+combination on a Toast.
 
-`.btn-close-sm` is 24px. With the icon, the message line and the close control all
-24px, the toast is 48px and nothing stretches, so the message centres with no rule
-for it at all. Measured after the change: toast, content, icon, body, message and
-close control all on the same centre line.
+It is 320 × 48, as every frame draws it. The height needs no help now: a 24px icon
+row plus 4px content padding and 8px toast padding on each side comes to 48 on its
+own. The width is `--toast-max-width: 20rem`, scoped to the prototype's container;
+Buckholt's value is 22rem (352) and every frame draws 320.
 
-An earlier version of this prototype patched the symptom with
-`justify-content: center` on `.toast-body`. That rule is gone — the cause was the
-close control's size.
-
-Toast's Code & specs examples show the plain `.btn-close`, so `.btn-close-sm` on a
-Toast is not a documented combination. The evidence that the frames use it is the
-48px height, which only the 24px control produces.
-
-**The 4px offset is now fixed at the source**, not just avoided here. Corrections 7
-and 8 in `css/buckholt-ai-fixes.css`, added 29 September 2026, align the close
-control to the first line of the message for both Alert and Toast, with an offset
+The 4px message offset that this section used to describe is gone from the component
+itself — corrections 7 and 8 in `css/buckholt-ai-fixes.css`, added 29 September 2026,
+align the close control to the first line for both Alert and Toast, with an offset
 derived from `--btn-close-height` so it is correct for the 32px and 24px controls
 alike. Recorded in `discrepancies/known-issues.md` and asserted by
-`test/runtime-verification/`. The earlier audit had measured the wrong element: the
-body is not high, the close control is low.
+`test/runtime-verification/`. This prototype no longer exercises them, since its
+toast has no close control, but the Alert warnings in the modals do.
 
-> **Still open for Buckholt:** whether a Toast's close control should be 24px — the
-> frames say yes, and only the 24px control gives the 48px toast they draw. And
-> `--toast-max-width` is 22rem while every frame draws 20rem. Both in
-> `SPEC-CHANGES.md`.
+> **Still open for Buckholt:** `--toast-max-width` is 22rem while every frame draws
+> 20rem. In `SPEC-CHANGES.md`.
+
+### 13. Every group of Buttons is a Button set
+
+Button's rules say to group related actions inside `.button-set`, and Buckholt's own
+Table example wraps even a lone row action in one. Every `.btn` in the page and in
+all three modals now sits in a set: the card's two icon actions
+(`.button-set.button-set-end`), the toolbar's Reassign and Clear selection, the
+Add originator action, and the three modal footers.
+
+The set brings its own spacing, so two prototype rules went away: `.button-set` gives
+icon-only sets `--set-gap: 0.25rem`, which is the 4px the card actions had hand-rolled,
+and 0.5rem otherwise.
+
+One rule was added. Buckholt gives every Button set a flow offset,
+`margin-top: 0.5rem`, for a set that follows content in normal flow. These three sets
+are positioned by a flex parent instead, so the offset displaces them. Buckholt
+cancels it the same way inside a component that positions its own actions —
+`.versatile-actions .button-set { margin: 0 }`, present in both builds — and the
+prototype mirrors that precedent. It is **not** `.button-set-no-offset`, which Mark
+confirmed on 9 September 2026 is undocumented and experimental.
 
 ### 13. Every icon-only Button carries a Tooltip
 
