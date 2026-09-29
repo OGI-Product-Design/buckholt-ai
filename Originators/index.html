@@ -166,7 +166,7 @@
                 </div>
               </div>
 
-              <div id="ori-table-region"></div>
+              <div id="ori-table-region" class="ori-table-region"></div>
             </div>
 
           </div>
@@ -277,7 +277,26 @@
               <div class="response check-input" id="ori-new-default-options" role="radiogroup" aria-labelledby="ori-new-default-heading"></div>
             </div>
 
-            <!-- Bank details warning (OR-03-04) / default change warning (OR-11-04, OR-11-07) -->
+            <!-- Default change warning (OR-11-04, OR-11-07). Sits directly below
+                 Choose new default, as OR-11-04 draws it. -->
+            <div class="alert alert-warning" role="alert" id="ori-default-warning" hidden>
+              <div class="alert-content">
+                <span class="alert-icon">
+                  <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
+                <div class="alert-body">
+                  <div class="alert-message">
+                    <h6 id="ori-default-warning-title"></h6>
+                  </div>
+                  <div class="alert-note" id="ori-default-warning-note"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Change warning (OR-03-04). Shown when the account holder, sort code
+                 or account number changes on an originator that has products. With
+                 no default change above it, this lands directly below the Make
+                 default toggle, as OR-03-04 draws it. Both can show at once. -->
             <div class="alert alert-warning" role="alert" id="ori-form-warning" hidden>
               <div class="alert-content">
                 <span class="alert-icon">

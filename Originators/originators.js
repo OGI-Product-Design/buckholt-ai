@@ -147,6 +147,10 @@
      in Card's Code & specs page. Recorded in PROTOTYPE.md.
      ------------------------------------------------------------------------ */
 
+  /* Every icon-only control carries a Tooltip and an accessible name. Button's
+     Usage guidance requires both: "Buckholt's Usage guidance requires a tooltip
+     explaining the action and the implementation must still provide an
+     accessible name." */
   function cardMarkup(o) {
     var count = productCount(o.id);
     var isDefault = o.id === state.defaultId;
@@ -174,15 +178,15 @@
           ' data-bs-toggle="tooltip" data-bs-placement="top"' +
           ' data-bs-title="' + escapeHtml(blockedReason) + '"' +
           ' aria-label="Delete ' + escapeHtml(o.holder) + ' (unavailable)">' +
-          '<div class="btn-icon">' +
-            '<i class="fa-regular fa-trash-can ori-icon-rest" aria-hidden="true"></i>' +
-            '<i class="fa-regular fa-ban ori-icon-blocked" aria-hidden="true"></i>' +
-          '</div>' +
+          '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
         '</button>';
     } else {
       deleteButton =
         '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="delete"' +
-          ' data-id="' + o.id + '" aria-label="Delete ' + escapeHtml(o.holder) + '">' +
+          ' data-id="' + o.id + '"' +
+          ' data-bs-toggle="tooltip" data-bs-placement="top"' +
+          ' data-bs-title="Delete originator"' +
+          ' aria-label="Delete ' + escapeHtml(o.holder) + '">' +
           '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
         '</button>';
     }
@@ -205,7 +209,10 @@
             '<div class="ori-card-badges">' + badges + '</div>' +
             '<div class="ori-card-actions">' +
               '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="edit"' +
-                ' data-id="' + o.id + '" aria-label="Edit ' + escapeHtml(o.holder) + '">' +
+                ' data-id="' + o.id + '"' +
+                ' data-bs-toggle="tooltip" data-bs-placement="top"' +
+                ' data-bs-title="Edit originator"' +
+                ' aria-label="Edit ' + escapeHtml(o.holder) + '">' +
                 '<div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>' +
               '</button>' +
               deleteButton +
@@ -327,7 +334,23 @@
             '</tbody>' +
           '</table>' +
         '</div>' +
-      '</div>';
+      '</div>' +
+      /* Row count. All rows show on one page, so the range is always 1 to the
+         number of rows currently shown, which follows the search and the
+         Originator filter together. Hidden in both empty states, which return
+         above.
+
+         `.support-01` is Buckholt's documented type set for small, subtle
+         messaging, and matches the screenshot: measured on OR-00-01 at 2x, the
+         count's ink is 21px tall against this build's 22px, so the drawn size
+         is 12px. No colour utility — the count is drawn in the same
+         `--text-primary` as every other text on the page. Sampled from
+         OR-00-01, the dominant glyph colour is rgb(29,30,28), which is
+         `--text-primary` under subpixel antialiasing; `--text-muted` over
+         white would land near rgb(112,112,112). */
+      '<p class="support-01 ori-row-count">' +
+        'Showing 1-' + rows.length + ' of ' + rows.length +
+      '</p>';
 
     syncSelectAll();
   }
@@ -564,42 +587,62 @@
     section.hidden = false;
   }
 
-  /* Bank details warning (OR-03) and default change warning (OR-11). Only one
-     is shown; the default change is the more consequential of the two. */
-  function renderFormWarning() {
-    var warning = $('ori-form-warning');
+  /* Default change warning (OR-11) and change warning (OR-03). They are
+     independent: an edit can trigger either, both, or neither. Both alerts are
+     in the DOM in the order OR-11-04 and OR-03-04 draw them — the default
+     change sits directly below Choose new default, the change warning below
+     that and directly below the Make default toggle when no default change
+     applies. */
+  function renderDefaultWarning() {
+    var warning = $('ori-default-warning');
     var target = pendingDefaultTarget();
 
-    if (target && target.name) {
-      $('ori-form-warning-title').textContent = 'You’re changing the default originator';
-      $('ori-form-warning-note').textContent =
-        inheritedCount() + ' products currently use ' + originatorName(state.defaultId) +
-        ' as the default originator and will use the new default originator ' + target.name +
-        ' instead. Products that have been explicitly assigned will stay as they are.' +
-        ' Please review your changes before confirming.';
-      warning.hidden = false;
-      /* The default change warning sits below Choose new default (OR-11-04). */
-      warning.parentNode.insertBefore(warning, $('ori-form-error-summary'));
-      return;
-    }
+    if (!target || !target.name) { warning.hidden = true; return; }
 
+    $('ori-default-warning-title').textContent = 'You’re changing the default originator';
+    $('ori-default-warning-note').textContent =
+      inheritedCount() + ' products currently use ' + originatorName(state.defaultId) +
+      ' as the default originator and will use the new default originator ' + target.name +
+      ' instead. Products that have been explicitly assigned will stay as they are.' +
+      ' Please review your changes before confirming.';
+    warning.hidden = false;
+  }
+
+  /* OR-03. Shown when the account holder, the sort code or the account number
+     differs from the saved value AND the originator has at least one product.
+     Never for an originator with 0 products, and never for User No. or Bureau
+     No. alone. The body says which of the two kinds of change was made. None of
+     this alters product assignments. */
+  function renderChangeWarning() {
+    var warning = $('ori-form-warning');
     var editing = state.editingId ? originatorById(state.editingId) : null;
-    if (editing) {
-      var v = formValues();
-      var bankChanged = (v.sort !== editing.sort) || (v.account !== editing.account);
-      var count = productCount(editing.id);
-      if (bankChanged && count > 0) {
-        $('ori-form-warning-title').textContent =
-          'This change will affect ' + plural(count, 'product');
-        $('ori-form-warning-note').textContent =
-          'Future collections for these products will go to the new account.' +
-          ' Check the sort code and account number before confirming.';
-        warning.hidden = false;
-        return;
-      }
+    if (!editing) { warning.hidden = true; return; }
+
+    var count = productCount(editing.id);
+    if (count === 0) { warning.hidden = true; return; }
+
+    var v = formValues();
+    var nameChanged = v.holder !== editing.holder;
+    var bankChanged = (v.sort !== editing.sort) || (v.account !== editing.account);
+    if (!nameChanged && !bankChanged) { warning.hidden = true; return; }
+
+    var note;
+    if (nameChanged && bankChanged) {
+      note = 'Future collections for these products will go to the new account,' +
+             ' and they will show the new account holder name.' +
+             ' Check the details before confirming.';
+    } else if (bankChanged) {
+      note = 'Future collections for these products will go to the new account.' +
+             ' Check the sort code and account number before confirming.';
+    } else {
+      note = 'These products will show the new account holder name.' +
+             ' Check the name before confirming.';
     }
 
-    warning.hidden = true;
+    $('ori-form-warning-title').textContent =
+      'This change will affect ' + plural(count, 'product');
+    $('ori-form-warning-note').textContent = note;
+    warning.hidden = false;
   }
 
   function isDirty() {
@@ -629,7 +672,8 @@
 
   function refreshOriginatorModal() {
     renderNewDefaultOptions();
-    renderFormWarning();
+    renderDefaultWarning();
+    renderChangeWarning();
     updateSaveState();
   }
 

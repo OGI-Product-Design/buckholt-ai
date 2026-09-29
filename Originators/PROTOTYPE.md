@@ -101,8 +101,9 @@ structure lands on the design without adjustment:
 | Inline field errors | Text input validation | `.is-invalid` + `.invalid-feedback`; the red circled exclamation inside the field is Buckholt's own |
 | Selected products list | List | `.list > .list-item` |
 | Success messages | Toast | `.toast.toast-success`, Bootstrap's native timing, as OR-06 requires |
-| Blocked delete explanation | Tooltip | Initialised with the options from Tooltip's own Code & specs example 3 (`offset: [0, 4]`, `delay: { show: 800, hide: 100 }`) |
+| Every icon-only Button | Tooltip | Required by Button's Usage guidance. Initialised with the options from Tooltip's own Code & specs example 3 (`offset: [0, 4]`, `delay: { show: 800, hide: 100 }`) |
 | Modal field pairs | Input row | `.row.input-row > .col` |
+| Row count below the table | Typography | `.support-01`, the documented type set for small, subtle messaging |
 
 ---
 
@@ -139,7 +140,16 @@ The cards have a tinted footer band carrying the badges and the icon actions.
 (`.card:has(.card-footer) .card-body`) — but it does **not** appear in Card's
 Code & specs page. It is used as shipped, not recreated.
 
-> **Gap to raise with Buckholt:** Card's documentation does not cover `.card-footer`.
+It is also **incomplete in the runtime**. `.card` is `overflow: visible` and
+`.card-footer` has no bottom corner radii, so the footer's square corners bleed
+past the card's 16px radius. Bootstrap's own base ships that radius rule; this
+build dropped it. The prototype restores it with Buckholt's own expression —
+`calc(var(--card-radius) - var(--card-border-width))`, which
+`.card-header-tabs .nav-link.active` already uses — scoped to the card row.
+
+> **Gaps to raise with Buckholt:** Card's documentation does not cover
+> `.card-footer`, and the runtime `.card-footer` has no bottom corner radii, so
+> it bleeds out of the card's rounded corner wherever it is used.
 
 ### 3. Selected table row
 
@@ -159,16 +169,27 @@ No new colour, no overridden rule.
 > **Gap to raise with Buckholt:** Table has no documented selected-row state, though
 > the runtime clearly anticipates one.
 
-### 4. Blocked delete (OR-10-02, OR-10-03)
+### 4. Blocked delete (OR-10-02, OR-10-03) — **diverges from the screens**
 
 The bin must stay hoverable, focusable and tooltip-bearing while doing nothing, so it
 carries `aria-disabled="true"` rather than `disabled`, and the click is prevented in
-script. At rest it is `--text-muted`; on hover or keyboard focus it swaps to a
-prohibited icon in `--error-01` and shows no hover surface. Only Buckholt's own
-button variables are rebound.
+script. It is `--text-muted`, shows no hover surface, and signals the block natively
+through `cursor: not-allowed` plus the Tooltip. Only Buckholt's own button variables
+are rebound.
+
+OR-10-02 and OR-10-03 draw the bin **swapping to a red prohibited icon** on hover and
+keyboard focus. That was built first and then dropped at Laurence's request on
+29 September 2026: the shape changing under the pointer read badly, and the native
+cursor already says "you cannot do this" without moving anything. `fa-ban` is no
+longer used anywhere.
+
+> **Figma / spec change needed:** OR-10-02 and OR-10-03 should show a muted bin with
+> `cursor: not-allowed` and the tooltip, not an icon swap. The "Blocked delete"
+> section of OR-10 needs the same change.
 
 > **Gap to raise with Buckholt:** Buckholt documents disabled, but not "available but
-> blocked, with an explanation" — a distinct state this feature needs.
+> blocked, with an explanation" — a distinct state this feature needs, and one where
+> the native `not-allowed` cursor is doing work no Buckholt token covers.
 
 ### 5. Heading attachment is deliberately **not** used
 
@@ -209,11 +230,11 @@ Two icons the screens need are **not** in it:
 | Need | Used | Status |
 | --- | --- | --- |
 | Bank / originator account | `fa-regular fa-building-columns` | **Catalogue gap** |
-| Blocked action | `fa-regular fa-ban` | **Catalogue gap** |
 
-Four more appear only in the static, non-Buckholt chrome and are outside the
-catalogue's scope: `fa-money-bill-transfer`, `fa-caret-left`, `fa-circle-dot`,
-`fa-chevron-down`.
+A prohibited icon was a second gap until the blocked bin stopped swapping icons — see
+deviation 4. Four more icons appear only in the static, non-Buckholt chrome and are
+outside the catalogue's scope: `fa-money-bill-transfer`, `fa-caret-left`,
+`fa-circle-dot`, `fa-chevron-down`.
 
 ### 10. Success toast icon
 
@@ -245,12 +266,108 @@ breaking the footer. Measured: one row of three at 498px each at 1920px, two at
 384px from 1440px down to 992px, full width below that, and no footer wrapping at
 any width.
 
-### 12. Page background
+### 12. Toast message sat 4px above centre
+
+`.toast-content` is a flex row with no `align-items`, so `.toast-body` stretches to
+the 32px height of `.btn-close` while its own 24px line sits at the top. The message
+therefore rendered 4px above the icon and the close control.
+
+This is a **known Buckholt runtime gap**, measured in both builds and recorded in
+`css/buckholt-ai-fixes.css` correction 4 as deliberately **not** corrected: that
+audit fixed the close control's horizontal placement and left the vertical offset
+open, because `align-items: center` on the content row drops the icon 36px when there
+is a multi-line note, and `align-self: center` on the body shifts the icon 4px.
+
+The prototype centres the **body's own content** instead:
+
+```css
+.ori-toast-container .toast-body { display: flex; flex-direction: column; justify-content: center; }
+```
+
+The body's height does not change, so neither the icon nor the close control moves,
+and a body tall enough to fill the row is unaffected — avoiding both failure modes
+the earlier audit recorded. Measured after the change: toast, content, icon, body,
+message and close control all centre on the same line.
+
+> **Gap to raise with Buckholt:** the Toast (and Alert) vertical offset is still open
+> upstream. This is a page-scoped workaround, not a fix to the component. If it holds
+> up, it is a candidate for `css/buckholt-ai-fixes.css` once someone checks it
+> against a multi-line `.toast-note` and `.toast-contextbar`.
+
+### 13. Every icon-only Button carries a Tooltip
+
+Button's rules are explicit: *"Buckholt's Usage guidance requires a tooltip explaining
+the action and the implementation must still provide an accessible name."* The card's
+edit and delete controls therefore carry both a Tooltip and an `aria-label`, not just
+a label. The Tooltips are initialised with the options from Tooltip's own Code & specs
+example 3.
+
+The screens only draw a tooltip on the *blocked* delete, so the edit and available
+delete tooltips are an addition the design system requires rather than something the
+frames show.
+
+> **Figma / spec change needed:** show the Edit originator and Delete originator
+> tooltips on the card, not just the blocked-delete ones.
+
+### 14. Row count below the product table
+
+Added 29 September 2026. `Showing 1-34 of 34`, left-aligned with the table's content
+edge. All rows show on one page, so the range is always 1 to the number of rows
+currently shown, and it follows the search and the Originator filter together. It is
+hidden in both empty states.
+
+Only the re-uploaded OR-00-01 draws it; the other frames predate it. It is added to
+every table state regardless, at Laurence's request.
+
+Two details were measured from OR-00-01 at 2x rather than taken from the brief:
+
+| | Brief said | OR-00-01 measures | Used |
+| --- | --- | --- | --- |
+| Colour | "small grey text" | dominant glyph colour `rgb(29, 30, 28)` — `--text-primary` under subpixel antialiasing. `--text-muted` over white would land near `rgb(112, 112, 112)`, and nothing on the page is drawn that way | `--text-primary`, i.e. no colour utility |
+| Size | — | ink 21px tall at 2x, against 22px for `.support-01` in this build | `.support-01` (12px / 16px / 400) |
+
+The gap is `--spacer-05` (24px). Measured, the count's line box starts about 21px
+below the table's last row border; Buckholt's spacing scale steps 16 → 24 with no
+20px between them, so 24 is the nearest documented token. Rendered ink gap: 25.5px in
+the design, 27.5px here.
+
+> **Say so if the brief meant it:** the count is drawn in primary text colour, not
+> grey. One class swaps it if grey was intended.
+
+### 15. Change warning extends beyond bank details (OR-03)
+
+Added 29 September 2026, extending OR-03. The amber warning now shows when the
+**account holder**, the sort code or the account number differs from the saved value
+and the originator has at least one product. Never for an originator with 0 products,
+and never for User No. or Bureau No. alone. Editing any of them still leaves product
+assignments untouched.
+
+The title is unchanged. The body says which kind of change was made:
+
+| Changed | Body |
+| --- | --- |
+| Account holder only | These products will show the new account holder name. Check the name before confirming. |
+| Sort code and/or account number only | Future collections for these products will go to the new account. Check the sort code and account number before confirming. |
+| Both | Future collections for these products will go to the new account, and they will show the new account holder name. Check the details before confirming. |
+
+The default change warning (OR-11) is now a **separate alert element**, so an edit can
+raise either, both or neither. Previously one element carried both messages and was
+moved in the DOM. The order is: Make default toggle → Choose new default → default
+change warning → change warning → error summary. That keeps OR-11-04's adjacency
+(default warning directly below Choose new default) and OR-03-04's (change warning
+directly below the toggle when no default change applies), and shows both stacked
+when both apply.
+
+> **Figma / spec change needed:** OR-03 documents only the bank-details body. The
+> account-holder and combined bodies, and the two alerts appearing together, are not
+> drawn in any frame.
+
+### 16. Page background
 
 Buckholt's `--body-background` is `#fbfbfb`; the screens draw `#ffffff` behind Main.
 Buckholt's value is left alone rather than overridden for a 4/255 difference.
 
-### 13. Prototype breakpoints are on the local build's scale
+### 17. Prototype breakpoints are on the local build's scale
 
 `originators.css` breaks at 991.98px and 575.98px — the **local** Bootstrap scale
 that `css/buckholt.css` ships, and the scale the modal's `.col` classes use. The live
@@ -303,8 +420,8 @@ vertical differences that follow from a fallback font (a card ~10px taller, one
 helper paragraph wrapping to two lines) are artefacts of the offline render, not of
 the markup. Everything else was measured against the screenshots directly.
 
-93 behavioural assertions across the eleven flows, with no console or page errors at
-any viewport. 92 pass. The one that does not is spec issue 1 below: the spec's own
+118 behavioural assertions across the eleven flows, with no console or page errors at
+any viewport. 117 pass. The one that does not is spec issue 1 below: the spec's own
 example search string for the no-results state matches 14 of its own seeded
 products, so the assertion written from the spec fails while the behaviour is
 correct. Re-checked with a string that genuinely matches nothing, it passes.
@@ -324,6 +441,8 @@ correct. Re-checked with a string that genuinely matches nothing, it passes.
 | OR-10 | Both blocked tooltips present and rendering; delete available once an originator is non-default with 0 products; card removed, filter option removed, toast |
 | OR-11 | Choose new default shown with the current default disabled and the only other preselected; warning naming 32 products, the current default and the new one; badge and inherited products move; 0/34; toast. Also the OR-11-07 route (switch on for another originator) and the Add-with-default route |
 | Cross-cutting | Selection survives search and filter; the counter counts hidden selections; the header checkbox reflects only visible rows; reassigning to the current default removes the override |
+| Row count | `Showing 1-34 of 34` on the full table, `1-9 of 9` after the search, `1-2 of 2` with the Real Insure LTD filter, `1-1 of 1` with both applied, and it follows a reassignment; hidden in both empty states; left edge on the table's, 12px / 400 in `rgb(26, 26, 26)`, 24px below the table |
+| Change warning | The name-only, bank-only and combined bodies, each titled "This change will affect 32 products"; reverting all three fields hides it; User No. and Bureau No. alone never raise it while still enabling Confirm; both alerts show together in the documented order; a 0-product originator raises nothing even with name and bank changed; a rename moves no products |
 
 Layout was checked for horizontal overflow at every viewport: none, at any width.
 Below 375px the table scrolls inside `.table-content`, which is Buckholt's own
