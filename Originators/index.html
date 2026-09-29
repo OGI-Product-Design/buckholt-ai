@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Originators — Mobius PAS prototype</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../css/buckholt.css">
+<link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: static app chrome + layout. Loads last. -->
+<link rel="stylesheet" href="originators.css">
+</head>
+<body>
+
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+
+  <!-- ======================================================================
+       STATIC APPLICATION CHROME — NOT BUCKHOLT.
+       Reproduced by visual inspection of OR-00-01. The spec records the top
+       bar and left navigation as static. Placed in Buckholt's own layout-03
+       `header` and `sidebar` grid areas.
+       ====================================================================== -->
+  <header class="ori-appbar">
+    <a class="ori-appbar-logo" href="#">open gi</a>
+
+    <div class="ori-appbar-search">
+      <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+      <label class="visually-hidden" for="ori-global-search">Search by name, reference or email</label>
+      <input type="search" id="ori-global-search" placeholder="Search by name, reference or email">
+    </div>
+
+    <a class="ori-appbar-help" href="#">
+      <i class="fa-regular fa-circle-info" aria-hidden="true"></i>
+      What can I search?
+    </a>
+
+    <div class="ori-appbar-spacer"></div>
+
+    <span class="ori-appbar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
+
+    <div class="ori-appbar-clock">
+      <span class="ori-appbar-time">13:24</span>
+      <span class="ori-appbar-date">07 August 2023</span>
+    </div>
+
+    <button type="button" class="ori-appbar-account">
+      Accounts
+      <i class="fa-regular fa-chevron-down" aria-hidden="true"></i>
+    </button>
+
+    <span class="ori-appbar-avatar" aria-hidden="true">AC</span>
+  </header>
+
+  <aside id="sidebar" class="ori-sidenav">
+    <nav class="ori-sidenav-items" aria-label="Modules">
+      <a class="ori-sidenav-item" href="#">
+        <i class="fa-regular fa-money-bill-transfer" aria-hidden="true"></i>AutoRek
+      </a>
+      <a class="ori-sidenav-item is-current" href="#" aria-current="page">
+        <i class="fa-regular fa-building-columns" aria-hidden="true"></i>BACS
+      </a>
+    </nav>
+    <button type="button" class="ori-sidenav-collapse">
+      <i class="fa-solid fa-caret-left" aria-hidden="true"></i>Collapse menu
+    </button>
+  </aside>
+
+  <!-- ======================================================================
+       MAIN — Buckholt from here down.
+       Page body → Frame → Pane → Panels, per patterns/page-layout.
+       ====================================================================== -->
+  <main id="main">
+    <div class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+
+            <!-- Panel: BACS section navigation ------------------------------ -->
+            <div class="page-panel">
+              <ul class="nav nav-underline">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Process</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Import</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">Originators</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Calendar</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Panel: Originators ------------------------------------------ -->
+            <div class="page-panel">
+              <div class="ori-section-head">
+                <div class="text-block">
+                  <h2 class="headline-02">Originators</h2>
+                  <p>Multiple originators can be configured. The default originator is used for any product that is not explicitly assigned to another originator.</p>
+                </div>
+
+                <button type="button" class="btn btn-secondary" id="ori-add-originator">
+                  <div class="btn-icon">
+                    <i class="fa-regular fa-plus" aria-hidden="true"></i>
+                  </div>
+                  <span class="button-label">Add originator</span>
+                </button>
+              </div>
+
+              <div class="ori-originator-list" id="ori-cards"></div>
+            </div>
+
+            <!-- Panel: Product assignments ---------------------------------- -->
+            <div class="page-panel">
+              <div class="text-block">
+                <h2 class="headline-02">Product assignments</h2>
+                <p>Every product is shown, whether or not it’s been explicitly assigned. Products with no override use the default originator.</p>
+              </div>
+
+              <div class="ori-toolbar">
+                <div class="ori-toolbar-filters">
+
+                  <div class="input">
+                    <div class="response text-input">
+                      <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                      <label class="visually-hidden" for="ori-search">Search products</label>
+                      <input type="text" class="form-control" id="ori-search" placeholder="Search products" autocomplete="off">
+                    </div>
+                  </div>
+
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="ori-filter" class="form-label">Originator</label>
+                    </div>
+                    <div class="response dropdown-input">
+                      <div class="dropdown" id="ori-filter-dropdown">
+                        <button id="ori-filter" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="dropdown-label">All</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="ori-filter" id="ori-filter-menu"></ul>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="ori-toolbar-actions">
+                  <p class="ori-selection-count" id="ori-selection-count" aria-live="polite">0 products selected</p>
+
+                  <button type="button" class="btn btn-primary" id="ori-reassign" disabled>
+                    <span class="button-label">Reassign originator</span>
+                  </button>
+
+                  <!-- Link rules: "Do not use a Link for an action that modifies data,
+                       changes state or triggers an event; use Button instead."
+                       Ghost Button gives the drawn text-only treatment and the
+                       documented disabled state. -->
+                  <button type="button" class="btn btn-ghost" id="ori-clear-selection" disabled>
+                    <span class="button-label">Clear selection</span>
+                  </button>
+                </div>
+              </div>
+
+              <div id="ori-table-region"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+
+<!-- ==========================================================================
+     Add / Edit originator — OR-01, OR-02, OR-03, OR-11
+     ========================================================================== -->
+<div class="modal fade" tabindex="-1" id="ori-originator-modal" aria-labelledby="ori-originator-modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h3 class="headline-02" id="ori-originator-modal-title">Add originator</h3>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <form class="form" id="ori-originator-form" novalidate>
+          <div class="form-body">
+
+            <div class="input">
+              <div class="input-label">
+                <label for="ori-f-holder" class="form-label">Account holder</label>
+              </div>
+              <div class="response text-input">
+                <input type="text" class="form-control" id="ori-f-holder" name="holder" placeholder="e.g. Assurant Inter LTD" autocomplete="off">
+              </div>
+              <div class="invalid-feedback" data-error-for="holder"></div>
+            </div>
+
+            <div class="row input-row">
+              <div class="col">
+                <div class="input">
+                  <div class="input-label">
+                    <label for="ori-f-sort" class="form-label">Sort code</label>
+                  </div>
+                  <div class="response text-input">
+                    <input type="text" class="form-control" id="ori-f-sort" name="sort" placeholder="00-00-00" autocomplete="off">
+                  </div>
+                  <div class="invalid-feedback" data-error-for="sort"></div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="input">
+                  <div class="input-label">
+                    <label for="ori-f-account" class="form-label">Account No.</label>
+                  </div>
+                  <div class="response text-input">
+                    <input type="text" class="form-control" id="ori-f-account" name="account" placeholder="00000000" autocomplete="off">
+                  </div>
+                  <div class="invalid-feedback" data-error-for="account"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row input-row">
+              <div class="col">
+                <div class="input">
+                  <div class="input-label">
+                    <label for="ori-f-user" class="form-label">User No.</label>
+                  </div>
+                  <div class="response text-input">
+                    <input type="text" class="form-control" id="ori-f-user" name="user" placeholder="123456" autocomplete="off">
+                  </div>
+                  <div class="invalid-feedback" data-error-for="user"></div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="input">
+                  <div class="input-label">
+                    <label for="ori-f-bureau" class="form-label">Bureau No.</label>
+                  </div>
+                  <div class="response text-input">
+                    <input type="text" class="form-control" id="ori-f-bureau" name="bureau" placeholder="ABC123" autocomplete="off">
+                  </div>
+                  <div class="invalid-feedback" data-error-for="bureau"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="ori-f-default">
+              <div class="input-label">
+                <label class="form-check-label" for="ori-f-default">Make default</label>
+              </div>
+            </div>
+
+            <!-- Choose new default — OR-11-04. Shown only when Make default is
+                 switched off on the current default. -->
+            <div class="input ori-modal-section" id="ori-new-default-section" hidden>
+              <div class="input-label">
+                <span class="form-label" id="ori-new-default-heading">Choose new default</span>
+                <small class="form-helper">Products without an explicit assignment will use this originator once you confirm your changes.</small>
+              </div>
+              <div class="response check-input" id="ori-new-default-options" role="radiogroup" aria-labelledby="ori-new-default-heading"></div>
+            </div>
+
+            <!-- Bank details warning (OR-03-04) / default change warning (OR-11-04, OR-11-07) -->
+            <div class="alert alert-warning" role="alert" id="ori-form-warning" hidden>
+              <div class="alert-content">
+                <span class="alert-icon">
+                  <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
+                <div class="alert-body">
+                  <div class="alert-message">
+                    <h6 id="ori-form-warning-title"></h6>
+                  </div>
+                  <div class="alert-note" id="ori-form-warning-note"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error summary alert (OR-02-05) -->
+            <div class="alert alert-error" role="alert" id="ori-form-error-summary" hidden>
+              <div class="alert-content">
+                <span class="alert-icon">
+                  <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                </span>
+                <div class="alert-body">
+                  <div class="alert-message">
+                    <h6>There’s a problem with the information entered</h6>
+                  </div>
+                  <div class="alert-note">Please check the highlighted fields and correct any errors before saving.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="ori-originator-save" disabled>
+            <span class="button-label">Save</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ==========================================================================
+     Reassign originator — OR-06, OR-07, OR-08, OR-09
+     ========================================================================== -->
+<div class="modal fade" tabindex="-1" id="ori-reassign-modal" aria-labelledby="ori-reassign-modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h3 class="headline-02" id="ori-reassign-modal-title">Reassign originator</h3>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <p id="ori-reassign-subtitle"></p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="page-panel">
+
+          <div class="alert alert-warning" role="alert" id="ori-reassign-warning" hidden>
+            <div class="alert-content">
+              <span class="alert-icon">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+              </span>
+              <div class="alert-body">
+                <div class="alert-message">
+                  <h6 id="ori-reassign-warning-title"></h6>
+                </div>
+                <div class="alert-note" id="ori-reassign-warning-note"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ori-selected-panel" id="ori-selected-panel"></div>
+
+          <div class="input ori-modal-section">
+            <div class="input-label">
+              <span class="form-label" id="ori-choose-heading">Choose originator</span>
+              <small class="form-helper" id="ori-choose-helper">Selected products will use this originator once you confirm your changes.</small>
+            </div>
+            <div class="response check-input" id="ori-choose-options" role="radiogroup" aria-labelledby="ori-choose-heading"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="ori-reassign-confirm" disabled>
+            <span class="button-label">Confirm changes</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ==========================================================================
+     Delete this originator? — OR-10-06
+     ========================================================================== -->
+<div class="modal fade" tabindex="-1" id="ori-delete-modal" aria-labelledby="ori-delete-modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h3 class="headline-02" id="ori-delete-modal-title">Delete this originator?</h3>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <p>This will permanently remove this originator. You cannot undo this action.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary btn-danger" id="ori-delete-confirm">
+            <div class="btn-icon">
+              <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+            </div>
+            <span class="button-label">Delete originator</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast container — OR-01-04 places it bottom right of the page. -->
+<div class="toast-container ori-toast-container" id="ori-toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../components/dropdown/dropdown.js"></script>
+<script src="originators.js"></script>
+</body>
+</html>

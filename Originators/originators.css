@@ -1,0 +1,402 @@
+/* ============================================================================
+   Originators prototype — prototype-only stylesheet
+   ============================================================================
+
+   Loads LAST, after:
+       https://use.typekit.net/vtl2xbn.css
+       https://kit.fontawesome.com/ca92816a31.js
+       ../css/buckholt.css
+       ../css/buckholt-ai-fixes.css
+
+   What is in this file, and why
+   -----------------------------
+   1. STATIC APPLICATION CHROME. The Mobius PAS top bar and left navigation are
+      NOT Buckholt components. The Originators spec states: "the top bar, left
+      navigation and the Process, Import and Calendar tabs are static", and the
+      brief for this prototype confirms they are to be built by visually
+      inspecting the screenshots. They are reproduced here from OR-00-01 and
+      are the only things in this file that draw their own appearance.
+      They are placed into Buckholt's own `.layout[data-layout=layout-03]`
+      grid areas (`header` / `#sidebar` / `#main`), so the page structure is
+      still Buckholt's.
+
+   2. PROTOTYPE LAYOUT ONLY. A small number of arrangement rules for things
+      Buckholt does not document a container for (the originator card row, the
+      two-part section head, the table toolbar). They set position and size.
+      They never restyle a Buckholt component.
+
+   3. BUCKHOLT VARIABLE BINDINGS. Three states the screens need that Buckholt
+      documents no class for. Each one sets a variable Buckholt already
+      declares, to a value from Buckholt's own token set — no new colours, no
+      overridden component rules. Each is commented with what it binds and why.
+
+   Nothing here overrides `buckholt.css` or `buckholt-ai-fixes.css`. Every
+   selector is `ori-` prefixed or reached through an `ori-` ancestor.
+   ============================================================================ */
+
+
+/* ============================================================================
+   1. STATIC APPLICATION CHROME — NOT BUCKHOLT
+   Built from the screenshots. Do not read anything in this section as
+   Buckholt design-system guidance.
+   ============================================================================ */
+
+.ori-appbar {
+  --ori-brand-blue: #2249b1;
+  --ori-brand-navy: #241860;
+  --ori-chrome-border: #dadada;
+
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 4.6875rem;                 /* 75px, measured from OR-00-01 */
+  padding: 0 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--ori-chrome-border);
+}
+
+.ori-appbar-logo {
+  display: flex;
+  align-items: center;
+  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ori-brand-blue);
+  text-decoration: none;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+.ori-appbar-search {
+  position: relative;
+  width: 19.75rem;
+}
+
+.ori-appbar-search i {
+  position: absolute;
+  top: 50%;
+  left: 0.875rem;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #707070;
+  pointer-events: none;
+}
+
+.ori-appbar-search input {
+  width: 100%;
+  height: 2.375rem;
+  padding: 0 0.875rem 0 2.375rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  border: 1px solid var(--ori-chrome-border);
+  border-radius: 0.5rem;
+}
+
+.ori-appbar-search input::placeholder { color: #707070; }
+.ori-appbar-search input:focus { outline: 2px solid #1748d0; outline-offset: 1px; }
+
+.ori-appbar-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #0f40c5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ori-appbar-help:hover { text-decoration: underline; }
+
+.ori-appbar-spacer { flex: 1 1 auto; }
+
+.ori-appbar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  white-space: nowrap;
+  padding-right: 1.5rem;
+}
+
+.ori-appbar-status i { font-size: 0.75rem; color: #168914; }
+
+.ori-appbar-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0 1.5rem;
+  border-left: 1px solid var(--ori-chrome-border);
+  border-right: 1px solid var(--ori-chrome-border);
+  align-self: stretch;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.ori-appbar-time { font-size: 1.125rem; font-weight: 600; color: #1a1a1a; }
+.ori-appbar-date { font-size: 0.8125rem; color: #454545; }
+
+.ori-appbar-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  border-right: 1px solid var(--ori-chrome-border);
+  align-self: stretch;
+  font-size: 0.9375rem;
+  color: #0f40c5;
+  background: none;
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ori-appbar-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  background-color: #5731d6;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ori-sidenav {
+  --ori-brand-blue: #2249b1;
+  --ori-brand-navy: #241860;
+
+  display: flex;
+  flex-direction: column;
+  width: 14.6875rem;                 /* 235px, measured from OR-00-01 */
+  background-color: var(--ori-brand-blue);
+}
+
+.ori-sidenav-items { flex: 1 1 auto; }
+
+.ori-sidenav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3.5rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.ori-sidenav-item i { width: 1.5rem; font-size: 1.125rem; text-align: center; }
+.ori-sidenav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #ffffff; }
+.ori-sidenav-item.is-current { background-color: var(--ori-brand-navy); }
+
+.ori-sidenav-collapse {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3.5rem;
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+  font: inherit;
+  font-size: 1rem;
+  color: #ffffff;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ori-sidenav-collapse i { width: 1.5rem; font-size: 0.875rem; text-align: center; }
+
+
+/* ============================================================================
+   2. PROTOTYPE LAYOUT ONLY
+   Position and size. No component appearance is set here.
+   ============================================================================ */
+
+/* Section head: a Text block on the left, one action on the right.
+   Buckholt's Heading attachment is deliberately NOT used — its documented
+   attachments are a close Button, a Standalone link, a Tag or an Icon block,
+   and its rules say not to turn the heading row into a general toolbar. */
+.ori-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.ori-section-head > .btn { flex: 0 0 auto; }
+
+/* Originator card row.
+   OR-01 "Layout": two cards sit at a fixed width, left-aligned; three stretch
+   to share the row equally. Measured on OR-00-01 at a 1920px frame, the drawn
+   card width is the width a card takes at three-up, so one rule covers both:
+   grow to fill, capped at a third of the row. */
+.ori-originator-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--page-panel-gap);
+}
+
+.ori-originator-list > * {
+  flex: 1 1 auto;
+  max-width: calc((100% - (var(--page-panel-gap) * 2)) / 3);
+  /* Floor. Below this the card footer cannot hold the Default badge, the
+     product-count chip and the two icon actions on one line. min-width beats
+     max-width, so narrower viewports fit fewer cards per row rather than
+     breaking the footer. Lifted below 992, where cards go full width. */
+  min-width: 24rem;
+}
+
+@media (max-width: 991.98px) {
+  .ori-originator-list > * { max-width: 100%; flex-basis: 100%; min-width: 0; }
+}
+
+/* Card internals: the Icon block sits beside the name rather than above it,
+   and the footer carries badges on the left with actions on the right. */
+.ori-card-identity { display: flex; align-items: center; gap: 1rem; }
+.ori-card-identity .icon-block { flex: 0 0 auto; margin-bottom: 0; }
+.ori-card-identity .text-block { flex: 1 1 auto; min-width: 0; }
+.ori-card-identity .text-block > * { overflow-wrap: anywhere; }
+
+.ori-card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ori-card-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.ori-card-actions { display: flex; align-items: center; gap: 0.25rem; }
+
+/* Product-assignments toolbar: filters left, selection actions right. */
+.ori-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ori-toolbar-filters { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.ori-toolbar-filters > .input { width: 15.5rem; }
+
+.ori-toolbar-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ori-toolbar-actions .btn { flex: 0 0 auto; }
+
+/* The Search products field is drawn without a visible label, so it is bottom
+   aligned with the labelled Originator dropdown beside it. */
+.ori-selection-count { white-space: nowrap; margin: 0; }
+
+/* Selected-products panel inside the Reassign modal. */
+.ori-selected-panel {
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--ui-overlay-02);
+}
+
+.ori-selected-panel-more { margin: 0; }
+
+.ori-modal-section { display: flex; flex-direction: column; gap: 0.5rem; }
+
+
+/* ============================================================================
+   3. BUCKHOLT VARIABLE BINDINGS
+   Three states the screens need that Buckholt documents no class for. Each
+   sets a variable Buckholt already declares, to a value from Buckholt's own
+   token set. No new colour is introduced and no component rule is overridden.
+   These three are recorded as gaps in PROTOTYPE.md.
+   ============================================================================ */
+
+/* (a) Selected table row (OR-06-02).
+   `.table` declares `--table-background-state` and consumes it in
+   `box-shadow: inset 0 0 0 9999px var(--table-background-state, …)`, but no
+   shipped class ever sets it. This binds Buckholt's own row-state hook to
+   `--action-04`, the light blue Buckholt already uses for a selected
+   interactive surface (`--nav-link-background-active`, `--tag-border`
+   on a selected Tag). Measured on OR-06-02: #E8EDFA. */
+.ori-table tr.ori-row-selected {
+  --table-background-state: var(--action-04);
+}
+
+/* (b) Blocked delete (OR-10-02, OR-10-03).
+   The control must stay hoverable, focusable and tooltip-bearing while doing
+   nothing, so it carries `aria-disabled` rather than `disabled`; the click is
+   prevented in JS. At rest the bin is muted; on hover or keyboard focus it is
+   replaced by a prohibited icon and no hover surface appears. Only Buckholt's
+   own button variables are rebound. */
+.ori-icon-btn[aria-disabled="true"] {
+  --button-label: var(--text-muted);
+  --button-label-hover: var(--error-01);
+  --button-label-focus: var(--error-01);
+  --button-label-active: var(--error-01);
+  --button-background-hover: var(--transparent);
+  --button-background-focus: var(--transparent);
+  --button-background-active: var(--transparent);
+  --button-border-active: var(--transparent);
+  cursor: default;
+}
+
+.ori-icon-btn .ori-icon-blocked { display: none; }
+.ori-icon-btn[aria-disabled="true"]:hover .ori-icon-rest,
+.ori-icon-btn[aria-disabled="true"]:focus-visible .ori-icon-rest { display: none; }
+.ori-icon-btn[aria-disabled="true"]:hover .ori-icon-blocked,
+.ori-icon-btn[aria-disabled="true"]:focus-visible .ori-icon-blocked { display: inline-block; }
+
+/* (c) Toast placement (OR-01-04).
+   `.toast-container` has no documented position. The screens place it bottom
+   right of the viewport. Position only — the Toast itself is untouched. */
+.ori-toast-container {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: auto;
+  max-width: min(28rem, calc(100vw - 3rem));
+}
+
+
+/* ============================================================================
+   Empty states (OR-04-03, OR-05-05) use Buckholt Text block. Nothing to style.
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   Narrow viewports.
+   These breakpoints are the prototype's own. They are set on the LOCAL build's
+   Bootstrap scale (576 / 768 / 992 / 1200 / 1400), because `css/buckholt.css`
+   — the build this repository loads, and the build whose `.col` classes the
+   modal input rows use — ships that scale. The live reference build breaks at
+   896 / 1088 / 1312 / 1520 / 1720 instead, so every figure below is measured
+   on the local scale and would land at a different viewport on the live build.
+   Flagged, per CLAUDE.md, rather than silently changed.
+   ---------------------------------------------------------------------------- */
+
+@media (max-width: 991.98px) {
+  .ori-sidenav { display: none; }
+  .ori-appbar-help,
+  .ori-appbar-status,
+  .ori-appbar-clock { display: none; }
+  .ori-appbar-search { width: auto; flex: 1 1 auto; min-width: 0; }
+}
+
+@media (max-width: 575.98px) {
+  .ori-appbar { gap: 0.75rem; padding: 0 0.75rem; }
+  .ori-appbar-logo { padding: 0; font-size: 1.25rem; }
+  .ori-appbar-account { display: none; }
+  .ori-appbar-avatar { margin-left: 0; }
+  .ori-toolbar-filters > .input { width: 100%; }
+  .ori-toolbar-filters { width: 100%; }
+  .ori-section-head { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  .ori-section-head > .btn { align-self: flex-start; }
+}
