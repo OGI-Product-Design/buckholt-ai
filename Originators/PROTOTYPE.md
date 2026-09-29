@@ -294,10 +294,18 @@ Toast's Code & specs examples show the plain `.btn-close`, so `.btn-close-sm` on
 Toast is not a documented combination. The evidence that the frames use it is the
 48px height, which only the 24px control produces.
 
-> **Gap to raise with Buckholt:** either `.toast .btn-close` should be 24px so it
-> matches the content row, or the content row should centre. The frames suggest the
-> former. Alert has the same geometry and the same offset. Separately,
-> `--toast-max-width` is 22rem and every frame draws 20rem.
+**The 4px offset is now fixed at the source**, not just avoided here. Corrections 7
+and 8 in `css/buckholt-ai-fixes.css`, added 29 September 2026, align the close
+control to the first line of the message for both Alert and Toast, with an offset
+derived from `--btn-close-height` so it is correct for the 32px and 24px controls
+alike. Recorded in `discrepancies/known-issues.md` and asserted by
+`test/runtime-verification/`. The earlier audit had measured the wrong element: the
+body is not high, the close control is low.
+
+> **Still open for Buckholt:** whether a Toast's close control should be 24px — the
+> frames say yes, and only the 24px control gives the 48px toast they draw. And
+> `--toast-max-width` is 22rem while every frame draws 20rem. Both in
+> `SPEC-CHANGES.md`.
 
 ### 13. Every icon-only Button carries a Tooltip
 
@@ -419,7 +427,7 @@ The rest of the bar was re-measured from OR-00-01 at 2x at the same time:
 | Logo ink starts | 16px | no logo padding |
 | Search box | 154.5 – 474.5, height 34px | `20rem` wide, `2.125rem` tall |
 | Dividers | 1572 / 1710 / 1842, full header height | `align-self: stretch` on the group |
-| "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding, weight 600 at Laurence's request |
+| "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding, weight 400 |
 | Avatar | 1859 – 1903.5 | `2.75rem`, `margin-left: 1rem` |
 
 Rendered dividers land within 2px of the design at the third, and within about 10px

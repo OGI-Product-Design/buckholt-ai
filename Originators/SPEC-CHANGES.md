@@ -216,34 +216,34 @@ the prototype uses `fa-regular fa-building-columns`.
 
 **Ask:** add it to the catalogue with a documented role.
 
-### C6. Toast's close control is taller than its content row
+### C6. The close control is 8px taller than the content row
 
 `.toast` gives 8px of padding and `.toast-content` 4px on each side, leaving a 24px
 content row. The default `.btn-close` is **32px**. Two consequences:
 
 1. A toast built from the documented markup is **56px tall**. Every Originators frame
    draws **48px**, which is what the 24px `.btn-close-sm` produces.
-2. `.toast-content` is a flex row with no `align-items`, so the 32px control stretches
-   `.toast-body` while its own 24px line sits at the top — the message renders 4px
-   above the icon and the close control. This is the offset already recorded as open
-   in `css/buckholt-ai-fixes.css` correction 4, which fixed the close control's
-   horizontal placement and left the vertical half.
+2. The close control centres 4px below the first line of the message — the offset
+   recorded in `css/buckholt-ai-fixes.css` corrections 3 and 4, which fixed the
+   horizontal placement and left the vertical half open.
 
-The cause is the same for both, and it is not the missing `align-items`: it is that
-the close control is 8px taller than everything else in the row.
+**The second is now corrected here**, by corrections 7 and 8, added 29 September 2026
+with an entry in `discrepancies/known-issues.md` and an assertion in
+`test/runtime-verification/`. The earlier audit had measured the wrong element:
+against the **first line of the message** the icon and the body already agree, and it
+is the close control that is low. Aligning the control alone, with an offset derived
+from `--btn-close-height`, fixes every case including multi-line, and avoids both
+failure modes that audit identified — `align-items: center` on the row (drops the
+icon 36px when a note wraps) and `align-self: center` on the body (shifts the icon).
 
-**Ask:** make `.toast .btn-close` 24px, matching the content row and the frames, or
-document `.btn-close-sm` as the Toast close control. Either removes the offset
-without the `align-items` change that correction 4 rejected, which drops the icon
-36px when a multi-line `.toast-note` is present.
+**Ask:** take corrections 7 and 8 upstream so the fix layer can drop them. They are
+two lines each, and the offset is self-adjusting for `.btn-close` and
+`.btn-close-sm`.
 
-**Alert has the same geometry** — `.alert-content` carries the same padding and no
-`align-items` — and should be answered at the same time, though Alert is used inline
-and its height is less constrained.
-
-The prototype uses `.btn-close-sm`. Toast's Code & specs examples show the plain
-`.btn-close`, so this is not a documented combination; the evidence that the frames
-use it is the 48px height.
+**Still open — the control's size.** Whether a Toast's close control should be 24px
+is a design question the fix does not answer. The frames say yes: every one draws a
+48px toast, and only the 24px control produces that. The prototype uses
+`.btn-close-sm`, which Toast's Code & specs examples do not show.
 
 ### C7. `--toast-max-width` is 22rem; every frame draws 20rem
 
