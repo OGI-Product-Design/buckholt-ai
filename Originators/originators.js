@@ -147,6 +147,10 @@
      in Card's Code & specs page. Recorded in PROTOTYPE.md.
      ------------------------------------------------------------------------ */
 
+  /* Every icon-only control carries a Tooltip and an accessible name. Button's
+     Usage guidance requires both: "Buckholt's Usage guidance requires a tooltip
+     explaining the action and the implementation must still provide an
+     accessible name." */
   function cardMarkup(o) {
     var count = productCount(o.id);
     var isDefault = o.id === state.defaultId;
@@ -174,15 +178,15 @@
           ' data-bs-toggle="tooltip" data-bs-placement="top"' +
           ' data-bs-title="' + escapeHtml(blockedReason) + '"' +
           ' aria-label="Delete ' + escapeHtml(o.holder) + ' (unavailable)">' +
-          '<div class="btn-icon">' +
-            '<i class="fa-regular fa-trash-can ori-icon-rest" aria-hidden="true"></i>' +
-            '<i class="fa-regular fa-ban ori-icon-blocked" aria-hidden="true"></i>' +
-          '</div>' +
+          '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
         '</button>';
     } else {
       deleteButton =
         '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="delete"' +
-          ' data-id="' + o.id + '" aria-label="Delete ' + escapeHtml(o.holder) + '">' +
+          ' data-id="' + o.id + '"' +
+          ' data-bs-toggle="tooltip" data-bs-placement="top"' +
+          ' data-bs-title="Delete originator"' +
+          ' aria-label="Delete ' + escapeHtml(o.holder) + '">' +
           '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
         '</button>';
     }
@@ -205,7 +209,10 @@
             '<div class="ori-card-badges">' + badges + '</div>' +
             '<div class="ori-card-actions">' +
               '<button type="button" class="btn btn-ghost ori-icon-btn" data-action="edit"' +
-                ' data-id="' + o.id + '" aria-label="Edit ' + escapeHtml(o.holder) + '">' +
+                ' data-id="' + o.id + '"' +
+                ' data-bs-toggle="tooltip" data-bs-placement="top"' +
+                ' data-bs-title="Edit originator"' +
+                ' aria-label="Edit ' + escapeHtml(o.holder) + '">' +
                 '<div class="btn-icon"><i class="fa-regular fa-pencil" aria-hidden="true"></i></div>' +
               '</button>' +
               deleteButton +

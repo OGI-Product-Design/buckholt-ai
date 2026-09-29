@@ -101,7 +101,7 @@ structure lands on the design without adjustment:
 | Inline field errors | Text input validation | `.is-invalid` + `.invalid-feedback`; the red circled exclamation inside the field is Buckholt's own |
 | Selected products list | List | `.list > .list-item` |
 | Success messages | Toast | `.toast.toast-success`, Bootstrap's native timing, as OR-06 requires |
-| Blocked delete explanation | Tooltip | Initialised with the options from Tooltip's own Code & specs example 3 (`offset: [0, 4]`, `delay: { show: 800, hide: 100 }`) |
+| Every icon-only Button | Tooltip | Required by Button's Usage guidance. Initialised with the options from Tooltip's own Code & specs example 3 (`offset: [0, 4]`, `delay: { show: 800, hide: 100 }`) |
 | Modal field pairs | Input row | `.row.input-row > .col` |
 
 ---
@@ -139,7 +139,16 @@ The cards have a tinted footer band carrying the badges and the icon actions.
 (`.card:has(.card-footer) .card-body`) — but it does **not** appear in Card's
 Code & specs page. It is used as shipped, not recreated.
 
-> **Gap to raise with Buckholt:** Card's documentation does not cover `.card-footer`.
+It is also **incomplete in the runtime**. `.card` is `overflow: visible` and
+`.card-footer` has no bottom corner radii, so the footer's square corners bleed
+past the card's 16px radius. Bootstrap's own base ships that radius rule; this
+build dropped it. The prototype restores it with Buckholt's own expression —
+`calc(var(--card-radius) - var(--card-border-width))`, which
+`.card-header-tabs .nav-link.active` already uses — scoped to the card row.
+
+> **Gaps to raise with Buckholt:** Card's documentation does not cover
+> `.card-footer`, and the runtime `.card-footer` has no bottom corner radii, so
+> it bleeds out of the card's rounded corner wherever it is used.
 
 ### 3. Selected table row
 
@@ -159,16 +168,27 @@ No new colour, no overridden rule.
 > **Gap to raise with Buckholt:** Table has no documented selected-row state, though
 > the runtime clearly anticipates one.
 
-### 4. Blocked delete (OR-10-02, OR-10-03)
+### 4. Blocked delete (OR-10-02, OR-10-03) — **diverges from the screens**
 
 The bin must stay hoverable, focusable and tooltip-bearing while doing nothing, so it
 carries `aria-disabled="true"` rather than `disabled`, and the click is prevented in
-script. At rest it is `--text-muted`; on hover or keyboard focus it swaps to a
-prohibited icon in `--error-01` and shows no hover surface. Only Buckholt's own
-button variables are rebound.
+script. It is `--text-muted`, shows no hover surface, and signals the block natively
+through `cursor: not-allowed` plus the Tooltip. Only Buckholt's own button variables
+are rebound.
+
+OR-10-02 and OR-10-03 draw the bin **swapping to a red prohibited icon** on hover and
+keyboard focus. That was built first and then dropped at Laurence's request on
+29 September 2026: the shape changing under the pointer read badly, and the native
+cursor already says "you cannot do this" without moving anything. `fa-ban` is no
+longer used anywhere.
+
+> **Figma / spec change needed:** OR-10-02 and OR-10-03 should show a muted bin with
+> `cursor: not-allowed` and the tooltip, not an icon swap. The "Blocked delete"
+> section of OR-10 needs the same change.
 
 > **Gap to raise with Buckholt:** Buckholt documents disabled, but not "available but
-> blocked, with an explanation" — a distinct state this feature needs.
+> blocked, with an explanation" — a distinct state this feature needs, and one where
+> the native `not-allowed` cursor is doing work no Buckholt token covers.
 
 ### 5. Heading attachment is deliberately **not** used
 
@@ -209,11 +229,11 @@ Two icons the screens need are **not** in it:
 | Need | Used | Status |
 | --- | --- | --- |
 | Bank / originator account | `fa-regular fa-building-columns` | **Catalogue gap** |
-| Blocked action | `fa-regular fa-ban` | **Catalogue gap** |
 
-Four more appear only in the static, non-Buckholt chrome and are outside the
-catalogue's scope: `fa-money-bill-transfer`, `fa-caret-left`, `fa-circle-dot`,
-`fa-chevron-down`.
+A prohibited icon was a second gap until the blocked bin stopped swapping icons — see
+deviation 4. Four more icons appear only in the static, non-Buckholt chrome and are
+outside the catalogue's scope: `fa-money-bill-transfer`, `fa-caret-left`,
+`fa-circle-dot`, `fa-chevron-down`.
 
 ### 10. Success toast icon
 
@@ -245,12 +265,55 @@ breaking the footer. Measured: one row of three at 498px each at 1920px, two at
 384px from 1440px down to 992px, full width below that, and no footer wrapping at
 any width.
 
-### 12. Page background
+### 12. Toast message sat 4px above centre
+
+`.toast-content` is a flex row with no `align-items`, so `.toast-body` stretches to
+the 32px height of `.btn-close` while its own 24px line sits at the top. The message
+therefore rendered 4px above the icon and the close control.
+
+This is a **known Buckholt runtime gap**, measured in both builds and recorded in
+`css/buckholt-ai-fixes.css` correction 4 as deliberately **not** corrected: that
+audit fixed the close control's horizontal placement and left the vertical offset
+open, because `align-items: center` on the content row drops the icon 36px when there
+is a multi-line note, and `align-self: center` on the body shifts the icon 4px.
+
+The prototype centres the **body's own content** instead:
+
+```css
+.ori-toast-container .toast-body { display: flex; flex-direction: column; justify-content: center; }
+```
+
+The body's height does not change, so neither the icon nor the close control moves,
+and a body tall enough to fill the row is unaffected — avoiding both failure modes
+the earlier audit recorded. Measured after the change: toast, content, icon, body,
+message and close control all centre on the same line.
+
+> **Gap to raise with Buckholt:** the Toast (and Alert) vertical offset is still open
+> upstream. This is a page-scoped workaround, not a fix to the component. If it holds
+> up, it is a candidate for `css/buckholt-ai-fixes.css` once someone checks it
+> against a multi-line `.toast-note` and `.toast-contextbar`.
+
+### 13. Every icon-only Button carries a Tooltip
+
+Button's rules are explicit: *"Buckholt's Usage guidance requires a tooltip explaining
+the action and the implementation must still provide an accessible name."* The card's
+edit and delete controls therefore carry both a Tooltip and an `aria-label`, not just
+a label. The Tooltips are initialised with the options from Tooltip's own Code & specs
+example 3.
+
+The screens only draw a tooltip on the *blocked* delete, so the edit and available
+delete tooltips are an addition the design system requires rather than something the
+frames show.
+
+> **Figma / spec change needed:** show the Edit originator and Delete originator
+> tooltips on the card, not just the blocked-delete ones.
+
+### 14. Page background
 
 Buckholt's `--body-background` is `#fbfbfb`; the screens draw `#ffffff` behind Main.
 Buckholt's value is left alone rather than overridden for a 4/255 difference.
 
-### 13. Prototype breakpoints are on the local build's scale
+### 15. Prototype breakpoints are on the local build's scale
 
 `originators.css` breaks at 991.98px and 575.98px — the **local** Bootstrap scale
 that `css/buckholt.css` ships, and the scale the modal's `.col` classes use. The live

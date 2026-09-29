@@ -267,6 +267,18 @@
 .ori-card-identity .text-block { flex: 1 1 auto; min-width: 0; }
 .ori-card-identity .text-block > * { overflow-wrap: anywhere; }
 
+/* The runtime gives `.card-footer` a tinted background but no bottom corner
+   radii, and `.card` does not clip (`overflow: visible`), so the footer's square
+   corners bleed past the card's 16px radius. Bootstrap's own base ships that
+   radius rule; this build dropped it along with the rest of Card's footer
+   documentation. The expression is Buckholt's own — `.card-header-tabs
+   .nav-link.active` already uses `calc(var(--card-radius) -
+   var(--card-border-width))`. Recorded in PROTOTYPE.md as a runtime gap. */
+.ori-originator-list .card-footer {
+  border-bottom-left-radius: calc(var(--card-radius) - var(--card-border-width));
+  border-bottom-right-radius: calc(var(--card-radius) - var(--card-border-width));
+}
+
 .ori-card-footer-row {
   display: flex;
   align-items: center;
@@ -330,30 +342,47 @@
 /* (b) Blocked delete (OR-10-02, OR-10-03).
    The control must stay hoverable, focusable and tooltip-bearing while doing
    nothing, so it carries `aria-disabled` rather than `disabled`; the click is
-   prevented in JS. At rest the bin is muted; on hover or keyboard focus it is
-   replaced by a prohibited icon and no hover surface appears. Only Buckholt's
-   own button variables are rebound. */
+   prevented in JS. The bin stays a bin, muted, with no hover surface, and the
+   block is signalled natively by `cursor: not-allowed` plus the Tooltip.
+
+   OR-10-02 and OR-10-03 draw the bin swapping to a red prohibited icon on
+   hover and keyboard focus. That was built first and then dropped at Laurence's
+   request on 2026-09-29: the shape changing under the pointer read badly, and
+   the native cursor already says "you cannot do this" without moving anything.
+   Recorded in PROTOTYPE.md as a change the Figma frames and the spec need.
+
+   Only Buckholt's own button variables are rebound. */
 .ori-icon-btn[aria-disabled="true"] {
   --button-label: var(--text-muted);
-  --button-label-hover: var(--error-01);
-  --button-label-focus: var(--error-01);
-  --button-label-active: var(--error-01);
+  --button-label-hover: var(--text-muted);
+  --button-label-focus: var(--text-muted);
+  --button-label-active: var(--text-muted);
   --button-background-hover: var(--transparent);
   --button-background-focus: var(--transparent);
   --button-background-active: var(--transparent);
   --button-border-active: var(--transparent);
-  cursor: default;
+  cursor: not-allowed;
 }
-
-.ori-icon-btn .ori-icon-blocked { display: none; }
-.ori-icon-btn[aria-disabled="true"]:hover .ori-icon-rest,
-.ori-icon-btn[aria-disabled="true"]:focus-visible .ori-icon-rest { display: none; }
-.ori-icon-btn[aria-disabled="true"]:hover .ori-icon-blocked,
-.ori-icon-btn[aria-disabled="true"]:focus-visible .ori-icon-blocked { display: inline-block; }
 
 /* (c) Toast placement (OR-01-04).
    `.toast-container` has no documented position. The screens place it bottom
    right of the viewport. Position only — the Toast itself is untouched. */
+/* `.toast-content` is a flex row with no `align-items`, so `.toast-body`
+   stretches to the 32px height of `.btn-close` while its own 24px line sits at
+   the top — the message renders 4px above the icon and the close control.
+   Measured in both builds and recorded as an open runtime gap in
+   `css/buckholt-ai-fixes.css` correction 4, which deliberately did not fix it:
+   `align-items: center` on the row drops the icon 36px when there is a
+   multi-line note, and `align-self: center` on the body shifts the icon 4px.
+   Centring the body's own content avoids both — the body's height does not
+   change, so the icon and close control do not move, and a body tall enough to
+   fill the row is unaffected. */
+.ori-toast-container .toast-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .ori-toast-container {
   position: fixed;
   right: 1.5rem;
