@@ -398,20 +398,18 @@
 /* (c) Toast placement (OR-01-04).
    `.toast-container` has no documented position. The screens place it bottom
    right of the viewport. Position only — the Toast itself is untouched. */
-/* `.toast-content` is a flex row with no `align-items`, so `.toast-body`
-   stretches to the 32px height of `.btn-close` while its own 24px line sits at
-   the top — the message renders 4px above the icon and the close control.
-   Measured in both builds and recorded as an open runtime gap in
-   `css/buckholt-ai-fixes.css` correction 4, which deliberately did not fix it:
-   `align-items: center` on the row drops the icon 36px when there is a
-   multi-line note, and `align-self: center` on the body shifts the icon 4px.
-   Centring the body's own content avoids both — the body's height does not
-   change, so the icon and close control do not move, and a body tall enough to
-   fill the row is unaffected. */
-.ori-toast-container .toast-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* Measured across all six frames that show a toast, the drawn toast is 320 x 48.
+   Buckholt's `--toast-max-width` is 22rem (352). The height follows from the
+   close control: 8px toast padding + 4px content padding each side leaves a
+   24px content row, which is `.btn-close-sm`, not the default 32px `.btn-close`
+   the Toast examples show. See the note in `originators.js`.
+
+   Using the small control also removes the 4px vertical offset recorded as an
+   open gap in `css/buckholt-ai-fixes.css` correction 4: with the icon, the
+   message line and the close control all 24px, nothing stretches `.toast-body`,
+   so the message is centred without any rule for it. */
+.ori-toast-container .toast {
+  --toast-max-width: 20rem;
 }
 
 .ori-toast-container {

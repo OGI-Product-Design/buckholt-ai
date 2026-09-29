@@ -268,33 +268,36 @@ breaking the footer. Measured: one row of three at 498px each at 1920px, two at
 384px from 1440px down to 992px, full width below that, and no footer wrapping at
 any width.
 
-### 12. Toast message sat 4px above centre
+### 12. Toast size, and the 4px message offset
 
-`.toast-content` is a flex row with no `align-items`, so `.toast-body` stretches to
-the 32px height of `.btn-close` while its own 24px line sits at the top. The message
-therefore rendered 4px above the icon and the close control.
+Measured across all six frames that show a toast, the drawn toast is **320 × 48**.
+Buckholt's `--toast-max-width` is 22rem (352), so the prototype sets 20rem on the
+toast, scoped to its container.
 
-This is a **known Buckholt runtime gap**, measured in both builds and recorded in
-`css/buckholt-ai-fixes.css` correction 4 as deliberately **not** corrected: that
-audit fixed the close control's horizontal placement and left the vertical offset
-open, because `align-items: center` on the content row drops the icon 36px when there
-is a multi-line note, and `align-self: center` on the body shifts the icon 4px.
+The height follows from the close control, and explains a gap that was previously
+recorded as unexplained. 8px toast padding and 4px content padding on each side
+leave a 24px content row. The default `.btn-close` is **32px** — taller than the row,
+so it both makes the toast 56px and, being the tallest item in a flex row with no
+`align-items`, stretches `.toast-body` while its own 24px line sits at the top. That
+is the 4px offset recorded in `css/buckholt-ai-fixes.css` correction 4.
 
-The prototype centres the **body's own content** instead:
+`.btn-close-sm` is 24px. With the icon, the message line and the close control all
+24px, the toast is 48px and nothing stretches, so the message centres with no rule
+for it at all. Measured after the change: toast, content, icon, body, message and
+close control all on the same centre line.
 
-```css
-.ori-toast-container .toast-body { display: flex; flex-direction: column; justify-content: center; }
-```
+An earlier version of this prototype patched the symptom with
+`justify-content: center` on `.toast-body`. That rule is gone — the cause was the
+close control's size.
 
-The body's height does not change, so neither the icon nor the close control moves,
-and a body tall enough to fill the row is unaffected — avoiding both failure modes
-the earlier audit recorded. Measured after the change: toast, content, icon, body,
-message and close control all centre on the same line.
+Toast's Code & specs examples show the plain `.btn-close`, so `.btn-close-sm` on a
+Toast is not a documented combination. The evidence that the frames use it is the
+48px height, which only the 24px control produces.
 
-> **Gap to raise with Buckholt:** the Toast (and Alert) vertical offset is still open
-> upstream. This is a page-scoped workaround, not a fix to the component. If it holds
-> up, it is a candidate for `css/buckholt-ai-fixes.css` once someone checks it
-> against a multi-line `.toast-note` and `.toast-contextbar`.
+> **Gap to raise with Buckholt:** either `.toast .btn-close` should be 24px so it
+> matches the content row, or the content row should centre. The frames suggest the
+> former. Alert has the same geometry and the same offset. Separately,
+> `--toast-max-width` is 22rem and every frame draws 20rem.
 
 ### 13. Every icon-only Button carries a Tooltip
 

@@ -406,6 +406,15 @@
   /* ------------------------------------------------------------------ Toast
      Buckholt Toast, Code & specs example 7 (status) plus the documented close
      control. Shown with Bootstrap's native timing, per OR-06's rule.
+
+     The close control is `.btn-close-sm` (24px) rather than the default 32px.
+     Measured across all six frames that show a toast, the drawn toast is
+     320 x 48: 8px toast padding + 4px content padding each side leaves a 24px
+     content row, which only the small close control fits. The default 32px
+     control makes the toast 56px tall and, because it is the tallest thing in
+     the row, stretches `.toast-body` and pushes the message 4px above centre —
+     the open runtime gap in `buckholt-ai-fixes.css` correction 4. Matching the
+     drawn size removes both symptoms at the cause.
      ------------------------------------------------------------------------ */
 
   function showToast(message) {
@@ -422,7 +431,7 @@
         '<div class="toast-body">' +
           '<div class="toast-message"><h6>' + escapeHtml(message) + '</h6></div>' +
         '</div>' +
-        '<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>' +
+        '<button type="button" class="btn-close btn-close-sm" data-bs-dismiss="toast" aria-label="Close"></button>' +
       '</div>';
 
     $('ori-toasts').appendChild(el);
