@@ -4,8 +4,10 @@
 
    What this file is
    -----------------
-   Six corrections, each verified against BOTH the component's own documented
-   Code & specs markup in `code-specs-html/` and the current reference CSS.
+   Eight corrections, each verified against the component's own documented
+   Code & specs markup in `code-specs-html/`. Corrections 1-6 were verified
+   against BOTH builds; corrections 7 and 8 were measured against this build
+   only - see the scope note in correction 7.
 
    Reference model (confirmed by Mark, 9 September 2026)
    -----------------------------------------------------
@@ -140,16 +142,12 @@
    positions the control only through `.alert-dismissible`, a class the
    canonical examples never use.
 
-   NOT corrected: the 4px vertical offset
-   --------------------------------------
-   `.alert-content` has `padding: 0.25rem 0.5rem`, so a single-line body is
-   exactly 32px - the height of `.btn-close`. Inside the wrapper the button is
-   a third item in a 24px row: the row grows to 32px, `.alert-body` stretches
-   (the wrapper sets no `align-items`, so `stretch` applies) and the text sits
-   at its top. Measured +4.0px in both builds, with and without this rule.
-   Do NOT add `align-items`: `center` on the content row drops the icon 36px in
-   the multi-line case, and `align-self: center` on the body shifts the icon 4px
-   in the single-line case. Recorded as an open runtime gap.
+   The vertical half is now corrected too, separately, by CORRECTION 7.
+   ---------------------------------------------------------------------
+   This rule handles the horizontal placement only. The 4px vertical offset
+   this block used to record as "not corrected" was re-measured on 2026-09-29
+   with Font Awesome loaded, which showed that the misaligned element is the
+   close control, not the body. See correction 7.
 
    Upstream: position the documented in-content close control - horizontally and
              vertically - and reconcile the "Close button" code block with its
@@ -184,9 +182,9 @@
        this rule  16px - at the trailing edge, as documented
    Identical in the local build.
 
-   The 4px vertical offset applies here too, for the same reason, and is
-   likewise NOT corrected - `.toast-content` carries the same padding and no
-   `align-items`. See correction 3.
+   The vertical half applies here too and is now corrected separately, by
+   CORRECTION 8. See correction 7 for the re-measurement that identified the
+   close control - not the body - as the misaligned element.
 
    Kept separate from Alert deliberately: the two components are documented
    separately and may diverge. Do not merge these selectors back together.
@@ -262,4 +260,89 @@
 img.card-img,
 img.card-img-top {
   object-fit: cover;
+}
+
+
+/* ============================================================================
+   7. ALERT - the documented close control sits 4px below the first line
+   CLASSIFICATION: RUNTIME GAP vs DOCUMENTED INTENT
+   Completes correction 3, whose comment block used to record this as an open
+   gap that could not be closed without trading one misalignment for another.
+   It can be: the earlier audit measured the wrong element.
+
+   Re-measurement, 2026-09-29, with Font Awesome loaded
+   ----------------------------------------------------
+   Against the FIRST LINE of the message - the only reference that is correct
+   for a single-line and a multi-line alert alike - the icon and the message
+   are already in agreement. The close control is not:
+
+       case                                   icon    close
+       single line, documented .btn-close     0.0px   +4.0px
+       multi-line note, documented .btn-close 0.0px   +4.0px
+       single line, no close control          0.0px     n/a
+       multi-line note, no close control      0.0px     n/a
+
+   So the body is not "4px high"; the close control is 4px low, and the icon
+   follows the body correctly in every case. The earlier figure was the same
+   4px seen from the other side, by comparing against the row centre - which a
+   multi-line alert has no business aligning to.
+
+   Cause:    `.btn-close` is 32px (`--btn-close-width/height: 2rem`). The line
+             it should align to is 24px. `.alert-content` sets no
+             `align-items`, but an item with a definite cross size does not
+             stretch - it is placed at flex-start - so a 32px control centres
+             4px below a 24px line.
+   Fix:      align it to the first line. The offset is derived, not hard-coded:
+             `(1.5rem - var(--btn-close-height)) / 2` is -4px for the 32px
+             control and 0 for `.btn-close-sm`, so the rule is correct for both
+             and needs no second selector.
+   Why not `align-items: center` on the content row: it drops the icon 36px in
+             the multi-line case. That remains true and is why correction 3
+             stopped where it did. This rule does not touch the row.
+   Why not `align-self: center` on the body: it shifts the icon. Also still
+             true. This rule does not touch the body or the icon; measured
+             after it, both are unchanged at 0.0px.
+   Scope:    measured against THIS build only - the live `compiled.css?v=2.3`
+             was not available in the session that made this correction. The
+             geometry does not depend on the build: it follows from
+             `--btn-close-height` and the 24px line, both of which the live
+             build shares. Re-measure against live when it is next to hand.
+   Font:     confirmed with Font Awesome Free standing in for the Pro kit. The
+             base rule that matters, `line-height: 1` on every icon class, is
+             identical in both, and the close control's geometry does not
+             depend on the icon font at all.
+   Upstream: as correction 3 - and note that the fix is about the close
+             control's box, not the content row.
+   ============================================================================ */
+
+.alert-content > .btn-close {
+  align-self: flex-start;
+  margin-top: calc((1.5rem - var(--btn-close-height)) / 2);
+}
+
+
+/* ============================================================================
+   8. TOAST - the documented close control sits 4px below the first line
+   CLASSIFICATION: RUNTIME GAP vs DOCUMENTED INTENT
+   Completes correction 4. Measured on Toast's own documented markup, not
+   inherited from the Alert finding: same four cases, same result, icon 0.0px
+   and close +4.0px wherever the documented 32px `.btn-close` is present.
+
+   `.toast-content` carries the same padding and the same absence of
+   `align-items` as `.alert-content`, so the cause and the fix are the same -
+   but Alert and Toast are different components (confirmed by Mark,
+   9 September 2026) and their corrections stay separate so they can diverge.
+   Do not merge this selector with correction 7.
+
+   See correction 7 for the full measurement table, the derivation of the
+   offset, and the scope and font caveats, which apply here unchanged.
+
+   Note: the Originators frames draw a 48px toast, which is what the 24px
+   `.btn-close-sm` produces; this rule is a no-op for that control and
+   corrects the documented 32px one.
+   ============================================================================ */
+
+.toast-content > .btn-close {
+  align-self: flex-start;
+  margin-top: calc((1.5rem - var(--btn-close-height)) / 2);
 }

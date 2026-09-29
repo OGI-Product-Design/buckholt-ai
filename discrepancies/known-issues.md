@@ -12,9 +12,18 @@ snapshot and is never edited. Each fix below was re-verified on 7 September 2026
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
 runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
 
-The layer holds **6 documented corrections**, expressed as **6 CSS rules**: four entries marked
-`ACTIVE FIX`, plus Alert and Toast, whose horizontal half is corrected and whose 4px vertical half
-remains `OPEN`. Alert and Toast are separate components and are corrected by separate rules.
+The layer holds **8 documented corrections**, expressed as **8 CSS rules**, all `ACTIVE FIX`. Alert
+and Toast each carry two: a horizontal correction (3, 4) and a vertical one (7, 8). Alert and Toast
+are separate components and are corrected by separate rules throughout.
+
+**Alert/Toast close control, 29 September 2026.** The 4px vertical offset that corrections 3 and 4
+recorded as `OPEN`, and as impossible to close without trading one misalignment for another, is now
+corrected by **corrections 7 and 8**. The earlier audit measured the wrong element. Measured against
+the **first line of the message** — the only reference that is correct for a single-line and a
+multi-line alert alike — the icon and the message already agree; the **close control** is 4px low,
+because `.btn-close` is 32px and the line it should align to is 24px. Aligning the control to the
+first line fixes every case and leaves the row, the body and the icon untouched, so neither of the
+two failure modes the earlier audit identified applies.
 
 > ## ⚠ Read `build-provenance.md` first
 >
@@ -55,7 +64,7 @@ reclassified — they are no longer all "defects in Buckholt's own compiled outp
 |---|---|
 | 1 Progress bar error icon | Local build regression — live renders correctly |
 | 2 Versa-tile action wrap | Local build regression — live renders correctly |
-| 3 Alert/Toast close placement | Unresolved — documentation shows two placements |
+| 3 Alert/Toast close placement | Horizontal: unresolved — documentation shows two placements. Vertical: corrected 29 September 2026, see corrections 7 and 8 |
 | 4 Table button-set offset | Unresolved — `.button-set-no-offset` is undocumented |
 | 5 Card image `object-fit` | Upstream mismatch — present in both builds |
 
@@ -172,7 +181,8 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
 
 ## Alert — 4px vertical offset of the label when the documented close control is present
 
-- **Status:** `OPEN` (vertical) — the horizontal half is corrected by **correction 3**.
+- **Status:** `ACTIVE FIX` — horizontal by **correction 3**, vertical by **correction 7**
+  (29 September 2026).
   Audited independently of Toast on 9 September 2026 against Alert's own Code & specs page.
 - **Documented intent.** `code-specs-html/Alert_ code & specs`, section "Close button":
 
@@ -197,9 +207,33 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
   exactly 32px — the height of `.btn-close`. Inside the wrapper the button becomes a third item in
   a 24px row: the row grows to 32px, `.alert-body` stretches (no `align-items`, so `stretch`
   applies) and the text sits at its top.
-- **Not corrected, and should not be.** `align-items: center` on the content row drops the icon 36px
-  in the multi-line case; `align-self: center` on the body shifts the icon 4px in the single-line
-  case. Both trade one misalignment for another. No CSS has been added for it.
+- **Corrected 29 September 2026 by correction 7**, after re-measuring with Font Awesome loaded and
+  against the **first line of the message** rather than the row centre. The earlier audit measured
+  the wrong element:
+
+  | case | icon vs 1st line | close vs 1st line |
+  |---|---|---|
+  | single line, documented `.btn-close` | 0.0px | **+4.0px** |
+  | multi-line note, documented `.btn-close` | 0.0px | **+4.0px** |
+  | single line, no close control | 0.0px | n/a |
+  | multi-line note, no close control | 0.0px | n/a |
+
+  The body is not 4px high — the **close control is 4px low**, and the icon follows the body
+  correctly in every case. `.btn-close` is 32px (`--btn-close-width/height: 2rem`); the line it
+  should align to is 24px. `.alert-content` sets no `align-items`, but an item with a definite cross
+  size does not stretch, so a 32px control is placed at flex-start and centres 4px below a 24px
+  line.
+- **The two rejected fixes are still rejected, and are still not used.** `align-items: center` on
+  the content row drops the icon 36px in the multi-line case; `align-self: center` on the body
+  shifts the icon. Correction 7 touches neither: it aligns the close control alone, with an offset
+  derived from `--btn-close-height` so it is correct for `.btn-close` and `.btn-close-sm` alike.
+  Measured after it, the icon and the body are unchanged at 0.0px.
+- **Scope of the new measurement.** This build only — the live `compiled.css?v=2.3` was not
+  available in the session that made the correction. The geometry follows from
+  `--btn-close-height` and the 24px line, which the live build shares, so it is expected to hold
+  there; re-measure when live is next to hand. Confirmed with Font Awesome **Free** standing in for
+  the Pro kit: the base rule that matters, `line-height: 1` on every icon class, is identical in
+  both, and the close control's geometry does not depend on the icon font at all.
 - **The style guide shows this**, using the documented in-content structure rather than the other
   documented code variant, so the gap is visible rather than hidden.
 - **Upstream action:** position the documented in-content close control vertically as well as
@@ -207,7 +241,8 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
 
 ## Toast — 4px vertical offset of the label when the documented close control is present
 
-- **Status:** `OPEN` (vertical) — the horizontal half is corrected by **correction 4**.
+- **Status:** `ACTIVE FIX` — horizontal by **correction 4**, vertical by **correction 8**
+  (29 September 2026).
   Audited independently of Alert, against Toast's own Code & specs page. **Alert and Toast are
   different components** (confirmed by Mark, 9 September 2026); that they behave alike here is a
   measured result, not an assumption, and their corrections are kept as separate rules so they can
@@ -227,7 +262,14 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
   Identical in the local build. `.toast-content` carries the same padding and the same absence of
   `align-items` as `.alert-content`, which is why the 4px is the same figure — but it was measured
   on Toast, not inherited from the Alert finding.
-- **Not corrected:** as for Alert. Do not merge the two selectors back together.
+- **Corrected 29 September 2026 by correction 8**, measured on Toast's own documented markup rather
+  than inherited from the Alert finding: the same four cases, the same result — icon 0.0px against
+  the first line, close **+4.0px** wherever the documented 32px `.btn-close` is present. Cause, fix
+  and caveats as for Alert. Do not merge the two selectors back together.
+- **Toast size, for reference.** Every Originators frame draws a **48px** toast, which is what the
+  24px `.btn-close-sm` produces; the documented 32px control gives 56px. Correction 8 is a no-op for
+  the small control. Whether Toast's close control should be 24px is an open question for Buckholt,
+  recorded in `Originators/SPEC-CHANGES.md`.
 - **Upstream action:** as for Alert, for Toast.
 
 ## Table — action button set sits below the row centre

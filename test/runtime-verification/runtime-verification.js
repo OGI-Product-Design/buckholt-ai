@@ -502,11 +502,44 @@
     }
   }
 
+  // Corrections 7 and 8. The close control must centre on the FIRST LINE of
+  // the message, not on the content row: a multi-line Alert has no business
+  // aligning its close control to the middle of a 128px row. Measured against
+  // `.alert-message` / `.toast-message`, which is that first line.
+  function assertFirstLineAligned(component, label, selector, messageSelector) {
+    var control = document.querySelector(selector);
+    if (!control) {
+      fixChecks.push({ component: component, label: label, ok: null,
+        detail: 'no canonical example with an in-content close control on this page' });
+      return;
+    }
+    var row = control.parentNode;
+    var message = row.querySelector(messageSelector);
+    if (!message) {
+      fixChecks.push({ component: component, label: label, ok: null,
+        detail: 'the example has no ' + messageSelector + ' to align against' });
+      return;
+    }
+    var c = control.getBoundingClientRect();
+    var m = message.getBoundingClientRect();
+    var offset = (c.top + c.height / 2) - (m.top + m.height / 2);
+    var ok = Math.abs(offset) <= 0.5;
+    fixChecks.push({ component: component, label: label, ok: ok,
+      detail: offset.toFixed(1) + 'px from the first line\u2019s centre' +
+              (ok ? '' : ' \u2014 expected 0.0px') });
+    if (!ok) {
+      record('BUCKHOLT RUNTIME DEFECT', component,
+        'The in-content close control sits ' + offset.toFixed(1) + 'px from the centre of the ' +
+        'first line of the message. Correction ' + (component === 'alert' ? '7' : '8') +
+        ' should be holding it at 0.0px.');
+    }
+  }
+
   function verifyCompatibilityFixes() {
     assertCloseGlyph();
     var zero = function (v) { return parseFloat(v) === 0; };
 
-    // Five corrections. Two more - the Dropdown caret and .btn-close box-sizing -
+    // Seven corrections. Two more - the Dropdown caret and .btn-close box-sizing -
     // were deleted on 2026-09-09 after measuring both this build and the live
     // compiled.css?v=2.3 and finding them inert in both. See
     // discrepancies/build-provenance.md.
@@ -522,6 +555,10 @@
       '.rv-canonical .alert-content > .btn-close');
     assertTrailingEdge('toast', 'in-content close control sits at the trailing edge',
       '.rv-canonical .toast-content > .btn-close');
+    assertFirstLineAligned('alert', 'in-content close control aligns with the first line',
+      '.rv-canonical .alert-content > .btn-close', '.alert-message');
+    assertFirstLineAligned('toast', 'in-content close control aligns with the first line',
+      '.rv-canonical .toast-content > .btn-close', '.toast-message');
     assertFix('table', 'action button set aligned to the row centre',
       '.rv-canonical .table td .button-set', 'marginTop', zero);
     assertFix('card', 'documented image markup is cropped, not stretched',
