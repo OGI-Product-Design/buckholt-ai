@@ -8,6 +8,8 @@ and `screenshots/`.
 | `index.html` | The page. Buckholt runtime contract, Buckholt page structure, Buckholt components. |
 | `originators.css` | Prototype-only. Static app chrome, a little layout, three Buckholt variable bindings. |
 | `originators.js` | State and behaviour for OR-00 to OR-11. In memory; reloading resets to the seed data. |
+| `PROTOTYPE.md` | These build notes. |
+| `SPEC-CHANGES.md` | The list to feed back into `originators-spec.md`, the Figma frames and Buckholt. |
 
 Open `index.html` directly in a browser. Everything is relative; nothing is built.
 
@@ -414,7 +416,7 @@ The rest of the bar was re-measured from OR-00-01 at 2x at the same time:
 | Logo ink starts | 16px | no logo padding |
 | Search box | 154.5 – 474.5, height 34px | `20rem` wide, `2.125rem` tall |
 | Dividers | 1572 / 1710 / 1842, full header height | `align-self: stretch` on the group |
-| "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding |
+| "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding, weight 600 at Laurence's request |
 | Avatar | 1859 – 1903.5 | `2.75rem`, `margin-left: 1rem` |
 
 Rendered dividers land within 2px of the design at the third, and within about 10px
@@ -439,19 +441,19 @@ prototype's own judgement.
 
 ## Spec issues found
 
-1. **OR-04-03's example search does match products.** The state is triggered by
-   typing `"Th"`, described as *"text that matches no product names"*. Matching is
-   *"case-insensitive… contains the search text anywhere"*, and 14 seeded products
-   contain "th" — every "Monthly" and "Months". The prototype implements the stated
-   rule, so `"Th"` returns matches; the no-results state was verified with a string
-   that genuinely matches nothing.
-
-2. **"Up to four cards sit in a row" is unreachable at the drawn card width.** See
+1. **"Up to four cards sit in a row" is unreachable at the drawn card width.** See
    deviation 11. Either the card is narrower than drawn, or the limit is three at
    1920px and four only at a wider viewport.
 
-3. **Toast success icon.** See deviation 10 — a Buckholt documentation issue rather
+2. **Toast success icon.** See deviation 10 — a Buckholt documentation issue rather
    than a spec one, but it surfaced here.
+
+> **Not an issue:** OR-04-03's `"Th"` is an illustrative Figma string showing what the
+> no-results state looks like, not a literal case — confirmed by Laurence on
+> 29 September 2026. Matching is *"contains the search text anywhere, ignoring
+> case"*, so `"th"` does match 14 seeded products (every "Monthly" and "Months").
+> The prototype implements the stated rule, and the state is asserted with a string
+> that genuinely matches nothing.
 
 ---
 
@@ -479,11 +481,8 @@ vertical differences that follow from a fallback font (a card ~10px taller, one
 helper paragraph wrapping to two lines) are artefacts of the offline render, not of
 the markup. Everything else was measured against the screenshots directly.
 
-118 behavioural assertions across the eleven flows, with no console or page errors at
-any viewport. 117 pass. The one that does not is spec issue 1 below: the spec's own
-example search string for the no-results state matches 14 of its own seeded
-products, so the assertion written from the spec fails while the behaviour is
-correct. Re-checked with a string that genuinely matches nothing, it passes.
+119 behavioural assertions across the eleven flows. All pass, with no console or
+page errors at any viewport.
 
 | Flow | Verified |
 | --- | --- |
@@ -491,7 +490,7 @@ correct. Re-checked with a string that genuinely matches nothing, it passes.
 | OR-01 | Add: Save disabled when empty, enabled when filled, new card with "0 products", toast, new filter option |
 | OR-02 | Inline "Max 18 characters" while typing; Save enabled with a blank field; Save then flags it, shows the summary alert, keeps the modal open and disables Save; correcting clears both; Cancel saves nothing |
 | OR-03 | Pre-filled fields, Confirm disabled until dirty, bank details warning naming 32 products, card updated, toast |
-| OR-04 | 9 matches for "Krypton - Open Market Motor"; no-results state replaces the table and its header row |
+| OR-04 | 9 matches for "Krypton - Open Market Motor"; no-results state replaces the table and its header row. Asserted with a string that genuinely matches nothing — the spec's `"Th"` is an illustrative frame, not a literal case |
 | OR-05 | Filter to Real Insure LTD's 2 rows; no-products-assigned state with the header row hidden |
 | OR-06 | Singular counter, row highlight, current originator preselected, Confirm disabled until a different one is chosen, counts 31/3, selection cleared, toast |
 | OR-07 | Header checkbox partial state, bulk change warning, five bullets plus "+ 2 more products", counts 25/9 |
