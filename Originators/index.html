@@ -20,13 +20,64 @@
 
   <!-- ======================================================================
        STATIC APPLICATION CHROME — NOT BUCKHOLT.
-       Filled by prototype/app-shell.js, which both features share. The spec
-       records the top bar and left navigation as static; they are reproduced
-       from the screenshots and placed in Buckholt's own layout-03 `header`
-       and `sidebar` grid areas.
+       Reproduced by visual inspection of OR-00-01. The spec records the top
+       bar and left navigation as static. Placed in Buckholt's own layout-03
+       `header` and `sidebar` grid areas.
+
+       The markup is in the page, not written by script, so the chrome is
+       there whatever happens to the JavaScript. Its styling is shared with
+       BACS Import in `prototype/app-shell.css`, and the clock is ticked by
+       `prototype/app-shell.js`.
        ====================================================================== -->
-  <header class="app-bar"></header>
-  <aside id="sidebar" class="app-sidenav"></aside>
+  <header class="app-bar">
+    <a class="app-bar-logo" href="#">open gi</a>
+
+    <div class="app-bar-search">
+      <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+      <label class="visually-hidden" for="app-global-search">Search by name, reference or email</label>
+      <input type="search" id="app-global-search" placeholder="Search by name, reference or email">
+    </div>
+
+    <a class="app-bar-help" href="#">
+      <i class="fa-regular fa-circle-info" aria-hidden="true"></i>
+      What can I search?
+    </a>
+
+    <!-- One tight row: the dividers butt against each cell's own padding, so
+         no gap sits between a divider and the text beside it. -->
+    <div class="app-bar-right">
+      <span class="app-bar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
+
+      <!-- Live clock, set and ticked by Shell.startClock(). The markup carries
+           the values the frames draw so the cell has its drawn width before
+           script runs; both are replaced on load. -->
+      <div class="app-bar-clock">
+        <time class="app-bar-time" id="app-clock-time" datetime="13:24">13:24</time>
+        <time class="app-bar-date" id="app-clock-date" datetime="2026-09-03">03 September 2026</time>
+      </div>
+
+      <button type="button" class="app-bar-account">
+        Accounts
+        <i class="fa-regular fa-chevron-down" aria-hidden="true"></i>
+      </button>
+
+      <span class="app-bar-avatar" aria-hidden="true">AC</span>
+    </div>
+  </header>
+
+  <aside id="sidebar" class="app-sidenav">
+    <nav class="app-sidenav-items" aria-label="Modules">
+      <a class="app-sidenav-item" href="#">
+        <i class="fa-regular fa-money-bill-transfer" aria-hidden="true"></i>AutoRek
+      </a>
+      <a class="app-sidenav-item is-current" href="#" aria-current="page">
+        <i class="fa-regular fa-building-columns" aria-hidden="true"></i>BACS
+      </a>
+    </nav>
+    <button type="button" class="app-sidenav-collapse">
+      <i class="fa-solid fa-caret-left" aria-hidden="true"></i>Collapse menu
+    </button>
+  </aside>
 
   <!-- ======================================================================
        MAIN — Buckholt from here down.
@@ -39,10 +90,26 @@
           <div class="page-pane">
 
             <!-- Panel: BACS section navigation ----------------------------
-                 Buckholt Page navigation, rendered by prototype/app-shell.js
-                 so Import and Originators share one tab set and link to
-                 each other. -->
-            <div class="page-panel" id="ori-bacs-tabs"></div>
+                 Buckholt Page navigation: four separate pages, so `.nav >
+                 .nav-item > .nav-link` with `.active` on the current one.
+                 Process, Import and Calendar live in the BACS Import
+                 prototype. -->
+            <div class="page-panel" id="ori-bacs-tabs">
+              <ul class="nav nav-underline">
+                <li class="nav-item">
+                  <a class="nav-link" href="../BACS-import/index.html#/process">Process</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../BACS-import/index.html#/import">Import</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#" aria-current="page">Originators</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../BACS-import/index.html#/calendar">Calendar</a>
+                </li>
+              </ul>
+            </div>
 
             <!-- Panel: Originators ------------------------------------------ -->
             <div class="page-panel">
