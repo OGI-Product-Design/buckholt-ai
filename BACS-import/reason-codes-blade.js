@@ -103,8 +103,10 @@
 
   /* -------------------------------------------------------------- Rendering */
 
+  /* Buckholt Tag, the documented default size, as Heading attachment's own
+     Code & specs example attaches one. */
   function chip(item, q, key) {
-    return '<span class="tag tag-sm' + (isExactCode(item, q) ? ' rc-chip-match' : '') + '"' +
+    return '<span class="tag' + (isExactCode(item, q) ? ' rc-chip-match' : '') + '"' +
       ' id="' + key + '-chip">' +
       '<span class="tag-label">' + esc(item.code) + '</span>' +
     '</span>';
@@ -140,13 +142,20 @@
         '</div>';
     }
 
+    /* Buckholt Heading attachment, Code & specs example 3:
+       `.text-block > .heading > .heading-content + .tag`, then the
+       description as the Text block's own paragraph. Buckholt supplies the
+       heading-row alignment and spacing; its rules say not to rebuild that
+       row with local flex or margin. */
     return '' +
-      '<div class="rc-item">' +
-        '<div class="rc-item-head">' +
-          '<h3 class="rc-item-title">' + highlight(item.title, q) + '</h3>' +
+      '<div class="text-block rc-item">' +
+        '<div class="heading">' +
+          '<div class="heading-content">' +
+            '<h4 class="title-01">' + highlight(item.title, q) + '</h4>' +
+          '</div>' +
           chip(item, q, key) +
         '</div>' +
-        '<p class="rc-item-description">' + highlight(item.description, q) + '</p>' +
+        '<p>' + highlight(item.description, q) + '</p>' +
         guidance +
       '</div>';
   }
@@ -178,7 +187,9 @@
 
     var index = 0;
     var body = groups.map(function (g) {
-      return (g.heading ? '<h4 class="rc-subheading">' + esc(g.heading) + '</h4>' : '') +
+      return (g.heading
+        ? '<div class="text-block"><h3 class="title-02">' + esc(g.heading) + '</h3></div>'
+        : '') +
         g.codes.map(function (item) {
           index += 1;
           return itemMarkup(item, key, index, q);
@@ -186,7 +197,7 @@
     }).join('');
 
     /* Rule 6: "Intros are hidden while searching." */
-    var intro = q ? '' : '<p class="rc-intro">' + esc(section.intro) + '</p>';
+    var intro = q ? '' : '<div class="text-block rc-intro"><p>' + esc(section.intro) + '</p></div>';
 
     return {
       count: count,
@@ -203,7 +214,12 @@
             '</button>' +
           '</h3>' +
           '<div id="rc-body-' + key + '" class="accordion-collapse collapse' + (open ? ' show' : '') + '">' +
-            '<div class="accordion-body">' + intro + body + '</div>' +
+            /* Buckholt Panel: "groups directly related components; no
+               padding; 2rem / 32px gap between items", which is the gap the
+               frame draws between code items. */
+            '<div class="accordion-body">' +
+              '<div class="page-panel">' + intro + body + '</div>' +
+            '</div>' +
           '</div>' +
         '</div>'
     };

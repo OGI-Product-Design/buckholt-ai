@@ -103,9 +103,6 @@
 
 .im-detail-search { width: 20rem; max-width: 100%; }
 
-/* Not applied rows carry the pill and then a neutral chip (section 9). */
-.im-outcome-cell { display: flex; align-items: center; gap: 0.5rem; }
-
 /* The row-opening chevron sits at the end of every row. */
 .im-row-open { display: flex; justify-content: flex-end; }
 
@@ -176,16 +173,15 @@
    type set is on the element. */
 .im-file-name { color: var(--text-primary); overflow-wrap: anywhere; }
 
-/* IM-05-01: an invalid file puts a red border on the card and the message
-   below it. `--text-error` is Buckholt's own error text token. */
+/* IM-05-01: an invalid file puts a red border on the card. The message under
+   it is Buckholt's documented `.invalid-feedback`, revealed by the design
+   system's own `.response:has(.is-invalid) ~ .invalid-feedback`, so only the
+   card's border is set here. */
 .im-file-card.is-invalid { border-color: var(--text-error); }
 
-.im-file-error {
-  margin: 0.5rem 0 0;
-  color: var(--text-error);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
+/* `.invalid-feedback` has `margin: 0`; the frame leaves a little air under
+   the card. */
+#im-file-region .invalid-feedback { margin-top: 0.5rem; }
 
 /* The bin is Buckholt's documented danger Ghost Button,
    `.btn.btn-ghost.btn-danger` — the variant Button's own Code & specs lists.
@@ -194,33 +190,13 @@
 
 
 /* ---------------------------------------------------------------- Date range
-   IM-00-01. Buckholt documents no date picker and no range input. The field
-   is a Buckholt Text input carrying the spec's `dd/mm/yyyy-dd/mm/yyyy`
-   format; the button beside it reveals two native date controls, which is
-   the nearest thing to a picker that does not invent a calendar component. */
+   IM-00-01. Buckholt documents no date input, no range input and no date
+   picker. Everything it *does* document is used: the field is a Text input,
+   the control inside it is Text input's own `.input-btn`, and the panel's
+   actions are a Button set. Only the panel itself is drawn here, from
+   Buckholt tokens, and only because Buckholt has no popover to put it in. */
 
 .im-filter-date { position: relative; }
-
-.im-date-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0.75rem;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0;
-  color: var(--action-01);
-  background: none;
-  border: 0;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.im-date-toggle:hover { background-color: var(--action-04); }
-.im-date-toggle:focus-visible { outline: 2px solid var(--action-01); outline-offset: 1px; }
 
 .im-date-picker {
   position: absolute;
@@ -238,6 +214,13 @@
   box-shadow: 0 10px 15px -3px rgba(var(--shadow-colour), 0.1), 0 4px 6px -4px rgba(var(--shadow-colour), 0.1);
 }
 
+/* A native date input draws the browser's own picker glyph, which would sit
+   next to Buckholt's `.input-btn` in the same corner and in a different
+   colour. The glyph is hidden and the Buckholt button opens the same native
+   picker through `showPicker()`, so the affordance is Buckholt's and the
+   calendar is still the browser's. */
+.im-date-picker input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+.im-date-picker input[type="date"]::-webkit-inner-spin-button { display: none; }
 
 /* --------------------------------------------------------------- Pagination
    IM-00-01. Buckholt has no pagination component: `buckholt.css` defines no
@@ -407,33 +390,15 @@
   font-weight: 400;
 }
 
-.rc-intro {
-  margin: 0 0 var(--spacer-04);
-  color: var(--text-secondary);
-}
+/* The intro, the group subheadings and the code items are all Buckholt Text
+   blocks inside a Buckholt Panel, so their type, their heading rows and the
+   32px between them all come from the design system. Nothing here rebuilds
+   that; the only rules left are the two things Buckholt has no answer for —
+   the search highlight, and keeping the code chip from shrinking. */
 
-.rc-subheading {
-  margin: var(--spacer-04) 0 var(--spacer-03);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.rc-subheading:first-child { margin-top: 0; }
-
-.rc-item + .rc-item { margin-top: var(--spacer-05); }
-
-.rc-item-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--spacer-03);
-}
-
-.rc-item-title { margin: 0; font-size: 1rem; font-weight: 500; line-height: 1.5rem; }
-.rc-item-description { margin: 0.25rem 0 0; color: var(--text-secondary); }
-
-/* The code chip is a Buckholt Tag; this only stops it shrinking. */
-.rc-item-head .tag { flex: 0 0 auto; }
+/* Heading attachment lets its attachment shrink; a two-character code chip
+   should not wrap. */
+.rc-item .heading > .tag { flex: 0 0 auto; }
 
 /* Spec 13.3: matched text is wrapped in <mark>, "with a yellow background such
    as #ffe58a". Buckholt has no highlight token. */
@@ -445,13 +410,7 @@
 }
 
 /* On an exact code match the chip is highlighted too. */
-.rc-item-head .tag.rc-chip-match { background-color: #ffe58a; }
-
-.rc-empty { margin: 0; }
-
-/* The "What to do" disclosure is the Buckholt Collapse component. Nothing
-   here restyles it; this only keeps it clear of the description above. */
-.rc-item .collapse-item { margin-top: 0.5rem; }
+.rc-item .heading > .tag.rc-chip-match { background-color: #ffe58a; }
 
 
 /* ----------------------------------------------------------------------------

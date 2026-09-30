@@ -572,11 +572,16 @@
       '<td>' + esc(record.clientName) + '</td>' +
       second +
       '<td>' + formatDate(record.date) + '</td>' +
+      /* Buckholt Tag set, Tag's Code & specs example 9: two Tags of the
+         documented default size, grouped. Section 9: a Not applied row shows
+         the pill, then a neutral "No matching policy" chip. */
       '<td>' +
-        '<div class="im-outcome-cell">' +
-          outcomePill(record.outcome) +
-          (unmatched ? '<span class="tag tag-sm"><span class="tag-label">No matching policy</span></span>' : '') +
-        '</div>' +
+        (unmatched
+          ? '<div class="tag-set">' +
+              outcomePill(record.outcome) +
+              '<span class="tag"><span class="tag-label">No matching policy</span></span>' +
+            '</div>'
+          : outcomePill(record.outcome)) +
       '</td>' +
       '<td>' + esc(reasonText(imp, record.reasonCode)) + '</td>' +
       '<td class="col-fit cell-data-right">' + menu + '</td>' +
@@ -687,10 +692,15 @@
       notApplied: notAppliedCount(imp)
     };
 
+    /* Section 9: when every record is applied, Applied would be a copy of
+       All and Not applied would be empty, so only All is shown. Otherwise
+       all three appear. */
+    var tabs = counts.notApplied === 0 ? TABS.slice(0, 1) : TABS;
+    if (counts.notApplied === 0) state.detail.tab = 'all';
+
     /* Buckholt Tabs: `.tabs > .tab-items > .tab-items-scroll > ul.nav.nav-underline`
-       with pill behaviour, and one `.tab-pane` per tab. Section 9 keeps the
-       Not applied tab even when its count is 0. */
-    var tabButtons = TABS.map(function (tab) {
+       with pill behaviour, and one `.tab-pane` per tab. */
+    var tabButtons = tabs.map(function (tab) {
       var on = tab.key === state.detail.tab;
       return '<li class="nav-item" role="presentation">' +
         '<button class="nav-link' + (on ? ' active' : '') + '" id="im-tab-' + tab.key + '-tab"' +
@@ -704,7 +714,7 @@
       '</li>';
     }).join('');
 
-    var tabPanes = TABS.map(function (tab) {
+    var tabPanes = tabs.map(function (tab) {
       var on = tab.key === state.detail.tab;
       return '<div class="tab-pane fade' + (on ? ' active show' : '') + '" id="im-tab-' + tab.key + '"' +
         ' role="tabpanel" aria-labelledby="im-tab-' + tab.key + '-tab" tabindex="0">' +
@@ -835,16 +845,15 @@
       $('im-file-remove').setAttribute('aria-label', 'Remove ' + u.filename);
     }
 
+    /* Buckholt shows `.invalid-feedback` through
+       `.response:has(.is-invalid) ~ .invalid-feedback`, so marking the card
+       invalid is all it takes — the message's type, colour and spacing are
+       the design system's. */
     var error = $('im-file-error');
-    error.hidden = !u.invalid;
-    if (u.invalid) {
-      error.textContent = COPY.formatError[u.fileType];
-      $('im-file-card').classList.add('is-invalid');
-      $('im-file-card').setAttribute('aria-describedby', 'im-file-error');
-    } else {
-      $('im-file-card').classList.remove('is-invalid');
-      $('im-file-card').removeAttribute('aria-describedby');
-    }
+    error.textContent = u.invalid ? COPY.formatError[u.fileType] : '';
+    $('im-file-card').classList.toggle('is-invalid', u.invalid);
+    if (u.invalid) $('im-file-card').setAttribute('aria-describedby', 'im-file-error');
+    else $('im-file-card').removeAttribute('aria-describedby');
 
     /* Section 7: "Import is enabled only when a file type is chosen and a
        valid file is attached." */
@@ -1112,6 +1121,17 @@
       $('im-date-picker').hidden = !open;
       this.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open) $('im-date-from').focus();
+    });
+
+    /* Buckholt's `.input-btn` is the affordance; the browser's own date
+       picker is what it opens. The native glyph is hidden in CSS so there is
+       only one control in the corner. */
+    $('im-date-picker').addEventListener('click', function (e) {
+      var button = e.target.closest('[data-picker-for]');
+      if (!button) return;
+      var field = $(button.dataset.pickerFor);
+      field.focus();
+      if (typeof field.showPicker === 'function') field.showPicker();
     });
 
     $('im-date-apply').addEventListener('click', function () {
