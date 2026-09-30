@@ -213,6 +213,39 @@ Drawn regular; the prototype uses semi-bold (600) at your request on 29 Septembe
 
 ---
 
+### A7. Reassign originator subtitle — bold the count — **new**
+
+The frames disagree with each other. OR-07-03 draws "You’re assigning a new
+originator to **7** products." with the count bold; OR-06-03 and OR-09-03 draw theirs
+in the regular weight. Confirmed by Laurence on 30 September 2026 that the bold one is
+the intent, and the prototype now bolds it in every case. It is a `<strong>`, which
+Buckholt sets to 500, the same treatment as the OR-03 intro line.
+
+Add to the OR-06 "Reassign originator modal" description:
+
+> **Subtitle:** "You’re assigning a new originator to **{count}** product(s)." The
+> count is bold. The all-products variant, "You’re reassigning all products.", has no
+> count.
+
+And update OR-06-03 and OR-09-03 to match OR-07-03.
+
+### A8. What the sticky layers do at phone width — **needs a decision**
+
+OR-00's "Sticky action bar and table header" does not say what happens below the
+width where the table stops fitting. Two things collide there:
+
+- `.table-content` has to be a horizontal scroller again (measured at 375px, the
+  table's minimum is 347px in a 311px column), and a sticky `thead th` inside a
+  scroller is positioned against *that* scrollport — it drops 340px down, below the
+  first row. The header cannot stick while the scroller is back.
+- The action bar stacks to five rows at that width, so pinning it alone would hold
+  about 300px of a 760px phone viewport under the top bar.
+
+The prototype takes both layers off below 576px. The top app bar still sticks.
+
+**Ask:** confirm, or say the action bar should stay pinned on a phone regardless. The
+table header cannot join it either way until C9 is settled.
+
 ## C. Tickets for the Buckholt design system
 
 These are not Originators changes. Each one is a gap the prototype hit and worked

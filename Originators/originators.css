@@ -193,11 +193,21 @@
 
 /* Layer 1: the action bar, directly under the top app bar. Bootstrap's
    `.sticky-top` is `top: 0`, so the offset is set here instead. The page
-   surface is `--ui-background-02`, the colour `body` already carries. */
+   surface is `--ui-background-02`, the colour `body` already carries.
+
+   The padding is what keeps the bar's own breathing room once it is stuck:
+   without it the controls sit flush against the top bar above and the table
+   header below. The matching negative margin gives the space back to the flow,
+   so the resting layout is drawn exactly as before — measured at 1920px, the
+   search field and the table start at the same y with and without these two
+   lines. A sticky offset positions the border box, not the margin box, so the
+   negative margin does not move the bar once it is stuck. */
 .ori-toolbar {
   position: sticky;
   top: var(--app-header-height, 4.75rem);
   z-index: 30;
+  padding-block: var(--spacer-04);
+  margin-block: calc(var(--spacer-04) * -1);
   background-color: var(--ui-background-02);
 }
 
@@ -264,7 +274,27 @@ html { scroll-padding-top: var(--ori-sticky-height, 0px); }
      table's minimum is 347px in a 311px column, so the page itself overflows.
      This is the case OR-00 anticipates ("if the table ever needs horizontal
      scrolling"), so Buckholt's own `.table-content` scroller is handed back its
-     job. The table header stops sticking here, because it is then bound to that
-     scroller rather than to the page; the action bar still sticks. */
+     job. */
   .ori-table .table-content { overflow-x: auto; }
+
+  /* Both sticky layers come off at phone width, for two separate reasons.
+
+     The table header MUST: `.table-content` is a scroll container again, so a
+     sticky `thead th` binds to that scrollport instead of the page and its
+     offset pushes the header row down inside the table — measured at 375px, 340px
+     down, below the first row. `position: static` is the only correct answer
+     while the scroller is back.
+
+     The action bar then follows it, because pinning it alone is worse than not
+     pinning it at all: the bar stacks to five rows at this width, so it and the
+     top bar together would hold about 300px of a 760px phone viewport. OR-00
+     asks for the bar to stay in view so the user can tick rows while they scroll;
+     with two thirds of the screen left for rows, it would stop doing that.
+     Flagged in PROTOTYPE.md as a judgement call rather than a silent change. */
+  .ori-toolbar,
+  .ori-table thead th { position: static; }
+
+  /* Nothing is pinned below the top bar any more, so a focused row only has to
+     clear the top bar. */
+  html { scroll-padding-top: var(--app-header-height, 4.75rem); }
 }
