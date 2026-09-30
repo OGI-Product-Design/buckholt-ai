@@ -315,12 +315,12 @@
                 <span class="im-dropzone-icon">
                   <i class="fa-regular fa-arrow-up-from-bracket" aria-hidden="true"></i>
                 </span>
-                <span class="im-dropzone-title">Drop files here</span>
-                <span class="im-dropzone-hint">or click to browse</span>
+                <span class="action-02 im-dropzone-title">Drop files here</span>
+                <span class="support-01 im-dropzone-hint">or click to browse</span>
               </button>
 
               <div class="im-file-card" id="im-file-card" hidden>
-                <span class="im-file-name" id="im-file-name"></span>
+                <span class="label-02 im-file-name" id="im-file-name"></span>
                 <button type="button" class="btn btn-ghost btn-danger" id="im-file-remove">
                   <div class="btn-icon">
                     <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
@@ -335,13 +335,17 @@
         </form>
       </div>
 
+      <!-- Buckholt Button set, stacked variant: `.button-set-stacked` makes
+           each Button full width and puts them in a column, which is what
+           IM-03-03 draws. Primary first, then the Ghost, as Button set's own
+           Code & specs orders a stacked set. -->
       <div class="modal-footer">
-        <div class="button-set">
-          <button type="button" class="btn btn-ghost" id="im-import-cancel" data-bs-dismiss="modal">
-            <span class="button-label">Cancel</span>
-          </button>
+        <div class="button-set button-set-stacked">
           <button type="button" class="btn btn-primary" id="im-import-submit" disabled>
             <span class="button-label">Import</span>
+          </button>
+          <button type="button" class="btn btn-ghost" id="im-import-cancel" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
           </button>
         </div>
       </div>

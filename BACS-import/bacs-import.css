@@ -120,6 +120,16 @@
    a gap in the design system rather than as Buckholt guidance.
    ============================================================================ */
 
+/* Buckholt's stacked Button set gives each Button `width: 100%`, but
+   `.modal-footer` is `justify-content: flex-end` and the set itself has no
+   width, so it shrinks to its content and that 100% resolves against the
+   content width — the Buttons stack but stay narrow and right aligned.
+   Letting the set fill the footer is what makes the documented variant draw
+   as IM-03-03 does. Scoped to this modal, and flagged in PROTOTYPE.md: the
+   two documented components disagree, so it is worth taking upstream. */
+#im-import-modal .modal-footer > .button-set-stacked { width: 100%; }
+
+
 /* ---------------------------------------------------- Drop zone, file card
    IM-03-03, IM-03-05, IM-05-01. Buckholt documents no file-upload component.
    The upload icon is the documented Upload common action,
@@ -143,9 +153,13 @@
 .im-dropzone.im-dropzone-over { background-color: var(--action-04); }
 .im-dropzone:focus-visible { outline: 2px solid var(--action-01); outline-offset: 2px; }
 
+/* Type comes from Buckholt's own type sets, set on the elements: `.action-02`
+   on "Drop files here", because it is the action, and `.support-01` on the
+   line under it, because that is support text. Only the colours are here,
+   and both are Buckholt tokens. */
 .im-dropzone-icon { font-size: 1.25rem; color: var(--action-01); }
-.im-dropzone-title { color: var(--action-01); font-size: 1rem; line-height: 1.5rem; }
-.im-dropzone-hint { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.25rem; }
+.im-dropzone-title { color: var(--action-01); }
+.im-dropzone-hint { color: var(--text-secondary); }
 
 .im-file-card {
   display: flex;
@@ -158,7 +172,9 @@
   border-radius: 0.5rem;
 }
 
-.im-file-name { overflow-wrap: anywhere; }
+/* The attached file's name is `.label-02` in the primary text colour; the
+   type set is on the element. */
+.im-file-name { color: var(--text-primary); overflow-wrap: anywhere; }
 
 /* IM-05-01: an invalid file puts a red border on the card and the message
    below it. `--text-error` is Buckholt's own error text token. */
@@ -292,6 +308,30 @@
 
 /* The pagination bar's slot for the live Results per page Dropdown. */
 .im-per-page-slot { display: flex; align-items: center; }
+
+
+/* ------------------------------------------------------------- Tab counts
+   IM-08-02 puts a small count beside each tab label. Buckholt has no count
+   badge: its Tag is the nearest thing, but `.tag.tag-sm` is 48 x 24 with a
+   pill radius, against the 24 x 20 rounded rectangle the frames draw. So
+   this is a prototype component, sized from the frame.
+
+   Measured on IM-08-02 at 2x: the "12" chip is 24 x 20 with a ~6px radius,
+   #efefef behind and #454545 ink — both already Buckholt tokens. The "11"
+   chip is 21 wide and the "1" chip 20, so the chip hugs its content down to
+   a 20px floor. Type is the `.support-01` set, which the element carries. */
+.im-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;                /* 20px */
+  height: 1.25rem;
+  padding: 0 0.4375rem;              /* 7px, measured either side of "12" */
+  margin-left: 0.5rem;
+  border-radius: 0.375rem;           /* 6px */
+  background-color: var(--ui-background-04);
+  color: var(--text-secondary);
+}
 
 
 /* ============================================================================

@@ -698,7 +698,8 @@
           ' data-tab="' + tab.key + '"' +
           ' aria-controls="im-tab-' + tab.key + '" aria-selected="' + (on ? 'true' : 'false') + '">' +
           tab.label +
-          '<span class="tag tag-sm"><span class="tag-label">' + counts[tab.key] + '</span></span>' +
+          /* Not Buckholt: see `.im-tab-count` in bacs-import.css. */
+          '<span class="support-01 im-tab-count">' + counts[tab.key] + '</span>' +
         '</button>' +
       '</li>';
     }).join('');
