@@ -423,6 +423,12 @@ The intro line's bold count is a plain `<strong>`, which Buckholt's own reboot s
 **500** against the paragraph's 300 — measured, not assumed. No type-set class and no
 local weight.
 
+The Reassign originator subtitle now bolds its count the same way, at Laurence's
+request on 30 September 2026. The frames disagree with each other: OR-07-03 draws
+"**7** products" bold, OR-06-03 and OR-09-03 draw theirs in the regular weight. The
+bold one is the intent. The all-products variant has no count, so nothing changes
+there.
+
 The default helper line shows under the Make default toggle whenever the toggle is on
 for an originator that is **not already the default** — in Add and in Edit — and under
 the Choose new default heading in OR-11-04. It is not shown when the Edit modal opens
@@ -563,6 +569,34 @@ header row, so it falls on the action bar instead.
 height, re-measured with the rest. A row 30 deep that takes focus lands clear of the
 header rather than under it — asserted.
 
+**The bar keeps its own padding when stuck.** Without it the controls sit flush
+against the top bar above and the table header below, which is how this first
+shipped and what Laurence caught. `padding-block: var(--spacer-04)` with a matching
+negative `margin-block` gives the space back to the flow, so the resting layout is
+drawn exactly as before — measured at 1920px, the search field and the table start at
+the same y with and without those two lines. A sticky offset positions the border
+box, not the margin box, so the negative margin does not drag the bar out from under
+the top bar once it is stuck; that was measured too, not assumed.
+
+**Below 576px both layers come off**, for two separate reasons.
+
+The table header *must*: `.table-content` is a scroll container again at that width
+(above), so a sticky `thead th` binds to that scrollport instead of the page and its
+offset pushes the header row down **inside** the table — measured at 375px, 340px
+down, below the first row. That was the second thing Laurence caught. `position:
+static` is the only correct answer while the scroller is back.
+
+The action bar then follows it, which is a judgement call rather than a necessity.
+Pinning the bar alone is worse than not pinning it: at phone width it stacks to five
+rows, so it and the top bar together would hold about 300px of a 760px viewport.
+OR-00 wants the bar in view *so the user can tick rows while they scroll*; with two
+thirds of the screen gone there are barely any rows left to tick. `scroll-padding-top`
+drops to the top bar's height to match.
+
+> **Worth a decision.** OR-00 does not say what should happen at phone width. If the
+> bar should stay pinned there regardless, it is a one-line change — but the table
+> header cannot join it until the horizontal scroller question (C9) is settled.
+
 ### 21. Clickable rows (OR-00)
 
 The row hover state is **Buckholt's**: `.table tr:hover td` already uses
@@ -634,7 +668,7 @@ vertical differences that follow from a fallback font are artefacts of the offli
 render, not of the markup. Everything else was measured against the screenshots
 directly.
 
-**141 behavioural assertions** across four suites, all passing with no console or
+**185 behavioural assertions** across five suites, all passing with no console or
 page errors at any viewport, plus the 54-assertion responsive sweep and the BACS
 Import suites (231 assertions) run as a regression check on the now-sticky shared top
 bar. `python3 test/source-parity/check-source-parity.py` passes in both directions.
@@ -647,13 +681,15 @@ bar. `python3 test/source-parity/check-source-parity.py` passes in both directio
 | OR-03 | Pre-filled fields, Confirm disabled until dirty, the intro line reading "Changes to this originator apply to the 32 products that use it." with the count in a `<strong>` computing to 500 against the paragraph's 300, **no alert of any kind**, card updated, toast |
 | OR-04 | 9 matches for "Krypton - Open Market Motor" and "Showing 1-9 of 9"; the no-results state replaces the table, its header row and the count, and the action bar stays; deleting the text restores 34 rows |
 | OR-05 | Filter to Real Insure LTD's 2 rows and "Showing 1-2 of 2"; the no-products-assigned body reads "… Set the filter to All originators, then …" |
-| OR-06 | Clicking a row's cell ticks its checkbox and highlights the row; "1 product selected"; both actions enable; header checkbox partial |
-| OR-07 | 7 selected, subtitle "You're assigning a new originator to 7 products.", **no alert**, five bullets plus "+ 2 more products", current originator preselected, Confirm disabled until a different one is chosen, counts 25/9, selection cleared, toast |
+| OR-06 | Clicking a row's cell ticks its checkbox and highlights the row; "1 product selected"; both actions enable; header checkbox partial. Subtitle "You're assigning a new originator to 1 product." with the 1 in a `<strong>` computing to 500 against the paragraph's 300 |
+| OR-07 | 7 selected, subtitle "You're assigning a new originator to 7 products." with the count bold, **no alert**, five bullets plus "+ 2 more products", current originator preselected, Confirm disabled until a different one is chosen, counts 25/9, selection cleared, toast |
 | OR-08 | Header checkbox ticks every row, "All products selected", subtitle "You're reassigning all products.", **no alert**, count-only panel with the clear-your-selection line, nothing preselected, the mixed helper with the count, counts 34/0 |
 | OR-09 | Three originators, none preselected, the mixed helper without the count, counts 31/1/2 with "1 product" singular |
 | OR-10 | Body reads "… Any products assigned to it will be moved to the default originator. …"; confirming removes the card, moves the 2 products to Assurant Inter LTD for 34, drops the filter option, toast "Originator deleted" |
 | OR-11 | Toggle off on the current default shows Choose new default with the helper line, the current default disabled and the only other preselected; confirming moves the badge, puts Real Insure LTD's card first, gives Assurant Inter LTD a bin, leaves every chip and both counts (2 / 32) untouched, toast "Default originator changed". Also the OR-11-07 route: the intro line for 2 products, the helper line under the toggle, no alert |
 | Selection | Selection survives search and filter and is still counted; the header checkbox shows its partial state when the selected rows are all hidden and clears all 3 on one click; ticking it again selects only the 2 visible rows; "Clear selection" clears hidden rows too |
+| Sticky padding | The bar carries 16px of vertical padding and gives it back with a matching negative margin, so at rest the search field and the table sit at the same y as the build without it and the Panel's 32px rhythm is intact; stuck, the bar is flush at 76 with 16px above the controls and 16px below them before the header row |
+| Mobile | At 375 / 414 / 480 / 575 neither layer is sticky, the header row sits above the first row rather than displaced into the table, `scroll-padding-top` is the top bar alone, and there is no page overflow; at 576 / 768 / 992 / 1280 the bar is still stuck at 76 with the header directly under it |
 | Sticky | `--app-header-height` 76px and `--ori-action-bar-height` measured, not hard-coded; at scroll the app bar is at 0, the bar at 76 and the header cells at 76 + bar height; `is-stuck` toggles and puts `--shadow-xs` under the header; the header cell is opaque and still carries `rgba(26, 26, 26, 0.07)`; `.table-content` is not a scroll container; the filter menu paints over the header; the modal and backdrop sit above the app bar, and the app bar above the sticky bar; the toast stack above all of them; with an empty state there is no header row and the bar still sticks |
 | Keyboard | Space on a row checkbox selects and deselects it and updates the bar; Space on the header checkbox clears everything; Tab runs search → filter → select-all when the actions are disabled, and search → filter → Reassign → Clear → select-all when they are not; `scroll-padding-top` keeps a focused row 30 deep clear of all three sticky layers; both card tooltips appear on focus; Escape closes each modal |
 | Toasts | No close control on any of them |

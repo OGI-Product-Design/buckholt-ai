@@ -728,9 +728,14 @@
 
     var everything = allSelected();
 
-    $('ori-reassign-subtitle').textContent = everything
+    /* The count is bold, as OR-07-03 draws it and as the Edit intro line does.
+       `<strong>` is Buckholt's own 500 against the paragraph's 300 — no type-set
+       class and no local weight. (OR-06-03 and OR-09-03 draw theirs in the
+       regular weight; the bold one is the intent. Recorded in SPEC-CHANGES.md.) */
+    $('ori-reassign-subtitle').innerHTML = everything
       ? 'You’re reassigning all products.'
-      : 'You’re assigning a new originator to ' + plural(chosen.length, 'product') + '.';
+      : 'You’re assigning a new originator to <strong>' + chosen.length + '</strong> product' +
+        (chosen.length === 1 ? '.' : 's.');
 
     /* No warning alert for any selection size (OR-07 rules); the subtitle
        states how many products are changing. */
