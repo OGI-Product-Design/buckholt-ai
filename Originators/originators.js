@@ -427,6 +427,43 @@
       state.filter === 'all' ? 'All' : originatorName(state.filter);
   }
 
+  /* --------------------------------------------------------- App bar clock
+     Static chrome, not Buckholt. OR-00-01 draws 13:24 and 07 August 2023;
+     this shows the real time and date in the same format, and ticks on the
+     minute rather than every second. `en-GB` with a 2-digit day gives
+     "07 August 2023" and a 24-hour clock gives "13:24", matching the frame.
+     ------------------------------------------------------------------------ */
+
+  function renderClock() {
+    var now = new Date();
+    var time = $('ori-clock-time');
+    var date = $('ori-clock-date');
+    if (!time || !date) return;
+
+    var hh = String(now.getHours()).padStart(2, '0');
+    var mm = String(now.getMinutes()).padStart(2, '0');
+    time.textContent = hh + ':' + mm;
+    time.setAttribute('datetime', hh + ':' + mm);
+
+    date.textContent = now.toLocaleDateString('en-GB', {
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+    date.setAttribute('datetime',
+      now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0'));
+  }
+
+  /* Align the first tick to the next minute boundary, then run every minute. */
+  function startClock() {
+    renderClock();
+    var msToNextMinute = 60000 - (Date.now() % 60000);
+    window.setTimeout(function () {
+      renderClock();
+      window.setInterval(renderClock, 60000);
+    }, msToNextMinute);
+  }
+
   /* ------------------------------------------------------------------ Toast
      Buckholt Toast, Code & specs example 7 (status) plus the documented close
      control. Shown with Bootstrap's native timing, per OR-06's rule.
@@ -901,6 +938,7 @@
   /* ================================================================= Wiring */
 
   function wire() {
+    startClock();
     originatorModal = new bootstrap.Modal($('ori-originator-modal'));
     reassignModal = new bootstrap.Modal($('ori-reassign-modal'));
     deleteModal = new bootstrap.Modal($('ori-delete-modal'));

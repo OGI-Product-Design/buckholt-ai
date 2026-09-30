@@ -434,12 +434,20 @@ The rest of the bar was re-measured from OR-00-01 at 2x at the same time:
 | | Measured | Used |
 | --- | --- | --- |
 | Header height | 76px | `4.75rem` |
+| Clock | 13:24 / 07 August 2023 | live, same format, ticking on the minute |
 | Bar padding | 16px both sides | `1rem` |
 | Logo ink starts | 16px | no logo padding |
 | Search box | 154.5 – 474.5, height 34px | `20rem` wide, `2.125rem` tall |
 | Dividers | 1572 / 1710 / 1842, full header height | `align-self: stretch` on the group |
 | "Accounts" cell | 1710 – 1842, text 1732.5 – 1816.5 | `0 1.5rem` padding, weight 400 |
 | Avatar | 1859 – 1903.5 | `2.75rem`, `margin-left: 1rem` |
+
+The clock shows the real time and date rather than the frame's values, added
+30 September 2026. It uses the frame's format — `en-GB`, a 2-digit day and a 24-hour
+clock give "30 September 2026" and "14:24" — and ticks on the minute boundary, not
+every second. A live date can be longer than the drawn one, so the search field may
+now shrink below its 320px to keep the bar from overflowing; it holds 320 down to
+1280.
 
 Rendered dividers land within 2px of the design at the third, and within about 10px
 at the first two — the remainder is the offline fallback font sizing "Live" and
