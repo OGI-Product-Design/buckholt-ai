@@ -6,17 +6,34 @@ and `screenshots/`.
 | File | What it is |
 | --- | --- |
 | `index.html` | The page. Buckholt runtime contract, Buckholt page structure, Buckholt components. |
-| `originators.css` | Prototype-only. Static app chrome, a little layout, three Buckholt variable bindings. |
+| `originators.css` | Prototype-only. A little layout, and three Buckholt variable bindings. |
 | `originators.js` | State and behaviour for OR-00 to OR-11. In memory; reloading resets to the seed data. |
 | `PROTOTYPE.md` | These build notes. |
 | `SPEC-CHANGES.md` | The list to feed back into `originators-spec.md`, the Figma frames and Buckholt. |
 
 Open `index.html` directly in a browser. Everything is relative; nothing is built.
 
-Nothing outside this folder was changed. `css/`, `components/`, `foundations/`,
-`patterns/`, `code-specs-html/`, `test/`, `verification/`, `discrepancies/` and
-`responsive/` are untouched, and `python3 test/source-parity/check-source-parity.py`
-still passes in both directions.
+### The shared shell
+
+> Added 30 September 2026, when BACS Import was built as the next tab in the
+> same prototype. The static top bar, the left navigation, the live clock, the
+> BACS section tabs, the toast helper and the tooltip helpers moved to
+> `prototype/`, so both features share one shell instead of each carrying a
+> copy. Nothing about their appearance or behaviour changed; the measurements
+> and comments moved with them, and the classes were renamed from `ori-` to
+> `app-`. `Shell.showToast` gained a variant argument that Originators does
+> not pass, so it still gets `toast-success`. See `prototype/README.md`, and
+> `BACS-import/PROTOTYPE.md` for the table of what moved where.
+>
+> One behavioural fix went in with the move: the app bar pushed the avatar
+> 19px past the right edge between 992px and about 1050px. That was already
+> true of this build before the move, and it is fixed in
+> `prototype/app-shell.css` for both features.
+
+`css/`, `components/`, `foundations/`, `patterns/`, `code-specs-html/`,
+`test/`, `verification/`, `discrepancies/` and `responsive/` are untouched,
+and `python3 test/source-parity/check-source-parity.py` still passes in both
+directions.
 
 ---
 
@@ -29,6 +46,7 @@ Exactly the order `CLAUDE.md` specifies, with the prototype stylesheet last:
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/buckholt.css">
 <link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+<link rel="stylesheet" href="../prototype/app-shell.css">
 <link rel="stylesheet" href="originators.css">
 ```
 

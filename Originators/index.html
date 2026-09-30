@@ -10,7 +10,8 @@
 <script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/buckholt.css">
 <link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
-<!-- Prototype-only: static app chrome + layout. Loads last. -->
+<!-- Prototype-only. Shared application chrome first, then this feature. -->
+<link rel="stylesheet" href="../prototype/app-shell.css">
 <link rel="stylesheet" href="originators.css">
 </head>
 <body>
@@ -19,59 +20,13 @@
 
   <!-- ======================================================================
        STATIC APPLICATION CHROME — NOT BUCKHOLT.
-       Reproduced by visual inspection of OR-00-01. The spec records the top
-       bar and left navigation as static. Placed in Buckholt's own layout-03
-       `header` and `sidebar` grid areas.
+       Filled by prototype/app-shell.js, which both features share. The spec
+       records the top bar and left navigation as static; they are reproduced
+       from the screenshots and placed in Buckholt's own layout-03 `header`
+       and `sidebar` grid areas.
        ====================================================================== -->
-  <header class="ori-appbar">
-    <a class="ori-appbar-logo" href="#">open gi</a>
-
-    <div class="ori-appbar-search">
-      <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-      <label class="visually-hidden" for="ori-global-search">Search by name, reference or email</label>
-      <input type="search" id="ori-global-search" placeholder="Search by name, reference or email">
-    </div>
-
-    <a class="ori-appbar-help" href="#">
-      <i class="fa-regular fa-circle-info" aria-hidden="true"></i>
-      What can I search?
-    </a>
-
-    <!-- One tight row: the dividers butt against each cell's own padding, so
-         no gap sits between a divider and the text beside it. -->
-    <div class="ori-appbar-right">
-      <span class="ori-appbar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
-
-      <!-- Live clock, set and ticked by originators.js. The markup carries the
-           values OR-00-01 draws so the cell has its drawn width before script
-           runs; they are replaced on load. -->
-      <div class="ori-appbar-clock">
-        <time class="ori-appbar-time" id="ori-clock-time" datetime="13:24">13:24</time>
-        <time class="ori-appbar-date" id="ori-clock-date" datetime="2023-08-07">07 August 2023</time>
-      </div>
-
-      <button type="button" class="ori-appbar-account">
-        Accounts
-        <i class="fa-regular fa-chevron-down" aria-hidden="true"></i>
-      </button>
-
-      <span class="ori-appbar-avatar" aria-hidden="true">AC</span>
-    </div>
-  </header>
-
-  <aside id="sidebar" class="ori-sidenav">
-    <nav class="ori-sidenav-items" aria-label="Modules">
-      <a class="ori-sidenav-item" href="#">
-        <i class="fa-regular fa-money-bill-transfer" aria-hidden="true"></i>AutoRek
-      </a>
-      <a class="ori-sidenav-item is-current" href="#" aria-current="page">
-        <i class="fa-regular fa-building-columns" aria-hidden="true"></i>BACS
-      </a>
-    </nav>
-    <button type="button" class="ori-sidenav-collapse">
-      <i class="fa-solid fa-caret-left" aria-hidden="true"></i>Collapse menu
-    </button>
-  </aside>
+  <header class="app-bar"></header>
+  <aside id="sidebar" class="app-sidenav"></aside>
 
   <!-- ======================================================================
        MAIN — Buckholt from here down.
@@ -83,23 +38,11 @@
         <div class="container-fluid">
           <div class="page-pane">
 
-            <!-- Panel: BACS section navigation ------------------------------ -->
-            <div class="page-panel">
-              <ul class="nav nav-underline">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Process</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Import</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="#">Originators</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Calendar</a>
-                </li>
-              </ul>
-            </div>
+            <!-- Panel: BACS section navigation ----------------------------
+                 Buckholt Page navigation, rendered by prototype/app-shell.js
+                 so Import and Originators share one tab set and link to
+                 each other. -->
+            <div class="page-panel" id="ori-bacs-tabs"></div>
 
             <!-- Panel: Originators ------------------------------------------ -->
             <div class="page-panel">
@@ -458,9 +401,10 @@
 
 
 <!-- Toast container — OR-01-04 places it bottom right of the page. -->
-<div class="toast-container ori-toast-container" id="ori-toasts"></div>
+<div class="toast-container app-toasts" id="ori-toasts"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../prototype/app-shell.js"></script>
 <script src="../components/dropdown/dropdown.js"></script>
 <script src="originators.js"></script>
 </body>

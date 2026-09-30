@@ -1,0 +1,448 @@
+/* ============================================================================
+   BACS Import prototype — prototype-only stylesheet
+   ============================================================================
+
+   Loads LAST, after:
+       https://use.typekit.net/vtl2xbn.css
+       https://kit.fontawesome.com/ca92816a31.js
+       ../css/buckholt.css
+       ../css/buckholt-ai-fixes.css
+       ../prototype/app-shell.css
+       ../prototype/blade.css
+
+   What is in this file, and why
+   -----------------------------
+   1. PROTOTYPE LAYOUT ONLY. Arrangement rules for things Buckholt documents
+      no container for — the filter toolbar, the pagination bar, the detail
+      page header. They set position and size. They never restyle a Buckholt
+      component.
+
+   2. COMPONENTS BUCKHOLT DOES NOT HAVE. Three of them: the file drop zone and
+      file card (section 7), the pagination bar (section 5), and the date
+      range control (section 5). Each is drawn from Buckholt tokens and each
+      is recorded as a gap in PROTOTYPE.md. The blade, the fourth, is in
+      `prototype/blade.css` because the spec asks for it as a reusable
+      component.
+
+   3. BUCKHOLT VARIABLE BINDINGS. States the screens need that Buckholt
+      documents no class for. Each sets a variable Buckholt already declares,
+      to a value from Buckholt's own token set.
+
+   The static top bar and left navigation are not here; they are shared with
+   Originators in `prototype/app-shell.css`.
+   ============================================================================ */
+
+
+/* ============================================================================
+   1. PROTOTYPE LAYOUT ONLY
+   ============================================================================ */
+
+/* IM-00-01: three filters on the left, the primary action right, all bottom
+   aligned on the filter inputs' baseline. */
+.im-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.im-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.im-filters > .input { width: 15.5rem; }
+.im-toolbar-action { flex: 0 0 auto; }
+
+/* Buckholt gives every Button set a flow offset, `margin-top: 0.5rem`, for a
+   set that follows content in normal flow. These sets are positioned by a flex
+   parent instead, so the offset displaces them. Buckholt cancels it the same
+   way inside a component that positions its own actions —
+   `.versatile-actions .button-set { margin: 0 }`, present in both builds — and
+   this mirrors that precedent. It is NOT `.button-set-no-offset`, which Mark
+   confirmed on 9 September 2026 is undocumented and experimental. */
+.im-toolbar-action > .button-set,
+.im-detail-head .button-set,
+.im-detail-toolbar .button-set,
+.im-date-picker .button-set { margin: 0; }
+
+/* The row count and the pagination are table metadata, so they sit close under
+   the table rather than at the Panel's 32px item rhythm. `--spacer-05` (24px)
+   is the nearest documented Buckholt spacing token to the ~21px measured on
+   the frames; the scale has no 20px step. */
+.im-table-region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);
+}
+
+.im-row-count { margin: 0; }
+
+/* Detail page header: back link, then the title block with the primary action
+   on its right (IM-08-02, IM-09-02). The Failed page has no action. */
+.im-detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.im-detail-head .text-block { min-width: 0; }
+
+/* Search on the left, "View reason codes" on the right (IM-08-02). */
+.im-detail-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.im-detail-search { width: 20rem; max-width: 100%; }
+
+/* Not applied rows carry the pill and then a neutral chip (section 9). */
+.im-outcome-cell { display: flex; align-items: center; gap: 0.5rem; }
+
+/* The row-opening chevron sits at the end of every row. */
+.im-row-open { display: flex; justify-content: flex-end; }
+
+/* A whole row opens its import, so the pointer says so. The In-progress rows
+   cannot be opened and keep the default pointer. */
+.im-table tbody tr.im-row-openable { cursor: pointer; }
+
+
+/* ============================================================================
+   2. COMPONENTS BUCKHOLT DOES NOT HAVE
+   Each is built from Buckholt tokens, and each is recorded in PROTOTYPE.md as
+   a gap in the design system rather than as Buckholt guidance.
+   ============================================================================ */
+
+/* ---------------------------------------------------- Drop zone, file card
+   IM-03-03, IM-03-05, IM-05-01. Buckholt documents no file-upload component.
+   The upload icon is the documented Upload common action,
+   `fa-regular fa-arrow-up-from-bracket`. */
+
+.im-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: var(--spacer-05) var(--spacer-04);
+  background: none;
+  border: 2px dotted var(--action-01);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.im-dropzone:hover,
+.im-dropzone.im-dropzone-over { background-color: var(--action-04); }
+.im-dropzone:focus-visible { outline: 2px solid var(--action-01); outline-offset: 2px; }
+
+.im-dropzone-icon { font-size: 1.25rem; color: var(--action-01); }
+.im-dropzone-title { color: var(--action-01); font-size: 1rem; line-height: 1.5rem; }
+.im-dropzone-hint { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.25rem; }
+
+.im-file-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacer-04);
+  padding: var(--spacer-04);
+  background-color: var(--ui-background-02);
+  border: 1px solid var(--ui-border-02);
+  border-radius: 0.5rem;
+}
+
+.im-file-name { overflow-wrap: anywhere; }
+
+/* IM-05-01: an invalid file puts a red border on the card and the message
+   below it. `--text-error` is Buckholt's own error text token. */
+.im-file-card.is-invalid { border-color: var(--text-error); }
+
+.im-file-error {
+  margin: 0.5rem 0 0;
+  color: var(--text-error);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+/* The bin is drawn in the error colour in every frame that shows it. Buckholt
+   has a documented danger Button, but `.btn-danger` is a filled treatment; the
+   frames draw a bare icon, so this binds the Ghost Button's own label
+   variable rather than restyling the component. */
+.im-file-remove { --button-label: var(--text-error); }
+
+
+/* ---------------------------------------------------------------- Date range
+   IM-00-01. Buckholt documents no date picker and no range input. The field
+   is a Buckholt Text input carrying the spec's `dd/mm/yyyy-dd/mm/yyyy`
+   format; the button beside it reveals two native date controls, which is
+   the nearest thing to a picker that does not invent a calendar component. */
+
+.im-filter-date { position: relative; }
+
+.im-date-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--action-01);
+  background: none;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.im-date-toggle:hover { background-color: var(--action-04); }
+.im-date-toggle:focus-visible { outline: 2px solid var(--action-01); outline-offset: 1px; }
+
+.im-date-picker {
+  position: absolute;
+  z-index: 1020;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+  width: 17rem;
+  padding: var(--spacer-04);
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(var(--shadow-colour), 0.1), 0 4px 6px -4px rgba(var(--shadow-colour), 0.1);
+}
+
+
+/* --------------------------------------------------------------- Pagination
+   IM-00-01. Buckholt has no pagination component: `buckholt.css` defines no
+   `.pagination`, `.page-item` or `.page-link` rule, and Page navigation is
+   for sibling pages, not table pages. Drawn from Buckholt tokens. */
+
+.im-pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  flex-wrap: wrap;
+}
+
+.im-pages {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--ui-border-02);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.im-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--action-01);
+  background-color: var(--ui-background-01);
+  border: 0;
+  border-right: 1px solid var(--ui-border-02);
+  cursor: pointer;
+}
+
+.im-page:last-child { border-right: 0; }
+.im-page:hover:not(:disabled) { background-color: var(--action-04); }
+.im-page:focus-visible { outline: 2px solid var(--action-01); outline-offset: -2px; }
+
+.im-page[aria-current="page"] {
+  background-color: var(--action-04);
+  box-shadow: inset 0 0 0 1px var(--action-01);
+  font-weight: 500;
+}
+
+.im-page:disabled {
+  color: var(--text-muted);
+  background-color: var(--ui-overlay-02);
+  cursor: default;
+}
+
+/* "Results per page" is drawn with its label to the left of the control.
+   Buckholt's Forms pattern says left-aligned labels "are not currently
+   supported", so this is a deliberate departure for table furniture rather
+   than a form field, and it is listed in PROTOTYPE.md. The label is still a
+   real `<label for>` bound to the Select. */
+.im-per-page.input {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  width: auto;
+}
+
+.im-per-page .form-label { margin: 0; white-space: nowrap; }
+.im-per-page .response { width: 5.5rem; }
+
+
+/* ============================================================================
+   3. BUCKHOLT VARIABLE BINDINGS
+   ============================================================================ */
+
+/* IM-10: the primary action is disabled but must keep its Tooltip on hover as
+   well as on focus (spec 3.4), which is why the spec calls for
+   `aria-disabled` rather than the native attribute. Buckholt's own disabled
+   treatment — `.btn.disabled` — supplies the appearance, but it also sets
+   `pointer-events: none`, which would put the Tooltip out of reach of the
+   pointer. This gives pointer events back for that one case;
+   `bacs-import.js` ignores the click. */
+.btn.disabled[aria-disabled="true"] {
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+
+/* The status pills are Buckholt Tags, and a Tag is not focusable. Spec 3.4
+   requires the Partial and Failed pills to take focus so their Tooltip is
+   reachable from the keyboard, so they carry `tabindex="0"`; this gives them
+   Buckholt's own focus ring. */
+.tag[data-bs-toggle="tooltip"] { cursor: help; }
+.tag[data-bs-toggle="tooltip"]:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.125rem var(--action-01);
+}
+
+
+/* ============================================================================
+   Reason codes blade content
+   The blade shell is `prototype/blade.css`. These are the reason-code lists
+   inside it (section 13.2).
+   ============================================================================ */
+
+.rc-disclaimer {
+  margin: 0 0 var(--spacer-05);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.rc-search { margin-bottom: var(--spacer-05); }
+
+/* Buckholt reveals `.input-clear` on `.response:hover` only, so a keyboard
+   user can never reach it. Section 13.2 requires the clear control once
+   there is text, and the search field is the first thing focus lands on when
+   the blade opens. This is an application-level accessibility addition,
+   scoped to the blade, not a change to Buckholt's Text input. */
+.rc-search .response:focus-within .input-clear { visibility: visible; opacity: 1; }
+.rc-results { margin: 0.5rem 0 0; }
+
+/* Accordion sections. Buckholt's own Accordion: `.accordion >
+   .accordion-item > h2.accordion-header > button.accordion-button +
+   .accordion-collapse.collapse > .accordion-body`, with no `data-bs-parent`,
+   because section 13.2 says any number of sections can be open at once.
+
+   The only thing bound here is the Accordion's own horizontal padding. Its
+   default is 2rem each side, which inside a 400px blade with 24px body
+   padding would leave the code list 288px wide. Both variables are
+   Buckholt's own, declared on `.accordion` for exactly this purpose. */
+.rc-sections {
+  --accordion-btn-padding-x: var(--spacer-04);
+  --accordion-btn-padding-right: var(--spacer-04);
+  --accordion-body-padding-x: var(--spacer-04);
+}
+
+/* Section 13.2: "While searching, the header also shows the number of
+   matches." */
+.rc-section-count {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.rc-intro {
+  margin: 0 0 var(--spacer-04);
+  color: var(--text-secondary);
+}
+
+.rc-subheading {
+  margin: var(--spacer-04) 0 var(--spacer-03);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.rc-subheading:first-child { margin-top: 0; }
+
+.rc-item + .rc-item { margin-top: var(--spacer-05); }
+
+.rc-item-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacer-03);
+}
+
+.rc-item-title { margin: 0; font-size: 1rem; font-weight: 500; line-height: 1.5rem; }
+.rc-item-description { margin: 0.25rem 0 0; color: var(--text-secondary); }
+
+/* The code chip is a Buckholt Tag; this only stops it shrinking. */
+.rc-item-head .tag { flex: 0 0 auto; }
+
+/* Spec 13.3: matched text is wrapped in <mark>, "with a yellow background such
+   as #ffe58a". Buckholt has no highlight token. */
+.rc-sections mark {
+  padding: 0 0.125rem;
+  color: inherit;
+  background-color: #ffe58a;
+  border-radius: 0.125rem;
+}
+
+/* On an exact code match the chip is highlighted too. */
+.rc-item-head .tag.rc-chip-match { background-color: #ffe58a; }
+
+.rc-empty { margin: 0; }
+
+/* The "What to do" disclosure is the Buckholt Collapse component. Nothing
+   here restyles it; this only keeps it clear of the description above. */
+.rc-item .collapse-item { margin-top: 0.5rem; }
+
+
+/* ----------------------------------------------------------------------------
+   Narrow viewports.
+   These breakpoints are the prototype's own. They are set on the LOCAL build's
+   Bootstrap scale (576 / 768 / 992 / 1200 / 1400), because `css/buckholt.css`
+   — the build this repository loads — ships that scale. The live reference
+   build breaks at 896 / 1088 / 1312 / 1520 / 1720 instead, so every figure
+   below is measured on the local scale and would land at a different viewport
+   on the live build. Flagged, per CLAUDE.md.
+   ---------------------------------------------------------------------------- */
+
+@media (max-width: 767.98px) {
+  .im-filters > .input { width: 100%; }
+  .im-filters { width: 100%; }
+  .im-toolbar-action { width: 100%; }
+  .im-detail-head { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  .im-detail-search { width: 100%; }
+  .im-date-picker { width: 100%; }
+}
+
+/* ----------------------------------------------------------------------------
+   Small additions the frames need and Buckholt has no token for.
+   ---------------------------------------------------------------------------- */
+
+/* "Imported by (avatar with initials, then name)" — IM-00-01. */
+.im-person { display: flex; align-items: center; gap: 0.75rem; }
+
+/* Section 4.2 asks for tabular figures in the Amount column. `.data-number`
+   is Buckholt's documented markup for a numeric cell, but this build ships
+   no rule for it at all and no tabular-figures token anywhere. Scoped to the
+   prototype's tables; recorded in PROTOTYPE.md. */
+.im-table .data-number { font-variant-numeric: tabular-nums; }
+
+/* The back link sits above the title block, not at the Panel's 32px rhythm. */
+.im-back { align-self: flex-start; }
