@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BACS Import — Mobius PAS prototype</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../css/buckholt.css">
+<link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+<!-- Prototype-only. Shared chrome and the shared blade, then this feature. -->
+<link rel="stylesheet" href="../prototype/app-shell.css">
+<link rel="stylesheet" href="../prototype/blade.css">
+<link rel="stylesheet" href="bacs-import.css">
+</head>
+<body>
+
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+
+  <!-- ======================================================================
+       STATIC APPLICATION CHROME — NOT BUCKHOLT.
+       Filled by prototype/app-shell.js, shared with Originators. Placed in
+       Buckholt's own layout-03 `header` and `sidebar` grid areas.
+       ====================================================================== -->
+  <header class="app-bar"></header>
+  <aside id="sidebar" class="app-sidenav"></aside>
+
+  <!-- ======================================================================
+       MAIN — Buckholt from here down.
+       Page body → Frame → Pane → Panels, per patterns/page-layout.
+       ====================================================================== -->
+  <main id="main">
+    <div class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+
+          <!-- ============================================================
+               IM-00 Previous imports
+               The filter controls are in the page source rather than
+               rendered, because `components/dropdown/dropdown.js` binds to
+               `.dropdown` once, on DOMContentLoaded. Only the table region
+               and the pagination are re-rendered.
+               ============================================================ -->
+          <div class="page-pane" id="im-list">
+
+            <!-- Panel: BACS section navigation. Rendered by the shared shell
+                 so Import and Originators carry one tab set. -->
+            <div class="page-panel" id="im-bacs-tabs"></div>
+
+            <!-- Panel: Previous imports -->
+            <div class="page-panel">
+
+              <div class="text-block">
+                <h2 class="headline-02">Previous imports</h2>
+              </div>
+
+              <div class="im-toolbar">
+                <div class="im-filters">
+
+                  <!-- Import date range. Buckholt documents no date picker and
+                       no range input, so this is a Text input carrying the
+                       spec's `dd/mm/yyyy-dd/mm/yyyy` format, with a button
+                       that reveals two native date controls. Recorded as a
+                       gap in PROTOTYPE.md. -->
+                  <div class="input im-filter-date">
+                    <div class="input-label">
+                      <label for="im-date-range" class="form-label">Import date range</label>
+                    </div>
+                    <div class="response text-input">
+                      <input type="text" class="form-control" id="im-date-range"
+                             placeholder="dd/mm/yyyy-dd/mm/yyyy" autocomplete="off"
+                             aria-describedby="im-date-range-help">
+                      <button type="button" class="im-date-toggle" id="im-date-toggle"
+                              aria-expanded="false" aria-controls="im-date-picker"
+                              aria-label="Choose an import date range">
+                        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <small class="form-helper visually-hidden" id="im-date-range-help">
+                      Both dates are included. Type a range as dd/mm/yyyy-dd/mm/yyyy, or use the calendar button.
+                    </small>
+
+                    <div class="im-date-picker" id="im-date-picker" hidden>
+                      <div class="input">
+                        <div class="input-label">
+                          <label for="im-date-from" class="form-label">From</label>
+                        </div>
+                        <div class="response text-input">
+                          <input type="date" class="form-control" id="im-date-from">
+                        </div>
+                      </div>
+                      <div class="input">
+                        <div class="input-label">
+                          <label for="im-date-to" class="form-label">To</label>
+                        </div>
+                        <div class="response text-input">
+                          <input type="date" class="form-control" id="im-date-to">
+                        </div>
+                      </div>
+                      <div class="button-set">
+                        <button type="button" class="btn btn-ghost" id="im-date-clear">
+                          <span class="button-label">Clear</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="im-date-apply">
+                          <span class="button-label">Apply</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Import result — Buckholt Dropdown -->
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="im-filter-result" class="form-label">Import result</label>
+                    </div>
+                    <div class="response dropdown-input">
+                      <div class="dropdown">
+                        <button id="im-filter-result" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="dropdown-label">All results</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="im-filter-result">
+                          <li id="im-result-all" class="dropdown-item active" role="option" aria-label="All results" aria-selected="true" tabindex="0" data-value="all">All results</li>
+                          <li id="im-result-inprogress" class="dropdown-item" role="option" aria-label="In-progress" aria-selected="false" tabindex="0" data-value="IN_PROGRESS">In-progress</li>
+                          <li id="im-result-partial" class="dropdown-item" role="option" aria-label="Partial" aria-selected="false" tabindex="0" data-value="PARTIAL">Partial</li>
+                          <li id="im-result-completed" class="dropdown-item" role="option" aria-label="Completed" aria-selected="false" tabindex="0" data-value="COMPLETED">Completed</li>
+                          <li id="im-result-failed" class="dropdown-item" role="option" aria-label="Failed" aria-selected="false" tabindex="0" data-value="FAILED">Failed</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- BACS file type — Buckholt Dropdown -->
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="im-filter-type" class="form-label">BACS file type</label>
+                    </div>
+                    <div class="response dropdown-input">
+                      <div class="dropdown">
+                        <button id="im-filter-type" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="dropdown-label">All file types</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="im-filter-type">
+                          <li id="im-type-all" class="dropdown-item active" role="option" aria-label="All file types" aria-selected="true" tabindex="0" data-value="all">All file types</li>
+                          <li id="im-type-arudd" class="dropdown-item" role="option" aria-label="ARUDD file" aria-selected="false" tabindex="0" data-value="ARUDD">ARUDD file</li>
+                          <li id="im-type-auddis" class="dropdown-item" role="option" aria-label="AUDDIS Return/ADDACS file" aria-selected="false" tabindex="0" data-value="AUDDIS_ADDACS">AUDDIS Return/ADDACS file</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- The primary action. Its permission state is set by
+                     bacs-import.js; IM-10 uses aria-disabled rather than the
+                     native attribute so the control keeps focus and its
+                     Tooltip stays reachable (spec 3.4). -->
+                <div class="im-toolbar-action">
+                  <div class="button-set">
+                    <button type="button" class="btn btn-primary" id="im-new-import">
+                      <div class="btn-icon">
+                        <i class="fa-regular fa-plus" aria-hidden="true"></i>
+                      </div>
+                      <span class="button-label">Import new file</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="im-table-region" class="im-table-region"></div>
+            </div>
+          </div>
+
+          <!-- IM-06, IM-08, IM-09 detail pages, and the Process, Calendar and
+               policy placeholders. Both are rendered by bacs-import.js. -->
+          <div class="page-pane" id="im-detail" hidden></div>
+          <div class="page-pane" id="im-placeholder" hidden></div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+
+<!-- ==========================================================================
+     Import BACS file — IM-03, IM-04, IM-05
+     ========================================================================== -->
+<div class="modal fade" tabindex="-1" id="im-import-modal" aria-labelledby="im-import-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h3 class="headline-02" id="im-import-modal-title">Import BACS file</h3>
+            </div>
+            <button type="button" class="btn-close" id="im-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <p>Choose the type of file you&#39;ve received from BACS.</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <form class="form" id="im-import-form" novalidate>
+          <div class="form-body">
+
+            <!-- Buckholt Select. Native `<select>`, per the Select component:
+                 one of fewer than a handful of fixed options, inside a Modal
+                 form. -->
+            <div class="input">
+              <div class="input-label">
+                <label for="im-file-type" class="form-label">BACS file type</label>
+              </div>
+              <div class="response select-input">
+                <select class="form-select" id="im-file-type" aria-describedby="im-file-type-hint">
+                  <option selected disabled value="">Select</option>
+                  <option value="ARUDD">ARUDD file</option>
+                  <option value="AUDDIS_ADDACS">AUDDIS Return / ADDACS file</option>
+                </select>
+              </div>
+              <small class="form-helper" id="im-file-type-hint" hidden></small>
+            </div>
+
+            <!-- Drop zone / file card. Buckholt documents no file-upload
+                 component, so this is prototype markup; recorded in
+                 PROTOTYPE.md. -->
+            <div id="im-file-region" hidden>
+              <input type="file" id="im-file-input" class="visually-hidden">
+
+              <button type="button" class="im-dropzone" id="im-dropzone">
+                <span class="im-dropzone-icon">
+                  <i class="fa-regular fa-arrow-up-from-bracket" aria-hidden="true"></i>
+                </span>
+                <span class="im-dropzone-title">Drop files here</span>
+                <span class="im-dropzone-hint">or click to browse</span>
+              </button>
+
+              <div class="im-file-card" id="im-file-card" hidden>
+                <span class="im-file-name" id="im-file-name"></span>
+                <button type="button" class="btn btn-ghost im-file-remove" id="im-file-remove">
+                  <div class="btn-icon">
+                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                  </div>
+                </button>
+              </div>
+
+              <p class="im-file-error" id="im-file-error" hidden></p>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-ghost" id="im-import-cancel" data-bs-dismiss="modal">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="im-import-submit" disabled>
+            <span class="button-label">Import</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast container — bottom right, per spec 3.5. -->
+<div class="toast-container app-toasts" id="im-toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../prototype/app-shell.js"></script>
+<script src="../prototype/blade.js"></script>
+<script src="../components/dropdown/dropdown.js"></script>
+<script src="reason-codes.js"></script>
+<script src="seed-data.js"></script>
+<script src="reason-codes-blade.js"></script>
+<script src="bacs-import.js"></script>
+</body>
+</html>

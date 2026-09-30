@@ -78,11 +78,12 @@
 
   function $(id) { return document.getElementById(id); }
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
+  /* The shared shell owns the chrome, the clock, toasts, tooltips and HTML
+     escaping. See `prototype/app-shell.js`. */
+  var escapeHtml = Shell.escapeHtml;
+  var initTooltips = Shell.initTooltips;
+  var disposeTooltips = Shell.disposeTooltips;
+  var showToast = Shell.showToast;
 
   function originatorById(id) {
     for (var i = 0; i < state.originators.length; i++) {
@@ -252,32 +253,6 @@
     initTooltips($('ori-cards'));
   }
 
-  /* ---------------------------------------------------------------- Tooltip
-     Initialised with the options from Tooltip's own Code & specs example 3.
-     ------------------------------------------------------------------------ */
-
-  function initTooltips(root) {
-    Array.prototype.forEach.call(
-      root.querySelectorAll('[data-bs-toggle="tooltip"]'),
-      function (el) {
-        new bootstrap.Tooltip(el, {
-          offset: [0, 4],
-          delay: { show: 800, hide: 100 }
-        });
-      }
-    );
-  }
-
-  function disposeTooltips(root) {
-    Array.prototype.forEach.call(
-      root.querySelectorAll('[data-bs-toggle="tooltip"]'),
-      function (el) {
-        var t = bootstrap.Tooltip.getInstance(el);
-        if (t) t.dispose();
-      }
-    );
-  }
-
   /* --------------------------------------------------------- Product table
      Buckholt Table, using the documented selection pattern:
      `.table-container > .table-content > table.table`, `.table-checkbox-header
@@ -425,76 +400,6 @@
     $('ori-filter-menu').innerHTML = html;
     $('ori-filter').querySelector('.dropdown-label').textContent =
       state.filter === 'all' ? 'All' : originatorName(state.filter);
-  }
-
-  /* --------------------------------------------------------- App bar clock
-     Static chrome, not Buckholt. OR-00-01 draws 13:24 and 07 August 2023;
-     this shows the real time and date in the same format, and ticks on the
-     minute rather than every second. `en-GB` with a 2-digit day gives
-     "07 August 2023" and a 24-hour clock gives "13:24", matching the frame.
-     ------------------------------------------------------------------------ */
-
-  function renderClock() {
-    var now = new Date();
-    var time = $('ori-clock-time');
-    var date = $('ori-clock-date');
-    if (!time || !date) return;
-
-    var hh = String(now.getHours()).padStart(2, '0');
-    var mm = String(now.getMinutes()).padStart(2, '0');
-    time.textContent = hh + ':' + mm;
-    time.setAttribute('datetime', hh + ':' + mm);
-
-    date.textContent = now.toLocaleDateString('en-GB', {
-      day: '2-digit', month: 'long', year: 'numeric'
-    });
-    date.setAttribute('datetime',
-      now.getFullYear() + '-' +
-      String(now.getMonth() + 1).padStart(2, '0') + '-' +
-      String(now.getDate()).padStart(2, '0'));
-  }
-
-  /* Align the first tick to the next minute boundary, then run every minute. */
-  function startClock() {
-    renderClock();
-    var msToNextMinute = 60000 - (Date.now() % 60000);
-    window.setTimeout(function () {
-      renderClock();
-      window.setInterval(renderClock, 60000);
-    }, msToNextMinute);
-  }
-
-  /* ------------------------------------------------------------------ Toast
-     Buckholt Toast, Code & specs example 7 (status) plus the documented close
-     control. Shown with Bootstrap's native timing, per OR-06's rule.
-
-     No close control, at Laurence's request on 29 September 2026 — the designs
-     are being updated to match. That makes this Code & specs example 7 exactly:
-     `.toast.toast-success > .toast-content > .toast-icon + .toast-body`. The
-     toast is 320 x 48, as every frame draws it, because the 24px icon row plus
-     4px content padding and 8px toast padding each side comes to 48 on its own.
-     ------------------------------------------------------------------------ */
-
-  function showToast(message) {
-    var el = document.createElement('div');
-    el.className = 'toast toast-success';
-    el.setAttribute('role', 'alert');
-    el.setAttribute('aria-live', 'assertive');
-    el.setAttribute('aria-atomic', 'true');
-    el.innerHTML = '' +
-      '<div class="toast-content">' +
-        '<span class="toast-icon">' +
-          '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>' +
-        '</span>' +
-        '<div class="toast-body">' +
-          '<div class="toast-message"><h6>' + escapeHtml(message) + '</h6></div>' +
-        '</div>' +
-      '</div>';
-
-    $('ori-toasts').appendChild(el);
-    var toast = new bootstrap.Toast(el);
-    el.addEventListener('hidden.bs.toast', function () { el.remove(); });
-    toast.show();
   }
 
   /* =========================================================================
@@ -938,7 +843,6 @@
   /* ================================================================= Wiring */
 
   function wire() {
-    startClock();
     originatorModal = new bootstrap.Modal($('ori-originator-modal'));
     reassignModal = new bootstrap.Modal($('ori-reassign-modal'));
     deleteModal = new bootstrap.Modal($('ori-delete-modal'));
@@ -1042,19 +946,31 @@
     $('ori-new-default-options').addEventListener('change', refreshOriginatorModal);
     $('ori-originator-save').addEventListener('click', saveOriginator);
 
-    /* Static chrome and the other BACS tabs do nothing. */
-    document.addEventListener('click', function (e) {
-      var a = e.target.closest('.ori-appbar a, .ori-sidenav a, .nav-underline .nav-link');
-      if (a) e.preventDefault();
-    });
   }
+
+  /* The BACS section tabs. Import, Process and Calendar live in the BACS
+     Import prototype; Originators is this page, so its link is inert. */
+  var BACS_TAB_PATHS = {
+    process: '../BACS-import/index.html#/process',
+    import: '../BACS-import/index.html#/import',
+    originators: '#',
+    calendar: '../BACS-import/index.html#/calendar'
+  };
 
   /* Options must exist before `dropdown.js` binds on DOMContentLoaded, so the
      first render runs at parse time; the rest waits for the Bootstrap bundle
-     to be ready. */
+     to be ready. The chrome mounts now too, so the page never paints without
+     its top bar. */
+  Shell.mountChrome({ sidebar: 'bacs' });
+  $('ori-bacs-tabs').innerHTML = Shell.bacsTabs('originators', BACS_TAB_PATHS);
+  $('ori-bacs-tabs').addEventListener('click', function (e) {
+    var a = e.target.closest('a[href="#"]');
+    if (a) e.preventDefault();
+  });
   renderFilterOptions();
 
   document.addEventListener('DOMContentLoaded', function () {
+    Shell.startClock();
     wire();
     renderAll();
   });

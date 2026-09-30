@@ -1,0 +1,301 @@
+/* ============================================================================
+   Mobius PAS prototype — shared application chrome
+   ============================================================================
+
+   NOT BUCKHOLT. The Mobius PAS top bar and left navigation are not Buckholt
+   components. The Originators spec states that "the top bar, left navigation
+   and the Process, Import and Calendar tabs are static", and both prototype
+   briefs confirm they are to be built by visually inspecting the screenshots.
+   They are reproduced here from OR-00-01 and IM-00-01, and they are the only
+   things in the prototype that draw their own appearance.
+
+   They are placed into Buckholt's own `.layout[data-layout=layout-03]` grid
+   areas (`header` / `#sidebar` / `#main`), so the page structure is still
+   Buckholt's. Nothing in this file overrides `buckholt.css` or
+   `buckholt-ai-fixes.css`; every selector is `app-` prefixed.
+
+   This file was extracted from `Originators/originators.css` when BACS Import
+   was added, so both features share one shell rather than each carrying a
+   copy. The measurements and comments are unchanged from that build.
+
+   Load order on every page that uses it:
+       https://use.typekit.net/vtl2xbn.css
+       https://kit.fontawesome.com/ca92816a31.js
+       css/buckholt.css
+       css/buckholt-ai-fixes.css
+       prototype/app-shell.css      <- this file
+       <feature>.css
+   ============================================================================ */
+
+
+/* ----------------------------------------------------------------- Top bar
+   Measured from OR-00-01 at 2x (a 1920px frame), and re-checked against
+   IM-00-01. The right-hand cells form one tight row: each divider butts
+   against the next cell's own padding, so there is no flex gap between a
+   divider and the text beside it.
+
+     logo ink        16 – 108.5      search box   154.5 – 474.5  (320 wide)
+     divider 1     1572              divider 2   1710
+     "Accounts"    1732.5 – 1816.5   divider 3   1842
+     avatar        1859 – 1903.5     page edge   1920
+     header height   76              search box height 34
+   -------------------------------------------------------------------------- */
+
+.app-bar {
+  --app-brand-blue: #2249b1;
+  --app-brand-navy: #241860;
+  --app-chrome-border: #dadada;
+
+  display: flex;
+  align-items: center;
+  height: 4.75rem;                   /* 76px */
+  padding: 0 1rem;                   /* 16px, measured both sides */
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--app-chrome-border);
+}
+
+.app-bar-logo {
+  display: flex;
+  align-items: center;
+  margin-right: 2.75rem;             /* logo ink ends ~108.5, search starts 154.5 */
+  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--app-brand-blue);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.app-bar-search {
+  position: relative;
+  width: 20rem;                      /* 320px */
+  /* Never grows past the drawn width, but may shrink: the clock shows a live
+     date, and a long one ("30 September 2026" against the frame's
+     "03 September 2026") would otherwise push the avatar off the right edge
+     at narrow widths. */
+  flex: 0 1 auto;
+  min-width: 6rem;
+}
+
+.app-bar-search i {
+  position: absolute;
+  top: 50%;
+  left: 0.875rem;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #707070;
+  pointer-events: none;
+}
+
+.app-bar-search input {
+  width: 100%;
+  height: 2.125rem;                  /* 34px */
+  padding: 0 0.875rem 0 2.375rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  border: 1px solid var(--app-chrome-border);
+  border-radius: 0.5rem;
+}
+
+.app-bar-search input::placeholder { color: #707070; }
+.app-bar-search input:focus { outline: 2px solid #1748d0; outline-offset: 1px; }
+
+.app-bar-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1.25rem;
+  font-size: 0.9375rem;
+  color: #0f40c5;
+  text-decoration: none;
+  white-space: nowrap;
+  /* Lets the link give way before the bar overflows. `white-space: nowrap`
+     with the default `min-width: auto` would otherwise hold the whole row
+     wider than the viewport in the band just above the 992px step. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-bar-help i { flex: 0 0 auto; }
+
+.app-bar-help:hover { text-decoration: underline; }
+
+/* The divided cells. `margin-left: auto` pushes the group right; there is no
+   gap inside it, so each divider sits directly against the neighbouring
+   cell's padding. */
+.app-bar-right {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;               /* dividers run the full header height */
+  margin-left: auto;
+  min-width: 0;
+}
+
+.app-bar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 1rem;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.app-bar-status i { font-size: 0.75rem; color: #168914; }
+
+.app-bar-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  padding: 0 1.5rem;
+  border-left: 1px solid var(--app-chrome-border);
+  border-right: 1px solid var(--app-chrome-border);
+  white-space: nowrap;
+}
+
+.app-bar-time { font-size: 1.125rem; font-weight: 600; color: #1a1a1a; }
+.app-bar-date { font-size: 0.8125rem; color: #454545; }
+
+.app-bar-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  border: 0;
+  border-right: 1px solid var(--app-chrome-border);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #0f40c5;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.app-bar-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 2.75rem;                    /* 44px */
+  height: 2.75rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  background-color: #5731d6;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+
+/* ------------------------------------------------------------ Left navigation */
+
+.app-sidenav {
+  --app-brand-blue: #2249b1;
+  --app-brand-navy: #241860;
+
+  display: flex;
+  flex-direction: column;
+  width: 14.6875rem;                 /* 235px, measured from OR-00-01 */
+  background-color: var(--app-brand-blue);
+}
+
+.app-sidenav-items { flex: 1 1 auto; }
+
+.app-sidenav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3.5rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.app-sidenav-item i { width: 1.5rem; font-size: 1.125rem; text-align: center; }
+.app-sidenav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #ffffff; }
+.app-sidenav-item.is-current { background-color: var(--app-brand-navy); }
+
+.app-sidenav-collapse {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3.5rem;
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+  font: inherit;
+  font-size: 1rem;
+  color: #ffffff;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.app-sidenav-collapse i { width: 1.5rem; font-size: 0.875rem; text-align: center; }
+
+
+/* --------------------------------------------------------------- Toast stack
+   OR-01-04 and IM-03-07 both place the toast bottom right of the page.
+
+   Measured across every frame that shows a toast, the drawn toast is 320 x 48.
+   Buckholt's `--toast-max-width` is 22rem (352), so the container binds
+   Buckholt's own variable to the drawn width rather than restyling the Toast.
+   ---------------------------------------------------------------------------- */
+
+.app-toasts .toast { --toast-max-width: 20rem; }
+
+.app-toasts {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: auto;
+  max-width: min(28rem, calc(100vw - 3rem));
+}
+
+
+/* ---------------------------------------------------------------------------
+   Narrow viewports.
+   These breakpoints are the prototype's own. They are set on the LOCAL build's
+   Bootstrap scale (576 / 768 / 992 / 1200 / 1400), because `css/buckholt.css`
+   — the build this repository loads — ships that scale. The live reference
+   build breaks at 896 / 1088 / 1312 / 1520 / 1720 instead, so every figure
+   below is measured on the local scale and would land at a different viewport
+   on the live build. Flagged, per CLAUDE.md, rather than silently changed.
+   --------------------------------------------------------------------------- */
+
+/* Between the 992px step and 1200px the sidebar is still 235px wide and the
+   bar has the least room it ever has. Measured at 992 on the build before
+   this file existed, the avatar sat 19px past the right edge; pulling the
+   logo's trailing space in over that band clears it. */
+@media (max-width: 1199.98px) {
+  .app-bar-logo { margin-right: 1.5rem; }
+  .app-bar-help { margin-left: 0.75rem; }
+}
+
+@media (max-width: 991.98px) {
+  .app-sidenav { display: none; }
+  .app-bar-help,
+  .app-bar-status,
+  .app-bar-clock { display: none; }
+  .app-bar-logo { margin-right: 1.5rem; }
+  .app-bar-search { width: auto; flex: 1 1 auto; min-width: 0; }
+}
+
+@media (max-width: 575.98px) {
+  .app-bar { padding: 0 0.75rem; }
+  .app-bar-logo { margin-right: 0.75rem; font-size: 1.25rem; }
+  .app-bar-account { display: none; }
+  .app-bar-avatar { margin-left: 0.75rem; }
+}
