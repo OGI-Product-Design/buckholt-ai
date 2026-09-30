@@ -97,21 +97,30 @@ described under **Deviations, 12**.
 
 **Buckholt**, using real classes, tokens and documented markup:
 
-Accordion · Alert · Avatar · Button · Button set · Collapse · Dropdown ·
-Form (Text input, Select) · Link (standalone) · Menu · Menu button · Modal ·
-Page layout (body / frame / pane / panel) · Page navigation · Table (including
-the documented sortable header) · Tabs · Tag · Text block · Toast · Tooltip ·
-Typography type sets · Spacing and colour tokens.
+Accordion · Alert · Avatar · Button · Button set (including the stacked
+variant) · Collapse · Dropdown · Form (Text input) · Link (standalone) ·
+Menu · Menu button · Modal · Page layout (body / frame / pane / panel) ·
+Page navigation · Table (including the documented sortable header) · Tabs ·
+Tag · Text block · Toast · Tooltip · Typography type sets · Spacing and
+colour tokens.
 
-**Not Buckholt**, and drawn from Buckholt tokens rather than invented colours:
+**Not Buckholt.** Everything this feature needs and Buckholt does not have is
+in `bacs-import.css`, drawn from Buckholt tokens rather than invented
+colours. Nothing feature-specific is in the shared or Buckholt layers.
 
 | Thing | Where | Why |
 |---|---|---|
-| Top bar, left navigation | `prototype/app-shell.css` | Static Mobius chrome. Both specs record it as static. |
-| Blade | `prototype/blade.*` | Spec 13.1: "Buckholt has no blade component." |
 | File drop zone and file card | `bacs-import.css` | Buckholt documents no file-upload component. |
 | Pagination bar | `bacs-import.css` | `buckholt.css` defines no `.pagination`, `.page-item` or `.page-link`. Page navigation is for sibling pages, not table pages. |
 | Date range field | `bacs-import.css` | Buckholt documents no date picker and no range input. |
+| Tab counts | `bacs-import.css` | Buckholt has no count badge; Tag is the wrong size and shape. |
+
+Two things sit outside `bacs-import.css`, both deliberately:
+
+| Thing | Where | Why |
+|---|---|---|
+| Top bar, left navigation | `prototype/app-shell.css` | Static Mobius chrome, shared with Originators. Both specs record it as static. Its markup is in each page's own HTML. |
+| Blade | `prototype/blade.*` | Spec 13.1: "Buckholt has no blade component… Build it as a reusable component, because other features will need it." Only the reason-code content inside it is in `bacs-import.css`. |
 
 ---
 
@@ -132,7 +141,7 @@ Typography type sets · Spacing and colour tokens.
 | Page navigation | The BACS section tabs — four separate pages, so Page navigation, not Tabs. |
 | Table | Both tables, with `.table-sort-header` + `button.table-sort` + `fa-solid fa-sort`, `.table-gap`, `.col-fit`, `.cell-data-right`, `.data-number`. |
 | Tabs | All / Applied / Not applied, `.nav-underline` with Bootstrap pill behaviour and one `.tab-pane` each. |
-| Tag | Status pills (`tag-status-*` with the documented icon), the "No matching policy" chip, the tab counts, and the blade's code chips. |
+| Tag | Status pills (`tag-status-*` with the documented icon), the "No matching policy" chip, and the blade's code chips. |
 | Text input | Record search, blade search (with `.input-icon` and `.input-btn.input-clear`), date range. |
 | Toast | All four toasts, Code & specs example 7, with each variant's documented icon. |
 | Tooltip | Partial and Failed pills, and the disabled Import new file button. |
@@ -156,15 +165,22 @@ use it. It auto-hides after Bootstrap's default 5000 ms, as 3.5 requires.
 **Spec change needed** if you still want the close control: say so and it
 comes back in `prototype/app-shell.js` for both features at once.
 
-### 2. The modal footer is Buckholt's, not the frame's
+### 2. The modal footer is a stacked Button set
 
-IM-03-03 draws Import full width with Cancel centred underneath. Buckholt's
-Modal Code & specs footer is `.modal-footer > .button-set` with the ghost
-Button first and the primary last, right aligned, and the Forms pattern says
-Modal contexts "may right-align actions with Primary after Secondary/Ghost".
-Originators' three modals already do that. The brief says to pick the simplest
-option consistent with Originators where the spec is silent, so the footer is
-Buckholt's.
+IM-03-03 draws Import full width with Cancel centred underneath, and Buckholt
+documents exactly that: `.button-set.button-set-stacked`, which sets
+`flex-direction: column` and gives each Button `width: 100%`. Primary first,
+then the Ghost, as Button set's own Code & specs orders a stacked set.
+
+**Buckholt gap.** The documented stacked set cannot draw as intended inside
+the documented Modal footer. `.modal-footer` is `justify-content: flex-end`
+and `.button-set` has no width of its own, so the set shrinks to its content
+and each Button's `width: 100%` resolves against that — the Buttons stack but
+stay narrow and right aligned. One rule in `bacs-import.css`, scoped to this
+modal, lets the set fill the footer. Two documented components disagreeing is
+worth taking upstream; it is not in `css/buckholt-ai-fixes.css` because that
+layer needs a classification pass under
+`verification/runtime-verification-framework.md` first.
 
 ### 3. The clock shows the real time, not 13:24
 
@@ -197,7 +213,22 @@ runtime sets `.table-sort-icon { opacity: 0 }` and reveals it on
 the prototype follows the runtime and not the frame.
 
 **Confirmed by Laurence, 30 September 2026:** Buckholt's behaviour is right
-and the frames will follow. No change needed here.
+and the frames will follow.
+
+One consequence, checked on IM-00-01: the icon **is** visible on Import date,
+because that is the default sort (newest first) and its button carries
+`.table-sort-desc`. Every other header reads `opacity: 0` until hovered. So
+the single visible icon is the table telling you which column it is sorted
+by, not a stray one.
+
+**A second Buckholt gap, though.** Buckholt ships only `fa-solid fa-sort`, a
+neutral double caret, and `.table-sort-asc` / `.table-sort-desc` change
+nothing but opacity. A sorted column therefore looks the same as a hovered
+one, and nothing on screen says which direction it is sorted. The direction
+is exposed to assistive technology through `aria-sort` (deviation 6), but
+there is no visual equivalent. Swapping in `fa-sort-up` / `fa-sort-down`
+would be inventing markup Buckholt does not document, so it is flagged rather
+than done.
 
 ### 6. Sort state is exposed with `aria-sort`
 
@@ -235,14 +266,31 @@ Results per page controls live in a hidden store and the pagination bar
 the region is replaced — so the documented behaviour is bound once and never
 lost, and nothing recreates it by hand.
 
-### 9. "Results per page" has a left-aligned label
+### 9. The tab counts are a prototype component
+
+IM-08-02 puts a small count beside each tab label. Buckholt has no count
+badge. The nearest thing is Tag, and `.tag.tag-sm` renders 48 x 24 with a
+pill radius — against the 24 x 20 rounded rectangle the frame draws, which is
+what the first build got wrong.
+
+`.im-tab-count` in `bacs-import.css` is sized from the frame, measured at 2x:
+24 x 20 for the "12" chip, 21 for "11" and 20 for "1", so the chip hugs its
+content down to a 20px floor; a 6px radius; `#efefef` behind and `#454545`
+ink, both of which are already Buckholt tokens (`--ui-background-04` and
+`--text-secondary`). The type is Buckholt's `.support-01` set, carried on the
+element. Chip width in the browser depends on the live Typekit font, which
+the offline mirror does not load.
+
+**Buckholt gap:** no count badge.
+
+### 10. "Results per page" has a left-aligned label
 
 IM-00-01 draws the label to the left of the Select. Buckholt's Forms pattern
 says "left-aligned labels are not currently supported". The label is still a
 real `<label for>` bound to the Select; only its placement departs, and only
 for table furniture rather than a form.
 
-### 10. The blade is built on Bootstrap's Offcanvas JavaScript, with its own CSS
+### 11. The blade is built on Bootstrap's Offcanvas JavaScript, with its own CSS
 
 Spec 13.1 says to start from Bootstrap 5 Offcanvas "if Buckholt is
 Bootstrap-based". `css/buckholt.css` is a complete Bootstrap 5.3 build, but it
@@ -271,14 +319,14 @@ Two things the plugin does not do, added in `blade.js`:
 The same two gaps applied to the import Modal, and the Modal's focus return is
 handled the same way in `bacs-import.js`.
 
-### 11. The blade header blue is chrome, not a Buckholt token
+### 12. The blade header blue is chrome, not a Buckholt token
 
 Spec 13.1 puts the blade header at `#2249b1`, the sidebar blue. That is static
 Mobius chrome, not a Buckholt colour, so it is declared once as
 `--blade-header-background` and named as chrome in the file. The close control
 is not Buckholt's `.btn-close`, which draws a dark cross for a light surface.
 
-### 12. The blade's clear button is reachable from the keyboard
+### 13. The blade's clear button is reachable from the keyboard
 
 Buckholt reveals `.input-clear` on `.response:hover` only, so a keyboard user
 can never reach it. Spec 13.2 requires the clear control once there is text,
@@ -287,7 +335,7 @@ scoped to the blade, also reveals it on `:focus-within`.
 
 **Buckholt gap:** `.input-clear` has no focus-visible treatment.
 
-### 13. App bar overflow between 992px and about 1050px — **fixed**
+### 14. App bar overflow between 992px and about 1050px — **fixed**
 
 Not introduced here: measured on `origin/main` before this branch, the
 Originators app bar pushed the avatar 19px past the right edge at 992px, and
@@ -298,7 +346,7 @@ below 1200px, and "What can I search?" can now shrink rather than holding the
 row wider than the viewport. Swept every width from 960 to 1400 in 8px steps —
 no overflow.
 
-### 14. Tabular figures in the Amount column
+### 15. Tabular figures in the Amount column
 
 Spec 4.2 asks for tabular figures. `.data-number` is Buckholt's documented
 markup for a numeric cell, but this build ships no rule for it, and there is
@@ -307,7 +355,7 @@ prototype's tables.
 
 **Buckholt gap:** no tabular-figures treatment for numeric data.
 
-### 15. Buttons in a loading state
+### 16. Buttons in a loading state
 
 Spec 7 step 7 asks for a spinner and "Importing…". Buckholt documents no
 loading state for Button and ships no spinner at all. The spinner is a Font
@@ -315,7 +363,7 @@ Awesome icon in Button's own documented `.btn-icon` slot.
 
 **Buckholt gap:** Button has no loading state.
 
-### 16. The blade accordion's horizontal padding is bound down
+### 17. The blade accordion's horizontal padding is bound down
 
 Buckholt's Accordion pads 2rem each side. Inside a 400px blade with 24px body
 padding that would leave the code list 288px wide. `--accordion-btn-padding-x`
@@ -323,33 +371,33 @@ and `--accordion-body-padding-x` are Buckholt's own custom properties,
 declared on `.accordion`, and they are bound to `--spacer-04`. Nothing is
 overridden.
 
-### 17. Curly apostrophes
+### 18. Curly apostrophes
 
 The brief asks for curly apostrophes. The spec's copy tables are typed with
 straight ones; its reason-code JSON in 13.4 uses curly. The reason-code data
 is used exactly as written, and every other UI string uses curly apostrophes,
 written as `’` in `bacs-import.js` so the choice is visible.
 
-### 18. The detail page's search and tab survive going back
+### 19. The detail page's search and tab survive going back
 
 Spec 9 says the back link returns to the list "with the filters, sort and page
 the user left", which the prototype does. It says nothing about the detail
 page's own state; reopening the same import keeps its tab, search and sort,
 and opening a different one starts clean.
 
-### 19. Generated Partial imports
+### 20. Generated Partial imports
 
 Spec 14.4 specifies 5–15 Applied records for other Completed files, and
 section 15 gives a new Partial import one Not applied record. It does not say
 how many records a *seeded* Partial should have, so they get the same 5–15
 with one unmatched.
 
-### 20. The reason codes blade section order when opened from a policy
+### 21. The reason codes blade section order when opened from a policy
 
 The blade is only opened from a detail page, so the file type is always known.
 No third preset was invented.
 
-### 21. Prototype breakpoints are on the local build's scale
+### 22. Prototype breakpoints are on the local build's scale
 
 Every media query in `bacs-import.css`, `prototype/app-shell.css` and
 `prototype/blade.css` is set on 576 / 768 / 992 / 1200 / 1400, because
@@ -390,8 +438,9 @@ rewritten to local copies.
 | Keyboard | 36 | Import a file, open a detail page, use the blade — keyboard only |
 | Responsive | 54 | Nine viewports across four pages, plus the blade |
 | Originators regression | 24 | Cards, table, search, selection, modal, toast, tooltips, and both tab links |
+| Type sets, stacked footer, tab counts, sort icon | 16 | The measured values behind deviations 2, 5 and 9 |
 
-**263 assertions, all passing.**
+**279 assertions, all passing.**
 
 Frame-by-frame comparison at 1920px:
 
