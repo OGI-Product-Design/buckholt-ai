@@ -6,12 +6,31 @@ and `screenshots/`.
 | File | What it is |
 | --- | --- |
 | `index.html` | The page. Buckholt runtime contract, Buckholt page structure, Buckholt components. |
-| `originators.css` | Prototype-only. A little layout, and three Buckholt variable bindings. |
+| `originators.css` | Prototype-only. A little layout, two Buckholt variable bindings, and the sticky layers. |
 | `originators.js` | State and behaviour for OR-00 to OR-11. In memory; reloading resets to the seed data. |
 | `PROTOTYPE.md` | These build notes. |
 | `SPEC-CHANGES.md` | The list to feed back into `originators-spec.md`, the Figma frames and Buckholt. |
 
 Open `index.html` directly in a browser. Everything is relative; nothing is built.
+
+### Revision 2 — 30 September 2026
+
+> Built against `originators-spec.md` revision 2, which lands the design review.
+> What changed here:
+>
+> | Area | Change |
+> | --- | --- |
+> | Assignment | Every product carries an explicit originator. `resolvedOriginator()` and the inherited-count helper are gone; the seed is 32 on Assurant Inter LTD and 2 on Real Insure LTD. Changing the default moves nothing. |
+> | Copy | New page intro, Product assignments subtitle, idle selection text, "All originators", and the no-products-assigned body. |
+> | Action bar | The filter lost its visible label and carries `aria-label="Filter by originator"`. "Clear selection" is always shown and natively disabled while nothing is selected. |
+> | Table | Rows are clickable; the header checkbox clears the whole selection, hidden rows included, and shows at least its partial state whenever anything is selected. |
+> | Sticky | The action bar and table header stick under the top app bar. See deviation 20. |
+> | Cards | The default card is first. It has no bin; every other card has a red danger bin that is always active, and deleting moves that originator's products to the default. |
+> | Modals | Every warning alert is gone. Edit gains the intro line with the product count; the default helper line appears wherever a new default is chosen. Only the OR-02 error summary is left. |
+> | Toasts | Already had no close control, from 29 September. Unchanged. |
+>
+> Deviations 4 and 15 described behaviour revision 2 removed; both are now marked
+> superseded rather than deleted, so the history reads straight.
 
 ### The shared shell
 
@@ -200,31 +219,27 @@ No new colour, no overridden rule.
 > **Gap to raise with Buckholt:** Table has no documented selected-row state, though
 > the runtime clearly anticipates one.
 
-### 4. Blocked delete (OR-10-02, OR-10-03) — **diverges from the screens**
+### 4. Delete — no blocked state (OR-10)
 
-The bin uses Buckholt's documented disabled state: the native `disabled` attribute
-on the control, which brings the documented treatment (resting colours at reduced
-opacity) with no local styling at all.
+> **Superseded, 30 September 2026.** This entry used to describe a blocked bin that
+> was natively disabled, with the Tooltip on a wrapper, and the accessibility
+> decision that followed. Spec revision 2 removed the whole idea.
 
-A disabled control receives no pointer events and cannot take keyboard focus, so the
-Tooltip cannot live on it. It sits on a wrapper instead — Bootstrap's own guidance
-for this case — which keeps the explanation on hover and gives the control an
-accessible name that includes the reason.
+The default originator has **no delete control at all**. Every other card carries
+`.btn .btn-ghost .btn-danger` — Buckholt's documented danger Button, which brings the
+red label and the red hover surface with it — and it is always active, whatever the
+product count. Confirming moves that originator's products to the default as explicit
+assignments.
 
-> **Accessibility consequence, needs a decision.** OR-10 says the tooltip "appears on
-> hover and on keyboard focus". With the control natively disabled, keyboard focus
-> never reaches it, so a keyboard user gets the accessible name but not the tooltip.
-> The wrapper is focusable to soften this, but a genuinely disabled control is
-> invisible to keyboard navigation by design. Either the control is disabled and the
-> spec drops the keyboard-focus requirement, or the requirement stands and the
-> control is enabled-but-inert. Recorded in `SPEC-CHANGES.md`.
+Two consequences worth naming:
 
-OR-10-02 and OR-10-03 also draw the bin **swapping to a red prohibited icon** on
-hover and keyboard focus. That was dropped at Laurence's request on 29 September
-2026: the shape changing under the pointer read badly. `fa-ban` is no longer used.
-
-> **Figma / spec change needed:** OR-10-02 and OR-10-03 should show a disabled bin
-> with the tooltip, not an icon swap.
+- **Nothing in this feature now needs a disabled-but-explained control**, so the
+  wrapper, the `not-allowed` cursor and the keyboard-focus question all go with it.
+  `SPEC-CHANGES.md` C4 stays open as a Buckholt question in its own right.
+- **OR-10's "It shows the light blue square background on hover, like the edit icon"
+  is not built.** Buckholt's danger Button hovers to `rgba(215, 5, 12, 0.1)`, and
+  overriding that would be restyling a documented component to match a screenshot.
+  The bin hovers red. Flagged rather than fixed.
 
 ### 5. Heading attachment is deliberately **not** used
 
@@ -387,33 +402,31 @@ the design, 27.5px here.
 > **Say so if the brief meant it:** the count is drawn in primary text colour, not
 > grey. One class swaps it if grey was intended.
 
-### 15. Change warning extends beyond bank details (OR-03)
+### 15. No warning alerts, and the Edit intro line (OR-03, OR-07, OR-08, OR-11)
 
-Added 29 September 2026, extending OR-03. The amber warning now shows when the
-**account holder**, the sort code or the account number differs from the saved value
-and the originator has at least one product. Never for an originator with 0 products,
-and never for User No. or Bureau No. alone. Editing any of them still leaves product
-assignments untouched.
+> **Superseded, 30 September 2026.** This entry used to describe the change warning,
+> its three bodies and the two alerts stacking. Spec revision 2 removed every warning
+> alert in the feature.
 
-The title is unchanged. The body says which kind of change was made:
+What is left, and what replaced each one:
 
-| Changed | Body |
+| Removed | Replaced by |
 | --- | --- |
-| Account holder only | These products will show the new account holder name. Check the name before confirming. |
-| Sort code and/or account number only | Future collections for these products will go to the new account. Check the sort code and account number before confirming. |
-| Both | Future collections for these products will go to the new account, and they will show the new account holder name. Check the details before confirming. |
+| Change warning (OR-03) | The Edit intro line: "Changes to this originator apply to the **{count}** products that use it." Hidden for an originator with 0 products; singular at 1. |
+| Default change warning (OR-11) | The default helper line: "New products will use this originator. Existing products stay as they are." |
+| Bulk change warning, 6+ (OR-07) | The subtitle, which already states the count. |
+| All-products warning (OR-08) | The subtitle "You're reassigning all products." and the panel's own "please clear your selection" line. |
 
-The default change warning (OR-11) is now a **separate alert element**, so an edit can
-raise either, both or neither. Previously one element carried both messages and was
-moved in the DOM. The order is: Make default toggle → Choose new default → default
-change warning → change warning → error summary. That keeps OR-11-04's adjacency
-(default warning directly below Choose new default) and OR-03-04's (change warning
-directly below the toggle when no default change applies), and shows both stacked
-when both apply.
+The only alert left in the feature is the OR-02 error summary.
 
-> **Figma / spec change needed:** OR-03 documents only the bank-details body. The
-> account-holder and combined bodies, and the two alerts appearing together, are not
-> drawn in any frame.
+The intro line's bold count is a plain `<strong>`, which Buckholt's own reboot sets to
+**500** against the paragraph's 300 — measured, not assumed. No type-set class and no
+local weight.
+
+The default helper line shows under the Make default toggle whenever the toggle is on
+for an originator that is **not already the default** — in Add and in Edit — and under
+the Choose new default heading in OR-11-04. It is not shown when the Edit modal opens
+on the current default with the toggle already on, where nothing is being changed.
 
 ### 16. Typography — where a type-set class is and is not used
 
@@ -496,16 +509,97 @@ would land at different viewports there. Flagged rather than silently changed, p
 `CLAUDE.md`. The screens only cover desktop; narrow-viewport behaviour is the
 prototype's own judgement.
 
+### 20. Sticky action bar and table header (OR-00)
+
+Built exactly as OR-00 describes, and each of its six conditions cost something worth
+recording.
+
+**Two layers, offsets from measured variables.** `.ori-toolbar` is
+`top: var(--app-header-height)` and `.ori-table thead th` is
+`top: calc(var(--app-header-height) + var(--ori-action-bar-height))`. Both variables
+are set on `documentElement` by a `ResizeObserver` watching the top bar and the action
+bar, and `renderTable` re-measures too, because the header row comes and goes with the
+empty states. Nothing is hard-coded: at 1440px the bar wraps onto two lines and the
+header follows it down.
+
+**The top app bar is now sticky, in the shared shell.** OR-00 puts the action bar
+"just below the top app bar", which only means anything if the top bar stays. It is
+`position: sticky; top: 0; z-index: 1030` in `prototype/app-shell.css`, so BACS Import
+gets it too — checked, and it changes nothing else there. 1030 keeps it above both
+page layers and below Bootstrap's backdrop (1050), modal (1055) and the toast stack.
+
+> Worth knowing: `header` is a grid item of `.layout[data-layout=layout-03]`, and the
+> sticky constraint rectangle for a grid item is arguably its grid area, which would
+> give it no travel at all. Chromium constrains it to the grid *container* instead, so
+> it works. Verified by measurement rather than assumed, and it is the one piece of
+> this that might behave differently in another engine.
+
+**No clipping ancestor — an override, and a Buckholt ticket.** Buckholt's
+`.table-content` is `overflow-x: auto`, which makes `overflow-y` compute to `auto` as
+well, so it becomes a scroll container and the sticky header binds to it rather than
+to the page. OR-00 says not to wrap the table in an overflow container, so
+`.ori-table .table-content { overflow: visible }`, scoped to this table. Below 576px
+it is handed back: measured at 375px the table's minimum is 347px in a 311px column,
+so the page itself overflows without it. The table header stops sticking there; the
+action bar still does. `SPEC-CHANGES.md` C9.
+
+**Solid backgrounds — without changing a colour.** `--table-header-background` is
+`--ui-overlay-03`, `rgba(26, 26, 26, 0.07)`, so rows show straight through a sticky
+header. The page surface is painted behind the cell and Buckholt's own header colour
+layered over it as a background image, which composites to exactly what the header
+already looks like at rest. A background on `thead tr` does not work: the row's
+background belongs to the table's background layer and does not travel with a sticky
+cell. `SPEC-CHANGES.md` C10.
+
+**Shadow when stuck.** A 1px sentinel sits in the flow just above the action bar, with
+`margin-bottom: calc((var(--page-panel-gap) + 1px) * -1)` giving back the Panel gap and
+its own height so the drawn spacing is unchanged. An `IntersectionObserver` whose root
+is inset by the top bar's height — so it fires at exactly the scroll position where
+the bar starts sticking — toggles `is-stuck` on the Panel. The shadow is `--shadow-xs`,
+the documented lowest elevation. With an empty state in place of the table there is no
+header row, so it falls on the action bar instead.
+
+**Keyboard focus.** `scroll-padding-top` on `html` is the three layers' combined
+height, re-measured with the rest. A row 30 deep that takes focus lands clear of the
+header rather than under it — asserted.
+
+### 21. Clickable rows (OR-00)
+
+The row hover state is **Buckholt's**: `.table tr:hover td` already uses
+`--table-hover-background`. The only addition is `cursor: pointer`, because Table
+documents no clickable-row state. `SPEC-CHANGES.md` C11.
+
+Clicks on the row toggle its checkbox; clicks inside `.form-check` are left to the
+control, so the checkbox is never toggled twice. The checkbox stays the keyboard focus
+target and Space still toggles it.
+
+### 22. Header checkbox semantics (OR-00)
+
+The handler reads `state`, not the checkbox's new `checked` value: anything selected
+anywhere → clear everything; nothing selected → select every visible row. That is what
+makes the partial state clear rather than select, which a native checkbox would not do
+on its own. It also means a selection hidden by a search or filter is cleared by the
+same click.
+
+`indeterminate` is set whenever something is selected and not every visible row is,
+which covers OR-00's "shows at least its partial state whenever anything is selected".
+The accessible name follows: "Select all visible products" when empty, "Clear
+selection" otherwise.
+
 ---
 
 ## Spec issues found
 
-1. **"Up to four cards sit in a row" is unreachable at the drawn card width.** See
-   deviation 11. Either the card is narrower than drawn, or the limit is three at
-   1920px and four only at a wider viewport.
+1. **"Up to four cards sit in a row" is unreachable at the drawn card width.**
+   **Closed by revision 2** — OR-01's Layout section now says three is the maximum at
+   1920px and gives the same reasoning as deviation 11.
 
 2. **Toast success icon.** See deviation 10 — a Buckholt documentation issue rather
    than a spec one, but it surfaced here.
+
+3. **OR-10's hover colour for the bin.** The spec says the red bin "shows the light
+   blue square background on hover, like the edit icon". Buckholt's danger Button
+   hovers red. The prototype keeps Buckholt's. See deviation 4.
 
 > **Not an issue:** OR-04-03's `"Th"` is an illustrative Figma string showing what the
 > no-results state looks like, not a literal case — confirmed by Laurence on
@@ -536,31 +630,34 @@ Because the sandbox blocks Typekit, the Font Awesome kit and jsDelivr, verificat
 used a mirror copy of this folder with those three URLs rewritten to a local
 Bootstrap 5.1.3 copy and the two font sources removed. That means **icons and the
 Poppins/Typekit metrics were absent from the verification renders** — the small
-vertical differences that follow from a fallback font (a card ~10px taller, one
-helper paragraph wrapping to two lines) are artefacts of the offline render, not of
-the markup. Everything else was measured against the screenshots directly.
+vertical differences that follow from a fallback font are artefacts of the offline
+render, not of the markup. Everything else was measured against the screenshots
+directly.
 
-119 behavioural assertions across the eleven flows. All pass, with no console or
-page errors at any viewport.
+**141 behavioural assertions** across four suites, all passing with no console or
+page errors at any viewport, plus the 54-assertion responsive sweep and the BACS
+Import suites (231 assertions) run as a regression check on the now-sticky shared top
+bar. `python3 test/source-parity/check-source-parity.py` passes in both directions.
 
 | Flow | Verified |
 | --- | --- |
-| OR-00 | Seed state: 2 cards reading "Default / 32 products" and "2 products", 34 table rows |
-| OR-01 | Add: Save disabled when empty, enabled when filled, new card with "0 products", toast, new filter option |
-| OR-02 | Inline "Max 18 characters" while typing; Save enabled with a blank field; Save then flags it, shows the summary alert, keeps the modal open and disables Save; correcting clears both; Cancel saves nothing |
-| OR-03 | Pre-filled fields, Confirm disabled until dirty, bank details warning naming 32 products, card updated, toast |
-| OR-04 | 9 matches for "Krypton - Open Market Motor"; no-results state replaces the table and its header row. Asserted with a string that genuinely matches nothing — the spec's `"Th"` is an illustrative frame, not a literal case |
-| OR-05 | Filter to Real Insure LTD's 2 rows; no-products-assigned state with the header row hidden |
-| OR-06 | Singular counter, row highlight, current originator preselected, Confirm disabled until a different one is chosen, counts 31/3, selection cleared, toast |
-| OR-07 | Header checkbox partial state, bulk change warning, five bullets plus "+ 2 more products", counts 25/9 |
-| OR-08 | "All products selected", all-products subtitle and warning, count-only panel, nothing preselected, mixed-originator helper, counts 34/0 |
-| OR-09 | Three originators listed, nothing preselected, no warning at 2 products, counts 31/1/2 |
-| OR-10 | Both blocked tooltips present and rendering; delete available once an originator is non-default with 0 products; card removed, filter option removed, toast |
-| OR-11 | Choose new default shown with the current default disabled and the only other preselected; warning naming 32 products, the current default and the new one; badge and inherited products move; 0/34; toast. Also the OR-11-07 route (switch on for another originator) and the Add-with-default route |
-| Cross-cutting | Selection survives search and filter; the counter counts hidden selections; the header checkbox reflects only visible rows; reassigning to the current default removes the override |
-| Row count | `Showing 1-34 of 34` on the full table, `1-9 of 9` after the search, `1-2 of 2` with the Real Insure LTD filter, `1-1 of 1` with both applied, and it follows a reassignment; hidden in both empty states; left edge on the table's, 12px / 400 in `rgb(26, 26, 26)`, 24px below the table |
-| Change warning | The name-only, bank-only and combined bodies, each titled "This change will affect 32 products"; reverting all three fields hides it; User No. and Bureau No. alone never raise it while still enabling Confirm; both alerts show together in the documented order; a 0-product originator raises nothing even with name and bank changed; a rename moves no products |
+| OR-00 | Seed state: 2 cards reading "Default / 32 products" and "2 products", the default first, no bin on it, a `btn-danger` bin on the other, 34 rows, "Showing 1-34 of 34", "Select products to reassign", "Clear selection" visible and natively disabled, the filter showing "All originators" with no visible label and `aria-label="Filter by originator"` |
+| OR-01 | Add: helper line appears when Make default is switched on and the wording matches; new card with "0 products"; toast "New originator added" even when saved as the default; new filter option |
+| OR-02 | Inline "Max 18 characters" while typing; Save enabled with a blank field; Save then flags it, shows the summary alert and keeps the modal open; it is the only alert left in the page |
+| OR-03 | Pre-filled fields, Confirm disabled until dirty, the intro line reading "Changes to this originator apply to the 32 products that use it." with the count in a `<strong>` computing to 500 against the paragraph's 300, **no alert of any kind**, card updated, toast |
+| OR-04 | 9 matches for "Krypton - Open Market Motor" and "Showing 1-9 of 9"; the no-results state replaces the table, its header row and the count, and the action bar stays; deleting the text restores 34 rows |
+| OR-05 | Filter to Real Insure LTD's 2 rows and "Showing 1-2 of 2"; the no-products-assigned body reads "… Set the filter to All originators, then …" |
+| OR-06 | Clicking a row's cell ticks its checkbox and highlights the row; "1 product selected"; both actions enable; header checkbox partial |
+| OR-07 | 7 selected, subtitle "You're assigning a new originator to 7 products.", **no alert**, five bullets plus "+ 2 more products", current originator preselected, Confirm disabled until a different one is chosen, counts 25/9, selection cleared, toast |
+| OR-08 | Header checkbox ticks every row, "All products selected", subtitle "You're reassigning all products.", **no alert**, count-only panel with the clear-your-selection line, nothing preselected, the mixed helper with the count, counts 34/0 |
+| OR-09 | Three originators, none preselected, the mixed helper without the count, counts 31/1/2 with "1 product" singular |
+| OR-10 | Body reads "… Any products assigned to it will be moved to the default originator. …"; confirming removes the card, moves the 2 products to Assurant Inter LTD for 34, drops the filter option, toast "Originator deleted" |
+| OR-11 | Toggle off on the current default shows Choose new default with the helper line, the current default disabled and the only other preselected; confirming moves the badge, puts Real Insure LTD's card first, gives Assurant Inter LTD a bin, leaves every chip and both counts (2 / 32) untouched, toast "Default originator changed". Also the OR-11-07 route: the intro line for 2 products, the helper line under the toggle, no alert |
+| Selection | Selection survives search and filter and is still counted; the header checkbox shows its partial state when the selected rows are all hidden and clears all 3 on one click; ticking it again selects only the 2 visible rows; "Clear selection" clears hidden rows too |
+| Sticky | `--app-header-height` 76px and `--ori-action-bar-height` measured, not hard-coded; at scroll the app bar is at 0, the bar at 76 and the header cells at 76 + bar height; `is-stuck` toggles and puts `--shadow-xs` under the header; the header cell is opaque and still carries `rgba(26, 26, 26, 0.07)`; `.table-content` is not a scroll container; the filter menu paints over the header; the modal and backdrop sit above the app bar, and the app bar above the sticky bar; the toast stack above all of them; with an empty state there is no header row and the bar still sticks |
+| Keyboard | Space on a row checkbox selects and deselects it and updates the bar; Space on the header checkbox clears everything; Tab runs search → filter → select-all when the actions are disabled, and search → filter → Reassign → Clear → select-all when they are not; `scroll-padding-top` keeps a focused row 30 deep clear of all three sticky layers; both card tooltips appear on focus; Escape closes each modal |
+| Toasts | No close control on any of them |
 
 Layout was checked for horizontal overflow at every viewport: none, at any width.
-Below 375px the table scrolls inside `.table-content`, which is Buckholt's own
-`overflow-x: auto`, not page overflow.
+At 575px and below the table scrolls inside Buckholt's own `.table-content`, which is
+where its `overflow-x: auto` is handed back (deviation 20).

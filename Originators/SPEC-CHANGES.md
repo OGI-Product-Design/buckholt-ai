@@ -7,6 +7,28 @@ tickets for the Buckholt design system rather than for this feature.
 Every item says what the prototype does now, so the spec can be brought in line with
 something already working rather than with a proposal.
 
+> ## Status after revision 2 of the spec — 30 September 2026
+>
+> `originators-spec.md` revision 2 lands the design review and **supersedes several
+> items below**. They are marked **RESOLVED** in place and were not built.
+>
+> | Item | Outcome |
+> | --- | --- |
+> | A1 Row count | **In the spec.** OR-00's Table bullet now carries it, and OR-04 / OR-05 hide it with the table. |
+> | A2 Change warning covers the account holder | **RESOLVED \u2014 withdrawn.** There is no change warning. Edit originator carries an intro line with the product count instead. |
+> | A3 Both warnings can appear at once | **RESOLVED \u2014 withdrawn.** No modal in this feature shows a warning alert. |
+> | A4 Icon-only buttons carry tooltips | **In the spec.** OR-00's card footer description now states both tooltips and the Buckholt requirement. |
+> | A5 Blocked delete no longer swaps icons | **RESOLVED \u2014 withdrawn.** There is no blocked delete: the default card has no bin and every other bin is always active. The keyboard-focus decision it asked for falls away with it. |
+> | A6 "Up to four cards sit in a row" | **In the spec.** OR-01's Layout section now says three is the maximum at 1920px and gives the reason. |
+> | B3 Blocked delete frames | **RESOLVED \u2014 withdrawn**, with A5. |
+> | B4 Change warning bodies | **RESOLVED \u2014 withdrawn**, with A2 and A3. |
+> | B1, B2, B5 | **Still open.** Frame changes, unaffected by revision 2. |
+> | Section C | **Unaffected**, except C4, which is withdrawn with A5, and two new tickets, C9 and C10, added by the sticky table header. |
+>
+> Everything revision 2 asked for is built: explicit assignment, no warning alerts,
+> the sticky action bar and table header, clickable rows, always-active delete that
+> moves products to the default, and toasts without a close control.
+
 ---
 
 ## A. Changes to `originators-spec.md`
@@ -28,6 +50,10 @@ rules:
 > The row count is hidden along with the table and its header row.
 
 ### A2. OR-03 change warning now covers the account holder — **replaces existing text**
+
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** All warning alerts are gone from the modals. Edit originator now opens with the
+> intro line "Changes to this originator apply to the **{count}** products that use
+> it." Kept below for the record; do not implement.
 
 The "Bank details warning" section becomes:
 
@@ -67,6 +93,9 @@ Keep *"Editing bank details does not change product assignments"* and add:
 
 ### A3. Both warnings can appear at once — **new**
 
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** There are no warnings left to stack. Kept below for the record; do not
+> implement.
+
 Add to OR-11 "Default change warning":
 
 > An edit can raise the change warning (OR-03) and the default change warning at the
@@ -83,6 +112,11 @@ Add to the OR-00-01 "Originator cards" footer description:
 > every icon-only Button as well as an accessible name.
 
 ### A5. Blocked delete no longer swaps icons — **replaces existing text**
+
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** There is no blocked delete. The default originator has no bin at all, and every
+> other bin is red and always active; confirming moves that originator’s products
+> to the default. The keyboard-focus decision this item asked for is moot.
+> Kept below for the record; do not implement.
 
 The OR-10 "Blocked delete" section becomes:
 
@@ -157,10 +191,14 @@ blocked-delete ones on OR-10-02 and OR-10-03.
 
 ### B3. Blocked delete — OR-10-02 and OR-10-03
 
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** Withdrawn with A5.
+
 Replace the red prohibited icon with a grey bin and the "not allowed" cursor. The
 tooltips are unchanged.
 
 ### B4. OR-03-04 and a new frame — change warning bodies
+
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** Withdrawn with A2 and A3.
 
 OR-03-04 draws only the bank-details body. Add frames or annotations for:
 
@@ -216,6 +254,9 @@ documentation does not describe.
 The prototype binds it to `--action-04`, which is the `#E8EDFA` the frames draw.
 
 ### C4. No "available but blocked, with an explanation" control state
+
+> **RESOLVED — withdrawn by spec revision 2, 30 September 2026.** Nothing in Originators needs this state any more. Worth keeping as a Buckholt
+> question in its own right, but it is no longer blocking anything here.
 
 Buckholt documents disabled. It does not document a control that stays hoverable,
 focusable and tooltip-bearing while doing nothing — which is what a blocked delete
@@ -281,6 +322,51 @@ copying that block.
 
 ---
 
+### C9. `.table-content` is a scroll container, so a sticky table header cannot work
+
+`.table-content` is `overflow-x: auto`. CSS makes `overflow-y` compute to `auto`
+alongside it, so the element becomes a scroll container — and `position: sticky` on
+`thead th` then binds to *that* scrollport instead of the page. A table header that
+should stay under the app bar simply stops sticking.
+
+OR-00's build notes anticipate this and say not to wrap the table in an overflow
+container, so the prototype switches it off for this one table
+(`.ori-table .table-content { overflow: visible }`) and hands it back below 576px,
+where the three columns genuinely no longer fit.
+
+**Ask:** decide what Table should do here. Either `.table-content` gains a documented
+modifier that turns the scroller off for a sticky-header table, or Table documents a
+sticky-header pattern in which `.table-content` is the vertical scroll container too
+and the offsets are set against it.
+
+### C10. `--table-header-background` is translucent, so a sticky header shows rows through it
+
+`--table-header-background` is `--ui-overlay-03`, `rgba(26, 26, 26, 0.07)`. That is
+fine for a header sitting on the page, and wrong for one that rows scroll underneath:
+the rows show straight through. A background on `thead tr` does not fix it — the row's
+background belongs to the table's background layer and does not travel with a sticky
+cell.
+
+The prototype paints the page surface behind the cell and layers Buckholt's own header
+colour over it as a background image, so the rendered colour is unchanged:
+
+```css
+background-color: var(--ui-background-02);
+background-image: linear-gradient(var(--table-header-background), var(--table-header-background));
+```
+
+**Ask:** give Table an opaque header token, or document this composition, for anyone
+building a sticky header.
+
+### C11. Table has no clickable-row state
+
+OR-00 makes the whole row a click target. Buckholt's Table ships the hover background
+(`.table tr:hover td` on `--table-hover-background`) and, with C3, anticipates a
+selected row, but documents no *clickable* row — so the pointer affordance
+(`cursor: pointer`) is the prototype's own.
+
+**Ask:** document a clickable-row treatment, including whether the pointer changes.
+
 ## Already agreed and built, no action needed
 
 Recorded here so nothing is chased twice.
@@ -288,9 +374,10 @@ Recorded here so nothing is chased twice.
 - **OR-04-03's `"Th"`** is an illustrative Figma string, not a literal case. Matching
   is "contains the search text anywhere, ignoring case", so `"th"` does match 14
   seeded products. The prototype implements the stated rule; no spec change needed.
-- **Blocked delete conditions.** The bin is blocked when the originator is the
-  default **or** has products assigned, and resting when both are false. Confirmed
-  29 September 2026; the prototype already did this.
+- **Blocked delete conditions.** *Superseded by spec revision 2, 30 September 2026:
+  there is no blocked delete at all.* The default card has no bin; every other bin is
+  red and always active, and confirming moves that originator's products to the
+  default. Recorded here so the earlier agreement is not re-applied.
 - **Toast has no close control.** Agreed 29 September 2026; the designs are being
   updated. The prototype's toast is now Code & specs example 7 exactly, and the
   `.btn-close-sm` it briefly used — not a documented combination on a Toast — is

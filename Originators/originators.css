@@ -19,13 +19,21 @@
       two-part section head, the table toolbar). They set position and size.
       They never restyle a Buckholt component.
 
-   3. BUCKHOLT VARIABLE BINDINGS. Three states the screens need that Buckholt
+   3. BUCKHOLT VARIABLE BINDINGS. Two states the screens need that Buckholt
       documents no class for. Each one sets a variable Buckholt already
       declares, to a value from Buckholt's own token set — no new colours, no
       overridden component rules. Each is commented with what it binds and why.
 
-   Nothing here overrides `buckholt.css` or `buckholt-ai-fixes.css`. Every
-   selector is `ori-` prefixed or reached through an `ori-` ancestor.
+   4. STICKY ACTION BAR AND TABLE HEADER. OR-00 specifies this in detail.
+      It is the one place this file overrides a Buckholt rule: Buckholt's
+      `.table-content` is a scroll container, and a sticky table header cannot
+      work inside one. That override is scoped to this table, handed back at
+      narrow widths, and logged for Buckholt in SPEC-CHANGES.md (C9).
+
+   Apart from that one rule, nothing here overrides `buckholt.css` or
+   `buckholt-ai-fixes.css`. Every selector is `ori-` prefixed or reached
+   through an `ori-` ancestor, except `html`, which carries the page's
+   `scroll-padding-top`.
    ============================================================================ */
 
 
@@ -94,12 +102,6 @@
 .ori-card-footer-row .button-set,
 .ori-toolbar-actions .button-set { margin: 0; }
 
-/* A disabled control receives no pointer events, so the Tooltip that explains
-   why deletion is blocked sits on this wrapper instead. Buckholt's own disabled
-   treatment — reduced opacity on the resting colours — is left to do the rest. */
-.ori-blocked-action { display: inline-flex; cursor: not-allowed; border-radius: 0.375rem; }
-.ori-blocked-action:focus-visible { outline: 0; box-shadow: 0 0 0 0.125rem #1748d0; }
-
 /* The row count is table metadata, so it sits close under the table rather
    than at the Panel's 32px item rhythm. Measured on OR-00-01: the count's line
    box starts about 21px below the table's last row border. `--spacer-05` (24px)
@@ -144,10 +146,10 @@
 
 /* ============================================================================
    3. BUCKHOLT VARIABLE BINDINGS
-   Three states the screens need that Buckholt documents no class for. Each
+   Two states the screens need that Buckholt documents no class for. Each
    sets a variable Buckholt already declares, to a value from Buckholt's own
    token set. No new colour is introduced and no component rule is overridden.
-   These three are recorded as gaps in PROTOTYPE.md.
+   Both are recorded as gaps in PROTOTYPE.md.
    ============================================================================ */
 
 /* (a) Selected table row (OR-06-02).
@@ -161,8 +163,80 @@
   --table-background-state: var(--action-04);
 }
 
+/* (b) Clickable row (OR-00 "Rows and header checkbox").
+   Buckholt's Table already ships the hover background — `.table tr:hover td`
+   uses `--table-hover-background` — so the hover state is Buckholt's. Table
+   documents no clickable-row state, so only the pointer affordance is added.
+   Recorded as a gap in PROTOTYPE.md. */
+.ori-table tbody tr[data-product] { cursor: pointer; }
+
 /* The toast container and its `--toast-max-width` binding moved to
    `prototype/app-shell.css`, alongside the shared `Shell.showToast()`. */
+
+
+/* ============================================================================
+   4. STICKY ACTION BAR AND TABLE HEADER (OR-00)
+
+   Two sticky layers. Their offsets are CSS variables set from measurements in
+   `originators.js` (a ResizeObserver on the top bar and the action bar),
+   because the bar wraps onto two lines at narrow widths. The values here are
+   fallbacks for the moment before script runs.
+   ============================================================================ */
+
+/* The 1px sentinel in the flow just above the action bar. The negative margin
+   gives back the Panel's own 32px gap and the 1px the strip adds, so the drawn
+   spacing between the helper text and the bar is unchanged. */
+.ori-sticky-sentinel {
+  height: 1px;
+  margin-bottom: calc((var(--page-panel-gap) + 1px) * -1);
+}
+
+/* Layer 1: the action bar, directly under the top app bar. Bootstrap's
+   `.sticky-top` is `top: 0`, so the offset is set here instead. The page
+   surface is `--ui-background-02`, the colour `body` already carries. */
+.ori-toolbar {
+  position: sticky;
+  top: var(--app-header-height, 4.75rem);
+  z-index: 30;
+  background-color: var(--ui-background-02);
+}
+
+/* Layer 2: the table header cells, directly under the action bar.
+
+   Buckholt's `--table-header-background` is a translucent overlay
+   (`--ui-overlay-03`, rgba(26,26,26,0.07)), so rows would show through it as
+   they scroll underneath. Rather than change the colour, the page surface is
+   painted behind it: `background-color` supplies the opaque page colour and
+   Buckholt's own header colour is layered over it as a background image, which
+   composites to exactly what the header already looks like at rest. A
+   background on `thead tr` does not work — the row's background belongs to the
+   table's background layer and does not travel with a sticky cell. */
+.ori-table thead th {
+  position: sticky;
+  top: calc(var(--app-header-height, 4.75rem) + var(--ori-action-bar-height, 0px));
+  z-index: 20;
+  background-color: var(--ui-background-02);
+  background-image: linear-gradient(var(--table-header-background), var(--table-header-background));
+}
+
+/* No clipping ancestor. Buckholt's `.table-content` is `overflow-x: auto`,
+   which makes `overflow-y` compute to `auto` as well, so it becomes the
+   scrollport a sticky header binds to and the header stops sticking to the
+   page. OR-00 asks for the table not to sit in an overflow container, so it is
+   switched off for this table only. The three columns wrap rather than
+   overflow, so no horizontal scrolling is lost. Logged for Buckholt in
+   SPEC-CHANGES.md. */
+.ori-table .table-content { overflow: visible; }
+
+/* Shadow when stuck. `--shadow-xs` is the documented lowest elevation in
+   `foundations/shadows`. It sits under the table header; when an empty state
+   has replaced the table there is no header row, so it sits under the bar. */
+#ori-assignments.is-stuck .ori-table thead th { box-shadow: var(--shadow-xs); }
+#ori-assignments.is-stuck:not(:has(thead)) .ori-toolbar { box-shadow: var(--shadow-xs); }
+
+/* Keyboard focus: a row that takes focus is scrolled clear of all three layers
+   rather than under them. `html` is this page's scroll container. */
+html { scroll-padding-top: var(--ori-sticky-height, 0px); }
 
 
 /* ============================================================================
@@ -185,4 +259,12 @@
   .ori-toolbar-filters { width: 100%; }
   .ori-section-head { flex-direction: column; align-items: stretch; gap: 1.5rem; }
   .ori-section-head > .btn { align-self: flex-start; }
+
+  /* Below this width the three columns no longer fit — measured at 375px, the
+     table's minimum is 347px in a 311px column, so the page itself overflows.
+     This is the case OR-00 anticipates ("if the table ever needs horizontal
+     scrolling"), so Buckholt's own `.table-content` scroller is handed back its
+     job. The table header stops sticking here, because it is then bound to that
+     scroller rather than to the page; the action bar still sticks. */
+  .ori-table .table-content { overflow-x: auto; }
 }
