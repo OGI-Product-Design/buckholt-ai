@@ -42,9 +42,12 @@
     <div class="ori-appbar-right">
       <span class="ori-appbar-status"><i class="fa-regular fa-circle-dot" aria-hidden="true"></i>Live</span>
 
+      <!-- Live clock, set and ticked by originators.js. The markup carries the
+           values OR-00-01 draws so the cell has its drawn width before script
+           runs; they are replaced on load. -->
       <div class="ori-appbar-clock">
-        <span class="ori-appbar-time">13:24</span>
-        <span class="ori-appbar-date">07 August 2023</span>
+        <time class="ori-appbar-time" id="ori-clock-time" datetime="13:24">13:24</time>
+        <time class="ori-appbar-date" id="ori-clock-date" datetime="2023-08-07">07 August 2023</time>
       </div>
 
       <button type="button" class="ori-appbar-account">
