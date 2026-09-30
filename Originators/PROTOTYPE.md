@@ -16,14 +16,25 @@ Open `index.html` directly in a browser. Everything is relative; nothing is buil
 ### The shared shell
 
 > Added 30 September 2026, when BACS Import was built as the next tab in the
-> same prototype. The static top bar, the left navigation, the live clock, the
-> BACS section tabs, the toast helper and the tooltip helpers moved to
-> `prototype/`, so both features share one shell instead of each carrying a
-> copy. Nothing about their appearance or behaviour changed; the measurements
-> and comments moved with them, and the classes were renamed from `ori-` to
-> `app-`. `Shell.showToast` gained a variant argument that Originators does
-> not pass, so it still gets `toast-success`. See `prototype/README.md`, and
+> same prototype. The chrome's **styling** moved to `prototype/app-shell.css`,
+> and the live clock, the toast helper and the tooltip helpers moved to
+> `prototype/app-shell.js`, so both features share one shell instead of each
+> carrying a copy. The classes were renamed from `ori-` to `app-`; the
+> measurements and comments moved with them unchanged.
+>
+> The chrome **markup** stayed in this page. The `<header class="app-bar">`
+> and `<aside id="sidebar" class="app-sidenav">` blocks, and the BACS section
+> tabs, are still written here rather than injected by script: they are
+> static application furniture, so they should be readable in the source and
+> present with the JavaScript off.
+>
+> `Shell.showToast` gained a variant argument that Originators does not pass,
+> so it still gets `toast-success`. See `prototype/README.md`, and
 > `BACS-import/PROTOTYPE.md` for the table of what moved where.
+>
+> This page renders **pixel-identically** to the build before the move —
+> compared at 1920 x 900, the only differing pixels are the clock's minute
+> digits.
 >
 > One behavioural fix went in with the move: the app bar pushed the avatar
 > 19px past the right edge between 992px and about 1050px. That was already

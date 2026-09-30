@@ -175,7 +175,8 @@
       tab: 'all',
       search: '',
       sort: { column: null, direction: 'asc' },
-      page: 1
+      page: 1,
+      perPage: 25
     },
     /* The file chosen in the import modal. */
     upload: { fileType: '', filename: '', invalid: false, busy: false }
@@ -341,6 +342,7 @@
     var region = $('im-table-region');
 
     Shell.disposeTooltips(region);
+    parkPerPage('list');
 
     /* Section 5: "No results: when the filters return nothing…" */
     if (total === 0) {
@@ -395,6 +397,7 @@
       '</div>' +
       paginationMarkup(state.list.page, pages, first + 1, first + page.length, total);
 
+    mountPerPage(region, 'list');
     Shell.initTooltips(region);
   }
 
@@ -404,6 +407,19 @@
 
      IM-00-01 draws a window of four page numbers against 21 pages, so the
      window is four wide. */
+  /* The Results per page Dropdowns are long-lived nodes, so `dropdown.js`
+     only has to bind them once. Park one back in its store before the region
+     that holds it is re-rendered, then move it into the new slot. */
+  function parkPerPage(key) {
+    var node = $('im-per-page-' + key);
+    if (node) $('im-per-page-store').appendChild(node);
+  }
+
+  function mountPerPage(root, key) {
+    var slot = root.querySelector('.im-per-page-slot');
+    if (slot) slot.appendChild($('im-per-page-' + key));
+  }
+
   function paginationMarkup(current, pages, first, last, total) {
     var windowSize = 4;
     var start = Math.max(1, Math.min(current - Math.floor((windowSize - 1) / 2), pages - windowSize + 1));
@@ -431,16 +447,10 @@
         step(pages, 'Last page', '»', current === pages) +
       '</div>' +
 
-      '<div class="im-per-page input">' +
-        '<label class="form-label" for="im-per-page">Results per page</label>' +
-        '<div class="response select-input">' +
-          '<select class="form-select" id="im-per-page">' +
-            [10, 25, 50].map(function (n) {
-              return '<option value="' + n + '"' + (n === state.list.perPage ? ' selected' : '') + '>' + n + '</option>';
-            }).join('') +
-          '</select>' +
-        '</div>' +
-      '</div>' +
+      /* Results per page is a Buckholt Dropdown that lives in the page
+         source, because `dropdown.js` binds once on DOMContentLoaded.
+         `mountPerPage` moves the live node into this slot. */
+      '<div class="im-per-page-slot"></div>' +
 
       '<p class="support-01 im-row-count">' + showingLine(first, last, total) + '</p>' +
     '</div>';
@@ -595,10 +605,11 @@
     var paged = rows;
     var pagination = '';
     if (rows.length > 25) {
-      var pages = Math.ceil(rows.length / 25);
+      var perPage = state.detail.perPage;
+      var pages = Math.ceil(rows.length / perPage);
       if (state.detail.page > pages) state.detail.page = pages;
-      var first = (state.detail.page - 1) * 25;
-      paged = rows.slice(first, first + 25);
+      var first = (state.detail.page - 1) * perPage;
+      paged = rows.slice(first, first + perPage);
       pagination = paginationMarkup(state.detail.page, pages, first + 1, first + paged.length, rows.length);
     }
 
@@ -634,6 +645,7 @@
   function renderDetail(imp) {
     var pane = $('im-detail');
     Shell.disposeTooltips(pane);
+    parkPerPage('detail');
 
     var head =
       '<div class="page-panel">' +
@@ -733,6 +745,7 @@
         '</div>' +
       '</div>';
 
+    mountPerPage(pane, 'detail');
     Shell.initTooltips(pane);
   }
 
@@ -808,6 +821,9 @@
     hint.hidden = !u.fileType;
     if (u.fileType) hint.textContent = COPY.hints[u.fileType];
 
+    $('im-file-type').querySelector('.dropdown-label').textContent =
+      u.fileType ? FILE_TYPE_LABEL_MODAL[u.fileType] : 'Select';
+
     /* Step 4: choosing a file type shows the hint and the drop zone. */
     $('im-file-region').hidden = !u.fileType;
     $('im-dropzone').hidden = !!u.filename;
@@ -853,10 +869,21 @@
      remembered and focus put back by hand. */
   var modalTrigger = null;
 
+  /* Back to "Select", with no option ticked. Section 7 step 3: "No option is
+     ticked until one is chosen." */
+  function resetFileTypeDropdown() {
+    var dropdown = $('im-file-type').closest('.dropdown');
+    dropdown.querySelector('.dropdown-label').textContent = 'Select';
+    Array.prototype.forEach.call(dropdown.querySelectorAll('.dropdown-item'), function (item) {
+      item.classList.remove('active');
+      item.setAttribute('aria-selected', 'false');
+    });
+  }
+
   function openImportModal(trigger) {
     modalTrigger = trigger || document.activeElement;
     state.upload = { fileType: '', filename: '', invalid: false, busy: false };
-    $('im-file-type').value = '';
+    resetFileTypeDropdown();
     $('im-file-input').value = '';
     refreshModal();
     importModal.show();
@@ -958,13 +985,6 @@
      its own page, built from its own spec, so its tab is a real link to it.
      ====================================================================== */
 
-  var BACS_TAB_PATHS = {
-    process: '#/process',
-    import: '#/import',
-    originators: '../Originators/index.html',
-    calendar: '#/calendar'
-  };
-
   function parseRoute() {
     var hash = location.hash.replace(/^#/, '') || '/import';
     var parts = hash.split('/').filter(Boolean);
@@ -983,15 +1003,11 @@
   }
 
   function placeholder(title, body) {
-    $('im-placeholder').innerHTML =
-      '<div class="page-panel" id="im-placeholder-tabs"></div>' +
-      '<div class="page-panel">' +
-        '<div class="text-block">' +
-          '<h2 class="headline-02">' + esc(title) + '</h2>' +
-          '<p>' + esc(body) + '</p>' +
-        '</div>' +
+    $('im-placeholder-body').innerHTML =
+      '<div class="text-block">' +
+        '<h2 class="headline-02">' + esc(title) + '</h2>' +
+        '<p>' + esc(body) + '</p>' +
       '</div>';
-    $('im-placeholder-tabs').innerHTML = Shell.bacsTabs('', BACS_TAB_PATHS);
     show('im-placeholder');
   }
 
@@ -1009,7 +1025,7 @@
       /* A different import resets the tab, the search and the sort; returning
          to the one you left keeps them, which is what the back link needs. */
       if (state.detail.id !== route.id) {
-        state.detail = { id: route.id, tab: 'all', search: '', sort: { column: null, direction: 'asc' }, page: 1 };
+        state.detail = { id: route.id, tab: 'all', search: '', sort: { column: null, direction: 'asc' }, page: 1, perPage: 25 };
       }
       renderDetail(imp);
       show('im-detail');
@@ -1159,11 +1175,23 @@
       if (id) location.hash = '#/import/' + id;
     });
 
-    $('im-table-region').addEventListener('change', function (e) {
-      if (e.target.id !== 'im-per-page') return;
-      state.list.perPage = parseInt(e.target.value, 10);
+    /* Results per page. The Dropdowns are outside the re-rendered regions,
+       so they are wired once, here. */
+    $('im-per-page-list').addEventListener('click', function (e) {
+      var item = e.target.closest('.dropdown-item');
+      if (!item) return;
+      state.list.perPage = parseInt(item.dataset.value, 10);
       state.list.page = 1;
       renderList();
+    });
+
+    $('im-per-page-detail').addEventListener('click', function (e) {
+      var item = e.target.closest('.dropdown-item');
+      if (!item) return;
+      state.detail.perPage = parseInt(item.dataset.value, 10);
+      state.detail.page = 1;
+      var imp = importById(state.detail.id);
+      if (imp) renderDetail(imp);
     });
 
     /* ------------------------------------------------------ Detail pages */
@@ -1217,10 +1245,13 @@
       openImportModal(this);
     });
 
-    $('im-file-type').addEventListener('change', function () {
-      state.upload.fileType = this.value;
-      /* Section 7: "Changing the file type after attaching a file keeps the
-         file, but re-validates it against the new type." */
+    /* `dropdown.js` handles opening, closing, the tick and the label; this
+       records the choice. Section 7: "Changing the file type after attaching
+       a file keeps the file, but re-validates it against the new type." */
+    $('im-file-type').closest('.dropdown').addEventListener('click', function (e) {
+      var item = e.target.closest('.dropdown-item');
+      if (!item) return;
+      state.upload.fileType = item.dataset.value;
       validateFile();
       refreshModal();
     });
@@ -1268,7 +1299,7 @@
       modalTrigger = null;
       if (state.upload.busy) return;
       state.upload = { fileType: '', filename: '', invalid: false, busy: false };
-      $('im-file-type').value = '';
+      resetFileTypeDropdown();
       $('im-file-input').value = '';
       refreshModal();
     });
@@ -1277,13 +1308,12 @@
   }
 
 
-  /* The BACS tabs and the permission state must exist before the first
-     render; `dropdown.js` binds to the filter dropdowns on DOMContentLoaded,
-     and those are in the page source, so nothing has to wait for them. */
-  Shell.mountChrome({ sidebar: 'bacs' });
-  $('im-bacs-tabs').innerHTML = Shell.bacsTabs('import', BACS_TAB_PATHS);
-
+  /* The chrome, the BACS tabs, the filter Dropdowns, the file type Dropdown
+     and the two Results per page Dropdowns are all in the page's own HTML,
+     so `components/dropdown/dropdown.js` binds every one of them on
+     DOMContentLoaded and nothing structural waits on script. */
   document.addEventListener('DOMContentLoaded', function () {
+    Shell.wireChrome();
     Shell.startClock();
     applyPermission();
     wire();

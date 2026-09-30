@@ -171,11 +171,10 @@
   line-height: 1.25rem;
 }
 
-/* The bin is drawn in the error colour in every frame that shows it. Buckholt
-   has a documented danger Button, but `.btn-danger` is a filled treatment; the
-   frames draw a bare icon, so this binds the Ghost Button's own label
-   variable rather than restyling the component. */
-.im-file-remove { --button-label: var(--text-error); }
+/* The bin is Buckholt's documented danger Ghost Button,
+   `.btn.btn-ghost.btn-danger` — the variant Button's own Code & specs lists.
+   Nothing is bound here: the resting label colour, the danger hover
+   background and the active state all come from the design system. */
 
 
 /* ---------------------------------------------------------------- Date range
@@ -290,6 +289,9 @@
 
 .im-per-page .form-label { margin: 0; white-space: nowrap; }
 .im-per-page .response { width: 5.5rem; }
+
+/* The pagination bar's slot for the live Results per page Dropdown. */
+.im-per-page-slot { display: flex; align-items: center; }
 
 
 /* ============================================================================

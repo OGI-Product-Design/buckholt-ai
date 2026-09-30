@@ -72,16 +72,24 @@ out of Originators into `prototype/`, unchanged apart from its class prefix:
 | `Originators/originators.js` `renderClock` / `startClock` | `Shell.startClock()` |
 | `Originators/originators.js` `showToast` | `Shell.showToast(message, variant)` |
 | `Originators/originators.js` `initTooltips` / `disposeTooltips` / `escapeHtml` | `Shell.*` |
-| The BACS tab `<ul class="nav nav-underline">`, written twice | `Shell.bacsTabs(active, paths)` |
 | `.ori-toast-container` | `.app-toasts` |
+
+What did **not** move is the chrome markup. The `<header class="app-bar">`
+and `<aside id="sidebar" class="app-sidenav">` blocks are written into each
+page's own HTML, and so are the BACS section tabs. They are static
+application furniture, so they belong in the page: readable in the source,
+present with the JavaScript off, and not dependent on a script having run.
+Only their styling and behaviour are shared.
 
 `Shell.showToast` gained a `variant` argument, because Import needs the
 warning and error Toasts as well as success. Originators calls it without one
 and still gets `toast-success`. Everything else about the shared code is what
 Originators already had, measurements and comments included.
 
-The one behavioural change in the shared shell is a bug fix, described under
-**Deviations, 12**.
+Originators renders **pixel-identically** to the build before the move —
+compared at 1920 x 900, the only differing pixels are the clock's minute
+digits. The one behavioural change in the shared shell is a bug fix,
+described under **Deviations, 12**.
 
 ---
 
@@ -114,15 +122,14 @@ Typography type sets · Spacing and colour tokens.
 | Accordion | The blade's four reason-code sections (13.2). No `data-bs-parent`, so any number can be open at once. |
 | Alert | Detail-page summaries, info and error, both without a close control (3.6). |
 | Avatar | `avatar-xs` with initials in the Imported by column. |
-| Button | Import new file (primary), Download report (primary), View reason codes (secondary), Cancel (ghost), row chevrons and the file bin (ghost, icon only). |
+| Button | Import new file (primary), Download report (primary), View reason codes (secondary), Cancel (ghost), row chevrons (ghost, icon only) and the file bin (`btn-ghost btn-danger`, the documented danger variant). |
 | Button set | Every group of Buttons, including the single-Button groups, per Button set's own guidance. |
 | Collapse | The "What to do" disclosures, using the Code & specs "Close button" example so the cross inside the box is the component's own. |
-| Dropdown | Import result and BACS file type filters. `.dropdown-item.active` supplies the tick and the highlighted row that IM-01-01 draws. |
+| Dropdown | Every single-select in the feature: the Import result and BACS file type filters, the modal's BACS file type, and Results per page. `.dropdown-item.active` supplies the tick and the highlighted row that IM-01-01 draws. |
 | Menu, Menu button | The row menu, Code & specs example 3 (ghost, `fa-ellipsis-vertical`), with one `.menu-item` carrying its icon directly inside, per Menu's rules. |
 | Modal | Import BACS file, `modal-sm`. |
 | Page layout | `layout-03`, then `.page-body > .page-frame > .container-fluid > .page-pane > .page-panel`. |
 | Page navigation | The BACS section tabs — four separate pages, so Page navigation, not Tabs. |
-| Select | BACS file type in the modal, and Results per page. |
 | Table | Both tables, with `.table-sort-header` + `button.table-sort` + `fa-solid fa-sort`, `.table-gap`, `.col-fit`, `.cell-data-right`, `.data-number`. |
 | Tabs | All / Applied / Not applied, `.nav-underline` with Bootstrap pill behaviour and one `.tab-pane` each. |
 | Tag | Status pills (`tag-status-*` with the documented icon), the "No matching policy" chip, the tab counts, and the blade's code chips. |
@@ -189,8 +196,8 @@ runtime sets `.table-sort-icon { opacity: 0 }` and reveals it on
 `.table-sort-desc`. That is Buckholt's own decision about the affordance, so
 the prototype follows the runtime and not the frame.
 
-**Either the frames or Buckholt needs to change.** Flagging rather than
-choosing.
+**Confirmed by Laurence, 30 September 2026:** Buckholt's behaviour is right
+and the frames will follow. No change needed here.
 
 ### 6. Sort state is exposed with `aria-sort`
 
@@ -211,14 +218,31 @@ handler ignores the click.
 
 **Buckholt gap:** an `aria-disabled` treatment for Button.
 
-### 8. "Results per page" has a left-aligned label
+### 8. One single-select control, not two
+
+The modal's BACS file type and Results per page were first built as Buckholt
+Selects — native `<select>` elements — while the two list filters were
+Buckholt Dropdowns. On a Mac that showed the operating system's own menu in
+the middle of the modal, next to two controls drawing Buckholt's panel.
+IM-03-02 draws the Dropdown's panel, with the hovered option highlighted, so
+every single-select in the feature is now the Dropdown.
+
+That has one structural consequence. `components/dropdown/dropdown.js` binds
+to `.dropdown` once, on `DOMContentLoaded`, so a Dropdown created later gets
+no behaviour. Every Dropdown is therefore in the page source. The two
+Results per page controls live in a hidden store and the pagination bar
+*moves* the live node into its slot on each render, parking it back before
+the region is replaced — so the documented behaviour is bound once and never
+lost, and nothing recreates it by hand.
+
+### 9. "Results per page" has a left-aligned label
 
 IM-00-01 draws the label to the left of the Select. Buckholt's Forms pattern
 says "left-aligned labels are not currently supported". The label is still a
 real `<label for>` bound to the Select; only its placement departs, and only
 for table furniture rather than a form.
 
-### 9. The blade is built on Bootstrap's Offcanvas JavaScript, with its own CSS
+### 10. The blade is built on Bootstrap's Offcanvas JavaScript, with its own CSS
 
 Spec 13.1 says to start from Bootstrap 5 Offcanvas "if Buckholt is
 Bootstrap-based". `css/buckholt.css` is a complete Bootstrap 5.3 build, but it
@@ -247,14 +271,14 @@ Two things the plugin does not do, added in `blade.js`:
 The same two gaps applied to the import Modal, and the Modal's focus return is
 handled the same way in `bacs-import.js`.
 
-### 10. The blade header blue is chrome, not a Buckholt token
+### 11. The blade header blue is chrome, not a Buckholt token
 
 Spec 13.1 puts the blade header at `#2249b1`, the sidebar blue. That is static
 Mobius chrome, not a Buckholt colour, so it is declared once as
 `--blade-header-background` and named as chrome in the file. The close control
 is not Buckholt's `.btn-close`, which draws a dark cross for a light surface.
 
-### 11. The blade's clear button is reachable from the keyboard
+### 12. The blade's clear button is reachable from the keyboard
 
 Buckholt reveals `.input-clear` on `.response:hover` only, so a keyboard user
 can never reach it. Spec 13.2 requires the clear control once there is text,
@@ -263,7 +287,7 @@ scoped to the blade, also reveals it on `:focus-within`.
 
 **Buckholt gap:** `.input-clear` has no focus-visible treatment.
 
-### 12. App bar overflow between 992px and about 1050px — **fixed**
+### 13. App bar overflow between 992px and about 1050px — **fixed**
 
 Not introduced here: measured on `origin/main` before this branch, the
 Originators app bar pushed the avatar 19px past the right edge at 992px, and
@@ -274,7 +298,7 @@ below 1200px, and "What can I search?" can now shrink rather than holding the
 row wider than the viewport. Swept every width from 960 to 1400 in 8px steps —
 no overflow.
 
-### 13. Tabular figures in the Amount column
+### 14. Tabular figures in the Amount column
 
 Spec 4.2 asks for tabular figures. `.data-number` is Buckholt's documented
 markup for a numeric cell, but this build ships no rule for it, and there is
@@ -283,7 +307,7 @@ prototype's tables.
 
 **Buckholt gap:** no tabular-figures treatment for numeric data.
 
-### 14. Buttons in a loading state
+### 15. Buttons in a loading state
 
 Spec 7 step 7 asks for a spinner and "Importing…". Buckholt documents no
 loading state for Button and ships no spinner at all. The spinner is a Font
@@ -291,7 +315,7 @@ Awesome icon in Button's own documented `.btn-icon` slot.
 
 **Buckholt gap:** Button has no loading state.
 
-### 15. The blade accordion's horizontal padding is bound down
+### 16. The blade accordion's horizontal padding is bound down
 
 Buckholt's Accordion pads 2rem each side. Inside a 400px blade with 24px body
 padding that would leave the code list 288px wide. `--accordion-btn-padding-x`
@@ -299,33 +323,33 @@ and `--accordion-body-padding-x` are Buckholt's own custom properties,
 declared on `.accordion`, and they are bound to `--spacer-04`. Nothing is
 overridden.
 
-### 16. Curly apostrophes
+### 17. Curly apostrophes
 
 The brief asks for curly apostrophes. The spec's copy tables are typed with
 straight ones; its reason-code JSON in 13.4 uses curly. The reason-code data
 is used exactly as written, and every other UI string uses curly apostrophes,
 written as `’` in `bacs-import.js` so the choice is visible.
 
-### 17. The detail page's search and tab survive going back
+### 18. The detail page's search and tab survive going back
 
 Spec 9 says the back link returns to the list "with the filters, sort and page
 the user left", which the prototype does. It says nothing about the detail
 page's own state; reopening the same import keeps its tab, search and sort,
 and opening a different one starts clean.
 
-### 18. Generated Partial imports
+### 19. Generated Partial imports
 
 Spec 14.4 specifies 5–15 Applied records for other Completed files, and
 section 15 gives a new Partial import one Not applied record. It does not say
 how many records a *seeded* Partial should have, so they get the same 5–15
 with one unmatched.
 
-### 19. The reason codes blade section order when opened from a policy
+### 20. The reason codes blade section order when opened from a policy
 
 The blade is only opened from a detail page, so the file type is always known.
 No third preset was invented.
 
-### 20. Prototype breakpoints are on the local build's scale
+### 21. Prototype breakpoints are on the local build's scale
 
 Every media query in `bacs-import.css`, `prototype/app-shell.css` and
 `prototype/blade.css` is set on 576 / 768 / 992 / 1200 / 1400, because
@@ -363,11 +387,11 @@ rewritten to local copies.
 | List, detail, filters | 52 | IM-06, IM-07, IM-09, search, sorting, pagination, IM-10 |
 | Tooltips, outcomes, CSV | 22 | IM-06-01 and IM-07-01 tooltips, Partial and Failed results, Cancel, the CSV, detail pagination over 25 records |
 | Blade | 43 | Every rule in 13.2 and 13.3 |
-| Keyboard | 33 | Import a file, open a detail page, use the blade — keyboard only |
+| Keyboard | 36 | Import a file, open a detail page, use the blade — keyboard only |
 | Responsive | 54 | Nine viewports across four pages, plus the blade |
 | Originators regression | 24 | Cards, table, search, selection, modal, toast, tooltips, and both tab links |
 
-**260 assertions, all passing.**
+**263 assertions, all passing.**
 
 Frame-by-frame comparison at 1920px:
 

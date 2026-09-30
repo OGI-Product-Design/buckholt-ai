@@ -948,28 +948,13 @@
 
   }
 
-  /* The BACS section tabs. Import, Process and Calendar live in the BACS
-     Import prototype; Originators is this page, so its link is inert. */
-  var BACS_TAB_PATHS = {
-    process: '../BACS-import/index.html#/process',
-    import: '../BACS-import/index.html#/import',
-    originators: '#',
-    calendar: '../BACS-import/index.html#/calendar'
-  };
-
   /* Options must exist before `dropdown.js` binds on DOMContentLoaded, so the
-     first render runs at parse time; the rest waits for the Bootstrap bundle
-     to be ready. The chrome mounts now too, so the page never paints without
-     its top bar. */
-  Shell.mountChrome({ sidebar: 'bacs' });
-  $('ori-bacs-tabs').innerHTML = Shell.bacsTabs('originators', BACS_TAB_PATHS);
-  $('ori-bacs-tabs').addEventListener('click', function (e) {
-    var a = e.target.closest('a[href="#"]');
-    if (a) e.preventDefault();
-  });
+     first render runs at parse time. The chrome and the BACS tabs are in the
+     page's own HTML; only their behaviour comes from the shared shell. */
   renderFilterOptions();
 
   document.addEventListener('DOMContentLoaded', function () {
+    Shell.wireChrome();
     Shell.startClock();
     wire();
     renderAll();
