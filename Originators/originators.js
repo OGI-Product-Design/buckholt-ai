@@ -20,44 +20,44 @@
     { id: 'o2', holder: 'Real Insure LTD',    sort: '11-23-45', account: '32899602', user: '758392', bureau: 'DEFGHI' }
   ];
 
-  /* Products in table order. `originator` is an explicit override; null means
-     the product inherits the default. Spec "Seed data": 32 inherit, 2 are
-     explicitly assigned to Real Insure LTD (rows 6 and 12). */
+  /* Products in table order. Every product carries an explicit originator;
+     there is no inheritance. Spec "Seed data": 32 on Assurant Inter LTD and 2
+     on Real Insure LTD (rows 6 and 12). */
   var PRODUCT_SEED = [
-    ['Krypton - Goods in Transit-Pay Monthly', null],
-    ['Krypton - Goods in Transit-Vitruvius Instalments', null],
-    ['Krypton - Open Market Motor-11 Months', null],
-    ['Krypton - Open Market Motor-3 Months Plan', null],
-    ['Krypton - Open Market Motor-6 Months instalments PP STP', null],
+    ['Krypton - Goods in Transit-Pay Monthly', 'o1'],
+    ['Krypton - Goods in Transit-Vitruvius Instalments', 'o1'],
+    ['Krypton - Open Market Motor-11 Months', 'o1'],
+    ['Krypton - Open Market Motor-3 Months Plan', 'o1'],
+    ['Krypton - Open Market Motor-6 Months instalments PP STP', 'o1'],
     ['Krypton - Open Market Motor-7 Months Instalments', 'o2'],
-    ['Krypton - Open Market Motor-DailyPP', null],
-    ['Krypton - Open Market Motor-Pay Monthly', null],
-    ['Krypton - Open Market Motor-Payment Plan No Links', null],
-    ['Krypton - Open Market Motor-Sazdo Test 2 Instalment', null],
-    ['Krypton - Open Market Motor-Sazdo Test PP with 2 instalment', null],
+    ['Krypton - Open Market Motor-DailyPP', 'o1'],
+    ['Krypton - Open Market Motor-Pay Monthly', 'o1'],
+    ['Krypton - Open Market Motor-Payment Plan No Links', 'o1'],
+    ['Krypton - Open Market Motor-Sazdo Test 2 Instalment', 'o1'],
+    ['Krypton - Open Market Motor-Sazdo Test PP with 2 instalment', 'o1'],
     ['Krypton - Commercial Combined-Monthly instalment', 'o2'],
-    ['Krypton - Open Market Commercial Vehicle-11 Months', null],
-    ['Krypton - Open Market Commercial Vehicle-3 Months Plan', null],
-    ['Krypton - Open Market Commercial Vehicle-7 Months Instalments', null],
-    ['Krypton - Open Market Commercial Vehicle-Daily Payment Plan', null],
-    ['Krypton - Open Market Commercial Vehicle-DailyPP', null],
-    ['Krypton - Open Market Commercial Vehicle-Pay Monthly', null],
-    ['Krypton - Open Market Commercial Vehicle-Payment Plan No Links', null],
-    ['Krypton - Shop-Monthly instalment', null],
-    ['Krypton - Shop-Pay Monthly', null],
-    ['Krypton - Shop-Vitruvius Instalments', null],
-    ['Krypton - Equine-3 Months Plan', null],
-    ['Krypton - Equine-Monthly instalment', null],
-    ['Krypton - Equine-Pay Monthly', null],
-    ['Krypton - Equine-Payment Plan No Links', null],
-    ['Krypton - Equine-Vitruvius Instalments', null],
-    ['Krypton - Professional Combined-Monthly instalment', null],
-    ['Krypton - Professional Combined-Pay Monthly', null],
-    ['Krypton - Professional Combined-Vitruvius Instalments', null],
-    ['Krypton - Travel-Monthly instalment', null],
-    ['Krypton - Office-Monthly instalment', null],
-    ['Krypton - Office-Pay Monthly', null],
-    ['Krypton - Office-Vitruvius Instalments', null]
+    ['Krypton - Open Market Commercial Vehicle-11 Months', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-3 Months Plan', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-7 Months Instalments', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-Daily Payment Plan', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-DailyPP', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-Pay Monthly', 'o1'],
+    ['Krypton - Open Market Commercial Vehicle-Payment Plan No Links', 'o1'],
+    ['Krypton - Shop-Monthly instalment', 'o1'],
+    ['Krypton - Shop-Pay Monthly', 'o1'],
+    ['Krypton - Shop-Vitruvius Instalments', 'o1'],
+    ['Krypton - Equine-3 Months Plan', 'o1'],
+    ['Krypton - Equine-Monthly instalment', 'o1'],
+    ['Krypton - Equine-Pay Monthly', 'o1'],
+    ['Krypton - Equine-Payment Plan No Links', 'o1'],
+    ['Krypton - Equine-Vitruvius Instalments', 'o1'],
+    ['Krypton - Professional Combined-Monthly instalment', 'o1'],
+    ['Krypton - Professional Combined-Pay Monthly', 'o1'],
+    ['Krypton - Professional Combined-Vitruvius Instalments', 'o1'],
+    ['Krypton - Travel-Monthly instalment', 'o1'],
+    ['Krypton - Office-Monthly instalment', 'o1'],
+    ['Krypton - Office-Pay Monthly', 'o1'],
+    ['Krypton - Office-Vitruvius Instalments', 'o1']
   ];
 
   var state = {
@@ -97,21 +97,20 @@
     return o ? o.holder : '';
   }
 
-  /* Every product resolves to exactly one originator: its override if it has
-     one, otherwise the default. */
-  function resolvedOriginator(product) {
-    return product.originator || state.defaultId;
-  }
-
   function productCount(originatorId) {
     return state.products.filter(function (p) {
-      return resolvedOriginator(p) === originatorId;
+      return p.originator === originatorId;
     }).length;
   }
 
-  /* Number of products inheriting the default (no explicit override). */
-  function inheritedCount() {
-    return state.products.filter(function (p) { return !p.originator; }).length;
+  /* Cards, filter options and every radio group are in card order: the default
+     first, then the others in the order they were added (OR-00, OR-11). */
+  function orderedOriginators() {
+    var def = [], rest = [];
+    state.originators.forEach(function (o) {
+      (o.id === state.defaultId ? def : rest).push(o);
+    });
+    return def.concat(rest);
   }
 
   function plural(n, singular, pluralWord) {
@@ -136,7 +135,7 @@
   function visibleProducts() {
     var q = state.search.trim().toLowerCase();
     return state.products.filter(function (p) {
-      if (state.filter !== 'all' && resolvedOriginator(p) !== state.filter) return false;
+      if (state.filter !== 'all' && p.originator !== state.filter) return false;
       if (q && p.name.toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
@@ -155,9 +154,6 @@
   function cardMarkup(o) {
     var count = productCount(o.id);
     var isDefault = o.id === state.defaultId;
-    var blockedReason = isDefault
-      ? 'Set another originator as default before deleting this one'
-      : (count > 0 ? 'Reassign this originator’s products before deleting it' : null);
 
     var badges = '';
     if (isDefault) {
@@ -172,35 +168,18 @@
         escapeHtml(plural(count, 'product')) +
       '</span></span>';
 
-    var deleteButton;
-    if (blockedReason) {
-      /* Buckholt's documented disabled state is the native attribute on the
-         control, so that is what this uses. A disabled button receives no
-         pointer events, so the Tooltip cannot live on it — Bootstrap's own
-         guidance for this case is to put the trigger on a wrapper, which is
-         what `.ori-blocked-action` is. Keyboard focus does not reach a disabled
-         control at all, so OR-10's "appears on hover and on keyboard focus"
-         cannot be met while the control is natively disabled. Recorded in
-         PROTOTYPE.md and SPEC-CHANGES.md. */
-      deleteButton =
-        '<span class="ori-blocked-action" tabindex="0" role="button" aria-disabled="true"' +
-          ' aria-label="Delete ' + escapeHtml(o.holder) + ' — ' + escapeHtml(blockedReason) + '"' +
-          ' data-bs-toggle="tooltip" data-bs-placement="top"' +
-          ' data-bs-title="' + escapeHtml(blockedReason) + '">' +
-          '<button type="button" class="btn btn-ghost" disabled tabindex="-1">' +
-            '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
-          '</button>' +
-        '</span>';
-    } else {
-      deleteButton =
-        '<button type="button" class="btn btn-ghost" data-action="delete"' +
-          ' data-id="' + o.id + '"' +
-          ' data-bs-toggle="tooltip" data-bs-placement="top"' +
-          ' data-bs-title="Delete originator"' +
-          ' aria-label="Delete ' + escapeHtml(o.holder) + '">' +
-          '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
-        '</button>';
-    }
+    /* OR-10: the default originator has no delete control at all. Every other
+       card carries a bin that is always active, whatever its product count.
+       Buckholt's documented danger Button is `.btn .btn-ghost .btn-danger`,
+       which brings the red label and the red hover surface with it. */
+    var deleteButton = isDefault ? '' :
+      '<button type="button" class="btn btn-ghost btn-danger" data-action="delete"' +
+        ' data-id="' + o.id + '"' +
+        ' data-bs-toggle="tooltip" data-bs-placement="top"' +
+        ' data-bs-title="Delete originator"' +
+        ' aria-label="Delete ' + escapeHtml(o.holder) + '">' +
+        '<div class="btn-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></div>' +
+      '</button>';
 
     return '' +
       '<div class="card">' +
@@ -211,7 +190,7 @@
             '</div>' +
             '<div class="text-block">' +
               '<h3 class="title-02">' + escapeHtml(o.holder) + '</h3>' +
-              '<p>' + escapeHtml(o.sort) + ' • ' + escapeHtml(o.account) + '</p>' +
+              '<p>' + escapeHtml(o.sort) + ' \u2022 ' + escapeHtml(o.account) + '</p>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -246,7 +225,7 @@
     disposeTooltips($('ori-cards'));
     $('ori-cards').innerHTML =
       '<div class="row">' +
-        state.originators.map(function (o) {
+        orderedOriginators().map(function (o) {
           return '<div class="col-12 col-md-6 col-xxl-4">' + cardMarkup(o) + '</div>';
         }).join('') +
       '</div>';
@@ -267,7 +246,14 @@
       '</div>';
   }
 
+  /* The header row comes and goes with the empty states, so every path
+     re-measures the sticky offsets. */
   function renderTable() {
+    drawTable();
+    measureSticky();
+  }
+
+  function drawTable() {
     var region = $('ori-table-region');
     var rows = visibleProducts();
 
@@ -276,7 +262,7 @@
       region.innerHTML = emptyStateMarkup(
         'No products assigned',
         'No products are assigned to ' + escapeHtml(originatorName(state.filter)) +
-        ' yet. Set Originator to All, then select products and use Reassign originator to assign them.'
+        ' yet. Set the filter to All originators, then select products and use Reassign originator to assign them.'
       );
       return;
     }
@@ -293,7 +279,7 @@
     var body = rows.map(function (p) {
       var isSelected = !!state.selected[p.id];
       return '' +
-        '<tr' + (isSelected ? ' class="ori-row-selected"' : '') + '>' +
+        '<tr data-product="' + p.id + '"' + (isSelected ? ' class="ori-row-selected"' : '') + '>' +
           '<td class="col-fit">' +
             '<div class="form-check">' +
               '<input class="form-check-input" type="checkbox" id="ori-row-' + p.id + '"' +
@@ -305,7 +291,7 @@
           '<td>' + escapeHtml(p.name) + '</td>' +
           '<td>' +
             '<span class="tag"><span class="tag-label">' +
-              escapeHtml(originatorName(resolvedOriginator(p))) +
+              escapeHtml(originatorName(p.originator)) +
             '</span></span>' +
           '</td>' +
         '</tr>';
@@ -320,7 +306,7 @@
                 '<th scope="col" class="table-checkbox-header col-fit">' +
                   '<div class="form-check">' +
                     '<input class="form-check-input" type="checkbox" id="ori-select-all">' +
-                    '<label class="visually-hidden" for="ori-select-all">Select all products</label>' +
+                    '<label class="visually-hidden" for="ori-select-all" id="ori-select-all-label"></label>' +
                   '</div>' +
                 '</th>' +
                 '<th scope="col"><div class="table-header-label">Product</div></th>' +
@@ -354,22 +340,44 @@
     syncSelectAll();
   }
 
-  /* Header checkbox reflects only the visible rows (OR-04, OR-08 rules). */
+  /* OR-00 "Rows and header checkbox". Ticked when every visible row is
+     selected; otherwise at least partial whenever anything is selected
+     anywhere, including rows a search or filter has hidden. */
   function syncSelectAll() {
     var box = $('ori-select-all');
     if (!box) return;
     var rows = visibleProducts();
     var chosen = rows.filter(function (p) { return state.selected[p.id]; }).length;
+    var anywhere = selectedIds().length > 0;
+
     box.checked = rows.length > 0 && chosen === rows.length;
-    box.indeterminate = chosen > 0 && chosen < rows.length;
+    box.indeterminate = !box.checked && anywhere;
+
+    var label = $('ori-select-all-label');
+    if (label) label.textContent = anywhere ? 'Clear selection' : 'Select all visible products';
   }
 
   /* ------------------------------------------------------------- Selection */
 
+  function setSelected(productId, on) {
+    if (on) state.selected[productId] = true;
+    else delete state.selected[productId];
+
+    var row = document.querySelector('tr[data-product="' + productId + '"]');
+    if (row) row.classList.toggle('ori-row-selected', on);
+    syncSelectAll();
+    renderSelectionBar();
+  }
+
   function renderSelectionBar() {
     var n = selectedIds().length;
-    $('ori-selection-count').textContent =
-      allSelected() ? 'All products selected' : plural(n, 'product') + ' selected';
+    var text;
+    if (n === 0) text = 'Select products to reassign';
+    else if (allSelected()) text = 'All products selected';
+    else text = plural(n, 'product') + ' selected';
+
+    $('ori-selection-count').textContent = text;
+    /* Both actions stay visible and are disabled while nothing is selected. */
     $('ori-reassign').disabled = n === 0;
     $('ori-clear-selection').disabled = n === 0;
   }
@@ -393,13 +401,13 @@
   }
 
   function renderFilterOptions() {
-    var html = filterOptionMarkup('all', 'All', state.filter === 'all');
-    state.originators.forEach(function (o) {
+    var html = filterOptionMarkup('all', 'All originators', state.filter === 'all');
+    orderedOriginators().forEach(function (o) {
       html += filterOptionMarkup(o.id, o.holder, state.filter === o.id);
     });
     $('ori-filter-menu').innerHTML = html;
     $('ori-filter').querySelector('.dropdown-label').textContent =
-      state.filter === 'all' ? 'All' : originatorName(state.filter);
+      state.filter === 'all' ? 'All originators' : originatorName(state.filter);
   }
 
   /* =========================================================================
@@ -541,7 +549,7 @@
     if (existing) preselect = existing.value;
 
     /* Buckholt Radio, Code & specs example 2 (radio group inside `.input`). */
-    $('ori-new-default-options').innerHTML = state.originators.map(function (o) {
+    $('ori-new-default-options').innerHTML = orderedOriginators().map(function (o) {
       var isCurrent = o.id === state.defaultId;
       return '' +
         '<div class="form-check">' +
@@ -558,62 +566,31 @@
     section.hidden = false;
   }
 
-  /* Default change warning (OR-11) and change warning (OR-03). They are
-     independent: an edit can trigger either, both, or neither. Both alerts are
-     in the DOM in the order OR-11-04 and OR-03-04 draw them — the default
-     change sits directly below Choose new default, the change warning below
-     that and directly below the Make default toggle when no default change
-     applies. */
-  function renderDefaultWarning() {
-    var warning = $('ori-default-warning');
-    var target = pendingDefaultTarget();
-
-    if (!target || !target.name) { warning.hidden = true; return; }
-
-    $('ori-default-warning-title').textContent = 'You’re changing the default originator';
-    $('ori-default-warning-note').textContent =
-      inheritedCount() + ' products currently use ' + originatorName(state.defaultId) +
-      ' as the default originator and will use the new default originator ' + target.name +
-      ' instead. Products that have been explicitly assigned will stay as they are.' +
-      ' Please review your changes before confirming.';
-    warning.hidden = false;
-  }
-
-  /* OR-03. Shown when the account holder, the sort code or the account number
-     differs from the saved value AND the originator has at least one product.
-     Never for an originator with 0 products, and never for User No. or Bureau
-     No. alone. The body says which of the two kinds of change was made. None of
-     this alters product assignments. */
-  function renderChangeWarning() {
-    var warning = $('ori-form-warning');
+  /* OR-03 intro line. Plain text under the title with the count in bold,
+     telling the user how many products this originator covers. No alert is
+     shown for any edit; this line does that work. Hidden on Add and for an
+     originator with no products. */
+  function renderIntroLine() {
+    var intro = $('ori-originator-intro');
     var editing = state.editingId ? originatorById(state.editingId) : null;
-    if (!editing) { warning.hidden = true; return; }
+    if (!editing) { intro.hidden = true; intro.textContent = ''; return; }
 
     var count = productCount(editing.id);
-    if (count === 0) { warning.hidden = true; return; }
+    if (count === 0) { intro.hidden = true; intro.textContent = ''; return; }
 
-    var v = formValues();
-    var nameChanged = v.holder !== editing.holder;
-    var bankChanged = (v.sort !== editing.sort) || (v.account !== editing.account);
-    if (!nameChanged && !bankChanged) { warning.hidden = true; return; }
+    intro.innerHTML = 'Changes to this originator apply to the <strong>' + count +
+      '</strong> product' + (count === 1 ? ' that uses it.' : 's that use it.');
+    intro.hidden = false;
+  }
 
-    var note;
-    if (nameChanged && bankChanged) {
-      note = 'Future collections for these products will go to the new account,' +
-             ' and they will show the new account holder name.' +
-             ' Check the details before confirming.';
-    } else if (bankChanged) {
-      note = 'Future collections for these products will go to the new account.' +
-             ' Check the sort code and account number before confirming.';
-    } else {
-      note = 'These products will show the new account holder name.' +
-             ' Check the name before confirming.';
-    }
-
-    $('ori-form-warning-title').textContent =
-      'This change will affect ' + plural(count, 'product');
-    $('ori-form-warning-note').textContent = note;
-    warning.hidden = false;
+  /* OR-11 "Default helper line". Under the Make default toggle while it is on
+     for an originator that is not already the default \u2014 in Add and in Edit.
+     Not shown when the Edit modal opens on the current default with the toggle
+     already on, where nothing is being changed. */
+  function renderDefaultHelper() {
+    var editing = state.editingId ? originatorById(state.editingId) : null;
+    var alreadyDefault = !!editing && editing.id === state.defaultId;
+    $('ori-default-helper').hidden = !$('ori-f-default').checked || alreadyDefault;
   }
 
   function isDirty() {
@@ -642,9 +619,9 @@
   }
 
   function refreshOriginatorModal() {
+    renderIntroLine();
     renderNewDefaultOptions();
-    renderDefaultWarning();
-    renderChangeWarning();
+    renderDefaultHelper();
     updateSaveState();
   }
 
@@ -702,9 +679,9 @@
     originatorModal.hide();
     renderAll();
 
-    if (defaultChanged) showToast('Default originator changed');
-    else if (editing) showToast('Originator changes made');
-    else showToast('New originator added');
+    if (!editing) showToast('New originator added');
+    else if (defaultChanged) showToast('Default originator changed');
+    else showToast('Originator changes made');
   }
 
   /* =========================================================================
@@ -755,28 +732,12 @@
       ? 'You’re reassigning all products.'
       : 'You’re assigning a new originator to ' + plural(chosen.length, 'product') + '.';
 
-    /* Warning by selection size (OR-07). */
-    var warning = $('ori-reassign-warning');
-    if (everything) {
-      $('ori-reassign-warning-title').textContent = 'You’re reassigning all products';
-      $('ori-reassign-warning-note').textContent =
-        'This will replace the current originator assignments for every product' +
-        ' in this configuration. Please review before confirming.';
-      warning.hidden = false;
-    } else if (chosen.length >= 6) {
-      $('ori-reassign-warning-title').textContent = 'You’re making a bulk change';
-      $('ori-reassign-warning-note').textContent =
-        'This will change the originator for ' + chosen.length +
-        ' selected products. Please review before confirming.';
-      warning.hidden = false;
-    } else {
-      warning.hidden = true;
-    }
-
+    /* No warning alert for any selection size (OR-07 rules); the subtitle
+       states how many products are changing. */
     renderSelectedPanel(chosen);
 
     /* Preselect only when every selected product already shares an originator. */
-    var resolved = chosen.map(resolvedOriginator);
+    var resolved = chosen.map(function (p) { return p.originator; });
     var mixed = resolved.some(function (r) { return r !== resolved[0]; });
     var current = mixed ? null : resolved[0];
 
@@ -787,7 +748,7 @@
           : 'These products currently use different originators. Choosing an originator will reassign all selected products to the same one.')
       : 'Selected products will use this originator once you confirm your changes.';
 
-    $('ori-choose-options').innerHTML = state.originators.map(function (o) {
+    $('ori-choose-options').innerHTML = orderedOriginators().map(function (o) {
       return '' +
         '<div class="form-check">' +
           '<input class="form-check-input" type="radio" name="ori-choose"' +
@@ -809,10 +770,8 @@
     if (!pick) return;
     var targetId = pick.value;
 
-    selectedProducts().forEach(function (p) {
-      /* "Assigning a product to the current default removes its override." */
-      p.originator = (targetId === state.defaultId) ? null : targetId;
-    });
+    /* Every assignment is explicit, including one to the current default. */
+    selectedProducts().forEach(function (p) { p.originator = targetId; });
 
     state.selected = {};
     reassignModal.hide();
@@ -822,7 +781,12 @@
 
   /* ============================================================ Delete flow */
 
+  /* OR-10: the originator is removed and any products assigned to it move to
+     the default originator, as explicit assignments. */
   function confirmDelete() {
+    state.products.forEach(function (p) {
+      if (p.originator === pendingDeleteId) p.originator = state.defaultId;
+    });
     state.originators = state.originators.filter(function (o) { return o.id !== pendingDeleteId; });
     if (state.filter === pendingDeleteId) state.filter = 'all';
     pendingDeleteId = null;
@@ -851,7 +815,6 @@
 
     /* Card actions. */
     $('ori-cards').addEventListener('click', function (e) {
-      if (e.target.closest('.ori-blocked-action')) { e.preventDefault(); return; }
       var btn = e.target.closest('button');
       if (!btn) return;
       var action = btn.dataset.action;
@@ -881,27 +844,38 @@
       renderSelectionBar();
     });
 
-    /* Row and header selection. */
+    /* Row and header selection.
+
+       Header checkbox (OR-00): empty selects every visible row; partial or
+       ticked clears the whole selection, including rows a search or filter has
+       hidden. Reading the state rather than the checkbox's new `checked` value
+       is what makes the partial case clear rather than select. */
     $('ori-table-region').addEventListener('change', function (e) {
       var box = e.target;
+
       if (box.id === 'ori-select-all') {
-        var rows = visibleProducts();
-        var turnOn = box.checked;
-        rows.forEach(function (p) {
-          if (turnOn) state.selected[p.id] = true;
-          else delete state.selected[p.id];
-        });
+        if (selectedIds().length > 0) state.selected = {};
+        else visibleProducts().forEach(function (p) { state.selected[p.id] = true; });
         renderTable();
         renderSelectionBar();
         return;
       }
+
       if (box.dataset.product) {
-        if (box.checked) state.selected[box.dataset.product] = true;
-        else delete state.selected[box.dataset.product];
-        box.closest('tr').classList.toggle('ori-row-selected', box.checked);
-        syncSelectAll();
-        renderSelectionBar();
+        setSelected(box.dataset.product, box.checked);
       }
+    });
+
+    /* Clicking anywhere on a row toggles its checkbox (OR-00). A click on the
+       checkbox itself, or on its label, is left to the control, which fires
+       the change event above. The checkbox stays the keyboard focus target. */
+    $('ori-table-region').addEventListener('click', function (e) {
+      var row = e.target.closest('tbody tr[data-product]');
+      if (!row || e.target.closest('.form-check')) return;
+      var box = row.querySelector('input[data-product]');
+      if (!box) return;
+      box.checked = !box.checked;
+      setSelected(row.dataset.product, box.checked);
     });
 
     $('ori-clear-selection').addEventListener('click', function () {
@@ -948,6 +922,71 @@
 
   }
 
+  /* =========================================================================
+     Sticky action bar and table header — OR-00
+
+     Two sticky layers. The action bar sits at the top bar's height and the
+     table header cells directly under it, so search, filter, selection text
+     and the select-all checkbox stay in view while the user ticks rows.
+
+     The offsets are CSS variables measured here rather than hard-coded,
+     because the bar wraps onto two lines at narrow widths. A `ResizeObserver`
+     on the top bar and the action bar keeps them current; `renderTable` calls
+     `measureSticky` too, because the header row comes and goes with the empty
+     states.
+     ========================================================================= */
+
+  var measureSticky = function () {};
+
+  function wireSticky() {
+    var root = document.documentElement;
+    var header = document.querySelector('.app-bar');
+    var bar = $('ori-toolbar');
+    var section = $('ori-assignments');
+    var sentinel = $('ori-sticky-sentinel');
+    var observer = null;
+    var observedTop = null;
+
+    /* Watching the sentinel from a root inset by the top bar's height means it
+       leaves the observer's root at exactly the scroll position where the
+       action bar starts sticking. The inset is a pixel value, so the observer
+       is rebuilt whenever the top bar's height changes. */
+    function watchSentinel(top) {
+      if (!window.IntersectionObserver || top === observedTop) return;
+      observedTop = top;
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver(function (entries) {
+        section.classList.toggle('is-stuck', !entries[0].isIntersecting);
+      }, { rootMargin: (-top) + 'px 0px 0px 0px', threshold: 0 });
+      observer.observe(sentinel);
+    }
+
+    measureSticky = function () {
+      var headerHeight = header.offsetHeight;
+      var barHeight = bar.offsetHeight;
+      var thead = section.querySelector('thead');
+
+      root.style.setProperty('--app-header-height', headerHeight + 'px');
+      root.style.setProperty('--ori-action-bar-height', barHeight + 'px');
+      /* `scroll-padding-top`: a row that takes keyboard focus is scrolled clear
+         of all three layers rather than under them. */
+      root.style.setProperty('--ori-sticky-height',
+        (headerHeight + barHeight + (thead ? thead.offsetHeight : 0)) + 'px');
+
+      watchSentinel(headerHeight);
+    };
+
+    measureSticky();
+
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(measureSticky);
+      ro.observe(header);
+      ro.observe(bar);
+    } else {
+      window.addEventListener('resize', measureSticky);
+    }
+  }
+
   /* Options must exist before `dropdown.js` binds on DOMContentLoaded, so the
      first render runs at parse time. The chrome and the BACS tabs are in the
      page's own HTML; only their behaviour comes from the shared shell. */
@@ -958,5 +997,6 @@
     Shell.startClock();
     wire();
     renderAll();
+    wireSticky();
   });
 }());

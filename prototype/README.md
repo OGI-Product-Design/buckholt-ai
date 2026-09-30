@@ -17,6 +17,14 @@ depends on a script having run. Only its styling and behaviour are shared.
 Copy the `<header class="app-bar">` and `<aside id="sidebar" class="app-sidenav">`
 blocks from `Originators/index.html` into a new page.
 
+**The top bar is sticky** (`top: 0`, `z-index: 1030`), so it stays in view while the
+page scrolls and a feature can position its own sticky layer under it. Its height is
+published as `--app-header-height` on `:root`, as a fallback of `4.75rem`; a feature
+that depends on the exact value should re-measure the element with a `ResizeObserver`
+and set the variable itself, as `Originators/originators.js` does. 1030 keeps the bar
+above a page's sticky layers and below Bootstrap's modal backdrop (1050), the modal
+(1055), the blade (1056) and the toast stack.
+
 ## Using the shell
 
 ```html

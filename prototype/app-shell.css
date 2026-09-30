@@ -41,10 +41,23 @@
      header height   76              search box height 34
    -------------------------------------------------------------------------- */
 
+/* The measured height of the top bar, published so a feature can position a
+   sticky layer directly under it. It is a fallback only: the Originators page
+   re-sets it from the real element with a ResizeObserver. */
+:root { --app-header-height: 4.75rem; }
+
 .app-bar {
   --app-brand-blue: #2249b1;
   --app-brand-navy: #241860;
   --app-chrome-border: #dadada;
+
+  /* The top bar stays in view while the page scrolls, which is what the
+     Originators spec's sticky action bar sits under ("just below the top app
+     bar"). z-index keeps it above both sticky layers in the page and below
+     Bootstrap's modal backdrop (1050), modal (1055) and the toast stack. */
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 
   display: flex;
   align-items: center;
