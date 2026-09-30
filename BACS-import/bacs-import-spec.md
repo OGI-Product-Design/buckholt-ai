@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Product** | Mobius PAS — Accounts › BACS › Import |
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Date** | 30 September 2026 |
 | **Status** | Ready for prototype build |
 | **Source** | Figma frames exported to `screenshots/` (IM-FF-SS naming) |
@@ -371,7 +371,7 @@ Both are single-select dropdowns. The selected option has a tick and a highlight
 2. **Title and subtitle:** filename as the title, then the subtitle (section 4.2).
 3. **Download report:** primary button, right-aligned. It downloads a CSV of every record: policy ref, client name, amount or type, date, outcome, reason code, reason title.
 4. **Info alert:** not dismissible.
-5. **Tabs:** All / Applied / Not applied, each with a count. The Not applied tab is shown even when its count is 0.
+5. **Tabs:** All / Applied / Not applied, each with a count. When every record in the file is applied, only **All** is shown: Applied would be a copy of it and Not applied would be empty. The three tabs appear together only on a Partial import. *(Changed 30 September 2026. The IM-09-02 frame still draws all three with "Not applied 0".)*
 6. **Search box and button:** search box ("Search policy ref or client name") on the left, and a secondary "View reason codes" button on the right.
 7. **Records table**, with columns by file type:
 
@@ -397,7 +397,7 @@ Both are single-select dropdowns. The selected option has a tick and a highlight
   - **There's no row menu**, because there's no policy to open (IM-08-02).
 - **Applied rows** have a row menu with a single item, **Open policy**, which opens the policy record (IM-08-04, IM-08-05).
 - **No search results:** "No records match “{search text}”" and "Check the policy ref or client name and try again."
-- **Empty Not applied tab:** "All records in this file have been applied." *(Not in Figma — confirmed.)*
+- **Empty Not applied tab:** cannot occur. The Not applied tab is only shown when at least one record is unmatched, so the earlier "All records in this file have been applied." copy is no longer needed. A search that filters the tab to nothing shows the no-search-results state instead. *(Changed 30 September 2026.)*
 
 ### Alert copy
 

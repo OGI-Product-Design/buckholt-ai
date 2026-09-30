@@ -141,8 +141,10 @@ Two things sit outside `bacs-import.css`, both deliberately:
 | Page navigation | The BACS section tabs — four separate pages, so Page navigation, not Tabs. |
 | Table | Both tables, with `.table-sort-header` + `button.table-sort` + `fa-solid fa-sort`, `.table-gap`, `.col-fit`, `.cell-data-right`, `.data-number`. |
 | Tabs | All / Applied / Not applied, `.nav-underline` with Bootstrap pill behaviour and one `.tab-pane` each. |
-| Tag | Status pills (`tag-status-*` with the documented icon), the "No matching policy" chip, and the blade's code chips. |
-| Text input | Record search, blade search (with `.input-icon` and `.input-btn.input-clear`), date range. |
+| Tag, Tag set | Status pills (`tag-status-*` with the documented icon). A Not applied row's pill and its "No matching policy" chip are a `.tag-set` of two default-size Tags, per Tag's Code & specs example 9. The blade's code chips are default Tags too. |
+| Heading attachment | Every reason code in the blade: `.text-block > .heading > .heading-content + .tag`, exactly as Heading attachment's Code & specs example 3 attaches a Tag to a heading. |
+| Form validation | The import modal's format error is the documented `.invalid-feedback`, revealed by Buckholt's own `.response:has(.is-invalid) ~ .invalid-feedback`. |
+| Text input | Record search, blade search (with `.input-icon` and `.input-btn.input-clear`), the date range field and the two date fields in its panel (all three with the documented `.input-btn` action button). |
 | Toast | All four toasts, Code & specs example 7, with each variant's documented icon. |
 | Tooltip | Partial and Failed pills, and the disabled Import new file button. |
 
@@ -195,14 +197,27 @@ that the timestamp matches the header clock. Seed rows keep their September
 ### 4. The date range has no calendar
 
 Spec 5 asks for `dd/mm/yyyy-dd/mm/yyyy` "with a calendar picker". Buckholt
-documents no date picker and no range input, and `CLAUDE.md` says to report
-the gap rather than invent one. The field is a Buckholt Text input that parses
-a typed range and filters on it, both dates inclusive; the calendar button
-beside it opens a small panel holding two **native** `<input type="date">`
-controls, which is as close to a picker as the design system allows without a
-new component.
+documents no date input, no range input and no date picker, and `CLAUDE.md`
+says to report the gap rather than invent one. So everything Buckholt *does*
+document is used, and only the missing piece is drawn:
 
-**Buckholt gap:** date input, date range input, date picker.
+- the field is a Buckholt **Text input** carrying the spec's format, which
+  parses a typed range and filters on it, both dates inclusive;
+- the control inside it is Text input's own **Input action button**,
+  `.input-btn`, whose Code & specs example carries exactly this icon,
+  `fa-regular fa-calendar-day`;
+- the two fields in the panel are Text inputs with the same button, and the
+  browser's own date-picker glyph is hidden so there is one control in the
+  corner, not two in two different colours. The Buckholt button opens the
+  same native picker through `showPicker()`;
+- the panel's actions are a Buckholt **Button set**, `.button-set-end`, with
+  the ghost first and the primary at the outer edge — Button's rules put the
+  primary at the "right/outer edge in right-aligned contained layouts".
+
+Only the popover itself is local CSS, because Buckholt has no popover to put
+the two fields in.
+
+**Buckholt gaps:** date input, date range input, date picker, popover.
 
 ### 5. Sort icons only appear on hover and on the sorted column
 
@@ -397,7 +412,26 @@ with one unmatched.
 The blade is only opened from a detail page, so the file type is always known.
 No third preset was invented.
 
-### 22. Prototype breakpoints are on the local build's scale
+### 22. One tab when every record is applied — **spec changed**
+
+The first build followed spec 9, which said "The Not applied tab is shown
+even when its count is 0", and IM-09-02 draws all three that way. On a
+Completed import that gives three tabs where Applied is a copy of All and Not
+applied is empty.
+
+At your request on 30 September 2026, a file with nothing unmatched now shows
+**All** alone; the three appear together only on a Partial import. Two lines
+of `bacs-import-spec.md` changed with it, and the spec is now version 1.1:
+
+- Layout item 5 states the new rule and notes that the IM-09-02 frame still
+  draws all three.
+- The "Empty Not applied tab" rule is marked as unreachable: the tab only
+  exists when at least one record is unmatched, so its
+  "All records in this file have been applied." copy is no longer needed. A
+  search that filters the tab to nothing still shows the no-search-results
+  state.
+
+### 23. Prototype breakpoints are on the local build's scale
 
 Every media query in `bacs-import.css`, `prototype/app-shell.css` and
 `prototype/blade.css` is set on 576 / 768 / 992 / 1200 / 1400, because
@@ -432,15 +466,16 @@ rewritten to local copies.
 | Suite | Assertions | What it covers |
 |---|---|---|
 | Import flow | 32 | IM-03 and IM-04 end to end, IM-05 format error, the six-record Completed result |
-| List, detail, filters | 52 | IM-06, IM-07, IM-09, search, sorting, pagination, IM-10 |
+| List, detail, filters | 53 | IM-06, IM-07, IM-09, search, sorting, pagination, IM-10 |
 | Tooltips, outcomes, CSV | 22 | IM-06-01 and IM-07-01 tooltips, Partial and Failed results, Cancel, the CSV, detail pagination over 25 records |
 | Blade | 43 | Every rule in 13.2 and 13.3 |
 | Keyboard | 36 | Import a file, open a detail page, use the blade — keyboard only |
 | Responsive | 54 | Nine viewports across four pages, plus the blade |
 | Originators regression | 24 | Cards, table, search, selection, modal, toast, tooltips, and both tab links |
 | Type sets, stacked footer, tab counts, sort icon | 16 | The measured values behind deviations 2, 5 and 9 |
+| Buckholt accuracy | 29 | That the date range, the validation message, the outcome cell, the blade items and the detail tabs are the documented components and not local copies |
 
-**279 assertions, all passing.**
+**309 assertions, all passing.**
 
 Frame-by-frame comparison at 1920px:
 
@@ -448,13 +483,13 @@ Frame-by-frame comparison at 1920px:
 |---|---|
 | IM-00-01 | Matches. Page 1 rows, statuses, types, importers and dates are the spec's table exactly, with `Showing 1–10 of 210`. |
 | IM-01-01, IM-02-01 | Match, including the tick and highlighted row on the selected option. |
-| IM-03-01 to IM-03-08 | Match, except the modal footer (2) and the toast close control (1). |
+| IM-03-01 to IM-03-08 | Match, except the toast close control (1). |
 | IM-04-01, IM-04-02 | Match. |
 | IM-05-01 | Matches. |
 | IM-06-01, IM-06-02 | Match. |
 | IM-07-01 | Matches. |
 | IM-08-01 to IM-08-05 | Match, except the resting sort icons (5). |
-| IM-09-01, IM-09-02 | Match. |
+| IM-09-01, IM-09-02 | Match, except the tabs: a Completed import now shows All alone (22). |
 | IM-10-01, IM-10-02 | Match. |
 
 The interactive mockup at `https://claude.ai/artifact/EEPUg3xKVPVi4TAURnNoci`

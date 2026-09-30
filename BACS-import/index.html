@@ -121,11 +121,18 @@
               <div class="im-toolbar">
                 <div class="im-filters">
 
-                  <!-- Import date range. Buckholt documents no date picker and
-                       no range input, so this is a Text input carrying the
-                       spec's `dd/mm/yyyy-dd/mm/yyyy` format, with a button
-                       that reveals two native date controls. Recorded as a
-                       gap in PROTOTYPE.md. -->
+                  <!-- Import date range.
+                       Buckholt documents no date input, no range input and no
+                       date picker, so the field itself is a Buckholt Text
+                       input carrying the spec's `dd/mm/yyyy-dd/mm/yyyy`
+                       format. Everything around it is Buckholt: the control
+                       inside the field is Text input's documented Input
+                       action button, `.input-btn`, whose own Code & specs
+                       example carries `fa-regular fa-calendar-day`; the two
+                       fields in the panel are Text inputs with the same
+                       button; and the panel's actions are a Button set,
+                       right aligned with the primary at the outer edge, as
+                       Button's rules put them in a contained layout. -->
                   <div class="input im-filter-date">
                     <div class="input-label">
                       <label for="im-date-range" class="form-label">Import date range</label>
@@ -134,10 +141,10 @@
                       <input type="text" class="form-control" id="im-date-range"
                              placeholder="dd/mm/yyyy-dd/mm/yyyy" autocomplete="off"
                              aria-describedby="im-date-range-help">
-                      <button type="button" class="im-date-toggle" id="im-date-toggle"
+                      <button type="button" class="input-btn" id="im-date-toggle"
                               aria-expanded="false" aria-controls="im-date-picker"
                               aria-label="Choose an import date range">
-                        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                        <i class="fa-regular fa-calendar-day" aria-hidden="true"></i>
                       </button>
                     </div>
                     <small class="form-helper visually-hidden" id="im-date-range-help">
@@ -151,6 +158,10 @@
                         </div>
                         <div class="response text-input">
                           <input type="date" class="form-control" id="im-date-from">
+                          <button type="button" class="input-btn" data-picker-for="im-date-from"
+                                  aria-label="Choose a start date">
+                            <i class="fa-regular fa-calendar-day" aria-hidden="true"></i>
+                          </button>
                         </div>
                       </div>
                       <div class="input">
@@ -159,13 +170,17 @@
                         </div>
                         <div class="response text-input">
                           <input type="date" class="form-control" id="im-date-to">
+                          <button type="button" class="input-btn" data-picker-for="im-date-to"
+                                  aria-label="Choose an end date">
+                            <i class="fa-regular fa-calendar-day" aria-hidden="true"></i>
+                          </button>
                         </div>
                       </div>
-                      <div class="button-set">
+                      <div class="button-set button-set-end">
                         <button type="button" class="btn btn-ghost" id="im-date-clear">
                           <span class="button-label">Clear</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" id="im-date-apply">
+                        <button type="button" class="btn btn-primary" id="im-date-apply">
                           <span class="button-label">Apply</span>
                         </button>
                       </div>
@@ -306,29 +321,35 @@
             </div>
 
             <!-- Drop zone / file card. Buckholt documents no file-upload
-                 component, so this is prototype markup; recorded in
-                 PROTOTYPE.md. -->
-            <div id="im-file-region" hidden>
-              <input type="file" id="im-file-input" class="visually-hidden">
+                 component, so the drop zone and the card are prototype
+                 markup — but the field around them is Buckholt's: an
+                 `.input` with a `.response` and the documented
+                 `.invalid-feedback`, which `.response:has(.is-invalid) ~
+                 .invalid-feedback` reveals with Buckholt's own error type
+                 and colour. Recorded in PROTOTYPE.md. -->
+            <div class="input" id="im-file-region" hidden>
+              <div class="response">
+                <input type="file" id="im-file-input" class="visually-hidden">
 
-              <button type="button" class="im-dropzone" id="im-dropzone">
-                <span class="im-dropzone-icon">
-                  <i class="fa-regular fa-arrow-up-from-bracket" aria-hidden="true"></i>
-                </span>
-                <span class="action-02 im-dropzone-title">Drop files here</span>
-                <span class="support-01 im-dropzone-hint">or click to browse</span>
-              </button>
-
-              <div class="im-file-card" id="im-file-card" hidden>
-                <span class="label-02 im-file-name" id="im-file-name"></span>
-                <button type="button" class="btn btn-ghost btn-danger" id="im-file-remove">
-                  <div class="btn-icon">
-                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                  </div>
+                <button type="button" class="im-dropzone" id="im-dropzone">
+                  <span class="im-dropzone-icon">
+                    <i class="fa-regular fa-arrow-up-from-bracket" aria-hidden="true"></i>
+                  </span>
+                  <span class="action-02 im-dropzone-title">Drop files here</span>
+                  <span class="support-01 im-dropzone-hint">or click to browse</span>
                 </button>
+
+                <div class="im-file-card" id="im-file-card" hidden>
+                  <span class="label-02 im-file-name" id="im-file-name"></span>
+                  <button type="button" class="btn btn-ghost btn-danger" id="im-file-remove">
+                    <div class="btn-icon">
+                      <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
               </div>
 
-              <p class="im-file-error" id="im-file-error" hidden></p>
+              <div class="invalid-feedback" id="im-file-error"></div>
             </div>
 
           </div>
