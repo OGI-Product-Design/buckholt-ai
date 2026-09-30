@@ -376,7 +376,12 @@
     else if (allSelected()) text = 'All products selected';
     else text = plural(n, 'product') + ' selected';
 
-    $('ori-selection-count').textContent = text;
+    /* The whole line is Buckholt's strong treatment, which the frames draw at a
+       visibly heavier weight than the helper text beside it. `<strong>` is
+       Buckholt's own 500 against the paragraph's 300 — no type-set class and no
+       local weight, the same treatment as the OR-03 intro line and the Reassign
+       subtitle. */
+    $('ori-selection-count').innerHTML = '<strong>' + escapeHtml(text) + '</strong>';
     /* Both actions stay visible and are disabled while nothing is selected. */
     $('ori-reassign').disabled = n === 0;
     $('ori-clear-selection').disabled = n === 0;

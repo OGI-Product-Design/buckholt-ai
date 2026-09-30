@@ -221,6 +221,11 @@ in the regular weight. Confirmed by Laurence on 30 September 2026 that the bold 
 the intent, and the prototype now bolds it in every case. It is a `<strong>`, which
 Buckholt sets to 500, the same treatment as the OR-03 intro line.
 
+The action bar's selection text is the same treatment, confirmed at the same time:
+"Select products to reassign", "{count} product(s) selected" and "All products
+selected" are strong in full, not just the number. Add it to the OR-00 "Selection
+text" table as a note.
+
 Add to the OR-06 "Reassign originator modal" description:
 
 > **Subtitle:** "You’re assigning a new originator to **{count}** product(s)." The
@@ -241,10 +246,17 @@ width where the table stops fitting. Two things collide there:
 - The action bar stacks to five rows at that width, so pinning it alone would hold
   about 300px of a 760px phone viewport under the top bar.
 
-The prototype takes both layers off below 576px. The top app bar still sticks.
+The prototype keeps the **action bar** pinned at every width and takes only the table
+header off below 576px. At 375px the pinned bar is 264px — tightened from 296px by
+halving its vertical padding and using the Panel's 16px step between its two groups —
+which with the 76px top bar is 340px of a 760px viewport. The bar stacks to four rows
+there: two full-width inputs, the selection text, then the two actions, which
+themselves stack below 414px.
 
-**Ask:** confirm, or say the action bar should stay pinned on a phone regardless. The
-table header cannot join it either way until C9 is settled.
+**Ask:** confirm that the table header scrolling with the table at phone width is
+acceptable — it cannot join the action bar until C9 is settled — and say whether the
+action bar wants a more compact phone treatment. Making it shorter than four rows
+needs a design decision, so nothing is invented here.
 
 ## C. Tickets for the Buckholt design system
 
