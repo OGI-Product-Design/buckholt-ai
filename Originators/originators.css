@@ -277,24 +277,36 @@ html { scroll-padding-top: var(--ori-sticky-height, 0px); }
      job. */
   .ori-table .table-content { overflow-x: auto; }
 
-  /* Both sticky layers come off at phone width, for two separate reasons.
+  /* The table header cannot stick here, and this is the one place in the page
+     where that is forced rather than chosen. `.table-content` is a scroll
+     container again (above), so a sticky `thead th` binds to that scrollport
+     instead of the page and its offset pushes the header row down inside the
+     table — measured at 375px, 340px down, below the first row. `position:
+     static` is the only correct answer while the scroller is back.
 
-     The table header MUST: `.table-content` is a scroll container again, so a
-     sticky `thead th` binds to that scrollport instead of the page and its
-     offset pushes the header row down inside the table — measured at 375px, 340px
-     down, below the first row. `position: static` is the only correct answer
-     while the scroller is back.
+     Buckholt's Tag is why the scroller is needed: `.tag` is `white-space:
+     nowrap` with a fixed `height: 2rem`, so the originator chip cannot wrap and
+     the Originator column cannot go below 177px. That is the component behaving
+     as documented, not a defect. See SPEC-CHANGES.md C9.
 
-     The action bar then follows it, because pinning it alone is worse than not
-     pinning it at all: the bar stacks to five rows at this width, so it and the
-     top bar together would hold about 300px of a 760px phone viewport. OR-00
-     asks for the bar to stay in view so the user can tick rows while they scroll;
-     with two thirds of the screen left for rows, it would stop doing that.
-     Flagged in PROTOTYPE.md as a judgement call rather than a silent change. */
-  .ori-toolbar,
+     The action bar still sticks. It is what OR-00 is actually for — keeping
+     search, the filter, the selection text and the actions in reach while the
+     user ticks rows — and that matters more on a phone, not less. */
   .ori-table thead th { position: static; }
 
-  /* Nothing is pinned below the top bar any more, so a focused row only has to
-     clear the top bar. */
-  html { scroll-padding-top: var(--app-header-height, 4.75rem); }
+  /* With no header row pinned, a focused row only has to clear the top bar and
+     the action bar. */
+  html {
+    scroll-padding-top: calc(var(--app-header-height, 4.75rem) + var(--ori-action-bar-height, 0px));
+  }
+
+  /* The bar stacks to four or five rows at this width, so it is tightened where
+     that costs nothing: half the vertical padding and the Panel's 16px step
+     between the two groups instead of 32px. Measured at 375px, that takes the
+     pinned bar from 296px to 264px. */
+  .ori-toolbar {
+    gap: var(--spacer-04);
+    padding-block: var(--spacer-03);
+    margin-block: calc(var(--spacer-03) * -1);
+  }
 }
