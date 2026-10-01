@@ -380,11 +380,15 @@ Awesome icon in Button's own documented `.btn-icon` slot.
 
 ### 17. The blade accordion's horizontal padding is bound down
 
-Buckholt's Accordion pads 2rem each side. Inside a 400px blade with 24px body
-padding that would leave the code list 288px wide. `--accordion-btn-padding-x`
-and `--accordion-body-padding-x` are Buckholt's own custom properties,
-declared on `.accordion`, and they are bound to `--spacer-04`. Nothing is
-overridden.
+Buckholt's Accordion pads 2rem each side. Inside the 400px blade the spec
+originally drew, with its 24px body padding, that would have left the code list
+288px wide. `--accordion-btn-padding-x` and `--accordion-body-padding-x` are
+Buckholt's own custom properties, declared on `.accordion`, and they are bound
+to `--spacer-04`. Nothing is overridden.
+
+The blade is 600px now (deviation 24), so the pressure is off — but the binding
+stays, because the blade is a reusable component and a narrower one would bring
+the problem straight back.
 
 ### 18. Curly apostrophes
 
@@ -430,6 +434,22 @@ of `bacs-import-spec.md` changed with it, and the spec is now version 1.1:
   "All records in this file have been applied." copy is no longer needed. A
   search that filters the tab to nothing still shows the no-search-results
   state.
+
+### 24. The blade is 600px, not 400px — **spec changed**
+
+Spec 13.1 drew the blade at 400px, full width below 576px. Widened to **600px**
+on 1 October 2026: the reason codes blade carries a lot of content, and at 400px
+most code descriptions wrapped to two or three lines. The body keeps its 24px
+side padding, so the content measure goes from 352px to 552px.
+
+The full-width threshold moves with it, to **768px**. `max-width: 100%` already
+makes the blade full width below 600px, and between 600 and 768 it would leave
+only a sliver of page beside it — a blade has a scrim precisely so the context
+behind stays visible, and 168px of context is not worth the squeeze. 768 is the
+build's own md step and removes that band.
+
+Both figures are on `.offcanvas` as `--blade-width`, so a caller can still pass
+its own `width`. `bacs-import-spec.md` 13.1 carries the change.
 
 ### 23. Prototype breakpoints are on the local build's scale
 

@@ -70,7 +70,7 @@ var blade = new Blade({
   title: 'Reason codes',
   body: '<p>…</p>',
   initialFocus: '#rc-search',      // defaults to the first input, else the close button
-  width: '25rem',                  // defaults to 400px, full width below 576px
+  width: '37.5rem',                // defaults to 600px, full width below 768px
   footer: null,                    // optional slot
   onOpen: fn,
   onClose: fn
