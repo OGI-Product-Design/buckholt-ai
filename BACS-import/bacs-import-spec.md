@@ -456,7 +456,7 @@ Buckholt has no blade, so build one as a reusable component. If Buckholt is Boot
 | Property | Specification |
 |---|---|
 | Position | Fixed to the right edge, full viewport height, above everything else |
-| Width | 400 px. Full width below 576 px. |
+| Width | 600 px. Full width below 768 px. *(Changed 1 October 2026 from 400 px / 576 px: the reason codes blade carries a lot of content. The full-width threshold moves with it — at 600 px wide, a 576–768 px viewport would leave only a sliver of page beside the blade.)* |
 | Overlay | Dims the page with a mid-grey scrim. Clicking the scrim closes the blade. |
 | Header | Height about 72 px, background `#2249b1`. Title in white, 20 px. A white close (×) button with a 44 × 44 px target and accessible label "Close {title}". |
 | Body | White, 24 px side padding, scrolls on its own. The header stays fixed. |

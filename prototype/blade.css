@@ -29,7 +29,10 @@
    ============================================================================ */
 
 .offcanvas {
-  --blade-width: 25rem;                              /* 400px, spec 13.1 */
+  /* 600px. Spec 13.1 drew 400px (25rem); widened on 1 October 2026 because the
+     reason codes blade carries a lot of content. Body padding is 24px a side,
+     so the content measure goes 352 -> 552. */
+  --blade-width: 37.5rem;
   --blade-zindex: 1056;                              /* above Buckholt's modal, 1055 */
   --blade-header-height: 4.5rem;                     /* 72px, spec 13.1 */
   --blade-header-background: #2249b1;                /* app chrome blue, not a Buckholt token */
@@ -81,10 +84,17 @@
   .offcanvas-backdrop { transition: none; }
 }
 
-/* "Full width below 576 px." Measured on the LOCAL build's Bootstrap scale;
-   the live reference build breaks at 896 / 1088 / 1312 / 1520 / 1720, so this
-   figure would land at a different viewport there. Flagged, per CLAUDE.md. */
-@media (max-width: 575.98px) {
+/* Spec 13.1 says "Full width below 576 px", which was the right threshold for a
+   400px blade. At 600px it is not: `max-width: 100%` already makes the blade
+   full width below 600, and between 600 and 768 it would leave a sliver of page
+   beside it — a blade has a scrim so you can still see the context behind, and
+   168px of context is not worth the squeeze. The switch moves up to the build's
+   own md step, 768, which removes that band. Below it the blade is full width.
+
+   Measured on the LOCAL build's Bootstrap scale; the live reference build breaks
+   at 896 / 1088 / 1312 / 1520 / 1720, so this figure would land at a different
+   viewport there. Flagged, per CLAUDE.md. */
+@media (max-width: 767.98px) {
   .offcanvas { --blade-width: 100%; }
 }
 
