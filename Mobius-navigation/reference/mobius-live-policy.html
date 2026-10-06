@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mobius</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F7F5;--surface:#FFFFFF;--side:#FFFFFF;--line:#E3E3DE;--line2:#EEEEEA;--thead:#F4F4F1;
+  --text:#14161A;--text2:#2E3138;--muted:#5C6068;--hover:#F0F0EC;
+  --brand:#2A4FAE;--brand-ink:#1E3C8C;--brand-soft:#E8EDF8;--context:#22408F;--context-text:#FFFFFF;
+  --active-bg:#14161A;--active-text:#FFFFFF;
+  --ok-bg:#DDF0E1;--ok-text:#1D5B2C;--warn-bg:#FBEBCB;--warn-text:#7A4B00;--bad-bg:#F8E1DE;--bad-text:#8E1E14;--neu-bg:#E9E9E5;--neu-text:#3A3D44;
+  --danger:#A61B1B;--danger-bg:#F8E6E4;
+  --scrim:rgba(20,22,26,.45);--shadow:0 16px 40px rgba(20,22,26,.14);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111215;--surface:#191A1E;--side:#15161A;--line:#2A2C31;--line2:#232529;--thead:#1F2025;
+  --text:#F1F1EE;--text2:#D5D5D0;--muted:#A1A5AC;--hover:#222429;
+  --brand:#8FA9EE;--brand-ink:#B3C5F5;--brand-soft:#1E2846;--context:#1A2850;--context-text:#F1F1EE;
+  --active-bg:#F1F1EE;--active-text:#111215;
+  --ok-bg:#1C3524;--ok-text:#9ED8AC;--warn-bg:#3A2D12;--warn-text:#F2C878;--bad-bg:#3A1F1D;--bad-text:#F5A49A;--neu-bg:#2A2C31;--neu-text:#D5D5D0;
+  --danger:#F08A80;--danger-bg:#3A1F1D;--scrim:rgba(0,0,0,.6);--shadow:0 16px 40px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --bg:#111215;--surface:#191A1E;--side:#15161A;--line:#2A2C31;--line2:#232529;--thead:#1F2025;
+  --text:#F1F1EE;--text2:#D5D5D0;--muted:#A1A5AC;--hover:#222429;
+  --brand:#8FA9EE;--brand-ink:#B3C5F5;--brand-soft:#1E2846;--context:#1A2850;--context-text:#F1F1EE;
+  --active-bg:#F1F1EE;--active-text:#111215;
+  --ok-bg:#1C3524;--ok-text:#9ED8AC;--warn-bg:#3A2D12;--warn-text:#F2C878;--bad-bg:#3A1F1D;--bad-text:#F5A49A;--neu-bg:#2A2C31;--neu-text:#D5D5D0;
+  --danger:#F08A80;--danger-bg:#3A1F1D;--scrim:rgba(0,0,0,.6);--shadow:0 16px 40px rgba(0,0,0,.5);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans','Helvetica Neue',sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand-ink)}
+svg{flex:none}
+.mono{font-family:'IBM Plex Mono',monospace}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.shell{display:flex;flex-direction:column;height:100%}
+.top{display:flex;align-items:center;gap:16px;min-height:56px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+.wordmark{font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--text);text-decoration:none}
+.search{flex:1 1 auto;max-width:420px;display:flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--muted)}
+.search input{border:0;background:transparent;outline:0;width:100%;font-size:16px;color:var(--text)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.env{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.clock{font-size:12px;color:var(--muted);text-align:right;line-height:1.3}
+.clock b{display:block;font-size:14px;color:var(--text);font-weight:600}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--brand-soft);color:var(--brand-ink);font-weight:600;font-size:13px}
+.icon-btn.menu-toggle{display:none}
+.context{display:flex;align-items:center;flex-wrap:wrap;gap:6px 20px;padding:10px 20px;background:var(--context);color:var(--context-text);font-size:13px}
+.context:empty{display:none}
+.context .who{font-weight:600}
+.context .kv span:first-child{opacity:.75;margin-right:6px}
+.pill{display:inline-flex;align-items:center;min-height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.t-ok{background:var(--ok-bg);color:var(--ok-text)}.t-warn{background:var(--warn-bg);color:var(--warn-text)}.t-bad{background:var(--bad-bg);color:var(--bad-text)}.t-neu{background:var(--neu-bg);color:var(--neu-text)}
+.body{flex:1 1 auto;display:flex;min-height:0}
+
+.side{width:296px;flex:none;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.side-scroll{position:relative;flex:1 1 auto;overflow-y:auto;padding:14px 12px 20px;display:flex;flex-direction:column;gap:18px}
+.sec-label{padding:0 12px;margin-bottom:6px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.item{display:flex;align-items:center;gap:12px;width:100%;min-height:40px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:var(--text2);text-decoration:none;text-align:left;font-size:14px;cursor:pointer}
+.item:hover{background:var(--hover);color:var(--text)}
+.item .lbl{flex:1 1 auto;min-width:0}
+.item[aria-current="page"]{background:var(--active-bg);color:var(--active-text);font-weight:600}
+.item[aria-current="page"] .pill{background:transparent;color:inherit;border:1px solid currentColor;opacity:.85}
+.group-btn[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.group-btn.has-current{color:var(--text);font-weight:600}
+.chev{transition:transform .15s ease;color:var(--muted);display:flex}
+.sub{list-style:none;margin:2px 0 6px;padding:0 0 0 30px;display:none;flex-direction:column;gap:2px}
+.group-btn[aria-expanded="true"] + .sub{display:flex}
+.sub .item{min-height:36px;font-size:13.5px}
+.rule{height:1px;background:var(--line);margin:0 12px}
+.act .ico{color:var(--brand);display:flex}
+.act[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand-ink);font-weight:600}
+.act .tail{color:var(--muted);display:flex}
+.act.danger,.act.danger .ico{color:var(--danger)}
+.act.danger:hover{background:var(--danger-bg)}
+.act-sub{padding:8px 12px 2px;font-size:12px;color:var(--muted)}
+.side-foot{border-top:1px solid var(--line);padding:10px 12px}
+.back-link{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:13px}
+.back-link:hover{background:var(--hover);color:var(--text)}
+.ctx-card{margin:0 4px;padding:12px;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:6px}
+.ctx-card .k{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ctx-card .t{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.ctx-card .s{font-size:12.5px;color:var(--muted)}
+.ctx-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.switch-btn{display:flex;align-items:center;gap:6px;border:0;background:none;padding:6px 0 0;color:var(--brand-ink);font-size:13px;font-weight:500;cursor:pointer}
+.switch-btn[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.pol-list{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.pol-item{display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:8px 12px;min-height:44px}
+.pol-item .r1{display:flex;align-items:center;justify-content:space-between;gap:4px 8px;flex-wrap:wrap}
+.pol-item .r2{font-size:12px;color:var(--muted)}
+.item[aria-current="page"] .r2{color:inherit;opacity:.75}
+.more-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:38px;margin-top:4px;border:1px dashed var(--line);border-radius:8px;background:none;color:var(--brand-ink);font-size:13px;font-weight:500;cursor:pointer}
+.more-btn:hover{background:var(--hover)}
+.item:focus-visible,.btn:focus-visible,.icon-btn:focus-visible,.seg button:focus-visible,.more-btn:focus-visible,.switch-btn:focus-visible,.linkbtn:focus-visible,.back-link:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+main{flex:1 1 auto;min-width:0;overflow-y:auto}
+.page{max-width:1280px;padding:26px clamp(16px,3vw,40px) 56px}
+.crumb{font-size:12px;color:var(--muted);margin-bottom:6px}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+h1{margin:0;font-size:26px;font-weight:600;letter-spacing:-.01em}
+.grid-main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line2);min-height:52px;flex-wrap:wrap}
+.card-h h2{margin:0;font-size:15px;font-weight:600}
+.card-b{padding:16px 18px}
+.card-b.flush{padding:0}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
+.fields.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.f .k{font-size:12.5px;color:var(--muted);margin-bottom:3px}
+.f .v{font-weight:500;overflow-wrap:anywhere}
+.empty{color:var(--muted)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-weight:600;font-size:12.5px;color:var(--muted);background:var(--thead);padding:10px 12px;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line2);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--hover)}
+.side-list .row{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-bottom:1px solid var(--line2)}
+.side-list .row:first-child{padding-top:0}.side-list .row:last-child{border-bottom:0;padding-bottom:0}
+.side-list .k{font-size:12.5px;color:var(--muted)}
+.side-list .v{font-weight:500}
+.linkbtn{border:0;background:none;padding:0;color:var(--brand-ink);cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:2px;font-weight:500}
+.linkbtn[disabled]{color:var(--muted);text-decoration:none;cursor:default}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:500;cursor:pointer;color:var(--text);text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn.sm{min-height:34px;padding:0 12px;font-size:13px}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(.95)}
+.btn.destroy{background:#A61B1B;border-color:#A61B1B;color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.note-strip{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;background:var(--brand-soft);color:var(--brand-ink);font-size:13.5px;line-height:1.45}
+.stat-tiles{display:grid;gap:10px}
+.tile{background:var(--thead);border-radius:8px;padding:14px;text-align:center}
+.tile b{display:block;font-size:22px;font-weight:600}
+.tile span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;padding:3px;border-radius:9px;background:var(--thead);gap:2px;flex-wrap:wrap}
+.seg button{min-height:34px;padding:0 14px;border:0;border-radius:7px;background:transparent;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.step{padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:var(--muted)}
+.step.done{color:var(--ok-text);border-color:var(--ok-bg);background:var(--ok-bg)}
+.step.on{border-color:var(--text);color:var(--text);font-weight:600}
+.form{display:grid;gap:14px;max-width:560px}
+.form.wide{max-width:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px}
+.form label,.lab{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.form input:not([type=checkbox]):not([type=radio]),.form select,.form textarea{width:100%;min-height:42px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:16px}
+.form input[readonly],.form select[disabled],.form textarea[readonly]{background:var(--thead);color:var(--muted)}
+.chk{display:flex;align-items:center;gap:10px;min-height:40px;font-size:14px}
+.chk input{width:18px;height:18px}
+.radios{display:flex;gap:16px;flex-wrap:wrap}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line2)}
+.toggle input[role=switch]{appearance:none;-webkit-appearance:none;flex:none;width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;cursor:pointer;transition:background .15s;margin:0}
+.toggle input[role=switch]::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.toggle input[role=switch]:checked{background:var(--brand)}
+.toggle input[role=switch]:checked::after{transform:translateX(18px)}
+.toggle input[role=switch]:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.ro-sec{margin-bottom:6px}
+.timeline{display:flex;gap:16px;align-items:flex-start}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--muted);margin-top:16px}
+.tl-card{flex:1;border-radius:8px;background:var(--warn-bg);color:var(--warn-text);padding:14px 16px}
+.donut{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--brand) 0 100%);display:flex;align-items:center;justify-content:center;margin:8px auto}
+.donut span{width:96px;height:96px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-weight:600}
+.big{font-size:30px;font-weight:600;letter-spacing:-.01em}
+.money{display:grid;grid-template-columns:repeat(4,auto);gap:4px 24px;justify-content:end;text-align:right}
+.money .k{font-size:12.5px;color:var(--muted)}.money .v{font-weight:600;font-size:16px}
+
+.scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.blade{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:100%;background:var(--surface);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .22s ease;z-index:50;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.blade.on{transform:none}
+.blade-h{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 8px 22px;border-bottom:1px solid var(--line2);min-height:56px}
+.blade-h h2{margin:0;font-size:16px;font-weight:600}
+.blade-b{flex:1 1 auto;overflow-y:auto;padding:20px 22px}
+.blade-f{display:flex;justify-content:space-between;gap:8px;padding:14px 22px;border-top:1px solid var(--line2)}
+.icon-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;border-radius:8px;cursor:pointer;color:var(--text)}
+.icon-btn:hover{background:var(--hover)}
+.dialog-wrap{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;z-index:60;background:var(--scrim)}
+.dialog-wrap.on{display:flex}
+.dialog{width:440px;max-width:100%;background:var(--surface);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.dialog h2{margin:0;font-size:18px;font-weight:600}
+.dialog p{margin:0;color:var(--muted);line-height:1.5}
+.dialog .btns{justify-content:flex-end;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;background:var(--active-bg);color:var(--active-text);padding:12px 18px;border-radius:8px;box-shadow:var(--shadow);z-index:70;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1100px){.grid-main{grid-template-columns:minmax(0,1fr)}.money{justify-content:start;text-align:left}}
+@media (max-width:760px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.form.wide{grid-template-columns:minmax(0,1fr)}.money{grid-template-columns:repeat(2,auto)}}
+@media (max-width:900px){
+  .icon-btn.menu-toggle{display:flex}
+  .search,.clock,.chg-toggle span{display:none}
+  .side{position:fixed;top:0;left:0;bottom:0;z-index:45;width:310px;max-width:88vw;transform:translateX(-100%);transition:transform .22s ease;box-shadow:var(--shadow);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .side.open{transform:none}
+  .side-close{display:flex !important}
+}
+@media (max-width:520px){.fields,.fields.two{grid-template-columns:minmax(0,1fr)}.context{font-size:12px;padding:10px 16px}}
+.lvl-sec{display:flex;flex-direction:column;gap:4px}
+.lvl{display:flex;flex-direction:column;gap:2px;padding:4px 12px 10px}
+.lvl-tag{align-self:flex-start;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:var(--active-bg);color:var(--active-text);margin-bottom:4px}
+.lvl-t{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.lvl-s{font-size:12.5px;color:var(--muted)}
+.lvl-actions{margin-top:10px}
+.pol-open .lvl-tag{background:var(--brand);color:#fff}
+.item.pol-item.is-open{background:var(--brand-soft);color:var(--brand-ink);font-weight:600;border-radius:8px 8px 0 0}
+.item.pol-item.is-open .r2{color:var(--brand-ink);opacity:.8}
+.pol-open{border:1px solid var(--brand-soft);border-top:0;border-radius:0 0 10px 10px;padding:10px 4px 10px;margin-bottom:6px;background:var(--side)}
+.pol-open .sub{padding-left:30px}
+.bc{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px}
+.bc a.who{color:inherit;text-underline-offset:3px}
+.bc-lvl{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.16)}
+.bc-ref{opacity:.75}
+.bc-sep{opacity:.6;font-size:16px;padding:0 2px}
+.icon-ghost{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--text2);cursor:pointer}
+.icon-ghost:hover{background:var(--hover);color:var(--text)}
+.icon-ghost:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.badge{position:absolute;top:3px;right:2px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#B42318;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+.quick{display:flex;gap:2px}
+.vr{width:1px;height:28px;background:var(--line);margin:0 6px}
+[data-tip]{position:relative}
+[data-tip]:hover::after,[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--active-bg);color:var(--active-text);font-size:12px;font-weight:500;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:5;pointer-events:none}
+a.icon-ghost{text-decoration:none}
+.chg{background:rgba(232,90,150,.09);color:inherit;border-radius:2px;padding:0 1px;text-decoration:underline;text-decoration-color:rgba(232,90,150,.45);text-decoration-thickness:1px;text-underline-offset:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.item[aria-current="page"] .chg,.btn.primary .chg,.pill .chg{background:none;text-decoration-color:rgba(232,90,150,.7)}
+
+body.hide-chg .chg,body.hide-chg .item[aria-current="page"] .chg,body.hide-chg .btn.primary .chg,body.hide-chg .pill .chg{background:none;color:inherit;padding:0;text-decoration:none}
+.chg-toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chg-toggle input{appearance:none;-webkit-appearance:none;width:36px;height:22px;border-radius:11px;background:var(--line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.chg-toggle input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.chg-toggle input:checked{background:#E58AAE}
+.chg-toggle input:checked::after{transform:translateX(14px)}
+.chg-toggle input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.side-close{display:none}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <button class="icon-btn menu-toggle" id="menuOpen" aria-label="Open menu" aria-controls="side" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <a class="wordmark" href="#search">Mobius</a>
+    <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/></svg><span class="sr">Search</span><input type="search" value="motor" id="q"></label>
+    <div class="top-right"><label class="chg-toggle"><input type="checkbox" role="switch" id="chgToggle" checked> <span>Show wording changes</span></label><span class="env">Test</span><div class="clock"><b>15:26</b>01 October 2026</div><div class="avatar" aria-label="Signed in as LA">LA</div></div>
+  </header>
+  <div class="context" id="context" aria-label="Current record"></div>
+  <div class="body">
+    <aside class="side" id="side" aria-label="Menu">
+      <div class="side-scroll" id="sideScroll"></div>
+      <div class="side-foot" id="sideFoot"></div>
+    </aside>
+    <main id="main" tabindex="-1"><div class="page" id="page"></div></main>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+<section class="blade" id="blade" role="dialog" aria-modal="true" aria-labelledby="bladeTitle" aria-hidden="true">
+  <div class="blade-h"><h2 id="bladeTitle"></h2><button class="icon-btn" id="bladeClose" aria-label="Close panel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="blade-b" id="bladeBody"></div>
+  <div class="blade-f"><button class="btn" id="bladeCancel">Cancel</button><button class="btn primary" id="bladeSave">Save</button></div>
+</section>
+<div class="dialog-wrap" id="dlg"><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" aria-describedby="dlgText">
+  <h2 id="dlgTitle"></h2><p id="dlgText"></p>
+  <div class="btns"><button class="btn" id="dlgCancel">Cancel</button><button class="btn primary" id="dlgOk">Confirm</button></div>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+/* ================= Icons ================= */
+var I={
+ home:'<path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>',
+ grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+ search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+ user:'<circle cx="12" cy="9" r="3.5"/><path d="M5 19c1.2-3 3.8-4.5 7-4.5s5.8 1.5 7 4.5"/>',
+ brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',
+ doc:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
+ calc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h8"/>',
+ coins:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+ info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>',
+ pulse:'<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+ flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+ shield:'<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+ screen:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>',
+ left:'<path d="M15 6l-6 6 6 6"/>',
+ down:'<path d="M6 9l6 6 6-6"/>',
+ edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+ swap:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
+ clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/>',
+ send:'<path d="M4 12l16-8-6 16-2-6z"/>',
+ pause:'<circle cx="12" cy="12" r="8.5"/><path d="M10 9v6M14 9v6"/>',
+ fee:'<path d="M12 3v18M16 7H10a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6H8"/>',
+ pm:'<path d="M6 7h6M9 4v6M14 17h6M5 20L19 4"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+ cancel:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/>',
+ help:'<circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.01"/>',
+ panel:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/>',
+ note:'<path d="M5 4h14v12l-4 4H5z"/><path d="M15 20v-4h4M8 9h8M8 13h5"/>',
+ link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+ users:'<circle cx="9" cy="9" r="3"/><path d="M3 19c.8-2.8 3-4 6-4s5.2 1.2 6 4"/><circle cx="17" cy="8" r="2.5"/><path d="M16 14c2.5 0 4.3 1 5 3.5"/>',
+ retrieve:'<path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/>',
+ replay:'<path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4v4h-4"/>',
+ clip:'<path d="M20 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4L14.8 7"/>',
+ history:'<path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4M12 8v4l3 2"/>',
+ docs:'<path d="M8 3h7l4 4v11H8z"/><path d="M15 3v4h4M5 7v14h11"/>',
+ newclient:'<circle cx="10" cy="9" r="3.5"/><path d="M3 19c1.2-3 3.8-4.5 7-4.5 1.5 0 2.8.3 4 1M18 14v6M15 17h6"/>'
+};
+function svg(n,s){s=s||16;return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(I[n]||'')+'</svg>';}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+/* ================= Data (from the Mobius screens) ================= */
+var CLIENT={name:'Reverend Motor API Automation',ref:'API/M/08121996/0046',dob:'08/12/1996',address:'2 Fernbank, La Butte, St. Peter Port, Guernsey, GY1 1XA',postcode:'GY1 1XA',email:'aman@email.com',tel:'00888888888',since:'30/12/2017'};
+var STD_EXC=[['Requested Voluntary Excess','£200.00'],['Accidental Damage Fire and Theft','£500.00'],['Voluntary, Accidental Damage','£16.00'],['Compulsory, Accidental Damage','£17.00'],['Windscreen Replacement','£50.00'],['Compulsory, Fire and Theft','£17.00']];
+var POLICIES=[
+ {id:'puco0068',ref:'PUCO0068',status:'Live',tone:'ok',kind:'live',inception:'11/09/2026',premium:'£520.00',start:'11/09/2026 09:27',end:'10/09/2027 23:59',dur:'12 months',ipn:null,stopRenewal:'No',endorse:null,exc:STD_EXC,sortKey:20260911},
+ {id:'puco0052',ref:'PUCO0052',status:'Live',tone:'ok',kind:'live',inception:'24/08/2026',premium:'£625.00',start:'24/08/2026 00:00',end:'23/08/2027 23:59',dur:'12 months',ipn:null,stopRenewal:'No',endorse:null,exc:STD_EXC.slice(0,2),sortKey:20260824},
+ {id:'aad666',ref:'AADD000000000666',status:'Live',tone:'ok',kind:'live',inception:'30/04/2026',premium:'£722.00',start:'30/04/2026 00:09',end:'29/04/2027 23:59',dur:'12 months',ipn:'LGN0658EDRY',stopRenewal:'No',endorse:null,exc:STD_EXC,sortKey:20260430},
+ {id:'y341',ref:'999/006/Y341/TGS',status:'Automatic Decline',tone:'bad',kind:'decline',inception:'25/12/2025',premium:'£0.00',start:'25/12/2025 09:26',end:'24/12/2026 23:59',dur:'12 months',ipn:null,stopRenewal:'No',sortKey:20251225},
+ {id:'zz646',ref:'ZZ0900000000646',status:'Lapsed',tone:'warn',kind:'lapsed',inception:'29/04/2025',premium:'£690.00',start:'29/04/2025 22:22',end:'28/04/2026 23:59',dur:'12 months',ipn:'ZZ09PIN000000000659',stopRenewal:'Yes',endorse:['Agreed Annual Mileage'],exc:[['Requested Voluntary Excess','£200.00'],['Accidental Damage Fire and Theft','£500.00'],['6876','£6,576.00']],sortKey:20250429},
+ {id:'z315',ref:'999/018/Z315/TGS',status:'Incomplete',tone:'neu',kind:'incomplete',inception:'02/03/2022',premium:'£0.00',start:'11/11/2023 17:00',end:'10/11/2024 23:59',dur:'12 months',ipn:null,sortKey:20231111},
+ {id:'zz2966',ref:'ZZ0002966',status:'Prospect',tone:'warn',kind:'prospect',inception:'08/02/2023',premium:'£529.50',start:'08/02/2023 11:01',end:'08/04/2023 11:00',dur:'N/A',hdrDur:'2 Months',ipn:null,endorse:null,exc:STD_EXC.slice(0,2),sortKey:20230208}
+];
+POLICIES.sort(function(a,b){return b.sortKey-a.sortKey;});
+var PBY={};POLICIES.forEach(function(p){PBY[p.id]=p;});
+function hl(s){return '<mark class="chg">'+s+'</mark>';}
+function statusTxt(p){return p.status==='Live'?hl('Live'):esc(p.status);}
+function pill(p){return '<span class="pill t-'+p.tone+'">'+statusTxt(p)+'</span>';}
+
+/* ================= Menu definitions per record type ================= */
+/* Navigation = pages. Actions = do something (blade, confirm or start a flow). */
+var T='transactions',C='corr',M='more';
+var GROUPS={
+ policy:function(p){var ch=[];if(p.kind!=='incomplete')ch.push({id:'details',label:hl('Policy details')});if(p.kind!=='decline')ch.push({id:'claims',label:'Claims'});return ch.length?{group:'Policy',icon:'doc',children:ch}:null;},
+ quote:function(p){return (p.kind==='prospect'||p.kind==='decline')?{group:'Quote',icon:'calc',children:[{id:'quote',label:'Quote summary'}]}:null;},
+ transactions:function(p){return p.kind==='decline'?null:{group:'Transactions',icon:'coins',children:[{id:'tx',label:hl('Account summary')},{id:'plan',label:'Payment plan'},{id:'collections',label:'Collections'},{id:'dd',label:'Direct Debit details'},{id:'cards',label:'Credit cards'},{id:'txdocs',label:hl('Transaction documents')}]};},
+ corr:function(){return {group:'Correspondence',icon:'mail',children:[{id:'diary',label:'Diary'},{id:'docs',label:'Documents'},{id:'notes',label:'Notes'},{id:'checklist',label:'Checklist'},{id:'attachments',label:'Attachments'},{id:'complaints',label:'Complaints'}]};},
+ more:function(){return {group:'More details',icon:'info',children:[{id:'agent',label:'Agent / product details'},{id:'history',label:'History'},{id:'activity',label:'Activity'}]};}
+};
+function policyNav(p){
+ return [{id:'summary',label:hl('Policy overview'),icon:'home'},GROUPS.quote(p),GROUPS.policy(p),GROUPS.transactions(p),GROUPS.corr(p),GROUPS.more(p)].filter(Boolean);
+}
+var A={
+ amend:{label:hl('Amend policy'),icon:'edit',kind:'flow',to:'amend'},
+ amendQuote:{label:hl('Amend policy'),icon:'edit',kind:'flow',to:'amendquote'},
+ amendRisk:{label:hl('Amend policy'),icon:'edit',kind:'flow',to:'amendquote'},
+ retrieve:{label:'Retrieve quote',icon:'retrieve',kind:'flow',to:'quote'},
+ mta:{label:'Add MTA',icon:'swap',kind:'blade'},
+ extend:{label:'Policy extension',icon:'clock',kind:'blade'},
+ renew:{label:'Renewal invite',icon:'send',kind:'confirm'},
+ stop:{label:'Stop policy',icon:'pause',kind:'confirm'},
+ reinstate:{label:'Reinstate policy',icon:'replay',kind:'confirm'},
+ fee:{label:'Admin fee',icon:'fee',kind:'blade'},
+ manual:{label:'Manual credit / debit',icon:'pm',kind:'blade'},
+ newquote:{label:'Add new quote',icon:'plus',kind:'flow',to:'newquote'},
+ copy:{label:hl('Copy policy'),icon:'copy',kind:'confirm'},
+ portal:{label:hl('Customer portal settings'),icon:'screen',kind:'blade'},
+ cancel:{label:'Cancel policy',icon:'cancel',kind:'confirm',danger:true}
+};
+function policyActions(p){
+ var g=[];
+ if(p.kind==='live'){
+  g.push({sub:'Policy',ids:['copy']});
+  g.push({sub:'MTA',ids:['mta','extend']});
+  g.push({sub:'Renewal',ids:['renew']});
+  g.push({sub:'Customer portal',ids:['portal']});
+  g.push({sub:null,ids:['stop','cancel']});
+ }else if(p.kind==='lapsed'){
+  g.push({sub:'Policy',ids:['reinstate','copy']});
+  g.push({sub:'Customer portal',ids:['portal']});
+ }else{
+  g.push({sub:'Policy',ids:['copy']});
+  g.push({sub:'Customer portal',ids:['portal']});
+ }
+ return g;
+}
+/* Flows open a page, so they sit in the page heading instead of the menu */
+function policyFlows(p){
+ if(p.kind==='live')return {primary:'amend',secondary:['newquote']};
+ if(p.kind==='prospect'||p.kind==='decline')return {primary:'amendQuote',secondary:['newquote']};
+ if(p.kind==='incomplete')return {primary:'amendRisk',secondary:[]};
+ return {primary:'newquote',secondary:[]};
+}
+var CLIENT_NAV=[
+ {id:'summary',label:hl('Client summary'),icon:'user'},
+ {id:'business',label:'Business details',icon:'brief'},
+ {id:'ctx',label:'Transactions',icon:'coins'},
+ {id:'cactivity',label:'Activity',icon:'pulse'},
+ {id:'ccomplaints',label:'Complaints',icon:'flag'},
+ {id:'checks',label:'Client checks',icon:'shield'}
+];
+var CA={
+ cnewquote:{label:'Add new quote',icon:'plus',kind:'flow',to:'newquote'},
+ cnotes:{label:'Client notes',icon:'note',kind:'blade'},
+ cheader:{label:'Add client header',icon:'edit',kind:'blade'},
+ clink:{label:'Add client link',icon:'link',kind:'blade'},
+ cconn:{label:'Add client connection',icon:'users',kind:'blade'},
+ sanctions:{label:'New sanctions check',icon:'shield',kind:'confirm'},
+ ccomplaint:{label:'Add complaint',icon:'flag',kind:'blade'},
+ cportal:{label:'Customer portal access',icon:'screen',kind:'blade'}
+};
+var CLIENT_ACTIONS=[];
+var CLIENT_NOTES=[{by:'Laurence Abbott',at:'01/10/2026 13:29',text:'[Sample client note]'}];
+var APP_ACTIONS=[{sub:null,ids:['newclient']}];
+var APPA={newclient:{label:'Create new client',icon:'newclient',kind:'flow',to:'newclient'}};
+
+/* ================= Small render helpers ================= */
+function card(title,body,extra,flush){return '<section class="card"><div class="card-h"><h2>'+title+'</h2>'+(extra||'')+'</div><div class="card-b'+(flush?' flush':'')+'">'+body+'</div></section>';}
+function fields(arr,cls){return '<div class="fields'+(cls?' '+cls:'')+'">'+arr.map(function(f){return '<div class="f"><div class="k">'+f[0]+'</div><div class="v">'+(f[1]===''||f[1]==null?'<span class="empty">Not set</span>':f[1])+'</div></div>';}).join('')+'</div>';}
+function table(h,rows,opts){opts=opts||{};return '<div class="tbl-wrap"><table><thead><tr>'+h.map(function(x){return '<th scope="col">'+x+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(r,i){var href=opts.hrefs&&opts.hrefs[i];return '<tr'+(href?' class="click" data-href="'+href+'"':'')+'>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';}
+function sideList(arr){return '<div class="side-list">'+arr.map(function(r){return '<div class="row"><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>';}).join('')+'</div>';}
+function lb(t,blade,arg){return '<button type="button" class="linkbtn" data-blade="'+blade+'"'+(arg!=null?' data-arg="'+esc(arg)+'"':'')+'>'+t+'</button>';}
+function btn(t,attrs,cls){return '<button type="button" class="btn sm '+(cls||'')+'" '+(attrs||'')+'>'+t+'</button>';}
+function strip(t){return '<div class="note-strip">'+svg('info',16)+'<div>'+t+'</div></div>';}
+function emptyP(t){return '<p class="empty" style="margin:0">'+t+'</p>';}
+function seg(name,opts,on){return '<div class="seg" role="group">'+opts.map(function(o,i){return '<button type="button" data-seg="'+name+'" data-val="'+i+'" aria-pressed="'+(i===(on||0))+'">'+o+'</button>';}).join('')+'</div>';}
+function panels(name,arr){return arr.map(function(h,i){return '<div data-panel="'+name+'" data-val="'+i+'"'+(i?' hidden':'')+'>'+h+'</div>';}).join('');}
+function selF(id,label,opts,dis){return '<div><label for="'+id+'">'+label+'</label><select id="'+id+'"'+(dis?' disabled':'')+'>'+opts.map(function(o){return '<option>'+esc(o)+'</option>';}).join('')+'</select></div>';}
+function inF(id,label,v,t,ro){return '<div><label for="'+id+'">'+label+'</label><input id="'+id+'" type="'+(t||'text')+'" value="'+esc(v||'')+'"'+(ro?' readonly':'')+'></div>';}
+function taF(id,label,rows){return '<div><label for="'+id+'">'+label+'</label><textarea id="'+id+'" rows="'+(rows||3)+'"></textarea></div>';}
+function yn(name,label,val){return '<div><span class="lab">'+label+'</span><div class="radios"><label class="chk"><input type="radio" name="'+name+'"'+(val==='Yes'?' checked':'')+'> Yes</label><label class="chk"><input type="radio" name="'+name+'"'+(val==='No'?' checked':'')+'> No</label></div></div>';}
+
+/* ================= State + routing ================= */
+var S={open:{},polShown:5,switchOpen:false,step:0,lastFlowFrom:null};
+function parse(){
+ var h=location.hash.replace(/^#/,'')||'search',parts=h.split('/');
+ if(parts[0]==='c')return {scope:'client',page:parts[1]||'summary'};
+ if(parts[0]==='p'&&PBY[parts[1]])return {scope:'policy',p:PBY[parts[1]],page:parts[2]||'summary'};
+ if(h==='dashboard'||h==='newclient')return {scope:'app',page:h};
+ return {scope:'app',page:'search'};
+}
+function href(r,page){if(r.scope==='client')return '#c/'+page;if(r.scope==='policy')return '#p/'+r.p.id+'/'+page;return '#'+page;}
+function allowedPolicyPages(p){
+ var ids=[];policyNav(p).forEach(function(n){if(n.children)n.children.forEach(function(c){ids.push(c.id);});else ids.push(n.id);});
+ var fl=policyFlows(p);[fl.primary].concat(fl.secondary).forEach(function(a){ids.push(A[a].to);});
+ return ids;
+}
+
+/* ================= Sidebar ================= */
+function navItem(id,label,icon,cur,hr){return '<li><a class="item" href="'+hr+'"'+(id===cur?' aria-current="page"':'')+'>'+(icon?svg(icon,18):'')+'<span class="lbl">'+label+'</span></a></li>';}
+function navList(items,cur,r){
+ var html='<ul class="list">';
+ items.forEach(function(n){
+  if(!n.children){html+=navItem(n.id,n.label,n.icon,cur,href(r,n.id));return;}
+  var has=n.children.some(function(c){return c.id===cur;});
+  var key=r.scope+':'+n.group;if(has)S.open[key]=true;
+  html+='<li><button type="button" class="item group-btn'+(has?' has-current':'')+'" aria-expanded="'+(!!S.open[key])+'" data-group="'+key+'">'+svg(n.icon,18)+'<span class="lbl">'+n.group+'</span><span class="chev">'+svg('chev',14)+'</span></button><ul class="sub">';
+  n.children.forEach(function(c){html+=navItem(c.id,c.label,null,cur,href(r,c.id));});
+  html+='</ul></li>';
+ });
+ return html+'</ul>';
+}
+function actionList(groups,defs,scope){
+ var html='';
+ groups.forEach(function(g){
+  if(!g.sub)html+='<div class="rule" style="margin:10px 12px"></div>';
+  else html+='<div class="act-sub">'+g.sub+'</div>';
+  g.ids.forEach(function(id){var a=defs[id];
+   var tail=a.kind==='blade'?svg('panel',15):(a.kind==='flow'?svg('chev',14):'');
+   html+='<button type="button" class="item act'+(a.danger?' danger':'')+'" data-act="'+id+'" data-scope="'+scope+'"'+(a.kind==='blade'?' aria-pressed="false" aria-haspopup="dialog"':'')+(a.kind==='confirm'?' aria-haspopup="dialog"':'')+'><span class="ico">'+svg(a.icon,17)+'</span><span class="lbl">'+a.label+'</span><span class="tail">'+tail+'</span></button>';
+  });
+ });
+ return html;
+}
+
+function policyLinks(curId,inSwitcher){
+ var shown=POLICIES.slice(0,S.polShown),rest=POLICIES.length-shown.length;
+ var html='<ul class="pol-list">'+shown.map(function(p){
+  return '<li><a class="item pol-item" href="#p/'+p.id+'/summary"'+(p.id===curId?' aria-current="page"':'')+'><span class="r1"><span class="mono" style="font-size:13px">'+esc(p.ref)+'</span>'+pill(p)+'</span><span class="r2">Open Market Motor · '+hl('cover start')+' '+p.start.split(' ')[0]+'</span></a></li>';
+ }).join('')+'</ul>';
+ if(rest>0)html+='<button type="button" class="more-btn" data-more="1">'+svg('down',14)+'Load '+Math.min(5,rest)+' more ('+rest+' remaining)</button>';
+ else if(POLICIES.length>5)html+='<button type="button" class="more-btn" data-more="0">Show fewer</button>';
+ return html;
+}
+var closeBtn='<div style="display:flex;justify-content:flex-end;margin:-6px -4px -14px"><button class="icon-btn side-close" data-close-menu aria-label="Close menu">'+svg('cancel',18)+'</button></div>';
+function renderSide(r){
+ var html=closeBtn,foot='';
+ if(r.scope==='app'){
+  html+='<nav aria-label="Main"><div class="sec-label">Go to</div>'+navList([{id:'dashboard',label:'Dashboard',icon:'grid'},{id:'search',label:'Search results',icon:'search'}],r.page,r)+'</nav>';
+  html+='<div class="rule"></div><div role="group" aria-label="Actions"><div class="sec-label">Actions</div>'+actionList(APP_ACTIONS,APPA,'app')+'</div>';
+ }else if(r.scope==='client'){
+  html+='<a class="back-link" href="#search">'+svg('left',15)+'Search results</a>';
+  html+='<div class="ctx-card"><span class="k">Client</span><span class="t">'+esc(CLIENT.name)+'</span><span class="s mono">'+CLIENT.ref+'</span></div>';
+  html+='<nav aria-label="Client sections"><div class="sec-label">Go to</div>'+navList(CLIENT_NAV,r.page,r)+'</nav>';
+  html+='<nav aria-label="Client policies"><div class="sec-label">Policies ('+POLICIES.length+')</div>'+policyLinks(null)+'</nav>';
+ }else{
+  var p=r.p;
+  html+='<a class="back-link" href="#c/summary">'+svg('left',15)+'Client: '+esc(CLIENT.name)+'</a>';
+  html+='<div class="ctx-card"><div class="ctx-row"><span class="k">Policy</span>'+pill(p)+'</div><span class="t mono">'+esc(p.ref)+'</span><span class="s">Open Market Motor · Krypton</span>'+
+   '<button type="button" class="switch-btn" data-switch aria-expanded="'+S.switchOpen+'" aria-controls="polSwitch"><span class="chev">'+svg('chev',13)+'</span>Switch policy ('+POLICIES.length+' for this client)</button>'+
+   '<div id="polSwitch"'+(S.switchOpen?'':' hidden')+'>'+policyLinks(p.id,true)+'</div></div>';
+  html+='<nav aria-label="Policy sections"><div class="sec-label">Go to</div>'+navList(policyNav(p),r.page,r)+'</nav>';
+  html+='<div class="rule"></div><div role="group" aria-label="Policy actions"><div class="sec-label">Actions</div>'+actionList(policyActions(p),A,'policy')+'</div>';
+ }
+ foot='<button type="button" class="item act" data-act="support" data-scope="global" aria-pressed="false"><span class="ico">'+svg('help',17)+'</span><span class="lbl">Client support</span><span class="tail">'+svg('panel',15)+'</span></button>';
+ document.getElementById('sideScroll').innerHTML=html;
+ document.getElementById('sideFoot').innerHTML=foot;
+}
+function renderContext(r){
+ var el=document.getElementById('context');
+ if(r.scope==='app'){el.innerHTML='';return;}
+ var h='<span class="who">'+esc(CLIENT.name)+'</span><span class="kv"><span>Client reference</span><span class="mono">'+CLIENT.ref+'</span></span>';
+ if(r.scope==='policy')h+='<span class="kv"><span>'+hl('Reference')+'</span><span class="mono">'+esc(r.p.ref)+'</span></span><span class="kv"><span>Policy duration</span>'+(r.p.hdrDur||r.p.dur)+'</span>'+'<span class="pill t-'+r.p.tone+'">Status: '+statusTxt(r.p)+'</span>';
+ el.innerHTML=h;
+}
+
+/* ================= Shared content ================= */
+function clientDetailsFields(){return fields([['Name',CLIENT.name],['Date of birth',CLIENT.dob],['Address',CLIENT.address],['Email address',CLIENT.email],['Telephone number',CLIENT.tel],[hl('Client since'),CLIENT.since]]);}
+function policiesTable(){
+ var shown=POLICIES.slice(0,S.polShown),rest=POLICIES.length-shown.length;
+ var t=table([hl('Reference'),hl('Cover start'),hl('Cover end'),'Status',hl('Business line'),'Insurer','Risk info'],shown.map(function(p){return ['<a class="mono" href="#p/'+p.id+'/summary">'+esc(p.ref)+'</a>',p.start.split(' ')[0],p.end.split(' ')[0],pill(p),'Open Market Motor','N/A','Registration: TBA1'];}),{hrefs:shown.map(function(p){return '#p/'+p.id+'/summary';})});
+ var foot='<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line2)"><span class="empty" style="font-size:13px">Showing 1 to '+shown.length+' of '+POLICIES.length+', most recent first</span>'+(rest>0?'<button type="button" class="btn sm" data-more="1">'+svg('down',14)+' Load '+Math.min(5,rest)+' more</button>':(POLICIES.length>5?'<button type="button" class="btn sm" data-more="0">Show fewer</button>':''))+'</div>';
+ return t+foot;
+}
+var FILTERS='<div class="form wide" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:none;margin-bottom:16px">';
+
+/* ================= App scope pages ================= */
+var APP_PAGES={
+ search:function(){
+  return '<div class="stack">'+card('Search results','<div class="form wide" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));max-width:none;align-items:end">'+selF('sb','Brand',['Select','Krypton'])+selF('sl','Line of business',['Select','Open Market Motor'])+selF('ss','Policy status',['Select','Live','Prospect','Incomplete','Lapsed','Automatic Decline'])+'<div class="btns"><button class="btn" type="button">Clear</button><button class="btn primary" type="button">Apply</button></div></div>')+
+  card('1 client found for “motor”',table(['Name','Reference','Address','Postcode'],[['<b>'+esc(CLIENT.name)+'</b>','<span class="mono">'+CLIENT.ref+'</span>','2 Fernbank, La Butte, St. Peter Port, Guernsey',CLIENT.postcode]],{hrefs:['#c/summary']})+
+   '<div style="padding:16px 18px;border-top:1px solid var(--line2)">'+fields([['Email address',CLIENT.email],[hl('Date of birth'),CLIENT.dob],['Policies',POLICIES.length+' linked']])+'<div class="btns" style="margin-top:14px"><a class="btn primary sm" href="#c/summary">Open client</a></div></div>'+
+   '<div style="border-top:1px solid var(--line2)"><div style="padding:14px 18px 6px;font-weight:600">Client policies</div>'+policiesTable()+'</div>','',true)+'</div>';
+ },
+ dashboard:function(){return card('Dashboard',strip('The existing Mobius dashboard sits here. It now lives in the left menu instead of the Dashboard dropdown in the top bar.'));},
+ newclient:function(){return flowNewClient();}
+};
+
+/* ================= Client scope pages ================= */
+var CLIENT_PAGES={
+ summary:function(){
+  return '<div class="grid-main"><div class="stack">'+
+  card('Client header',emptyP('No client header set.'),btn('Add','data-blade="cheader"'))+
+  card('Client details',fields([['Name',CLIENT.name],['Date of birth',CLIENT.dob],['Client reference','<span class="mono">'+CLIENT.ref+'</span>'],['Telephone',CLIENT.tel],['Email',CLIENT.email],['Address',CLIENT.address]]))+
+  card('Client policies',policiesTable(),'<span class="empty" style="font-size:13px">Select a policy to open it</span>',true)+
+  '<div id="linked">'+card('Linked clients',emptyP('There are no linked clients.'),btn('Add client link','data-blade="clink"'))+'</div>'+
+  card('Suggested links',emptyP('There are no suggested clients.'))+
+  card('Connected clients',emptyP('This client doesn’t have any connected clients.'),btn('Add client connection','data-blade="cconn"'))+
+  '</div><div class="stack">'+
+  card('Statistics','<div class="stat-tiles"><div class="tile"><b>3</b><span>'+hl('Live policies')+'</span></div><div class="tile"><b>£1,867.00</b><span>Total active GWP</span></div><div class="tile"><b>£0.00</b><span>Total outstanding balance</span></div></div><p style="margin:12px 0 0;text-align:center"><button class="linkbtn" type="button" data-toast="Statistics for more clients">Show statistics for more clients</button></p>')+
+  card('Additional info','<div class="stat-tiles"><div class="tile"><b>0</b><span>Open claims</span></div><div class="stat-tiles" style="grid-template-columns:1fr 1fr"><div class="tile"><b>0</b><span>Connected clients</span></div><div class="tile"><b>0</b><span>Loyalty years</span></div></div></div>')+
+  card('Open customer portal access','<label class="toggle" style="border:0;padding:0"><span>Client access to Open Customer Portal</span><input type="checkbox" role="switch" data-switch-toast="Customer portal access"></label>')+
+  '</div></div>';
+ },
+ business:function(){return '<div class="stack">'+card('Client policies','<p style="margin:0 0 12px" class="empty">Select a policy to display its business details and business contacts below.</p>'+table([hl('Reference'),'Status',hl('Business line'),hl('Cover start')],POLICIES.map(function(p){return ['<span class="mono">'+esc(p.ref)+'</span>',pill(p),'Open Market Motor',p.start.split(' ')[0]];})))+card('Business details',emptyP('There are no business details.'))+card('Business contacts',emptyP('There are no business contacts.'))+'</div>';},
+ ctx:function(){return '<div class="stack">'+card('Summary',fields([['Account name',CLIENT.name],['Client reference','<span class="mono">'+CLIENT.ref+'</span>'],['Current balance due','£0.00'],['Total outstanding balance','£0.00']])+'<div style="margin-top:18px">'+table(['Statistics','Year to date','Last year'],[['Premium','£0.00','£0.00'],['Earnings','£0.00','£0.00']])+'</div>')+card('Open items',emptyP('There are no open items.'))+card('Settled items',emptyP('There are no settled items.'))+'</div>';},
+ cactivity:function(){return card('Activity','<p class="empty" style="margin:0 0 14px">Activity shows the full audit trail record. Search by date range and filter by multiple criteria. You can preview each activity and save the audit trail as a PDF.</p>'+FILTERS+inF('ad','Start date to end date','01/10/2026 to 01/10/2026')+inF('ao','Operator','')+selF('at','Activity type',['Select'])+inF('ac','Client ref',CLIENT.ref,'text',true)+inF('ap','Policy / quote ref','')+selF('as','Policy status',['Select'])+'</div><div class="btns" style="margin-bottom:16px"><button class="btn primary sm" type="button">Apply filters</button><button class="btn sm" type="button" data-toast="Audit trail saved as PDF">Save as PDF</button></div>'+table(['Date and time','Operator','Activity type','Description','Policy / quote ref','Policy status'],[['01/10/2026 13:29','Laurence Abbott','View Client','View Client','N/A','N/A'],['01/10/2026 13:01','Laurence Abbott','View Client','View Client','N/A','N/A']]));},
+ ccomplaints:function(){return card('Complaints',emptyP('There are no complaints.'),btn('Add complaint','data-blade="ccomplaint"','primary'));},
+ newquote:function(){return flowNewQuote('#c/summary');},
+ checks:function(){return card('Sanctions checks',table(['Status','Matches above threshold','Operator','Date and time'],[['No matches','0','Laurence Abbott','01/10/2026 13:30'],['No matches','0','Laurence Abbott','01/10/2026 12:57']]),btn('New sanctions check','data-confirm="sanctions"','primary'),true);}
+};
+
+/* ================= Policy detail sections (from Policy > View screens) ================= */
+function detailSections(p,blank){
+ function v(x){return blank?'':x;}
+ var startTxt=p?p.start:'',endTxt=p?p.end:'';
+ return [
+  {key:'proposer',title:hl('Policyholder details'),cards:[
+   ['Personal details',[['Client reference',v(CLIENT.ref)],['Private individual or other',v('Private individual')],['Title',v('Reverend')],['Forename',v('Motor')],['Other initials',v('Dd')],['Surname',v('Api Automation')],['Date of birth',v('08/12/1996')],['Gender',v('Female')],['Credit check consent',v('Not asked')]]],
+   ['Contact details',[['Email address',v(CLIENT.email)]],blank?null:table(['Telephone','Type','Extension','Ex directory'],[['00888888888','Fax','2345','No'],['00111222333','Fax','2345','No']])],
+   ['Cover date and time',[[hl('Cover start'),v(startTxt)],[hl('Cover end'),v(endTxt)]]]]},
+  {key:'business',title:hl('Invoicing details'),cards:[
+   ['Invoicing address',[['House name / number',v('2 Fernbank')],['Postcode',v('GY1 1XA')],['Street',v('La Butte')],['Locality',v('St. Peter Port')],['City',v('Guernsey')],['County','']]],
+   ['Additional contacts',[],blank?emptyP('No additional contacts.'):table(['Name','Title'],[['Test Contact','Test Title']])],
+   ['VAT',[['Business VAT registered',v('Yes')],['Reference',v('21021')]]],
+   ['Employer reference number',[['Employer reference number','']]]]},
+  {key:'consent',title:'Consent screen',cards:[
+   ['Data processing consent',[],emptyP('No data processing consent entered.')],
+   ['Marketing consent',[],emptyP('No marketing consent entered.')],
+   ['Consent to contact',[],emptyP('No consent to contact entered.')]]},
+  {key:'driver',title:'Driver details',cards:[
+   ['Driver details',[],blank?emptyP('No drivers added.'):table(['Title','Forename','Surname','Date of birth',hl('Relationship to policyholder')],[['Reverend','Motor','API Automation','08/12/1996',hl('Policyholder')]])]]},
+  {key:'vehicle',title:'Vehicle details',cards:[
+   ['Vehicle details',[['Registration',v('TBA1')],['Make',v('Mercedes')],['Model',v('E220 AMG Sport CDI Auto')],['Chassis number',v('WDD2120022A036530')],['Type',v('AMG Sport CDI')],['CC',v('2143')],['Year of manufacture',v('01/01/2014')],['Fuel',v('Diesel')],['Gearbox',v('Automatic')],['Colour',v('Silver')],['Body type',v('Saloon')],['Doors',v('4')],['Seats',v('5')],['ABI code',v('32120769')]]]]},
+  {key:'cover',title:'Vehicle cover',cards:[
+   ['Cover details',[['Who is to be insured',v('Insured only')],['Cover',v('Comprehensive')],['Voluntary excess',v('200')]]],
+   ['No claims',[['NCD',v('0')],['Reason',''],['Country earned',v('United Kingdom')],['NCD entitlement reason',v('Combination of experience')],['Type',v('No claims')],['Protected NCD',v('No')]]],
+   ['Previous insurance',[['Insurer name',''],['Policy number',''],['Expiry date','']]]]},
+  {key:'contact',title:'Contact and marketing',cards:[
+   ['Contact',[['Preferred contact method',''],['Original contact source',''],['Originator',''],['Stop correspondence',v('No')],['Correspondence to branch',v('No')]]],
+   ['Marketing source',[['Campaign',''],['Source of business',''],['Activity',''],['Reference',''],['Referred by','']]],
+   ['Mailings and email',[['Allow mailings and emails from administrator',v('No')],['Allow mailings and emails from affinity',v('No')],['Allow mailings and emails from third party',v('No')]]]]}
+ ];
+}
+function renderSectionCards(sec,editable){
+ return sec.cards.map(function(c,ci){
+  var body='';
+  if(c[1].length){
+   body+=editable?'<div class="form wide">'+c[1].map(function(f,fi){return inF(sec.key+ci+'_'+fi,f[0],f[1]);}).join('')+'</div>':fields(c[1]);
+  }
+  if(c[2])body+=(c[1].length?'<div style="margin-top:16px">':'<div>')+c[2]+'</div>';
+  return card(c[0],body);
+ }).join('');
+}
+
+/* ================= Policy summary ================= */
+function summaryFor(p){
+ var rq='Please re-quote the policy',decl='This product has referred or declined.';
+ var rows=[['Source','N/A'],['Insurer policy number',p.ipn?lb('<span class="mono">'+p.ipn+'</span>','insurer'):lb('Add manually','insurer')]];
+ rows.push(['Quote details and conditions',p.kind==='incomplete'?rq:(p.kind==='prospect'?'<button class="linkbtn" disabled>See details</button>':lb('See details','conditions'))]);
+ rows.push(['Breakdown',p.kind==='incomplete'?rq:lb('See details','breakdown')]);
+ if(p.kind==='decline')rows.push(['Declined',lb('See details','declined')]);
+ rows.push(['Consecutive years',p.kind==='incomplete'?'0':lb('0','years')]);
+ rows.push(['Manual amendments',p.kind==='incomplete'?rq:lb('See details','amendments')]);
+ if(p.stopRenewal)rows.push(['Stop renewal',p.stopRenewal]);
+ function block(title,list,emptyTxt){
+  if(p.kind==='decline')return card(title,emptyP(decl+' '+title+' are not available to view.'));
+  if(p.kind==='incomplete')return card(title,emptyP(rq));
+  if(!list||!list.length)return card(title,emptyP(emptyTxt));
+  return card(title,sideList(list.map(function(x){return typeof x==='string'?['',lb(x,'endorse',x)]:[esc(x[0]),lb(x[1],'excess',x[0]+'|'+x[1])];})));
+ }
+ var docBadge='';
+ return '<div class="grid-main"><div class="stack">'+
+  card('Policy header',emptyP('No policy header set.'),btn('Edit','data-blade="header"'))+
+  card('Client details',clientDetailsFields())+
+  card('Policy details',fields([[hl('Reference'),'<span class="mono">'+esc(p.ref)+'</span>'],['Business line','Open Market Motor'],['Brand','Krypton'],['Policy status',statusTxt(p)],['Inception date',p.inception],['Premium',p.premium],['Cover start',p.start],['Cover end',p.end],['Duration',p.dur]]))+
+  card('Driver details',table(['Name','Date of birth','Relationship'],[[esc(CLIENT.name),'08/12/1996',hl('Policyholder')]]),'',true)+
+  card('Vehicle details',table(['Vehicle registration','Make','Model','Annual mileage'],[['<span class="mono">TBA1</span>','Mercedes','E220 AMG Sport CDI Auto','15,000']]),'',true)+
+  '</div><div class="stack">'+
+  card('Policy summary',sideList(rows),docBadge)+
+  block('Endorsements',p.endorse,'There are no endorsements applied to this policy.')+
+  block('Excesses',p.exc,'No excesses.')+
+  (p.kind==='decline'?card('Add-ons',emptyP(decl+' Add-ons are not available to view.')):p.kind==='incomplete'?card('Add-ons',emptyP(rq)):card('Add-ons',emptyP('No add-ons for this policy.')))+
+  '</div></div>';
+}
+
+/* ================= Policy scope pages ================= */
+var POLICY_PAGES={
+ summary:summaryFor,
+ details:function(p){
+  var secs=detailSections(p);
+  return '<p class="empty" style="margin:-8px 0 18px">Read only. Use '+A[policyFlows(p).primary].label+' at the top of the page to make changes.</p>'+secs.map(function(s){return '<h2 style="font-size:17px;font-weight:600;margin:26px 0 12px">'+s.title+'</h2><div class="stack">'+renderSectionCards(s,false)+'</div>';}).join('');
+ },
+ claims:function(p){return '<div class="grid-main"><div class="stack">'+card('Select existing claim',strip('There are no existing claims for this policy.'))+'</div><div class="stack">'+card('Loss ratio','<div class="donut"><span>N/A</span></div><p class="empty" style="text-align:center;margin:8px 0 0">No claims</p>')+'</div></div>';},
+ quote:function(p){
+  var dec=p.kind==='decline';
+  var rows=dec?[['Vitruvius Motor','Declined','£0.00','£0.00'],['Alpha Motor','Declined','£0.00','£0.00'],['Mobius Private Car','Declined','£0.00','£0.00']]:
+   [['<b>Vitruvius Motor</b>','£521.20','£0.00','£521.20'],['Alpha Motor','£630.68','£0.00','£630.68'],['Mobius Private Car','£636.16','£0.00','£636.16'],['QA Motor','£727.27','£0.00','£727.27'],['Midas, GB Motor','£171.36','£0.00','£171.36']];
+  return '<div class="grid-main"><div class="stack">'+
+   card('Premium and product',(dec?strip('This product has referred or declined. There is no premium to convert.'):'<div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap"><div><div class="big">£521.20</div><div style="font-weight:500">Vitruvius Motor</div><div class="empty" style="margin-top:6px">Payment plan: Default single payment in full (no admin fees)</div></div><div class="money"><span class="k">Total payable</span><span class="k">1 x payment of</span><span class="k">Deposit</span><span class="k">Excess</span><span class="v">£521.20</span><span class="v">£521.20</span><span class="v">£0.00</span><span class="v">£600.00</span></div></div>')+
+    '<div class="btns" style="margin-top:18px"><button class="btn sm" data-href="#p/'+p.id+'/amendquote" type="button">Amend risk</button><button class="btn sm" type="button" data-blade="editpremium"'+(dec?' disabled':'')+'>Edit premium</button><button class="btn sm" type="button" data-blade="payplan"'+(dec?' disabled':'')+'>Select payment plan</button><span style="flex:1"></span><button class="btn sm primary" type="button" data-confirm="convert"'+(dec?' disabled':'')+'>Convert to policy</button></div>')+
+   card('Quotes',table([hl('Scheme'),'Premium','Deposit','Total payable'],rows)+'<div style="padding:12px 18px;border-top:1px solid var(--line2)"><button class="btn sm" type="button" data-toast="More quotes loaded">Load more quotes</button></div>','',true)+
+   '</div><div class="stack">'+
+   card('Insurer authorisation code',emptyP('There is no authorisation code applied to this quote.'),btn('Add','data-blade="authcode"'))+
+   card('Excesses',dec?emptyP('Not available.'):sideList([['Requested voluntary excess','£250.00'],['Accidental damage fire and theft, compulsory','£500.00'],['Voluntary, accidental damage fire and theft','£16.00']]),dec?'':btn('View / edit','data-blade="excesses"'))+
+   card('Endorsements',emptyP('There are no endorsements applied to this policy.'))+
+   card('Add-ons',emptyP('There are no quoted add-ons for this quote.'))+
+   card('Policy notes',emptyP('There are no notes for this policy.'),btn('View / edit','data-blade="note"'))+
+   '</div></div>';
+ },
+ tx:function(p){
+  var settled=p.id==='puco0068'?table(['Created','Reference','Due','Type','Method','Amount','Settled','Payment ref','Card ending','Expiry'],[['11/09/2026','<span class="mono">OMRMTRI02281471</span>','11/09/2026','PAY','Credit card','−£520.00','11/09/2026','123456','5262','01/05/2031'],['11/09/2026','<span class="mono">OMRMTRI02281472</span>','11/09/2026','NB','Credit card','£520.00','11/09/2026','','','']]):'<div class="card-b">'+emptyP('There is no data to display.')+'</div>';
+  var txBtns=p.kind==='live'?'<div class="btns">'+btn('Admin fee','data-blade="fee"')+btn('Manual credit / debit','data-blade="manual"')+'</div>':'';
+  return '<div class="stack">'+card('Summary',fields([['Account name',CLIENT.name],['Reference','<span class="mono">'+esc(p.ref)+'</span>'],['Payment made by','Policyholder'],['Current balance due','£0.00'],['Total outstanding balance','£0.00'],['Full name','Motor API Automation']])+'<div style="margin-top:18px">'+table(['Statistics','Year to date','Last year'],p.id==='puco0068'?[['Premium','£510.00','£0.00'],['Earnings','£10.00','£0.00']]:[['Premium','£0.00','£0.00'],['Earnings','£0.00','£0.00']])+'</div>',txBtns)+
+  card('Open items','<p class="empty" style="margin:0 0 14px">There is no data to display.</p><div class="btns"><button class="btn sm" type="button" data-toast="Cash allocation opened">Cash</button><button class="btn sm" type="button" data-toast="Match opened">Match</button><button class="btn sm" disabled>View</button></div>')+
+  card('Settled items',settled+'<div style="padding:12px 18px;border-top:1px solid var(--line2)"><button class="btn sm" disabled>View</button></div>','',true)+'</div>';
+ },
+ plan:function(){return '<div class="stack">'+card('Payment plan',fields([['Plan','Default single payment in full (no admin fees)'],['Effective date',''],['Finance agreement ref',''],['Balance on plan','£0.00'],['Amount to add',''],['Revised plan',''],['No. of instalments','1'],['Auto renewal opt out','No'],['Service charge','£0.00']])+'<div class="btns" style="margin-top:16px"><button class="btn sm" disabled>Cancel plan</button><button class="btn sm" disabled>Amend</button></div>')+card('Outstanding transactions on the policy',emptyP('There is no data to display.'))+'</div>';},
+ collections:function(){return card('Collections',strip('This is not a BACS plan, so there are no collections to display. In Mobius today this shows as a pop-up; here it sits in the page.'));},
+ dd:function(){return '<div class="stack">'+card('Direct Debit details',emptyP('There is no data to display.'),btn('Add','data-blade="ddadd"'))+card('Current bank account details',fields([['Sort code','N/A'],['Account number','N/A'],['Holder','N/A'],['Reference','N/A'],['DD stop','']]))+'</div>';},
+ cards:function(){return card('Credit cards',table(['Card number','Card holder','Card expiry','Preferred','CA approved',''],[['<span class="mono">**********5262</span>','Motor API Automation','05/31','Yes','Yes','<button class="btn sm" type="button" data-toast="Made preferred card">Make preferred card</button>']]),'',true);},
+ txdocs:function(){return card(hl('Transaction documents'),strip('In Mobius today the Transactions › Documents link doesn’t work, so there’s no current screen to replicate. This is its place in the menu.'));},
+ diary:function(p){return card('Diary','<div style="margin-bottom:14px">'+seg('diary',['Outstanding','History'])+'</div>'+panels('diary',[table(['Created','Operator','Assigned to','Action type','Due date and time','Last note'],[['11/09/2026','System','System','1st Chaser, Proposal Form Return','11/09/2026 09:28',''],['11/09/2026','System','System','Added Auto Extra','11/09/2026 09:29','']]),emptyP('No completed diary entries.')]),btn('Add diary entry','data-blade="diary"','primary'));},
+ docs:function(){var names=['2nd Nested Doc, Copy.doc','3rd Nested Doc, Copy.doc','AuthTest.doc','CV, New Business Pack (Post).zip','Highway Certificate.doc'];
+  return card('Documents','<div class="form wide" style="grid-template-columns:repeat(auto-fit,minmax(200px,260px));margin-bottom:16px;align-items:end">'+selF('df','Documents for',['Policy','Client'])+'<div><button class="btn" disabled style="width:100%">Complaint selection: All</button></div></div><div style="margin-bottom:12px">'+seg('docs',['Documents','Archive'])+'</div>'+
+  panels('docs',['<div class="tbl-wrap"><table><thead><tr><th scope="col" style="width:40px"><span class="sr">Select</span></th><th scope="col">Document</th></tr></thead><tbody>'+names.map(function(n,i){return '<tr><td><input type="checkbox" aria-label="Select '+esc(n)+'"></td><td><a href="#" onclick="return false">'+esc(n)+'</a></td></tr>';}).join('')+'</tbody></table></div><p style="margin:12px 0 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn sm" type="button" data-toast="Would load the next 5 of 18">Load more</button><span class="empty" style="font-size:13px">Showing 1 to 5 of 18</span></p>',emptyP('No archived documents.')])+
+  '<div class="btns" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line2)"><button class="btn sm" disabled>Edit</button><button class="btn sm" disabled>Download</button><button class="btn sm" disabled>Notify</button><button class="btn sm" disabled>SMS client</button><button class="btn sm" disabled>Email client</button><button class="btn sm" disabled>Print client</button></div>');},
+ notes:function(){return card('Notes','<div style="margin-bottom:14px">'+seg('notes',['Policy','Client'])+'</div><div class="form wide" style="grid-template-columns:repeat(auto-fit,minmax(200px,260px));margin-bottom:16px">'+selF('nt','Note type filter',['Select'])+inF('nc','Created by filter','')+'</div>'+
+  panels('notes',['<div style="border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--thead)"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><b>Document</b><div class="empty" style="font-size:12.5px">11/09/2026 09:28</div></div><button class="btn sm" type="button" data-toast="Pinned to top">Pin to top</button></div><p style="margin:10px 0 0">System manually added note:<br>CV, Quotation Pack (Email) [Email direct from Document]</p></div>',emptyP('No client notes.')]),btn('Add note','data-blade="note"','primary'));},
+ checklist:function(){return '<div class="stack">'+card('Checklist details','<div class="form">'+inF('ce','Excess','')+inF('cd','D.O.C.','')+inF('cs','Security','')+inF('cm','Mileage','')+inF('cr','Renewal','')+'</div><div class="btns" style="margin-top:16px"><button class="btn primary sm" type="button" data-toast="Checklist saved">Save</button></div>')+
+  card('Outstanding items','<p class="empty" style="margin:0 0 12px">The outstanding items are documents that the customer is required to provide.</p><div style="margin-bottom:12px">'+seg('oi',['Current items','Other items'])+'</div>'+emptyP('There is no data to display.')+'<div class="btns" style="margin-top:12px"><button class="btn sm" disabled>Request via portal</button></div>',btn('Add item','data-blade="additem"','primary'))+
+  card('Sale status','<div class="form">'+yn('s1','Opt out of day one inflation increase?','No')+yn('s2','Was the sale advised?','No')+yn('s3','Opt out of automatic renewal?','Yes')+'</div><div class="btns" style="margin-top:18px;justify-content:space-between"><button class="btn sm" type="button">Cancel</button><button class="btn primary sm" type="button" data-toast="Checklist complete">Continue</button></div>')+'</div>';},
+ attachments:function(){return card('Attachments',emptyP('There are no attachments.')+'<div class="btns" style="margin-top:14px"><button class="btn sm" disabled>Download</button><button class="btn sm" disabled>Delete</button></div>',btn('Upload','data-toast="Choose a file to upload"','primary'));},
+ complaints:function(){return card('Complaints',emptyP('There are no complaints.'),btn('Add complaint','data-blade="ccomplaint"','primary'));},
+ agent:function(p){return '<div class="stack">'+card('Current details',fields([['Brand','Krypton'],['Agent','No Agent'],['Reference','<span class="mono">'+esc(p.ref)+'</span>'],[hl('Business line'),'Open Market Motor'],['Agent branch','N/A']]))+card('Introducers',emptyP('There are no introducers or advisors connected to this policy.'))+'</div>';},
+ history:function(p){return card('Policy history','<div style="margin-bottom:16px">'+seg('hist',['Table view','Timeline view'])+'</div>'+
+  panels('hist',[fields([[hl('Policyholder'),CLIENT.name],[hl('Reference'),'<span class="mono">'+esc(p.ref)+'</span>']],'two')+'<div style="margin-top:16px">'+table(['ID','Status','Start date','End date','Policy duration','Record flags','Description','Operator','Created',''],[['1',statusTxt(p),p.start,p.end,hl('12 months'),'Live','','Despina Krstevska',p.inception,'<button class="btn sm" type="button" data-toast="History record loaded">Load</button>']])+'</div>',
+   '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:13px"><span><b>Effective date</b></span><span class="empty">Current live history: 1 · Sort by effective date</span></div><div class="timeline"><div style="width:90px;font-size:13px;padding-top:12px">'+p.inception+'</div><div class="tl-dot"></div><div class="tl-card"><b>1&nbsp; '+statusTxt(p)+'</b><div style="margin-top:4px">Created on '+p.inception+' by Despina Krstevska</div></div></div>'])+
+  '<p class="empty" style="margin:16px 0 0;font-size:12.5px">History legend: Live history · Pending event · History file</p>');},
+ activity:function(p){return card('Activity','<p class="empty" style="margin:0 0 14px">Activity shows the full audit trail record. Search by date range and filter by multiple criteria.</p>'+FILTERS+inF('pd','Start date to end date','01/10/2026 to 01/10/2026')+inF('po','Operator','')+selF('pt','Activity type',['Select'])+inF('pc','Client ref',CLIENT.ref,'text',true)+inF('pp','Policy / quote ref',p.ref,'text',true)+selF('ps','Policy status',[p.status])+'</div><div class="btns" style="margin-bottom:16px"><button class="btn primary sm" type="button">Apply filters</button><button class="btn sm" type="button" data-toast="Audit trail saved as PDF">Save as PDF</button></div>'+table(['Date and time','Operator','Activity type','Description'],[['01/10/2026 15:28','Laurence Abbott','Update Policy','Client Details updated'],['01/10/2026 15:23','Laurence Abbott','View Policy','View Policy'],['01/10/2026 15:11','Laurence Abbott','View Policy','View Policy']]));},
+ amend:function(p){return flowAmend(p);},
+ amendquote:function(p){return flowAmendQuote(p);},
+ newquote:function(p){return flowNewQuote('#p/'+p.id+'/summary');}
+};
+
+/* ================= Flows (processes keep a stepper; navigation does not) ================= */
+function stepper(names,cur){return '<div class="steps" aria-label="Progress">'+names.map(function(n,i){return '<span class="step'+(i<cur?' done':'')+(i===cur?' on':'')+'"'+(i===cur?' aria-current="step"':'')+'>'+(i+1)+'. '+n+'</span>';}).join('')+'</div>';}
+function flowNav(cur,total,cancelHref,finishMsg){
+ return '<div class="btns" style="margin-top:20px;justify-content:space-between"><div class="btns"><a class="btn" href="'+cancelHref+'">Cancel</a>'+(cur>0?'<button class="btn" type="button" data-step="'+(cur-1)+'">Back</button>':'')+'</div>'+(cur<total-1?'<button class="btn primary" type="button" data-step="'+(cur+1)+'">Next</button>':'<button class="btn primary" type="button" data-finish="'+cancelHref+'" data-msg="'+finishMsg+'">Save</button>')+'</div>';
+}
+function flowAmend(p){
+ var names=['Client details','Consent screen','Contact and marketing'],c=Math.min(S.step,2),ret='#p/'+p.id+'/summary',body;
+ if(c===0)body=card('Contact details',table(['Telephone number','Type'],[['00888888888',hl('Fax')],['00111222333',hl('Fax')]])+'<div class="btns" style="margin:12px 0 18px"><button class="btn sm" type="button" data-blade="addtel">Add telephone</button></div><div class="form">'+inF('ae','Email address',CLIENT.email,'email')+'</div>')+card('Stop renewal','<div class="form">'+yn('sr','Stop renewal',p.stopRenewal||'No')+'</div>');
+ else if(c===1)body=renderSectionCards(detailSections(p)[2],false).replace(/<\/p>/g,'</p><div class="btns" style="margin-top:12px"><button class="btn sm" type="button" data-blade="consent">Add</button></div>');
+ else body=renderSectionCards(detailSections(p)[6],true);
+ return stepper(names,c)+'<div class="stack">'+body+'</div>'+flowNav(c,3,ret,'Details updated');
+}
+function flowAmendQuote(p){
+ var secs=detailSections(p),c=Math.min(S.step,secs.length-1),ret='#p/'+p.id+'/summary';
+ return stepper(secs.map(function(s){return s.title;}),c)+'<div class="stack">'+renderSectionCards(secs[c],c!==2&&c!==3)+'</div>'+flowNav(c,secs.length,ret,'Quote re-run');
+}
+function productSelection(){return card('Select a product','<div class="form">'+selF('pb','Brand',['Krypton'])+selF('pl','Business line',['Open Market Motor','Open Market Commercial Vehicle'])+selF('pa','Agent',['No Agent'])+'<div><button class="btn sm" type="button" data-blade="introducer">Add introducer</button></div></div>');}
+function flowNewQuote(ret){return productSelection()+'<div class="btns" style="margin-top:20px;justify-content:space-between"><a class="btn" href="'+ret+'">Cancel</a><button class="btn primary" type="button" data-finish="#p/zz2966/quote" data-msg="New quote created">Next</button></div>';}
+function flowNewClient(){
+ var secs=detailSections(null,true),names=['Product selection'].concat(secs.map(function(s){return s.title;})),c=Math.min(S.step,names.length-1);
+ var body=c===0?productSelection():renderSectionCards(secs[c-1],c-1!==2&&c-1!==3);
+ return stepper(names,c)+'<div class="stack">'+body+'</div>'+flowNav(c,names.length,'#search','Client created and quote run');
+}
+
+/* ================= Titles ================= */
+var TITLES={
+ app:{search:['Search results for “motor”',''],dashboard:['Dashboard',''],newclient:['Create new client','New business']},
+ client:{summary:[hl('Client summary'),'Client'],business:['Business details','Client'],ctx:['Transactions','Client'],cactivity:['Activity','Client'],ccomplaints:['Complaints','Client'],checks:['Client checks','Client'],newquote:['Product selection','New quote']},
+ policy:{summary:[hl('Policy overview'),''],details:[hl('Policy details'),'Policy'],claims:['Claims','Policy'],quote:['Quote summary','Quote'],tx:[hl('Account summary'),'Transactions'],plan:['Payment plan','Transactions'],collections:['Collections','Transactions'],dd:['Direct Debit details','Transactions'],cards:['Credit cards','Transactions'],txdocs:[hl('Transaction documents'),'Transactions'],diary:['Diary','Correspondence'],docs:['Documents','Correspondence'],notes:['Notes','Correspondence'],checklist:['Checklist','Correspondence'],attachments:['Attachments','Correspondence'],complaints:['Complaints','Correspondence'],agent:['Agent / product details','More details'],history:['Policy history','More details'],activity:['Activity','More details'],amend:[hl('Amend policy'),'Policy action'],amendquote:[hl('Amend policy'),'Policy action'],newquote:['Product selection','New quote']}
+};
+
+/* ================= Blades ================= */
+var BLADES={
+ mta:function(){return ['Select MTA','<div class="form">'+selF('m1','Required MTA type',['Please select','Permanent MTA','Temporary MTA'])+'<h3 style="margin:6px 0 0;font-size:15px">MTA effective date</h3>'+inF('m2','Start date','','date')+inF('m3','Start time','','time')+'<div><span class="lab">MTA adjustment type</span>'+['Change of Security Device','Correction (NB)','Correction (MTA)','Change of Occupation','Correction (Renewal)'].map(function(x,i){return '<label class="chk"><input type="checkbox"> '+x+'</label>';}).join('')+'</div>'+taF('m4','MTA description')+'</div>','MTA started'];},
+ extend:function(p){return ['Policy extension','<div class="form">'+selF('e1','Extension duration',['Select','1 month','3 months','6 months'])+'</div><p style="margin:18px 0 12px"><b>Previous extension:</b> No</p>'+table(['','Current policy','Extended policy'],[['Cover start',p.start,'-'],['Cover end',p.end,'-'],['Duration',hl('12 months'),'-'],['Premium',p.premium,'-']]),'Extension calculated','Next'];},
+ fee:function(p){return ['Admin fee','<div class="form">'+selF('f1','Policy number',[p.ref])+inF('f2','Amount (£)','','number')+selF('f3','Fee account',['Select'])+'</div>','Admin fee added'];},
+ manual:function(){return ['Manual credit / debit','<div class="form">'+selF('n1','Type',['Select','Credit','Debit'])+inF('n2','Effective date','','date')+inF('n3','Reason','')+selF('n4','Payment method',['Select'])+'</div><h3 style="font-size:15px;margin:20px 0 10px">Postings</h3>'+table(['','Section','Premium','Taxes','Total'],[['<input type="checkbox" aria-label="Insurer fee">','Insurer Fee','0','0','0'],['<input type="checkbox" aria-label="Admin fee">','Admin Fee','0','0','0']])+'<div class="btns" style="margin:12px 0"><button class="btn sm" type="button">Add</button></div><p style="margin:0"><b>Total:</b> £0.00</p>','Transaction posted'];},
+ portal:function(){return [hl('Customer portal settings'),'<label class="toggle"><span>Allow customer to perform MTA via portal</span><input type="checkbox" role="switch"></label><label class="toggle"><span>Allow customer to perform renewal via portal</span><input type="checkbox" role="switch"></label>','Portal settings saved'];},
+ cportal:function(){return ['Open customer portal access','<label class="toggle"><span>Client access to Open Customer Portal</span><input type="checkbox" role="switch"></label>','Portal access saved'];},
+ support:function(){return ['Client support','<div class="form">'+inF('su','Search help articles','')+'</div><div style="margin-top:16px">'+strip('The existing Client support content sits here. It used to be a button in the blue bar.')+'</div>',null];},
+ header:function(){return ['Policy header','<div class="form">'+taF('h1','Header text',4)+'</div>','Policy header saved'];},
+ cheader:function(){return ['Client header','<div class="form">'+taF('ch','Header text',4)+'</div>','Client header saved'];},
+ insurer:function(p){return ['Insurer policy number (IPN)','<div class="form">'+inF('ip','Enter insurer policy number',p.ipn||'')+'</div>','Insurer policy number saved'];},
+ conditions:function(){return ['Quote details','<div class="form">'+selF('qd','Details',['Select'])+'</div>',null];},
+ breakdown:function(p){return ['Quote breakdown','<div style="margin-bottom:14px">'+seg('bd',['Quote breakdown','MTI details'])+'</div>'+panels('bd',[table(['Description','Percentage','Amount','Total'],[['Premium','0%','£0.00','£0.00'],['Quoted premium','0%','£0.00','£0.00'],['Insurer admin fee','0%','£0.00','£0.00'],['Insurer admin fee IPT','0%','£0.00','£0.00'],['Commission','0%','£0.00','£0.00'],['Gross premium (excl. IPT)','0%','£0.00','£0.00'],['Gross premium (incl. IPT)','0%','£0.00',p.premium],['Admin fee','0%','£0.00','£0.00'],['Live deposit','0%','£0.00','£0.00'],['Gross premium (incl. deposit)','0%','£0.00',p.premium]]),emptyP('No MTI details.')]),'Saved as attachment','Save as attachment'];},
+ years:function(){return ['Consecutive years','<div class="form">'+inF('cy','Consecutive years','0','number')+'</div>','Saved'];},
+ amendments:function(){return ['Manual amendments','<p style="margin-top:0">Last quoted scheme: <b>Ultimate Motor</b></p><p class="empty">The following were applied manually to the previous quote.</p>'+table(['Manual amendment','Amount'],[['Discount','£0.00'],['Discount to RPS/MP','£0.00'],['Annual premium','£0.00'],['Revised annual premium','£0.00'],['RPS adjustment','£0.00']])+'<h3 style="font-size:15px;margin:20px 0 6px">Endorsements</h3>'+emptyP('There are no manually added endorsements.')+'<h3 style="font-size:15px;margin:20px 0 6px">Excesses</h3>'+emptyP('There are no manually added excesses.'),null];},
+ excess:function(p,arg){var a=(arg||'|').split('|');return ['Excess details',sideList([['Amount',a[1]],['Description',esc(a[0])],['Applies to','N/A']]),null];},
+ endorse:function(p,arg){return ['Endorsement',sideList([['Endorsement',esc(arg)],['Applies to','N/A']]),null];},
+ declined:function(){return ['Declined',strip('Decline reasons from the insurer appear here.'),null];},
+ diary:function(p){return [hl('Add diary entry'),'<div class="form">'+inF('d1','Date','01/10/2026','text',true)+inF('d2','Policy no.',p?p.ref:'','text',true)+inF('d3','Due date','','date')+inF('d4','Due time','','time')+selF('d5','Action type',['Select'])+selF('d6','Assigned to',['Select'])+'<label class="chk"><input type="checkbox"> Completed</label>'+inF('d7','Completor','','text',true)+taF('d8','Notes')+taF('d9','Add a note')+'</div>','Diary entry added'];},
+ note:function(){return ['Add note','<div class="form">'+selF('nt2','Note type',['Select'])+taF('nb','Note',5)+'</div>','Note added'];},
+ cnotes:function(){return ['Client notes',(CLIENT_NOTES.length?CLIENT_NOTES.map(function(x){return '<div style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px"><div class="empty" style="font-size:12.5px">'+esc(x.by)+' · '+x.at+'</div><div style="margin-top:4px">'+esc(x.text)+'</div></div>';}).join(''):emptyP('There are no client notes.'))+'<div class="form" style="margin-top:16px">'+taF('cn','Add a note',4)+'</div>','Client note added','Add note'];},
+ cclaims:function(){return ['Client claims',strip('There are no existing claims for this client.')+'<h3 style="font-size:15px;margin:20px 0 4px">Loss ratio</h3><div class="donut"><span>N/A</span></div>',null];},
+ clink:function(){return ['Add client link','<div class="form">'+inF('cl','Search for a client','')+'</div>','Client linked'];},
+ cconn:function(){return ['Add client connection','<div class="form">'+inF('cc','Search for a client','')+selF('ct','Connection type',['Select'])+'</div>','Connection added'];},
+ ccomplaint:function(){return ['Add complaint','<div class="form">'+inF('cp1','Date received','','date')+selF('cp2','Category',['Select'])+taF('cp3','Details',5)+'</div>','Complaint added'];},
+ authcode:function(){return ['Insurer authorisation code','<div class="form">'+inF('ac1','Authorisation code','')+'</div>','Authorisation code added'];},
+ excesses:function(){return ['Excesses',table(['Excess','Amount'],[['Requested voluntary excess','£250.00'],['Accidental damage fire and theft, compulsory','£500.00'],['Voluntary, accidental damage fire and theft','£16.00']]),'Excesses saved'];},
+ editpremium:function(){return ['Edit premium','<div class="form">'+selF('ep1','Adjustment',['Edit commission','Discount'])+inF('ep2','Amount (£)','','number')+'</div>','Premium updated'];},
+ payplan:function(){return ['Select payment plan','<div class="form">'+selF('pp1','Payment plan',['Default single payment in full (no admin fees)'])+'</div>','Payment plan selected'];},
+ ddadd:function(){return ['Add Direct Debit','<div class="form">'+inF('dd1','Account holder','')+inF('dd2','Sort code','')+inF('dd3','Account number','')+'</div>','Direct Debit added'];},
+ additem:function(){return ['Add outstanding item','<div class="form">'+selF('oi1','Item',['Select'])+inF('oi2','Due date','','date')+'</div>','Item added'];},
+ addtel:function(){return ['Add telephone number','<div class="form">'+inF('t1','Telephone number','','tel')+selF('t2','Type',['Select','Mobile','Home','Fax'])+inF('t3','Extension','')+yn('t4','Ex directory','No')+'</div>','Telephone number added'];},
+ consent:function(){return ['Add consent','<div class="form">'+selF('co1','Consent type',['Select'])+inF('co2','Date given','','date')+'</div>','Consent added'];},
+ introducer:function(){return ['Add introducer','<div class="form">'+inF('in1','Search introducers','')+'</div>','Introducer added'];}
+};
+var CONFIRMS={
+ renew:['Invite for renewal?','Are you sure you would like to invite this policy for renewal?','OK','Renewal invite sent',false],
+ stop:['Stop this policy?','The policy will be stopped. This can be reversed later.','Stop policy','Policy stopped',false],
+ copy:['Copy this policy?','A new policy will be created with the same client, driver and vehicle details.','Copy policy','Policy copied',false],
+ cancel:['Cancel this policy?','Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.','Cancel policy','Policy cancelled',true],
+ reinstate:['Reinstate this policy?','The lapsed policy will be reinstated with its previous cover dates.','Reinstate','Policy reinstated',false],
+ sanctions:['Run a new sanctions check?','A sanctions check will be run against this client now.','Run check','Sanctions check performed successfully. No match found',false],
+ convert:['Convert to policy?','The selected quote will be converted to a live policy. You will confirm cover, complete the checklist and take payment next.','Convert','Converting to policy',false]
+};
+
+/* ================= Page heading actions ================= */
+function headActions(){
+ if(R.scope==='policy'&&(R.page==='summary'||R.page==='details')){
+  var fl=policyFlows(R.p),out='<div class="btns" style="align-items:center">';
+  if(R.page==='summary'){
+   var ql=[['docs','Documents','docs',3],['attachments','Attachments','clip',0],['notes','Notes','note',1],['history','History','history',0]];
+   out+='<nav class="quick" aria-label="Quick links">'+ql.map(function(q){return '<a class="icon-ghost" href="#p/'+R.p.id+'/'+q[0]+'" aria-label="'+q[1]+(q[3]?', '+q[3]+' new':'')+'" data-tip="'+q[1]+'">'+svg(q[2],20)+(q[3]?'<span class="badge" aria-hidden="true">'+q[3]+'</span>':'')+'</a>';}).join('')+'</nav><span class="vr" aria-hidden="true"></span>';
+  }
+  if(R.page==='summary')fl.secondary.forEach(function(k){out+='<a class="btn" href="#p/'+R.p.id+'/'+A[k].to+'">'+svg(A[k].icon,16)+A[k].label+'</a>';});
+  out+='<a class="btn primary" href="#p/'+R.p.id+'/'+A[fl.primary].to+'">'+svg(A[fl.primary].icon,16)+A[fl.primary].label+'</a>';
+  return out+'</div>';
+ }
+ if(!(R.scope==='client'&&R.page==='summary'))return '';
+ var n=CLIENT_NOTES.length;
+ return '<div class="btns" style="align-items:center">'+
+  '<button type="button" class="icon-ghost" data-blade="cnotes" aria-label="Client notes'+(n?', '+n+' note'+(n>1?'s':''):', none')+'" data-tip="Client notes">'+svg('note',20)+(n?'<span class="badge" aria-hidden="true">'+n+'</span>':'')+'</button>'+
+  '<button type="button" class="btn" data-blade="cclaims">View claims</button>'+
+  '<a class="btn primary" href="#c/newquote">'+svg('plus',16)+'Add new quote</a></div>';
+}
+/* ================= Render ================= */
+var R=null;
+function render(){
+ R=parse();
+ if(R.scope==='policy'&&allowedPolicyPages(R.p).indexOf(R.page)<0){location.replace('#p/'+R.p.id+'/summary');return;}
+ if(R.scope==='client'&&!CLIENT_PAGES[R.page]){location.replace('#c/summary');return;}
+ renderSide(R);renderContext(R);
+ var t=(TITLES[R.scope]||{})[R.page]||['',''],body;
+ if(R.scope==='app')body=APP_PAGES[R.page]();
+ else if(R.scope==='client')body=CLIENT_PAGES[R.page]();
+ else body=POLICY_PAGES[R.page](R.p);
+ var crumb=R.scope==='policy'?(t[1]?t[1]:'Policy')+' · <span class="mono">'+esc(R.p.ref)+'</span>':(t[1]||'');
+ document.getElementById('page').innerHTML=(crumb?'<div class="crumb">'+crumb+'</div>':'')+'<div class="ph"><h1>'+t[0]+'</h1>'+headActions()+'</div>'+body;
+ document.title='Mobius · '+t[0].replace(/<[^>]+>/g,'').replace(/[“”]/g,'');
+}
+function go(){S.step=0;render();closeMenu();document.getElementById('sideScroll').scrollTop=0;var m=document.getElementById('main');m.scrollTop=0;if(S.scrollTo){var el=document.getElementById(S.scrollTo);S.scrollTo=null;if(el){m.scrollTop=el.getBoundingClientRect().top-m.getBoundingClientRect().top-16;var f=el.querySelector('button');if(f)f.focus({preventScroll:true});}}}
+
+/* ================= Blade / dialog / toast mechanics ================= */
+var bladeEl=document.getElementById('blade'),scrim=document.getElementById('scrim'),bladeKey=null,lastFocus=null;
+function setPressed(){document.querySelectorAll('.act[aria-pressed]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-act')===bladeKey?'true':'false');});}
+function openBlade(k,arg){var f=BLADES[k];if(!f)return;var b=f(R&&R.p,arg);lastFocus=document.activeElement;bladeKey=k;
+ document.getElementById('bladeTitle').innerHTML=b[0];document.getElementById('bladeBody').innerHTML=b[1];
+ var save=document.getElementById('bladeSave');save.style.display=b[2]?'':'none';save.textContent=b[3]||'Save';save.setAttribute('data-msg',b[2]||'');
+ document.getElementById('bladeCancel').textContent=b[2]?'Cancel':'Close';
+ bladeEl.classList.add('on');bladeEl.setAttribute('aria-hidden','false');scrim.classList.add('on');setPressed();closeMenu(true);
+ setTimeout(function(){document.getElementById('bladeClose').focus();},60);}
+function closeBlade(){if(!bladeKey)return;bladeEl.classList.remove('on');bladeEl.setAttribute('aria-hidden','true');if(!menuIsOpen())scrim.classList.remove('on');bladeKey=null;setPressed();if(lastFocus&&lastFocus.focus&&document.body.contains(lastFocus))lastFocus.focus();}
+document.getElementById('bladeClose').onclick=closeBlade;document.getElementById('bladeCancel').onclick=closeBlade;
+document.getElementById('bladeSave').onclick=function(){var m=this.getAttribute('data-msg');if(bladeKey==='cnotes'){var v=(document.getElementById('cn')||{}).value||'';if(!v.trim()){document.getElementById('cn').focus();return;}CLIENT_NOTES.unshift({by:'Laurence Abbott',at:'01/10/2026 15:26',text:v.trim()});}var wasNotes=bladeKey==='cnotes';closeBlade();if(m)toast(m);if(wasNotes)render();};
+var dlg=document.getElementById('dlg'),dlgKey=null;
+function openConfirm(k){var c=CONFIRMS[k];if(!c)return;dlgKey=k;lastFocus=document.activeElement;closeMenu(true);
+ document.getElementById('dlgTitle').textContent=c[0];document.getElementById('dlgText').textContent=c[1];
+ var ok=document.getElementById('dlgOk');ok.textContent=c[2];ok.className='btn '+(c[4]?'destroy':'primary');
+ dlg.classList.add('on');document.getElementById('dlgCancel').focus();}
+function closeConfirm(){dlg.classList.remove('on');dlgKey=null;if(!menuIsOpen()&&!bladeKey)scrim.classList.remove('on');if(lastFocus&&lastFocus.focus&&document.body.contains(lastFocus))lastFocus.focus();}
+document.getElementById('dlgCancel').onclick=closeConfirm;
+document.getElementById('dlgOk').onclick=function(){var m=CONFIRMS[dlgKey][3];closeConfirm();toast(m);};
+var tEl=document.getElementById('toast'),tt;
+function toast(m){tEl.textContent=m;tEl.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){tEl.classList.remove('on');},3000);}
+
+/* ================= Mobile menu ================= */
+var side=document.getElementById('side'),mo=document.getElementById('menuOpen');
+function menuIsOpen(){return side.classList.contains('open');}
+function openMenu(){side.classList.add('open');scrim.classList.add('on');mo.setAttribute('aria-expanded','true');}
+function closeMenu(keep){if(!menuIsOpen())return;side.classList.remove('open');mo.setAttribute('aria-expanded','false');if(!keep&&!bladeKey)scrim.classList.remove('on');}
+mo.onclick=openMenu;
+scrim.onclick=function(){if(bladeKey)closeBlade();closeMenu();};
+
+/* ================= Events ================= */
+document.addEventListener('click',function(e){
+ var t=e.target;
+ if(t.closest('[data-close-menu]')){closeMenu();return;}
+ var g=t.closest('[data-group]');if(g){var k=g.getAttribute('data-group');S.open[k]=g.getAttribute('aria-expanded')!=='true';g.setAttribute('aria-expanded',S.open[k]);return;}
+ var sw=t.closest('[data-switch]');if(sw){S.switchOpen=!S.switchOpen;sw.setAttribute('aria-expanded',S.switchOpen);document.getElementById('polSwitch').hidden=!S.switchOpen;return;}
+ var mr=t.closest('[data-more]');if(mr){S.polShown=mr.getAttribute('data-more')==='1'?Math.min(POLICIES.length,S.polShown+5):5;var y=document.getElementById('sideScroll').scrollTop;render();document.getElementById('sideScroll').scrollTop=y;return;}
+ var a=t.closest('[data-act]');if(a){var id=a.getAttribute('data-act'),sc=a.getAttribute('data-scope');
+  if(id==='support'){bladeKey==='support'?closeBlade():openBlade('support');return;}
+  var def=(sc==='policy'?A:sc==='client'?CA:APPA)[id];if(!def)return;
+  if(def.kind==='blade'){bladeKey===id?closeBlade():openBlade(id);}
+  else if(def.kind==='confirm')openConfirm(id);
+  else if(def.kind==='flow'){location.hash=sc==='policy'?'#p/'+R.p.id+'/'+def.to:(sc==='client'?'#c/newquote':'#'+def.to);}
+  return;}
+ var sg=t.closest('[data-seg]');if(sg){var nm=sg.getAttribute('data-seg'),v=sg.getAttribute('data-val');
+  document.querySelectorAll('[data-seg="'+nm+'"]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-val')===v?'true':'false');});
+  document.querySelectorAll('[data-panel="'+nm+'"]').forEach(function(pn){pn.hidden=pn.getAttribute('data-val')!==v;});return;}
+ var st=t.closest('[data-step]');if(st){S.step=+st.getAttribute('data-step');render();document.getElementById('main').scrollTop=0;return;}
+ var fin=t.closest('[data-finish]');if(fin){toast(fin.getAttribute('data-msg'));location.hash=fin.getAttribute('data-finish').replace(/^#/,'');return;}
+ var bl=t.closest('[data-blade]');if(bl&&!bl.disabled){openBlade(bl.getAttribute('data-blade'),bl.getAttribute('data-arg'));return;}
+ var cf=t.closest('[data-confirm]');if(cf&&!cf.disabled){openConfirm(cf.getAttribute('data-confirm'));return;}
+ var ts=t.closest('[data-toast]');if(ts){toast(ts.getAttribute('data-toast'));return;}
+ var sc=t.closest('[data-scrollto]');if(sc){S.scrollTo=sc.getAttribute('data-scrollto');}
+ if(t.closest('a'))return;
+ var hr=t.closest('[data-href]');if(hr){location.hash=hr.getAttribute('data-href').replace(/^#/,'');}
+});
+document.addEventListener('change',function(ev){var s=ev.target.closest&&ev.target.closest('[data-switch-toast]');if(s)toast(s.getAttribute('data-switch-toast')+(s.checked?' turned on':' turned off'));});
+document.getElementById('chgToggle').addEventListener('change',function(){document.body.classList.toggle('hide-chg',!this.checked);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(dlgKey)closeConfirm();else if(bladeKey)closeBlade();else closeMenu();}});
+window.addEventListener('hashchange',go);
+go();
+})();
+
+</script>
+</body>
+</html>
