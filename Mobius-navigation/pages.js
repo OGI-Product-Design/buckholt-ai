@@ -1040,6 +1040,11 @@
       return out + set(labelled);
     }
 
+    if (R.scope === 'app' && R.page === 'search') {
+      var nc = M.APP_ACTIONS.newclient;
+      return set([btn(nc.label, { variant: 'primary', icon: nc.icon, href: '#' + nc.to })]);
+    }
+
     if (R.scope === 'client' && R.page === 'summary') {
       var n = F.clientNotes.length;
       var notesLabel = 'Client notes' + (n ? ', ' + n + ' note' + (n > 1 ? 's' : '') : ', none');

@@ -168,10 +168,9 @@
     var c = F.client;
 
     if (r.scope === 'app') {
+      /* Navigation only. "Create new client" opens a page, so it is in the
+         Search results heading, not here. */
       html += '<nav aria-labelledby="mob-nav-main">' + sectionLabel('mob-nav-main', 'Go to') + navList(M.APP_NAV, r.page, r) + '</nav>';
-      html += '<section aria-labelledby="mob-actions-label">' + sectionLabel('mob-actions-label', 'Actions') +
-        actionMenu(M.APP_ACTION_GROUPS, M.APP_ACTIONS, 'app', 'mob-actions-label')+
-      '</section>';
     } else if (r.scope === 'client') {
       html += backLink('#search', 'Search results');
       html += '<div class="card mob-context-card"><div class="card-body"><div class="text-block">' +
@@ -201,7 +200,12 @@
     }
 
     $('mob-side').innerHTML = html;
-    $('mob-side-foot').innerHTML = actionMenu([{ sub: null, ids: ['support'] }], M.GLOBAL_ACTIONS, 'global', null);
+
+    /* Client support is about a client, so it only appears once one is open:
+       at client and policy level, not on Search results or the Dashboard. */
+    var foot = $('mob-side-foot');
+    foot.hidden = r.scope === 'app';
+    foot.innerHTML = foot.hidden ? '' : actionMenu([{ sub: null, ids: ['support'] }], M.GLOBAL_ACTIONS, 'global', null);
   }
 
   /* ======================================================= Record context
@@ -512,7 +516,7 @@
     if (act) {
       var id = act.getAttribute('data-action');
       var scope = act.getAttribute('data-scope');
-      var def = (scope === 'policy' ? M.POLICY_ACTIONS : scope === 'app' ? M.APP_ACTIONS : M.GLOBAL_ACTIONS)[id];
+      var def = (scope === 'policy' ? M.POLICY_ACTIONS : M.GLOBAL_ACTIONS)[id];
       if (!def) return;
       if (def.kind === 'panel') {
         if (S.panelKey === id && openBlade()) openBlade().close();
@@ -520,7 +524,7 @@
       } else if (def.kind === 'confirm') {
         openConfirm(id, act);
       } else if (def.kind === 'flow') {
-        location.hash = scope === 'policy' ? '#p/' + R.p.id + '/' + def.to : '#' + def.to;
+        location.hash = '#p/' + R.p.id + '/' + def.to;
       }
       return;
     }

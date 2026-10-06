@@ -68,9 +68,10 @@ prototype the left column *is* the redesigned menu.
 | Client policies, policy switcher | Page navigation links: reference, status Tag, then "Open Market Motor · cover start {date}" in `support-01` |
 | Load more / Show fewer | Button, secondary, small, in a stacked Button set |
 | Actions | Menu (`.menu-body`, `.menu-section-header`, `.menu-item` with its icon directly inside, `.menu-divider`, `.menu-item-danger`), shown in place (see deviation 2) |
-| Client support (menu foot) | Menu item, the same as other panel actions |
+| Client support (menu foot) | Menu item, the same as other panel actions. Client and policy level only |
 
-Each level's menu is rebuilt on every route, so it only ever shows that level's content.
+Each level's menu is rebuilt on every route, so it only ever shows that level's content. The
+app level (Search results, Dashboard, Create new client) has navigation only.
 `navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
 `policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
 the prototype's:
@@ -242,12 +243,21 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Attachments | `fa-paperclip` |
 | Create new client | `fa-user-plus` |
 
-### 10. "Create new client" stays in the app-level menu
+### 10. "Create new client" is in the Search results heading, not the menu
 
-The brief says actions that open a page go in the heading. The prototype's app level (Search
-results / Dashboard) is the one exception: it lists "Create new client" as a menu action with a
-trailing chevron. It is kept as the prototype has it. **Decide** whether it should move to the
-Search results heading.
+The reference prototype listed it as an app-level menu action. It opens a page, so it follows
+the brief's rule and sits in the Search results heading as the primary action (an anchor styled
+as a Button, like the other heading flows). The app-level menu (Search results, Dashboard, Create
+new client) is navigation only: Go to: Dashboard, Search results. Changed 6 October 2026, at
+Laurence's request.
+
+**Client support** is in the menu foot only once a client is open, at client and policy level.
+It is not shown on Search results, the Dashboard or Create new client, because there is no
+client yet.
+
+> Worth a look: Search results now has three primary Buttons (Create new client, the filter's
+> Apply and Open client), all from the prototype. Buckholt normally allows one primary per
+> screen, so Apply and Open client could step down to secondary.
 
 ### 11. Small layout fixes, all scoped to this feature
 
@@ -275,7 +285,7 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **65 behavioural assertions, all passing.** They cover:
+- **73 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
@@ -291,6 +301,8 @@ Awesome), and Typekit was absent.
   - Account summary card actions
   - the wording toggle
   - flow steps
+  - the app level: no menu actions, no Client support, and Create new client in the Search
+    results heading opening the flow
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and
   navigating closes it.

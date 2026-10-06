@@ -9,9 +9,9 @@
    - Navigation is pages. Each level's menu only shows that level's pages.
    - Menu actions only happen in place: a side panel (`panel`) or a
      confirmation (`confirm`).
-   - Actions that open a page (`flow`) sit in the page heading, never in the
-     record menus. (The app level keeps the prototype's one exception,
-     "Create new client"; see PROTOTYPE.md.)
+   - Actions that open a page (`flow`) sit in the page heading, never in a
+     menu. That includes "Create new client", which the reference prototype
+     listed in the app-level menu; it is in the Search results heading.
    - Page and card actions stay on the page next to what they affect.
 
    Labels use the fixtures convention: [[text]] marks a terminology change
@@ -203,10 +203,11 @@
     { id: 'search', label: 'Search results', icon: ICON.search }
   ];
 
+  /* Opens a page, so it sits in the Search results heading. The app-level
+     menu has navigation only. */
   var APP_ACTIONS = { newclient: { label: 'Create new client', icon: ICON.newClient, kind: 'flow', to: 'newclient' } };
-  var APP_ACTION_GROUPS = [{ sub: null, ids: ['newclient'] }];
 
-  /* Present in the menu footer at every level. */
+  /* In the menu footer at client and policy level only: it needs a client. */
   var GLOBAL_ACTIONS = { support: { label: 'Client support', icon: ICON.help, kind: 'panel' } };
 
   /* ----------------------------------------------------------- Confirmations
@@ -255,7 +256,6 @@
     CLIENT_ACTIONS: CLIENT_ACTIONS,
     APP_NAV: APP_NAV,
     APP_ACTIONS: APP_ACTIONS,
-    APP_ACTION_GROUPS: APP_ACTION_GROUPS,
     GLOBAL_ACTIONS: GLOBAL_ACTIONS,
     CONFIRMS: CONFIRMS,
     TITLES: TITLES
