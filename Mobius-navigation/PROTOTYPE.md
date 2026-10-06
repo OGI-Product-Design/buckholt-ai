@@ -255,9 +255,22 @@ Laurence's request.
 It is not shown on Search results, the Dashboard or Create new client, because there is no
 client yet.
 
-> Worth a look: Search results now has three primary Buttons (Create new client, the filter's
-> Apply and Open client), all from the prototype. Buckholt normally allows one primary per
-> screen, so Apply and Open client could step down to secondary.
+### 10a. One primary Button per screen
+
+Button: "A page should normally have one primary call to action." Common actions: primary is
+"normally limited to one per screen context". The prototype often had several, so the extra ones
+are secondary here:
+
+| Screen | Primary | Changed to secondary |
+| --- | --- | --- |
+| Search results | Create new client (heading) | Apply (filters), Open client |
+| Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
+
+Where a page has a heading action it is the primary; otherwise the primary is the page's one
+main card action (for example Add complaint, New sanctions check, Convert to policy). Side panels
+and confirmations are their own screen context, and each keeps one primary: Save or the confirm
+action. An audit across all 120 routes, every flow step, every side panel and the confirmation
+finds no screen with more than one primary.
 
 ### 11. Small layout fixes, all scoped to this feature
 
@@ -301,6 +314,7 @@ Awesome), and Typekit was absent.
   - Account summary card actions
   - the wording toggle
   - flow steps
+  - one primary per screen, side panel and confirmation (separate audit)
   - the app level: no menu actions, no Client support, and Create new client in the Search
     results heading opening the flow
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape

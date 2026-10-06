@@ -88,6 +88,10 @@
 
   /* ---------------------------------------------------------------- Buttons
      Buckholt Button: `.btn` + variant, `.btn-icon` before `.button-label`.
+     One primary per screen (Button rules; Common actions: "normally limited
+     to one per screen context"). A page's primary is its heading action
+     where it has one; otherwise its one main card action. Side panels and
+     confirmations are their own context and keep their own primary.
      `href` makes it an anchor — only for heading actions that open a page. */
   function btn(label, o) {
     o = o || {};
@@ -424,14 +428,14 @@
               select('sl', 'Line of business', ['Select', 'Open Market Motor']),
               select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
             ], 3),
-            set([btn('Apply', { variant: 'primary' }), btn('Clear', { variant: 'ghost' })])
+            set([btn('Apply', { variant: 'secondary' }), btn('Clear', { variant: 'ghost' })])
           ])),
           card('1 client found for “' + F.search.query + '”',
             table(['Name', 'Reference', 'Address', 'Postcode'],
               [[cell('<a href="#c/summary"><strong>' + esc(c.name) + '</strong></a>'), c.ref, c.addressShort, c.postcode]],
               { hrefs: ['#c/summary'], caption: 'Clients found' }) +
             fields([['Email address', c.email], ['[[Date of birth]]', c.dob], ['Policies', F.policies.length + ' linked']]) +
-            set([btn('Open client', { variant: 'primary', size: 'sm', href: '#c/summary' })]) +
+            set([btn('Open client', { variant: 'secondary', size: 'sm', href: '#c/summary' })]) +
             '<div class="text-block"><h3 class="title-01">Client policies</h3></div>' +
             policiesTable())
         ])
@@ -725,12 +729,12 @@
     checklist: function () {
       return [stack([
         card('Checklist details', form([input('ce', 'Excess', ''), input('cd', 'D.O.C.', ''), input('cs', 'Security', ''), input('cm', 'Mileage', ''), input('cr', 'Renewal', '')]) +
-          set([btn('Save', { variant: 'primary', size: 'sm', attrs: ' data-toast="Checklist saved"' })])),
+          set([btn('Save', { variant: 'secondary', size: 'sm', attrs: ' data-toast="Checklist saved"' })])),
         card('Outstanding items',
           empty('The outstanding items are documents that the customer is required to provide.') +
           tabs(['Current items', 'Other items'], [empty('There is no data to display.'), empty('There is no data to display.')]) +
           set([btn('Request via portal', { size: 'sm', disabled: true })]),
-          { actions: [btn('Add item', { variant: 'primary', size: 'sm', attrs: ' data-panel="additem" aria-haspopup="dialog"' })] }),
+          { actions: [btn('Add item', { variant: 'secondary', size: 'sm', attrs: ' data-panel="additem" aria-haspopup="dialog"' })] }),
         card('Sale status', form([
           yesNo('s1', 'Opt out of day one inflation increase?', 'No'),
           yesNo('s2', 'Was the sale advised?', 'No'),
