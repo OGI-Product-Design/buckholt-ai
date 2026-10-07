@@ -45,7 +45,7 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  var S = { polShown: 5, step: 0, panelKey: null, query: null };
+  var S = { polShown: 5, step: 0, railOpen: false, panelKey: null, query: null };
   P.init(S);
 
   var R = null;
@@ -98,24 +98,48 @@
     '</li>';
   }
 
+  /* The rail collapses, as the Buckholt documentation site's sidebar does
+     once a section is open: on every client and policy page the record
+     column is open, so the rail shrinks to a 64px strip of icons. Its
+     expand button opens it over the record column to switch record or
+     load more policies; picking one, Escape or a click elsewhere closes
+     it again. In the drawer (below 1280px) it is always open. */
+  function railCollapsed() { return !narrow.matches && !S.railOpen; }
+
+  /* A rail link: icon, then a two-line label (what it is, with the status
+     Tag on the same line, then the name or reference). Collapsed, the
+     label is the link's accessible name and its Tooltip instead. */
+  function railLink(url, on, iconCls, title, sub, tag, cls) {
+    var name = title + ', ' + sub + (tag ? ', ' + tag.status : '');
+    var tight = railCollapsed();
+    return '<li class="nav-item">' +
+      '<a class="nav-link' + (cls ? ' ' + cls : '') + (on ? ' active' : '') + '" href="' + url + '"' + (on ? ' aria-current="true"' : '') +
+        (tight ? ' aria-label="' + esc(plain(name)) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(plain(name)) + '"' : '') + '>' +
+        icon(iconCls) +
+        (tight ? '' :
+          '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(title) + '</span>' +
+            (tag ? ui.statusTag(tag, true) : '') + '</span>' +
+            '<span class="mob-rail-sub">' + esc(sub) + '</span></span>') +
+      '</a>' +
+    '</li>';
+  }
+
   /* The client's policies in the rail: Page navigation, one link per
-     policy, the icon straight inside the link, then the product and the
-     reference, and the status Tag. The open policy is the current one. */
+     policy. The open policy is the current one. */
   function railPolicies(curId) {
     return '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
-      var on = p.id === curId;
-      return '<li class="nav-item">' +
-        '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-          icon(M.ICON.motor) +
-          /* The Tag shares the product's line, so the reference under it
-             keeps the full width. */
-          '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.product) + '</span>' +
-            ui.statusTag(p, true) + '</span>' +
-            '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
-        '</a>' +
-      '</li>';
+      return railLink(ui.policyHref(p), p.id === curId, M.ICON.motor, F.client.product, p.ref, p);
     }).join('') + '</ul>' +
-    '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
+    (railCollapsed() ? '' : '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>');
+  }
+
+  /* A rail Button: labelled when the rail is open, icon-only with its
+     accessible name and Tooltip when collapsed. */
+  function railButton(label, o) {
+    if (!railCollapsed()) return ui.btn(label, o);
+    var name = plain(label);
+    o = Object.assign({}, o, { attrs: (o.attrs || '') + ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '"' });
+    return ui.btn('', o);
   }
 
   /* Actions: a 48px tool strip beside the record column, like an editing
@@ -174,23 +198,29 @@
     if (app) { $('mob-rail').innerHTML = ''; $('mob-record').innerHTML = ''; $('mob-toolbar').innerHTML = ''; $('mob-toolbar').hidden = true; return; }
 
     var onClient = r.scope === 'client';
+    var tight = railCollapsed();
+    var toggleName = tight ? 'Expand client and policies' : 'Collapse client and policies';
+    sidebar.classList.toggle('mob-rail-collapsed', tight);
+    sidebar.classList.toggle('mob-rail-open', !narrow.matches && S.railOpen);
     $('mob-rail').innerHTML =
+      /* The expand / collapse control: an icon-only ghost Button with its
+         name and Tooltip, as on the documentation site. Wide screens only. */
+      '<div class="mob-rail-head">' + ui.set([ui.btn('', { icon: tight ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
+        attrs: ' data-rail-toggle aria-expanded="' + !tight + '" aria-controls="mob-rail" aria-label="' + toggleName + '"' +
+          ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + toggleName + '"' })]) + '</div>' +
       '<div class="mob-rail-scroll">' +
         '<nav aria-label="Client and policies">' +
           '<ul class="nav flex-column mob-nav">' +
-            '<li class="nav-item"><a class="nav-link mob-rail-client' + (onClient ? ' active' : '') + '" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' +
-              icon(M.ICON.client) +
-              '<span class="mob-rail-text"><span class="mob-rail-title">Client</span><span class="mob-rail-sub">' + esc(c.name) + '</span></span>' +
-            '</a></li>' +
+            railLink('#c/summary', onClient, M.ICON.client, 'Client', c.name, null, 'mob-rail-client') +
           '</ul>' +
-          sectionLabel('mob-rail-policies', 'Policies') +
+          '<h2 class="label-01 mob-side-label' + (tight ? ' visually-hidden' : '') + '" id="mob-rail-policies">Policies</h2>' +
           railPolicies(r.scope === 'policy' ? r.p.id : null) +
         '</nav>' +
-        ui.set([ui.btn(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action') +
+        ui.set([railButton(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action') +
       '</div>' +
       /* Client support opens a side panel: a ghost Button, as the new
          designs draw it (Menu has no dark-theme treatment). */
-      '<div class="mob-rail-foot">' + ui.set([ui.btn(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
+      '<div class="mob-rail-foot">' + ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
         attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]) + '</div>';
 
     var head = onClient
@@ -389,6 +419,7 @@
   var firstRender = true;
   function go() {
     S.step = 0;
+    S.railOpen = false;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -591,6 +622,9 @@
     /* The skip link moves focus without touching the route. */
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
+    if (el.closest('[data-rail-toggle]')) { setRail(!S.railOpen, true); return; }
+    /* A click anywhere outside the open rail closes it. */
+    if (S.railOpen && !el.closest('#mob-rail')) setRail(false, false);
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
     /* Breadcrumb overflow items are Menu buttons (Code & specs); each goes to its page. */
     var goEl = el.closest('[data-go]');
@@ -696,6 +730,21 @@
      change from current Mobius. Off, the wording reads as plain text. */
   $('mob-terms-toggle').addEventListener('change', function () {
     document.body.classList.toggle('mob-hide-terms', !this.checked);
+  });
+
+  /* Opening or closing the rail re-renders it; focus stays on its toggle. */
+  function setRail(open, keepFocus) {
+    if (narrow.matches || S.railOpen === open) return;
+    S.railOpen = open;
+    Shell.disposeTooltips($('mob-rail'));
+    renderSide(R);
+    Shell.initTooltips($('mob-rail'));
+    if (keepFocus) document.querySelector('[data-rail-toggle]').focus();
+  }
+
+  /* Escape closes the open rail, back to its toggle. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && S.railOpen && !dialogOpen()) { setRail(false, true); }
   });
 
   /* Escape closes the drawer. A panel or confirmation open on top of it

@@ -101,7 +101,7 @@
 
 .mob-drawer-head, .mob-drawer-search { display: none; }
 
-.mob-columns { flex: 1 1 auto; min-height: 0; display: flex; }
+.mob-columns { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
 
 /* The rail: Buckholt's dark theme (`data-bs-theme="dark"`, so every
    component inside takes its dark-theme tokens) on the primary expressive
@@ -115,6 +115,29 @@
   flex: 0 0 auto;
   background-color: var(--expressive-rich);
   color: var(--text-primary);
+}
+.mob-rail-head { flex: 0 0 auto; display: flex; justify-content: flex-end; padding: var(--spacer-03) var(--spacer-03) 0; }
+.mob-rail-head .button-set { margin-top: 0; }
+
+/* Wide screens: the rail is a 64px strip of icons beside the record
+   column. Opened, it widens over the record column (which keeps its
+   place) with Buckholt's large shadow, until a record is picked. */
+@media (min-width: 1280px) {
+  .mob-columns { padding-left: 4rem; }
+  .mob-rail { position: absolute; top: 0; bottom: 0; left: 0; z-index: 2; transition: width 0.15s ease-in-out; }
+  .mob-rail-collapsed .mob-rail { width: 4rem; }
+  .mob-rail-open .mob-rail { box-shadow: var(--shadow-xl); }
+
+  .mob-rail-collapsed .mob-rail-head { justify-content: center; padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-02); align-items: stretch; }
+  .mob-rail-collapsed .mob-rail .nav-link { justify-content: center; padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-action,
+  .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; padding: 0; }
+  .mob-rail-collapsed .mob-rail-action .btn { width: auto; }
+  .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; }
+}
+@media (min-width: 1280px) and (prefers-reduced-motion: reduce) {
+  .mob-rail { transition: none; }
 }
 .mob-rail-scroll {
   flex: 1 1 auto;
@@ -422,6 +445,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   /* One scrolling drawer: the columns stack and grow to their content. */
   .mob-columns { flex: 0 0 auto; flex-direction: column; min-height: auto; margin-top: var(--spacer-04); }
   .mob-rail, .mob-record { width: auto; }
+  .mob-rail-head { display: none; }
   .mob-rail-scroll, .mob-record { overflow: visible; }
   .mob-side-empty .mob-columns { display: none; }
 
