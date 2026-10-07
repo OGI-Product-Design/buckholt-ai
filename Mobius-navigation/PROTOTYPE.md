@@ -131,9 +131,9 @@ Laurence asked for the best experience for system-level navigation. The decision
 | --- | --- | --- |
 | System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 1280px they move into the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
-| Search results | `#search/{query}`, only after a search. It filters the sample rows on name, reference or email, and has a no-results state ("No clients found for “{query}”"). The client's name is the link to the client; the separate "Open client" link repeated it and is gone. Create new client stays in the heading | |
-| Search | Text input with its search icon, at the top of the blue rail on every page (Mark, 7 October 2026). Submitting opens the search results. With the rail collapsed it is a Search icon that opens the rail at the field | "What can I search?" and recent searches were removed with the rest of the menu's extras |
-| Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main above the heading: Dashboard › Search results (once a search has been run) › client › policy › page. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2: `li.menu` with its Tooltip, `a.menu-toggle`, a Menu of `button.menu-item`s), and below 768px only the first and last stay out of it |
+| Search results | In the search Modal (below), not a page. They filter the sample rows on name, reference or email, with a no-results state ("No clients found for “{query}”"). The client's name is the link to the client. Create new client sits under the results. An old `#search/{query}` link opens the Modal with that search over the Dashboard | |
+| Search (Jon's suggestion, 7 October 2026) | The Text input at the top of the rail opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) on a click, Enter, Down arrow or the first character typed, which carries over. The page you are on stays behind it. The Modal has its own field; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Running a search shows the results in the Modal; opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). With the rail collapsed, the Search icon opens the Modal directly | The search keeps you where you are, and the results are one Escape away from the page behind |
+| Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main above the heading: Dashboard › client › policy › page. The search is a Modal, not a place, so it is not in the trail. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2), and below 768px only the first and last stay out of it |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
 | A full top bar | Between 1280 and 1680px the "Show wording changes" label is visually hidden (still named), the module links use one step less padding, now that the search has left the bar. Checked at every width from 360 to 1920px | |
 
@@ -444,7 +444,7 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **98 behavioural assertions, all passing** (a fresh set for this round's menu). They cover:
+- **101 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
@@ -477,13 +477,15 @@ Awesome), and Typekit was absent.
   - one primary per screen, side panel and confirmation (separate audit)
   - the app level: no menu actions, no Client support, and Create new client in the Search
     results heading opening the flow
-- **Broking and breadcrumbs (20 assertions)**: opens on the Dashboard with no search results;
-  the two Tabs switch; the filter actions sit at the right edge and the fields are content
-  width; a search opens the results with the right breadcrumb; no Open client link; the record
-  column at client and policy level; the rail in the dark theme; the policy breadcrumb's
-  overflow menu and its navigation; a bare `#search` goes to the Dashboard; no record strip.
-- **Search (5 assertions)**: at 375px the search is in the drawer and runs from there, closing
-  the drawer; widened, it is in the rail and shows the query.
+- **Broking, search and breadcrumbs (26 assertions)**: opens on the Dashboard; the two Tabs
+  switch; the filter actions sit at the right edge and the fields are content width; clicking
+  the rail's field opens the search Modal with recent searches, Down arrow moves into them and
+  one runs, showing results in the Modal while the page stays; the no-results state; clearing
+  the field brings recent searches back, newest first; opening a client closes the Modal; the
+  client and policy columns; the policy breadcrumb without a search crumb; a bare `#search` and a
+  `#search/{query}` link (which opens the Modal over the Dashboard).
+- **Search at 375px (5 assertions)**: the search is in the drawer, runs in the Modal, and opening
+  a result closes the Modal and the drawer; widened, it is in the rail and shows the query.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and
