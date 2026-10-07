@@ -50,7 +50,7 @@
    at once at their full size. The module links take a
    tighter padding, and the review switch keeps its label as its accessible
    name but stops drawing it. */
-@media (min-width: 1280px) and (max-width: 1679.98px) {
+@media (min-width: 1024px) and (max-width: 1679.98px) {
   /* Page navigation's own link padding, one spacing step tighter. */
   .mob-modules { padding-right: var(--spacer-03); }
   .mob-modules .nav { --nav-link-padding-x: var(--spacer-03); }
@@ -59,6 +59,12 @@
     overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
   }
   .mob-terms .form-check-input { margin: 0; }
+}
+/* Between 1024 and 1280px, now the menu stays beside the page rather than
+   in a drawer, the module links take one more step off their padding so the
+   bar still holds everything. */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .mob-modules .nav { --nav-link-padding-x: var(--spacer-02); }
 }
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button
@@ -78,7 +84,7 @@
   grid-template-rows: auto auto 1fr auto;
 }
 .layout.mob-in-broking { --mob-chrome-height: calc(var(--app-header-height) + var(--mob-module-bar-height)); }
-:root { --mob-module-bar-height: 4.5rem; }   /* 72px */
+:root { --mob-module-bar-height: 4rem; }     /* 64px */
 
 .mob-module-bar {
   grid-area: module;
@@ -102,7 +108,7 @@
 /* The back arrow lines up with the icons in the column below: with the
    rail open it already does (both centred 44px in); over the collapsed
    64px strip it moves in to the strip's centre (32px). */
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .layout:has(.mob-rail-collapsed) .mob-module-bar { padding-left: calc(2rem - 1.25rem); }
 }
 /* The client in User meta, in one line: the name, then the reference.
@@ -165,7 +171,7 @@
    panel the policy column has (inset 8px, 8px radius, Card's border)
    rather than sitting bare on the page background (Laurence, 7 October
    2026). Once a policy is open the panel moves to the policy column. */
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .mob-sidebar:not(.mob-has-record):not(.mob-rail-collapsed) .mob-rail {
     margin: var(--spacer-03);
     width: calc(17rem - var(--spacer-03) * 2);
@@ -257,7 +263,7 @@
    column beside it moves over rather than being covered. Each category is
    one icon button that opens the rail there. The record column does not
    collapse. */
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .mob-rail { transition: width 0.15s ease-in-out; }
   /* Not on first load: the rail starts in its state, it does not slide
      into it (removed once the first page has been drawn). */
@@ -269,7 +275,7 @@
   .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; }
   .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; flex-direction: column; }
 }
-@media (min-width: 1280px) and (prefers-reduced-motion: reduce) {
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
   .mob-rail { transition: none; }
 }
 
@@ -543,7 +549,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 
 
 /* -------------------------------------------------------------- Narrow: drawer
-   Below 1280px two menu columns would leave Main too narrow, so the menu
+   Below 1024px two menu columns would leave Main too narrow, so the menu
    leaves the grid and becomes a drawer from the left, opened by the Menu
    button. It also takes the search and the modules from the top bar, and
    stacks the rail over the record column. Above the top bar (1030) and
@@ -558,7 +564,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   backdrop-filter: blur(0.5rem);
 }
 
-@media (max-width: 1279.98px) {
+@media (max-width: 1023.98px) {
   .layout[data-layout=layout-03] { grid-template-areas: "header" "module" "main" "footer"; grid-template-columns: 1fr; }
   /* The drawer always opens: it holds the modules even at app level. */
   .mob-sidebar.mob-side-empty { display: flex; }
