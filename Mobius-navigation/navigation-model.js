@@ -69,6 +69,14 @@
       var ch = [];
       if (p.kind !== 'incomplete') ch.push({ id: 'details', label: '[[Policy details]]' });
       if (p.kind !== 'decline') ch.push({ id: 'claims', label: 'Claims' });
+      /* Amend policy and Add new quote are menu items in current Mobius
+         (Laurence, 7 October 2026). They open pages, so they sit in the
+         Policy group with its other pages. Which ones a status has is
+         policyFlows', the same as the page heading. */
+      var fl = policyFlows(p);
+      [fl.primary].concat(fl.secondary).forEach(function (k) {
+        ch.push({ id: POLICY_ACTIONS[k].to, label: POLICY_ACTIONS[k].label });
+      });
       return ch.length ? { group: 'Policy', icon: ICON.policy, children: ch } : null;
     },
     quote: function (p) {
@@ -111,18 +119,10 @@
   };
 
   function policyNav(p) {
-    /* Amend policy and Add new quote are menu items in current Mobius
-       (Laurence, 7 October 2026), so they sit under Policy overview as well
-       as in the page heading. Which ones a status has is policyFlows'. */
-    var fl = policyFlows(p);
-    var flows = [fl.primary].concat(fl.secondary).map(function (k) {
-      var a = POLICY_ACTIONS[k];
-      return { id: a.to, label: a.label, icon: a.icon };
-    });
     return [
-      { id: 'summary', label: '[[Policy overview]]', icon: ICON.home }].concat(flows, [
+      { id: 'summary', label: '[[Policy overview]]', icon: ICON.home },
       GROUPS.quote(p), GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
-    ]).filter(Boolean);
+    ].filter(Boolean);
   }
 
   /* kind: 'flow' opens a page, 'panel' opens a side panel in place,

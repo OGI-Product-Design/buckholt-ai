@@ -45,10 +45,9 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  /* railOverride / recordOverride: a column opened (true) or collapsed
-     (false) with its toggle on this page, or null. Both reset on every
-     route. */
-  var S = { polShown: 5, step: 0, railOverride: null, recordOverride: null, panelKey: null, query: null };
+  /* railOverride: the rail opened (true) or collapsed (false) with its
+     toggle on this page, or null. Reset on every route. */
+  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null };
   P.init(S);
 
   var R = null;
@@ -118,17 +117,17 @@
        policy pages  the rail collapses to a 64px strip; the policy menu is
                      open (Laurence: on a policy page the client's menu
                      closes)
-     Each column has Mark's collapse button, which is also its open button.
-     A choice made with it lasts until the next page, which sets the
-     columns for itself again. Collapsed, each category is one icon button;
-     pressing it opens its column at that category (Laurence, 7 October
-     2026, in place of floating menus). In the drawer (below 1280px)
+     The rail has Mark's collapse button, which is also its open button.
+     A choice made with it lasts until the next page, which sets the rail
+     for itself again. Collapsed, each category is one icon button;
+     pressing it opens the rail at that category (Laurence, 7 October 2026,
+     in place of floating menus). The record column is always open: it has
+     no collapse button (Laurence). In the drawer (below 1280px)
      everything is open and there are no toggles. */
   function railCollapsed() {
     if (narrow.matches) return false;
     return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
   }
-  function recordCollapsed() { return !narrow.matches && S.recordOverride === false; }
 
   /* A collapsed control is icon-only: its accessible name, and a Tooltip to
      the right (Buckholt requires one for icon-only Buttons). */
@@ -270,20 +269,6 @@
     '</li>';
   }
 
-  /* The record column collapsed: a top-level page stays an icon link; each
-     group is one icon button that opens the column at that group. */
-  function navStrip(items, cur, r) {
-    return '<ul class="nav flex-column mob-nav mob-strip">' + items.map(function (n) {
-      if (!n.children) {
-        var on = n.id === cur;
-        return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="' + href(r, n.id) + '"' + (on ? ' aria-current="page"' : '') + tipAttrs(plain(n.label)) + '>' + icon(n.icon) + '</a></li>';
-      }
-      var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
-      var has = n.children.some(function (c) { return c.id === cur; });
-      return expander('record', '[aria-labelledby="' + gid + '"] a', plain(n.group), '<div class="btn-icon">' + icon(n.icon) + '</div>', has);
-    }).join('') + '</ul>';
-  }
-
   /* The menu:
        rail    search; at client and policy level the client (User meta),
                their policies, Add new quote and Client support
@@ -296,10 +281,8 @@
     var onClient = r.scope === 'client';
     var onPolicy = r.scope === 'policy';
     var tight = railCollapsed();
-    var recTight = !app && recordCollapsed();
     sidebar.classList.toggle('mob-app-level', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
-    sidebar.classList.toggle('mob-record-collapsed', recTight);
 
     $('mob-rail-head').innerHTML = columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
 
@@ -312,7 +295,8 @@
         expander('rail', '#mob-search-input', 'Search', '<div class="btn-icon">' + icon('fa-regular fa-magnifying-glass') + '</div>', false) +
         (app ? '' :
           expander('rail', '.mob-rail-client', 'Client: ' + c.name,
-            '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
+            /* Avatar extra small, so it sits in the strip like the icons. */
+            '<div class="btn-icon"><div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div></div>', onClient) +
           expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
             '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy)) +
       '</ul>';
@@ -340,16 +324,17 @@
        policy's menu. The head names the record: the client's name or the
        policy reference with its status Tag, then the title. */
     var nav = onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p);
-    var label = onClient ? 'Client record' : c.businessLine;
+    /* Client: the reference over the client's name. Policy: the reference
+       and its status over the line of business. */
+    var label = onClient ? c.name : c.businessLine;
+    /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML =
-      '<div class="mob-record-top">' + columnToggle('data-record-toggle aria-controls="mob-record"', recTight, onClient ? 'client record menu' : 'policy menu') + '</div>' +
-      (recTight ? '' :
-        '<div class="text-block mob-record-head">' +
-          '<div class="mob-record-eyebrow"><span class="eyebrow">' + esc(onClient ? c.name : r.p.ref) + '</span>' + (onPolicy ? ui.statusTag(r.p, true) : '') + '</div>' +
-          '<h2 class="title-02" id="mob-record-title">' + t(label) + '</h2>' +
-        '</div>') +
+      '<div class="text-block mob-record-head">' +
+        '<div class="mob-record-eyebrow"><span class="eyebrow">' + esc(onClient ? c.ref : r.p.ref) + '</span>' + (onPolicy ? ui.statusTag(r.p, true) : '') + '</div>' +
+        '<h2 class="title-02" id="mob-record-title">' + t(label) + '</h2>' +
+      '</div>' +
       '<nav aria-label="' + esc(onClient ? 'Client record' : label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
-        (recTight ? navStrip(nav, r.page, r) : navGroups(nav, r.page, r)) +
+        navGroups(nav, r.page, r) +
       '</nav>';
 
     tb.innerHTML = onPolicy ? toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') : '';
@@ -529,7 +514,6 @@
   function go() {
     S.step = 0;
     S.railOverride = null;
-    S.recordOverride = null;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -738,11 +722,10 @@
     if (el.closest('[data-rail-toggle]')) { S.railOverride = railCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
     var ex = el.closest('[data-expand]');
     if (ex) {
-      if (ex.getAttribute('data-expand') === 'rail') S.railOverride = true; else S.recordOverride = true;
+      S.railOverride = true;
       rerenderSide(ex.getAttribute('data-focus'));
       return;
     }
-    if (el.closest('[data-record-toggle]')) { S.recordOverride = recordCollapsed(); rerenderSide('[data-record-toggle]'); return; }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
     /* Breadcrumb overflow items are Menu buttons (Code & specs); each goes to its page. */
     var goEl = el.closest('[data-go]');

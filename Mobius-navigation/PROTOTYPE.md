@@ -67,7 +67,7 @@ search at its top; at app level it holds only the search.
 | Column | Contents | Built with |
 | --- | --- | --- |
 | Rail (320px open), as in Laurence's Figma design | **Search** at the top; the **client as User meta** (initials Avatar, name, reference) in a soft grey panel that links to the client; **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
-| Record column | On client pages, as before: the client's name as an eyebrow, "Client record", and the client's pages in a "Client" group. On policy pages: the reference with its status Tag, the line of business ("Open Market Motor"), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. Its collapse button sits at the top right, as in the Figma design | Text block; Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
+| Record column (always open, no collapse button) | On client pages: the client reference as an eyebrow, the client's name as the title, and the client's pages in a "Client" group. On policy pages: the reference with its status Tag, the line of business ("Open Market Motor"), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. Its collapse button sits at the top right, as in the Figma design | Text block; Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
@@ -76,22 +76,23 @@ columns are open follows where you are:
 | Where | Rail | Record column |
 | --- | --- | --- |
 | Dashboard, search results, other modules | Open (the search) | none |
-| Client pages | Open | Open: the client record |
+| Client pages | Open | Open: the client's pages |
 | Policy pages | **Collapsed** to a 64px strip (the client's menu closes) | Open: the policy's menu |
 
 - *"All sidebars that are considered collapsible display a collapse button that also functions
   as an open button, so the user has control of what they see."* Both columns have one at their
-  top right: an icon-only ghost Button ("Collapse client menu" / "Open client menu", and the same
-  for the record column; `aria-expanded`, Tooltip). A choice made with it lasts until the next
+  top right: an icon-only ghost Button ("Collapse client menu" / "Open client menu";
+  `aria-expanded`, Tooltip). The record column is always open and has no collapse button
+  (Laurence, 7 October 2026). A choice made with it lasts until the next
   page, which sets the columns for itself again. Open, a column is in the flow: the one beside it
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
-  Collapsed rail: Search, the client (their Avatar) and **Policies (one Shield icon button)**,
-  spaced evenly; Add new quote and Client support become icon-only Buttons. Collapsed record
-  column: a top-level page stays an icon link and each group is one icon button. **Pressing a
-  category opens its column at that category** (Laurence, 7 October 2026: the Shield opens the
+  Collapsed rail: Search, the client (their Avatar, extra small, so it sits among the icons) and
+  **Policies (one Shield icon button)**,
+  spaced evenly; Add new quote and Client support become icon-only Buttons. **Pressing a
+  category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
   rail rather than a floating menu): focus moves to the search field, the client, the open
-  policy, or the group's first page. Every collapsed control has its accessible name and a
+  policy. Every collapsed control has its accessible name and a
   Tooltip.
 - Below 1280px both columns live in the drawer, open, with no toggles.
 
@@ -116,10 +117,10 @@ the prototype's:
 
 | Status | Groups | Menu actions | Heading |
 | --- | --- | --- | --- |
-| Live | Policy (details, claims), Transactions, Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
+| Live | Policy (details, claims, Amend policy, Add new quote), Transactions (with Admin fee and Manual credit / debit), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
 | Prospect | Quote, Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
-| Automatic Decline | Quote, Policy (details only), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
-| Incomplete | Policy (claims only), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
+| Automatic Decline | Quote, Policy (details, Amend policy, Add new quote; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
+| Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
 | Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | Add new quote (primary) |
 
 ## System navigation (7 October 2026)
@@ -155,8 +156,8 @@ here.").
   Amend policy, Add new quote, Admin fee and Manual credit / debit are menu items. The reference
   prototype had moved them out (flows to the page heading, Admin fee and Manual credit / debit to
   the Account summary card), so they are back in the policy menu as well: **Amend policy** and
-  **Add new quote** as links under Policy overview (which of them a status has follows the
-  prototype's `policyFlows`, the same as the heading), and **Admin fee** and **Manual credit /
+  **Add new quote** as pages in the **Policy** group, after Policy details and Claims (which of
+  them a status has follows the prototype's `policyFlows`, the same as the heading), and **Admin fee** and **Manual credit /
   debit** at the end of Transactions on Live policies. Those two open side panels, so they are
   Buttons in the navigation (`button.nav-link`, `aria-haspopup="dialog"`, pressed while open);
   they are not pages and are not in the allowed-page list. The heading actions and the Account
