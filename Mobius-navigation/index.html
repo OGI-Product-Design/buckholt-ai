@@ -80,24 +80,13 @@
        BROKING BAR — under the top bar on every Broking page (Dashboard,
        Create new client, client and policy pages), not in the other
        modules. Search is Broking's (clients and policies), so it sits here
-       rather than in the global top bar or in the client's menu. The field
-       opens the search Modal; "/" does too. Create new client is a
-       Broking-wide action, so it sits here as well.
+       rather than in the global top bar or in the client's menu. On the
+       left: a back arrow to the Dashboard and the open client. On the
+       right: the search (an icon Button opening the search Modal; "/" does
+       too) and Create new client, a Broking-wide action.
        ====================================================================== -->
   <div class="mob-module-bar" id="mob-module-bar" role="region" aria-label="Broking" hidden>
-    <div class="mob-module-back" id="mob-module-back"></div>
-    <form class="mob-search" role="search" id="mob-search" autocomplete="off" aria-label="Search Broking">
-      <div class="input">
-        <div class="input-label">
-          <label for="mob-search-input" class="form-label visually-hidden">Search Broking clients and policies</label>
-        </div>
-        <div class="response text-input">
-          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-          <input type="text" class="form-control" id="mob-search-input" placeholder="Search clients and policies" enterkeyhint="search"
-            aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">
-        </div>
-      </div>
-    </form>
+    <div class="mob-module-context" id="mob-module-context"></div>
     <div class="button-set mob-module-actions" id="mob-module-actions"></div>
   </div>
 
@@ -125,7 +114,6 @@
       <!-- The rail: the selected client's menu, written by
            mobius-navigation.js. -->
       <div class="mob-rail" id="mob-rail">
-        <div class="mob-rail-head" id="mob-rail-head"></div>
         <div class="mob-rail-scroll" id="mob-rail-body"></div>
         <div class="mob-rail-foot" id="mob-rail-foot"></div>
       </div>

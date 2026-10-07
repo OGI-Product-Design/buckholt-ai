@@ -115,11 +115,10 @@
     }
   };
 
-  function clientNav() {
-    return [
-      { id: 'summary', label: '[[Client overview]]', icon: ICON.home },
-      { group: 'Client', icon: ICON.client, children: CLIENT_NAV }
-    ];
+  /* The client's pages, flat, in the rail under the client: the overview,
+     then the rest. */
+  function clientPages() {
+    return [{ id: 'summary', label: '[[Client overview]]', icon: ICON.home }].concat(CLIENT_NAV);
   }
 
   function policyNav(p) {
@@ -200,9 +199,8 @@
 
   /* ------------------------------------------------------------ Client level */
 
-  /* Mirrors the policy menu: an overview on its own, then the client's
-     pages in one group: Add new quote first (Laurence, 7 October 2026),
-     then Business details. */
+  /* The client's pages, after Client overview: Add new quote first
+     (Laurence, 7 October 2026), then Business details. */
   var CLIENT_NAV = [
     { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
@@ -287,7 +285,7 @@
     POLICY_ACTIONS: POLICY_ACTIONS,
     QUICK_LINKS: QUICK_LINKS,
     CLIENT_NAV: CLIENT_NAV,
-    clientNav: clientNav,
+    clientPages: clientPages,
     CLIENT_ACTIONS: CLIENT_ACTIONS,
     MODULES: MODULES,
     APP_ACTIONS: APP_ACTIONS,
