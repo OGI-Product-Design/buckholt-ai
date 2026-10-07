@@ -155,7 +155,6 @@
 }
 .mob-record-head { padding: 0 var(--spacer-03) var(--spacer-04); border-bottom: 1px solid var(--ui-border-02); }
 .mob-record-head .title-02 { overflow-wrap: anywhere; }
-.mob-record-actions { padding-top: var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
 
 .mob-side-label {
   margin: 0 0 var(--spacer-03);
@@ -190,37 +189,26 @@
 }
 .mob-subnav .nav-link { --nav-link-height: 2.75rem; }   /* Buckholt's own `.nav-sm` height */
 
-/* Actions: Buckholt's Menu shown in place rather than in a popover. The
-   panel is not floating here, so its own custom properties are bound to
-   "no shadow, no padding, the column's width". The demo-only `.show` and
-   `.position-relative` that Buckholt's documentation uses to show a Menu
-   in a page make it visible. */
-.mob-menu-inline {
-  --menu-shadow: none;
-  --menu-background: transparent;
-  --menu-padding-x: 0;
-  --menu-padding-y: 0;
-  --menu-min-width: 0;
-  --menu-max-width: none;
-  z-index: auto;
+/* The toolbar: a 48px strip beside the record column, as in an editing
+   application. Icon-only ghost Buttons (Button's medium icon-only size) in
+   stacked Button sets, a rule between groups. */
+.mob-toolbar {
+  width: 3rem;
+  flex: 0 0 auto;
+  overflow-y: auto;
+  padding: var(--spacer-04) var(--spacer-02);
+  border-left: 1px solid var(--ui-border-02);
 }
+.mob-toolbar[hidden] { display: none; }
+.mob-toolbar-body { display: flex; flex-direction: column; align-items: center; gap: var(--spacer-03); }
+.mob-toolbar .button-set { margin: 0; }
+.mob-toolbar-rule { width: 1.5rem; border-top: 1px solid var(--ui-border-02); }
 
-.mob-actions .menu-item {
-  display: flex;
-  align-items: center;
-  height: auto;
-  min-height: var(--menu-item-height);
-  white-space: normal;
-  text-align: left;
-}
-.mob-menu-label { flex: 1 1 auto; min-width: 0; }
-.mob-actions .menu-item i.mob-trail { width: auto; margin: 0 0 0 var(--spacer-03); color: var(--text-tertiary); }
-
-/* Pressed while its panel is open: Menu's own active colours, which it
-   otherwise shows only while the pointer is down. */
-.mob-actions .menu-item[aria-pressed="true"] {
-  color: var(--menu-item-label-active);
-  background-color: var(--menu-item-background-active);
+/* Pressed while its panel is open: the ghost Button's own hover colours,
+   which it otherwise shows only under the pointer. */
+.mob-toolbar .btn[aria-pressed="true"] {
+  --button-label: var(--button-label-hover);
+  --button-background: var(--button-background-hover);
 }
 
 
@@ -436,6 +424,14 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-rail, .mob-record { width: auto; }
   .mob-rail-scroll, .mob-record { overflow: visible; }
   .mob-side-empty .mob-columns { display: none; }
+
+  /* The toolbar lies flat in the drawer, above the record's pages. */
+  .mob-toolbar { order: 1; width: auto; overflow: visible; border-left: 0; border-top: 1px solid var(--ui-border-02); padding: var(--spacer-03) var(--spacer-04); }
+  .mob-record { order: 2; }
+  .mob-toolbar-body { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+  .mob-toolbar .button-set-stacked { flex-direction: row; flex-wrap: nowrap; }
+  .mob-toolbar .button-set-stacked > .btn { width: auto; }
+  .mob-toolbar-rule { width: auto; height: 1.5rem; border-top: 0; border-left: 1px solid var(--ui-border-02); }
 
   .mob-terms { display: none; }
   .mob-modules { display: none; }

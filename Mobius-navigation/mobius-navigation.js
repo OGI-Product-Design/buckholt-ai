@@ -18,7 +18,8 @@
      rail     (blue) Client, the client's policies, Add new quote,
               Client support
      record   (white) "Client record" or "{product} policy", its pages in
-              always-open groups, and at policy level the status's Actions
+              always-open groups
+     toolbar  (48px) at policy level, the status's actions as icon Buttons
 
    Menu actions only happen in place. A side panel opens in the shared
    prototype Blade (`prototype/blade.js`) and its menu item stays pressed
@@ -117,32 +118,31 @@
     '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
   }
 
-  /* Actions: Buckholt Menu items shown in place rather than behind a
-     trigger. Section headers name the groups; Stop and Cancel sit below a
-     divider, and only Cancel is the documented danger item. A panel action
-     carries a trailing panel icon and stays pressed while its panel is open. */
-  function actionMenu(groups, defs, scope, labelId) {
-    var items = '';
-    groups.forEach(function (g, gi) {
-      if (g.sub) items += '<li><h6 class="menu-section-header">' + t(g.sub) + '</h6></li>';
-      else if (gi > 0) items += '<li><hr class="menu-divider"></li>';
-      g.ids.forEach(function (key) {
-        var a = defs[key];
-        var trail = a.kind === 'panel' ? icon(M.ICON.panel, 'mob-trail') : (a.kind === 'flow' ? icon(M.ICON.flow, 'mob-trail') : '');
-        items += '<li>' +
-          '<button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button"' +
-            ' data-action="' + key + '" data-scope="' + scope + '"' +
+  /* Actions: a 48px tool strip beside the record column, like an editing
+     application's toolbar. Every action is an icon-only ghost Button with
+     its accessible name and the Tooltip Buckholt requires for icon-only
+     Buttons. Each group (Policy, MTA, Renewal, Customer portal) is a
+     stacked Button set; groups are divided by a rule, Stop and Cancel come
+     last, and Cancel is the danger variant. A panel action stays pressed
+     while its panel is open. One Tab stop: arrow keys move along it. */
+  function toolbar(groups, defs, scope) {
+    var sets = groups.map(function (g) {
+      return '<div class="button-set button-set-stacked" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' +
+        g.ids.map(function (key) {
+          var a = defs[key];
+          var name = plain(a.label);
+          return '<button type="button" class="btn btn-ghost' + (a.danger ? ' btn-danger' : '') + '" tabindex="-1"' +
+            ' data-action="' + key + '" data-scope="' + scope + '" aria-label="' + esc(name) + '"' +
             (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === key) + '" aria-haspopup="dialog"' : '') +
-            (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') + '>' +
-            icon(a.icon) + '<span class="mob-menu-label">' + t(a.label) + '</span>' + trail +
-          '</button>' +
-        '</li>';
-      });
+            (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') +
+            ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
+            '<div class="btn-icon">' + icon(a.icon) + '</div>' +
+          '</button>';
+        }).join('') +
+      '</div>';
     });
-    return '<div class="menu mob-actions">' +
-      '<div class="menu-panel show position-relative mob-menu-inline"' + (labelId ? ' role="group" aria-labelledby="' + labelId + '"' : '') + '>' +
-        '<ul class="menu-body">' + items + '</ul>' +
-      '</div>' +
+    return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="vertical">' +
+      sets.join('<div class="mob-toolbar-rule" role="separator"></div>') +
     '</div>';
   }
 
@@ -164,13 +164,14 @@
 
   /* Two columns at client and policy level, as in the new designs:
        rail    (blue) the client, their policies, Add new quote, Client support
-       record  (white) which record this is, its pages, and its actions
+       record  (white) which record this is, and its pages
+       toolbar (48px) at policy level, the record's actions
      Nothing at app level: the modules and search are in the top bar. */
   function renderSide(r) {
     var c = F.client;
     var app = r.scope === 'app';
     sidebar.classList.toggle('mob-side-empty', app);
-    if (app) { $('mob-rail').innerHTML = ''; $('mob-record').innerHTML = ''; return; }
+    if (app) { $('mob-rail').innerHTML = ''; $('mob-record').innerHTML = ''; $('mob-toolbar').innerHTML = ''; $('mob-toolbar').hidden = true; return; }
 
     var onClient = r.scope === 'client';
     $('mob-rail').innerHTML =
@@ -200,11 +201,14 @@
       '<nav aria-labelledby="mob-record-title" class="mob-record-nav">' +
         navGroups(onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p), r.page, r) +
       '</nav>';
-    if (!onClient) {
-      html += '<section aria-labelledby="mob-actions-label" class="mob-record-actions">' + sectionLabel('mob-actions-label', 'Actions') +
-        actionMenu(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy', 'mob-actions-label') + '</section>';
-    }
     $('mob-record').innerHTML = html;
+
+    var tb = $('mob-toolbar');
+    tb.hidden = onClient;
+    tb.innerHTML = onClient ? '' : toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy');
+    var first = tb.querySelector('[data-action]');
+    if (first) first.tabIndex = 0;
+    orientToolbar();
   }
 
   function searchHref() { return '#search/' + encodeURIComponent(S.query); }
@@ -346,6 +350,16 @@
 
   searchForm.addEventListener('submit', function (e) { e.preventDefault(); runSearch(searchInput.value); });
 
+  /* In the drawer the toolbar lies flat, above the record's pages. */
+  function orientToolbar() {
+    var flat = narrow.matches;
+    var body = document.querySelector('.mob-toolbar-body');
+    if (body) body.setAttribute('aria-orientation', flat ? 'horizontal' : 'vertical');
+    Array.prototype.forEach.call(document.querySelectorAll('.mob-toolbar [data-bs-toggle=tooltip]'), function (b) {
+      b.setAttribute('data-bs-placement', flat ? 'top' : 'right');
+    });
+  }
+
   function placeSearch() {
     if (narrow.matches) $('mob-drawer-search').appendChild(searchForm);
     else searchHome.insertBefore(searchForm, searchNext);
@@ -396,7 +410,7 @@
   var pendingRender = false;
 
   function setPressed() {
-    Array.prototype.forEach.call(document.querySelectorAll('.menu-item[aria-pressed]'), function (b) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-action][aria-pressed]'), function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-action') === S.panelKey ? 'true' : 'false');
     });
   }
@@ -560,7 +574,7 @@
   menuButton.addEventListener('click', openDrawer);
   scrim.addEventListener('click', function () { closeDrawer(true); });
   sidebar.addEventListener('keydown', function (e) { if (drawerOpen()) wrapTab(sidebar, e); });
-  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); placeSearch(); });
+  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); placeSearch(); if (R) render(); });
   placeSearch();
 
   /* =============================================================== Events */
@@ -649,6 +663,23 @@
     if (el.closest('a, button, input, select, textarea, label')) return;
     var row = el.closest('tr[data-href]');
     if (row) location.hash = row.getAttribute('data-href').replace(/^#/, '');
+  });
+
+  /* The toolbar is one Tab stop (roving tabindex): Up / Down (and Left /
+     Right when it lies flat in the drawer), Home and End move along it. */
+  document.addEventListener('keydown', function (e) {
+    var bar = e.target.closest && e.target.closest('[role=toolbar]');
+    if (!bar) return;
+    var items = Array.prototype.slice.call(bar.querySelectorAll('[data-action]'));
+    var i = items.indexOf(e.target);
+    if (i < 0) return;
+    var n = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 }[e.key];
+    if (n == null) return;
+    e.preventDefault();
+    n = (n + items.length) % items.length;
+    items[i].tabIndex = -1;
+    items[n].tabIndex = 0;
+    items[n].focus();
   });
 
   /* Links that act in place are role="button": Space activates them too. */
