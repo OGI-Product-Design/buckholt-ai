@@ -415,9 +415,10 @@
   }
 
   /* Two columns on wide screens: main content and a narrower side column,
-     each a Panel of Cards. */
+     each a Panel of Cards. They stack when Main itself is narrow (see
+     `.mob-columns-row`). */
   function columns(main, side) {
-    return '<div class="row">' +
+    return '<div class="row mob-columns-row">' +
       '<div class="col-12 col-xl-8"><div class="page-panel">' + main.join('') + '</div></div>' +
       '<div class="col-12 col-xl-4"><div class="page-panel">' + side.join('') + '</div></div>' +
     '</div>';

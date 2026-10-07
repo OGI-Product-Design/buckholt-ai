@@ -201,8 +201,10 @@
   /* ------------------------------------------------------------ Client level */
 
   /* Mirrors the policy menu: an overview on its own, then the client's
-     pages in one group, Business details first. */
+     pages in one group: Add new quote first (Laurence, 7 October 2026),
+     then Business details. */
   var CLIENT_NAV = [
+    { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
     { id: 'cactivity', label: 'Activity', icon: ICON.activity },
