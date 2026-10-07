@@ -46,8 +46,9 @@
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
   /* railOverride: the rail opened (true) or collapsed (false) with its
-     toggle, or null (open). It lasts across pages: the rail no longer
-     collapses by itself. */
+     toggle on this page, or null. Reset on every route: a policy page
+     collapses the rail again, to leave the page room (Laurence, 7 October
+     2026). */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). */
   var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
@@ -129,7 +130,7 @@
      everything is open and there are no toggles. */
   function railCollapsed() {
     if (narrow.matches) return false;
-    return S.railOverride === false;
+    return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
   }
 
   /* A collapsed control is icon-only: its accessible name, and a Tooltip to
@@ -156,9 +157,11 @@
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-            '<div class="icon-block expressive-dark" aria-hidden="true">' + icon(M.ICON.motor) + '</div>' +
-            /* The Tag shares the title's line and wraps under it when the
-               status is long ("Automatic Decline"). */
+            /* A small Car icon, no Icon block (Laurence, 7 October 2026: the
+               blocks were too heavy), then the line of business over the
+               reference in the policy head's type, the status Tag on the
+               title's line (it wraps under it when long). */
+            icon(M.ICON.motor, 'mob-rail-icon') +
             '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
               ui.statusTag(p, true) + '</span>' +
               '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
@@ -510,17 +513,16 @@
   }
 
   /* The body: recent searches until a search is run, then its results
-     (the Search results page's own content), with Create new client. */
+     (the Search results page's own content). Create new client is in the
+     Broking bar, not here (Laurence, 7 October 2026). */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
     if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
     var prev = S.query;
     S.query = S.modalQuery;
-    var nc = M.APP_ACTIONS.newclient;
     modalBody.innerHTML =
       '<div class="mob-search-results">' +
         P.app.search().join('') +
-        ui.set([ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })]) +
       '</div>';
     S.query = prev;
     Shell.initTooltips(modalBody);
@@ -607,11 +609,12 @@
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
         '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
       '</div>' : '');
-    /* Right: the search (an icon-only ghost Button that opens the search
-       Modal), then Create new client (not while creating one). */
+    /* Right: Create new client (a ghost Button; not while creating one),
+       then the search, an icon-only secondary Button at the far right so
+       it holds its place (Laurence, 7 October 2026). */
     $('mob-module-actions').innerHTML = !on ? '' :
-      ui.btn('', { icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') }) +
-      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to }) : '');
+      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'ghost', icon: nc.icon, href: '#' + nc.to }) : '') +
+      ui.btn('', { variant: 'secondary', icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') });
     Shell.initTooltips(bar);
   }
 
@@ -653,6 +656,7 @@
     /* Opening a client or policy from the search closes it. */
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
+    S.railOverride = null;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);

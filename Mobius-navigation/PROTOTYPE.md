@@ -71,9 +71,10 @@ client menu. It now sits in a bar under the top bar on every Broking page (Dashb
 Create new client, client and policy pages). On the left: a **back arrow** to the Dashboard (an
 icon-only ghost Button, "Back to dashboard" in its accessible name and Tooltip; not on the
 Dashboard itself), then, on client and policy pages, **the client in User meta laid out in one
-line** (small Avatar, name, reference). On the right: **search, an icon-only ghost Button**
-(Magnifying glass, "Search clients and policies", Tooltip) that opens the search Modal, then
-**Create new client** as a secondary Button (not on Create new client itself). There is no search
+line** (small Avatar, name, reference). On the right: **Create new client** as a ghost Button
+(not on Create new client itself), then, at the far right, **search, an icon-only secondary
+Button** (Magnifying glass, "Search clients and policies", Tooltip) that opens the search Modal;
+secondary so the lone icon holds its place (Laurence, 7 October 2026). There is no search
 field any more (Laurence, 7 October 2026): the field only ever opened the Modal, so it was not a
 real search. The Dashboard has the same two Buttons. Below 768px the reference is left out;
 below 576px the Avatar too, and Create new client shows its icon with its label visually hidden.
@@ -95,7 +96,7 @@ stay one click away from any policy.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (304px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **No head**: the client is named in the Broking bar above, so the rail starts with the **client's pages**, flat, with their icons: **Client overview** (Home), **Add new quote**, Business details, Transactions, Activity, Complaints, Client checks. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot, with the rail's **collapse button at the foot's right** (as in Outlook or VS Code). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
+| Rail (304px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border), as the policy column is; once a policy opens, the panel passes to the policy column. **No head**: the client is named in the Broking bar above, so the rail starts with the **client's pages**, flat, with their icons: **Client overview** (Home), **Add new quote**, Business details, Transactions, Activity, Complaints, Client checks. Then **Policies**: one link per policy: a **small Car icon with no Icon block** (Laurence, 7 October 2026: the blocks were too heavy), the line of business (16px, medium) with the status Tag on its line, wrapping under it when long, over the reference (14px, light, secondary), the same type as the policy column's head; "Show 2 more" / "Show fewer"; **Client support** at the foot, with the rail's **collapse button at the foot's right** (as in Outlook or VS Code). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
 | Policy column (policy pages only, no collapse button; 304px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, then the **policy's actions in a row** under it (below), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Policy actions (in the policy's head) | Every action of the policy's status, as icons in one row under the title, like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
@@ -106,14 +107,15 @@ columns are open follows where you are:
 | --- | --- | --- |
 | Dashboard, Create new client, other modules | none (no left menu) | none |
 | Client pages | Open: the client and their pages and policies | none |
-| Policy pages | Open, with the policy marked | Open: the policy's menu |
+| Policy pages | **Collapsed** to a 64px strip, to leave the page room (Laurence, 7 October 2026); opened, the policy is marked | Open: the policy's menu |
 
 - *"All sidebars that are considered collapsible display a collapse button that also functions
   as an open button, so the user has control of what they see."* Both columns have one at their
   top right: an icon-only ghost Button ("Collapse client menu" / "Open client menu";
   `aria-expanded`, Tooltip). The policy column has no collapse button
-  (Laurence, 7 October 2026). The rail no longer collapses by itself: it is collapsed by hand,
-  and that choice lasts from page to page until it is opened again. Open, a column is in the flow: the one beside it
+  (Laurence, 7 October 2026). On a policy page the rail collapses by itself, since there is not
+  enough room for both columns and the page; opened by hand, it stays open until the next page,
+  which sets it again. Open, a column is in the flow: the one beside it
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: **Client pages (one User icon button)** (the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
@@ -494,8 +496,8 @@ Awesome), and Typekit was absent.
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
   - columns by level: on a client page the rail only, with the client's pages in it; on a
-    policy page the rail stays open (304px) with the open policy marked and in view, and the
-    policy column beside it; the rail collapses only by hand, and stays so
+    policy page the rail auto-collapsed (64px) beside the policy column; opened (304px), the open
+    policy is marked and in view; the next policy page collapses it again
   - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
     button with a Tooltip that opens the rail (320px) with focus on the open policy; no search in
     the rail (it is in the Broking bar), and "/" opening the search Modal
