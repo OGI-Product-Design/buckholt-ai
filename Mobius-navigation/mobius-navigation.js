@@ -275,7 +275,14 @@
     sidebar.classList.toggle('mob-app-level', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    $('mob-rail-head').innerHTML = columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
+    /* Back to the Broking dashboard: a standalone Link with the Arrow-left
+       icon on the left, the collapse button on the right. Not on the
+       Dashboard itself, and not when the rail is collapsed. */
+    var onDashboard = app && r.page === 'dashboard';
+    $('mob-rail-head').innerHTML =
+      (tight || onDashboard ? '' :
+        '<a class="link-standalone mob-rail-back" href="#dashboard"><span class="icon">' + icon('fa-regular fa-arrow-left') + '</span>Back to dashboard</a>') +
+      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
 
     var curPolicy = onPolicy ? r.p.id : null;
     var body = '';
@@ -555,7 +562,15 @@
 
   /* The rail's field opens the Modal on a click, Enter, Down arrow or the
      first character typed, which carries over into the Modal's field. */
-  searchInput.addEventListener('click', function () { S.searchTrigger = searchInput; openSearch(searchInput.value); });
+  /* A pointer press opens the Modal without focusing the field, so the
+     field's focus ring is not left showing behind it, and focus is not put
+     back on it afterwards. Opened from the keyboard, focus returns to the
+     field (with its focus ring) when the Modal closes. */
+  searchInput.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    S.searchTrigger = null;
+    openSearch(searchInput.value);
+  });
   searchInput.addEventListener('keydown', function (e) {
     if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
     e.preventDefault();
