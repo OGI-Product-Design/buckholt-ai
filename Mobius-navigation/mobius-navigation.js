@@ -156,9 +156,11 @@
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-            '<div class="icon-block expressive-dark" aria-hidden="true">' + icon(M.ICON.motor) + '</div>' +
-            /* The Tag shares the title's line and wraps under it when the
-               status is long ("Automatic Decline"). */
+            /* A small Car icon, no Icon block (Laurence, 7 October 2026: the
+               blocks were too heavy), then the line of business over the
+               reference in the policy head's type, the status Tag on the
+               title's line (it wraps under it when long). */
+            icon(M.ICON.motor, 'mob-rail-icon') +
             '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
               ui.statusTag(p, true) + '</span>' +
               '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
@@ -607,11 +609,12 @@
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
         '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
       '</div>' : '');
-    /* Right: the search (an icon-only ghost Button that opens the search
-       Modal), then Create new client (not while creating one). */
+    /* Right: Create new client (a ghost Button; not while creating one),
+       then the search, an icon-only secondary Button at the far right so
+       it holds its place (Laurence, 7 October 2026). */
     $('mob-module-actions').innerHTML = !on ? '' :
-      ui.btn('', { icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') }) +
-      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to }) : '');
+      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'ghost', icon: nc.icon, href: '#' + nc.to }) : '') +
+      ui.btn('', { variant: 'secondary', icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') });
     Shell.initTooltips(bar);
   }
 
