@@ -52,8 +52,14 @@
     /* The signed-in user, as the top bar and the notes show them. */
     user: { name: 'Laurence Abbott', initials: 'LA', environment: 'Test' },
 
-    /* The search the prototype opens on. */
+    /* The search the prototype opens on, and the user's recent searches
+       (most recent first), shown when they click into the search field. A
+       search they run is added to the top of this list for the session. */
     search: { query: 'motor' },
+    recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
+
+    /* The user menu under the avatar, as current Mobius has it. */
+    userMenu: ['Unlock records', 'Clear cache', 'Change password', 'Release notes', 'Cookie policy'],
 
     client: {
       name: 'Reverend Motor API Automation',

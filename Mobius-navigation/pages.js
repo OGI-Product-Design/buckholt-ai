@@ -467,17 +467,37 @@
 
   /* ================================================================== App */
 
+  /* Does the mock data hold anything for this search? Name, reference,
+     email, postcode or address of the client, or any policy reference. */
+  function matches(q) {
+    var n = String(q || '').trim().toLowerCase();
+    if (!n) return false;
+    var c = F.client;
+    return [c.name, c.ref, c.email, c.postcode, c.address].concat(F.policies.map(function (p) { return p.ref; }))
+      .some(function (v) { return String(v).toLowerCase().indexOf(n) >= 0; });
+  }
+
   var app = {
+    /* Broking's landing page: the results of the search run from the menu.
+       Matching is against the mock client and their policies, so swapping in
+       a real search API only replaces matches(). */
     search: function () {
       var c = F.client;
+      var q = S.query;
+      var found = matches(q);
+      var filters = card('Search results', filterBar([
+        select('sb', 'Brand', ['Select', 'Krypton']),
+        select('sl', 'Line of business', ['Select', 'Open Market Motor']),
+        select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
+      ], [btn('Apply', { variant: 'secondary', icon: AI.filter }), btn('Clear', { icon: AI.clear })], 'Filter search results'));
+      if (!found) {
+        return [stack([filters,
+          card('No clients found for “' + q + '”', empty('Check the name, reference or email and search again, or create a new client.'))])];
+      }
       return [
         stack([
-          card('Search results', filterBar([
-            select('sb', 'Brand', ['Select', 'Krypton']),
-            select('sl', 'Line of business', ['Select', 'Open Market Motor']),
-            select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
-          ], [btn('Apply', { variant: 'secondary', icon: AI.filter }), btn('Clear', { icon: AI.clear })], 'Filter search results')),
-          card('1 client found for “' + F.search.query + '”',
+          filters,
+          card('1 client found for “' + q + '”',
             table(['Name', 'Reference', 'Address', 'Postcode'],
               [[cell('<a href="#c/summary"><strong>' + esc(c.name) + '</strong></a>'), c.ref, c.addressShort, c.postcode]],
               { hrefs: ['#c/summary'], caption: 'Clients found' }) +
@@ -488,9 +508,13 @@
         ])
       ];
     },
-    dashboard: function () {
-      return [card('Dashboard', placeholder('The existing Mobius dashboard sits here. It now lives in the left menu instead of the Dashboard dropdown in the top bar.'))];
-    },
+
+    /* The other Mobius modules are outside this prototype. */
+    activity: function () { return [card('Activity', placeholder('The existing Mobius Activity module sits here.'))]; },
+    renewals: function () { return [card('Renewals', placeholder('The existing Mobius Renewals module sits here.'))]; },
+    bordereau: function () { return [card('Bordereau', placeholder('The existing Mobius Bordereau module sits here.'))]; },
+    accounts: function () { return [card('Accounts', placeholder('The existing Mobius Accounts module sits here.'))]; },
+
     newclient: function () { return flowNewClient(); }
   };
 

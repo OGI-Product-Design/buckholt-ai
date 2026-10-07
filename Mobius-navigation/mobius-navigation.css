@@ -39,6 +39,48 @@
 .app-bar-search input::-webkit-search-cancel-button { cursor: pointer; }
 
 
+/* --------------------------------------------------------------- Modules
+   Buckholt Page navigation in the top bar, with icons. Placed by the bar,
+   so it takes the room between the wordmark and the right-hand cells. */
+.mob-modules { flex: 1 1 auto; min-width: 0; margin-right: var(--spacer-05); }
+.mob-modules .nav { flex-wrap: nowrap; }
+.mob-modules .nav-link > i { width: 1.25rem; text-align: center; }
+.mob-drawer-modules { display: none; }
+
+/* Between the drawer step and 1300px the bar cannot hold the modules and
+   the right-hand cells at once. The module links take a tighter padding,
+   and the review switch keeps its label as its accessible name but stops
+   drawing it. */
+@media (min-width: 992px) and (max-width: 1299.98px) {
+  /* Page navigation's own link padding, one spacing step tighter. */
+  .mob-modules { margin-right: var(--spacer-03); }
+  .mob-modules .nav { --nav-link-padding-x: var(--spacer-03); }
+  .mob-terms .form-check-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .mob-terms .form-check-input { margin: 0; }
+}
+@media (min-width: 992px) and (max-width: 1023.98px) {
+  .app-bar .app-bar-logo { margin-right: var(--spacer-03); }
+}
+
+/* The user menu's trigger is the Avatar itself, so the toggle has no Button
+   chrome of its own; focus is drawn round the Avatar. */
+.mob-user-menu { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
+.mob-avatar-toggle { padding: 0; background: none; border: 0; border-radius: 50%; cursor: pointer; }
+.mob-avatar-toggle:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
+.mob-user-menu .menu-panel { z-index: 1035; }
+
+/* --------------------------------------------------------------- Search
+   At the top of the menu column, above every level's content. Recent
+   searches open as a Buckholt Menu panel directly under the field. */
+.mob-search { position: relative; flex: 0 0 auto; padding: var(--spacer-05) var(--spacer-04) 0; }
+.mob-search .input-label { display: none; }
+.mob-recent-menu { position: relative; }
+.mob-recent-menu .menu-panel { top: var(--spacer-02); left: 0; right: 0; --menu-max-width: none; }
+.mob-recent-menu .menu-item { display: flex; align-items: center; height: auto; min-height: var(--menu-item-height); white-space: normal; text-align: left; }
+
 /* -------------------------------------------------------------------- Menu
    The menu column sits in Buckholt's layout-03 `sidebar` area. It stays in
    view under the sticky top bar and scrolls on its own; "Client support"
@@ -116,6 +158,9 @@
    and a long status ("Automatic Decline") cannot sit side by side, so the
    Tag may drop under the reference instead of overflowing the Card. */
 .mob-pol-link .heading { flex-wrap: wrap; row-gap: var(--spacer-02); }
+/* Card body gap bound to the spacing scale, as on the client / policy card,
+   so the Cover start Key-value sits close under the Text block. */
+.mob-pol-link { --card-body-gap: var(--spacer-03); }
 /* The menu column is narrow, so the Card's own arrow indicator is left off
    (Laurence's decision, 7 October 2026). The newer local build has an
    undocumented `.hide-indicator` opt-out; the reference build does not, so
@@ -214,10 +259,17 @@
   flex-wrap: wrap;
   gap: var(--spacer-04);
 }
+/* Sets here sit side by side in a flex row, so the runtime's offsets for
+   stacked sets (margin-top, and margin-bottom on a set with a following
+   sibling) would only push them out of line with each other. */
 .mob-heading-actions .button-set,
 .mob-card-head .button-set,
 .mob-split .button-set,
 .mob-table-foot .button-set { margin-top: 0; }
+.mob-heading-actions > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-card-head [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-split [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-table-foot [class$=-set][class|=button][class*=-set][class|=button]:has(~ *) { margin-bottom: 0; }
 
 /* The quick links and the labelled actions are separate Button sets,
    divided by a rule, as in the reference prototype. */
@@ -378,6 +430,8 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-drawer-head .button-set { margin-top: 0; }
 
   .mob-terms { display: none; }
+  .mob-modules { display: none; }
+  .mob-drawer-modules { display: block; padding: var(--spacer-04) var(--spacer-04) 0; }
   .mob-context { padding-inline: var(--spacer-05); }
 }
 

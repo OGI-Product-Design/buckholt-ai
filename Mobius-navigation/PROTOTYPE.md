@@ -65,13 +65,13 @@ prototype the left column *is* the redesigned menu.
 | Client and policy cards at the top of the menu | Card (`.card > .card-body > .text-block`, eyebrow + `title-01`). The policy card carries the status Tag (`.tag-sm`) and the "Switch policy (7 for this client)" ghost Button (`aria-expanded`, `aria-controls`) |
 | Go to: pages | Page navigation (`ul.nav > li.nav-item > a.nav-link`), with the icon directly inside the link, `.active` and `aria-current="page"` on the current page. Stacked with `.flex-column`, as Buckholt's documentation site stacks its own side navigation |
 | Collapsible groups (Policy, Transactions…) | `button.nav-link` with `aria-expanded` / `aria-controls`, plus a nested `ul.nav`. It opens by itself when it holds the current page |
-| Client policies, policy switcher | One clickable Card (`a.card.card-clickable`) per policy, holding Heading attachment's Code & specs example 3 exactly: the reference (`h3.title-01`) in `.heading-content`, the status Tag attached, then a paragraph "Open Market Motor · cover start {date}". Spacing is the Text block's own. The Card's arrow indicator is left off (Laurence, 7 October 2026). The heading row may wrap, so a long status drops under a long reference. The open policy uses `--action-04` with a `--action-01` border |
+| Client policies, policy switcher | One clickable Card (`a.card.card-clickable`) per policy, holding Heading attachment's Code & specs example 3 exactly: the reference (`h3.title-01`) in `.heading-content`, the status Tag attached, then the line of business as a paragraph, and the cover start as a Key-value pair (`.key-value > .key + .value`) under the Text block, separated by the Card body's own gap. Spacing is the Text block's own. The Card's arrow indicator is left off (Laurence, 7 October 2026). The heading row may wrap, so a long status drops under a long reference. The open policy uses `--action-04` with a `--action-01` border |
 | Load more / Show fewer | Standalone Link, left aligned, with a chevron in `.icon` |
 | Actions | Menu (`.menu-body`, `.menu-section-header`, `.menu-item` with its icon directly inside, `.menu-divider`, `.menu-item-danger`), shown in place (see deviation 2) |
 | Client support (menu foot) | Menu item, the same as other panel actions. Client and policy level only |
 
-Each level's menu is rebuilt on every route, so it only ever shows that level's content. The
-app level (Search results, Dashboard, Create new client) has navigation only.
+Each level's menu is rebuilt on every route, so it only ever shows that level's content. At
+app level the menu holds only Search (see "System navigation" below).
 `navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
 `policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
 the prototype's:
@@ -83,6 +83,22 @@ the prototype's:
 | Automatic Decline | Quote, Policy (details only), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
 | Incomplete | Policy (claims only), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
 | Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | Add new quote (primary) |
+
+## System navigation (7 October 2026)
+
+Laurence asked for the best experience for system-level navigation. The decisions:
+
+| Need | Built with | Why |
+| --- | --- | --- |
+| System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 992px they move to the top of the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking and uses the handshake icon (catalogue GAP) |
+| Broking landing page | The search results page (`#search`, `#search/{query}`). It filters the sample rows on name, reference or email, and has a no-results state ("No clients found for “{query}”") | Every journey starts with a search, so the module opens on one. Create new client stays the page's one primary action |
+| Search | Text input with its search icon, at the top of the menu on **every** page, above all navigation. Submitting opens Broking with the results | Search is reachable from inside a client or policy without going back first |
+| Recent searches | Menu (`.menu-panel > ul.menu-body`, a section header and items with the Recent icon) opening under the search box on focus or Down arrow. Arrow keys move through it, Escape closes it and returns focus to the box, picking one runs it. The last five searches, newest first | A Menu, but driven by this feature's script rather than Bootstrap Dropdown: `.dropdown-menu` would hand its arrow keys to a Dropdown that has no toggle here |
+| User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
+| "Show wording changes" | Unchanged, but between 992 and 1300px its label is visually hidden (still named) and the module links use one step less padding, so the bar never overflows | |
+
+Module pages other than Broking are placeholders ("The existing Mobius {module} module sits
+here.").
 
 ## Menu actions, panels and confirmations
 
@@ -223,7 +239,7 @@ Buckholt Tabs (`.nav-underline`, Bootstrap pill behaviour).
 | Loss-ratio donut ("N/A") | Stacked Key-value, "N/A" over "No claims" | No chart, and nothing to chart |
 | History timeline | Date + Versa-tile | No timeline |
 | Info strips | Alert, info, without a close control | |
-| "Existing … content sits here" | Alert, info, titled **"Placeholder: existing Mobius content"**, with the prototype's own sentence | Dashboard, Client support |
+| "Existing … content sits here" | Alert, info, titled **"Placeholder: existing Mobius content"**, with the prototype's own sentence | Activity, Renewals, Bordereau and Accounts modules, Client support |
 | Values that open a panel in Policy summary, Excesses and Endorsements | Standalone Links with `role="button"` (Space activates them too). An unavailable one is muted text, because Link has no disabled state | Laurence's decision, 7 October 2026: Link's rules reserve it for navigation, but these read as values |
 | Field grids | Stacked Key-value pairs on the Bootstrap grid | |
 
@@ -248,17 +264,18 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Notes / Client notes | `fa-note-sticky` |
 | Attachments | `fa-paperclip` |
 | Create new client | `fa-user-plus` |
+| Broking module | `fa-handshake` |
+| Bordereau module | `fa-list` |
 
 ### 10. "Create new client" is in the Search results heading, not the menu
 
 The reference prototype listed it as an app-level menu action. It opens a page, so it follows
 the brief's rule and sits in the Search results heading as the primary action (an anchor styled
-as a Button, like the other heading flows). The app-level menu (Search results, Dashboard, Create
-new client) is navigation only: Go to: Dashboard, Search results. Changed 6 October 2026, at
-Laurence's request.
+as a Button, like the other heading flows). Changed 6 October 2026, at Laurence's request. Since
+7 October the app-level menu holds only Search; the modules are in the top bar.
 
 **Client support** is in the menu foot only once a client is open, at client and policy level.
-It is not shown on Search results, the Dashboard or Create new client, because there is no
+It is not shown on Broking, the other modules or Create new client, because there is no
 client yet.
 
 ### 10a. One primary Button per screen
@@ -319,7 +336,17 @@ example 3).
   `.table-content`, it escapes the table's scroller and widens the page whenever a table scrolls.
   `#main .table-content { position: relative }` keeps it inside. This is worth a Buckholt ticket.
 - The Cards in the menu (the client or policy card, and each policy's clickable Card) bind their
-  own `--card-padding-*` variables to `--spacer-04` for a 296px column.
+  own `--card-padding-*` variables to `--spacer-04` (16px) for a 296px column.
+- **Card padding (Jon's question, 7 October 2026).** Buckholt documents two Card sizes: default
+  (32px padding) and `.card-lg` (64px). The runtime also has `.card-sm` (24px), but it is not in
+  the documentation and Card's rules say not to promote undocumented size classes, so it is not
+  used. Main's Cards stay at the documented default; only the narrow menu column binds its own
+  padding variable. A tighter documented Card size for dense administration screens would need
+  to come from Buckholt.
+- Button sets placed side by side (page heading, card heads, table foot) drop the runtime's
+  stacked-set offsets: `margin-top`, and the `margin-bottom` it gives a set that has a following
+  sibling. Left on, that margin pushed the Client notes button 4px above View claims and Add new
+  quote.
 - The Switch policy toggle is flush with the card's text and left aligned, with its chevron after
   the label, so it no longer centres and wraps under the chevron.
 - Breakpoints use the **local** build's scale (576 / 768 / 992 / 1200 / 1400), like every other
@@ -358,9 +385,13 @@ Awesome), and Typekit was absent.
   - one primary per screen, side panel and confirmation (separate audit)
   - the app level: no menu actions, no Client support, and Create new client in the Search
     results heading opening the flow
+- **System navigation**: recent searches open on Down arrow, arrow keys move through them, and
+  picking one opens Broking with that query and moves it to the top of the list; the user menu
+  opens from the Avatar; the modules mark the current one.
+- **Top bar**: no overflow at every width from 992 to 1440px.
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and
   navigating closes it.
-- **Sweep**: all 120 routes (every page of every status), at 1440 / 1024 / 768 / 375. No
+- **Sweep**: all routes (every page of every status, a no-results search and every module) (every page of every status), at 1440 / 1024 / 768 / 375. No
   console or page errors, and no page-level horizontal overflow. Wide tables scroll inside
   Buckholt's `.table-content`.
