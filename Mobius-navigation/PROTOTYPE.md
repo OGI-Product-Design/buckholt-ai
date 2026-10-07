@@ -115,7 +115,8 @@ columns are open follows where you are:
   `aria-expanded`, Tooltip). The policy column has no collapse button
   (Laurence, 7 October 2026). On a policy page the rail collapses by itself, since there is not
   enough room for both columns and the page; opened by hand, it stays open until the next page,
-  which sets it again. Open, a column is in the flow: the one beside it
+  which sets it again. Opened directly (a link or a reload), a policy page draws the rail
+  already collapsed: it slides only when it changes in front of you. Open, a column is in the flow: the one beside it
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: **Client pages (one User icon button)** (the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
