@@ -296,7 +296,7 @@
         (app ? '' :
           expander('rail', '.mob-rail-client', 'Client: ' + c.name,
             /* Avatar extra small, so it sits in the strip like the icons. */
-            '<div class="btn-icon"><div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div></div>', onClient) +
+            '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
           expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
             '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy)) +
       '</ul>';
