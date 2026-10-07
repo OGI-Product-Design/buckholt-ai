@@ -30,6 +30,8 @@
     dashboard: 'fa-regular fa-grid-2',                 // Dashboard
     search: 'fa-regular fa-magnifying-glass',          // Search
     user: 'fa-regular fa-user',                        // User
+    client: 'fa-regular fa-user',                      // User
+    motor: 'fa-regular fa-car',                        // Car
     business: 'fa-regular fa-briefcase',               // GAP
     policy: 'fa-regular fa-file-lines',                // Document
     quote: 'fa-regular fa-calculator',                 // Calculator

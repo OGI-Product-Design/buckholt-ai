@@ -52,24 +52,6 @@
     /* The signed-in user, as the top bar and the notes show them. */
     user: { name: 'Laurence Abbott', initials: 'LA', environment: 'Test' },
 
-    /* The user's recent searches (most recent first), shown when they click
-       into the search field. No search has been run when the prototype
-       opens: Broking opens on its dashboard. A search they run is added to
-       the top of this list for the session. */
-    recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
-
-    /* "What can I search?", under the search field. Current Mobius wording,
-       in sentence case. */
-    searchHelp: {
-      title: 'Search clients by',
-      groups: [
-        ['Partial or full matches:', ['Name or surname', 'Postcode', 'Phone number']],
-        ['Full match only:', ['Email address', 'Policy, client or claim reference', 'Insurer policy number', 'Vehicle registration', 'Invoice number']],
-        ['Combine criteria for better results:', ['Name or surname + postcode: Davies SW1A 2AA']]
-      ],
-      tip: 'Use * for partial matches (e.g. *smith for Blacksmith).'
-    },
-
     /* Broking dashboard: current Mobius's two tabs, sample rows. */
     outstandingDiary: {
       total: '14,334',
@@ -111,6 +93,7 @@
       tel: '00888888888',
       since: '30/12/2017',
       businessLine: 'Open Market Motor',
+      product: 'Motor',
       brand: 'Krypton',
       riskInfo: 'Registration: TBA1',
       insurer: 'N/A'
