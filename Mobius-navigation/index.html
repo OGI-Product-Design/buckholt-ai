@@ -24,7 +24,7 @@
   <!-- ======================================================================
        STATIC APPLICATION CHROME — the shared Mobius top bar
        (`prototype/app-shell.css`). Its contents are Buckholt components:
-       the Menu button (narrow screens), the search (Text input), the
+       the Menu button (narrow screens), the
        system modules as Page navigation with icons, the "Show wording
        changes" review aid
        (Switch), and the user menu under the avatar (Menu button + Avatar).
@@ -38,20 +38,6 @@
     </div>
 
     <a class="app-bar-logo" href="#dashboard">Mobius</a>
-
-    <!-- Search: Buckholt Text input with its search icon, as current Mobius
-         has it beside the wordmark. Running a search opens the results. -->
-    <form class="mob-search" role="search" id="mob-search" autocomplete="off">
-      <div class="input">
-        <div class="input-label">
-          <label for="mob-search-input" class="form-label visually-hidden">Search</label>
-        </div>
-        <div class="response text-input">
-          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-          <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email">
-        </div>
-      </div>
-    </form>
 
     <!-- System modules: Page navigation, the icon straight inside each link.
          Written by mobius-navigation.js so the current module is marked. -->
@@ -94,9 +80,9 @@
        THE MENU — Buckholt from here down. Two columns at client and policy
        level, as in the new designs: the blue rail (the client and their
        policies) and the record column (that record's pages and actions).
-       Both are rebuilt on every route. Nothing at app level on wide
-       screens. Below 1280px it is a drawer, which also takes the search
-       and the modules from the top bar.
+       The rail is on every page, with the search at its top; the record
+       column and toolbar only on client and policy pages. Below 1280px it
+       is a drawer, which also takes the modules from the top bar.
        ====================================================================== -->
   <aside id="sidebar" class="mob-sidebar" aria-label="Menu">
     <div class="mob-drawer-head">
@@ -107,12 +93,30 @@
         </button>
       </div>
     </div>
-    <!-- On narrow screens the search moves in here, then the modules. -->
-    <div class="mob-drawer-search" id="mob-drawer-search"></div>
+    <!-- On narrow screens the modules move in here. -->
     <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
 
     <div class="mob-columns">
-      <div class="mob-rail" id="mob-rail" data-bs-theme="dark"></div>
+      <!-- The rail: Buckholt dark theme. Its search is static; the rest is
+           written by mobius-navigation.js. -->
+      <div class="mob-rail" id="mob-rail" data-bs-theme="dark">
+        <div class="mob-rail-head" id="mob-rail-head"></div>
+        <!-- Search: Buckholt Text input with its search icon. Running a
+             search opens the results. -->
+        <form class="mob-search" role="search" id="mob-search" autocomplete="off">
+          <div class="input">
+            <div class="input-label">
+              <label for="mob-search-input" class="form-label visually-hidden">Search</label>
+            </div>
+            <div class="response text-input">
+              <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email">
+            </div>
+          </div>
+        </form>
+        <div class="mob-rail-scroll" id="mob-rail-body"></div>
+        <div class="mob-rail-foot" id="mob-rail-foot"></div>
+      </div>
       <div class="mob-record" id="mob-record"></div>
       <div class="mob-toolbar" id="mob-toolbar" hidden></div>
     </div>

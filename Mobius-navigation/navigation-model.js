@@ -32,6 +32,7 @@
     user: 'fa-regular fa-user',                        // User
     client: 'fa-regular fa-user',                      // User
     motor: 'fa-regular fa-car',                        // Car
+    policies: 'fa-regular fa-shield',                  // Shield
     business: 'fa-regular fa-briefcase',               // GAP
     policy: 'fa-regular fa-file-lines',                // Document
     quote: 'fa-regular fa-calculator',                 // Calculator
