@@ -198,9 +198,16 @@
 
   /* --------------------------------------------------------------- App level */
 
-  var APP_NAV = [
-    { id: 'dashboard', label: 'Dashboard', icon: ICON.dashboard },
-    { id: 'search', label: 'Search results', icon: ICON.search }
+  /* System level: the Mobius modules, which current Mobius hides in the
+     "Dashboard" dropdown in the top bar. "Dashboard" is really Broking, and
+     Broking's landing page is search, because every broking journey starts
+     with one. Client and policy pages belong to Broking. */
+  var MODULES = [
+    { id: 'search', label: 'Broking', icon: 'fa-regular fa-handshake' },      // Agreement
+    { id: 'activity', label: 'Activity', icon: ICON.activity },               // GAP
+    { id: 'renewals', label: 'Renewals', icon: ICON.renew },                  // Renew
+    { id: 'bordereau', label: 'Bordereau', icon: 'fa-regular fa-list' },      // List
+    { id: 'accounts', label: 'Accounts', icon: ICON.money }                   // Pound
   ];
 
   /* Opens a page, so it sits in the Search results heading. The app-level
@@ -226,7 +233,10 @@
      [page heading, eyebrow]. On policy pages the eyebrow is followed by the
      policy reference. */
   var TITLES = {
-    app: { search: ['Search results for “@query”', ''], dashboard: ['Dashboard', ''], newclient: ['Create new client', 'New business'] },
+    app: {
+      search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
+      activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
+    },
     client: {
       summary: ['[[Client summary]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
       cactivity: ['Activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
@@ -254,7 +264,7 @@
     QUICK_LINKS: QUICK_LINKS,
     CLIENT_NAV: CLIENT_NAV,
     CLIENT_ACTIONS: CLIENT_ACTIONS,
-    APP_NAV: APP_NAV,
+    MODULES: MODULES,
     APP_ACTIONS: APP_ACTIONS,
     GLOBAL_ACTIONS: GLOBAL_ACTIONS,
     CONFIRMS: CONFIRMS,

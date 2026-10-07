@@ -22,12 +22,11 @@
 <div class="layout" data-layout="layout-03" data-layout-surface="flush">
 
   <!-- ======================================================================
-       STATIC APPLICATION CHROME — NOT BUCKHOLT.
-       The shared Mobius top bar (`prototype/app-shell.css`), carrying the
-       reference prototype's own contents: the Menu button (narrow screens),
-       the Mobius wordmark, search, the "Show wording changes" review aid,
-       the environment, the clock and the signed-in user. The Menu button and
-       the switch inside it are Buckholt components.
+       STATIC APPLICATION CHROME — the shared Mobius top bar
+       (`prototype/app-shell.css`). Its contents are Buckholt components:
+       the Menu button (narrow screens), the system modules as Page
+       navigation with icons, the "Show wording changes" review aid
+       (Switch), and the user menu under the avatar (Menu button + Avatar).
        ====================================================================== -->
   <header class="app-bar">
     <div class="button-set mob-menu-button-set">
@@ -39,11 +38,9 @@
 
     <a class="app-bar-logo" href="#search">Mobius</a>
 
-    <div class="app-bar-search">
-      <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-      <label class="visually-hidden" for="app-global-search">Search</label>
-      <input type="search" id="app-global-search" value="motor">
-    </div>
+    <!-- System modules: Page navigation, the icon straight inside each link.
+         Written by mobius-navigation.js so the current module is marked. -->
+    <nav class="mob-modules" aria-label="Modules" id="mob-modules"></nav>
 
     <div class="app-bar-right">
       <!-- Dev / review aid: highlights wording that differs from current
@@ -63,14 +60,27 @@
         <time class="app-bar-date" id="app-clock-date" datetime="2026-10-01">01 October 2026</time>
       </div>
 
-      <span class="app-bar-avatar" role="img" aria-label="Signed in as LA">LA</span>
+      <!-- User menu: Buckholt Menu button (Code & specs example 1) whose
+           trigger is the user's Avatar. Bootstrap Dropdown gives the
+           keyboard behaviour. Items are written by mobius-navigation.js. -->
+      <div class="menu mob-user-menu">
+        <button type="button" class="menu-toggle mob-avatar-toggle" id="mob-user-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+          aria-label="User menu, Laurence Abbott">
+          <div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">LA</div></div>
+        </button>
+        <div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-user-toggle">
+          <ul class="menu-body" role="menu" id="mob-user-items"></ul>
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- ======================================================================
        THE MENU — Buckholt from here down.
-       Rebuilt on every route by mobius-navigation.js, so each level shows
-       only its own content. A sidebar on wide screens, a drawer below 992px.
+       Search sits at the top on every page: every journey starts with one.
+       Below it, the level's content, rebuilt on every route so each level
+       shows only its own content. A sidebar on wide screens, a drawer below
+       992px (where the modules move in here too).
        ====================================================================== -->
   <aside id="sidebar" class="mob-sidebar" aria-label="Menu">
     <div class="mob-drawer-head">
@@ -81,6 +91,33 @@
         </button>
       </div>
     </div>
+
+    <!-- Search: Buckholt Text input with its search icon. Recent searches
+         open under it in a Buckholt Menu panel. Not `.dropdown-menu`: the
+         panel is driven by mobius-navigation.js, and that class would hand
+         its arrow keys to Bootstrap's Dropdown, which has no toggle here. -->
+    <form class="mob-search" role="search" id="mob-search" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="mob-search-input" class="form-label visually-hidden">Search</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email"
+            aria-expanded="false" aria-controls="mob-recent" aria-describedby="mob-search-hint">
+        </div>
+      </div>
+      <p class="visually-hidden" id="mob-search-hint">Press the down arrow for recent searches.</p>
+      <div class="menu mob-recent-menu">
+        <div class="menu-panel show" id="mob-recent" hidden>
+          <ul class="menu-body" id="mob-recent-items"></ul>
+        </div>
+      </div>
+    </form>
+
+    <!-- Modules, on narrow screens only (they are in the top bar above 992px). -->
+    <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
+
     <div class="mob-side-scroll" id="mob-side"></div>
     <div class="mob-side-foot" id="mob-side-foot"></div>
   </aside>

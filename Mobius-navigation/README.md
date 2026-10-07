@@ -26,11 +26,12 @@ panels). Nothing outside this folder was changed.
 
 ## Routes
 
-The prototype's hash routes, unchanged:
+The prototype's hash routes, with the system modules added:
 
 | Route | Level |
 | --- | --- |
-| `#search`, `#dashboard`, `#newclient` | App |
+| `#search`, `#search/{query}`, `#newclient` | App: Broking (search results) and the Create new client flow |
+| `#activity`, `#renewals`, `#bordereau`, `#accounts` | App: the other system modules (placeholders) |
 | `#c/{page}` | Client: `summary`, `business`, `ctx`, `cactivity`, `ccomplaints`, `checks`, `newquote` |
 | `#p/{policy}/{page}` | Policy: `puco0068`, `puco0052`, `aad666` (Live), `y341` (Automatic Decline), `zz646` (Lapsed), `z315` (Incomplete), `zz2966` (Prospect) |
 

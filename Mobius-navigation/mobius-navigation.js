@@ -4,7 +4,8 @@
 
    Routes are the prototype's hash routes, unchanged:
 
-     #search  #dashboard  #newclient            app level
+     #search[/{query}]  #newclient             Broking (app level)
+     #activity #renewals #bordereau #accounts   other modules (placeholders)
      #c/{page}                                  client level
      #p/{policy id}/{page}                      policy level
 
@@ -14,7 +15,7 @@
    The menu is rebuilt on every route change, so each level's menu only ever
    shows that level's content:
 
-     app      Go to (Dashboard, Search results), Actions
+     app      nothing below Search (the modules are in the top bar)
      client   back link, client card, Go to, the client's policies
      policy   "Client: {name}" back link, policy card with Switch policy,
               Go to (the status's pages), Actions (the status's actions)
@@ -42,7 +43,7 @@
 
   /* open: expanded menu groups, keyed by level and group. polShown: how many
      policies every policy list shows. step: the current step of a flow. */
-  var S = { open: {}, polShown: 5, switchOpen: false, step: 0, panelKey: null };
+  var S = { open: {}, polShown: 5, switchOpen: false, step: 0, panelKey: null, query: F.search.query };
   P.init(S);
 
   var R = null;
@@ -55,7 +56,8 @@
     var parts = h.split('/');
     if (parts[0] === 'c') return { scope: 'client', page: parts[1] || 'summary' };
     if (parts[0] === 'p' && POLICY_BY_ID[parts[1]]) return { scope: 'policy', p: POLICY_BY_ID[parts[1]], page: parts[2] || 'summary' };
-    if (h === 'dashboard' || h === 'newclient') return { scope: 'app', page: h };
+    if (parts[0] === 'search' && parts[1]) S.query = decodeURIComponent(parts.slice(1).join('/'));
+    if (['newclient', 'activity', 'renewals', 'bordereau', 'accounts'].indexOf(h) >= 0) return { scope: 'app', page: h };
     return { scope: 'app', page: 'search' };
   }
 
@@ -133,9 +135,12 @@
                 '</div>' +
                 ui.statusTag(p, true) +
               '</div>' +
-              /* "cover start {date}" is held together with non-breaking
-                 spaces, so the line only ever breaks after the "·". */
-              '<p>' + esc(F.client.businessLine) + ' · ' + t('[[cover\u00a0start]]') + '\u00a0' + esc(p.start.split(' ')[0]) + '</p>' +
+              '<p>' + esc(F.client.businessLine) + '</p>' +
+            '</div>' +
+            /* The cover start is a fact with a label: a Buckholt Key-value. */
+            '<div class="key-value">' +
+              '<span class="key">' + t('[[Cover start]]') + '</span>' +
+              '<span class="value">' + esc(p.start.split(' ')[0]) + '</span>' +
             '</div>' +
           '</div>' +
         '</a>' +
@@ -184,9 +189,9 @@
     var c = F.client;
 
     if (r.scope === 'app') {
-      /* Navigation only. "Create new client" opens a page, so it is in the
-         Search results heading, not here. */
-      html += '<nav aria-labelledby="mob-nav-main">' + sectionLabel('mob-nav-main', 'Go to') + navList(M.APP_NAV, r.page, r) + '</nav>';
+      /* Broking's landing page and the other modules have nothing below the
+         search: the modules are in the top bar, and "Create new client"
+         opens a page, so it is in the Search results heading. */
     } else if (r.scope === 'client') {
       html += backLink('#search', 'Search results');
       html += '<div class="card mob-context-card"><div class="card-body"><div class="text-block">' +
@@ -221,7 +226,7 @@
     $('mob-side').innerHTML = html;
 
     /* Client support is about a client, so it only appears once one is open:
-       at client and policy level, not on Search results or the Dashboard. */
+       at client and policy level, not on Broking or the other modules. */
     var foot = $('mob-side-foot');
     foot.hidden = r.scope === 'app';
     foot.innerHTML = foot.hidden ? '' : actionMenu([{ sub: null, ids: ['support'] }], M.GLOBAL_ACTIONS, 'global', null);
@@ -250,7 +255,7 @@
 
   function titleFor(r) {
     var tt = (M.TITLES[r.scope] || {})[r.page] || ['', ''];
-    var title = tt[0].replace('@query', F.search.query);
+    var title = tt[0].replace('@query', S.query);
     var eyebrow = r.scope === 'policy' ? (tt[1] || 'Policy') + ' · ' + r.p.ref : tt[1];
     return { title: title, eyebrow: eyebrow };
   }
@@ -283,12 +288,117 @@
     if (R.scope === 'policy' && M.allowedPolicyPages(R.p).indexOf(R.page) < 0) { location.replace(ui.policyHref(R.p)); return false; }
     if (R.scope === 'client' && !P.client[R.page]) { location.replace('#c/summary'); return false; }
     Shell.disposeTooltips($('sidebar'));
+    renderModules(R);
     renderSide(R);
     renderContext(R);
+    syncSearch(R);
     renderPage(R);
     Shell.initTooltips($('sidebar'));
     return true;
   }
+
+  /* ============================================================ Modules
+     The system modules, as Buckholt Page navigation with icons (the icon
+     straight inside the link). Client and policy pages belong to Broking.
+     The same list is written into the drawer for narrow screens. */
+  function renderModules(r) {
+    var cur = r.scope === 'app' && r.page !== 'newclient' ? r.page : 'search';
+    var list = function (extra) {
+      return '<ul class="nav' + (extra ? ' ' + extra : '') + '">' + M.MODULES.map(function (m) {
+        var on = m.id === cur;
+        return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
+          icon(m.icon) + t(m.label) + '</a></li>';
+      }).join('') + '</ul>';
+    };
+    $('mob-modules').innerHTML = list('');
+    $('mob-drawer-modules').innerHTML = list('flex-column mob-nav');
+  }
+
+  /* ============================================================= Search
+     At the top of the menu on every page. Running a search opens Broking's
+     landing page with the results. Clicking into the field shows recent
+     searches in a Buckholt Menu panel: Down arrow moves into it, Up / Down
+     move through it, Escape closes it and returns to the field. */
+  var searchForm = $('mob-search');
+  var searchInput = $('mob-search-input');
+  var recentPanel = $('mob-recent');
+
+  function syncSearch(r) {
+    searchInput.value = r.scope === 'app' && r.page === 'search' ? S.query : '';
+  }
+
+  function recentItems() { return Array.prototype.slice.call(recentPanel.querySelectorAll('.menu-item')); }
+
+  function openRecent() {
+    var list = F.recentSearches;
+    if (!list.length) return;
+    $('mob-recent-items').innerHTML =
+      '<li><h6 class="menu-section-header" id="mob-recent-label">Recent searches</h6></li>' +
+      list.map(function (q) {
+        return '<li><button class="menu-item" type="button" data-recent="' + esc(q) + '">' +
+          icon(M.ICON.history) + esc(q) + '</button></li>';
+      }).join('');
+    recentPanel.hidden = false;
+    searchInput.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeRecent() {
+    recentPanel.hidden = true;
+    searchInput.setAttribute('aria-expanded', 'false');
+  }
+
+  function runSearch(q) {
+    q = String(q || '').trim();
+    if (!q) { searchInput.focus(); return; }
+    closeRecent();
+    S.query = q;
+    F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
+    var target = '#search/' + encodeURIComponent(q);
+    if (location.hash === target) go(); else location.hash = target;
+  }
+
+  searchForm.addEventListener('submit', function (e) { e.preventDefault(); runSearch(searchInput.value); });
+  searchInput.addEventListener('focus', openRecent);
+  searchInput.addEventListener('click', openRecent);
+  searchInput.addEventListener('input', function () { if (searchInput.value) closeRecent(); else openRecent(); });
+  searchForm.addEventListener('keydown', function (e) {
+    var items = recentItems();
+    var i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (recentPanel.hidden) openRecent();
+      items = recentItems();
+      if (items.length) items[i < 0 ? 0 : Math.min(i + 1, items.length - 1)].focus();
+    } else if (e.key === 'ArrowUp' && i >= 0) {
+      e.preventDefault();
+      if (i === 0) searchInput.focus(); else items[i - 1].focus();
+    } else if (e.key === 'Escape' && !recentPanel.hidden) {
+      e.stopPropagation();
+      closeRecent();
+      searchInput.focus();
+    }
+  });
+  searchForm.addEventListener('focusout', function (e) {
+    if (!searchForm.contains(e.relatedTarget)) closeRecent();
+  });
+  recentPanel.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-recent]');
+    if (b) runSearch(b.getAttribute('data-recent'));
+  });
+
+  /* ========================================================== User menu
+     Under the avatar, as current Mobius has it: the user's name, the
+     account tools, then Logout below a divider. The tools are outside this
+     prototype, so each says so. */
+  $('mob-user-items').innerHTML =
+    '<li role="none"><h6 class="menu-section-header">' + esc(F.user.name) + '</h6></li>' +
+    '<li role="none"><hr class="menu-divider"></li>' +
+    F.userMenu.map(function (label) {
+      return '<li role="none"><button class="menu-item" type="button" role="menuitem" data-toast="' + esc(label) + ' is not part of this prototype">' + esc(label) + '</button></li>';
+    }).join('') +
+    '<li role="none"><hr class="menu-divider"></li>' +
+    '<li role="none"><button class="menu-item" type="button" role="menuitem" data-toast="Logout is not part of this prototype">' +
+      icon('fa-regular fa-arrow-right-from-bracket') + 'Logout</button></li>';
 
   /* After a re-render, put focus back on the control that caused it. */
   function refocus(focusId) {
@@ -492,7 +602,10 @@
   /* =============================================================== Events */
 
   function dialogOpen() {
-    return !!document.querySelector('.modal.show, .offcanvas.show');
+    /* Anything that Escape should close first: a panel, a confirmation,
+       the user menu, or the recent searches under the search field. */
+    return !!document.querySelector('.modal.show, .offcanvas.show, .mob-user-menu .dropdown-menu.show') ||
+      !$('mob-recent').hidden;
   }
 
   document.addEventListener('click', function (e) {
