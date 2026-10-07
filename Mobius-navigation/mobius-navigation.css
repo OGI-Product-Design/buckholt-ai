@@ -178,7 +178,7 @@
   .mob-rail-collapsed .mob-rail { width: 4rem; }
   .mob-rail-collapsed .mob-search { display: none; }
   .mob-rail-collapsed .mob-rail-head { justify-content: center; padding-inline: 0; }
-  .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); }
+  .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); gap: var(--spacer-05); }
   .mob-rail-collapsed .mob-rail-action,
   .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; }
   .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; }
@@ -188,12 +188,12 @@
 }
 
 /* A strip of icons: one per category, evenly spaced and centred. */
-.mob-strip { --nav-gap: var(--spacer-03); align-items: center; }
+.mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
 .mob-strip-item { list-style: none; }
 .mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
 .mob-strip .btn.active { --button-background: var(--action-04); }
-/* The client's Avatar (extra small) sits in the button's icon slot. */
-.mob-strip .btn-icon:has(.avatar) { width: auto; height: auto; line-height: 0; }
+/* The client's Avatar (extra small) is centred in a button the size of the others. */
+.mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
 
 .mob-side-label {
   margin: 0 0 var(--spacer-03);
