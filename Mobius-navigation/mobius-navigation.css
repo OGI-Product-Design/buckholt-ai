@@ -203,6 +203,9 @@
   display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--nav-link-gap); align-items: start;
 }
 .mob-rail-policies .mob-rail-status { grid-column: 1 / -1; margin: 0; }
+/* The status stays grey on the open policy too: only the title and icon
+   take Page navigation's active colour. */
+.mob-rail-policies .nav-link .mob-rail-status { color: var(--text-secondary); }
 /* The Car at the link's own icon size, on the title's line. */
 .mob-rail-policies .mob-rail-icon { flex: 0 0 auto; width: 1.25rem; line-height: 1.5rem; text-align: center; }
 .mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
