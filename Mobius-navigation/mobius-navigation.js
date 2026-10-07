@@ -12,13 +12,13 @@
    A policy page its status does not have redirects to that policy's
    overview, and an unknown client page to the Client summary.
 
-   The menu is rebuilt on every route change, so each level's menu only ever
-   shows that level's content:
+   The menu is rebuilt on every route change. Following the new designs it
+   is two columns at client and policy level, and nothing at app level:
 
-     app      nothing below Search (the modules are in the top bar)
-     client   back link, client card, Go to, the client's policies
-     policy   "Back to client" link, policy card with Switch policy,
-              Go to (the status's pages), Actions (the status's actions)
+     rail     (blue) Client, the client's policies, Add new quote,
+              Client support
+     record   (white) "Client record" or "{product} policy", its pages in
+              always-open groups, and at policy level the status's Actions
 
    Menu actions only happen in place. A side panel opens in the shared
    prototype Blade (`prototype/blade.js`) and its menu item stays pressed
@@ -41,13 +41,14 @@
   var POLICY_BY_ID = {};
   F.policies.forEach(function (p) { POLICY_BY_ID[p.id] = p; });
 
-  /* open: expanded menu groups, keyed by level and group. polShown: how many
+  /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  var S = { open: {}, polShown: 5, switchOpen: false, step: 0, panelKey: null, query: null };
+  var S = { polShown: 5, step: 0, panelKey: null, query: null };
   P.init(S);
 
   var R = null;
+  var sidebar = document.getElementById('sidebar');
   var $ = function (id) { return document.getElementById(id); };
 
   /* ================================================================ Routing */
@@ -96,62 +97,24 @@
     '</li>';
   }
 
-  /* A group is a disclosure, so its header is a button, not a link. It opens
-     by itself when it holds the current page. */
-  function navList(items, cur, r) {
-    return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
-      if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
-      var has = n.children.some(function (c) { return c.id === cur; });
-      var key = r.scope + ':' + n.group;
-      if (has) S.open[key] = true;
-      var open = !!S.open[key];
-      var subId = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
-      return '<li class="nav-item">' +
-        '<button type="button" class="nav-link mob-nav-group' + (has ? ' mob-has-current' : '') + '"' +
-          ' aria-expanded="' + open + '" aria-controls="' + subId + '" data-group="' + esc(key) + '">' +
-          icon(n.icon) + t(n.group) + icon('fa-regular fa-chevron-down', 'mob-chevron') +
-        '</button>' +
-        '<ul class="nav flex-column mob-subnav" id="' + subId + '"' + (open ? '' : ' hidden') + '>' +
-          n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
-        '</ul>' +
-      '</li>';
-    }).join('') + '</ul>';
-  }
-
-  /* A policy in a list: reference and status, then line of business and
-     cover start. In the switcher the open policy is the current item of the
-     set (aria-current="true"); it is the current page only on its overview. */
-  function policyLinks(curId, inSwitcher) {
-    /* Each policy is a Buckholt clickable Card (`a.card.card-clickable >
-       .card-body > .text-block`), the documented whole-card link. Inside is
-       Heading attachment's Code & specs example 3 exactly: `.heading` with
-       the reference in `.heading-content` and the status Tag attached, then
-       a paragraph. Spacing is the Text block's own. */
-    return '<ul class="list-unstyled mob-policies">' + ui.shownPolicies().map(function (p) {
+  /* The client's policies in the rail: Page navigation, one link per
+     policy, the icon straight inside the link, then the product and the
+     reference, and the status Tag. The open policy is the current one. */
+  function railPolicies(curId) {
+    return '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
       var on = p.id === curId;
-      return '<li>' +
-        '<a class="card card-clickable mob-pol-link' + (on ? ' mob-pol-current' : '') + '" href="' + ui.policyHref(p) + '"' +
-          (on ? ' aria-current="' + (inSwitcher ? 'true' : 'page') + '"' : '') + '>' +
-          '<div class="card-body">' +
-            '<div class="text-block">' +
-              '<div class="heading">' +
-                '<div class="heading-content">' +
-                  '<h3 class="title-01">' + esc(p.ref) + '</h3>' +
-                '</div>' +
-                ui.statusTag(p, true) +
-              '</div>' +
-              '<p>' + esc(F.client.businessLine) + '</p>' +
-            '</div>' +
-            /* The cover start is a fact with a label: a Buckholt Key-value. */
-            '<div class="key-value">' +
-              '<span class="key">' + t('[[Cover start]]') + '</span>' +
-              '<span class="value">' + esc(p.start.split(' ')[0]) + '</span>' +
-            '</div>' +
-          '</div>' +
+      return '<li class="nav-item">' +
+        '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+          icon(M.ICON.motor) +
+          /* The Tag shares the product's line, so the reference under it
+             keeps the full width. */
+          '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.product) + '</span>' +
+            ui.statusTag(p, true) + '</span>' +
+            '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
         '</a>' +
       '</li>';
     }).join('') + '</ul>' +
-    '<div class="mob-more">' + ui.loadMoreButton(inSwitcher ? 'switch' : 'side') + '</div>';
+    '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
   }
 
   /* Actions: Buckholt Menu items shown in place rather than behind a
@@ -183,75 +146,65 @@
     '</div>';
   }
 
-  function backLink(url, label) {
-    return '<a class="link-standalone mob-back" href="' + url + '">' +
-      '<span class="icon">' + icon('fa-regular fa-arrow-left') + '</span>' + t(label) +
-    '</a>';
+  /* A navigation group as the new designs draw it: always open, its label
+     (with the group's icon) heading a nested Page navigation. The label is
+     not a link: the group is not a page. */
+  function navGroups(items, cur, r) {
+    return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
+      if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
+      var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
+      return '<li class="nav-item mob-group">' +
+        '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
+        '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
+          n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
+        '</ul>' +
+      '</li>';
+    }).join('') + '</ul>';
   }
 
+  /* Two columns at client and policy level, as in the new designs:
+       rail    (blue) the client, their policies, Add new quote, Client support
+       record  (white) which record this is, its pages, and its actions
+     Nothing at app level: the modules and search are in the top bar. */
   function renderSide(r) {
-    var html = '';
     var c = F.client;
+    var app = r.scope === 'app';
+    sidebar.classList.toggle('mob-side-empty', app);
+    if (app) { $('mob-rail').innerHTML = ''; $('mob-record').innerHTML = ''; return; }
 
-    if (r.scope === 'app') {
-      /* Broking's pages and the other modules have nothing below the search:
-         the modules are in the top bar, and "Create new client" opens a
-         page, so it is in the Broking page headings. */
-    } else if (r.scope === 'client') {
-      html += S.query ? backLink(searchHref(), 'Back to search results') : backLink('#dashboard', 'Back to dashboard');
-      /* Who this is, then the facts a broker checks first. Avatar (initials)
-         beside a Text block, then a Buckholt Key-value list. */
-      html += '<div class="card mob-context-card"><div class="card-body">' +
-        '<div class="mob-identity">' +
-          '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-          '<div class="text-block">' +
-            '<span class="eyebrow">Client</span>' +
-            '<h2 class="title-01">' + esc(c.name) + '</h2>' +
-          '</div>' +
-        '</div>' +
-        kvList([['Client reference', esc(c.ref)], ['[[Date of birth]]', esc(c.dob)], ['Postcode', esc(c.postcode)], ['Policies', String(F.policies.length)]]) +
-      '</div></div>';
-      html += '<nav aria-labelledby="mob-nav-client">' + sectionLabel('mob-nav-client', 'Go to') + navList(M.CLIENT_NAV, r.page, r) + '</nav>';
-      html += '<nav aria-labelledby="mob-nav-policies">' + sectionLabel('mob-nav-policies', 'Policies (' + F.policies.length + ')') + policyLinks(null, false) + '</nav>';
-    } else {
-      var p = r.p;
-      html += backLink('#c/summary', 'Back to client');
-      html += '<div class="card mob-context-card"><div class="card-body">' +
-        '<div class="text-block">' +
-          '<div class="mob-ctx-row"><span class="eyebrow">Policy</span>' + ui.statusTag(p, true) + '</div>' +
-          '<h2 class="title-01">' + esc(p.ref) + '</h2>' +
-          '<p class="support-01">' + esc(c.businessLine) + ' · ' + esc(c.brand) + '</p>' +
-        '</div>' +
-        /* What the record strip used to carry, now that breadcrumbs replace it. */
-        kvList([['Client', esc(c.name)], ['[[Cover start]]', esc(p.start.split(' ')[0])], ['Policy duration', esc(p.hdrDur || p.dur)]]) +
-        /* A disclosure, so a Button: ghost, small, flush with the card's text,
-           with the chevron after the label (Button's trailing `.btn-icon`). */
-        ui.set([ui.btn('Switch policy (' + F.policies.length + ' for this client)', {
-          variant: 'ghost', size: 'sm',
-          after: '<div class="btn-icon"><i class="fa-regular fa-chevron-down mob-chevron" aria-hidden="true"></i></div>',
-          attrs: ' data-switch aria-expanded="' + S.switchOpen + '" aria-controls="mob-switch"' })], 'mob-switch-toggle') +
-        '<nav id="mob-switch" aria-label="Switch policy"' + (S.switchOpen ? '' : ' hidden') + '>' + policyLinks(p.id, true) + '</nav>' +
-      '</div></div>';
-      html += '<nav aria-labelledby="mob-nav-policy">' + sectionLabel('mob-nav-policy', 'Go to') + navList(M.policyNav(p), r.page, r) + '</nav>';
-      html += '<section aria-labelledby="mob-actions-label">' + sectionLabel('mob-actions-label', 'Actions') +
-        actionMenu(M.policyActions(p), M.POLICY_ACTIONS, 'policy', 'mob-actions-label') + '</section>';
+    var onClient = r.scope === 'client';
+    $('mob-rail').innerHTML =
+      '<div class="mob-rail-scroll">' +
+        '<nav aria-label="Client and policies">' +
+          '<ul class="nav flex-column mob-nav">' +
+            '<li class="nav-item"><a class="nav-link mob-rail-client' + (onClient ? ' active' : '') + '" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' +
+              icon(M.ICON.client) +
+              '<span class="mob-rail-text"><span class="mob-rail-title">Client</span><span class="mob-rail-sub">' + esc(c.name) + '</span></span>' +
+            '</a></li>' +
+          '</ul>' +
+          sectionLabel('mob-rail-policies', 'Policies') +
+          railPolicies(r.scope === 'policy' ? r.p.id : null) +
+        '</nav>' +
+        ui.set([ui.btn(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action') +
+      '</div>' +
+      /* Client support opens a side panel: a ghost Button, as the new
+         designs draw it (Menu has no dark-theme treatment). */
+      '<div class="mob-rail-foot">' + ui.set([ui.btn(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
+        attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]) + '</div>';
+
+    var head = onClient
+      ? ['Client record', c.name]
+      : [t(c.product) + ' policy', r.p.ref];
+    var html =
+      '<div class="text-block mob-record-head"><span class="eyebrow">' + esc(head[1]) + '</span><h2 class="title-02" id="mob-record-title">' + head[0] + '</h2></div>' +
+      '<nav aria-labelledby="mob-record-title" class="mob-record-nav">' +
+        navGroups(onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p), r.page, r) +
+      '</nav>';
+    if (!onClient) {
+      html += '<section aria-labelledby="mob-actions-label" class="mob-record-actions">' + sectionLabel('mob-actions-label', 'Actions') +
+        actionMenu(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy', 'mob-actions-label') + '</section>';
     }
-
-    $('mob-side').innerHTML = html;
-
-    /* Client support is about a client, so it only appears once one is open:
-       at client and policy level, not on Broking or the other modules. */
-    var foot = $('mob-side-foot');
-    foot.hidden = r.scope === 'app';
-    foot.innerHTML = foot.hidden ? '' : actionMenu([{ sub: null, ids: ['support'] }], M.GLOBAL_ACTIONS, 'global', null);
-  }
-
-  /* Buckholt Key-value list, stacked (key over value, so a long value has
-     the column's full width), with the small key size. */
-  function kvList(rows) {
-    return '<div class="key-value-list key-value-list-stacked mob-kv-list">' + rows.map(function (x) {
-      return '<div class="key-value key-value-sm"><span class="key">' + t(x[0]) + '</span><span class="value">' + x[1] + '</span></div>';
-    }).join('') + '</div>';
+    $('mob-record').innerHTML = html;
   }
 
   function searchHref() { return '#search/' + encodeURIComponent(S.query); }
@@ -371,95 +324,32 @@
   }
 
   /* ============================================================= Search
-     At the top of the menu on every page. Running a search opens Broking's
-     landing page with the results. Clicking into the field shows recent
-     searches in a Buckholt Menu panel: Down arrow moves into it, Up / Down
-     move through it, Escape closes it and returns to the field. */
+     In the top bar, beside the wordmark, as in current Mobius. Running a
+     search opens the results. Below 1280px the same form moves into the
+     drawer, above the modules. */
   var searchForm = $('mob-search');
   var searchInput = $('mob-search-input');
-  var recentPanel = $('mob-recent');
-
-  /* "What can I search?" content: Collapse's title in a Text block, then the
-     groups as Buckholt Lists with a list heading, inside the documented
-     `.collapse-contextbar` (which spaces them and the Link). */
-  (function () {
-    var h = F.searchHelp;
-    var list = function (head, items) {
-      return '<ul class="list"><li class="list-heading">' + esc(head) + '</li>' +
-        items.map(function (x) { return '<li class="list-item">' + esc(x) + '</li>'; }).join('') + '</ul>';
-    };
-    $('mob-search-help-content').innerHTML =
-      '<div class="text-block"><h6 class="collapse-title">' + esc(h.title) + '</h6></div>' +
-      '<div class="collapse-contextbar">' +
-        h.groups.map(function (g) { return list(g[0], g[1]); }).join('') +
-        list('Tip:', [h.tip]) +
-        '<a class="link-standalone" href="#" data-toast="Search help is not part of this prototype">' +
-          '<span class="icon"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>Learn more</a>' +
-      '</div>';
-  }());
+  var searchHome = searchForm.parentNode;
+  var searchNext = searchForm.nextSibling;
 
   function syncSearch(r) {
     searchInput.value = r.scope === 'app' && r.page === 'search' ? S.query : '';
   }
 
-  function recentItems() { return Array.prototype.slice.call(recentPanel.querySelectorAll('.menu-item')); }
-
-  function openRecent() {
-    var list = F.recentSearches;
-    if (!list.length) return;
-    $('mob-recent-items').innerHTML =
-      '<li><h6 class="menu-section-header" id="mob-recent-label">Recent searches</h6></li>' +
-      list.map(function (q) {
-        return '<li><button class="menu-item" type="button" data-recent="' + esc(q) + '">' +
-          icon(M.ICON.history) + esc(q) + '</button></li>';
-      }).join('');
-    recentPanel.hidden = false;
-    searchInput.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeRecent() {
-    recentPanel.hidden = true;
-    searchInput.setAttribute('aria-expanded', 'false');
-  }
-
   function runSearch(q) {
     q = String(q || '').trim();
     if (!q) { searchInput.focus(); return; }
-    closeRecent();
     S.query = q;
-    F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
     var target = '#search/' + encodeURIComponent(q);
     if (location.hash === target) go(); else location.hash = target;
   }
 
   searchForm.addEventListener('submit', function (e) { e.preventDefault(); runSearch(searchInput.value); });
-  searchInput.addEventListener('focus', openRecent);
-  searchInput.addEventListener('click', openRecent);
-  searchInput.addEventListener('input', function () { if (searchInput.value) closeRecent(); else openRecent(); });
-  searchForm.addEventListener('keydown', function (e) {
-    var items = recentItems();
-    var i = items.indexOf(document.activeElement);
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (recentPanel.hidden) openRecent();
-      items = recentItems();
-      if (items.length) items[i < 0 ? 0 : Math.min(i + 1, items.length - 1)].focus();
-    } else if (e.key === 'ArrowUp' && i >= 0) {
-      e.preventDefault();
-      if (i === 0) searchInput.focus(); else items[i - 1].focus();
-    } else if (e.key === 'Escape' && !recentPanel.hidden) {
-      e.stopPropagation();
-      closeRecent();
-      searchInput.focus();
-    }
-  });
-  searchForm.addEventListener('focusout', function (e) {
-    if (!searchForm.contains(e.relatedTarget)) closeRecent();
-  });
-  recentPanel.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-recent]');
-    if (b) runSearch(b.getAttribute('data-recent'));
-  });
+
+  function placeSearch() {
+    if (narrow.matches) $('mob-drawer-search').appendChild(searchForm);
+    else searchHome.insertBefore(searchForm, searchNext);
+  }
 
   /* ========================================================== User menu
      Under the avatar, as current Mobius has it: the user's name, the
@@ -487,7 +377,6 @@
     S.step = 0;
     closeDrawer(false);
     if (!render()) return;
-    $('mob-side').scrollTop = 0;
     window.scrollTo(0, 0);
     /* A route change moves focus to the new page's heading, so it is
        announced. Not on first load. */
@@ -639,10 +528,9 @@
      Below 992px the menu is a drawer behind the Menu button: a dialog while
      it is open, with the rest of the page inert behind it. */
 
-  var sidebar = $('sidebar');
   var menuButton = $('mob-menu-open');
   var scrim = $('mob-scrim');
-  var narrow = window.matchMedia('(max-width: 991.98px)');
+  var narrow = window.matchMedia('(max-width: 1279.98px)');
 
   function drawerOpen() { return sidebar.classList.contains('is-open'); }
 
@@ -672,15 +560,15 @@
   menuButton.addEventListener('click', openDrawer);
   scrim.addEventListener('click', function () { closeDrawer(true); });
   sidebar.addEventListener('keydown', function (e) { if (drawerOpen()) wrapTab(sidebar, e); });
-  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); });
+  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); placeSearch(); });
+  placeSearch();
 
   /* =============================================================== Events */
 
   function dialogOpen() {
     /* Anything that Escape should close first: a panel, a confirmation,
-       the user menu, or the recent searches under the search field. */
-    return !!document.querySelector('.modal.show, .offcanvas.show, .mob-user-menu .dropdown-menu.show') ||
-      !$('mob-recent').hidden;
+       or the user menu. */
+    return !!document.querySelector('.modal.show, .offcanvas.show, .mob-user-menu .dropdown-menu.show');
   }
 
   document.addEventListener('click', function (e) {
@@ -697,30 +585,15 @@
     /* Links that act in place (role="button") never change the route. */
     if (el.closest('a[role="button"]')) e.preventDefault();
 
-    var g = el.closest('[data-group]');
-    if (g) {
-      var key = g.getAttribute('data-group');
-      S.open[key] = g.getAttribute('aria-expanded') !== 'true';
-      g.setAttribute('aria-expanded', String(S.open[key]));
-      $(g.getAttribute('aria-controls')).hidden = !S.open[key];
-      return;
-    }
-
-    var sw = el.closest('[data-switch]');
-    if (sw) {
-      S.switchOpen = !S.switchOpen;
-      sw.setAttribute('aria-expanded', String(S.switchOpen));
-      $('mob-switch').hidden = !S.switchOpen;
-      return;
-    }
-
     var more = el.closest('[data-more]');
     if (more) {
       var focusId = more.getAttribute('data-focus-id');
       S.polShown = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown + 5) : 5;
-      var y = $('mob-side').scrollTop;
+      var scroller = document.querySelector('.mob-rail-scroll');
+      var y = scroller ? scroller.scrollTop : 0;
       render();
-      $('mob-side').scrollTop = y;
+      scroller = document.querySelector('.mob-rail-scroll');
+      if (scroller) scroller.scrollTop = y;
       refocus(focusId);
       return;
     }

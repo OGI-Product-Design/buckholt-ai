@@ -24,8 +24,9 @@
   <!-- ======================================================================
        STATIC APPLICATION CHROME — the shared Mobius top bar
        (`prototype/app-shell.css`). Its contents are Buckholt components:
-       the Menu button (narrow screens), the system modules as Page
-       navigation with icons, the "Show wording changes" review aid
+       the Menu button (narrow screens), the search (Text input), the
+       system modules as Page navigation with icons, the "Show wording
+       changes" review aid
        (Switch), and the user menu under the avatar (Menu button + Avatar).
        ====================================================================== -->
   <header class="app-bar">
@@ -37,6 +38,20 @@
     </div>
 
     <a class="app-bar-logo" href="#dashboard">Mobius</a>
+
+    <!-- Search: Buckholt Text input with its search icon, as current Mobius
+         has it beside the wordmark. Running a search opens the results. -->
+    <form class="mob-search" role="search" id="mob-search" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="mob-search-input" class="form-label visually-hidden">Search</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email">
+        </div>
+      </div>
+    </form>
 
     <!-- System modules: Page navigation, the icon straight inside each link.
          Written by mobius-navigation.js so the current module is marked. -->
@@ -76,11 +91,12 @@
   </header>
 
   <!-- ======================================================================
-       THE MENU — Buckholt from here down.
-       Search sits at the top on every page: every journey starts with one.
-       Below it, the level's content, rebuilt on every route so each level
-       shows only its own content. A sidebar on wide screens, a drawer below
-       992px (where the modules move in here too).
+       THE MENU — Buckholt from here down. Two columns at client and policy
+       level, as in the new designs: the blue rail (the client and their
+       policies) and the record column (that record's pages and actions).
+       Both are rebuilt on every route. Nothing at app level on wide
+       screens. Below 1280px it is a drawer, which also takes the search
+       and the modules from the top bar.
        ====================================================================== -->
   <aside id="sidebar" class="mob-sidebar" aria-label="Menu">
     <div class="mob-drawer-head">
@@ -91,47 +107,14 @@
         </button>
       </div>
     </div>
-
-    <!-- Search: Buckholt Text input with its search icon. Recent searches
-         open under it in a Buckholt Menu panel. Not `.dropdown-menu`: the
-         panel is driven by mobius-navigation.js, and that class would hand
-         its arrow keys to Bootstrap's Dropdown, which has no toggle here. -->
-    <form class="mob-search" role="search" id="mob-search" autocomplete="off">
-      <div class="input">
-        <div class="input-label">
-          <label for="mob-search-input" class="form-label visually-hidden">Search</label>
-        </div>
-        <div class="response text-input">
-          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-          <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email"
-            aria-expanded="false" aria-controls="mob-recent" aria-describedby="mob-search-hint">
-        </div>
-      </div>
-      <p class="visually-hidden" id="mob-search-hint">Press the down arrow for recent searches.</p>
-      <div class="menu mob-recent-menu">
-        <div class="menu-panel show" id="mob-recent" hidden>
-          <ul class="menu-body" id="mob-recent-items"></ul>
-        </div>
-      </div>
-    </form>
-
-    <!-- "What can I search?": Buckholt Collapse, close-button variation
-         (Code & specs), under the field. Its content reuses Text block and
-         List, and a standalone Link with the External-link icon. -->
-    <div class="collapse-item mob-search-help">
-      <a class="collapse-trigger" data-bs-toggle="collapse" href="#mob-search-help" role="button" aria-expanded="false" aria-controls="mob-search-help">What can I search?</a>
-
-      <div class="collapse-card collapse" id="mob-search-help">
-        <div class="collapse-content" id="mob-search-help-content"></div>
-        <button type="button" class="btn-close" data-bs-toggle="collapse" href="#mob-search-help" aria-label="Close"></button>
-      </div>
-    </div>
-
-    <!-- Modules, on narrow screens only (they are in the top bar above 992px). -->
+    <!-- On narrow screens the search moves in here, then the modules. -->
+    <div class="mob-drawer-search" id="mob-drawer-search"></div>
     <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
 
-    <div class="mob-side-scroll" id="mob-side"></div>
-    <div class="mob-side-foot" id="mob-side-foot"></div>
+    <div class="mob-columns">
+      <div class="mob-rail" id="mob-rail" data-bs-theme="dark"></div>
+      <div class="mob-record" id="mob-record"></div>
+    </div>
   </aside>
 
   <!-- ======================================================================

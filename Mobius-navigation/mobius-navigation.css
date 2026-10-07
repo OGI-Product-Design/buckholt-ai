@@ -36,33 +36,41 @@
   white-space: nowrap;
 }
 
-.app-bar-search input::-webkit-search-cancel-button { cursor: pointer; }
+/* Search, beside the wordmark as in current Mobius. */
+/* It gives up width first when the bar is short of room. */
+.app-bar .mob-search { flex: 0 1 17rem; min-width: 9rem; margin-right: var(--spacer-05); }
+.mob-search .input-label { display: none; }
+.mob-search input::-webkit-search-cancel-button { cursor: pointer; }
 
 
 /* --------------------------------------------------------------- Modules
    Buckholt Page navigation in the top bar, with icons. Placed by the bar,
-   so it takes the room between the wordmark and the right-hand cells. */
-.mob-modules { flex: 1 1 auto; min-width: 0; margin-right: var(--spacer-05); }
+   so it takes the room between the search and the right-hand cells. */
+.mob-modules { flex: 0 0 auto; margin-right: auto; padding-right: var(--spacer-05); }
 .mob-modules .nav { flex-wrap: nowrap; }
 .mob-modules .nav-link > i { width: 1.25rem; text-align: center; }
 .mob-drawer-modules { display: none; }
 
-/* Between the drawer step and 1300px the bar cannot hold the modules and
-   the right-hand cells at once. The module links take a tighter padding,
-   and the review switch keeps its label as its accessible name but stops
-   drawing it. */
-@media (min-width: 992px) and (max-width: 1299.98px) {
+/* Up to 1680px the bar cannot hold the search, the modules and the
+   right-hand cells at once at their full size. The module links take a
+   tighter padding, and the review switch keeps its label as its accessible
+   name but stops drawing it. */
+@media (min-width: 1280px) and (max-width: 1679.98px) {
   /* Page navigation's own link padding, one spacing step tighter. */
-  .mob-modules { margin-right: var(--spacer-03); }
+  .mob-modules { padding-right: var(--spacer-03); }
   .mob-modules .nav { --nav-link-padding-x: var(--spacer-03); }
+  .app-bar .mob-search { margin-right: var(--spacer-03); }
   .mob-terms .form-check-label {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
     overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
   }
   .mob-terms .form-check-input { margin: 0; }
 }
-@media (min-width: 992px) and (max-width: 1023.98px) {
-  .app-bar .app-bar-logo { margin-right: var(--spacer-03); }
+
+/* Below 1340px the environment label ("Test") is left out of the bar,
+   as it already is on phones, to keep room for the modules. */
+@media (min-width: 1280px) and (max-width: 1339.98px) {
+  .app-bar-status { display: none; }
 }
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button
@@ -72,53 +80,82 @@
 .mob-avatar-toggle:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
 .mob-user-menu .menu-panel { z-index: 1035; }
 
-/* --------------------------------------------------------------- Search
-   At the top of the menu column, above every level's content. Recent
-   searches open as a Buckholt Menu panel directly under the field. */
-.mob-search { position: relative; flex: 0 0 auto; padding: var(--spacer-05) var(--spacer-04) 0; }
-.mob-search .input-label { display: none; }
-/* "What can I search?" sits under the field, inside the menu's gutter. */
-.mob-search-help { flex: 0 0 auto; padding: var(--spacer-03) var(--spacer-04) 0; }
-.mob-recent-menu { position: relative; }
-.mob-recent-menu .menu-panel { top: var(--spacer-02); left: 0; right: 0; --menu-max-width: none; }
-.mob-recent-menu .menu-item { display: flex; align-items: center; height: auto; min-height: var(--menu-item-height); white-space: normal; text-align: left; }
 
 /* -------------------------------------------------------------------- Menu
-   The menu column sits in Buckholt's layout-03 `sidebar` area. It stays in
-   view under the sticky top bar and scrolls on its own; "Client support"
-   is pinned to its foot. */
+   Two columns in Buckholt's layout-03 `sidebar` area, as in the new
+   designs: the rail and the record column. They stay in view under the
+   sticky top bar and each scrolls on its own. At app level there is
+   nothing in them, so the area is not drawn. */
 
 .mob-sidebar {
-  --mob-side-width: 18.5rem;                          /* 296px, the reference prototype's menu width */
-
   position: sticky;
   top: var(--app-header-height);
   align-self: start;
   display: flex;
   flex-direction: column;
-  width: var(--mob-side-width);
   height: calc(100vh - var(--app-header-height));
   background-color: var(--ui-background-01);
   border-right: 1px solid var(--ui-border-02);
 }
+.mob-sidebar.mob-side-empty { display: none; }
 
-.mob-drawer-head { display: none; }
+.mob-drawer-head, .mob-drawer-search { display: none; }
 
-.mob-side-scroll {
+.mob-columns { flex: 1 1 auto; min-height: 0; display: flex; }
+
+/* The rail: Buckholt's dark theme (`data-bs-theme="dark"`, so every
+   component inside takes its dark-theme tokens) on the primary expressive
+   rich blue. The new designs use a brighter blue; on it the dark theme's
+   link and status colours fall below contrast, so the rail takes the
+   darker expressive step, as the documentation site's own sidebar does. */
+.mob-rail {
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  flex: 0 0 auto;
+  background-color: var(--expressive-rich);
+  color: var(--text-primary);
+}
+.mob-rail-scroll {
   flex: 1 1 auto;
   min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+  padding: var(--spacer-05) var(--spacer-03);
+}
+.mob-rail-foot { flex: 0 0 auto; padding: var(--spacer-03); border-top: 1px solid var(--white-tint-30); }
+.mob-rail-foot .button-set { margin-top: 0; }
+.mob-rail .mob-side-label { margin-top: var(--spacer-04); padding: 0 var(--spacer-03); color: var(--text-secondary); }
+
+/* A rail link: icon, then a two-line label (what it is, with the status
+   Tag on the same line, then the name or reference). Page navigation's own
+   link states. */
+.mob-rail .nav-link { min-width: 0; }
+.mob-rail .nav-link { height: auto; min-height: var(--nav-link-height); padding-block: var(--spacer-03); align-items: center; }
+.mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+.mob-rail-title { font-weight: 500; }
+.mob-rail-sub { color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mob-rail-row { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); }
+.mob-rail .nav-link .tag { flex: 0 1 auto; min-width: 0; }
+.mob-rail-action { margin-top: 0; padding: 0 var(--spacer-03); }
+.mob-rail-action .btn { width: 100%; }
+.mob-more { padding: 0 var(--spacer-03); }
+
+/* The record column: which record, then its pages and actions. */
+.mob-record {
+  width: 17.5rem;
+  flex: 0 0 auto;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacer-05);
   padding: var(--spacer-05) var(--spacer-04);
 }
-
-.mob-side-foot {
-  flex: 0 0 auto;
-  padding: var(--spacer-03) var(--spacer-04);
-  border-top: 1px solid var(--ui-border-02);
-}
+.mob-record-head { padding: 0 var(--spacer-03) var(--spacer-04); border-bottom: 1px solid var(--ui-border-02); }
+.mob-record-head .title-02 { overflow-wrap: anywhere; }
+.mob-record-actions { padding-top: var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
 
 .mob-side-label {
   margin: 0 0 var(--spacer-03);
@@ -126,72 +163,32 @@
   color: var(--text-secondary);
 }
 
-.mob-back { align-self: flex-start; }
-
 /* Page navigation, stacked. `.nav-link` keeps every one of its own states;
    this only lets long labels wrap instead of running out of the column. */
-.mob-nav { --nav-gap: var(--spacer-01); }
+/* Page navigation wraps by default; stacked, a wrapping column would size
+   its links to their content rather than the column. */
+.mob-nav { --nav-gap: var(--spacer-01); flex-wrap: nowrap; }
 .mob-nav .nav-link { width: 100%; text-align: left; white-space: normal; }
 .mob-nav .nav-link > i { width: 1.25rem; flex: 0 0 auto; text-align: center; }
 
-.mob-nav-group .mob-chevron { margin-left: auto; transition: transform 0.15s ease-in-out; }
-.mob-nav-group[aria-expanded="true"] .mob-chevron { transform: rotate(180deg); }
-.mob-nav-group.mob-has-current { font-weight: 500; }
-
-/* Group pages line up with the group's label, past its icon. */
-.mob-subnav { margin-top: var(--spacer-01); padding-left: calc(1.25rem + var(--nav-link-gap)); }
+/* A group, always open: its label (not a link), then its pages, indented
+   past the icon with a rule down the left, as the new designs draw it. */
+.mob-group { margin-top: var(--spacer-03); }
+.mob-group-label {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-link-gap);
+  padding: var(--spacer-03) var(--nav-link-padding-x);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.mob-group-label > i { width: 1.25rem; flex: 0 0 auto; text-align: center; color: var(--icon-primary, inherit); }
+.mob-subnav {
+  margin-left: calc(var(--nav-link-padding-x) + 0.625rem);
+  padding-left: var(--spacer-03);
+  border-left: 1px solid var(--ui-border-02);
+}
 .mob-subnav .nav-link { --nav-link-height: 2.75rem; }   /* Buckholt's own `.nav-sm` height */
-
-@media (prefers-reduced-motion: reduce) {
-  .mob-nav-group .mob-chevron { transition: none; }
-}
-
-/* A policy in a list: a clickable Card holding a Heading attachment. Card,
-   Text block and Heading attachment keep their own spacing and type. */
-.mob-policies { display: flex; flex-direction: column; gap: var(--spacer-03); margin: 0; }
-/* The same padding as the client / policy card above it in the menu: the
-   Card's own variables bound to the spacing scale for a 296px column. */
-.mob-pol-link {
-  --card-padding-x: var(--spacer-04);
-  --card-padding-y: var(--spacer-04);
-  height: auto;
-}
-/* Heading attachment's row does not wrap. In this column a long reference
-   and a long status ("Automatic Decline") cannot sit side by side, so the
-   Tag may drop under the reference instead of overflowing the Card. */
-.mob-pol-link .heading { flex-wrap: wrap; row-gap: var(--spacer-02); }
-/* Card body gap bound to the spacing scale, as on the client / policy card,
-   so the Cover start Key-value sits close under the Text block. */
-.mob-pol-link { --card-body-gap: var(--spacer-03); }
-/* The menu column is narrow, so the Card's own arrow indicator is left off
-   (Laurence's decision, 7 October 2026). The newer local build has an
-   undocumented `.hide-indicator` opt-out; the reference build does not, so
-   it is not used. */
-.mob-policies .mob-pol-link.card-clickable .card-body::after { display: none; }
-/* The open policy: Buckholt's selected surface (--action-04, as the selected
-   table row in Originators) and the Card's own hover border colour. */
-.mob-pol-current { --card-background: var(--action-04); --card-border: var(--action-01); }
-
-.mob-more { margin-top: var(--spacer-03); }
-.mob-more .button-set { margin-top: 0; }
-
-/* The client or policy card at the top of the menu. A Card, with its own
-   padding variables bound to the spacing scale for a 296px column. */
-.mob-context-card {
-  --card-padding-x: var(--spacer-04);
-  --card-padding-y: var(--spacer-04);
-  --card-body-gap: var(--spacer-03);
-  height: auto;
-}
-.mob-context-card .title-01 { overflow-wrap: anywhere; }
-.mob-ctx-row { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); }
-.mob-ctx-row .eyebrow { margin: 0; }
-.mob-switch-toggle { margin-top: 0; }
-/* Flush with the card's text and left aligned, so a long label wraps under
-   itself rather than centring beneath the chevron. */
-.mob-switch-toggle .btn { justify-content: flex-start; padding-inline: 0; text-align: left; height: auto; min-height: var(--btn-height, 2rem); }
-.mob-switch-toggle .btn[aria-expanded="true"] .mob-chevron { transform: rotate(180deg); }
-#mob-switch .mob-nav { margin-top: var(--spacer-02); }
 
 /* Actions: Buckholt's Menu shown in place rather than in a popover. The
    panel is not floating here, so its own custom properties are bound to
@@ -225,12 +222,6 @@
   color: var(--menu-item-label-active);
   background-color: var(--menu-item-background-active);
 }
-
-/* Client card: the Avatar beside the Text block naming the client. */
-.mob-identity { display: flex; align-items: center; gap: var(--spacer-03); }
-.mob-identity .text-block { min-width: 0; }
-/* A long value may break anywhere in the narrow column. */
-.mob-kv-list .value { overflow-wrap: anywhere; }
 
 
 /* -------------------------------------------------------------------- Page */
@@ -388,11 +379,12 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 
 
 /* -------------------------------------------------------------- Narrow: drawer
-   Below 992px — the step at which the shared shell drops its own side
-   navigation — the menu leaves the grid and becomes a drawer from the left,
-   opened by the Menu button. Above the top bar (1030) and below a Bootstrap
-   modal backdrop (1050), so a panel or confirmation opened from the drawer
-   covers it. */
+   Below 1280px two menu columns would leave Main too narrow, so the menu
+   leaves the grid and becomes a drawer from the left, opened by the Menu
+   button. It also takes the search and the modules from the top bar, and
+   stacks the rail over the record column. Above the top bar (1030) and
+   below a Bootstrap modal backdrop (1050), so a panel or confirmation
+   opened from the drawer covers it. */
 
 .mob-scrim {
   position: fixed;
@@ -402,20 +394,23 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   backdrop-filter: blur(0.5rem);
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1279.98px) {
   .layout[data-layout=layout-03] { grid-template-areas: "header" "main" "footer"; grid-template-columns: 1fr; }
 
   .mob-menu-button-set { display: flex; }
 
-  .mob-sidebar {
-    --mob-side-width: min(20rem, 88vw);
+  .mob-sidebar,
+  .mob-sidebar.mob-side-empty {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     z-index: 1045;
+    display: flex;
+    width: min(20rem, 88vw);
     height: 100%;
     margin: 0;
+    overflow-y: auto;
     visibility: hidden;
     transform: translateX(-100%);
     transition: transform 0.2s ease-in-out, visibility 0s linear 0.2s;
@@ -434,6 +429,13 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
     padding: var(--spacer-03) var(--spacer-03) 0;
   }
   .mob-drawer-head .button-set { margin-top: 0; }
+  .mob-drawer-search { display: block; padding: var(--spacer-03) var(--spacer-04) 0; }
+
+  /* One scrolling drawer: the columns stack and grow to their content. */
+  .mob-columns { flex: 0 0 auto; flex-direction: column; min-height: auto; margin-top: var(--spacer-04); }
+  .mob-rail, .mob-record { width: auto; }
+  .mob-rail-scroll, .mob-record { overflow: visible; }
+  .mob-side-empty .mob-columns { display: none; }
 
   .mob-terms { display: none; }
   .mob-modules { display: none; }

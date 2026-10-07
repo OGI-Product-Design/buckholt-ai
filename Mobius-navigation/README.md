@@ -11,7 +11,7 @@ feel.** None of the prototype's CSS, colours or fonts are used.
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The page: Buckholt runtime contract, the shared top bar, the menu column, Main, and the confirmation Modal. |
+| `index.html` | The page: Buckholt runtime contract, the shared top bar, the two menu columns (rail and record), Main, and the confirmation Modal. |
 | `fixtures.js` | **All mock data in one file**: the client Reverend Motor API Automation, their 7 policies and every sample row. Swap this for real API responses. |
 | `navigation-model.js` | What each level's menu and heading contain. A direct port of the prototype's `policyNav`, `policyActions`, `policyFlows`, `CLIENT_NAV`, `CONFIRMS` and `TITLES`. |
 | `pages.js` | Every page, side panel and flow, built from Buckholt markup. |
