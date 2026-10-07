@@ -201,10 +201,10 @@
   /* ------------------------------------------------------------ Client level */
 
   /* Mirrors the policy menu: an overview on its own, then the client's
-     pages in one group, Transactions first. */
+     pages in one group, Business details first. */
   var CLIENT_NAV = [
-    { id: 'ctx', label: 'Transactions', icon: ICON.money },
     { id: 'business', label: 'Business details', icon: ICON.business },
+    { id: 'ctx', label: 'Transactions', icon: ICON.money },
     { id: 'cactivity', label: 'Activity', icon: ICON.activity },
     { id: 'ccomplaints', label: 'Complaints', icon: ICON.flag },
     { id: 'checks', label: 'Client checks', icon: ICON.checks }
