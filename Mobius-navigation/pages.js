@@ -381,14 +381,33 @@
     }).join('') + '</div>';
   }
 
-  /* A filter bar: Buckholt inputs across the Bootstrap grid at the card's
-     full width, with its action at the end of the fields, left aligned
-     (Forms: actions at the completion point). Not `.form-body`, which is
-     capped at 36rem for a stacked form and squeezes three columns. */
+  /* A filter bar, as in BACS import: Buckholt inputs side by side at a
+     content-sized width, wrapping when they run out of room, with the
+     actions on the right, in line with the fields. Buckholt does not ask
+     inputs to fill the space available (Input rows: "prefer content-driven
+     proportions over arbitrary equal widths"), so they do not stretch. In a
+     contained, right-aligned set the strongest action is at the outer edge,
+     so Clear comes before Apply. */
   function filterBar(items, actions, label) {
     return '<form class="mob-filters"' + (label ? ' role="search" aria-label="' + esc(label) + '"' : '') + ' onsubmit="return false">' +
-      fieldGrid(items, 3) + (actions && actions.length ? set(actions) : '') +
+      '<div class="mob-filter-fields">' + items.join('') + '</div>' +
+      (actions && actions.length ? set(actions, 'mob-filter-actions') : '') +
     '</form>';
+  }
+
+  /* A Buckholt Tag, status variant where it has one, with its icon. */
+  function tag(label, variant, iconCls) {
+    return '<span class="tag' + (variant ? ' tag-status tag-status-' + variant : '') + '">' +
+      (iconCls ? '<span class="icon"><i class="fa-solid ' + iconCls + '" aria-hidden="true"></i></span>' : '') +
+      '<span class="tag-label">' + t(label) + '</span>' +
+    '</span>';
+  }
+
+  /* A person in a table cell: Buckholt Avatar (extra small, initials) and
+     their name. The name carries the meaning; the Avatar is decoration. */
+  function person(x) {
+    if (!x) return '<span class="mob-not-set">Not assigned</span>';
+    return '<div class="mob-person"><div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(x[0]) + '</div></div><span>' + esc(x[1]) + '</span></div>';
   }
 
   function list(items) {
@@ -459,7 +478,7 @@
       input(prefix + 'c', 'Client ref', F.client.ref, 'text', true),
       input(prefix + 'p', 'Policy / quote ref', policy ? policy.ref : '', 'text', !!policy),
       select(prefix + 's', 'Policy status', [policy ? policy.status : 'Select'])
-    ], [btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter activity');
+    ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter activity');
   }
 
   /* Acts on the whole audit trail, so it sits in the card heading. */
@@ -477,10 +496,64 @@
       .some(function (v) { return String(v).toLowerCase().indexOf(n) >= 0; });
   }
 
+  /* Sanctions check status: a status Tag, so the status is never colour
+     alone. Current Mobius wording, in sentence case. */
+  var SANCTION = {
+    error: ['Error, check not performed', null, null],
+    overridden: ['Some matches overridden', 'warning', 'fa-triangle-exclamation'],
+    above: ['Matches above threshold', 'error', 'fa-circle-exclamation']
+  };
+
+  function tableFoot(shown, total, what) {
+    return '<div class="mob-table-foot">' +
+      '<p class="support-01">Showing 1 to ' + shown + ' of ' + total + '</p>' +
+      moreLink('Load more', ' data-toast="Would load the next ' + what + '"', AI.more) +
+    '</div>';
+  }
+
   var app = {
-    /* Broking's landing page: the results of the search run from the menu.
-       Matching is against the mock client and their policies, so swapping in
-       a real search API only replaces matches(). */
+    /* Broking's landing page: what needs the broker's attention today, as in
+       current Mobius. Two Tabs, because they are two views of one page that
+       switch in place. Searching is in the menu, on every page. */
+    dashboard: function () {
+      var d = F.outstandingDiary;
+      var sc = F.sanctionMatches;
+      var diary = card('Outstanding diary actions',
+        filterBar([
+          input('dq', 'Quote / policy number', ''),
+          select('db', 'Brand', ['Select', 'Krypton', 'Tungsten']),
+          select('da', 'Agent', ['Select', 'Dubnium']),
+          input('dc', 'Client name', ''),
+          select('dt', 'Action type', ['All', 'Cheaper quote', 'NB accepted', 'Quote saved', 'Cancel RTA letter due']),
+          input('dr', 'Due date range', ''),
+          input('dw', 'Assigned to', F.user.name)
+        ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter outstanding diary actions') +
+        table(['Quote / policy number', 'Brand', 'Agent', 'Client name', 'Action type', 'Due date', 'Days overdue', 'Assigned to'],
+          d.rows.map(function (r) {
+            return [r[0], r[1], r[2] || '–', cell('<a href="#c/summary">' + esc(r[3]) + '</a>'), r[4], r[5], r[6], cell(person(r[7]))];
+          }), { caption: 'Outstanding diary actions' }) +
+        tableFoot(d.rows.length, d.total, '6 diary actions'));
+      var sanctions = card('Sanctions check matches',
+        filterBar([
+          select('ss1', 'Status', ['All', 'Error, check not performed', 'Some matches overridden', 'Matches above threshold']),
+          input('ss2', 'Client reference', ''),
+          input('ss3', 'Policy reference', ''),
+          input('ss4', 'Client name', ''),
+          input('ss5', 'Business source code', '')
+        ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter sanctions check matches') +
+        table(['Status', 'Matches above threshold', 'Highest match quality', 'Date and time', 'Client reference', 'Policy reference', 'Client name', 'Business source code'],
+          sc.rows.map(function (r) {
+            var st = SANCTION[r[0]];
+            return [cell(tag(st[0], st[1], st[2])), r[1] || '–', r[2] || '–', r[3], r[4] || '–', r[5] || '–',
+              cell('<a href="#c/summary">' + esc(r[6]) + '</a>'), r[7]];
+          }), { caption: 'Sanctions check matches' }) +
+        tableFoot(sc.rows.length, sc.total, '6 matches'));
+      return [tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
+    },
+
+    /* The results of a search run from the menu. Matching is against the
+       mock client and their policies, so swapping in a real search API only
+       replaces matches(). */
     search: function () {
       var c = F.client;
       var q = S.query;
@@ -489,7 +562,7 @@
         select('sb', 'Brand', ['Select', 'Krypton']),
         select('sl', 'Line of business', ['Select', 'Open Market Motor']),
         select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
-      ], [btn('Apply', { variant: 'secondary', icon: AI.filter }), btn('Clear', { icon: AI.clear })], 'Filter search results'));
+      ], [btn('Clear', { icon: AI.clear }), btn('Apply', { variant: 'secondary', icon: AI.filter })], 'Filter search results'));
       if (!found) {
         return [stack([filters,
           card('No clients found for “' + q + '”', empty('Check the name, reference or email and search again, or create a new client.'))])];
@@ -501,8 +574,9 @@
             table(['Name', 'Reference', 'Address', 'Postcode'],
               [[cell('<a href="#c/summary"><strong>' + esc(c.name) + '</strong></a>'), c.ref, c.addressShort, c.postcode]],
               { hrefs: ['#c/summary'], caption: 'Clients found' }) +
+            /* The client's name is the link to the client: no separate
+               "Open client" link repeating it. */
             fields([['Email address', c.email], ['[[Date of birth]]', c.dob], ['Policies', F.policies.length + ' linked']]) +
-            standalone('Open client', '#c/summary') +
             '<div class="text-block"><h3 class="title-01">Client policies</h3></div>' +
             policiesTable())
         ])
@@ -956,7 +1030,7 @@
     var names = ['Product selection'].concat(secs.map(function (s) { return s.title; }));
     var c = Math.min(S.step, names.length - 1);
     var body = c === 0 ? productSelection() : detailCards(secs[c - 1], null, { editable: c - 1 !== 2 && c - 1 !== 3, blank: true });
-    return [progress(names, c), stack([body]), flowNav(c, names.length, '#search', 'Client created and quote run')];
+    return [progress(names, c), stack([body]), flowNav(c, names.length, '#dashboard', 'Client created and quote run')];
   }
 
   /* ========================================================== Side panels
@@ -1115,7 +1189,7 @@
       return out + set(labelled);
     }
 
-    if (R.scope === 'app' && R.page === 'search') {
+    if (R.scope === 'app' && (R.page === 'dashboard' || R.page === 'search')) {
       var nc = M.APP_ACTIONS.newclient;
       return set([btn(nc.label, { variant: 'primary', icon: nc.icon, href: '#' + nc.to })]);
     }

@@ -4,7 +4,7 @@
 
    Routes are the prototype's hash routes, unchanged:
 
-     #search[/{query}]  #newclient             Broking (app level)
+     #dashboard  #search/{query}  #newclient   Broking (app level)
      #activity #renewals #bordereau #accounts   other modules (placeholders)
      #c/{page}                                  client level
      #p/{policy id}/{page}                      policy level
@@ -17,7 +17,7 @@
 
      app      nothing below Search (the modules are in the top bar)
      client   back link, client card, Go to, the client's policies
-     policy   "Client: {name}" back link, policy card with Switch policy,
+     policy   "Back to client" link, policy card with Switch policy,
               Go to (the status's pages), Actions (the status's actions)
 
    Menu actions only happen in place. A side panel opens in the shared
@@ -43,7 +43,8 @@
 
   /* open: expanded menu groups, keyed by level and group. polShown: how many
      policies every policy list shows. step: the current step of a flow. */
-  var S = { open: {}, polShown: 5, switchOpen: false, step: 0, panelKey: null, query: F.search.query };
+  /* query: the last search run, or null before the first one. */
+  var S = { open: {}, polShown: 5, switchOpen: false, step: 0, panelKey: null, query: null };
   P.init(S);
 
   var R = null;
@@ -52,13 +53,17 @@
   /* ================================================================ Routing */
 
   function parse() {
-    var h = location.hash.replace(/^#/, '') || 'search';
+    var h = location.hash.replace(/^#/, '') || 'dashboard';
     var parts = h.split('/');
     if (parts[0] === 'c') return { scope: 'client', page: parts[1] || 'summary' };
     if (parts[0] === 'p' && POLICY_BY_ID[parts[1]]) return { scope: 'policy', p: POLICY_BY_ID[parts[1]], page: parts[2] || 'summary' };
-    if (parts[0] === 'search' && parts[1]) S.query = decodeURIComponent(parts.slice(1).join('/'));
+    /* Search results only exist for a search: a bare #search is the dashboard. */
+    if (parts[0] === 'search' && parts[1]) {
+      S.query = decodeURIComponent(parts.slice(1).join('/'));
+      return { scope: 'app', page: 'search' };
+    }
     if (['newclient', 'activity', 'renewals', 'bordereau', 'accounts'].indexOf(h) >= 0) return { scope: 'app', page: h };
-    return { scope: 'app', page: 'search' };
+    return { scope: 'app', page: 'dashboard' };
   }
 
   function href(r, page) {
@@ -189,27 +194,36 @@
     var c = F.client;
 
     if (r.scope === 'app') {
-      /* Broking's landing page and the other modules have nothing below the
-         search: the modules are in the top bar, and "Create new client"
-         opens a page, so it is in the Search results heading. */
+      /* Broking's pages and the other modules have nothing below the search:
+         the modules are in the top bar, and "Create new client" opens a
+         page, so it is in the Broking page headings. */
     } else if (r.scope === 'client') {
-      html += backLink('#search', 'Search results');
-      html += '<div class="card mob-context-card"><div class="card-body"><div class="text-block">' +
-        '<span class="eyebrow">Client</span>' +
-        '<h2 class="title-01">' + esc(c.name) + '</h2>' +
-        '<p class="support-01">' + esc(c.ref) + '</p>' +
-      '</div></div></div>';
+      html += S.query ? backLink(searchHref(), 'Back to search results') : backLink('#dashboard', 'Back to dashboard');
+      /* Who this is, then the facts a broker checks first. Avatar (initials)
+         beside a Text block, then a Buckholt Key-value list. */
+      html += '<div class="card mob-context-card"><div class="card-body">' +
+        '<div class="mob-identity">' +
+          '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+          '<div class="text-block">' +
+            '<span class="eyebrow">Client</span>' +
+            '<h2 class="title-01">' + esc(c.name) + '</h2>' +
+          '</div>' +
+        '</div>' +
+        kvList([['Client reference', esc(c.ref)], ['[[Date of birth]]', esc(c.dob)], ['Postcode', esc(c.postcode)], ['Policies', String(F.policies.length)]]) +
+      '</div></div>';
       html += '<nav aria-labelledby="mob-nav-client">' + sectionLabel('mob-nav-client', 'Go to') + navList(M.CLIENT_NAV, r.page, r) + '</nav>';
       html += '<nav aria-labelledby="mob-nav-policies">' + sectionLabel('mob-nav-policies', 'Policies (' + F.policies.length + ')') + policyLinks(null, false) + '</nav>';
     } else {
       var p = r.p;
-      html += backLink('#c/summary', 'Client: ' + c.name);
+      html += backLink('#c/summary', 'Back to client');
       html += '<div class="card mob-context-card"><div class="card-body">' +
         '<div class="text-block">' +
           '<div class="mob-ctx-row"><span class="eyebrow">Policy</span>' + ui.statusTag(p, true) + '</div>' +
           '<h2 class="title-01">' + esc(p.ref) + '</h2>' +
           '<p class="support-01">' + esc(c.businessLine) + ' · ' + esc(c.brand) + '</p>' +
         '</div>' +
+        /* What the record strip used to carry, now that breadcrumbs replace it. */
+        kvList([['Client', esc(c.name)], ['[[Cover start]]', esc(p.start.split(' ')[0])], ['Policy duration', esc(p.hdrDur || p.dur)]]) +
         /* A disclosure, so a Button: ghost, small, flush with the card's text,
            with the chevron after the label (Button's trailing `.btn-icon`). */
         ui.set([ui.btn('Switch policy (' + F.policies.length + ' for this client)', {
@@ -232,30 +246,72 @@
     foot.innerHTML = foot.hidden ? '' : actionMenu([{ sub: null, ids: ['support'] }], M.GLOBAL_ACTIONS, 'global', null);
   }
 
-  /* ======================================================= Record context
-     The current record, under the top bar. Buckholt Key-value pairs in a
-     row; the status is its Tag. */
-  function renderContext(r) {
-    var el = $('mob-context');
-    if (r.scope === 'app') { el.hidden = true; el.innerHTML = ''; return; }
+  /* Buckholt Key-value list, stacked (key over value, so a long value has
+     the column's full width), with the small key size. */
+  function kvList(rows) {
+    return '<div class="key-value-list key-value-list-stacked mob-kv-list">' + rows.map(function (x) {
+      return '<div class="key-value key-value-sm"><span class="key">' + t(x[0]) + '</span><span class="value">' + x[1] + '</span></div>';
+    }).join('') + '</div>';
+  }
+
+  function searchHref() { return '#search/' + encodeURIComponent(S.query); }
+
+  /* ========================================================= Breadcrumbs
+     Location-based: Dashboard › Search results (once a search has been run)
+     › client › policy › page. They replace the record strip that used to sit
+     under the top bar. The current page is the last, unlinked item.
+     Breadcrumbs should not wrap, so a long trail puts its middle in
+     Breadcrumb's documented overflow menu: past four items on wide screens
+     (Dashboard › … › client › policy › page), and past two below 768px
+     (Dashboard › … › page). */
+  var phone = window.matchMedia('(max-width: 767.98px)');
+  function crumbs(r, title) {
     var c = F.client;
-    var kv = function (k, v, hideKey) {
-      return '<div class="key-value"><span class="key' + (hideKey ? ' visually-hidden' : '') + '">' + t(k) + '</span><span class="value">' + v + '</span></div>';
-    };
-    var h = kv('Client', esc(c.name), true) + kv('Client reference', esc(c.ref));
-    if (r.scope === 'policy') {
-      h += kv('[[Reference]]', esc(r.p.ref)) + kv('Policy duration', esc(r.p.hdrDur || r.p.dur)) +
-        '<div class="key-value">' + ui.statusTag(r.p, false, 'Status: ') + '</div>';
+    var trail = [];
+    if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
+    trail.push(['Dashboard', '#dashboard']);
+    if (r.scope !== 'app' && S.query) trail.push(['Search results', searchHref()]);
+    if (r.scope === 'client') {
+      if (r.page === 'summary') trail.push([c.name, null]);
+      else trail.push([c.name, '#c/summary'], [title, null]);
+    } else if (r.scope === 'policy') {
+      trail.push([c.name, '#c/summary']);
+      if (r.page === 'summary') trail.push([r.p.ref, null]);
+      else trail.push([r.p.ref, ui.policyHref(r.p)], [title, null]);
+    } else {
+      trail.push([r.page === 'search' ? 'Search results' : title, null]);
     }
-    el.innerHTML = '<div class="key-value-list key-value-list-row">' + h + '</div>';
-    el.hidden = false;
+
+    var item = function (x) {
+      return x[1]
+        ? '<li class="breadcrumb-item"><a class="breadcrumb-link" href="' + x[1] + '">' + t(x[0]) + '</a></li>'
+        : '<li class="breadcrumb-item active" aria-current="page">' + t(x[0]) + '</li>';
+    };
+    var html;
+    var keep = phone.matches ? 1 : 3;
+    if (trail.length > keep + 1) {
+      var hidden = trail.slice(1, trail.length - keep);
+      html = item(trail[0]) +
+        '<li class="breadcrumb-item menu" data-bs-toggle="tooltip" data-bs-title="More pages">' +
+          '<a class="breadcrumb-link menu-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-crumb-menu" aria-label="More pages">…</a>' +
+          '<div class="menu-panel dropdown-menu" id="mob-crumb-menu">' +
+            '<ul class="menu-body" role="menu">' + hidden.map(function (x) {
+              return '<li><button class="menu-item" type="button" data-go="' + x[1] + '">' + t(x[0]) + '</button></li>';
+            }).join('') + '</ul>' +
+          '</div>' +
+        '</li>' +
+        trail.slice(trail.length - keep).map(item).join('');
+    } else {
+      html = trail.map(item).join('');
+    }
+    return '<nav aria-label="breadcrumb" class="mob-crumbs"><ol class="breadcrumb">' + html + '</ol></nav>';
   }
 
   /* ================================================================= Page */
 
   function titleFor(r) {
     var tt = (M.TITLES[r.scope] || {})[r.page] || ['', ''];
-    var title = tt[0].replace('@query', S.query);
+    var title = tt[0].replace('@query', S.query || '');
     var eyebrow = r.scope === 'policy' ? (tt[1] || 'Policy') + ' · ' + r.p.ref : tt[1];
     return { title: title, eyebrow: eyebrow };
   }
@@ -269,6 +325,7 @@
 
     main.innerHTML =
       '<div class="page-panel">' +
+        crumbs(r, tt.title) +
         '<div class="mob-heading">' +
           '<div class="text-block">' +
             (tt.eyebrow ? '<span class="eyebrow">' + t(tt.eyebrow) + '</span>' : '') +
@@ -290,7 +347,6 @@
     Shell.disposeTooltips($('sidebar'));
     renderModules(R);
     renderSide(R);
-    renderContext(R);
     syncSearch(R);
     renderPage(R);
     Shell.initTooltips($('sidebar'));
@@ -302,7 +358,7 @@
      straight inside the link). Client and policy pages belong to Broking.
      The same list is written into the drawer for narrow screens. */
   function renderModules(r) {
-    var cur = r.scope === 'app' && r.page !== 'newclient' ? r.page : 'search';
+    var cur = r.scope === 'app' && ['dashboard', 'search', 'newclient'].indexOf(r.page) < 0 ? r.page : 'dashboard';
     var list = function (extra) {
       return '<ul class="nav' + (extra ? ' ' + extra : '') + '">' + M.MODULES.map(function (m) {
         var on = m.id === cur;
@@ -322,6 +378,25 @@
   var searchForm = $('mob-search');
   var searchInput = $('mob-search-input');
   var recentPanel = $('mob-recent');
+
+  /* "What can I search?" content: Collapse's title in a Text block, then the
+     groups as Buckholt Lists with a list heading, inside the documented
+     `.collapse-contextbar` (which spaces them and the Link). */
+  (function () {
+    var h = F.searchHelp;
+    var list = function (head, items) {
+      return '<ul class="list"><li class="list-heading">' + esc(head) + '</li>' +
+        items.map(function (x) { return '<li class="list-item">' + esc(x) + '</li>'; }).join('') + '</ul>';
+    };
+    $('mob-search-help-content').innerHTML =
+      '<div class="text-block"><h6 class="collapse-title">' + esc(h.title) + '</h6></div>' +
+      '<div class="collapse-contextbar">' +
+        h.groups.map(function (g) { return list(g[0], g[1]); }).join('') +
+        list('Tip:', [h.tip]) +
+        '<a class="link-standalone" href="#" data-toast="Search help is not part of this prototype">' +
+          '<span class="icon"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>Learn more</a>' +
+      '</div>';
+  }());
 
   function syncSearch(r) {
     searchInput.value = r.scope === 'app' && r.page === 'search' ? S.query : '';
@@ -615,6 +690,9 @@
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
+    /* Breadcrumb overflow items are Menu buttons (Code & specs); each goes to its page. */
+    var goEl = el.closest('[data-go]');
+    if (goEl) { location.hash = goEl.getAttribute('data-go').replace(/^#/, ''); return; }
 
     /* Links that act in place (role="button") never change the route. */
     if (el.closest('a[role="button"]')) e.preventDefault();
@@ -691,7 +769,7 @@
     if (cf && !cf.disabled) { openConfirm(cf.getAttribute('data-confirm'), cf); return; }
 
     var ts = el.closest('[data-toast]');
-    if (ts) { toast(ts.getAttribute('data-toast')); return; }
+    if (ts) { if (ts.tagName === 'A') e.preventDefault(); toast(ts.getAttribute('data-toast')); return; }
 
     /* Clickable table rows. The row's own link is the keyboard path; a click
        anywhere else on the row follows it. */
@@ -725,6 +803,7 @@
   }, true);
 
   window.addEventListener('hashchange', go);
+  phone.addEventListener('change', function () { if (R) renderPage(R); });
 
   Shell.startClock();
   Shell.initTooltips(document.querySelector('.app-bar'));

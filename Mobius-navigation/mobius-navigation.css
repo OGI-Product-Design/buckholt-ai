@@ -77,6 +77,8 @@
    searches open as a Buckholt Menu panel directly under the field. */
 .mob-search { position: relative; flex: 0 0 auto; padding: var(--spacer-05) var(--spacer-04) 0; }
 .mob-search .input-label { display: none; }
+/* "What can I search?" sits under the field, inside the menu's gutter. */
+.mob-search-help { flex: 0 0 auto; padding: var(--spacer-03) var(--spacer-04) 0; }
 .mob-recent-menu { position: relative; }
 .mob-recent-menu .menu-panel { top: var(--spacer-02); left: 0; right: 0; --menu-max-width: none; }
 .mob-recent-menu .menu-item { display: flex; align-items: center; height: auto; min-height: var(--menu-item-height); white-space: normal; text-align: left; }
@@ -224,17 +226,11 @@
   background-color: var(--menu-item-background-active);
 }
 
-
-/* ------------------------------------------------------------ Record strip */
-
-.mob-context {
-  padding: var(--spacer-04) var(--page-body-spacing-x);
-  background-color: var(--expressive-pale);
-  border-bottom: 1px solid var(--ui-border-02);
-}
-.mob-context .key-value-list-row { align-items: center; gap: var(--spacer-03) var(--spacer-05); }
-.mob-context .key-value { gap: var(--spacer-03); }
-.mob-context .key-value:first-child .value { font-weight: 600; }
+/* Client card: the Avatar beside the Text block naming the client. */
+.mob-identity { display: flex; align-items: center; gap: var(--spacer-03); }
+.mob-identity .text-block { min-width: 0; }
+/* A long value may break anywhere in the narrow column. */
+.mob-kv-list .value { overflow-wrap: anywhere; }
 
 
 /* -------------------------------------------------------------------- Page */
@@ -339,9 +335,19 @@
 /* Clickable rows keep Buckholt's own row hover; only the pointer is added. */
 .mob-row-link { cursor: pointer; }
 
-/* Filter bar: fields across the card's full width, its action under them. */
-.mob-filters { display: flex; flex-direction: column; gap: var(--spacer-05); }
+/* Filter bar: content-width fields that wrap, the actions on the right in
+   line with the fields' bottom edge (as in BACS import). 14rem keeps three
+   fields and the actions on one row in Main at 1440px. */
+.mob-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--spacer-05) var(--spacer-04); }
+/* The fields wrapper takes no box, so the actions flow on the last row of
+   fields rather than dropping under all of them. */
+.mob-filter-fields { display: contents; }
+.mob-filter-fields > .input { width: 14rem; }
 .mob-filters .button-set { margin-top: 0; }
+.mob-filters .mob-filter-actions { margin-left: auto; }
+
+/* A person in a table: Avatar and name on one line. */
+.mob-person { display: flex; align-items: center; gap: var(--spacer-03); white-space: nowrap; }
 
 /* Card heading actions sit at the right; when they wrap under the heading
    they stay right aligned. */
@@ -432,7 +438,6 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-terms { display: none; }
   .mob-modules { display: none; }
   .mob-drawer-modules { display: block; padding: var(--spacer-04) var(--spacer-04) 0; }
-  .mob-context { padding-inline: var(--spacer-05); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -451,7 +456,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
      recommends (application layer, not Buckholt). */
   #mob-page .progress { min-width: 0; }
   .app-bar-status { display: none; }
-  .mob-context { padding-inline: var(--spacer-04); }
+  .mob-filter-fields > .input { width: 100%; }
 }
 
 
