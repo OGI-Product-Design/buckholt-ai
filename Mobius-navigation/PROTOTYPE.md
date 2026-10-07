@@ -65,8 +65,8 @@ prototype the left column *is* the redesigned menu.
 | Client and policy cards at the top of the menu | Card (`.card > .card-body > .text-block`, eyebrow + `title-01`). The policy card carries the status Tag (`.tag-sm`) and the "Switch policy (7 for this client)" ghost Button (`aria-expanded`, `aria-controls`) |
 | Go to: pages | Page navigation (`ul.nav > li.nav-item > a.nav-link`), with the icon directly inside the link, `.active` and `aria-current="page"` on the current page. Stacked with `.flex-column`, as Buckholt's documentation site stacks its own side navigation |
 | Collapsible groups (Policy, Transactions…) | `button.nav-link` with `aria-expanded` / `aria-controls`, plus a nested `ul.nav`. It opens by itself when it holds the current page |
-| Client policies, policy switcher | Page navigation links: reference, status Tag, then "Open Market Motor · cover start {date}" in `support-01` |
-| Load more / Show fewer | Button, secondary, small, in a stacked Button set |
+| Client policies, policy switcher | One clickable Card (`a.card.card-clickable`) per policy, Buckholt's documented "the whole thing is one link" pattern with its own arrow: status Tag on its own row, the reference (`title-01`), then "Open Market Motor" and "Cover start {date}" on a line each (`support-01`). The open policy uses Buckholt's selected surface, `--action-04`, and a `--action-01` border |
+| Load more / Show fewer | Standalone Link, left aligned, with a chevron in `.icon` |
 | Actions | Menu (`.menu-body`, `.menu-section-header`, `.menu-item` with its icon directly inside, `.menu-divider`, `.menu-item-danger`), shown in place (see deviation 2) |
 | Client support (menu foot) | Menu item, the same as other panel actions. Client and policy level only |
 
@@ -138,7 +138,9 @@ excess names and "Automatic Decline" are kept as data.
   the scrim close it, and focus returns to the Menu button. A panel or confirmation opened from
   the drawer covers it, and closing that leaves the drawer open with focus back on the action.
   Following a link closes the drawer.
-- Every table has a visually hidden caption, and every unlabelled column has a hidden heading.
+- Every table is named with `aria-label`, and every unlabelled column has a hidden heading. A
+  visually hidden `<caption>` is not used: it keeps 1px of height inside `.table-content`, which
+  scrolls in both directions, so every table showed a vertical scrollbar.
   Yes/No questions are fieldsets with a legend.
 
 ---
@@ -185,12 +187,16 @@ Button says "use Button for actions, Link for navigation". "Add new quote" and "
 open a page, and the brief puts them in the heading as buttons. They are `<a class="btn">`, as in
 the prototype, so they keep link semantics.
 
-### 4. Count badges use the runtime `.badge.badge-floating`
+### 4. Count badges follow Mark's badge design
 
-`.badge` (with `.badge-floating`) exists in `css/buckholt.css` but has no Code & specs page, so
-it is runtime-only evidence. The badge is `aria-hidden`; the count is in the accessible name.
+The design draws a red circle with a white count, centred on the top-right corner of the Button,
+which widens to a pill for "999+". It isn't in Buckholt's documentation yet. It is built on the
+runtime `.badge.badge-floating` by binding that component's own custom properties to Buckholt
+tokens: `--action-danger-01`, `--text-light`, `--border-radius-full` and `--shadow-xs`. Counts
+over 999 read "999+". The badge is `aria-hidden`, and the count is in the Button's accessible
+name.
 
-> **Gap:** `.badge` is undocumented.
+> **Gap:** `.badge` and this design are not in Buckholt's documentation.
 
 ### 5. Flow progress uses Progress bar, not a stepper
 
@@ -218,12 +224,12 @@ Buckholt Tabs (`.nav-underline`, Bootstrap pill behaviour).
 | History timeline | Date + Versa-tile | No timeline |
 | Info strips | Alert, info, without a close control | |
 | "Existing … content sits here" | Alert, info, titled **"Placeholder: existing Mobius content"**, with the prototype's own sentence | Dashboard, Client support |
-| Link-styled buttons in Policy summary, Excesses and Endorsements (they open panels) | Ghost small Buttons | They act in place, so Button rather than Link |
+| Values that open a panel in Policy summary, Excesses and Endorsements | Standalone Links with `role="button"` (Space activates them too). An unavailable one is muted text, because Link has no disabled state | Laurence's decision, 7 October 2026: Link's rules reserve it for navigation, but these read as values |
 | Field grids | Stacked Key-value pairs on the Bootstrap grid | |
 
 ### 8. Form action order
 
-The Search results filter puts Apply (primary) before Clear (ghost), and the Forms pattern puts
+The Search results filter puts Apply (secondary) before Clear (ghost), and the Forms pattern puts
 the primary first and left-aligned on in-page forms. The prototype drew Clear first.
 
 ### 9. Icons
@@ -263,7 +269,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Search results | Create new client (heading) | Apply (filters), Open client |
+| Search results | Create new client (heading) | Apply (filters). Open client is now a standalone Link |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a heading action it is the primary; otherwise the primary is the page's one
@@ -272,6 +278,39 @@ and confirmations are their own screen context, and each keeps one primary: Save
 action. An audit across all 120 routes, every flow step, every side panel and the confirmation
 finds no screen with more than one primary.
 
+### 10b. Button hierarchy and placement (7 October 2026)
+
+The pages had too many outlined Buttons. Buckholt's hierarchy is applied as:
+
+| Emphasis | Used for |
+| --- | --- |
+| Primary | The one main action of the screen |
+| Secondary | Only beside the primary in the page heading, a filter form's Apply, a form's own Save, and Back in a flow |
+| Ghost (the default) | Every other card and table action. As in Buckholt's table-action pattern, it shows an icon and a label; icons are all or none within a set |
+| Standalone Link | Anything that navigates (Open client, Amend risk), "more" actions on tables and content (Load more, Show fewer, Load more quotes, Show statistics for more clients), and values that open a panel |
+
+Placement follows one rule:
+
+- Actions on a whole card or table go in the card heading, top right, with any primary at the
+  outer edge.
+- A form's action goes at its end, left aligned, primary first (Forms pattern).
+- Quote summary closes its card with Form's documented actions: "Convert to policy" (primary),
+  then "Amend risk" as a standalone Link.
+- "More" links go at the bottom left. Row actions stay in their row.
+
+Filter bars (Activity, Search results, Documents, Notes) use Buckholt inputs across the card's
+full width on the Bootstrap grid, with Input row's own gutters. Previously they sat inside
+`.form-body`, which Buckholt caps at 36rem for a stacked form, and that squeezed the fields.
+Editable forms in flows are stacked, as the Forms pattern sets by default. Intro sentences sit in
+the card's Text block under its heading, as Text block example 1 does.
+
+### 10c. Page titles use a Display type set
+
+Typography: "Use display styles sparingly for standout moments such as page titles." The page
+`<h1>` is `display-01` (36px), the smallest Display set. `headline-02` (28px) is a section-heading
+style. The eyebrow above it is Text block's documented `<span class="eyebrow">` (Code & specs
+example 3).
+
 ### 11. Small layout fixes, all scoped to this feature
 
 - The menu column is sticky under the top bar and scrolls on its own, with Client support pinned
@@ -279,8 +318,10 @@ finds no screen with more than one primary.
 - A visually hidden column heading is absolutely positioned. Without a containing block inside
   `.table-content`, it escapes the table's scroller and widens the page whenever a table scrolls.
   `#main .table-content { position: relative }` keeps it inside. This is worth a Buckholt ticket.
-- The Card in the menu binds its own `--card-padding-*` variables to `--spacer-04` for a 296px
-  column.
+- The Cards in the menu (the client or policy card, and each policy's clickable Card) bind their
+  own `--card-padding-*` variables to `--spacer-04` for a 296px column.
+- The Switch policy toggle is flush with the card's text and left aligned, with its chevron after
+  the label, so it no longer centres and wraps under the chevron.
 - Breakpoints use the **local** build's scale (576 / 768 / 992 / 1200 / 1400), like every other
   prototype here. On the live reference scale they would land at other widths.
 

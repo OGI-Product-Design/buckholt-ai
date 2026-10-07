@@ -115,17 +115,27 @@
      cover start. In the switcher the open policy is the current item of the
      set (aria-current="true"); it is the current page only on its overview. */
   function policyLinks(curId, inSwitcher) {
-    return '<ul class="nav flex-column mob-nav mob-policies">' + ui.shownPolicies().map(function (p) {
+    /* Each policy is a Buckholt clickable Card (`a.card.card-clickable`),
+       the documented "the whole thing is one link" pattern, with its own
+       arrow indicator. Inside: the status Tag, the reference, then the line
+       of business and the cover start. */
+    return '<ul class="list-unstyled mob-policies">' + ui.shownPolicies().map(function (p) {
       var on = p.id === curId;
-      return '<li class="nav-item">' +
-        '<a class="nav-link mob-pol-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' +
+      return '<li>' +
+        '<a class="card card-clickable mob-pol-link' + (on ? ' mob-pol-current' : '') + '" href="' + ui.policyHref(p) + '"' +
           (on ? ' aria-current="' + (inSwitcher ? 'true' : 'page') + '"' : '') + '>' +
-          '<span class="mob-pol-row"><span class="mob-pol-ref">' + esc(p.ref) + '</span>' + ui.statusTag(p, true) + '</span>' +
-          '<span class="support-01 mob-pol-meta">' + esc(F.client.businessLine) + ' · ' + t('[[cover start]]') + ' ' + esc(p.start.split(' ')[0]) + '</span>' +
+          '<div class="card-body"><div class="text-block">' +
+            /* The status Tag has a row of its own, so it sits in the same place
+               on every card whatever the reference's length. */
+            '<div class="mob-pol-row">' + ui.statusTag(p, true) + '</div>' +
+            '<span class="title-01 mob-pol-ref">' + esc(p.ref) + '</span>' +
+            /* One fact per line, so neither wraps mid-phrase in the column. */
+            '<p class="support-01 mob-pol-meta">' + esc(F.client.businessLine) + '<br>' + t('[[Cover start]]') + ' ' + esc(p.start.split(' ')[0]) + '</p>' +
+          '</div></div>' +
         '</a>' +
       '</li>';
     }).join('') + '</ul>' +
-    '<div class="mob-more">' + ui.set([ui.loadMoreButton(inSwitcher ? 'switch' : 'side')], 'button-set-stacked') + '</div>';
+    '<div class="mob-more">' + ui.loadMoreButton(inSwitcher ? 'switch' : 'side') + '</div>';
   }
 
   /* Actions: Buckholt Menu items shown in place rather than behind a
@@ -189,8 +199,11 @@
           '<h2 class="title-01">' + esc(p.ref) + '</h2>' +
           '<p class="support-01">' + esc(c.businessLine) + ' · ' + esc(c.brand) + '</p>' +
         '</div>' +
+        /* A disclosure, so a Button: ghost, small, flush with the card's text,
+           with the chevron after the label (Button's trailing `.btn-icon`). */
         ui.set([ui.btn('Switch policy (' + F.policies.length + ' for this client)', {
-          variant: 'ghost', size: 'sm', icon: 'fa-regular fa-chevron-down mob-chevron',
+          variant: 'ghost', size: 'sm',
+          after: '<div class="btn-icon"><i class="fa-regular fa-chevron-down mob-chevron" aria-hidden="true"></i></div>',
           attrs: ' data-switch aria-expanded="' + S.switchOpen + '" aria-controls="mob-switch"' })], 'mob-switch-toggle') +
         '<nav id="mob-switch" aria-label="Switch policy"' + (S.switchOpen ? '' : ' hidden') + '>' + policyLinks(p.id, true) + '</nav>' +
       '</div></div>';
@@ -248,7 +261,7 @@
         '<div class="mob-heading">' +
           '<div class="text-block">' +
             (tt.eyebrow ? '<span class="eyebrow">' + t(tt.eyebrow) + '</span>' : '') +
-            '<h1 class="headline-02" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
+            '<h1 class="display-01" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
           '</div>' +
           (actions ? '<div class="mob-heading-actions">' + actions + '</div>' : '') +
         '</div>' +
@@ -484,6 +497,9 @@
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
 
+    /* Links that act in place (role="button") never change the route. */
+    if (el.closest('a[role="button"]')) e.preventDefault();
+
     var g = el.closest('[data-group]');
     if (g) {
       var key = g.getAttribute('data-group');
@@ -549,6 +565,7 @@
     }
 
     var panel = el.closest('[data-panel]');
+    if (panel && panel.tagName === 'A') e.preventDefault();
     if (panel && !panel.disabled) { openPanel(panel.getAttribute('data-panel'), panel.getAttribute('data-arg'), panel); return; }
 
     var cf = el.closest('[data-confirm]');
@@ -562,6 +579,11 @@
     if (el.closest('a, button, input, select, textarea, label')) return;
     var row = el.closest('tr[data-href]');
     if (row) location.hash = row.getAttribute('data-href').replace(/^#/, '');
+  });
+
+  /* Links that act in place are role="button": Space activates them too. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === ' ' && e.target.matches && e.target.matches('a[role="button"]')) { e.preventDefault(); e.target.click(); }
   });
 
   document.addEventListener('change', function (e) {

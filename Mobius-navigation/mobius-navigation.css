@@ -103,11 +103,23 @@
 }
 
 /* A policy in a list: reference and status Tag, then a support line. */
-.mob-pol-link { flex-direction: column; align-items: stretch; gap: var(--spacer-01); padding-block: var(--spacer-03); }
-.mob-pol-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-02) var(--spacer-03); }
+.mob-policies { display: flex; flex-direction: column; gap: var(--spacer-03); margin: 0; }
+/* Clickable Card in a 296px column: its own padding and gap variables bound
+   to the spacing scale, as for the client and policy card above. */
+.mob-pol-link {
+  --card-padding-x: var(--spacer-04);
+  --card-padding-y: var(--spacer-04);
+  --card-body-gap: var(--spacer-02);
+  height: auto;
+}
+.mob-pol-link .text-block { gap: var(--spacer-02); }
+.mob-pol-link .text-block p { margin: 0; }
+.mob-pol-row { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-02) var(--spacer-03); }
 .mob-pol-ref { overflow-wrap: anywhere; }
 .mob-pol-meta { color: var(--text-secondary); }
-.mob-pol-link.active .mob-pol-meta { color: inherit; }
+/* The open policy: Buckholt's selected surface (--action-04, as the selected
+   table row in Originators) and the Card's own hover border colour. */
+.mob-pol-current { --card-background: var(--action-04); --card-border: var(--action-01); }
 
 .mob-more { margin-top: var(--spacer-03); }
 .mob-more .button-set { margin-top: 0; }
@@ -124,7 +136,9 @@
 .mob-ctx-row { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); }
 .mob-ctx-row .eyebrow { margin: 0; }
 .mob-switch-toggle { margin-top: 0; }
-.mob-switch-toggle .btn { justify-content: flex-start; }
+/* Flush with the card's text and left aligned, so a long label wraps under
+   itself rather than centring beneath the chevron. */
+.mob-switch-toggle .btn { justify-content: flex-start; padding-inline: 0; text-align: left; height: auto; min-height: var(--btn-height, 2rem); }
 .mob-switch-toggle .btn[aria-expanded="true"] .mob-chevron { transform: rotate(180deg); }
 #mob-switch .mob-nav { margin-top: var(--spacer-02); }
 
@@ -205,9 +219,27 @@
    divided by a rule, as in the reference prototype. */
 .mob-quick { padding-right: var(--spacer-04); border-right: 1px solid var(--ui-border-02); }
 
-/* An icon-only Button carrying a count: Buckholt's `.badge.badge-floating`,
-   which positions itself against its container. */
+/* Count badge, to Mark's badge design (not yet in Buckholt's documentation):
+   a red circle with a white count, centred on the top-right corner of the
+   Button it counts for, widening to a pill for "999+". Built on Buckholt's
+   runtime `.badge.badge-floating` by binding its own custom properties to
+   Buckholt tokens; nothing is restyled with values of its own. */
 .mob-badged { position: relative; }
+.mob-count {
+  --badge-background: var(--action-danger-01);
+  --badge-border: var(--action-danger-01);
+  --badge-label: var(--text-light);
+  --badge-radius: var(--border-radius-full);
+  --badge-padding-x: var(--padding-02);
+  top: calc(var(--spacer-03) * -1);
+  right: calc(var(--spacer-03) * -1);
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  font-size: var(--typescale-02);
+  font-weight: 500;
+  box-shadow: var(--shadow-xs);
+}
 
 /* Cards: Text block on the left, the card's action on the right. */
 .mob-card-head {
@@ -236,10 +268,9 @@
 
 .mob-table-foot {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--spacer-04);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacer-03);
 }
 .mob-table-foot p { margin: 0; }
 
@@ -252,8 +283,16 @@
 /* Clickable rows keep Buckholt's own row hover; only the pointer is added. */
 .mob-row-link { cursor: pointer; }
 
+/* Filter bar: fields across the card's full width, its action under them. */
+.mob-filters { display: flex; flex-direction: column; gap: var(--spacer-05); }
+.mob-filters .button-set { margin-top: 0; }
+
+/* Card heading actions sit at the right; when they wrap under the heading
+   they stay right aligned. */
+.mob-card-head > .button-set { justify-content: flex-end; margin-left: auto; }
+
 /* Fields across the grid, and a Button set that lines up with them. */
-.mob-field-grid { row-gap: var(--spacer-05); }
+/* Row and column spacing come from Buckholt's own `.input-row` gutters. */
 .mob-field-action { display: flex; align-items: flex-end; height: 100%; }
 .mob-inline-checks { flex-direction: row; flex-wrap: wrap; column-gap: var(--spacer-05); }
 fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
@@ -277,9 +316,11 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 /* Key-value tables in narrow cards: the key column a little narrower. */
 .mob-kv-table { --keyvalue-key-col: 1fr; --keyvalue-value-col: 1fr; align-items: center; }
 .mob-kv-table .value { overflow-wrap: anywhere; }
-/* A panel Button in a value cell reads from the value column's left edge. */
-.mob-kv-table .btn,
-.mob-card .list .btn { justify-self: start; justify-content: flex-start; text-align: left; }
+/* A standalone Link in a value cell sits at the value column's left edge. */
+.mob-kv-table .link-standalone { justify-self: start; }
+.mob-link { align-self: flex-start; }
+/* Form actions at the end of a card: the card body's gap already spaces it. */
+.mob-form-actions { margin-top: 0; gap: var(--spacer-04); }
 
 .mob-placeholder .alert-message h6 { font-weight: 600; }
 
