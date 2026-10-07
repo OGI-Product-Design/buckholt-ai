@@ -66,7 +66,8 @@ sidebar: **two slim columns** at client and policy level, nothing at app level.
 | Column | Contents | Built with |
 | --- | --- | --- |
 | Rail (blue) | "Client" and the client's name; **Policies**: one link per policy (Car icon, "Motor", the status Tag on the same line, the reference under it, truncated with an ellipsis); Load more / Show fewer; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, icon straight inside the link, Page navigation's own `.active`). The client link is `aria-current="true"` at client level, the open policy at policy level: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
-| Record (white) | Which record this is: the client's name or the policy reference as an eyebrow, then "Client record" or "Motor policy" (`title-02`). Its pages in **always-open groups**: a group label with its icon (not a link: a group is not a page), then its pages indented under a rule. At policy level, **Actions** below a rule | Text block; Page navigation with `.active` + `aria-current="page"` on the current page; Menu shown in place for Actions (see deviation 2) |
+| Record (white) | Which record this is: the client's name or the policy reference as an eyebrow, then "Client record" or "Motor policy" (`title-02`). Its pages in **always-open groups**: a group label with its icon (not a link: a group is not a page), then its pages indented under a rule. | Text block; Page navigation with `.active` + `aria-current="page"` on the current page |
+| Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal, then Stop and Cancel), a rule between groups. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). Cancel is `.btn-ghost.btn-danger`. See deviation 2 |
 
 The rail is Buckholt's **dark theme** (`data-bs-theme="dark"` on the rail, so Page navigation,
 Tag, Button and Link take their dark-theme tokens) on `--expressive-rich`. The designs use a
@@ -155,7 +156,7 @@ excess names and "Automatic Decline" are kept as data.
 - Navigation items are links, with `aria-current="page"` on the single current page, in the
   record column. In the rail, the open client or policy is marked `aria-current="true"` (the
   current item of a set): it is the current record, not the current page.
-- Actions are buttons. Group labels are plain text naming their list (`aria-labelledby`); the
+- Actions are buttons in a toolbar (deviation 2). Group labels are plain text naming their list (`aria-labelledby`); the
   groups are always open, so nothing needs disclosing.
 - Panels and confirmations trap focus, close on Escape and return focus to their trigger. When
   re-rendering replaced the trigger, focus goes to its successor.
@@ -192,25 +193,29 @@ specs does not show. The prototype draws the current page in black; Buckholt's
 > **Gap to raise with Buckholt:** a documented vertical / side navigation, including grouped
 > sections and a dark rail like the documentation site's.
 
-### 2. Menu shown in place, not behind a trigger
+### 2. Actions in a toolbar (7 October 2026)
 
-Buckholt documents Menu as a popover. Here the actions are always visible, so the panel uses the
-`.show` and `.position-relative` that Buckholt's documentation uses to show a Menu in a page. Its
-own custom properties are bound to "no shadow, no padding, the column's width"
-(`--menu-shadow`, `--menu-padding-*`, `--menu-max-width`). Items wrap rather than truncate, and
-show a trailing icon for panel actions.
+The actions used to be a Menu shown in place at the foot of the record column. Laurence asked
+for an Adobe-like 48px toolbar instead, so the record column holds navigation only and every
+action is one click away whatever the scroll position. Buckholt has **no Toolbar component**, so
+the strip is assembled from documented parts: icon-only ghost Buttons (40px, Button's medium
+icon-only size, in a 48px column), each with an accessible name and a Tooltip to its right
+(Buckholt's requirement for icon-only Buttons), grouped in stacked Button sets.
 
-Two consequences:
+- It is an ARIA `toolbar` (`aria-label="Policy actions"`, `aria-orientation`), one Tab stop with
+  a roving tabindex: Up / Down, Home and End move along it. Each group is a `role="group"` named
+  after the prototype's section header; the rules between groups are separators.
+- A panel action is `aria-pressed="true"` while its panel is open, drawn with the ghost Button's
+  own hover colours. Panels and confirmations still return focus to the toolbar Button.
+- Cancel policy is the ghost Button's documented danger modifier, red at rest.
+- Below 1280px, in the drawer, the toolbar lies flat above the record's pages and wraps; its
+  arrow keys follow (Left / Right), and Tooltips open above.
+- Lost from the old Menu: the visible labels and the trailing panel / page icons. Icon-only
+  actions rely on recognisable icons; MTA (`fa-swap-arrows`) and Stop (`fa-circle-pause`) are
+  catalogue gaps (see deviation 9).
 
-- `role="menu"` is **not** used, because a `menu` role promises arrow-key menuitem behaviour that
-  an always-visible list of buttons does not have. The list is a labelled group instead.
-- **Cancel policy is red only on hover.** Buckholt's `.menu-item-danger` sets the danger colour
-  for hover only; at rest it reads like any item. The prototype draws it red at rest. Buckholt
-  wins, as in Originators deviation 4.
-
-> **Gaps:** an inline action-list variant of Menu; whether `.menu-item-danger` should be red at
-> rest. Menu has no pressed state (only `:active`), so `aria-pressed` reuses Menu's own
-> `--menu-item-*-active` colours.
+> **Gap to raise with Buckholt:** a documented Toolbar (vertical icon strip), including grouping,
+> pressed state and keyboard model.
 
 ### 3. Heading actions that open pages are anchors styled as Buttons
 
@@ -380,11 +385,12 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **72 behavioural assertions, all passing.** They cover:
+- **76 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
-  - the divider and the danger item
+  - the toolbar: its actions per status, the rule before Stop, the danger Cancel, accessible
+    names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
   - the record column's head, the rail marking the open client or policy, newest-first order,
     Load more / Show fewer and focus retention
