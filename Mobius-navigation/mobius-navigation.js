@@ -146,7 +146,8 @@
 
   /* The client, centred like a profile (Laurence's design, 7 October
      2026): the initials Avatar (its default 48px, the largest Buckholt
-     documents), the name (Title 01) and the reference under it. */
+     documents), the name (Title 01) and the reference under it. Not a
+     link (Laurence, 7 October 2026). */
   function clientMeta(c) {
     return '<div class="avatar" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
       '<span class="title-01 mob-rail-name">' + esc(c.name) + '</span>' +
@@ -276,11 +277,11 @@
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    /* The head, as in Laurence's design: the client (User meta, the link
-       to the client) in a grey band, the collapse button at its right.
-       Collapsed, the band keeps only the button. */
+    /* The head, as in Laurence's design: the client, centred, as plain
+       text (Client overview in the menu is the way to the client), and the
+       collapse button at its top right. Collapsed, only the button. */
     $('mob-rail-head').innerHTML = app ? '' :
-      (tight ? '' : '<a class="mob-rail-client" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' + clientMeta(c) + '</a>') +
+      (tight ? '' : '<div class="mob-rail-client">' + clientMeta(c) + '</div>') +
       columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
 
     var curPolicy = onPolicy ? r.p.id : null;
@@ -289,7 +290,7 @@
       /* Collapsed: one icon button per category, each opening the rail
          there; the actions become icon-only Buttons. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('rail', '.mob-rail-client', 'Client: ' + c.name,
+        expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Client: ' + c.name,
           /* Avatar extra small, so it sits in the strip like the icons. */
           '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
         expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
