@@ -81,9 +81,9 @@ is a gap to raise.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (320px open), as in Laurence's Figma design | The head is a **grey band** (`--ui-overlay-02`, 80px): the **client as User meta** (initials Avatar, name, reference), which links to the client, and the collapse button at its right. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
-| Record column (always open, no collapse button) | Its head **continues the rail's grey band** at the same height, in User meta's type (and the band runs on across the toolbar), so the two heads read as one header. On client pages the head says "Client" (the name and reference are in the rail beside it), then **Client overview** on its own (Home icon) and the client's pages in a "Client" group, Business details first, then Transactions, so it reads like the policy menu's Policy overview and groups (Laurence, 7 October 2026). On policy pages: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
-| Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
+| Rail (320px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). The head: the **client as User meta** (initials Avatar, name, reference), which links to the client, and the collapse button at its right. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot. Add new quote moved to the client's menu (Laurence, 7 October 2026) | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Client support opens its side panel and is a ghost Button |
+| Record column (always open, no collapse button; 336px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). On client pages it has no head (the client is in the rail beside it, and the "Client" group names the menu): **Client overview** on its own (Home icon), then the "Client" group: **Add new quote** first, then Business details, Transactions, Activity, Complaints and Client checks, so it reads like the policy menu's Policy overview and groups (Laurence, 7 October 2026). On policy pages a head in User meta's type: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, then the **policy's actions in a row** under it (below), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
+| Policy actions (in the policy's head) | Every action of the policy's status, as icons in one row under the title, like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
 columns are open follows where you are:
@@ -104,7 +104,7 @@ columns are open follows where you are:
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: the client (their Avatar, extra small, so it sits among the icons; the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
   **Policies (one Shield icon button)**,
-  spaced evenly; Add new quote and Client support become icon-only Buttons. **Pressing a
+  spaced evenly; Client support becomes an icon-only Button. **Pressing a
   category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
   rail rather than a floating menu): focus moves to the client or the open policy. Every collapsed control has its accessible name and a
   Tooltip.
@@ -242,33 +242,32 @@ specs does not show. The prototype draws the current page in black; Buckholt's
 
 ### 2. Actions in a toolbar (7 October 2026)
 
-The actions used to be a Menu shown in place at the foot of the record column. Laurence asked
-for an Adobe-like 48px toolbar instead, so the record column holds navigation only and every
-action is one click away whatever the scroll position. Buckholt has **no Toolbar component**, so
-the strip is assembled from documented parts: icon-only ghost Buttons (40px, Button's medium
-icon-only size, in a 48px column), each with an accessible name and a Tooltip to its right
-(Buckholt's requirement for icon-only Buttons), grouped in stacked Button sets.
+The actions used to be a Menu shown in place at the foot of the record column, then an
+Adobe-like 48px vertical strip beside it. Laurence then asked for them as a **row of inline
+actions under the policy's title**, like a mail client's reading pane, with the policy menu a
+little wider (336px) to hold them. Buckholt has **no Toolbar component**, so the row is assembled
+from documented parts: icon-only ghost Buttons (40px, Button's medium icon-only size), each with
+an accessible name and a Tooltip below it (Buckholt's requirement for icon-only Buttons), grouped
+in Button sets.
 
-- It is an ARIA `toolbar` (`aria-label="Policy actions"`, `aria-orientation`), one Tab stop with
-  a roving tabindex: Up / Down, Home and End move along it. Each group is a `role="group"` named
+- It is an ARIA `toolbar` (`aria-label="Policy actions"`, `aria-orientation="horizontal"`), one
+  Tab stop with a roving tabindex: Left / Right, Home and End move along it. Each group is a `role="group"` named
   after the prototype's section header; the rules between groups are separators.
 - A panel action is `aria-pressed="true"` while its panel is open, drawn with the ghost Button's
   own hover colours. Panels and confirmations still return focus to the toolbar Button.
 - **Stop and Cancel are behind an Overflow menu** (Mark, 7 October 2026: they are destructive,
   so not one click away). It is Menu button's Code & specs example 3: an icon-only ghost
   `.menu-toggle` with `fa-ellipsis-vertical`, named "More actions" with its Tooltip on the Menu
-  wrapper (as Breadcrumb's overflow menu does), **fixed to the foot of the toolbar** below a
-  rule, away from the everyday actions, and opening a Menu to its right (`.dropend`; it flips
-  upward at the foot of the screen). In the drawer it sits at the end of the flat row. Cancel is
+  wrapper (as Breadcrumb's overflow menu does), **at the end of the row** after a rule, away
+  from the everyday actions, and opening its Menu below. Cancel is
   Menu's danger item, which Buckholt draws red on hover. Each still asks for confirmation; when
   the confirmation closes, focus returns to the "More actions" trigger.
-- Below 1280px, in the drawer, the toolbar lies flat above the record's pages and wraps; its
-  arrow keys follow (Left / Right), and Tooltips open above.
+- Below 1280px, in the drawer, it stays in the policy's head.
 - Lost from the old Menu: the visible labels and the trailing panel / page icons. Icon-only
   actions rely on recognisable icons; MTA (`fa-swap-arrows`) and Stop (`fa-circle-pause`) are
   catalogue gaps (see deviation 9).
 
-> **Gap to raise with Buckholt:** a documented Toolbar (vertical icon strip), including grouping,
+> **Gap to raise with Buckholt:** a documented Toolbar (a row of icon Buttons), including grouping,
 > pressed state and keyboard model.
 
 ### 3. Heading actions that open pages are anchors styled as Buttons
@@ -423,6 +422,11 @@ style. The eyebrow above it is Text block's documented `<span class="eyebrow">` 
 example 3).
 
 ### 11. Small layout fixes, all scoped to this feature
+
+- **The page's two columns also stack when Main is narrow.** Bootstrap's `.col-xl-8` /
+  `.col-xl-4` follow the viewport, but beside the two menu columns Main is far narrower than the
+  viewport: at 1440px the side column could not fit a statistic such as "£1,867.00". A container
+  query on Main stacks them below 60rem, 32px apart (a Panel's gap).
 
 - The two menu columns are sticky under the top bar and each scrolls on its own, with Client
   support pinned to the rail's foot.

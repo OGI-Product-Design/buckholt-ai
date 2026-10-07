@@ -15,11 +15,11 @@
    The menu is rebuilt on every route change. Following the new designs it
    is two columns at client and policy level, and nothing at app level:
 
-     rail     (blue) Client, the client's policies, Add new quote,
-              Client support
-     record   (white) "Client record" or "{product} policy", its pages in
-              always-open groups
-     toolbar  (48px) at policy level, the status's actions as icon Buttons
+     rail     (on the page background) the client, the client's policies,
+              Add new quote, Client support
+     record   (a white panel, inset 8px) "Client" or the policy, with the
+              policy's actions in a row of icon Buttons under its title, and
+              its pages in always-open groups
 
    Menu actions only happen in place. A side panel opens in the shared
    prototype Blade (`prototype/blade.js`) and its menu item stays pressed
@@ -191,11 +191,11 @@
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
-  /* Actions: a 48px tool strip beside the record column, like an editing
-     application's toolbar. Every action is an icon-only ghost Button with
-     its accessible name and the Tooltip Buckholt requires for icon-only
-     Buttons. Each group (Policy, MTA, Renewal, Customer portal) is a
-     stacked Button set; groups are divided by a rule, Stop and Cancel come
+  /* Actions: a row of icon Buttons under the policy's title, like the
+     inline actions of a mail client's reading pane. Every action is an
+     icon-only ghost Button with its accessible name and the Tooltip
+     Buckholt requires for icon-only Buttons. Each group (Policy, MTA,
+     Renewal, Customer portal) is a Button set; groups are divided by a rule, Stop and Cancel come
      last, and Cancel is the danger variant. A panel action stays pressed
      while its panel is open. One Tab stop: arrow keys move along it. */
   var DESTRUCTIVE = ['stop', 'cancel'];
@@ -207,7 +207,7 @@
         ' data-action="' + key + '" data-scope="' + scope + '" aria-label="' + esc(name) + '"' +
         (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === key) + '" aria-haspopup="dialog"' : '') +
         (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') +
-        ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
+        ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + esc(name) + '">' +
         '<div class="btn-icon">' + icon(a.icon) + '</div>' +
       '</button>';
     };
@@ -216,17 +216,17 @@
     groups.forEach(function (g) {
       var ids = g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
       risky = risky.concat(g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; }));
-      if (ids.length) sets.push('<div class="button-set button-set-stacked" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' + ids.map(button).join('') + '</div>');
+      if (ids.length) sets.push('<div class="button-set" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' + ids.map(button).join('') + '</div>');
     });
     /* Stop and Cancel are destructive, so they are not one click away: they
        sit behind Buckholt's Overflow menu (Menu button Code & specs
        example 3: ghost icon-only trigger, `fa-ellipsis-vertical`), which
-       opens to the right. Cancel is Menu's danger item. It is fixed to the
-       foot of the toolbar, away from the everyday actions. */
+       opens below. Cancel is Menu's danger item. It ends the row, after a
+       rule, away from the everyday actions. */
     var foot = '';
     if (risky.length) {
       foot = '<div class="mob-toolbar-foot"><div class="mob-toolbar-rule" role="separator"></div>' +
-        '<div class="menu dropend mob-overflow" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="More actions">' +
+        '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="More actions">' +
         '<button type="button" class="btn btn-ghost menu-toggle" tabindex="-1" data-toolbar-item id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
           '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
         '</button>' +
@@ -239,7 +239,7 @@
         '</div>' +
       '</div></div>';
     }
-    return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="vertical">' +
+    return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="horizontal">' +
       sets.join('<div class="mob-toolbar-rule" role="separator"></div>') + foot +
     '</div>';
   }
@@ -300,7 +300,7 @@
           railPolicies(curPolicy) +
         '</nav>';
     }
-    if (!app) body += ui.set([railButton(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action');
+    /* Add new quote is in the client's menu now, first under Client. */
     $('mob-rail-body').innerHTML = body;
     /* Client support opens a side panel: a ghost Button. It needs a
        client, so not at app level. */
@@ -309,34 +309,32 @@
     $('mob-rail-foot').hidden = app;
 
     var rec = $('mob-record');
-    var tb = $('mob-toolbar');
     rec.hidden = app;
-    tb.hidden = !onPolicy;
-    if (app) { rec.innerHTML = ''; tb.innerHTML = ''; return; }
+    if (app) { rec.innerHTML = ''; return; }
 
     /* The record column, as before: the client record's pages, or the
        policy's menu. The head names the record: the client's name or the
        policy reference with its status Tag, then the title. */
     var nav = onClient ? M.clientNav() : M.policyNav(r.p);
-    /* The head continues the rail's grey band, in User meta's type: the
-       client's name is already in the rail beside it, so a client page says
-       "Client"; a policy shows its line of business with the status Tag,
-       over its reference, like its row in the rail. */
-    var label = onClient ? 'Client' : c.businessLine;
+    /* The head, at policy level only, in User meta's type: the line of
+       business with the status Tag, over the reference, like the policy's
+       row in the rail, then the policy's actions in a row under it. A
+       client page has none: the client is in the rail beside it, and the
+       menu's own "Client" group names it. */
+    var label = c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
-    rec.innerHTML =
+    rec.innerHTML = (!onPolicy ? '' :
       '<div class="mob-record-head">' +
-        '<div class="mob-rail-row"><h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' + (onPolicy ? ui.statusTag(r.p, true) : '') + '</div>' +
-        (onPolicy ? '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' : '') +
-      '</div>' +
+        '<div class="mob-rail-row"><h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' + ui.statusTag(r.p, true) + '</div>' +
+        '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' +
+        '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
+      '</div>') +
       '<nav aria-label="' + esc(onClient ? 'Client record' : label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
       '</nav>';
 
-    tb.innerHTML = onPolicy ? toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') : '';
-    var first = tb.querySelector('[data-toolbar-item]');
+    var first = rec.querySelector('[data-toolbar-item]');
     if (first) first.tabIndex = 0;
-    orientToolbar();
   }
 
   /* ========================================================= Breadcrumbs
@@ -604,15 +602,6 @@
     if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); }
   });
 
-  /* In the drawer the toolbar lies flat, above the record's pages. */
-  function orientToolbar() {
-    var flat = narrow.matches;
-    var body = document.querySelector('.mob-toolbar-body');
-    if (body) body.setAttribute('aria-orientation', flat ? 'horizontal' : 'vertical');
-    Array.prototype.forEach.call(document.querySelectorAll('.mob-toolbar [data-bs-toggle=tooltip]'), function (b) {
-      b.setAttribute('data-bs-placement', flat ? 'top' : 'right');
-    });
-  }
 
   /* The field is a way into the search, not a record of the last one: it
      stays empty (the Modal keeps the last search). */
@@ -976,15 +965,15 @@
     if (row) location.hash = row.getAttribute('data-href').replace(/^#/, '');
   });
 
-  /* The toolbar is one Tab stop (roving tabindex): Up / Down (and Left /
-     Right when it lies flat in the drawer), Home and End move along it. */
+  /* The toolbar is one Tab stop (roving tabindex): Left / Right, Home and
+     End move along it (Down stays with the Overflow menu's toggle). */
   document.addEventListener('keydown', function (e) {
     var bar = e.target.closest && e.target.closest('[role=toolbar]');
     if (!bar) return;
     var items = Array.prototype.slice.call(bar.querySelectorAll('[data-toolbar-item]'));
     var i = items.indexOf(e.target);
     if (i < 0) return;
-    var n = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 }[e.key];
+    var n = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 }[e.key];
     if (n == null) return;
     e.preventDefault();
     n = (n + items.length) % items.length;
