@@ -43,9 +43,8 @@ its CSS are dropped.
 ├─ header.app-bar            ← shared static Mobius chrome (prototype/app-shell.css)
 ├─ aside#sidebar             ← the two-level menu, Buckholt components
 └─ main#main
-   ├─ .mob-context           ← the record strip: Key-value pairs + status Tag
    └─ .page-body > .page-frame > .container-fluid > .page-pane
-      ├─ .page-panel         page heading: Text block (eyebrow + h1) + heading actions
+      ├─ .page-panel         Breadcrumb, then the page heading: Text block (eyebrow + h1) + heading actions
       └─ .page-panel …       page content: Cards on the Bootstrap grid
 ```
 
@@ -61,8 +60,9 @@ prototype the left column *is* the redesigned menu.
 
 | Prototype | Built with |
 | --- | --- |
-| Back link ("Search results", "Client: {name}") | Link, standalone, with the Arrow-left icon in `.icon` |
-| Client and policy cards at the top of the menu | Card (`.card > .card-body > .text-block`, eyebrow + `title-01`). The policy card carries the status Tag (`.tag-sm`) and the "Switch policy (7 for this client)" ghost Button (`aria-expanded`, `aria-controls`) |
+| Back link | Link, standalone, with the Arrow-left icon in `.icon`. "Back to search results" (or "Back to dashboard" before any search) at client level, "Back to client" at policy level. The client's name is in the breadcrumbs and the policy card, so the link no longer repeats it |
+| Client card at the top of the menu | Card. An Avatar (`.avatar.avatar-sm`, initials) beside a Text block (eyebrow "Client" + `title-01` name), then a stacked Key-value list (`.key-value-list.key-value-list-stacked`, small keys): Client reference, Date of birth, Postcode, Policies |
+| Policy card at the top of the menu | Card (`.card > .card-body > .text-block`, eyebrow + status Tag `.tag-sm` + `title-01`), then the same stacked Key-value list: Client, Cover start, Policy duration (what the record strip used to show). Then the "Switch policy (7 for this client)" ghost Button (`aria-expanded`, `aria-controls`) |
 | Go to: pages | Page navigation (`ul.nav > li.nav-item > a.nav-link`), with the icon directly inside the link, `.active` and `aria-current="page"` on the current page. Stacked with `.flex-column`, as Buckholt's documentation site stacks its own side navigation |
 | Collapsible groups (Policy, Transactions…) | `button.nav-link` with `aria-expanded` / `aria-controls`, plus a nested `ul.nav`. It opens by itself when it holds the current page |
 | Client policies, policy switcher | One clickable Card (`a.card.card-clickable`) per policy, holding Heading attachment's Code & specs example 3 exactly: the reference (`h3.title-01`) in `.heading-content`, the status Tag attached, then the line of business as a paragraph, and the cover start as a Key-value pair (`.key-value > .key + .value`) under the Text block, separated by the Card body's own gap. Spacing is the Text block's own. The Card's arrow indicator is left off (Laurence, 7 October 2026). The heading row may wrap, so a long status drops under a long reference. The open policy uses `--action-04` with a `--action-01` border |
@@ -90,9 +90,12 @@ Laurence asked for the best experience for system-level navigation. The decision
 
 | Need | Built with | Why |
 | --- | --- | --- |
-| System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 992px they move to the top of the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking and uses the handshake icon (catalogue GAP) |
-| Broking landing page | The search results page (`#search`, `#search/{query}`). It filters the sample rows on name, reference or email, and has a no-results state ("No clients found for “{query}”") | Every journey starts with a search, so the module opens on one. Create new client stays the page's one primary action |
-| Search | Text input with its search icon, at the top of the menu on **every** page, above all navigation. Submitting opens Broking with the results | Search is reachable from inside a client or policy without going back first |
+| System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 992px they move to the top of the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
+| Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
+| Search results | `#search/{query}`, only after a search. It filters the sample rows on name, reference or email, and has a no-results state ("No clients found for “{query}”"). The client's name is the link to the client; the separate "Open client" link repeated it and is gone. Create new client stays in the heading | |
+| Search | Text input with its search icon, at the top of the menu on **every** page, above all navigation. Submitting opens the search results | Search is reachable from inside a client or policy without going back first |
+| What can I search? | Collapse, close-button variation, under the field. Inside: the title in a Text block (`h6.collapse-title`), then the documented `.collapse-contextbar` holding a List per group (`li.list-heading` + items), the tip, and a "Learn more" standalone Link with the External-link icon. Current Mobius wording, sentence case | Current Mobius shows it as a popover from the top bar. A Collapse keeps it in the menu's flow, beside the field it explains. The contextbar is the Context bar variation's documented wrapper for Lists and a Link; the two variations are composed here, not merged into a new canonical example |
+| Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main above the heading: Dashboard › Search results (once a search has been run) › client › policy › page. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2: `li.menu` with its Tooltip, `a.menu-toggle`, a Menu of `button.menu-item`s), and below 768px only the first and last stay out of it |
 | Recent searches | Menu (`.menu-panel > ul.menu-body`, a section header and items with the Recent icon) opening under the search box on focus or Down arrow. Arrow keys move through it, Escape closes it and returns focus to the box, picking one runs it. The last five searches, newest first | A Menu, but driven by this feature's script rather than Bootstrap Dropdown: `.dropdown-menu` would hand its arrow keys to a Dropdown that has no toggle here |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
 | "Show wording changes" | Unchanged, but between 992 and 1300px its label is visually hidden (still named) and the module links use one step less padding, so the bar never overflows | |
@@ -234,7 +237,6 @@ Buckholt Tabs (`.nav-underline`, Bootstrap pill behaviour).
 
 | Prototype | Built as | Why |
 | --- | --- | --- |
-| Blue record strip under the top bar | Key-value pairs in a `.key-value-list-row` on `--expressive-pale`, with the status Tag | No record header / context bar component |
 | Statistic tiles | Key-value grid of stacked, flipped `.key-value-lg` pairs | No stat tile |
 | Loss-ratio donut ("N/A") | Stacked Key-value, "N/A" over "No claims" | No chart, and nothing to chart |
 | History timeline | Date + Versa-tile | No timeline |
@@ -243,14 +245,20 @@ Buckholt Tabs (`.nav-underline`, Bootstrap pill behaviour).
 | Values that open a panel in Policy summary, Excesses and Endorsements | Standalone Links with `role="button"` (Space activates them too). An unavailable one is muted text, because Link has no disabled state | Laurence's decision, 7 October 2026: Link's rules reserve it for navigation, but these read as values |
 | Field grids | Stacked Key-value pairs on the Bootstrap grid | |
 
-### 8. Form action order
+### 8. Filter bars (7 October 2026)
 
-The Search results filter puts Apply (secondary) before Clear (ghost), and the Forms pattern puts
-the primary first and left-aligned on in-page forms. The prototype drew Clear first.
+Filter bars (Dashboard, Search results, Activity, Documents, Notes) follow BACS import and current
+Mobius: the fields sit side by side at a content width (14rem) and wrap when they run out of
+room, and the actions sit on the right, in line with the last row of fields. Buckholt does not
+ask inputs to fill the space available, and Input rows prefers "content-driven proportions over
+arbitrary equal widths". Below 576px each field takes the full width. The actions are a
+right-aligned set, so the stronger action is at the outer edge: Clear (ghost) then Apply
+(secondary), as Button's rules place it in a right-aligned layout and as the prototype drew it.
+Editable forms stay in `.form-body`, Buckholt's stacked form width.
 
 ### 9. Icons
 
-Icons from the catalogue are used as documented: Home, Dashboard, Search, User, Document,
+Icons from the catalogue are used as documented: Home, Dashboard, Shield, Search, User, Document,
 Calculator, Pound, Email, Info, Flag, Shield-check, Edit, Change, Time, Renew, Redo, Plus, Copy,
 Settings, Misuse, Help, Expand, Chevron-right/down, Recent, Documents, Arrow-left, Menu and
 Close. The **catalogue has no entry** for the following, so they are marked `GAP` in
@@ -264,7 +272,6 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Notes / Client notes | `fa-note-sticky` |
 | Attachments | `fa-paperclip` |
 | Create new client | `fa-user-plus` |
-| Broking module | `fa-handshake` |
 | Bordereau module | `fa-list` |
 
 ### 10. "Create new client" is in the Search results heading, not the menu
@@ -286,7 +293,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Search results | Create new client (heading) | Apply (filters). Open client is now a standalone Link |
+| Dashboard, Search results | Create new client (heading) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a heading action it is the primary; otherwise the primary is the page's one
@@ -304,7 +311,7 @@ The pages had too many outlined Buttons. Buckholt's hierarchy is applied as:
 | Primary | The one main action of the screen |
 | Secondary | Only beside the primary in the page heading, a filter form's Apply, a form's own Save, and Back in a flow |
 | Ghost (the default) | Every other card and table action. As in Buckholt's table-action pattern, it shows an icon and a label; icons are all or none within a set |
-| Standalone Link | Anything that navigates (Open client, Amend risk), "more" actions on tables and content (Load more, Show fewer, Load more quotes, Show statistics for more clients), and values that open a panel |
+| Standalone Link | Anything that navigates (Amend risk, back links), "more" actions on tables and content (Load more, Show fewer, Load more quotes, Show statistics for more clients), and values that open a panel |
 
 Placement follows one rule:
 
@@ -315,10 +322,7 @@ Placement follows one rule:
   then "Amend risk" as a standalone Link.
 - "More" links go at the bottom left. Row actions stay in their row.
 
-Filter bars (Activity, Search results, Documents, Notes) use Buckholt inputs across the card's
-full width on the Bootstrap grid, with Input row's own gutters. Previously they sat inside
-`.form-body`, which Buckholt caps at 36rem for a stacked form, and that squeezed the fields.
-Editable forms in flows are stacked, as the Forms pattern sets by default. Intro sentences sit in
+Filter bars are described in deviation 8. Editable forms in flows are stacked, as the Forms pattern sets by default. Intro sentences sit in
 the card's Text block under its heading, as Text block example 1 does.
 
 ### 10c. Page titles use a Display type set
@@ -385,6 +389,13 @@ Awesome), and Typekit was absent.
   - one primary per screen, side panel and confirmation (separate audit)
   - the app level: no menu actions, no Client support, and Create new client in the Search
     results heading opening the flow
+- **Broking and breadcrumbs (24 assertions)**: opens on the Dashboard with no search results;
+  the two Tabs switch; the filter actions are on the right in line with the fields and the
+  fields are content width; What can I search? opens and closes without changing the route; a
+  search opens the results with the right breadcrumb; no Open client link; the back links; the
+  client card's Avatar and Key-values; the policy breadcrumb's overflow menu and its navigation;
+  a bare `#search` goes to the Dashboard; no record strip. At 375px the trail is Dashboard › … ›
+  page and the overflow menu stays inside the viewport.
 - **System navigation**: recent searches open on Down arrow, arrow keys move through them, and
   picking one opens Broking with that query and moves it to the top of the list; the user menu
   opens from the Avatar; the modules mark the current one.

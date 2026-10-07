@@ -36,7 +36,7 @@
       </button>
     </div>
 
-    <a class="app-bar-logo" href="#search">Mobius</a>
+    <a class="app-bar-logo" href="#dashboard">Mobius</a>
 
     <!-- System modules: Page navigation, the icon straight inside each link.
          Written by mobius-navigation.js so the current module is marked. -->
@@ -115,6 +115,18 @@
       </div>
     </form>
 
+    <!-- "What can I search?": Buckholt Collapse, close-button variation
+         (Code & specs), under the field. Its content reuses Text block and
+         List, and a standalone Link with the External-link icon. -->
+    <div class="collapse-item mob-search-help">
+      <a class="collapse-trigger" data-bs-toggle="collapse" href="#mob-search-help" role="button" aria-expanded="false" aria-controls="mob-search-help">What can I search?</a>
+
+      <div class="collapse-card collapse" id="mob-search-help">
+        <div class="collapse-content" id="mob-search-help-content"></div>
+        <button type="button" class="btn-close" data-bs-toggle="collapse" href="#mob-search-help" aria-label="Close"></button>
+      </div>
+    </div>
+
     <!-- Modules, on narrow screens only (they are in the top bar above 992px). -->
     <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
 
@@ -124,10 +136,9 @@
 
   <!-- ======================================================================
        MAIN — Page body → Frame → Pane → Panels, per patterns/page-layout.
-       The record strip above it names the client or policy being viewed.
+       Breadcrumbs at the top of the first Panel say where the page is.
        ====================================================================== -->
   <main id="main">
-    <div class="mob-context" id="mob-context" role="region" aria-label="Current record" hidden></div>
     <div class="page-body">
       <div class="page-frame">
         <div class="container-fluid">

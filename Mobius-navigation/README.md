@@ -30,7 +30,7 @@ The prototype's hash routes, with the system modules added:
 
 | Route | Level |
 | --- | --- |
-| `#search`, `#search/{query}`, `#newclient` | App: Broking (search results) and the Create new client flow |
+| `#dashboard` (default), `#search/{query}`, `#newclient` | App: Broking's Dashboard, search results and the Create new client flow. A bare `#search` goes to the Dashboard |
 | `#activity`, `#renewals`, `#bordereau`, `#accounts` | App: the other system modules (placeholders) |
 | `#c/{page}` | Client: `summary`, `business`, `ctx`, `cactivity`, `ccomplaints`, `checks`, `newquote` |
 | `#p/{policy}/{page}` | Policy: `puco0068`, `puco0052`, `aad666` (Live), `y341` (Automatic Decline), `zz646` (Lapsed), `z315` (Incomplete), `zz2966` (Prospect) |

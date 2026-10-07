@@ -199,19 +199,20 @@
   /* --------------------------------------------------------------- App level */
 
   /* System level: the Mobius modules, which current Mobius hides in the
-     "Dashboard" dropdown in the top bar. "Dashboard" is really Broking, and
-     Broking's landing page is search, because every broking journey starts
-     with one. Client and policy pages belong to Broking. */
+     "Dashboard" dropdown in the top bar. "Dashboard" is really Broking.
+     Broking opens on its dashboard (outstanding diary and sanctions check
+     matches); a search from the menu opens its results. Client and policy
+     pages belong to Broking. */
   var MODULES = [
-    { id: 'search', label: 'Broking', icon: 'fa-regular fa-handshake' },      // Agreement
+    { id: 'dashboard', label: 'Broking', icon: 'fa-regular fa-shield' },      // Shield
     { id: 'activity', label: 'Activity', icon: ICON.activity },               // GAP
     { id: 'renewals', label: 'Renewals', icon: ICON.renew },                  // Renew
     { id: 'bordereau', label: 'Bordereau', icon: 'fa-regular fa-list' },      // List
     { id: 'accounts', label: 'Accounts', icon: ICON.money }                   // Pound
   ];
 
-  /* Opens a page, so it sits in the Search results heading. The app-level
-     menu has navigation only. */
+  /* Opens a page, so it sits in the Broking page headings (Dashboard and
+     Search results). */
   var APP_ACTIONS = { newclient: { label: 'Create new client', icon: ICON.newClient, kind: 'flow', to: 'newclient' } };
 
   /* In the menu footer at client and policy level only: it needs a client. */
@@ -234,7 +235,7 @@
      policy reference. */
   var TITLES = {
     app: {
-      search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
+      dashboard: ['Dashboard', 'Broking'], search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {

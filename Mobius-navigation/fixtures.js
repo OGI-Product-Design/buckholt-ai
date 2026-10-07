@@ -52,17 +52,56 @@
     /* The signed-in user, as the top bar and the notes show them. */
     user: { name: 'Laurence Abbott', initials: 'LA', environment: 'Test' },
 
-    /* The search the prototype opens on, and the user's recent searches
-       (most recent first), shown when they click into the search field. A
-       search they run is added to the top of this list for the session. */
-    search: { query: 'motor' },
+    /* The user's recent searches (most recent first), shown when they click
+       into the search field. No search has been run when the prototype
+       opens: Broking opens on its dashboard. A search they run is added to
+       the top of this list for the session. */
     recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
+
+    /* "What can I search?", under the search field. Current Mobius wording,
+       in sentence case. */
+    searchHelp: {
+      title: 'Search clients by',
+      groups: [
+        ['Partial or full matches:', ['Name or surname', 'Postcode', 'Phone number']],
+        ['Full match only:', ['Email address', 'Policy, client or claim reference', 'Insurer policy number', 'Vehicle registration', 'Invoice number']],
+        ['Combine criteria for better results:', ['Name or surname + postcode: Davies SW1A 2AA']]
+      ],
+      tip: 'Use * for partial matches (e.g. *smith for Blacksmith).'
+    },
+
+    /* Broking dashboard: current Mobius's two tabs, sample rows. */
+    outstandingDiary: {
+      total: '14,334',
+      rows: [
+        ['ZZ0002931', 'Tungsten', '', 'Mr Motor DTEST', 'Cheaper quote', '01/03/2021', '2046', ['SS', 'System']],
+        ['ZZ0002929', 'Tungsten', '', 'Mr Motor DTEST', 'Cheaper quote', '05/03/2021', '2042', ['SS', 'System']],
+        ['ZZ/000000479', 'Tungsten', '', 'Mrs Miroslav 1234 adasd', 'NB accepted', '10/06/2021', '1945', null],
+        ['ZZ/000000479', 'Tungsten', '', 'Mrs Miroslav 1234 adasd', 'Quote saved', '10/06/2021', '1945', ['MU', 'MB User3']],
+        ['999/001/X172/TES', 'Krypton', 'Dubnium', 'Miss Forename Katwoj HH Krypton SubAgent Introducer', 'Cancel RTA letter due', '11/07/2021', '1914', ['SS', 'System']],
+        ['ZZ0000018', 'Krypton', 'Dubnium', 'Mr Kamil Test', 'Cancel RTA letter due', '11/07/2021', '1914', ['SS', 'System']]
+      ]
+    },
+    /* [status, matches above threshold, highest match quality, date and time,
+       client reference, policy reference, client name, business source code] */
+    sanctionMatches: {
+      total: '40',
+      rows: [
+        ['error', '', '', '08/02/2022 21:28', 'PC-/T/28111979/0001', '', 'Test PC-One', 'Mobius UI'],
+        ['overridden', '10', '76%', '17/02/2022 13:00', 'ALI/A/01011990/0001', '999/001/X342/WEB', 'Amin Ali', 'Digital'],
+        ['error', '', '', '17/02/2022 13:47', 'HOO/A/01111990/0001', 'ZZ0002906', 'amin hoover', 'Digital'],
+        ['above', '10', '74%', '24/02/2022 08:48', 'HOO/A/01011990/0004', '', 'Amin Hoover', 'Mobius UI'],
+        ['above', '1', '74%', '05/04/2022 11:00', 'TES/T/10051986/0005', '', 'Test Test', 'Mobius UI'],
+        ['overridden', '5', '74%', '12/04/2022 09:06', '', '', 'Amin Ali', 'Mobius UI']
+      ]
+    },
 
     /* The user menu under the avatar, as current Mobius has it. */
     userMenu: ['Unlock records', 'Clear cache', 'Change password', 'Release notes', 'Cookie policy'],
 
     client: {
       name: 'Reverend Motor API Automation',
+      initials: 'RM',
       ref: 'API/M/08121996/0046',
       dob: '08/12/1996',
       address: '2 Fernbank, La Butte, St. Peter Port, Guernsey, GY1 1XA',
