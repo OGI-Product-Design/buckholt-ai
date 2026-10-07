@@ -148,7 +148,7 @@
      initials Avatar, then the client's name and reference. */
   function clientMeta(c) {
     return '<div class="user-meta user-meta-compact">' +
-      '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+      '<div class="avatar" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
       '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
     '</div>';
   }
@@ -276,13 +276,11 @@
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    /* Back to the Broking dashboard: a standalone Link with the Arrow-left
-       icon on the left, the collapse button on the right. Not on the
-       Dashboard itself, and not when the rail is collapsed. */
-    var onDashboard = app && r.page === 'dashboard';
-    $('mob-rail-head').innerHTML =
-      (tight || onDashboard ? '' :
-        '<a class="link-standalone mob-rail-back" href="#dashboard"><span class="icon">' + icon('fa-regular fa-arrow-left') + '</span>Back to dashboard</a>') +
+    /* The head, as in Laurence's design: the client (User meta, the link
+       to the client) in a grey band, the collapse button at its right.
+       Collapsed, the band keeps only the button. */
+    $('mob-rail-head').innerHTML = app ? '' :
+      (tight ? '' : '<a class="mob-rail-client" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' + clientMeta(c) + '</a>') +
       columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
 
     var curPolicy = onPolicy ? r.p.id : null;
@@ -299,7 +297,6 @@
       '</ul>';
     } else if (!app) {
       body = '<nav aria-label="Client and policies">' +
-          '<a class="mob-rail-client' + (onClient ? ' mob-on' : '') + '" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' + clientMeta(c) + '</a>' +
           railPolicies(curPolicy) +
         '</nav>';
     }
@@ -321,14 +318,16 @@
        policy's menu. The head names the record: the client's name or the
        policy reference with its status Tag, then the title. */
     var nav = onClient ? M.clientNav() : M.policyNav(r.p);
-    /* Client: the reference over the client's name. Policy: the reference
-       and its status over the line of business. */
-    var label = onClient ? c.name : c.businessLine;
+    /* The head continues the rail's grey band, in User meta's type: the
+       client's name is already in the rail beside it, so a client page says
+       "Client"; a policy shows its line of business with the status Tag,
+       over its reference, like its row in the rail. */
+    var label = onClient ? 'Client' : c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML =
-      '<div class="text-block mob-record-head">' +
-        '<div class="mob-record-eyebrow"><span class="eyebrow">' + esc(onClient ? c.ref : r.p.ref) + '</span>' + (onPolicy ? ui.statusTag(r.p, true) : '') + '</div>' +
-        '<h2 class="title-02" id="mob-record-title">' + t(label) + '</h2>' +
+      '<div class="mob-record-head">' +
+        '<div class="mob-rail-row"><h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' + (onPolicy ? ui.statusTag(r.p, true) : '') + '</div>' +
+        (onPolicy ? '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' : '') +
       '</div>' +
       '<nav aria-label="' + esc(onClient ? 'Client record' : label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
@@ -633,6 +632,10 @@
     $('mob-module-bar').hidden = !on;
     document.querySelector('.layout').classList.toggle('mob-in-broking', on);
     var nc = M.APP_ACTIONS.newclient;
+    /* Back to the Broking dashboard on the left (not on the Dashboard),
+       the search centred, Create new client on the right. */
+    $('mob-module-back').innerHTML = on && r.page !== 'dashboard'
+      ? '<a class="link-standalone" href="#dashboard"><span class="icon">' + icon('fa-regular fa-arrow-left') + '</span>Back to dashboard</a>' : '';
     $('mob-module-actions').innerHTML = on && r.page !== 'newclient'
       ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })
       : '';
