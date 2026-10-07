@@ -45,7 +45,10 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  var S = { polShown: 5, step: 0, railPref: storedRail(), panelKey: null, query: null };
+  /* railOverride / recordOverride: a column opened (true) or collapsed
+     (false) with its toggle on this page, or null. groups: policy-menu
+     groups opened or closed on this page. All reset on every route. */
+  var S = { polShown: 5, step: 0, railOverride: null, recordOverride: null, groups: {}, panelKey: null, query: null };
   P.init(S);
 
   var R = null;
@@ -93,86 +96,94 @@
     var on = id === cur;
     return '<li class="nav-item">' +
       '<a class="nav-link' + (on ? ' active' : '') + '" href="' + url + '"' + (on ? ' aria-current="page"' : '') + '>' +
-        (iconCls ? icon(iconCls) : '') + t(label) +
+        (iconCls ? icon(iconCls) : '') + t(label) + countBadge(countFor(id)) +
       '</a>' +
     '</li>';
   }
 
-  /* The rail collapses, as Mark describes for collapsible sidebars: it
-     carries a collapse button that is also its open button, so the user
-     decides what they see. Until they choose, it is open where there is
-     room (app level, where nothing sits beside it) and collapsed to a 64px
-     strip of icons on client and policy pages, beside the record column.
-     Their choice then holds on every page (and is remembered in this
-     browser). Collapsed, each category becomes one icon button, and the
-     Policies button opens a floating Menu of the policies. In the drawer
-     (below 1280px) it is always open and has no toggle. */
-  function storedRail() {
-    try { var v = localStorage.getItem('mob-rail'); return v === 'open' ? true : v === 'closed' ? false : null; } catch (e) { return null; }
+  /* New items on a page (Documents, Attachments, Notes, History): a count
+     badge at the end of its link, to Mark's badge design, in place of the
+     quick links that used to sit in the Policy overview heading. The count
+     is read out as ", 3 new". */
+  function countFor(id) { return (F.quickLinkCounts || {})[id] || 0; }
+  function countBadge(n) {
+    if (!n) return '';
+    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' +
+      '<span class="visually-hidden">, ' + n + ' new</span>';
   }
-  function railOpenFor(r) {
-    if (narrow.matches) return true;
-    return S.railPref !== null ? S.railPref : r.scope === 'app';
-  }
-  function railCollapsed() { return !railOpenFor(R); }
 
-  /* A collapsed rail control is icon-only: its accessible name, and a
-     Tooltip to the right (Buckholt requires one for icon-only Buttons). */
+  /* Which column is open follows where you are, so only one is ever
+     expanded (Laurence, 7 October 2026):
+       app level     the rail is open: its search
+       client pages  the rail is open: it is the client's menu (the client
+                     and their pages, their policies); no record column
+       policy pages  the rail collapses to a 64px strip, the policy menu is
+                     open
+     Each column has Mark's collapse button, which is also its open button.
+     A choice made with it lasts until the next page, which sets the
+     columns for itself again. Collapsed, each category is one icon button
+     that opens a floating Menu of its pages (Mark). In the drawer (below
+     1280px) everything is open and there are no toggles. */
+  function railCollapsed() {
+    if (narrow.matches) return false;
+    return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
+  }
+  function recordCollapsed() { return !narrow.matches && S.recordOverride === false; }
+
+  /* A collapsed control is icon-only: its accessible name, and a Tooltip to
+     the right (Buckholt requires one for icon-only Buttons). */
   function tipAttrs(name) {
     return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '"';
   }
 
-  /* A rail link: icon, then a two-line label (what it is, with the status
-     Tag on the same line, then the name or reference). */
-  function railLink(url, on, iconCls, title, sub, tag, cls) {
-    var name = plain(title + ', ' + sub + (tag ? ', ' + tag.status : ''));
-    var tight = railCollapsed();
-    return '<li class="nav-item">' +
-      '<a class="nav-link' + (cls ? ' ' + cls : '') + (on ? ' active' : '') + '" href="' + url + '"' + (on ? ' aria-current="true"' : '') +
-        (tight ? tipAttrs(name) : '') + '>' +
-        icon(iconCls) +
-        (tight ? '' :
-          '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(title) + '</span>' +
-            (tag ? ui.statusTag(tag, true) : '') + '</span>' +
-            '<span class="mob-rail-sub">' + esc(sub) + '</span></span>') +
-      '</a>' +
-    '</li>';
+  /* The client: Buckholt's User meta (the runtime's `.user-meta`), the
+     initials Avatar, then the client's name and reference. */
+  function clientMeta(c) {
+    return '<div class="user-meta user-meta-compact">' +
+      '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+      '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
+    '</div>';
   }
 
-  /* The client's policies, open rail: Page navigation, one link per
-     policy, the 5 most recent with Load more. */
-  function railPolicies(curId) {
-    return '<h2 class="label-01 mob-side-label" id="mob-rail-policies">Policies</h2>' +
-      '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
-        return railLink(ui.policyHref(p), p.id === curId, M.ICON.motor, F.client.product, p.ref, p);
-      }).join('') + '</ul>' +
-      '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
-  }
-
-  /* The client's policies, collapsed rail: the whole category is one icon
-     button (the Shield) that opens a floating Menu to its right listing
-     every policy (Menu's link items, `a.menu-item`), the open one marked.
-     The Tooltip sits on the Menu's wrapper, as Breadcrumb's overflow menu
-     does, because the Button's own data-bs-toggle is the Dropdown's. */
-  function railPolicyMenu(curId) {
-    var on = !!curId;
-    var name = 'Policies (' + F.policies.length + ')';
-    return '<div class="menu dropend mob-rail-menu" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
-      '<button type="button" class="btn btn-ghost menu-toggle' + (on ? ' active' : '') + '" id="mob-rail-policies-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="' + esc(name) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-        '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>' +
+  /* A floating Menu for a collapsed category: Menu button with an
+     icon-only ghost trigger (or the client's Avatar), opening to the right
+     (`.dropend`), its items Menu's link items. The Tooltip sits on the
+     wrapper, as Breadcrumb's overflow menu does, because the trigger's own
+     data-bs-toggle is the Dropdown's. The panel keeps the light theme. */
+  function flyout(idBase, name, triggerInner, on, items) {
+    return '<div class="menu dropend mob-flyout" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
+      '<button type="button" class="btn btn-ghost menu-toggle' + (on ? ' active' : '') + '" id="' + idBase + '-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="' + esc(name) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+        triggerInner +
       '</button>' +
-      /* The panel keeps Buckholt's light theme: it floats over the page. */
-      '<div class="menu-panel dropdown-menu" data-bs-theme="buckholt" aria-labelledby="mob-rail-policies-toggle">' +
+      '<div class="menu-panel dropdown-menu" data-bs-theme="buckholt" aria-labelledby="' + idBase + '-toggle">' +
         '<ul class="menu-body" role="menu">' +
           '<li role="none"><h6 class="menu-section-header">' + esc(name) + '</h6></li>' +
-          F.policies.map(function (p) {
-            var cur = p.id === curId;
-            return '<li role="none"><a class="menu-item mob-pol-item' + (cur ? ' mob-current' : '') + '" role="menuitem" href="' + ui.policyHref(p) + '"' + (cur ? ' aria-current="true"' : '') + '>' +
-              icon(M.ICON.motor) + '<span class="mob-pol-ref">' + esc(p.ref) + '</span>' + ui.statusTag(p, true) + '</a></li>';
+          items.map(function (x) {
+            return '<li role="none"><a class="menu-item mob-fly-item' + (x.cur ? ' mob-current' : '') + '" role="menuitem" href="' + x.href + '"' + (x.cur ? ' aria-current="' + x.cur + '"' : '') + '>' +
+              (x.icon ? icon(x.icon) : '') + '<span class="mob-fly-label">' + x.label + '</span>' + (x.after || '') + '</a></li>';
           }).join('') +
         '</ul>' +
       '</div>' +
     '</div>';
+  }
+
+  /* The client's policies, open rail: Page navigation, one link per
+     policy (Car icon, product with the status Tag, the reference under
+     it), the 5 most recent with Load more. */
+  function railPolicies(curId) {
+    return '<h2 class="label-01 mob-side-label" id="mob-rail-policies">Policies</h2>' +
+      '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+        var on = p.id === curId;
+        return '<li class="nav-item">' +
+          '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+            icon(M.ICON.motor) +
+            '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.product) + '</span>' +
+              ui.statusTag(p, true) + '</span>' +
+              '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
+          '</a>' +
+        '</li>';
+      }).join('') + '</ul>' +
+      '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
   }
 
   /* A rail Button: labelled when the rail is open, icon-only with its
@@ -181,6 +192,14 @@
     if (!railCollapsed()) return ui.btn(label, o);
     o = Object.assign({}, o, { attrs: (o.attrs || '') + tipAttrs(plain(label)) });
     return ui.btn('', o);
+  }
+
+  /* A column's collapse / open control: one icon-only ghost Button, as on
+     the documentation site. */
+  function columnToggle(attr, collapsed, what) {
+    var name = (collapsed ? 'Open ' : 'Collapse ') + what;
+    return ui.set([ui.btn('', { icon: collapsed ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
+      attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })]);
   }
 
   /* Actions: a 48px tool strip beside the record column, like an editing
@@ -236,53 +255,100 @@
     '</div>';
   }
 
-  /* A navigation group as the new designs draw it: always open, its label
-     (with the group's icon) heading a nested Page navigation. The label is
-     not a link: the group is not a page. */
+  /* The policy menu's groups collapse: only the group holding the current
+     page is open when a page loads, the others closed. Each group header
+     is a disclosure Button (`button.nav-link`, `aria-expanded`) and a
+     closed group shows the total of its pages' new-item counts. */
   function navGroups(items, cur, r) {
     return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
       if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
       var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
+      var has = n.children.some(function (c) { return c.id === cur; });
+      var open = S.groups[n.group] != null ? S.groups[n.group] : has;
+      var total = n.children.reduce(function (a, c) { return a + countFor(c.id); }, 0);
       return '<li class="nav-item mob-group">' +
-        '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
-        '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
+        '<button type="button" class="nav-link mob-group-toggle' + (has ? ' mob-has-current' : '') + '" id="' + gid + '" data-group="' + esc(n.group) + '"' +
+          ' aria-expanded="' + open + '" aria-controls="' + gid + '-pages">' +
+          icon(n.icon) + '<span class="mob-group-name">' + t(n.group) + '</span>' + (open ? '' : countBadge(total)) +
+          icon('fa-regular fa-chevron-down', 'mob-chevron') +
+        '</button>' +
+        '<ul class="nav flex-column mob-subnav" id="' + gid + '-pages" aria-labelledby="' + gid + '"' + (open ? '' : ' hidden') + '>' +
           n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
         '</ul>' +
       '</li>';
     }).join('') + '</ul>';
   }
 
-  /* The menu, as in the new designs:
-       rail    (blue) search; at client and policy level also the client,
-               their policies, Add new quote and Client support
-       record  (white) at client and policy level: which record, its pages
-       toolbar (48px) at policy level, the record's actions */
+  /* The policy menu collapsed: Policy overview stays an icon link; each
+     group is one icon button with a floating Menu of its pages. */
+  function navStrip(items, cur, r) {
+    return '<ul class="nav flex-column mob-nav mob-strip">' + items.map(function (n) {
+      if (!n.children) {
+        var on = n.id === cur;
+        return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="' + href(r, n.id) + '"' + (on ? ' aria-current="page"' : '') + tipAttrs(plain(n.label)) + '>' + icon(n.icon) + '</a></li>';
+      }
+      var has = n.children.some(function (c) { return c.id === cur; });
+      return '<li class="mob-strip-item">' + flyout('mob-fly-' + n.group.toLowerCase().replace(/\W+/g, '-'), plain(n.group),
+        '<div class="btn-icon">' + icon(n.icon) + '</div>', has,
+        n.children.map(function (c) {
+          return { href: href(r, c.id), label: t(c.label) + (countFor(c.id) ? '<span class="visually-hidden">, ' + countFor(c.id) + ' new</span>' : ''),
+            cur: c.id === cur ? 'page' : null, after: countFor(c.id) ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + countFor(c.id) + '</span>' : '' };
+        })) + '</li>';
+    }).join('') + '</ul>';
+  }
+
+  /* The menu:
+       rail    (blue) search; at client and policy level also the client
+               (User meta) and their pages, their policies, Add new quote
+               and Client support
+       record  (white) at policy level: the policy's menu
+       toolbar (48px) at policy level: the policy's actions */
   function renderSide(r) {
     var c = F.client;
     var app = r.scope === 'app';
     var onClient = r.scope === 'client';
+    var onPolicy = r.scope === 'policy';
     var tight = railCollapsed();
-    var toggleName = tight ? 'Open menu panel' : 'Collapse menu panel';
+    var recTight = onPolicy && recordCollapsed();
     sidebar.classList.toggle('mob-app-level', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
+    sidebar.classList.toggle('mob-record-collapsed', recTight);
 
     $('mob-rail-head').innerHTML =
-      /* Collapse / open: one icon-only ghost Button, as on the documentation
-         site. Wide screens only. */
-      ui.set([ui.btn('', { icon: tight ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
-        attrs: ' data-rail-toggle aria-expanded="' + !tight + '" aria-controls="mob-rail"' + tipAttrs(toggleName) })]) +
+      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu') +
       /* Collapsed, the search is an icon that opens the rail at the field. */
       (tight ? ui.set([ui.btn('', { icon: 'fa-regular fa-magnifying-glass', attrs: ' data-rail-search' + tipAttrs('Search') })]) : '');
 
     var body = '';
     if (!app) {
-      body =
-        '<nav aria-label="Client and policies">' +
+      var curPolicy = onPolicy ? r.p.id : null;
+      var clientPages = M.CLIENT_NAV.map(function (x) { return x; });
+      body = '<nav aria-label="Client and policies">';
+      if (tight) {
+        /* Collapsed: the client is its Avatar, opening a Menu of the
+           client's pages; the policies are one Shield button (Mark). */
+        body +=
+          '<ul class="nav flex-column mob-nav mob-strip">' +
+            '<li class="mob-strip-item">' + flyout('mob-fly-client', 'Client: ' + c.name,
+              '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient,
+              clientPages.map(function (x) { return { href: '#c/' + x.id, label: t(x.label), icon: x.icon, cur: onClient && r.page === x.id ? 'page' : null }; })) + '</li>' +
+            '<li class="mob-strip-item">' + flyout('mob-fly-policies', 'Policies (' + F.policies.length + ')',
+              '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy,
+              F.policies.map(function (p) { return { href: ui.policyHref(p), label: esc(p.ref), icon: M.ICON.motor, cur: p.id === curPolicy ? 'true' : null, after: ui.statusTag(p, true) }; })) + '</li>' +
+          '</ul>';
+      } else {
+        body +=
           '<ul class="nav flex-column mob-nav">' +
-            railLink('#c/summary', onClient, M.ICON.client, 'Client', c.name, null, 'mob-rail-client') +
+            '<li class="nav-item"><a class="nav-link mob-rail-client' + (onClient ? ' mob-on' : '') + '" href="#c/summary"' + (onClient ? ' aria-current="true"' : '') + '>' + clientMeta(c) + '</a>' +
+              /* The client's own pages, under the client. */
+              '<ul class="nav flex-column mob-subnav" aria-label="Client pages">' +
+                clientPages.map(function (x) { return navLink(x.id, x.label, null, onClient ? r.page : null, '#c/' + x.id); }).join('') +
+              '</ul>' +
+            '</li>' +
           '</ul>' +
-          (tight ? railPolicyMenu(r.scope === 'policy' ? r.p.id : null) : railPolicies(r.scope === 'policy' ? r.p.id : null)) +
-        '</nav>' +
+          railPolicies(curPolicy);
+      }
+      body += '</nav>' +
         ui.set([railButton(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action');
     }
     $('mob-rail-body').innerHTML = body;
@@ -294,20 +360,21 @@
 
     var rec = $('mob-record');
     var tb = $('mob-toolbar');
-    rec.hidden = app;
-    tb.hidden = app || onClient;
-    if (app) { rec.innerHTML = ''; tb.innerHTML = ''; return; }
+    rec.hidden = !onPolicy;
+    tb.hidden = !onPolicy;
+    if (!onPolicy) { rec.innerHTML = ''; tb.innerHTML = ''; return; }
 
-    var head = onClient
-      ? ['Client record', c.name]
-      : [t(c.product) + ' policy', r.p.ref];
+    var nav = M.policyNav(r.p);
     rec.innerHTML =
-      '<div class="text-block mob-record-head"><span class="eyebrow">' + esc(head[1]) + '</span><h2 class="title-02" id="mob-record-title">' + head[0] + '</h2></div>' +
-      '<nav aria-labelledby="mob-record-title" class="mob-record-nav">' +
-        navGroups(onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p), r.page, r) +
+      '<div class="mob-record-top">' +
+        (recTight ? '' : '<div class="text-block mob-record-head"><span class="eyebrow">' + esc(r.p.ref) + '</span><h2 class="title-02" id="mob-record-title">' + t(c.product) + ' policy</h2></div>') +
+        columnToggle('data-record-toggle aria-controls="mob-record"', recTight, 'policy menu') +
+      '</div>' +
+      '<nav aria-label="' + esc(c.product + ' policy ' + r.p.ref) + '" class="mob-record-nav">' +
+        (recTight ? navStrip(nav, r.page, r) : navGroups(nav, r.page, r)) +
       '</nav>';
 
-    tb.innerHTML = onClient ? '' : toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy');
+    tb.innerHTML = toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy');
     var first = tb.querySelector('[data-toolbar-item]');
     if (first) first.tabIndex = 0;
     orientToolbar();
@@ -483,6 +550,9 @@
   var firstRender = true;
   function go() {
     S.step = 0;
+    S.railOverride = null;
+    S.recordOverride = null;
+    S.groups = {};
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -625,7 +695,8 @@
     if (e.key !== 'Tab') return;
     var items = Array.prototype.filter.call(
       container.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'),
-      function (n) { return n.offsetParent !== null; });
+      /* Visible, and in the Tab order: the toolbar's roving items at -1 are not. */
+      function (n) { return n.offsetParent !== null && n.tabIndex !== -1; });
     if (!items.length) return;
     var first = items[0];
     var last = items[items.length - 1];
@@ -687,8 +758,16 @@
     /* The skip link moves focus without touching the route. */
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
-    if (el.closest('[data-rail-toggle]')) { setRail(railCollapsed(), '[data-rail-toggle]'); return; }
-    if (el.closest('[data-rail-search]')) { setRail(true, '#mob-search-input'); return; }
+    if (el.closest('[data-rail-toggle]')) { S.railOverride = railCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
+    if (el.closest('[data-rail-search]')) { S.railOverride = true; rerenderSide('#mob-search-input'); return; }
+    if (el.closest('[data-record-toggle]')) { S.recordOverride = recordCollapsed(); rerenderSide('[data-record-toggle]'); return; }
+    var grp = el.closest('[data-group]');
+    if (grp) {
+      var gname = grp.getAttribute('data-group');
+      S.groups[gname] = grp.getAttribute('aria-expanded') !== 'true';
+      rerenderSide('[data-group="' + gname + '"]');
+      return;
+    }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
     /* Breadcrumb overflow items are Menu buttons (Code & specs); each goes to its page. */
     var goEl = el.closest('[data-go]');
@@ -796,12 +875,8 @@
     document.body.classList.toggle('mob-hide-terms', !this.checked);
   });
 
-  /* Opening or closing the rail is the user's choice: it holds on every
-     page and is remembered in this browser. Focus goes to `focusSel`. */
-  function setRail(open, focusSel) {
-    if (narrow.matches) return;
-    S.railPref = open;
-    try { localStorage.setItem('mob-rail', open ? 'open' : 'closed'); } catch (e) { /* not stored */ }
+  /* A toggle re-renders the menu; focus goes to `focusSel`. */
+  function rerenderSide(focusSel) {
     Shell.disposeTooltips(sidebar);
     renderSide(R);
     Shell.initTooltips(sidebar);

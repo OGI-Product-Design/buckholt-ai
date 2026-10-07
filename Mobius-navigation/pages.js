@@ -62,14 +62,14 @@
 
   /* ------------------------------------------------------------- Status tag
      Buckholt Tag, status variant, with the documented icon. Every status
-     carries its text, so status never relies on colour alone. Incomplete has
-     no status colour in the prototype, so it is the plain read-only Tag. */
+     carries its text, so status never relies on colour alone. Incomplete
+     has no status colour in the prototype; it takes the info variant. */
   var STATUS = {
     'Live': { variant: 'success', icon: 'fa-circle-check', label: '[[Live]]' },
     'Prospect': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Prospect' },
     'Lapsed': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Lapsed' },
     'Automatic Decline': { variant: 'error', icon: 'fa-circle-exclamation', label: 'Automatic Decline' },
-    'Incomplete': { variant: null, icon: null, label: 'Incomplete' }
+    'Incomplete': { variant: 'info', icon: 'fa-circle-info', label: 'Incomplete' }
   };
 
   function statusText(p) { return t(STATUS[p.status].label); }
@@ -1164,21 +1164,9 @@
     if (R.scope === 'policy' && (R.page === 'summary' || R.page === 'details')) {
       var p = R.p;
       var fl = M.policyFlows(p);
-      var out = '';
-      if (R.page === 'summary') {
-        /* Quick links: icon-only ghost links to sibling pages, each with an
-           accessible name and a Tooltip. A set of their own, because
-           Buckholt does not mix icon-only and labelled Buttons in one set. */
-        out += '<nav class="mob-quick" aria-label="Quick links">' + set(M.QUICK_LINKS.map(function (q) {
-          var n = F.quickLinkCounts[q[3]];
-          return '<a class="btn btn-ghost mob-badged" href="' + policyHref(p, q[0]) + '"' +
-              ' aria-label="' + q[1] + (n ? ', ' + n + ' new' : '') + '"' +
-              ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + q[1] + '">' +
-            '<div class="btn-icon"><i class="' + q[2] + '" aria-hidden="true"></i></div>' +
-            (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
-          '</a>';
-        }), 'button-set-nowrap') + '</nav>';
-      }
+      /* The quick links (Documents, Attachments, Notes, History) that were
+         here are gone: their counts are badges on those pages' links in the
+         policy menu. */
       var labelled = [];
       if (R.page === 'summary') fl.secondary.forEach(function (k) {
         var a = M.POLICY_ACTIONS[k];
@@ -1186,7 +1174,7 @@
       });
       var pa = M.POLICY_ACTIONS[fl.primary];
       labelled.push(btn(pa.label, { variant: 'primary', icon: pa.icon, href: policyHref(p, pa.to) }));
-      return out + set(labelled);
+      return set(labelled);
     }
 
     if (R.scope === 'app' && (R.page === 'dashboard' || R.page === 'search')) {
