@@ -104,7 +104,7 @@
 }
 .mob-rail-head { flex: 0 0 auto; align-items: center; gap: var(--spacer-04); display: flex; justify-content: flex-end; padding: var(--spacer-04) var(--spacer-04) 0; }
 .mob-column-toggle { margin-top: 0; margin-left: auto; }
-.mob-rail-back { min-width: 0; }
+.mob-rail-back { min-width: 0; align-self: center; }   /* Link sets its own align-self; centre it on the collapse button */
 
 /* Search, at the top of the rail, divided from the client and policies
    below it by a rule. */
