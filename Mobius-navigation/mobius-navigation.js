@@ -47,7 +47,9 @@
   /* query: the last search run, or null before the first one. */
   /* railOverride: the rail opened (true) or collapsed (false) with its
      toggle on this page, or null. Reset on every route. */
-  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null };
+  /* query: the last search run; modalQuery: the search shown in the search
+     Modal (null shows recent searches). */
+  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
   P.init(S);
 
   var R = null;
@@ -281,7 +283,8 @@
       /* Collapsed: one icon button per category, each opening the rail
          there; the actions become icon-only Buttons. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('rail', '#mob-search-input', 'Search', '<div class="btn-icon">' + icon('fa-regular fa-magnifying-glass') + '</div>', false) +
+        /* Search opens the search Modal straight away. */
+        '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" data-open-search aria-haspopup="dialog"' + tipAttrs('Search') + '><div class="btn-icon">' + icon('fa-regular fa-magnifying-glass') + '</div></button></li>' +
         (app ? '' :
           expander('rail', '.mob-rail-client', 'Client: ' + c.name,
             /* Avatar extra small, so it sits in the strip like the icons. */
@@ -332,11 +335,9 @@
     orientToolbar();
   }
 
-  function searchHref() { return '#search/' + encodeURIComponent(S.query); }
-
   /* ========================================================= Breadcrumbs
-     Location-based: Dashboard › Search results (once a search has been run)
-     › client › policy › page. They replace the record strip that used to sit
+     Location-based: Dashboard › client › policy › page. The search is a
+     Modal over the page, not a place, so it is not in the trail. They replace the record strip that used to sit
      under the top bar. The current page is the last, unlinked item.
      Breadcrumbs should not wrap, so a long trail puts its middle in
      Breadcrumb's documented overflow menu: past four items on wide screens
@@ -348,7 +349,6 @@
     var trail = [];
     if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
     trail.push(['Dashboard', '#dashboard']);
-    if (r.scope !== 'app' && S.query) trail.push(['Search results', searchHref()]);
     if (r.scope === 'client') {
       if (r.page === 'summary') trail.push([c.name, null]);
       else trail.push([c.name, '#c/summary'], [title, null]);
@@ -422,6 +422,9 @@
     R = parse();
     if (R.scope === 'policy' && M.allowedPolicyPages(R.p).indexOf(R.page) < 0) { location.replace(ui.policyHref(R.p)); return false; }
     if (R.scope === 'client' && !P.client[R.page]) { location.replace('#c/summary'); return false; }
+    /* A search link (#search/{query}) opens the search Modal over the
+       Dashboard. */
+    if (R.scope === 'app' && R.page === 'search') { S.pendingSearch = S.query; location.replace('#dashboard'); return false; }
     Shell.disposeTooltips($('sidebar'));
     renderModules(R);
     renderSide(R);
@@ -449,10 +452,108 @@
   }
 
   /* ============================================================= Search
-     At the top of the rail, on every page. Running a search opens the
-     results. */
+     The field at the top of the rail opens the search in a large Buckholt
+     Modal (Jon's suggestion), so the page you are on stays behind it.
+     Opening it shows recent searches (a Menu shown in place: Down arrow
+     moves into it, Up / Down move through it, picking one runs it).
+     Running a search shows the results in the Modal; opening a client or
+     policy from them closes it. */
   var searchForm = $('mob-search');
   var searchInput = $('mob-search-input');
+  var searchModalEl = $('mob-search-modal');
+  var searchModal = new bootstrap.Modal(searchModalEl);
+  var modalForm = $('mob-search-modal-form');
+  var modalInput = $('mob-search-modal-input');
+  var modalBody = $('mob-search-modal-body');
+
+  function recentMenu() {
+    if (!F.recentSearches.length) return '';
+    return '<div class="menu mob-actions mob-recent">' +
+      '<div class="menu-panel show position-relative mob-menu-inline" role="group" aria-labelledby="mob-recent-label">' +
+        '<ul class="menu-body">' +
+          '<li><h6 class="menu-section-header" id="mob-recent-label">Recent searches</h6></li>' +
+          F.recentSearches.map(function (q) {
+            return '<li><button class="menu-item" type="button" data-recent="' + esc(q) + '">' + icon(M.ICON.history) + esc(q) + '</button></li>';
+          }).join('') +
+        '</ul>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* The body: recent searches until a search is run, then its results
+     (the Search results page's own content), with Create new client. */
+  function renderSearchBody() {
+    Shell.disposeTooltips(modalBody);
+    if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
+    var prev = S.query;
+    S.query = S.modalQuery;
+    var nc = M.APP_ACTIONS.newclient;
+    modalBody.innerHTML =
+      '<div class="mob-search-results">' +
+        P.app.search().join('') +
+        ui.set([ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })]) +
+      '</div>';
+    S.query = prev;
+    Shell.initTooltips(modalBody);
+  }
+
+  function openSearch(seed) {
+    modalInput.value = seed || S.modalQuery || '';
+    if (!modalInput.value) S.modalQuery = null;
+    renderSearchBody();
+    searchModal.show();
+  }
+
+  function runModalSearch(q) {
+    q = String(q || '').trim();
+    if (!q) { S.modalQuery = null; renderSearchBody(); modalInput.focus(); return; }
+    S.modalQuery = q;
+    S.query = q;
+    modalInput.value = q;
+    F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
+    renderSearchBody();
+    searchInput.value = q;
+  }
+
+  searchModalEl.addEventListener('shown.bs.modal', function () { modalInput.focus(); modalInput.select(); });
+  /* Back to the field that opened it, without reopening the search. */
+  searchModalEl.addEventListener('hidden.bs.modal', function () {
+    if (S.searchTrigger && document.contains(S.searchTrigger)) { S.reopenGuard = true; S.searchTrigger.focus(); S.reopenGuard = false; }
+    S.searchTrigger = null;
+  });
+
+  /* The rail's field opens the Modal on a click, Enter, Down arrow or the
+     first character typed, which carries over into the Modal's field. */
+  searchInput.addEventListener('click', function () { S.searchTrigger = searchInput; openSearch(searchInput.value); });
+  searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
+    e.preventDefault();
+    S.searchTrigger = searchInput;
+    openSearch(e.key.length === 1 ? searchInput.value + e.key : searchInput.value);
+  });
+  searchForm.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
+  modalInput.addEventListener('input', function () {
+    if (!modalInput.value && S.modalQuery) { S.modalQuery = null; renderSearchBody(); }
+  });
+  /* Recent searches: Down arrow from the field moves into them. */
+  searchModalEl.addEventListener('keydown', function (e) {
+    var items = Array.prototype.slice.call(modalBody.querySelectorAll('[data-recent]'));
+    if (!items.length) return;
+    var i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' && (document.activeElement === modalInput || i >= 0)) {
+      e.preventDefault();
+      items[i < 0 ? 0 : Math.min(i + 1, items.length - 1)].focus();
+    } else if (e.key === 'ArrowUp' && i >= 0) {
+      e.preventDefault();
+      if (i === 0) modalInput.focus(); else items[i - 1].focus();
+    }
+  });
+  modalBody.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-recent]');
+    if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); }
+  });
 
   /* In the drawer the toolbar lies flat, above the record's pages. */
   function orientToolbar() {
@@ -464,19 +565,9 @@
     });
   }
 
-  function syncSearch(r) {
-    searchInput.value = r.scope === 'app' && r.page === 'search' ? S.query : '';
+  function syncSearch() {
+    searchInput.value = S.query || '';
   }
-
-  function runSearch(q) {
-    q = String(q || '').trim();
-    if (!q) { searchInput.focus(); return; }
-    S.query = q;
-    var target = '#search/' + encodeURIComponent(q);
-    if (location.hash === target) go(); else location.hash = target;
-  }
-
-  searchForm.addEventListener('submit', function (e) { e.preventDefault(); runSearch(searchInput.value); });
 
   /* ========================================================== User menu
      Under the avatar, as current Mobius has it: the user's name, the
@@ -501,6 +592,8 @@
 
   var firstRender = true;
   function go() {
+    /* Opening a client or policy from the search closes it. */
+    if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
     S.railOverride = null;
     closeDrawer(false);
@@ -510,6 +603,7 @@
        announced. Not on first load. */
     if (!firstRender) $('mob-title').focus({ preventScroll: true });
     firstRender = false;
+    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; runModalSearch(q); openSearch(q); }
   }
 
   /* ============================================================== Toasts */
@@ -709,6 +803,8 @@
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
     if (el.closest('[data-rail-toggle]')) { S.railOverride = railCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
+    var os = el.closest('[data-open-search]');
+    if (os) { S.searchTrigger = os; openSearch(); return; }
     var ex = el.closest('[data-expand]');
     if (ex) {
       S.railOverride = true;
@@ -729,9 +825,17 @@
       S.polShown = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown + 5) : 5;
       var scroller = document.querySelector('.mob-rail-scroll');
       var y = scroller ? scroller.scrollTop : 0;
+      var inModal = !!more.closest('#mob-search-modal');
       render();
       scroller = document.querySelector('.mob-rail-scroll');
       if (scroller) scroller.scrollTop = y;
+      /* From the search Modal: refresh its results and keep focus there. */
+      if (inModal) {
+        renderSearchBody();
+        var again = modalBody.querySelector('[data-focus-id="' + focusId + '"]');
+        if (again) again.focus();
+        return;
+      }
       refocus(focusId);
       return;
     }

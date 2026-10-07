@@ -110,7 +110,8 @@
             </div>
             <div class="response text-input">
               <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-              <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email">
+              <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email"
+                aria-haspopup="dialog" aria-controls="mob-search-modal">
             </div>
           </div>
         </form>
@@ -167,6 +168,45 @@
           <button type="button" class="btn btn-ghost" id="mob-confirm-cancel" data-bs-dismiss="modal"><span class="button-label">Cancel</span></button>
           <button type="button" class="btn btn-primary" id="mob-confirm-ok"><span class="button-label">Confirm</span></button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     Search — Buckholt Modal (Code & specs example 1), extra large and
+     scrollable, so the page you are on stays behind it (Jon's suggestion).
+     The search field, recent searches and the results are written by
+     mobius-navigation.js.
+     ========================================================================== -->
+<div class="modal fade" id="mob-search-modal" tabindex="-1" aria-labelledby="mob-search-title">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02" id="mob-search-title">Search</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form class="mob-search-modal-form" role="search" id="mob-search-modal-form" autocomplete="off">
+          <div class="input">
+            <div class="input-label">
+              <label for="mob-search-modal-input" class="form-label visually-hidden">Search by name, reference or email</label>
+            </div>
+            <div class="response text-input">
+              <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" class="form-control" id="mob-search-modal-input" placeholder="Search by name, reference or email"
+                aria-describedby="mob-search-modal-hint">
+            </div>
+          </div>
+          <p class="visually-hidden" id="mob-search-modal-hint">Press the down arrow for recent searches.</p>
+        </form>
+        <div id="mob-search-modal-body" aria-live="polite"></div>
       </div>
     </div>
   </div>
