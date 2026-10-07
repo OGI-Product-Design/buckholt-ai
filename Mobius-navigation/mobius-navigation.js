@@ -157,13 +157,13 @@
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-            /* A small Car icon, no Icon block (Laurence, 7 October 2026: the
-               blocks were too heavy), then the line of business over the
-               reference in the policy head's type, the status Tag on the
-               title's line (it wraps under it when long). */
+            /* The status as an eyebrow, plain text above the row (Laurence,
+               7 October 2026: in place of the Tag), then a small Car icon
+               (no Icon block) beside the line of business over the
+               reference, in the policy head's type. */
+            '<span class="eyebrow mob-rail-status">' + ui.statusText(p) + '</span>' +
             icon(M.ICON.motor, 'mob-rail-icon') +
-            '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
-              ui.statusTag(p, true) + '</span>' +
+            '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
               '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
           '</a>' +
         '</li>';
@@ -288,7 +288,8 @@
     } else if (!app) {
       /* The client's pages, then their policies. */
       body = '<nav aria-label="Client and policies">' +
-          '<ul class="nav flex-column mob-nav mob-rail-pages" aria-label="Client pages">' +
+          sectionLabel('mob-rail-client-label', 'Client') +
+          '<ul class="nav flex-column mob-nav mob-rail-pages" aria-labelledby="mob-rail-client-label">' +
             M.clientPages().map(function (n) { return navLink(n.id, n.label, n.icon, onClient ? r.page : null, '#c/' + n.id); }).join('') +
           '</ul>' +
           railPolicies(curPolicy) +
@@ -319,14 +320,15 @@
     if (!onPolicy) { rec.innerHTML = ''; return; }
 
     var nav = M.policyNav(r.p);
-    /* The head, in User meta's type: the line of business with the status
-       Tag, over the reference, like the policy's row in the rail, then the
-       policy's actions in a row under it. */
+    /* The head, as the policy's row in the rail: the status as an eyebrow
+       (plain text, no Tag), then the line of business over the reference,
+       then the policy's actions in a row under it. */
     var label = c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML = (
       '<div class="mob-record-head">' +
-        '<div class="mob-rail-row"><h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' + ui.statusTag(r.p, true) + '</div>' +
+        '<span class="eyebrow mob-record-status">' + ui.statusText(r.p) + '</span>' +
+        '<h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' +
         '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' +
         '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
       '</div>') +
