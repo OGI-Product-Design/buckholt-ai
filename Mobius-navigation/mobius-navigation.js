@@ -115,23 +115,29 @@
      cover start. In the switcher the open policy is the current item of the
      set (aria-current="true"); it is the current page only on its overview. */
   function policyLinks(curId, inSwitcher) {
-    /* Each policy is a Buckholt clickable Card (`a.card.card-clickable`),
-       the documented "the whole thing is one link" pattern, with its own
-       arrow indicator. Inside: the status Tag, the reference, then the line
-       of business and the cover start. */
+    /* Each policy is a Buckholt clickable Card (`a.card.card-clickable >
+       .card-body > .text-block`), the documented whole-card link. Inside is
+       Heading attachment's Code & specs example 3 exactly: `.heading` with
+       the reference in `.heading-content` and the status Tag attached, then
+       a paragraph. Spacing is the Text block's own. */
     return '<ul class="list-unstyled mob-policies">' + ui.shownPolicies().map(function (p) {
       var on = p.id === curId;
       return '<li>' +
         '<a class="card card-clickable mob-pol-link' + (on ? ' mob-pol-current' : '') + '" href="' + ui.policyHref(p) + '"' +
           (on ? ' aria-current="' + (inSwitcher ? 'true' : 'page') + '"' : '') + '>' +
-          '<div class="card-body"><div class="text-block">' +
-            /* The status Tag has a row of its own, so it sits in the same place
-               on every card whatever the reference's length. */
-            '<div class="mob-pol-row">' + ui.statusTag(p, true) + '</div>' +
-            '<span class="title-01 mob-pol-ref">' + esc(p.ref) + '</span>' +
-            /* One fact per line, so neither wraps mid-phrase in the column. */
-            '<p class="support-01 mob-pol-meta">' + esc(F.client.businessLine) + '<br>' + t('[[Cover start]]') + ' ' + esc(p.start.split(' ')[0]) + '</p>' +
-          '</div></div>' +
+          '<div class="card-body">' +
+            '<div class="text-block">' +
+              '<div class="heading">' +
+                '<div class="heading-content">' +
+                  '<h3 class="title-01">' + esc(p.ref) + '</h3>' +
+                '</div>' +
+                ui.statusTag(p, true) +
+              '</div>' +
+              /* "cover start {date}" is held together with non-breaking
+                 spaces, so the line only ever breaks after the "·". */
+              '<p>' + esc(F.client.businessLine) + ' · ' + t('[[cover\u00a0start]]') + '\u00a0' + esc(p.start.split(' ')[0]) + '</p>' +
+            '</div>' +
+          '</div>' +
         '</a>' +
       '</li>';
     }).join('') + '</ul>' +
