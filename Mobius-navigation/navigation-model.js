@@ -90,14 +90,11 @@
         { id: 'plan', label: 'Payment plan' },
         { id: 'collections', label: 'Collections' },
         { id: 'dd', label: 'Direct Debit details' },
-        { id: 'cards', label: 'Credit cards' },
-        { id: 'txdocs', label: '[[Transaction documents]]' }
-      ].concat(p.kind === 'live' ? [
-        /* Menu items in current Mobius (Laurence, 7 October 2026). They
-           open side panels, so they are actions, not pages. */
-        { id: 'fee', label: 'Admin fee', action: 'fee' },
-        { id: 'manual', label: 'Manual credit / debit', action: 'manual' }
-      ] : []) };
+        { id: 'cards', label: 'Credit cards' }
+        /* Transaction documents is removed (Laurence, 7 October 2026). Admin
+           fee and Manual credit / debit open side panels, so they are
+           Buttons on the Account summary page, not menu items. */
+      ] };
     },
     corr: function () {
       return { group: 'Correspondence', icon: ICON.correspondence, children: [
@@ -178,7 +175,7 @@
   function allowedPolicyPages(p) {
     var ids = [];
     policyNav(p).forEach(function (n) {
-      if (n.children) n.children.forEach(function (c) { if (!c.action) ids.push(c.id); });
+      if (n.children) n.children.forEach(function (c) { ids.push(c.id); });
       else ids.push(n.id);
     });
     var fl = policyFlows(p);
@@ -263,7 +260,7 @@
       summary: ['[[Policy overview]]', ''], details: ['[[Policy details]]', 'Policy'], claims: ['Claims', 'Policy'],
       quote: ['Quote summary', 'Quote'], tx: ['[[Account summary]]', 'Transactions'], plan: ['Payment plan', 'Transactions'],
       collections: ['Collections', 'Transactions'], dd: ['Direct Debit details', 'Transactions'], cards: ['Credit cards', 'Transactions'],
-      txdocs: ['[[Transaction documents]]', 'Transactions'], diary: ['Diary', 'Correspondence'], docs: ['Documents', 'Correspondence'],
+      diary: ['Diary', 'Correspondence'], docs: ['Documents', 'Correspondence'],
       notes: ['Notes', 'Correspondence'], checklist: ['Checklist', 'Correspondence'], attachments: ['Attachments', 'Correspondence'],
       complaints: ['Complaints', 'Correspondence'], agent: ['Agent / product details', 'More details'],
       history: ['Policy history', 'More details'], activity: ['Activity', 'More details'],

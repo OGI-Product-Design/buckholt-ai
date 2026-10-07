@@ -822,10 +822,6 @@
         }), { caption: 'Credit cards' }))];
     },
 
-    txdocs: function () {
-      return [card('[[Transaction documents]]', note('In Mobius today the Transactions › Documents link doesn’t work, so there’s no current screen to replicate. This is its place in the menu.'))];
-    },
-
     diary: function () {
       return [card('Diary', tabs(['Outstanding', 'History'], [
         table(['Created', 'Operator', 'Assigned to', 'Action type', 'Due date and time', 'Last note'], F.diary, { caption: 'Outstanding diary entries' }),
