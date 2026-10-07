@@ -102,11 +102,13 @@
   flex: 0 0 auto;
   border-right: 1px solid var(--ui-border-02);
 }
-.mob-rail-head { flex: 0 0 auto; display: flex; justify-content: flex-end; padding: var(--spacer-04) var(--spacer-04) 0; }
-.mob-column-toggle { margin-top: 0; }
+.mob-rail-head { flex: 0 0 auto; align-items: center; gap: var(--spacer-04); display: flex; justify-content: flex-end; padding: var(--spacer-04) var(--spacer-04) 0; }
+.mob-column-toggle { margin-top: 0; margin-left: auto; }
+.mob-rail-back { min-width: 0; }
 
-/* Search, at the top of the rail. */
-.mob-search { flex: 0 0 auto; padding: var(--spacer-04) var(--spacer-04) 0; }
+/* Search, at the top of the rail, divided from the client and policies
+   below it by a rule. */
+.mob-search { flex: 0 0 auto; padding: var(--spacer-04); border-bottom: 1px solid var(--ui-border-02); }
 .mob-search .input-label { display: none; }
 
 .mob-rail-scroll {
@@ -177,6 +179,7 @@
   .mob-rail-collapsed .mob-rail { width: 4rem; }
   .mob-rail-collapsed .mob-search { display: none; }
   .mob-rail-collapsed .mob-rail-head { justify-content: center; padding-inline: 0; }
+  .mob-rail-collapsed .mob-column-toggle { margin-left: 0; }
   .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); gap: var(--spacer-05); }
   .mob-rail-collapsed .mob-rail-action,
   .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; }
