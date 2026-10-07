@@ -221,6 +221,8 @@
    application. Icon-only ghost Buttons (Button's medium icon-only size) in
    stacked Button sets, a rule between groups. */
 .mob-toolbar {
+  display: flex;
+  flex-direction: column;
   width: 3rem;
   flex: 0 0 auto;
   overflow: visible;                                  /* the Overflow menu floats out of it */
@@ -228,7 +230,10 @@
   border-left: 1px solid var(--ui-border-02);
 }
 .mob-toolbar[hidden] { display: none; }
-.mob-toolbar-body { display: flex; flex-direction: column; align-items: center; gap: var(--spacer-03); }
+.mob-toolbar-body { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; gap: var(--spacer-03); }
+/* The destructive actions' Overflow menu is fixed to the foot of the
+   strip, below a rule. */
+.mob-toolbar-foot { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: var(--spacer-03); }
 .mob-toolbar .button-set { margin: 0; }
 .mob-toolbar-rule { width: 1.5rem; border-top: 1px solid var(--ui-border-02); }
 
@@ -455,6 +460,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-toolbar { order: 1; width: auto; overflow: visible; border-left: 0; border-top: 1px solid var(--ui-border-02); padding: var(--spacer-03) var(--spacer-04); }
   .mob-record { order: 2; }
   .mob-toolbar-body { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+  .mob-toolbar-foot { margin-top: 0; flex-direction: row; }
   .mob-toolbar .button-set-stacked { flex-direction: row; flex-wrap: nowrap; }
   .mob-toolbar .button-set-stacked > .btn { width: auto; }
   .mob-toolbar-rule { width: auto; height: 1.5rem; border-top: 0; border-left: 1px solid var(--ui-border-02); }

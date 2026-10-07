@@ -237,7 +237,9 @@ icon-only size, in a 48px column), each with an accessible name and a Tooltip to
 - **Stop and Cancel are behind an Overflow menu** (Mark, 7 October 2026: they are destructive,
   so not one click away). It is Menu button's Code & specs example 3: an icon-only ghost
   `.menu-toggle` with `fa-ellipsis-vertical`, named "More actions" with its Tooltip on the Menu
-  wrapper (as Breadcrumb's overflow menu does), opening a Menu to its right (`.dropend`). Cancel is
+  wrapper (as Breadcrumb's overflow menu does), **fixed to the foot of the toolbar** below a
+  rule, away from the everyday actions, and opening a Menu to its right (`.dropend`; it flips
+  upward at the foot of the screen). In the drawer it sits at the end of the flat row. Cancel is
   Menu's danger item, which Buckholt draws red on hover. Each still asks for confirmation; when
   the confirmation closes, focus returns to the "More actions" trigger.
 - Below 1280px, in the drawer, the toolbar lies flat above the record's pages and wraps; its

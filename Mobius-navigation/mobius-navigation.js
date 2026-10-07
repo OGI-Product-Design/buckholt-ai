@@ -213,9 +213,12 @@
     /* Stop and Cancel are destructive, so they are not one click away: they
        sit behind Buckholt's Overflow menu (Menu button Code & specs
        example 3: ghost icon-only trigger, `fa-ellipsis-vertical`), which
-       opens to the right. Cancel is Menu's danger item. */
+       opens to the right. Cancel is Menu's danger item. It is fixed to the
+       foot of the toolbar, away from the everyday actions. */
+    var foot = '';
     if (risky.length) {
-      sets.push('<div class="menu dropend mob-overflow" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="More actions">' +
+      foot = '<div class="mob-toolbar-foot"><div class="mob-toolbar-rule" role="separator"></div>' +
+        '<div class="menu dropend mob-overflow" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="More actions">' +
         '<button type="button" class="btn btn-ghost menu-toggle" tabindex="-1" data-toolbar-item id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
           '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
         '</button>' +
@@ -226,10 +229,10 @@
               ' data-action="' + key + '" data-scope="' + scope + '" aria-haspopup="dialog">' + icon(a.icon) + t(a.label) + '</button></li>';
           }).join('') + '</ul>' +
         '</div>' +
-      '</div>');
+      '</div></div>';
     }
     return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="vertical">' +
-      sets.join('<div class="mob-toolbar-rule" role="separator"></div>') +
+      sets.join('<div class="mob-toolbar-rule" role="separator"></div>') + foot +
     '</div>';
   }
 
