@@ -99,6 +99,12 @@
 .mob-module-bar[hidden] { display: none; }
 .mob-module-context { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--spacer-04); }
 .mob-module-context > .btn { flex: 0 0 auto; }
+/* The back arrow lines up with the icons in the column below: with the
+   rail open it already does (both centred 44px in); over the collapsed
+   64px strip it moves in to the strip's centre (32px). */
+@media (min-width: 1280px) {
+  .layout:has(.mob-rail-collapsed) .mob-module-bar { padding-left: calc(2rem - 1.25rem); }
+}
 /* The client in User meta, in one line: the name, then the reference.
    Only on a narrow screen does the name truncate. */
 .mob-bar-client { min-width: 0; }
