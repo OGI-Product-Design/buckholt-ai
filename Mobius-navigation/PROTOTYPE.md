@@ -81,7 +81,7 @@ is a gap to raise.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (320px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). The head: the **client as User meta** (initials Avatar, name, reference), which links to the client, and the collapse button at its right. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot. Add new quote moved to the client's menu (Laurence, 7 October 2026) | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Client support opens its side panel and is a ghost Button |
+| Rail (320px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). The head: the **client centred like a profile** (Laurence, 7 October 2026): the initials Avatar, the name (Title 01) and the reference under it, the whole block linking to the client, with the collapse button at the head's top right. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot. Add new quote moved to the client's menu (Laurence, 7 October 2026) | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; Avatar, Title 01 (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Client support opens its side panel and is a ghost Button |
 | Record column (always open, no collapse button; 336px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). On client pages it has no head (the client is in the rail beside it, and the "Client" group names the menu): **Client overview** on its own (Home icon), then the "Client" group: **Add new quote** first, then Business details, Transactions, Activity, Complaints and Client checks, so it reads like the policy menu's Policy overview and groups (Laurence, 7 October 2026). On policy pages a head in User meta's type: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, then the **policy's actions in a row** under it (below), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Policy actions (in the policy's head) | Every action of the policy's status, as icons in one row under the title, like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
@@ -290,16 +290,19 @@ translate cleared), with the count in visually hidden text.
 
 > **Gap:** `.badge` and this design are not in Buckholt's documentation.
 
-### 4a. The client is shown with User meta
+### 4a. The client is shown as a centred profile
 
-Laurence asked for Buckholt's User meta for the client: the initials Avatar, then the name and
-the reference. Buckholt has **no User meta documentation or Code & specs** in this repository.
-The markup follows the runtime's own selectors in `css/buckholt.css`: `.user-meta`
-(`.user-meta-compact` inside the link), `.avatar`, `.user-meta-body > .user-meta-first + span`.
-The live reference build names the same component `.account-meta`
-(`discrepancies/build-provenance.md`), so on live this markup would be unstyled.
+The client was first shown with the runtime's User meta (Avatar beside the name and reference).
+Laurence's later design centres it: the Avatar above, the name, then the reference. User meta is
+a row and has **no documentation or Code & specs** here (the live build names it
+`.account-meta`, `discrepancies/build-provenance.md`), so the centred head is composed from
+documented parts instead: Avatar at its default size, the name in Title 01, the reference in the
+secondary text colour. The design's Avatar is larger than 48px, but Buckholt documents nothing
+larger than its default (`.avatar-sm` and `.avatar-xs` are the only other sizes), so it stays
+at 48px.
 
-> **Gap to raise with Buckholt:** document User meta / Account meta and settle its class name.
+> **Gap to raise with Buckholt:** a profile or record header (centred Avatar, name, reference),
+> and an Avatar size above 48px if the design needs it.
 
 ### 4b. Incomplete takes the info status
 
@@ -474,7 +477,7 @@ Awesome), and Typekit was absent.
   - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
     button with a Tooltip that opens the rail (320px) with focus on the open policy; no search in
     the rail (it is in the Broking bar), and "/" opening the search Modal
-  - the open rail: the client in User meta, no client pages in the rail, policies with Icon
+  - the open rail: the client centred (Avatar, name, reference), no client pages in the rail, policies with Icon
     blocks, "Show 2 more"; the next page collapsing it again
   - the policy menu collapsing to a strip, and a group icon opening it at that group
   - groups always open with no accordion, and a count on Documents

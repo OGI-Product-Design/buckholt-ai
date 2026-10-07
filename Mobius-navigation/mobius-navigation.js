@@ -144,13 +144,13 @@
       tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + inner + '</button></li>';
   }
 
-  /* The client: Buckholt's User meta (the runtime's `.user-meta`), the
-     initials Avatar, then the client's name and reference. */
+  /* The client, centred like a profile (Laurence's design, 7 October
+     2026): the initials Avatar (its default 48px, the largest Buckholt
+     documents), the name (Title 01) and the reference under it. */
   function clientMeta(c) {
-    return '<div class="user-meta user-meta-compact">' +
-      '<div class="avatar" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-      '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
-    '</div>';
+    return '<div class="avatar" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+      '<span class="title-01 mob-rail-name">' + esc(c.name) + '</span>' +
+      '<span class="mob-rail-ref">' + esc(c.ref) + '</span>';
   }
 
   /* The client's policies, open rail: Page navigation, one link per
