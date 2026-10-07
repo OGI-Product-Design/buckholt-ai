@@ -151,6 +151,17 @@ here.").
   to policy) use one Buckholt Modal in the page source (Code & specs example 1). The confirm
   Button is `btn-primary`, and `btn-primary btn-danger` for Cancel policy only. Focus starts on
   Cancel, Tab wraps inside, Escape closes it, and focus returns to the trigger.
+- **Current Mobius menu items restored (Laurence, 7 October 2026).** In current Mobius,
+  Amend policy, Add new quote, Admin fee and Manual credit / debit are menu items. The reference
+  prototype had moved them out (flows to the page heading, Admin fee and Manual credit / debit to
+  the Account summary card), so they are back in the policy menu as well: **Amend policy** and
+  **Add new quote** as links under Policy overview (which of them a status has follows the
+  prototype's `policyFlows`, the same as the heading), and **Admin fee** and **Manual credit /
+  debit** at the end of Transactions on Live policies. Those two open side panels, so they are
+  Buttons in the navigation (`button.nav-link`, `aria-haspopup="dialog"`, pressed while open);
+  they are not pages and are not in the allowed-page list. The heading actions and the Account
+  summary card's Buttons stay as well. (No screenshot of the current Mobius policy menu is in the
+  repository; this follows Laurence's account of it.)
 - **Page and card actions stay on the page**: Add client header, Add client link and connection,
   the portal access Switch, New sanctions check, Add complaint, and Admin fee and Manual credit /
   debit on the Account summary card (Live only, as in the prototype).
