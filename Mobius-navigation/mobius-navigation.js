@@ -325,14 +325,16 @@
     if (!onPolicy) { rec.innerHTML = ''; return; }
 
     var nav = M.policyNav(r.p);
-    /* The head, as the policy's row in the rail: the status as an eyebrow
-       (plain text, no Tag), then the line of business over the reference,
+    /* The head: the status Tag, the reference over the line of business,
        then the policy's actions in a row under it. */
     var label = c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML = (
       '<div class="mob-record-head">' +
-        ui.statusDot(r.p, 'mob-record-status') +
+        /* One policy here, so its status is the small status Tag, above
+           the reference (Laurence, 7 October 2026); the rail's list keeps
+           the lighter dots. */
+        '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
         '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
         '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
         /* Labelled "Actions", as the menus' sections are. */
