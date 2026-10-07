@@ -145,15 +145,6 @@
       tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + inner + '</button></li>';
   }
 
-  /* The client: Buckholt's User meta (the runtime's `.user-meta`), the
-     small initials Avatar beside the name and reference (Laurence, 7
-     October 2026: back from the centred profile). Plain text, not a link. */
-  function clientMeta(c) {
-    return '<div class="user-meta user-meta-compact">' +
-      '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-      '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
-    '</div>';
-  }
 
   /* The client's policies, open rail: Page navigation, one link per
      policy, as in the Figma design: an Icon block (expressive dark, the
@@ -277,12 +268,8 @@
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    /* The head: the client in User meta, as plain text (Client overview
-       below is the way to the client), and the collapse button at its
-       right. Collapsed, only the button. */
-    $('mob-rail-head').innerHTML = app ? '' :
-      (tight ? '' : '<div class="mob-rail-client">' + clientMeta(c) + '</div>') +
-      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
+    /* The client is named in the Broking bar above, so the rail has no
+       head: it starts with the client's pages. */
 
     var curPolicy = onPolicy ? r.p.id : null;
     var body = '';
@@ -290,9 +277,8 @@
       /* Collapsed: one icon button per category, each opening the rail
          there; the actions become icon-only Buttons. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('rail', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client: ' + c.name,
-          /* Avatar extra small, so it sits in the strip like the icons. */
-          '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
+        expander('rail', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client pages',
+          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', onClient) +
         expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
           '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy) +
       '</ul>';
@@ -316,8 +302,11 @@
     }
     /* Client support opens a side panel: a ghost Button. It needs a
        client, so not at app level. */
+    /* The foot: Client support, and the collapse button at its right (as
+       in Outlook or VS Code), now the rail has no head. */
     $('mob-rail-foot').innerHTML = app ? '' : ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
-      attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]);
+      attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]) +
+      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
     $('mob-rail-foot').hidden = app;
 
     /* The policy column: only once a policy is open. */
@@ -440,7 +429,6 @@
     renderModules(R);
     renderModuleBar(R);
     renderSide(R);
-    syncSearch(R);
     renderPage(R);
     Shell.initTooltips($('sidebar'));
     return true;
@@ -470,8 +458,6 @@
      moves into it, Up / Down move through it, picking one runs it).
      Running a search shows the results in the Modal; opening a client or
      policy from them closes it. */
-  var searchForm = $('mob-search');
-  var searchInput = $('mob-search-input');
   var searchModalEl = $('mob-search-modal');
   var searchModal = new bootstrap.Modal(searchModalEl);
   var modalForm = $('mob-search-modal-form');
@@ -555,7 +541,6 @@
     modalInput.value = q;
     F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
     renderSearchBody();
-    searchInput.value = q;
   }
 
   searchModalEl.addEventListener('shown.bs.modal', function () { modalInput.focus(); modalInput.select(); });
@@ -565,24 +550,6 @@
     S.searchTrigger = null;
   });
 
-  /* The rail's field opens the Modal on a click, Enter, Down arrow or the
-     first character typed, which carries over into the Modal's field. */
-  /* A pointer press opens the Modal without focusing the field, so the
-     field's focus ring is not left showing behind it, and focus is not put
-     back on it afterwards. Opened from the keyboard, focus returns to the
-     field (with its focus ring) when the Modal closes. */
-  searchInput.addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    S.searchTrigger = null;
-    openSearch(searchInput.value);
-  });
-  searchInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
-    e.preventDefault();
-    S.searchTrigger = searchInput;
-    openSearch(e.key.length === 1 ? searchInput.value + e.key : searchInput.value);
-  });
-  searchForm.addEventListener('submit', function (e) { e.preventDefault(); });
 
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
   modalInput.addEventListener('input', function () {
@@ -612,11 +579,6 @@
   });
 
 
-  /* The field is a way into the search, not a record of the last one: it
-     stays empty (the Modal keeps the last search). */
-  function syncSearch() {
-    searchInput.value = '';
-  }
 
   /* ========================================================= Broking bar
      On every Broking page: the Dashboard, Create new client, and client and
@@ -627,17 +589,32 @@
   }
   function renderModuleBar(r) {
     var on = inBroking(r);
-    $('mob-module-bar').hidden = !on;
+    var bar = $('mob-module-bar');
+    Shell.disposeTooltips(bar);
+    bar.hidden = !on;
     document.querySelector('.layout').classList.toggle('mob-in-broking', on);
+    var c = F.client;
     var nc = M.APP_ACTIONS.newclient;
-    /* Back to the Broking dashboard on the left (not on the Dashboard),
-       the search centred, Create new client on the right. */
-    $('mob-module-back').innerHTML = on && r.page !== 'dashboard'
-      ? '<a class="link-standalone" href="#dashboard"><span class="icon">' + icon('fa-regular fa-arrow-left') + '</span>Back to dashboard</a>' : '';
-    $('mob-module-actions').innerHTML = on && r.page !== 'newclient'
-      ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })
-      : '';
+    var tip = function (name) { return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + esc(name) + '"'; };
+    /* Left: a back arrow to the Dashboard (an icon-only ghost Button, its
+       name in a Tooltip; not on the Dashboard itself), then the open
+       client in User meta, laid out in one line. */
+    var record = r.scope === 'client' || r.scope === 'policy';
+    $('mob-module-context').innerHTML = !on ? '' :
+      (r.page === 'dashboard' && r.scope === 'app' ? '' :
+        ui.btn('', { icon: 'fa-regular fa-arrow-left', href: '#dashboard', attrs: tip('Back to dashboard') })) +
+      (record ? '<div class="user-meta user-meta-compact mob-bar-client">' +
+        '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+        '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
+      '</div>' : '');
+    /* Right: the search (an icon-only ghost Button that opens the search
+       Modal), then Create new client (not while creating one). */
+    $('mob-module-actions').innerHTML = !on ? '' :
+      ui.btn('', { icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') }) +
+      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to }) : '');
+    Shell.initTooltips(bar);
   }
+
 
   /* "/" opens the search anywhere in Broking, unless you are typing. */
   document.addEventListener('keydown', function (e) {
@@ -683,7 +660,7 @@
        announced. Not on first load. */
     if (!firstRender) $('mob-title').focus({ preventScroll: true });
     firstRender = false;
-    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; runModalSearch(q); openSearch(q); }
+    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = $('mob-search-open'); runModalSearch(q); openSearch(q); }
   }
 
   /* ============================================================== Toasts */
