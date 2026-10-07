@@ -139,7 +139,7 @@
 /* On the client's own pages it takes Page navigation's active colours. */
 .mob-rail-client.mob-on { background-color: var(--action-04); }
 
-.mob-rail .mob-side-label { margin: var(--spacer-03) 0 var(--spacer-03); padding: 0; color: var(--text-secondary); }
+.mob-rail .mob-side-label { margin: var(--spacer-06) 0 var(--spacer-03); padding: 0; color: var(--text-secondary); }   /* 32px below the client */
 
 /* A policy: Icon block, the line of business over the reference, and the
    status Tag. Page navigation's own link states. */
@@ -151,7 +151,7 @@
 .mob-rail-sub { color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mob-rail-policies .nav-link .tag { flex: 0 0 auto; }
 .mob-rail-action { margin-top: 0; }
-.mob-more { margin-top: calc(var(--spacer-02) * -1); }
+.mob-more { margin-top: var(--spacer-05); }   /* 24px below the last policy */
 
 /* The record column: the client record's pages, or the policy's menu. */
 .mob-record {
