@@ -466,6 +466,37 @@
   var modalInput = $('mob-search-modal-input');
   var modalBody = $('mob-search-modal-body');
 
+  /* "What can I search?": the help panel's content. A heading with a close
+     Button (Modal's own `.btn-close`), then a Buckholt List per group with
+     its list heading, the tip, and "Learn more" as a standalone Link with
+     the External-link icon. */
+  (function () {
+    var h = F.searchHelp;
+    var list = function (head, items) {
+      return '<ul class="list"><li class="list-heading">' + esc(head) + '</li>' +
+        items.map(function (x) { return '<li class="list-item">' + esc(x) + '</li>'; }).join('') + '</ul>';
+    };
+    $('mob-search-help').innerHTML =
+      '<div class="mob-search-help-body">' +
+        '<div class="text-block"><div class="heading"><div class="heading-content"><h3 class="title-01" id="mob-search-help-title">' + esc(h.title) + '</h3></div>' +
+          '<button type="button" class="btn-close" data-help-close aria-label="Close"></button></div></div>' +
+        h.groups.map(function (g) { return list(g[0], g[1]); }).join('') +
+        list('Tip:', [h.tip]) +
+        '<a class="link-standalone" href="#" data-toast="Search help is not part of this prototype">' +
+          '<span class="icon"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>Learn more</a>' +
+      '</div>';
+    /* Fixed positioning, so the panel floats over the Modal rather than
+       being clipped by its scrolling body. */
+    bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle'), { autoClose: 'outside', popperConfig: { strategy: 'fixed' } });
+    $('mob-search-help').addEventListener('click', function (e) {
+      if (e.target.closest('[data-help-close]')) bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle')).hide();
+    });
+    /* Escape closes the help first, not the whole search. */
+    $('mob-search-help').addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.stopPropagation(); bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle')).hide(); $('mob-search-help-toggle').focus(); }
+    });
+  }());
+
   function recentMenu() {
     if (!F.recentSearches.length) return '';
     return '<div class="menu mob-actions mob-recent">' +
@@ -536,6 +567,11 @@
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
   modalInput.addEventListener('input', function () {
     if (!modalInput.value && S.modalQuery) { S.modalQuery = null; renderSearchBody(); }
+  });
+  /* Buckholt's clear button (form.js empties the field): back to recent
+     searches, focus in the field. */
+  modalForm.querySelector('.input-clear').addEventListener('click', function () {
+    setTimeout(function () { S.modalQuery = null; renderSearchBody(); modalInput.focus(); }, 0);
   });
   /* Recent searches: Down arrow from the field moves into them. */
   searchModalEl.addEventListener('keydown', function (e) {

@@ -108,7 +108,6 @@
 /* Search, at the top of the rail. */
 .mob-search { flex: 0 0 auto; padding: var(--spacer-04) var(--spacer-04) 0; }
 .mob-search .input-label { display: none; }
-.mob-search input::-webkit-search-cancel-button { cursor: pointer; }
 
 .mob-rail-scroll {
   flex: 1 1 auto;
@@ -191,7 +190,14 @@
 .mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
 .mob-strip-item { list-style: none; }
 .mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
-.mob-strip .btn.active { --button-background: var(--action-04); }
+/* The current category is marked in the light active tint Page navigation
+   uses for its current page, not the ghost Button's solid pressed colour
+   (which `.btn.active` would otherwise draw). */
+.mob-strip .btn.active {
+  --button-label-active: var(--action-text-01);
+  --button-background-active: var(--action-04);
+  --button-border-active: transparent;
+}
 /* The client's Avatar (extra small) is centred in a button the size of the others. */
 .mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
 
@@ -234,7 +240,14 @@
    the documentation's demo-only `.show` and `.position-relative`, with the
    panel's own custom properties bound to "no shadow, no padding, full
    width"), or the results. */
-.mob-search-modal-form { margin-bottom: var(--spacer-05); }
+.mob-search-modal-bar { display: flex; align-items: flex-start; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+.mob-search-modal-form { flex: 1 1 auto; min-width: 0; }
+.mob-search-help { flex: 0 0 auto; }
+.mob-search-help .button-set { margin: 0; }
+/* The help panel: a Menu panel holding text, so it is wider and padded. */
+.mob-search-help .menu-panel { --menu-min-width: 20rem; --menu-max-width: 22rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+.mob-search-help-body { display: flex; flex-direction: column; gap: var(--spacer-04); padding: var(--spacer-03) var(--spacer-04); }
+.mob-search-help-body .heading { align-items: flex-start; }
 .mob-search-modal-form .input-label { display: none; }
 .mob-menu-inline {
   --menu-shadow: none;
