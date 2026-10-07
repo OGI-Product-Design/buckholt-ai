@@ -66,49 +66,42 @@ search at its top; at app level it holds only the search.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (blue, 288px open) | **Search** at the top (Text input with its search icon); the **client as User meta** (initials Avatar, name, reference) with the **client's pages** under it; **Policies**: one link per policy (Car icon, "Motor", the status Tag on the same line, the reference under it, truncated with an ellipsis); Load more / Show fewer; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, icon straight inside the link, Page navigation's own `.active`). The client link is `aria-current="true"` at client level, the open policy at policy level: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
-| Policy menu (white, policy pages only) | The policy reference as an eyebrow, "Motor policy" (`title-02`) and its collapse button. Its pages in **collapsible groups**: only the group holding the current page is open when a page loads. Documents, Attachments, Notes and History carry their **count badge**; a closed group shows its pages' total | Text block; Page navigation with `.active` + `aria-current="page"` on the current page; each group header a disclosure `button.nav-link` (`aria-expanded`, `aria-controls`) |
+| Rail (320px open), as in Laurence's Figma design | **Search** at the top; the **client as User meta** (initials Avatar, name, reference) in a soft grey panel that links to the client; **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
+| Record column | On client pages, as before: the client's name as an eyebrow, "Client record", and the client's pages in a "Client" group. On policy pages: the reference with its status Tag, the line of business ("Open Market Motor"), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. Its collapse button sits at the top right, as in the Figma design | Text block; Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
-**How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Only one
-column is ever expanded, and which one follows where you are:
+**How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
+columns are open follows where you are:
 
-| Where | Rail | Policy menu |
+| Where | Rail | Record column |
 | --- | --- | --- |
 | Dashboard, search results, other modules | Open (the search) | none |
-| Client pages | Open: it is the client's menu (the client, their pages, their policies) | none |
-| Policy pages | **Collapsed** to a 64px strip | Open |
+| Client pages | Open | Open: the client record |
+| Policy pages | **Collapsed** to a 64px strip (the client's menu closes) | Open: the policy's menu |
 
 - *"All sidebars that are considered collapsible display a collapse button that also functions
-  as an open button, so the user has control of what they see."* Both columns have one: an
-  icon-only ghost Button ("Collapse client menu" / "Open client menu", and the same for the
-  policy menu; `aria-expanded`, Tooltip). A choice made with it lasts until the next page, which
-  sets the columns for itself again. Open, a column is in the flow: the one beside it moves over
-  rather than being covered.
-- *"When sidebar is collapsed: items under a category collapse into a single icon button.
-  Clicking on icon button in sidebar will reveal floating submenus if more items are needed to be
-  shown."* Collapsed rail: the search becomes a Search icon that opens the rail at the field; the
-  **client is their Avatar**, opening a floating Menu of the client's pages; **Policies is one
-  Shield icon button** (Mark's suggestion; the catalogue's Shield), opening a Menu of **every**
-  policy with its status Tag; Add new quote and Client support become icon-only Buttons.
-  Collapsed policy menu: Policy overview stays an icon link and **each group is one icon button**
-  opening a Menu of its pages, with their counts. Each floating Menu is a Buckholt Menu button
-  (`.menu.dropend`, Menu's link items `a.menu-item`), the current item marked in Menu's own active
-  colours, in Buckholt's light theme as it floats over the page. Every collapsed control has its
-  accessible name and a Tooltip. The flyouts sit in plain list items, not Page navigation's
-  `.nav-item`, whose dropdown treatment would add its own chevron.
+  as an open button, so the user has control of what they see."* Both columns have one at their
+  top right: an icon-only ghost Button ("Collapse client menu" / "Open client menu", and the same
+  for the record column; `aria-expanded`, Tooltip). A choice made with it lasts until the next
+  page, which sets the columns for itself again. Open, a column is in the flow: the one beside it
+  moves over rather than being covered.
+- *"When sidebar is collapsed: items under a category collapse into a single icon button."*
+  Collapsed rail: Search, the client (their Avatar) and **Policies (one Shield icon button)**,
+  spaced evenly; Add new quote and Client support become icon-only Buttons. Collapsed record
+  column: a top-level page stays an icon link and each group is one icon button. **Pressing a
+  category opens its column at that category** (Laurence, 7 October 2026: the Shield opens the
+  rail rather than a floating menu): focus moves to the search field, the client, the open
+  policy, or the group's first page. Every collapsed control has its accessible name and a
+  Tooltip.
 - Below 1280px both columns live in the drawer, open, with no toggles.
 
-> Collapsed, a policy's status shows in the Policies Menu, and in the open rail. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
+> Collapsed, a policy's status shows once the rail is open. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
 > undocumented here), so it is left out.
 
-The rail is Buckholt's **dark theme** (`data-bs-theme="dark"` on the rail, so Page navigation,
-Tag, Button and Link take their dark-theme tokens) on `--expressive-rich`. The designs use a
-brighter blue (close to `--expressive-deep`), but on it the dark theme's link and status colours
-fall below contrast, so the rail takes the darker expressive step, as the documentation site's
-own sidebar does. The documentation site's sidebar itself is site chrome (`sidebar.css`,
-`sidebar_container`, `submenu_link`), not a Buckholt component, so it is not copied: only Buckholt
-components sit in the rail.
+The rail uses Buckholt's **light theme**, following Laurence's Figma design (it was the dark
+theme on `--expressive-rich` in the previous rounds). The documentation site's own sidebar is
+site chrome (`sidebar.css`, `sidebar_container`, `submenu_link`), not a Buckholt component, so it
+is not copied: only Buckholt components sit in the rail.
 
 Removed: the search from the menu (back in the top bar), "What can I search?", recent searches,
 back links, the client card with Avatar and Key-values, the policy card with Switch policy (the
@@ -444,23 +437,22 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **98 behavioural assertions, all passing.** They cover:
+- **98 behavioural assertions, all passing** (a fresh set for this round's menu). They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
   - the toolbar: its actions per status, the rule before Stop, the danger Cancel, accessible
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
-  - columns by location: the rail collapsed and the policy menu open on a policy page; the rail
-    open with the client's pages (current marked) and no policy menu on a client page
-  - the collapsed rail: the client as its Avatar with a Menu of the client's 6 pages, Policies as
-    one Shield button whose Menu lists all 7 with the open one marked, closing on Escape, and
-    Search as an icon that opens the rail at the field
-  - the rail opening to 288px and moving the policy menu over, the client in User meta, and the
-    next page collapsing it again; the policy menu collapsing to a strip of group buttons and the
-    next page opening it again
-  - groups: all closed on the overview, only Correspondence open on Diary, a count on Documents,
-    and a group opening on click with focus kept
+  - columns by location: on a policy page the rail collapsed (64px) and the policy menu open; on
+    a client page the rail and the client record column open
+  - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
+    button with a Tooltip that opens the rail (320px) with focus on the open policy; Search as an
+    icon that opens the rail at the field
+  - the open rail: the client in User meta, no client pages in the rail, policies with Icon
+    blocks, "Show 2 more"; the next page collapsing it again
+  - the policy menu collapsing to a strip, and a group icon opening it at that group
+  - groups always open with no accordion, and a count on Documents
   - no quick links in the Policy overview heading
   - Stop and Cancel behind the "More actions" Overflow menu, the confirmation from it, and
     focus returning to that trigger

@@ -436,12 +436,15 @@
   function loadMoreButton(where, size) {
     var total = F.policies.length;
     var rest = total - S.polShown;
+    /* The menu's list reads "Show 2 more" with no icon, as in the Figma
+       design; the table keeps "Load 2 more" with its chevron. */
+    var side = where !== 'table';
     if (rest > 0) {
-      return moreLink(where === 'table' ? 'Load ' + Math.min(5, rest) + ' more' : 'Load ' + Math.min(5, rest) + ' more (' + rest + ' remaining)',
-        ' data-more="1" data-focus-id="more-' + where + '"', AI.more);
+      return moreLink((side ? 'Show ' : 'Load ') + Math.min(5, rest) + ' more',
+        ' data-more="1" data-focus-id="more-' + where + '"', side ? null : AI.more);
     }
     if (total > 5) {
-      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', AI.fewer);
+      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? null : AI.fewer);
     }
     return '';
   }
