@@ -10,7 +10,7 @@
      #p/{policy id}/{page}                      policy level
 
    A policy page its status does not have redirects to that policy's
-   overview, and an unknown client page to the Client summary.
+   overview, and an unknown client page to the Client overview.
 
    The menu is rebuilt on every route change. Following the new designs it
    is two columns at client and policy level, and nothing at app level:
@@ -272,7 +272,8 @@
     var onClient = r.scope === 'client';
     var onPolicy = r.scope === 'policy';
     var tight = railCollapsed();
-    sidebar.classList.toggle('mob-app-level', app);
+    /* The menu is the selected client's: at app level there is none. */
+    sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
     /* Back to the Broking dashboard: a standalone Link with the Arrow-left
@@ -290,14 +291,11 @@
       /* Collapsed: one icon button per category, each opening the rail
          there; the actions become icon-only Buttons. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        /* Search opens the search Modal straight away. */
-        '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" data-open-search aria-haspopup="dialog"' + tipAttrs('Search') + '><div class="btn-icon">' + icon('fa-regular fa-magnifying-glass') + '</div></button></li>' +
-        (app ? '' :
-          expander('rail', '.mob-rail-client', 'Client: ' + c.name,
-            /* Avatar extra small, so it sits in the strip like the icons. */
-            '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
-          expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
-            '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy)) +
+        expander('rail', '.mob-rail-client', 'Client: ' + c.name,
+          /* Avatar extra small, so it sits in the strip like the icons. */
+          '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
+        expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
+          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy) +
       '</ul>';
     } else if (!app) {
       body = '<nav aria-label="Client and policies">' +
@@ -322,7 +320,7 @@
     /* The record column, as before: the client record's pages, or the
        policy's menu. The head names the record: the client's name or the
        policy reference with its status Tag, then the title. */
-    var nav = onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p);
+    var nav = onClient ? M.clientNav() : M.policyNav(r.p);
     /* Client: the reference over the client's name. Policy: the reference
        and its status over the line of business. */
     var label = onClient ? c.name : c.businessLine;
@@ -434,6 +432,7 @@
     if (R.scope === 'app' && R.page === 'search') { S.pendingSearch = S.query; location.replace('#dashboard'); return false; }
     Shell.disposeTooltips($('sidebar'));
     renderModules(R);
+    renderModuleBar(R);
     renderSide(R);
     syncSearch(R);
     renderPage(R);
@@ -616,9 +615,39 @@
     });
   }
 
+  /* The field is a way into the search, not a record of the last one: it
+     stays empty (the Modal keeps the last search). */
   function syncSearch() {
-    searchInput.value = S.query || '';
+    searchInput.value = '';
   }
+
+  /* ========================================================= Broking bar
+     On every Broking page: the Dashboard, Create new client, and client and
+     policy pages. Not in the other modules, whose search (if any) is their
+     own. Create new client is Broking-wide, so it sits here. */
+  function inBroking(r) {
+    return r.scope !== 'app' || ['dashboard', 'search', 'newclient'].indexOf(r.page) >= 0;
+  }
+  function renderModuleBar(r) {
+    var on = inBroking(r);
+    $('mob-module-bar').hidden = !on;
+    document.querySelector('.layout').classList.toggle('mob-in-broking', on);
+    var nc = M.APP_ACTIONS.newclient;
+    $('mob-module-actions').innerHTML = on && r.page !== 'newclient'
+      ? ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })
+      : '';
+  }
+
+  /* "/" opens the search anywhere in Broking, unless you are typing. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (!R || !inBroking(R) || dialogOpen()) return;
+    e.preventDefault();
+    S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+    openSearch();
+  });
 
   /* ========================================================== User menu
      Under the avatar, as current Mobius has it: the user's name, the
