@@ -161,10 +161,12 @@
                7 October 2026: in place of the Tag), then a small Car icon
                (no Icon block) beside the line of business over the
                reference, in the policy head's type. */
-            '<span class="eyebrow mob-rail-status">' + ui.statusText(p) + '</span>' +
+            ui.statusDot(p, 'mob-rail-status') +
             icon(M.ICON.motor, 'mob-rail-icon') +
             '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
               '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
+            /* A right chevron: the policy opens the next column. */
+            icon('fa-regular fa-chevron-right', 'mob-rail-chevron') +
           '</a>' +
         '</li>';
       }).join('') + '</ul>' +
@@ -327,7 +329,7 @@
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML = (
       '<div class="mob-record-head">' +
-        '<span class="eyebrow mob-record-status">' + ui.statusText(r.p) + '</span>' +
+        ui.statusDot(r.p, 'mob-record-status') +
         '<h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' +
         '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' +
         '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
