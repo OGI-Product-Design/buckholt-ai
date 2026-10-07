@@ -126,7 +126,7 @@
      for itself again. Collapsed, each category is one icon button;
      pressing it opens the rail at that category (Laurence, 7 October 2026,
      in place of floating menus). The record column is always open: it has
-     no collapse button (Laurence). In the drawer (below 1280px)
+     no collapse button (Laurence). In the drawer (below 1024px)
      everything is open and there are no toggles. */
   function railCollapsed() {
     if (narrow.matches) return false;
@@ -350,6 +350,24 @@
     tipTruncated();
   }
 
+  /* In the drawer (below 1024px) on a policy page, the policy's menu comes
+     first, then the client's pages and policies, then the modules: what you
+     are most likely to want is at the top (Laurence, 7 October 2026).
+     Moved in the DOM, not just drawn in that order, so Tab follows it.
+     Beside the page, the rail goes back to the left of the policy column. */
+  function arrangeDrawer(r) {
+    var cols = sidebar.querySelector('.mob-columns');
+    var rail = $('mob-rail'), rec = $('mob-record'), mods = $('mob-drawer-modules');
+    var first = narrow.matches && r.scope === 'policy';
+    if (first) {
+      if (cols.firstElementChild !== rec) cols.insertBefore(rec, rail);
+      if (cols.nextElementSibling !== mods) sidebar.insertBefore(mods, cols.nextSibling);
+    } else {
+      if (cols.firstElementChild !== rail) cols.insertBefore(rail, rec);
+      if (mods.nextElementSibling !== cols) sidebar.insertBefore(mods, cols);
+    }
+  }
+
   /* A reference too long for its line ends in "…" and shows in full in a
      Tooltip (Laurence, 7 October 2026). Only where it is actually cut. */
   function tipTruncated() {
@@ -458,6 +476,7 @@
     renderModules(R);
     renderModuleBar(R);
     renderSide(R);
+    arrangeDrawer(R);
     renderPage(R);
     Shell.initTooltips($('sidebar'));
     return true;
@@ -624,13 +643,15 @@
     var c = F.client;
     var nc = M.APP_ACTIONS.newclient;
     var tip = function (name) { return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + esc(name) + '"'; };
-    /* Left: a back arrow to the Dashboard (an icon-only ghost Button, its
-       name in a Tooltip; not on the Dashboard itself), then the open
-       client in User meta, laid out in one line. */
+    /* Left: a back arrow up one level (Laurence, 7 October 2026): from a
+       policy to the client, from the client or Create new client to the
+       Dashboard. An icon-only ghost Button, its name in a Tooltip; not on
+       the Dashboard itself. Then the open client in User meta, in one line. */
+    var up = r.scope === 'policy' ? ['#c/summary', 'Back to client'] : ['#dashboard', 'Back to dashboard'];
     var record = r.scope === 'client' || r.scope === 'policy';
     $('mob-module-context').innerHTML = !on ? '' :
       (r.page === 'dashboard' && r.scope === 'app' ? '' :
-        ui.btn('', { icon: 'fa-regular fa-arrow-left', href: '#dashboard', attrs: tip('Back to dashboard') })) +
+        ui.btn('', { icon: 'fa-regular fa-arrow-left', href: up[0], attrs: tip(up[1]) })) +
       (record ? '<div class="user-meta user-meta-compact mob-bar-client">' +
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
         '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
@@ -846,7 +867,7 @@
 
   var menuButton = $('mob-menu-open');
   var scrim = $('mob-scrim');
-  var narrow = window.matchMedia('(max-width: 1279.98px)');
+  var narrow = window.matchMedia('(max-width: 1023.98px)');
 
   function drawerOpen() { return sidebar.classList.contains('is-open'); }
 
@@ -1035,6 +1056,7 @@
   function rerenderSide(focusSel) {
     Shell.disposeTooltips(sidebar);
     renderSide(R);
+    arrangeDrawer(R);
     Shell.initTooltips(sidebar);
     /* A list of selectors is tried in order: the first that matches wins. */
     var f = null;

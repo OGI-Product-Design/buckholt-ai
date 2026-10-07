@@ -125,7 +125,7 @@ columns are open follows where you are:
   category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
   rail rather than a floating menu): focus moves to the current client page or the open policy. Every collapsed control has its accessible name and a
   Tooltip.
-- Below 1280px both columns live in the drawer, open, with no toggles.
+- Below 1024px both columns live in the drawer, open, with no toggles. On a policy page the drawer starts with the policy's menu, then the client's pages and policies, then the modules (moved in the DOM, so Tab follows the same order).
 
 > Collapsed, a policy's status shows once the rail is open. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
 > undocumented here), so it is left out.
@@ -140,7 +140,7 @@ rail is the switcher now), and the policy cards. Breadcrumbs stay; they replaced
 strip in the previous round.
 
 Both columns are rebuilt on every route. At app level (Dashboard, the other modules, Create new
-client) there is no left menu on wide screens; below 1280px the drawer holds the modules.
+client) there is no left menu on wide screens; below 1024px the drawer holds the modules.
 `navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
 `policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
 the prototype's:
@@ -159,7 +159,7 @@ Laurence asked for the best experience for system-level navigation. The decision
 
 | Need | Built with | Why |
 | --- | --- | --- |
-| System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 1280px they move into the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
+| System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 1024px they move into the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | What can I search? (in the search Modal) | A ghost Button with the Info icon to the right of the Modal's search field, as current Mobius has it. It opens a floating help panel: the title with a close Button, a Buckholt List per group (list heading and items), the tip, and "Learn more" as a standalone Link with the External-link icon; current Mobius wording in sentence case. Escape closes the panel first, back to its Button. **Buckholt has no Popover** (no `.popover` styles in `buckholt.css`, and no Bootstrap stylesheet is loaded), so the panel is a Menu panel (`.menu-panel.dropdown-menu`) on Bootstrap Dropdown, with fixed positioning so it floats over the Modal's scrolling body | Gap to raise with Buckholt: a documented Popover |
 | Search results | In the search Modal (below), not a page. They filter the sample rows on name, reference or email, with a no-results state ("No clients found for “{query}”"). The client's name is the link to the client. An old `#search/{query}` link opens the Modal with that search over the Dashboard | |
@@ -280,7 +280,7 @@ in Button sets.
   while the Menu is open, so the two never overlap (the breadcrumb's "…" does the same). Cancel is
   Menu's danger item, which Buckholt draws red on hover. Each still asks for confirmation; when
   the confirmation closes, focus returns to the "More actions" trigger.
-- Below 1280px, in the drawer, it stays in the policy's head.
+- Below 1024px, in the drawer, it stays in the policy's head.
 - Lost from the old Menu: the visible labels and the trailing panel / page icons. Icon-only
   actions rely on recognisable icons; MTA (`fa-swap-arrows`) and Stop (`fa-circle-pause`) are
   catalogue gaps (see deviation 9).
@@ -461,9 +461,13 @@ example 3).
 
 - The two menu columns are sticky under the top bar and each scrolls on its own, with Client
   support pinned to the rail's foot.
-- **Below 1280px the menu is a drawer**, with the modules (the Broking bar stays on the page), and the rail stacked
-  over the record column. Two columns (520px) beside Main need at least 1280px; 1280 is not on
-  Bootstrap's scale, so it is a layout breakpoint of this prototype only.
+- **Below 1024px the menu is a drawer** (Laurence, 7 October 2026: it was 1280px, which hid all
+  navigation on common laptop widths), with the modules (the Broking bar stays on the page). From
+  1024 to 1280px a policy page keeps the collapsed 64px strip and the 304px policy column beside
+  Main (about 650px at 1024), and the top bar's module links take one more step off their padding
+  to fit. 1024 is a layout breakpoint of this prototype only.
+- **The Broking bar is 64px** (from 72px). Its **back arrow goes up one level**: from a policy to
+  the client ("Back to client"), from a client page or Create new client to the Dashboard.
 - A visually hidden column heading is absolutely positioned. Without a containing block inside
   `.table-content`, it escapes the table's scroller and widens the page whenever a table scrolls.
   `#main .table-content { position: relative }` keeps it inside. This is worth a Buckholt ticket.
