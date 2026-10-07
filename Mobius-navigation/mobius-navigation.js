@@ -46,8 +46,9 @@
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
   /* railOverride: the rail opened (true) or collapsed (false) with its
-     toggle, or null (open). It lasts across pages: the rail no longer
-     collapses by itself. */
+     toggle on this page, or null. Reset on every route: a policy page
+     collapses the rail again, to leave the page room (Laurence, 7 October
+     2026). */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). */
   var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
@@ -129,7 +130,7 @@
      everything is open and there are no toggles. */
   function railCollapsed() {
     if (narrow.matches) return false;
-    return S.railOverride === false;
+    return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
   }
 
   /* A collapsed control is icon-only: its accessible name, and a Tooltip to
@@ -512,17 +513,16 @@
   }
 
   /* The body: recent searches until a search is run, then its results
-     (the Search results page's own content), with Create new client. */
+     (the Search results page's own content). Create new client is in the
+     Broking bar, not here (Laurence, 7 October 2026). */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
     if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
     var prev = S.query;
     S.query = S.modalQuery;
-    var nc = M.APP_ACTIONS.newclient;
     modalBody.innerHTML =
       '<div class="mob-search-results">' +
         P.app.search().join('') +
-        ui.set([ui.btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })]) +
       '</div>';
     S.query = prev;
     Shell.initTooltips(modalBody);
@@ -656,6 +656,7 @@
     /* Opening a client or policy from the search closes it. */
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
+    S.railOverride = null;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);

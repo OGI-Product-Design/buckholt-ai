@@ -107,14 +107,15 @@ columns are open follows where you are:
 | --- | --- | --- |
 | Dashboard, Create new client, other modules | none (no left menu) | none |
 | Client pages | Open: the client and their pages and policies | none |
-| Policy pages | Open, with the policy marked | Open: the policy's menu |
+| Policy pages | **Collapsed** to a 64px strip, to leave the page room (Laurence, 7 October 2026); opened, the policy is marked | Open: the policy's menu |
 
 - *"All sidebars that are considered collapsible display a collapse button that also functions
   as an open button, so the user has control of what they see."* Both columns have one at their
   top right: an icon-only ghost Button ("Collapse client menu" / "Open client menu";
   `aria-expanded`, Tooltip). The policy column has no collapse button
-  (Laurence, 7 October 2026). The rail no longer collapses by itself: it is collapsed by hand,
-  and that choice lasts from page to page until it is opened again. Open, a column is in the flow: the one beside it
+  (Laurence, 7 October 2026). On a policy page the rail collapses by itself, since there is not
+  enough room for both columns and the page; opened by hand, it stays open until the next page,
+  which sets it again. Open, a column is in the flow: the one beside it
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: **Client pages (one User icon button)** (the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
@@ -495,8 +496,8 @@ Awesome), and Typekit was absent.
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
   - columns by level: on a client page the rail only, with the client's pages in it; on a
-    policy page the rail stays open (304px) with the open policy marked and in view, and the
-    policy column beside it; the rail collapses only by hand, and stays so
+    policy page the rail auto-collapsed (64px) beside the policy column; opened (304px), the open
+    policy is marked and in view; the next policy page collapses it again
   - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
     button with a Tooltip that opens the rail (320px) with focus on the open policy; no search in
     the rail (it is in the Broking bar), and "/" opening the search Modal
