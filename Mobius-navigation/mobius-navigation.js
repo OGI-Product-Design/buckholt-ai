@@ -165,6 +165,8 @@
             icon(M.ICON.motor, 'mob-rail-icon') +
             '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
               '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
+            /* A right chevron: the policy opens the next column. */
+            icon('fa-regular fa-chevron-right', 'mob-rail-chevron') +
           '</a>' +
         '</li>';
       }).join('') + '</ul>' +
