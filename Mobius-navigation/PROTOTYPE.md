@@ -69,6 +69,21 @@ sidebar: **two slim columns** at client and policy level, nothing at app level.
 | Record (white) | Which record this is: the client's name or the policy reference as an eyebrow, then "Client record" or "Motor policy" (`title-02`). Its pages in **always-open groups**: a group label with its icon (not a link: a group is not a page), then its pages indented under a rule. | Text block; Page navigation with `.active` + `aria-current="page"` on the current page |
 | Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal, then Stop and Cancel), a rule between groups. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). Cancel is `.btn-ghost.btn-danger`. See deviation 2 |
 
+**How the columns collapse (7 October 2026).** The two columns are never both fully open. On
+every client and policy page a record is open, so the record column shows and the rail
+collapses to a **64px strip of icons**, as the Buckholt documentation site's sidebar does once a
+section is open: Client, each policy, Add new quote and Client support, each with its accessible
+name ("Motor, PUCO0068, Live") and a Tooltip to its right; the open record keeps its active
+state. An expand button at the top of the strip (icon-only ghost Button, `aria-expanded`,
+`aria-controls`) opens the rail to 240px **over** the record column, which keeps its place, with
+the full labels, status Tags and Load more. Picking a record, Escape (focus back to the toggle)
+or a click anywhere else collapses it again. At app level neither column is drawn. Below 1280px
+both live in the drawer, where the rail is always open and has no toggle.
+
+> Collapsed, a policy's status is in its name and Tooltip only; the Tag shows when the rail is
+> open. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
+> undocumented here), so it is left out.
+
 The rail is Buckholt's **dark theme** (`data-bs-theme="dark"` on the rail, so Page navigation,
 Tag, Button and Link take their dark-theme tokens) on `--expressive-rich`. The designs use a
 brighter blue (close to `--expressive-deep`), but on it the dark theme's link and status colours
@@ -385,13 +400,16 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **76 behavioural assertions, all passing.** They cover:
+- **83 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
   - the toolbar: its actions per status, the rule before Stop, the danger Cancel, accessible
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
+  - the rail collapsed to 64px on a policy page, its named and Tooltipped links, expanding to
+    240px over the record column (which keeps its place) with focus on the toggle, and
+    collapsing on Escape and on a click outside
   - the record column's head, the rail marking the open client or policy, newest-first order,
     Load more / Show fewer and focus retention
   - the shared count in the table
