@@ -84,7 +84,12 @@
         { id: 'dd', label: 'Direct Debit details' },
         { id: 'cards', label: 'Credit cards' },
         { id: 'txdocs', label: '[[Transaction documents]]' }
-      ] };
+      ].concat(p.kind === 'live' ? [
+        /* Menu items in current Mobius (Laurence, 7 October 2026). They
+           open side panels, so they are actions, not pages. */
+        { id: 'fee', label: 'Admin fee', action: 'fee' },
+        { id: 'manual', label: 'Manual credit / debit', action: 'manual' }
+      ] : []) };
     },
     corr: function () {
       return { group: 'Correspondence', icon: ICON.correspondence, children: [
@@ -106,10 +111,18 @@
   };
 
   function policyNav(p) {
+    /* Amend policy and Add new quote are menu items in current Mobius
+       (Laurence, 7 October 2026), so they sit under Policy overview as well
+       as in the page heading. Which ones a status has is policyFlows'. */
+    var fl = policyFlows(p);
+    var flows = [fl.primary].concat(fl.secondary).map(function (k) {
+      var a = POLICY_ACTIONS[k];
+      return { id: a.to, label: a.label, icon: a.icon };
+    });
     return [
-      { id: 'summary', label: '[[Policy overview]]', icon: ICON.home },
+      { id: 'summary', label: '[[Policy overview]]', icon: ICON.home }].concat(flows, [
       GROUPS.quote(p), GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
-    ].filter(Boolean);
+    ]).filter(Boolean);
   }
 
   /* kind: 'flow' opens a page, 'panel' opens a side panel in place,
@@ -165,7 +178,7 @@
   function allowedPolicyPages(p) {
     var ids = [];
     policyNav(p).forEach(function (n) {
-      if (n.children) n.children.forEach(function (c) { ids.push(c.id); });
+      if (n.children) n.children.forEach(function (c) { if (!c.action) ids.push(c.id); });
       else ids.push(n.id);
     });
     var fl = policyFlows(p);

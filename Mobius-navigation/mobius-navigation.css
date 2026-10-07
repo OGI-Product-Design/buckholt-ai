@@ -93,94 +93,69 @@
 
 .mob-columns { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
 
-/* The rail: Buckholt's dark theme (`data-bs-theme="dark"`, so every
-   component inside takes its dark-theme tokens) on the primary expressive
-   rich blue. The new designs use a brighter blue; on it the dark theme's
-   link and status colours fall below contrast, so the rail takes the
-   darker expressive step, as the documentation site's own sidebar does. */
+/* The rail, as in the Figma design: Buckholt's light theme on the page's
+   own background, divided from the record column by a rule. */
 .mob-rail {
   display: flex;
   flex-direction: column;
-  width: 18rem;                                       /* room for the search field's placeholder */
+  width: 20rem;                                       /* room for the search placeholder and a policy's title and status */
   flex: 0 0 auto;
-  background-color: var(--expressive-rich);
-  color: var(--text-primary);
+  border-right: 1px solid var(--ui-border-02);
 }
-.mob-rail-head { flex: 0 0 auto; display: flex; justify-content: flex-end; gap: var(--spacer-02); padding: var(--spacer-03) var(--spacer-03) 0; }
-.mob-rail-head .button-set { margin-top: 0; }
+.mob-rail-head,
+.mob-record-top { flex: 0 0 auto; display: flex; justify-content: flex-end; padding: var(--spacer-04) var(--spacer-04) 0; }
+.mob-column-toggle { margin-top: 0; }
 
 /* Search, at the top of the rail. */
-.mob-search { flex: 0 0 auto; padding: var(--spacer-03) var(--spacer-03) 0; }
+.mob-search { flex: 0 0 auto; padding: var(--spacer-04) var(--spacer-04) 0; }
 .mob-search .input-label { display: none; }
 .mob-search input::-webkit-search-cancel-button { cursor: pointer; }
 
-/* Wide screens, collapsed: a 64px strip of icons, in the flow, so the
-   record column moves over rather than being covered. Each category is one
-   icon button; the search field gives way to its icon. */
-@media (min-width: 1280px) {
-  .mob-rail { transition: width 0.15s ease-in-out; }
-  .mob-rail-collapsed .mob-rail { width: 4rem; }
-  .mob-rail-collapsed .mob-search { display: none; }
-
-  .mob-rail-collapsed .mob-rail-head { flex-direction: column; align-items: center; padding-inline: 0; }
-  /* Visible overflow, so the floating Menus are not clipped. */
-  .mob-rail-collapsed .mob-rail-scroll { overflow: visible; padding-inline: var(--spacer-02); align-items: stretch; }
-  .mob-rail-collapsed .mob-rail .nav-link { justify-content: center; padding-inline: 0; }
-  .mob-rail-collapsed .mob-flyout { display: flex; justify-content: center; }
-  .mob-rail-collapsed .mob-rail-action,
-  .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; padding: 0; }
-  .mob-rail-collapsed .mob-rail-action .btn { width: auto; }
-  .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; }
-}
-@media (min-width: 1280px) and (prefers-reduced-motion: reduce) {
-  .mob-rail { transition: none; }
-}
-
-/* A collapsed category's floating Menu: icon, label, then a status Tag or
-   count. The current item uses Menu's own active colours, like the pressed
-   toolbar Buttons; the current category's trigger is marked too. */
-.mob-flyout .menu-panel { --menu-max-width: 22rem; }
-.mob-fly-item { display: flex; align-items: center; gap: var(--spacer-03); }
-.mob-fly-label { flex: 1 1 auto; }
-.mob-fly-item.mob-current { color: var(--menu-item-label-active); background-color: var(--menu-item-background-active); }
-.mob-rail .mob-flyout > .menu-toggle.active { --button-background: var(--white-tint-30); }
-.mob-record .mob-flyout > .menu-toggle.active { --button-background: var(--action-04); }
-/* The client's Avatar is the trigger itself. */
-.mob-flyout > .menu-toggle:has(.avatar) { padding: 0; width: auto; height: auto; border-radius: 50%; }
-
-/* The client in the open rail: Buckholt User meta inside the link. */
-.mob-rail-client .user-meta { min-width: 0; }
-.mob-rail-client .user-meta-body { min-width: 0; }
-.mob-rail-client .user-meta-body > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mob-rail-client.mob-on { background-color: var(--nav-link-background-hover); }
 .mob-rail-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--spacer-04);
-  padding: var(--spacer-05) var(--spacer-03);
+  gap: var(--spacer-05);
+  padding: var(--spacer-05) var(--spacer-04);
 }
-.mob-rail-foot { flex: 0 0 auto; padding: var(--spacer-03); border-top: 1px solid var(--white-tint-30); }
+.mob-rail-foot { flex: 0 0 auto; padding: var(--spacer-03) var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
 .mob-rail-foot .button-set { margin-top: 0; }
-.mob-rail .mob-side-label { margin-top: var(--spacer-04); padding: 0 var(--spacer-03); color: var(--text-secondary); }
 
-/* A rail link: icon, then a two-line label (what it is, with the status
-   Tag on the same line, then the name or reference). Page navigation's own
-   link states. */
-.mob-rail .nav-link { min-width: 0; }
-.mob-rail .nav-link { height: auto; min-height: var(--nav-link-height); padding-block: var(--spacer-03); align-items: center; }
+/* The client: User meta in a soft panel (`--ui-overlay-02` and Buckholt's
+   large radius), the whole panel the link to the client. */
+.mob-rail-client {
+  display: block;
+  padding: var(--spacer-04);
+  border-radius: var(--border-radius-lg, 1rem);
+  background-color: var(--ui-overlay-02);
+  color: inherit;
+  text-decoration: none;
+}
+.mob-rail-client:hover { background-color: var(--ui-overlay-03); }
+.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
+.mob-rail-client .user-meta { min-width: 0; }
+.mob-rail-client .user-meta-body { min-width: 0; }
+.mob-rail-client .user-meta-body > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* On the client's own pages it takes Page navigation's active colours. */
+.mob-rail-client.mob-on { background-color: var(--action-04); }
+
+.mob-rail .mob-side-label { margin: var(--spacer-03) 0 var(--spacer-03); padding: 0; color: var(--text-secondary); }
+
+/* A policy: Icon block, the line of business over the reference, and the
+   status Tag. Page navigation's own link states. */
+.mob-rail-policies .nav-link { height: auto; min-width: 0; padding: var(--spacer-03); gap: var(--spacer-03); align-items: center; }
+.mob-rail-policies .icon-block { flex: 0 0 auto; }
 .mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
-.mob-rail-title { font-weight: 500; }
+.mob-rail-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacer-02) var(--spacer-03); }
+.mob-rail-title { min-width: min(100%, 8.5rem); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mob-rail-sub { color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mob-rail-row { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); }
-.mob-rail .nav-link .tag { flex: 0 1 auto; min-width: 0; }
-.mob-rail-action { margin-top: 0; padding: 0 var(--spacer-03); }
-.mob-rail-action .btn { width: 100%; }
-.mob-more { padding: 0 var(--spacer-03); }
+.mob-rail-policies .nav-link .tag { flex: 0 0 auto; }
+.mob-rail-action { margin-top: 0; }
+.mob-more { margin-top: calc(var(--spacer-02) * -1); }
 
-/* The record column: the policy's menu. */
+/* The record column: the client record's pages, or the policy's menu. */
 .mob-record {
   width: 17.5rem;
   flex: 0 0 auto;
@@ -188,25 +163,41 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacer-05);
-  padding: var(--spacer-05) var(--spacer-04);
+  padding: 0 var(--spacer-04) var(--spacer-05);
 }
-.mob-record-top { display: flex; align-items: flex-start; gap: var(--spacer-03); padding: 0 0 var(--spacer-04) var(--spacer-03); border-bottom: 1px solid var(--ui-border-02); }
-.mob-record-top .button-set { margin: 0 0 0 auto; }
-.mob-record-head { min-width: 0; }
-
-/* The policy menu collapsed: a 64px strip of icons, each group one icon
-   button with a floating Menu of its pages. */
-@media (min-width: 1280px) {
-  .mob-record-collapsed .mob-record { width: 4rem; overflow: visible; padding-inline: var(--spacer-02); }
-  .mob-record-collapsed .mob-record-top { justify-content: center; padding-left: 0; }
-  .mob-record-collapsed .mob-record-top .button-set { margin: 0; }
-  .mob-strip .nav-link { justify-content: center; padding-inline: 0; }
-  .mob-strip .mob-flyout { display: flex; justify-content: center; }
-  /* A flyout sits in a plain list item, not Page navigation's
-     `.nav-item`, whose dropdown treatment would add its own chevron. */
-  .mob-strip-item { list-style: none; }
-}
+.mob-record-top { padding-inline: 0; }
+.mob-record-head { min-width: 0; padding: 0 var(--spacer-03); }
+.mob-record-eyebrow { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); }
+.mob-record-eyebrow .eyebrow { margin: 0; }
 .mob-record-head .title-02 { overflow-wrap: anywhere; }
+
+/* Wide screens, collapsed: a 64px strip of icons, in the flow, so the
+   column beside it moves over rather than being covered. Each category is
+   one icon button that opens the column there. */
+@media (min-width: 1280px) {
+  .mob-rail, .mob-record { transition: width 0.15s ease-in-out; }
+  .mob-rail-collapsed .mob-rail,
+  .mob-record-collapsed .mob-record { width: 4rem; }
+  .mob-rail-collapsed .mob-search { display: none; }
+  .mob-rail-collapsed .mob-rail-head,
+  .mob-record-collapsed .mob-record-top { justify-content: center; padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-scroll,
+  .mob-record-collapsed .mob-record { padding-inline: var(--spacer-03); }
+  .mob-rail-collapsed .mob-rail-action,
+  .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; }
+  .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; }
+}
+@media (min-width: 1280px) and (prefers-reduced-motion: reduce) {
+  .mob-rail, .mob-record { transition: none; }
+}
+
+/* A strip of icons: one per category, evenly spaced and centred. */
+.mob-strip { --nav-gap: var(--spacer-03); align-items: center; }
+.mob-strip-item { list-style: none; }
+.mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
+.mob-strip .btn.active { --button-background: var(--action-04); }
+/* The client's Avatar is the button's content: no padding round it. */
+.mob-strip .btn:has(.avatar) { padding: 0; border-radius: 50%; }
 
 .mob-side-label {
   margin: 0 0 var(--spacer-03);
@@ -214,21 +205,24 @@
   color: var(--text-secondary);
 }
 
-/* Page navigation, stacked. `.nav-link` keeps every one of its own states;
-   this only lets long labels wrap instead of running out of the column. */
-/* Page navigation wraps by default; stacked, a wrapping column would size
-   its links to their content rather than the column. */
+/* Page navigation, stacked. Page navigation wraps by default; stacked, a
+   wrapping column would size its links to their content rather than the
+   column. Long labels wrap rather than running out of the column. */
 .mob-nav { --nav-gap: var(--spacer-01); flex-wrap: nowrap; }
 .mob-nav .nav-link { width: 100%; text-align: left; white-space: normal; }
 .mob-nav .nav-link > i { width: 1.25rem; flex: 0 0 auto; text-align: center; }
 
-/* A group: a disclosure (`button.nav-link`), then its pages, indented past
-   the icon with a rule down the left, as the new designs draw it. */
-.mob-group-toggle { font-weight: 500; }
-.mob-group-name { flex: 1 1 auto; }
-.mob-group-toggle .mob-chevron { transition: transform 0.15s ease-in-out; }
-.mob-group-toggle[aria-expanded="true"] .mob-chevron { transform: rotate(180deg); }
-@media (prefers-reduced-motion: reduce) { .mob-group-toggle .mob-chevron { transition: none; } }
+/* A group, always open: its label (not a link), then its pages, indented
+   past the icon with a rule down the left, as the design draws it. */
+.mob-group { margin-top: var(--spacer-03); }
+.mob-group-label {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-link-gap);
+  padding: var(--spacer-03) var(--nav-link-padding-x);
+  color: var(--text-primary);
+}
+.mob-group-label > i { width: 1.25rem; flex: 0 0 auto; text-align: center; }
 
 /* A count at the end of a link (Mark's badge design, inline). */
 .mob-count-inline { --badge-translate-y: 0; position: static; top: auto; right: auto; transform: none; flex: 0 0 auto; margin-left: auto; box-shadow: none; }
@@ -238,8 +232,6 @@
   border-left: 1px solid var(--ui-border-02);
 }
 .mob-subnav .nav-link { --nav-link-height: 2.75rem; }   /* Buckholt's own `.nav-sm` height */
-.mob-rail .mob-subnav { border-left-color: var(--white-tint-30); }
-.mob-subnav[hidden] { display: none; }
 
 /* The toolbar: a 48px strip beside the record column, as in an editing
    application. Icon-only ghost Buttons (Button's medium icon-only size) in
@@ -474,7 +466,7 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   /* One scrolling drawer: the columns stack and grow to their content. */
   .mob-columns { flex: 0 0 auto; flex-direction: column; min-height: auto; margin-top: var(--spacer-04); }
   .mob-rail, .mob-record { width: auto; }
-  .mob-rail-head { display: none; }
+  .mob-rail-head, .mob-record-top { display: none; }
   .mob-rail-scroll, .mob-record { overflow: visible; }
 
   /* The toolbar lies flat in the drawer, above the record's pages. */
