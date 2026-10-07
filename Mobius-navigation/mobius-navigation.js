@@ -163,8 +163,10 @@
                reference, in the policy head's type. */
             ui.statusDot(p, 'mob-rail-status') +
             icon(M.ICON.motor, 'mob-rail-icon') +
-            '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(F.client.businessLine) + '</span>' +
-              '<span class="mob-rail-sub">' + esc(p.ref) + '</span></span>' +
+            /* The reference leads (it is what tells the rows apart), the
+               line of business under it. */
+            '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(p.ref) + '</span>' +
+              '<span class="mob-rail-sub">' + esc(F.client.businessLine) + '</span></span>' +
             /* A right chevron: the policy opens the next column. */
             icon('fa-regular fa-chevron-right', 'mob-rail-chevron') +
           '</a>' +
@@ -299,6 +301,7 @@
     }
     var railBody = $('mob-rail-body');
     railBody.innerHTML = body;
+    tipTruncated();
     /* The open policy stays in view beside its menu: the rail scrolls (by
        itself, not the page) to bring it up when it is below the fold. */
     var open = onPolicy && railBody.querySelector('.mob-rail-policies a[aria-current]');
@@ -330,8 +333,8 @@
     rec.innerHTML = (
       '<div class="mob-record-head">' +
         ui.statusDot(r.p, 'mob-record-status') +
-        '<h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' +
-        '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' +
+        '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
+        '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
         '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
@@ -340,6 +343,18 @@
 
     var first = rec.querySelector('[data-toolbar-item]');
     if (first) first.tabIndex = 0;
+    tipTruncated();
+  }
+
+  /* A reference too long for its line ends in "…" and shows in full in a
+     Tooltip (Laurence, 7 October 2026). Only where it is actually cut. */
+  function tipTruncated() {
+    Array.prototype.forEach.call(sidebar.querySelectorAll('.mob-rail-title, .mob-record-title'), function (el) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        el.setAttribute('data-bs-toggle', 'tooltip');
+        el.setAttribute('data-bs-title', el.textContent);
+      }
+    });
   }
 
   /* ========================================================= Breadcrumbs
@@ -355,6 +370,10 @@
     var c = F.client;
     var trail = [];
     if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
+    /* None on client and policy pages: the Broking bar's back arrow and
+       client, and the policy column, already say where you are
+       (Laurence, 7 October 2026). */
+    if (r.scope !== 'app') return '';
     trail.push(['Dashboard', '#dashboard']);
     if (r.scope === 'client') {
       if (r.page === 'summary') trail.push([c.name, null]);
@@ -397,7 +416,10 @@
   function titleFor(r) {
     var tt = (M.TITLES[r.scope] || {})[r.page] || ['', ''];
     var title = tt[0].replace('@query', S.query || '');
-    var eyebrow = r.scope === 'policy' ? (tt[1] || 'Policy') + ' · ' + r.p.ref : tt[1];
+    /* No eyebrow on client and policy pages: the Broking bar names the
+       client and the policy column names the policy (Laurence, 7 October
+       2026). */
+    var eyebrow = r.scope === 'app' ? tt[1] : '';
     return { title: title, eyebrow: eyebrow };
   }
 

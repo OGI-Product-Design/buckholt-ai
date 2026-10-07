@@ -188,7 +188,7 @@
   gap: var(--spacer-05);
   padding: var(--spacer-03) var(--spacer-03) var(--spacer-05);   /* 8px sides: the links carry their own inner padding */
 }
-.mob-rail-foot { flex: 0 0 auto; display: flex; align-items: center; gap: var(--spacer-03); padding: var(--spacer-03) var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
+.mob-rail-foot { flex: 0 0 auto; display: flex; align-items: center; gap: var(--spacer-03); padding: var(--spacer-03) var(--spacer-04); }   /* no rule: Client support is a plain link-like action, not a band */
 .mob-rail-foot .button-set { margin-top: 0; }
 
 .mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-04);   /* in line with the links' text and the status eyebrows */ color: var(--text-secondary); }
@@ -212,7 +212,7 @@
 .mob-status { display: inline-flex; align-items: center; gap: var(--spacer-03); }
 .mob-rail-policies .nav-link .mob-status,
 .mob-record-head .mob-status { color: var(--text-primary); }
-.mob-status-dot { flex: 0 0 auto; width: 0.5rem; height: 0.5rem; border-radius: 50%; background-color: var(--mob-status-colour, currentColor); }
+.mob-status-dot { flex: 0 0 auto; width: 0.5rem; height: 0.5rem; border-radius: 50%; align-self: center; background-color: var(--mob-status-colour, currentColor); }
 .mob-status-success { --mob-status-colour: var(--feedback-border-success); }
 .mob-status-warning { --mob-status-colour: var(--feedback-border-warning); }
 .mob-status-error { --mob-status-colour: var(--feedback-border-error); }
@@ -244,7 +244,7 @@
 /* User meta's type: the name line, then the reference. */
 .mob-record-head { display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
 .mob-record-status { margin: 0; }
-.mob-record-title { margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow-wrap: anywhere; }
+.mob-record-title { margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }   /* a long reference ends in "…", in full in a Tooltip */
 .mob-record-ref { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; }
 
 /* Wide screens, collapsed: a 64px strip of icons, in the flow, so the
