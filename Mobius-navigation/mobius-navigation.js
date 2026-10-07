@@ -663,6 +663,10 @@
     /* A route change moves focus to the new page's heading, so it is
        announced. Not on first load. */
     if (!firstRender) $('mob-title').focus({ preventScroll: true });
+    /* The rail animates only after the first page has been drawn, so a
+       policy page opened directly starts collapsed rather than sliding
+       shut. */
+    if (firstRender) requestAnimationFrame(function () { requestAnimationFrame(function () { sidebar.classList.remove('mob-no-anim'); }); });
     firstRender = false;
     if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = $('mob-search-open'); runModalSearch(q); openSearch(q); }
   }

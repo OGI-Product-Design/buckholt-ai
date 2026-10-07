@@ -226,6 +226,9 @@
    collapse. */
 @media (min-width: 1280px) {
   .mob-rail { transition: width 0.15s ease-in-out; }
+  /* Not on first load: the rail starts in its state, it does not slide
+     into it (removed once the first page has been drawn). */
+  .mob-no-anim .mob-rail { transition: none; }
   .mob-rail-collapsed .mob-rail { width: 4rem; }
   .mob-rail-collapsed .mob-column-toggle { margin-left: 0; }
   .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); gap: var(--spacer-05); }
