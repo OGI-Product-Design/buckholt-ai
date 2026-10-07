@@ -45,10 +45,10 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  /* railOverride: the rail opened (true) or collapsed (false) with its
-     toggle on this page, or null. Reset on every route: a policy page
-     collapses the rail again, to leave the page room (Laurence, 7 October
-     2026). */
+  /* railOverride: the rail opened (true) or collapsed (false) by hand, or
+     null. Untouched, a policy page collapses the rail to leave the page
+     room; once it has been opened or collapsed by hand, that choice stays
+     from page to page (Laurence, 7 October 2026). */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). */
   var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
@@ -226,7 +226,7 @@
     var foot = '';
     if (risky.length) {
       foot = '<div class="mob-toolbar-foot"><div class="mob-toolbar-rule" role="separator"></div>' +
-        '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="More actions">' +
+        '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="More actions">' +
         '<button type="button" class="btn btn-ghost menu-toggle" tabindex="-1" data-toolbar-item id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
           '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
         '</button>' +
@@ -372,10 +372,6 @@
     var c = F.client;
     var trail = [];
     if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
-    /* None on client and policy pages: the Broking bar's back arrow and
-       client, and the policy column, already say where you are
-       (Laurence, 7 October 2026). */
-    if (r.scope !== 'app') return '';
     trail.push(['Dashboard', '#dashboard']);
     if (r.scope === 'client') {
       if (r.page === 'summary') trail.push([c.name, null]);
@@ -684,7 +680,6 @@
     /* Opening a client or policy from the search closes it. */
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
-    S.railOverride = null;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -1018,6 +1013,20 @@
      the wording reads as plain text until it is switched on. */
   $('mob-terms-toggle').addEventListener('change', function () {
     document.body.classList.toggle('mob-hide-terms', !this.checked);
+  });
+
+  /* A Menu whose wrapper carries a Tooltip (More actions, the breadcrumb's
+     "…"): the Tooltip hides while the Menu is open, so the two never
+     overlap, and comes back once it closes. */
+  document.addEventListener('show.bs.dropdown', function (e) {
+    var host = e.target.closest && e.target.closest('[data-bs-toggle="tooltip"]');
+    var tip = host && bootstrap.Tooltip.getInstance(host);
+    if (tip) { tip.hide(); tip.disable(); }
+  });
+  document.addEventListener('hidden.bs.dropdown', function (e) {
+    var host = e.target.closest && e.target.closest('[data-bs-toggle="tooltip"]');
+    var tip = host && bootstrap.Tooltip.getInstance(host);
+    if (tip) tip.enable();
   });
 
   /* A toggle re-renders the menu; focus goes to `focusSel`. */

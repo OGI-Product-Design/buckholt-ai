@@ -193,6 +193,8 @@
 
 .mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-04);   /* in line with the links' text and the status eyebrows */ color: var(--text-secondary); }
 .mob-rail .mob-side-label:first-child { margin-top: var(--spacer-03); }   /* the Client label, at the top */
+/* Policies are ruled off from the client's pages above them. */
+.mob-rail #mob-rail-policies { display: block; align-self: stretch; margin-top: var(--spacer-04); padding-top: var(--spacer-05); border-top: 1px solid var(--ui-border-02); }
 
 /* A policy: Icon block, the line of business over the reference, and the
    status Tag. Page navigation's own link states. */
@@ -205,6 +207,10 @@
 .mob-rail-policies .mob-rail-status { grid-column: 1 / 3; grid-row: 1; margin: 0; }
 .mob-rail-policies .mob-rail-icon { grid-column: 1; grid-row: 2; }
 .mob-rail-policies .mob-rail-text { grid-column: 2; grid-row: 2; }
+/* On the open policy the reference and chevron take Page navigation's
+   active colour, as the icon does; the status and line of business do not. */
+.mob-rail-policies .nav-link.active .mob-rail-title,
+.mob-rail-policies .nav-link.active .mob-rail-chevron { color: inherit; }
 /* The chevron, centred on the whole row: the policy opens the next column. */
 .mob-rail-policies .mob-rail-chevron { grid-column: 3; grid-row: 1 / span 2; align-self: center; font-size: 0.875rem; color: var(--text-secondary); }
 /* The status: a dot in its status colour, then the text in the primary
@@ -351,7 +357,13 @@
 /* The policy's actions: a row of icon-only ghost Buttons (Button's medium
    icon-only size) under the title, a rule between groups, the Overflow
    menu last. It wraps if a status has more actions than fit. */
-.mob-toolbar { margin-top: var(--spacer-04); }
+.mob-toolbar {
+  /* Ruled off above and below (Laurence, 7 October 2026). */
+  margin-top: var(--spacer-04);
+  padding: var(--spacer-04) 0;
+  border-top: 1px solid var(--ui-border-02);
+  border-bottom: 1px solid var(--ui-border-02);
+}
 .mob-toolbar-label { margin: 0 0 var(--spacer-02); color: var(--text-secondary); }   /* as the rail's section labels */
 .mob-toolbar-body { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--spacer-02); margin-left: calc(-1 * var(--spacer-03)); }   /* the first icon lines up with the title */
 .mob-toolbar-foot { display: flex; align-items: center; gap: var(--spacer-02); }
