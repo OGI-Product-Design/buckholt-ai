@@ -102,21 +102,25 @@
   .mob-nav-group .mob-chevron { transition: none; }
 }
 
-/* A policy in a list: reference and status Tag, then a support line. */
+/* A policy in a list: a clickable Card holding a Heading attachment. Card,
+   Text block and Heading attachment keep their own spacing and type. */
 .mob-policies { display: flex; flex-direction: column; gap: var(--spacer-03); margin: 0; }
-/* Clickable Card in a 296px column: its own padding and gap variables bound
-   to the spacing scale, as for the client and policy card above. */
+/* The same padding as the client / policy card above it in the menu: the
+   Card's own variables bound to the spacing scale for a 296px column. */
 .mob-pol-link {
   --card-padding-x: var(--spacer-04);
   --card-padding-y: var(--spacer-04);
-  --card-body-gap: var(--spacer-02);
   height: auto;
 }
-.mob-pol-link .text-block { gap: var(--spacer-02); }
-.mob-pol-link .text-block p { margin: 0; }
-.mob-pol-row { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-02) var(--spacer-03); }
-.mob-pol-ref { overflow-wrap: anywhere; }
-.mob-pol-meta { color: var(--text-secondary); }
+/* Heading attachment's row does not wrap. In this column a long reference
+   and a long status ("Automatic Decline") cannot sit side by side, so the
+   Tag may drop under the reference instead of overflowing the Card. */
+.mob-pol-link .heading { flex-wrap: wrap; row-gap: var(--spacer-02); }
+/* The menu column is narrow, so the Card's own arrow indicator is left off
+   (Laurence's decision, 7 October 2026). The newer local build has an
+   undocumented `.hide-indicator` opt-out; the reference build does not, so
+   it is not used. */
+.mob-policies .mob-pol-link.card-clickable .card-body::after { display: none; }
 /* The open policy: Buckholt's selected surface (--action-04, as the selected
    table row in Originators) and the Card's own hover border colour. */
 .mob-pol-current { --card-background: var(--action-04); --card-border: var(--action-01); }
