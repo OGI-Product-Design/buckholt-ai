@@ -115,6 +115,13 @@
     }
   };
 
+  function clientNav() {
+    return [
+      { id: 'summary', label: '[[Client overview]]', icon: ICON.home },
+      { group: 'Client', icon: ICON.client, children: CLIENT_NAV }
+    ];
+  }
+
   function policyNav(p) {
     return [
       { id: 'summary', label: '[[Policy overview]]', icon: ICON.home },
@@ -193,10 +200,11 @@
 
   /* ------------------------------------------------------------ Client level */
 
+  /* Mirrors the policy menu: an overview on its own, then the client's
+     pages in one group, Transactions first. */
   var CLIENT_NAV = [
-    { id: 'summary', label: '[[Client summary]]', icon: ICON.user },
-    { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
+    { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'cactivity', label: 'Activity', icon: ICON.activity },
     { id: 'ccomplaints', label: 'Complaints', icon: ICON.flag },
     { id: 'checks', label: 'Client checks', icon: ICON.checks }
@@ -252,7 +260,7 @@
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {
-      summary: ['[[Client summary]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
+      summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
       cactivity: ['Activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
       newquote: ['Product selection', 'New quote']
     },
@@ -277,6 +285,7 @@
     POLICY_ACTIONS: POLICY_ACTIONS,
     QUICK_LINKS: QUICK_LINKS,
     CLIENT_NAV: CLIENT_NAV,
+    clientNav: clientNav,
     CLIENT_ACTIONS: CLIENT_ACTIONS,
     MODULES: MODULES,
     APP_ACTIONS: APP_ACTIONS,

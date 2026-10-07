@@ -61,13 +61,25 @@ prototype the left column *is* the redesigned menu.
 The menu had grown heavy: search, a help panel, back links, a client or policy card full of
 Key-value pairs, policy cards, "Go to", "Actions" and Client support, all in one column. It now
 follows Laurence's colleague's designs, which work like the Buckholt documentation site's own
-sidebar: **two slim columns** at client and policy level. The rail is on every page, with the
-search at its top; at app level it holds only the search.
+sidebar: **two slim columns** at client and policy level, both about the client you have open.
+The search is not in them: it is in the **Broking bar** (below), because it only searches Broking.
+
+**The Broking bar (Laurence, 7 October 2026, option 3 of the search audit).** The search only
+finds Broking clients and policies, not Accounts, Bordereau or the other modules, so it cannot
+sit in the global top bar; and in the rail it suggested its results ("motor") belonged to the
+client menu. It now sits in a bar under the top bar on every Broking page (Dashboard, search,
+Create new client, client and policy pages): "Broking" (Title 01), the search field, and
+**Create new client** at the right as a secondary Button (not on Create new client itself). The
+bar is sticky under the top bar; the menu columns sit under it. It is not shown on the other
+modules. "/" opens the search from anywhere in Broking, unless you are typing in a field.
+Building it needed no new component: a Text input and a Button in a flex row with Buckholt's
+spacing, border and background tokens. Buckholt documents no module or sub-header bar, so this
+is a gap to raise.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (320px open), as in Laurence's Figma design | A **Back to dashboard** standalone Link (Arrow-left icon) on the left of the head, the collapse button on the right; the Link is not shown on the Dashboard itself or when the rail is collapsed. **Search** below it, divided from the rest by a rule; the **client as User meta** (initials Avatar, name, reference) in a soft grey panel that links to the client; **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
-| Record column (always open, no collapse button) | On client pages: the client reference as an eyebrow, the client's name as the title, and the client's pages in a "Client" group. On policy pages: the reference with its status Tag, the line of business ("Open Market Motor"), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. Its collapse button sits at the top right, as in the Figma design | Text block; Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
+| Rail (320px open), as in Laurence's Figma design | A **Back to dashboard** standalone Link (Arrow-left icon) on the left of the head, the collapse button on the right; the Link is not shown when the rail is collapsed. The **client as User meta** (initials Avatar, name, reference) in a soft grey panel that links to the client; **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; User meta (see deviation 4a). The client and the open policy are `aria-current="true"`: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
+| Record column (always open, no collapse button) | On client pages: the client reference as an eyebrow, the client's name as the title, then **Client overview** on its own (Home icon) and the client's pages in a "Client" group, Transactions first, so it reads like the policy menu's Policy overview and groups (Laurence, 7 October 2026). On policy pages: the reference with its status Tag, the line of business ("Open Market Motor"), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. Its collapse button sits at the top right, as in the Figma design | Text block; Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
@@ -75,7 +87,7 @@ columns are open follows where you are:
 
 | Where | Rail | Record column |
 | --- | --- | --- |
-| Dashboard, search results, other modules | Open (the search) | none |
+| Dashboard, Create new client, other modules | none (no left menu) | none |
 | Client pages | Open | Open: the client's pages |
 | Policy pages | **Collapsed** to a 64px strip (the client's menu closes) | Open: the policy's menu |
 
@@ -87,12 +99,11 @@ columns are open follows where you are:
   page, which sets the columns for itself again. Open, a column is in the flow: the one beside it
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
-  Collapsed rail: Search, the client (their Avatar, extra small, so it sits among the icons; the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
+  Collapsed rail: the client (their Avatar, extra small, so it sits among the icons; the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
   **Policies (one Shield icon button)**,
   spaced evenly; Add new quote and Client support become icon-only Buttons. **Pressing a
   category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
-  rail rather than a floating menu): focus moves to the search field, the client, the open
-  policy. Every collapsed control has its accessible name and a
+  rail rather than a floating menu): focus moves to the client or the open policy. Every collapsed control has its accessible name and a
   Tooltip.
 - Below 1280px both columns live in the drawer, open, with no toggles.
 
@@ -104,13 +115,12 @@ theme on `--expressive-rich` in the previous rounds). The documentation site's o
 site chrome (`sidebar.css`, `sidebar_container`, `submenu_link`), not a Buckholt component, so it
 is not copied: only Buckholt components sit in the rail.
 
-Removed: the search from the menu (back in the top bar), "What can I search?", recent searches,
-back links, the client card with Avatar and Key-values, the policy card with Switch policy (the
+Removed: the search from the menu (now in the Broking bar), back links, the client card with Avatar and Key-values, the policy card with Switch policy (the
 rail is the switcher now), and the policy cards. Breadcrumbs stay; they replaced the blue record
 strip in the previous round.
 
-Both columns are rebuilt on every route. At app level (Dashboard, search results, the other
-modules, Create new client) the menu area is not drawn on wide screens.
+Both columns are rebuilt on every route. At app level (Dashboard, the other modules, Create new
+client) there is no left menu on wide screens; below 1280px the drawer holds the modules.
 `navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
 `policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
 the prototype's:
@@ -132,8 +142,8 @@ Laurence asked for the best experience for system-level navigation. The decision
 | System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 1280px they move into the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | What can I search? (in the search Modal) | A ghost Button with the Info icon to the right of the Modal's search field, as current Mobius has it. It opens a floating help panel: the title with a close Button, a Buckholt List per group (list heading and items), the tip, and "Learn more" as a standalone Link with the External-link icon; current Mobius wording in sentence case. Escape closes the panel first, back to its Button. **Buckholt has no Popover** (no `.popover` styles in `buckholt.css`, and no Bootstrap stylesheet is loaded), so the panel is a Menu panel (`.menu-panel.dropdown-menu`) on Bootstrap Dropdown, with fixed positioning so it floats over the Modal's scrolling body | Gap to raise with Buckholt: a documented Popover |
-| Search results | In the search Modal (below), not a page. They filter the sample rows on name, reference or email, with a no-results state ("No clients found for “{query}”"). The client's name is the link to the client. Create new client sits under the results. An old `#search/{query}` link opens the Modal with that search over the Dashboard | |
-| Search (Jon's suggestion, 7 October 2026) | The Text input (`type="text"`, as Text input's Code & specs has it; the browser's own search-field styling and clear cross are gone) at the top of the rail opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) on a click, Enter, Down arrow or the first character typed, which carries over. A pointer press opens it without focusing the rail's field, so no focus ring is left on a field nobody is typing in, and focus is not put back there afterwards; opened from the keyboard, focus returns to the field when the Modal closes. (The field's focus styling is Buckholt's own Text input focus, measured identical to Text input's Code & specs example.) The page you are on stays behind it. The Modal has its own field, with Buckholt's clear button (Text input Code & specs example 6, `.input-btn.input-clear`, driven by `components/form/form.js` with jQuery loaded first, as CLAUDE.md sets out); clearing shows recent searches again; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Running a search shows the results in the Modal; opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). With the rail collapsed, the Search icon opens the Modal directly | The search keeps you where you are, and the results are one Escape away from the page behind |
+| Search results | In the search Modal (below), not a page. They filter the sample rows on name, reference or email, with a no-results state ("No clients found for “{query}”"). The client's name is the link to the client. An old `#search/{query}` link opens the Modal with that search over the Dashboard | |
+| Search (Jon's suggestion, 7 October 2026) | The Text input (`type="text"`, as Text input's Code & specs has it; the browser's own search-field styling and clear cross are gone) in the Broking bar opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) on a click, Enter, Down arrow or the first character typed, which carries over. A pointer press opens it without focusing the bar's field, so no focus ring is left on a field nobody is typing in, and focus is not put back there afterwards; opened from the keyboard, focus returns to the field when the Modal closes. (The field's focus styling is Buckholt's own Text input focus, measured identical to Text input's Code & specs example.) The page you are on stays behind it. The Modal has its own field, with Buckholt's clear button (Text input Code & specs example 6, `.input-btn.input-clear`, driven by `components/form/form.js` with jQuery loaded first, as CLAUDE.md sets out); clearing shows recent searches again; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Running a search shows the results in the Modal; opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). "/" opens it too | The search keeps you where you are, and the results are one Escape away from the page behind |
 | Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main above the heading: Dashboard › client › policy › page. The search is a Modal, not a place, so it is not in the trail. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2), and below 768px only the first and last stay out of it |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
 | A full top bar | Between 1280 and 1680px the "Show wording changes" label is visually hidden (still named), the module links use one step less padding, now that the search has left the bar. Checked at every width from 360 to 1920px | |
@@ -165,13 +175,13 @@ here.").
 - **Heading actions** open pages, so they are anchors with Button styling. The Policy overview's
   quick links (Documents, Attachments, Notes, History) are gone (Laurence, 7 October 2026):
   their counts are badges on those pages' links in the policy menu instead, read out as
-  ", 3 new". Client summary has the
+  ", 3 new". Client overview has the
   Client notes icon Button with its count badge, "View claims" (secondary) and "Add new quote"
   (primary). Adding a client note updates the badge.
 
 ## Policy lists
 
-There is one shared count, which starts at 5. It is used by the rail, the Client summary's
+There is one shared count, which starts at 5. It is used by the rail, the Client overview's
 Client policies table and the search results. Each list is sorted by cover
 start, newest first. "Load 2 more (2 remaining)" becomes "Show fewer", and the table version
 reads "Showing 1 to 5 of 7, most recent first". After the list re-renders, focus stays on the
@@ -351,12 +361,12 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Create new client | `fa-user-plus` |
 | Bordereau module | `fa-list` |
 
-### 10. "Create new client" is in the Search results heading, not the menu
+### 10. "Create new client" is in the Broking bar, not the menu
 
-The reference prototype listed it as an app-level menu action. It opens a page, so it follows
-the brief's rule and sits in the Search results heading as the primary action (an anchor styled
-as a Button, like the other heading flows). Changed 6 October 2026, at Laurence's request. Since
-7 October the app-level menu holds only Search; the modules are in the top bar.
+The reference prototype listed it as an app-level menu action. It opens a page, so it is an
+anchor styled as a Button. It was the Search results heading's primary (6 October 2026); since
+the Broking bar (7 October) it sits at the bar's right on every Broking page as a secondary
+Button, so it never competes with a page's own primary.
 
 **Client support** is in the menu foot only once a client is open, at client and policy level.
 It is not shown on Broking, the other modules or Create new client, because there is no
@@ -370,7 +380,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Dashboard, Search results | Create new client (heading) | Apply (filters) |
+| Dashboard | none (Create new client is secondary, in the Broking bar) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a heading action it is the primary; otherwise the primary is the page's one
@@ -413,7 +423,7 @@ example 3).
 
 - The two menu columns are sticky under the top bar and each scrolls on its own, with Client
   support pinned to the rail's foot.
-- **Below 1280px the menu is a drawer**, with the search and the modules, and the rail stacked
+- **Below 1280px the menu is a drawer**, with the modules (the Broking bar stays on the page), and the rail stacked
   over the record column. Two columns (520px) beside Main need at least 1280px; 1280 is not on
   Bootstrap's scale, so it is a layout breakpoint of this prototype only.
 - A visually hidden column heading is absolutely positioned. Without a containing block inside
@@ -455,8 +465,8 @@ Awesome), and Typekit was absent.
   - columns by location: on a policy page the rail collapsed (64px) and the policy menu open; on
     a client page the rail and the client record column open
   - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
-    button with a Tooltip that opens the rail (320px) with focus on the open policy; Search as an
-    icon that opens the rail at the field
+    button with a Tooltip that opens the rail (320px) with focus on the open policy; no search in
+    the rail (it is in the Broking bar), and "/" opening the search Modal
   - the open rail: the client in User meta, no client pages in the rail, policies with Icon
     blocks, "Show 2 more"; the next page collapsing it again
   - the policy menu collapsing to a strip, and a group icon opening it at that group
@@ -476,17 +486,18 @@ Awesome), and Typekit was absent.
   - the wording toggle
   - flow steps
   - one primary per screen, side panel and confirmation (separate audit)
-  - the app level: no menu actions, no Client support, and Create new client in the Search
-    results heading opening the flow
+  - the app level: no left menu, no Client support, the search and Create new client in the
+    Broking bar, the button opening the flow and leaving the bar while there
 - **Broking, search and breadcrumbs (26 assertions)**: opens on the Dashboard; the two Tabs
   switch; the filter actions sit at the right edge and the fields are content width; clicking
-  the rail's field opens the search Modal with recent searches, Down arrow moves into them and
+  the Broking bar's field opens the search Modal with recent searches, Down arrow moves into them and
   one runs, showing results in the Modal while the page stays; the no-results state; clearing
   the field brings recent searches back, newest first; opening a client closes the Modal; the
   client and policy columns; the policy breadcrumb without a search crumb; a bare `#search` and a
   `#search/{query}` link (which opens the Modal over the Dashboard).
-- **Search at 375px (5 assertions)**: the search is in the drawer, runs in the Modal, and opening
-  a result closes the Modal and the drawer; widened, it is in the rail and shows the query.
+- **Search and client menu (6 assertions)**: at 375px the search is in the Broking bar, runs in
+  the Modal, and opening a result closes it; widened, it is still in the bar, not the rail; the
+  client menu is Client overview, then the Client group with Transactions first.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and

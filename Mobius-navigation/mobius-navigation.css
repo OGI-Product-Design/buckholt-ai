@@ -69,6 +69,36 @@
 .mob-user-menu .menu-panel { z-index: 1035; }
 
 
+/* ------------------------------------------------------------ Broking bar
+   A row of its own in the layout grid, between the top bar and the menu and
+   Main, on Broking pages only; it stays in view under the top bar. The
+   menu's sticky offset adds its height. */
+.layout[data-layout=layout-03] {
+  grid-template-areas: "header header" "module module" "sidebar main" "footer footer";
+  grid-template-rows: auto auto 1fr auto;
+}
+.layout.mob-in-broking { --mob-chrome-height: calc(var(--app-header-height) + var(--mob-module-bar-height)); }
+:root { --mob-module-bar-height: 4.5rem; }   /* 72px */
+
+.mob-module-bar {
+  grid-area: module;
+  position: sticky;
+  top: var(--app-header-height);
+  z-index: 1029;                                       /* under the top bar (1030), over the page */
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-05);
+  height: var(--mob-module-bar-height);
+  padding: 0 var(--spacer-05);
+  background-color: var(--ui-background-01);
+  border-bottom: 1px solid var(--ui-border-02);
+}
+.mob-module-bar[hidden] { display: none; }
+.mob-module-name { flex: 0 0 auto; margin: 0; }
+.mob-module-bar .mob-search { flex: 0 1 30rem; min-width: 0; }
+.mob-module-bar .mob-search .input-label { display: none; }
+.mob-module-actions { margin: 0 0 0 auto; flex: 0 0 auto; }
+
 /* -------------------------------------------------------------------- Menu
    Two columns in Buckholt's layout-03 `sidebar` area, as in the new
    designs: the rail and the record column. They stay in view under the
@@ -77,16 +107,17 @@
 
 .mob-sidebar {
   position: sticky;
-  top: var(--app-header-height);
+  top: var(--mob-chrome-height, var(--app-header-height));
   align-self: start;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - var(--app-header-height));
+  height: calc(100vh - var(--mob-chrome-height, var(--app-header-height)));
   background-color: var(--ui-background-01);
   border-right: 1px solid var(--ui-border-02);
   z-index: 2;                                          /* its floating Menus open over Main */
 }
-/* At app level only the rail is drawn. */
+/* The menu is the selected client's: at app level it is not drawn. */
+.mob-sidebar.mob-side-empty { display: none; }
 .mob-record[hidden], .mob-toolbar[hidden], .mob-rail-foot[hidden] { display: none; }
 
 .mob-drawer-head { display: none; }
@@ -106,10 +137,6 @@
 .mob-column-toggle { margin-top: 0; margin-left: auto; }
 .mob-rail-back { min-width: 0; align-self: center; }   /* Link sets its own align-self; centre it on the collapse button */
 
-/* Search, at the top of the rail, divided from the client and policies
-   below it by a rule. */
-.mob-search { flex: 0 0 auto; padding: var(--spacer-04); border-bottom: 1px solid var(--ui-border-02); }
-.mob-search .input-label { display: none; }
 
 .mob-rail-scroll {
   flex: 1 1 auto;
@@ -177,7 +204,6 @@
 @media (min-width: 1280px) {
   .mob-rail { transition: width 0.15s ease-in-out; }
   .mob-rail-collapsed .mob-rail { width: 4rem; }
-  .mob-rail-collapsed .mob-search { display: none; }
   .mob-rail-collapsed .mob-rail-head { justify-content: center; padding-inline: 0; }
   .mob-rail-collapsed .mob-column-toggle { margin-left: 0; }
   .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); gap: var(--spacer-05); }
@@ -461,7 +487,10 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 
 @media (max-width: 1279.98px) {
-  .layout[data-layout=layout-03] { grid-template-areas: "header" "main" "footer"; grid-template-columns: 1fr; }
+  .layout[data-layout=layout-03] { grid-template-areas: "header" "module" "main" "footer"; grid-template-columns: 1fr; }
+  /* The drawer always opens: it holds the modules even at app level. */
+  .mob-sidebar.mob-side-empty { display: flex; }
+  .mob-side-empty .mob-columns { display: none; }
 
   .mob-menu-button-set { display: flex; }
 
@@ -531,6 +560,10 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   #mob-page .progress { min-width: 0; }
   .app-bar-status { display: none; }
   .mob-filter-fields > .input { width: 100%; }
+  /* On a phone the bar keeps the search and its action; "Broking" is in
+     the modules (and the bar's accessible name). */
+  .mob-module-bar { padding: 0 var(--spacer-04); gap: var(--spacer-04); }
+  .mob-module-name { display: none; }
 }
 
 

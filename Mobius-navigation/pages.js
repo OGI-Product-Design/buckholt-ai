@@ -1176,10 +1176,7 @@
       return set(labelled);
     }
 
-    if (R.scope === 'app' && (R.page === 'dashboard' || R.page === 'search')) {
-      var nc = M.APP_ACTIONS.newclient;
-      return set([btn(nc.label, { variant: 'primary', icon: nc.icon, href: '#' + nc.to })]);
-    }
+    /* Create new client is in the Broking bar, on every Broking page. */
 
     if (R.scope === 'client' && R.page === 'summary') {
       var n = F.clientNotes.length;

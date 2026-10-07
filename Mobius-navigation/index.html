@@ -77,6 +77,31 @@
   </header>
 
   <!-- ======================================================================
+       BROKING BAR — under the top bar on every Broking page (Dashboard,
+       Create new client, client and policy pages), not in the other
+       modules. Search is Broking's (clients and policies), so it sits here
+       rather than in the global top bar or in the client's menu. The field
+       opens the search Modal; "/" does too. Create new client is a
+       Broking-wide action, so it sits here as well.
+       ====================================================================== -->
+  <div class="mob-module-bar" id="mob-module-bar" role="region" aria-label="Broking" hidden>
+    <span class="title-01 mob-module-name" aria-hidden="true">Broking</span>
+    <form class="mob-search" role="search" id="mob-search" autocomplete="off" aria-label="Search Broking">
+      <div class="input">
+        <div class="input-label">
+          <label for="mob-search-input" class="form-label visually-hidden">Search Broking clients and policies</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" class="form-control" id="mob-search-input" placeholder="Search clients and policies" enterkeyhint="search"
+            aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">
+        </div>
+      </div>
+    </form>
+    <div class="button-set mob-module-actions" id="mob-module-actions"></div>
+  </div>
+
+  <!-- ======================================================================
        THE MENU — Buckholt from here down. Two columns at client and policy
        level, as in the new designs: the blue rail (the client and their
        policies) and the record column (that record's pages and actions).
@@ -97,24 +122,10 @@
     <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
 
     <div class="mob-columns">
-      <!-- The rail. Its search is static; the rest is written by
+      <!-- The rail: the selected client's menu, written by
            mobius-navigation.js. -->
       <div class="mob-rail" id="mob-rail">
         <div class="mob-rail-head" id="mob-rail-head"></div>
-        <!-- Search: Buckholt Text input with its search icon. Running a
-             search opens the results. -->
-        <form class="mob-search" role="search" id="mob-search" autocomplete="off">
-          <div class="input">
-            <div class="input-label">
-              <label for="mob-search-input" class="form-label visually-hidden">Search</label>
-            </div>
-            <div class="response text-input">
-              <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-              <input type="text" class="form-control" id="mob-search-input" placeholder="Name, reference or email" enterkeyhint="search"
-                aria-haspopup="dialog" aria-controls="mob-search-modal">
-            </div>
-          </div>
-        </form>
         <div class="mob-rail-scroll" id="mob-rail-body"></div>
         <div class="mob-rail-foot" id="mob-rail-foot"></div>
       </div>
