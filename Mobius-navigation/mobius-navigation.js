@@ -239,7 +239,7 @@
         '</div>' +
       '</div></div>';
     }
-    return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="horizontal">' +
+    return '<div class="mob-toolbar-body" role="toolbar" aria-labelledby="mob-toolbar-label" aria-orientation="horizontal">' +
       sets.join('<div class="mob-toolbar-rule" role="separator"></div>') + foot +
     '</div>';
   }
@@ -335,7 +335,9 @@
         ui.statusDot(r.p, 'mob-record-status') +
         '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
         '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
-        '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
+        /* Labelled "Actions", as the menus' sections are. */
+        '<div class="mob-toolbar" id="mob-toolbar"><h3 class="label-01 mob-toolbar-label" id="mob-toolbar-label">Actions</h3>' +
+          toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
@@ -1012,7 +1014,8 @@
   });
 
   /* "Show wording changes": a review aid that highlights every terminology
-     change from current Mobius. Off, the wording reads as plain text. */
+     change from current Mobius. Off by default (Laurence, 7 October 2026):
+     the wording reads as plain text until it is switched on. */
   $('mob-terms-toggle').addEventListener('change', function () {
     document.body.classList.toggle('mob-hide-terms', !this.checked);
   });
