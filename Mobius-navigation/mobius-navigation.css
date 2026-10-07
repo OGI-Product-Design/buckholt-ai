@@ -186,10 +186,17 @@
 .mob-rail-foot .button-set { margin-top: 0; }
 
 .mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-03); color: var(--text-secondary); }
+.mob-rail .mob-side-label:first-child { margin-top: var(--spacer-03); }   /* the Client label, at the top */
 
 /* A policy: Icon block, the line of business over the reference, and the
    status Tag. Page navigation's own link states. */
-.mob-rail-policies .nav-link { height: auto; min-width: 0; padding: var(--spacer-03) var(--nav-link-padding-x); gap: var(--nav-link-gap); align-items: flex-start; }
+.mob-rail-policies .nav-link {
+  height: auto; min-width: 0; padding: var(--spacer-03) var(--nav-link-padding-x);
+  /* The status eyebrow across the top, then the Car beside the title and
+     reference. */
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--nav-link-gap); align-items: start;
+}
+.mob-rail-policies .mob-rail-status { grid-column: 1 / -1; margin: 0; }
 /* The Car at the link's own icon size, on the title's line. */
 .mob-rail-policies .mob-rail-icon { flex: 0 0 auto; width: 1.25rem; line-height: 1.5rem; text-align: center; }
 .mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
@@ -198,7 +205,6 @@
    (14px, light, secondary). */
 .mob-rail-title { min-width: min(100%, 8.5rem); font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mob-rail-sub { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mob-rail-policies .nav-link .tag { flex: 0 0 auto; }
 .mob-more { margin-top: var(--spacer-05); }   /* 24px below the last policy */
 
 /* The record column: the client record's pages, or the policy's menu. */
@@ -217,6 +223,7 @@
 .mob-record-nav:first-child { padding-top: var(--spacer-05); }   /* a client page: no head */
 /* User meta's type: the name line, then the reference. */
 .mob-record-head { display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
+.mob-record-status { margin: 0; }
 .mob-record-title { margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow-wrap: anywhere; }
 .mob-record-ref { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; }
 
