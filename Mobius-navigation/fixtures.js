@@ -52,6 +52,10 @@
     /* The signed-in user, as the top bar and the notes show them. */
     user: { name: 'Laurence Abbott', initials: 'LA', environment: 'Test' },
 
+    /* The user's recent searches (most recent first), shown when they open
+       the search. A search they run is added to the top for the session. */
+    recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
+
     /* Broking dashboard: current Mobius's two tabs, sample rows. */
     outstandingDiary: {
       total: '14,334',

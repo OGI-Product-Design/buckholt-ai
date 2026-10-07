@@ -229,6 +229,26 @@
 }
 .mob-subnav .nav-link { --nav-link-height: 2.75rem; }   /* Buckholt's own `.nav-sm` height */
 
+/* ------------------------------------------------------- Search Modal
+   The search field, then recent searches (Buckholt Menu shown in place:
+   the documentation's demo-only `.show` and `.position-relative`, with the
+   panel's own custom properties bound to "no shadow, no padding, full
+   width"), or the results. */
+.mob-search-modal-form { margin-bottom: var(--spacer-05); }
+.mob-search-modal-form .input-label { display: none; }
+.mob-menu-inline {
+  --menu-shadow: none;
+  --menu-background: transparent;
+  --menu-padding-x: 0;
+  --menu-padding-y: 0;
+  --menu-min-width: 0;
+  --menu-max-width: none;
+  z-index: auto;
+}
+.mob-recent .menu-item { display: flex; align-items: center; height: auto; min-height: var(--menu-item-height); white-space: normal; text-align: left; }
+.mob-search-results { display: flex; flex-direction: column; gap: var(--spacer-05); }
+.mob-search-results > .button-set { margin-top: 0; }
+
 /* The toolbar: a 48px strip beside the record column, as in an editing
    application. Icon-only ghost Buttons (Button's medium icon-only size) in
    stacked Button sets, a rule between groups. */
