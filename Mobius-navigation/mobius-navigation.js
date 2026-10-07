@@ -252,21 +252,10 @@
       return '<li class="nav-item mob-group">' +
         '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
         '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
-          n.children.map(function (c) { return c.action ? navAction(c) : navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
+          n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
         '</ul>' +
       '</li>';
     }).join('') + '</ul>';
-  }
-
-  /* An action in the menu (Admin fee, Manual credit / debit): it opens a
-     side panel in place, so it is a Button (`button.nav-link`), pressed
-     while its panel is open. */
-  function navAction(c) {
-    return '<li class="nav-item">' +
-      '<button type="button" class="nav-link" data-action="' + c.action + '" data-scope="policy" aria-haspopup="dialog" aria-pressed="' + (S.panelKey === c.action) + '">' +
-        t(c.label) +
-      '</button>' +
-    '</li>';
   }
 
   /* The menu:

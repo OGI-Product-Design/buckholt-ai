@@ -117,7 +117,7 @@ the prototype's:
 
 | Status | Groups | Menu actions | Heading |
 | --- | --- | --- | --- |
-| Live | Policy (details, claims, Amend policy, Add new quote), Transactions (with Admin fee and Manual credit / debit), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
+| Live | Policy (details, claims, Amend policy, Add new quote), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
 | Prospect | Quote, Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
 | Automatic Decline | Quote, Policy (details, Amend policy, Add new quote; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
 | Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
@@ -152,17 +152,12 @@ here.").
   to policy) use one Buckholt Modal in the page source (Code & specs example 1). The confirm
   Button is `btn-primary`, and `btn-primary btn-danger` for Cancel policy only. Focus starts on
   Cancel, Tab wraps inside, Escape closes it, and focus returns to the trigger.
-- **Current Mobius menu items restored (Laurence, 7 October 2026).** In current Mobius,
-  Amend policy, Add new quote, Admin fee and Manual credit / debit are menu items. The reference
-  prototype had moved them out (flows to the page heading, Admin fee and Manual credit / debit to
-  the Account summary card), so they are back in the policy menu as well: **Amend policy** and
-  **Add new quote** as pages in the **Policy** group, after Policy details and Claims (which of
-  them a status has follows the prototype's `policyFlows`, the same as the heading), and **Admin fee** and **Manual credit /
-  debit** at the end of Transactions on Live policies. Those two open side panels, so they are
-  Buttons in the navigation (`button.nav-link`, `aria-haspopup="dialog"`, pressed while open);
-  they are not pages and are not in the allowed-page list. The heading actions and the Account
-  summary card's Buttons stay as well. (No screenshot of the current Mobius policy menu is in the
-  repository; this follows Laurence's account of it.)
+- **Amend policy and Add new quote in the menu (Laurence, 7 October 2026).** In current Mobius
+  they are menu items, so they are pages in the **Policy** group, after Policy details and Claims
+  (which of them a status has follows the prototype's `policyFlows`, the same as the heading).
+  **Admin fee and Manual credit / debit open side panels**, so they are not menu items: they are
+  Buttons on the Account summary page only. **Transaction documents is removed** (Laurence, 7
+  October 2026); its placeholder page went with it.
 - **Page and card actions stay on the page**: Add client header, Add client link and connection,
   the portal access Switch, New sanctions check, Add complaint, and Admin fee and Manual credit /
   debit on the Account summary card (Live only, as in the prototype).
