@@ -110,7 +110,7 @@
             </div>
             <div class="response text-input">
               <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-              <input type="search" class="form-control" id="mob-search-input" placeholder="Name, reference or email"
+              <input type="text" class="form-control" id="mob-search-input" placeholder="Name, reference or email" enterkeyhint="search"
                 aria-haspopup="dialog" aria-controls="mob-search-modal">
             </div>
           </div>
@@ -193,19 +193,35 @@
         </div>
       </div>
       <div class="modal-body">
-        <form class="mob-search-modal-form" role="search" id="mob-search-modal-form" autocomplete="off">
-          <div class="input">
-            <div class="input-label">
-              <label for="mob-search-modal-input" class="form-label visually-hidden">Search by name, reference or email</label>
+        <div class="mob-search-modal-bar">
+          <form class="mob-search-modal-form" role="search" id="mob-search-modal-form" autocomplete="off">
+            <div class="input">
+              <div class="input-label">
+                <label for="mob-search-modal-input" class="form-label visually-hidden">Search by name, reference or email</label>
+              </div>
+              <div class="response text-input">
+                <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" class="form-control" id="mob-search-modal-input" placeholder="Search by name, reference or email"
+                  enterkeyhint="search" aria-describedby="mob-search-modal-hint">
+                <!-- Buckholt's clear button (Text input Code & specs example 6),
+                     driven by components/form/form.js. -->
+                <button type="button" class="input-btn input-clear" aria-label="Clear"></button>
+              </div>
             </div>
-            <div class="response text-input">
-              <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-              <input type="search" class="form-control" id="mob-search-modal-input" placeholder="Search by name, reference or email"
-                aria-describedby="mob-search-modal-hint">
-            </div>
+            <p class="visually-hidden" id="mob-search-modal-hint">Press the down arrow for recent searches.</p>
+          </form>
+          <!-- "What can I search?": a ghost Button that opens a floating help
+               panel to its right, as current Mobius has it. Buckholt has no
+               Popover, so the panel is a Menu panel (`.menu-panel.dropdown-menu`)
+               on Bootstrap Dropdown, holding a Text block, Lists and a Link. -->
+          <div class="menu mob-search-help">
+            <button type="button" class="btn btn-ghost menu-toggle" id="mob-search-help-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-controls="mob-search-help">
+              <div class="btn-icon"><i class="fa-regular fa-circle-info" aria-hidden="true"></i></div>
+              <span class="button-label">What can I search?</span>
+            </button>
+            <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-search-help" role="dialog" aria-labelledby="mob-search-help-title"></div>
           </div>
-          <p class="visually-hidden" id="mob-search-modal-hint">Press the down arrow for recent searches.</p>
-        </form>
+        </div>
         <div id="mob-search-modal-body" aria-live="polite"></div>
       </div>
     </div>
@@ -216,6 +232,10 @@
 <div class="toast-container app-toasts" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Buckholt's shared Form behaviour (the search field's clear button)
+     needs jQuery, loaded first, as CLAUDE.md sets out. -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
 <script src="fixtures.js"></script>

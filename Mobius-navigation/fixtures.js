@@ -56,6 +56,18 @@
        the search. A search they run is added to the top for the session. */
     recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
 
+    /* "What can I search?" in the search Modal. Current Mobius wording, in
+       sentence case. */
+    searchHelp: {
+      title: 'Search clients by',
+      groups: [
+        ['Partial or full matches:', ['Name or surname', 'Postcode', 'Phone number']],
+        ['Full match only:', ['Email address', 'Policy, client or claim reference', 'Insurer policy number', 'Vehicle registration', 'Invoice number']],
+        ['Combine criteria for better results:', ['Name or surname + postcode: Davies SW1A 2AA']]
+      ],
+      tip: 'Use * for partial matches (e.g. *smith for Blacksmith).'
+    },
+
     /* Broking dashboard: current Mobius's two tabs, sample rows. */
     outstandingDiary: {
       total: '14,334',
