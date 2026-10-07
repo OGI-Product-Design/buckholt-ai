@@ -61,27 +61,39 @@ prototype the left column *is* the redesigned menu.
 The menu had grown heavy: search, a help panel, back links, a client or policy card full of
 Key-value pairs, policy cards, "Go to", "Actions" and Client support, all in one column. It now
 follows Laurence's colleague's designs, which work like the Buckholt documentation site's own
-sidebar: **two slim columns** at client and policy level, nothing at app level.
+sidebar: **two slim columns** at client and policy level. The rail is on every page, with the
+search at its top; at app level it holds only the search.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (blue) | "Client" and the client's name; **Policies**: one link per policy (Car icon, "Motor", the status Tag on the same line, the reference under it, truncated with an ellipsis); Load more / Show fewer; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, icon straight inside the link, Page navigation's own `.active`). The client link is `aria-current="true"` at client level, the open policy at policy level: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
+| Rail (blue) | **Search** at the top (Text input with its search icon); "Client" and the client's name; **Policies**: one link per policy (Car icon, "Motor", the status Tag on the same line, the reference under it, truncated with an ellipsis); Load more / Show fewer; **Add new quote**; **Client support** at the foot | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, icon straight inside the link, Page navigation's own `.active`). The client link is `aria-current="true"` at client level, the open policy at policy level: they mark the record, not the page. Add new quote is a secondary Button (it opens a page, so an anchor). Client support opens its side panel and is a ghost Button |
 | Record (white) | Which record this is: the client's name or the policy reference as an eyebrow, then "Client record" or "Motor policy" (`title-02`). Its pages in **always-open groups**: a group label with its icon (not a link: a group is not a page), then its pages indented under a rule. | Text block; Page navigation with `.active` + `aria-current="page"` on the current page |
-| Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal, then Stop and Cancel), a rule between groups. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). Cancel is `.btn-ghost.btn-danger`. See deviation 2 |
+| Toolbar (48px, policy level) | Every action of the policy's status, as icons, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in stacked Button sets (`.button-set.button-set-stacked`). The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
-**How the columns collapse (7 October 2026).** The two columns are never both fully open. On
-every client and policy page a record is open, so the record column shows and the rail
-collapses to a **64px strip of icons**, as the Buckholt documentation site's sidebar does once a
-section is open: Client, each policy, Add new quote and Client support, each with its accessible
-name ("Motor, PUCO0068, Live") and a Tooltip to its right; the open record keeps its active
-state. An expand button at the top of the strip (icon-only ghost Button, `aria-expanded`,
-`aria-controls`) opens the rail to 240px **over** the record column, which keeps its place, with
-the full labels, status Tags and Load more. Picking a record, Escape (focus back to the toggle)
-or a click anywhere else collapses it again. At app level neither column is drawn. Below 1280px
-both live in the drawer, where the rail is always open and has no toggle.
+**How the rail collapses (Mark Feltwell, 7 October 2026).** Mark's rules for collapsible
+sidebars, followed as given:
 
-> Collapsed, a policy's status is in its name and Tooltip only; the Tag shows when the rail is
-> open. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
+- *"All sidebars that are considered collapsible display a collapse button that also functions
+  as an open button, so the user has control of what they see."* One icon-only ghost Button at
+  the top of the rail ("Collapse menu panel" / "Open menu panel", `aria-expanded`,
+  `aria-controls`, Tooltip). The user's choice holds on every page and is remembered in this
+  browser (`localStorage`, wrapped so the page works without it). Until they choose, the rail is
+  open at app level, where nothing sits beside it, and collapsed on client and policy pages,
+  where the record column is open. Open, the rail is in the flow: the record column moves over
+  rather than being covered.
+- *"When sidebar is collapsed: items under a category collapse into a single icon button.
+  Clicking on icon button in sidebar will reveal floating submenus if more items are needed to be
+  shown."* Collapsed (64px): the search becomes a Search icon that opens the rail at the field;
+  Client stays one icon link; **Policies collapses into one Shield icon button** (Mark's
+  suggestion; the catalogue's Shield), a Buckholt Menu button whose floating Menu opens to its
+  right and lists **every** policy (Menu's link items, `a.menu-item`, with the reference and its
+  status Tag), the open one marked `aria-current="true"` in Menu's own active colours. Add new
+  quote and Client support become icon-only Buttons. Every collapsed control has its accessible
+  name and a Tooltip ("Motor, PUCO0068, Live"; "Policies (7)"). The floating Menu keeps
+  Buckholt's light theme, as it floats over the page.
+- Below 1280px both columns live in the drawer, where the rail is always open and has no toggle.
+
+> Collapsed, a policy's status shows in the Policies Menu, and in the open rail. A status mark on the collapsed icon would need a Buckholt indicator (Badge is
 > undocumented here), so it is left out.
 
 The rail is Buckholt's **dark theme** (`data-bs-theme="dark"` on the rail, so Page navigation,
@@ -120,10 +132,10 @@ Laurence asked for the best experience for system-level navigation. The decision
 | System modules: Broking, Activity, Renewals, Bordereau, Accounts | Page navigation with icons, horizontal, in the top bar (`nav.mob-modules`, `ul.nav > li.nav-item > a.nav-link`, icon directly inside the link, `.active` + `aria-current="page"`). Below 1280px they move into the drawer, stacked | Modules are separate sibling pages, which is what Page navigation is for. The prototype's "Dashboard" is the Broking module, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026) |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | Search results | `#search/{query}`, only after a search. It filters the sample rows on name, reference or email, and has a no-results state ("No clients found for “{query}”"). The client's name is the link to the client; the separate "Open client" link repeated it and is gone. Create new client stays in the heading | |
-| Search | Text input with its search icon, in the top bar beside the wordmark, as current Mobius has it, on every page. Submitting opens the search results. Below 1280px the same form moves into the drawer, above the modules | Simplified 7 October 2026: "What can I search?" and recent searches were removed with the rest of the menu's extras |
+| Search | Text input with its search icon, at the top of the blue rail on every page (Mark, 7 October 2026). Submitting opens the search results. With the rail collapsed it is a Search icon that opens the rail at the field | "What can I search?" and recent searches were removed with the rest of the menu's extras |
 | Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main above the heading: Dashboard › Search results (once a search has been run) › client › policy › page. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2: `li.menu` with its Tooltip, `a.menu-toggle`, a Menu of `button.menu-item`s), and below 768px only the first and last stay out of it |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
-| A full top bar | Between 1280 and 1680px the "Show wording changes" label is visually hidden (still named), the module links use one step less padding, and the search gives up width first; below 1340px the environment label ("Test") is left out, as it already is on phones. Checked at every width from 360 to 1920px | |
+| A full top bar | Between 1280 and 1680px the "Show wording changes" label is visually hidden (still named), the module links use one step less padding, now that the search has left the bar. Checked at every width from 360 to 1920px | |
 
 Module pages other than Broking are placeholders ("The existing Mobius {module} module sits
 here.").
@@ -222,7 +234,12 @@ icon-only size, in a 48px column), each with an accessible name and a Tooltip to
   after the prototype's section header; the rules between groups are separators.
 - A panel action is `aria-pressed="true"` while its panel is open, drawn with the ghost Button's
   own hover colours. Panels and confirmations still return focus to the toolbar Button.
-- Cancel policy is the ghost Button's documented danger modifier, red at rest.
+- **Stop and Cancel are behind an Overflow menu** (Mark, 7 October 2026: they are destructive,
+  so not one click away). It is Menu button's Code & specs example 3: an icon-only ghost
+  `.menu-toggle` with `fa-ellipsis-vertical`, named "More actions" with its Tooltip on the Menu
+  wrapper (as Breadcrumb's overflow menu does), opening a Menu to its right (`.dropend`). Cancel is
+  Menu's danger item, which Buckholt draws red on hover. Each still asks for confirmation; when
+  the confirmation closes, focus returns to the "More actions" trigger.
 - Below 1280px, in the drawer, the toolbar lies flat above the record's pages and wraps; its
   arrow keys follow (Left / Right), and Tooltips open above.
 - Lost from the old Menu: the visible labels and the trailing panel / page icons. Icon-only
@@ -400,16 +417,20 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **83 behavioural assertions, all passing.** They cover:
+- **90 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
   - the single `aria-current`
   - the toolbar: its actions per status, the rule before Stop, the danger Cancel, accessible
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
-  - the rail collapsed to 64px on a policy page, its named and Tooltipped links, expanding to
-    240px over the record column (which keeps its place) with focus on the toggle, and
-    collapsing on Escape and on a click outside
+  - the rail collapsed to 64px on a policy page: named, Tooltipped links; Policies as one Shield
+    button whose Menu lists all 7 with the open one marked, closing on Escape; Search as an icon
+    that opens the rail at the field
+  - the rail opening to 240px and moving the record column over, focus on the toggle, and the
+    user's choice (open or collapsed) holding on the next page
+  - Stop and Cancel behind the "More actions" Overflow menu, the confirmation from it, and
+    focus returning to that trigger
   - the record column's head, the rail marking the open client or policy, newest-first order,
     Load more / Show fewer and focus retention
   - the shared count in the table
@@ -430,7 +451,7 @@ Awesome), and Typekit was absent.
   column at client and policy level; the rail in the dark theme; the policy breadcrumb's
   overflow menu and its navigation; a bare `#search` goes to the Dashboard; no record strip.
 - **Search (5 assertions)**: at 375px the search is in the drawer and runs from there, closing
-  the drawer; widened, it moves back to the top bar and shows the query.
+  the drawer; widened, it is in the rail and shows the query.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and

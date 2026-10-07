@@ -45,7 +45,7 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  var S = { polShown: 5, step: 0, railOpen: false, panelKey: null, query: null };
+  var S = { polShown: 5, step: 0, railPref: storedRail(), panelKey: null, query: null };
   P.init(S);
 
   var R = null;
@@ -98,23 +98,38 @@
     '</li>';
   }
 
-  /* The rail collapses, as the Buckholt documentation site's sidebar does
-     once a section is open: on every client and policy page the record
-     column is open, so the rail shrinks to a 64px strip of icons. Its
-     expand button opens it over the record column to switch record or
-     load more policies; picking one, Escape or a click elsewhere closes
-     it again. In the drawer (below 1280px) it is always open. */
-  function railCollapsed() { return !narrow.matches && !S.railOpen; }
+  /* The rail collapses, as Mark describes for collapsible sidebars: it
+     carries a collapse button that is also its open button, so the user
+     decides what they see. Until they choose, it is open where there is
+     room (app level, where nothing sits beside it) and collapsed to a 64px
+     strip of icons on client and policy pages, beside the record column.
+     Their choice then holds on every page (and is remembered in this
+     browser). Collapsed, each category becomes one icon button, and the
+     Policies button opens a floating Menu of the policies. In the drawer
+     (below 1280px) it is always open and has no toggle. */
+  function storedRail() {
+    try { var v = localStorage.getItem('mob-rail'); return v === 'open' ? true : v === 'closed' ? false : null; } catch (e) { return null; }
+  }
+  function railOpenFor(r) {
+    if (narrow.matches) return true;
+    return S.railPref !== null ? S.railPref : r.scope === 'app';
+  }
+  function railCollapsed() { return !railOpenFor(R); }
+
+  /* A collapsed rail control is icon-only: its accessible name, and a
+     Tooltip to the right (Buckholt requires one for icon-only Buttons). */
+  function tipAttrs(name) {
+    return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '"';
+  }
 
   /* A rail link: icon, then a two-line label (what it is, with the status
-     Tag on the same line, then the name or reference). Collapsed, the
-     label is the link's accessible name and its Tooltip instead. */
+     Tag on the same line, then the name or reference). */
   function railLink(url, on, iconCls, title, sub, tag, cls) {
-    var name = title + ', ' + sub + (tag ? ', ' + tag.status : '');
+    var name = plain(title + ', ' + sub + (tag ? ', ' + tag.status : ''));
     var tight = railCollapsed();
     return '<li class="nav-item">' +
       '<a class="nav-link' + (cls ? ' ' + cls : '') + (on ? ' active' : '') + '" href="' + url + '"' + (on ? ' aria-current="true"' : '') +
-        (tight ? ' aria-label="' + esc(plain(name)) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(plain(name)) + '"' : '') + '>' +
+        (tight ? tipAttrs(name) : '') + '>' +
         icon(iconCls) +
         (tight ? '' :
           '<span class="mob-rail-text"><span class="mob-rail-row"><span class="mob-rail-title">' + esc(title) + '</span>' +
@@ -124,21 +139,47 @@
     '</li>';
   }
 
-  /* The client's policies in the rail: Page navigation, one link per
-     policy. The open policy is the current one. */
+  /* The client's policies, open rail: Page navigation, one link per
+     policy, the 5 most recent with Load more. */
   function railPolicies(curId) {
-    return '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
-      return railLink(ui.policyHref(p), p.id === curId, M.ICON.motor, F.client.product, p.ref, p);
-    }).join('') + '</ul>' +
-    (railCollapsed() ? '' : '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>');
+    return '<h2 class="label-01 mob-side-label" id="mob-rail-policies">Policies</h2>' +
+      '<ul class="nav flex-column mob-nav mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+        return railLink(ui.policyHref(p), p.id === curId, M.ICON.motor, F.client.product, p.ref, p);
+      }).join('') + '</ul>' +
+      '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
+  }
+
+  /* The client's policies, collapsed rail: the whole category is one icon
+     button (the Shield) that opens a floating Menu to its right listing
+     every policy (Menu's link items, `a.menu-item`), the open one marked.
+     The Tooltip sits on the Menu's wrapper, as Breadcrumb's overflow menu
+     does, because the Button's own data-bs-toggle is the Dropdown's. */
+  function railPolicyMenu(curId) {
+    var on = !!curId;
+    var name = 'Policies (' + F.policies.length + ')';
+    return '<div class="menu dropend mob-rail-menu" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
+      '<button type="button" class="btn btn-ghost menu-toggle' + (on ? ' active' : '') + '" id="mob-rail-policies-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="' + esc(name) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+        '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>' +
+      '</button>' +
+      /* The panel keeps Buckholt's light theme: it floats over the page. */
+      '<div class="menu-panel dropdown-menu" data-bs-theme="buckholt" aria-labelledby="mob-rail-policies-toggle">' +
+        '<ul class="menu-body" role="menu">' +
+          '<li role="none"><h6 class="menu-section-header">' + esc(name) + '</h6></li>' +
+          F.policies.map(function (p) {
+            var cur = p.id === curId;
+            return '<li role="none"><a class="menu-item mob-pol-item' + (cur ? ' mob-current' : '') + '" role="menuitem" href="' + ui.policyHref(p) + '"' + (cur ? ' aria-current="true"' : '') + '>' +
+              icon(M.ICON.motor) + '<span class="mob-pol-ref">' + esc(p.ref) + '</span>' + ui.statusTag(p, true) + '</a></li>';
+          }).join('') +
+        '</ul>' +
+      '</div>' +
+    '</div>';
   }
 
   /* A rail Button: labelled when the rail is open, icon-only with its
      accessible name and Tooltip when collapsed. */
   function railButton(label, o) {
     if (!railCollapsed()) return ui.btn(label, o);
-    var name = plain(label);
-    o = Object.assign({}, o, { attrs: (o.attrs || '') + ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '"' });
+    o = Object.assign({}, o, { attrs: (o.attrs || '') + tipAttrs(plain(label)) });
     return ui.btn('', o);
   }
 
@@ -149,22 +190,44 @@
      stacked Button set; groups are divided by a rule, Stop and Cancel come
      last, and Cancel is the danger variant. A panel action stays pressed
      while its panel is open. One Tab stop: arrow keys move along it. */
+  var DESTRUCTIVE = ['stop', 'cancel'];
   function toolbar(groups, defs, scope) {
-    var sets = groups.map(function (g) {
-      return '<div class="button-set button-set-stacked" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' +
-        g.ids.map(function (key) {
-          var a = defs[key];
-          var name = plain(a.label);
-          return '<button type="button" class="btn btn-ghost' + (a.danger ? ' btn-danger' : '') + '" tabindex="-1"' +
-            ' data-action="' + key + '" data-scope="' + scope + '" aria-label="' + esc(name) + '"' +
-            (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === key) + '" aria-haspopup="dialog"' : '') +
-            (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') +
-            ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
-            '<div class="btn-icon">' + icon(a.icon) + '</div>' +
-          '</button>';
-        }).join('') +
-      '</div>';
+    var button = function (key) {
+      var a = defs[key];
+      var name = plain(a.label);
+      return '<button type="button" class="btn btn-ghost" tabindex="-1" data-toolbar-item' +
+        ' data-action="' + key + '" data-scope="' + scope + '" aria-label="' + esc(name) + '"' +
+        (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === key) + '" aria-haspopup="dialog"' : '') +
+        (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') +
+        ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '">' +
+        '<div class="btn-icon">' + icon(a.icon) + '</div>' +
+      '</button>';
+    };
+    var risky = [];
+    var sets = [];
+    groups.forEach(function (g) {
+      var ids = g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
+      risky = risky.concat(g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; }));
+      if (ids.length) sets.push('<div class="button-set button-set-stacked" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' + ids.map(button).join('') + '</div>');
     });
+    /* Stop and Cancel are destructive, so they are not one click away: they
+       sit behind Buckholt's Overflow menu (Menu button Code & specs
+       example 3: ghost icon-only trigger, `fa-ellipsis-vertical`), which
+       opens to the right. Cancel is Menu's danger item. */
+    if (risky.length) {
+      sets.push('<div class="menu dropend mob-overflow" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="More actions">' +
+        '<button type="button" class="btn btn-ghost menu-toggle" tabindex="-1" data-toolbar-item id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
+          '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
+        '</button>' +
+        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-more-actions">' +
+          '<ul class="menu-body" role="menu">' + risky.map(function (key) {
+            var a = defs[key];
+            return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' +
+              ' data-action="' + key + '" data-scope="' + scope + '" aria-haspopup="dialog">' + icon(a.icon) + t(a.label) + '</button></li>';
+          }).join('') + '</ul>' +
+        '</div>' +
+      '</div>');
+    }
     return '<div class="mob-toolbar-body" role="toolbar" aria-label="Policy actions" aria-orientation="vertical">' +
       sets.join('<div class="mob-toolbar-rule" role="separator"></div>') +
     '</div>';
@@ -186,57 +249,63 @@
     }).join('') + '</ul>';
   }
 
-  /* Two columns at client and policy level, as in the new designs:
-       rail    (blue) the client, their policies, Add new quote, Client support
-       record  (white) which record this is, and its pages
-       toolbar (48px) at policy level, the record's actions
-     Nothing at app level: the modules and search are in the top bar. */
+  /* The menu, as in the new designs:
+       rail    (blue) search; at client and policy level also the client,
+               their policies, Add new quote and Client support
+       record  (white) at client and policy level: which record, its pages
+       toolbar (48px) at policy level, the record's actions */
   function renderSide(r) {
     var c = F.client;
     var app = r.scope === 'app';
-    sidebar.classList.toggle('mob-side-empty', app);
-    if (app) { $('mob-rail').innerHTML = ''; $('mob-record').innerHTML = ''; $('mob-toolbar').innerHTML = ''; $('mob-toolbar').hidden = true; return; }
-
     var onClient = r.scope === 'client';
     var tight = railCollapsed();
-    var toggleName = tight ? 'Expand client and policies' : 'Collapse client and policies';
+    var toggleName = tight ? 'Open menu panel' : 'Collapse menu panel';
+    sidebar.classList.toggle('mob-app-level', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
-    sidebar.classList.toggle('mob-rail-open', !narrow.matches && S.railOpen);
-    $('mob-rail').innerHTML =
-      /* The expand / collapse control: an icon-only ghost Button with its
-         name and Tooltip, as on the documentation site. Wide screens only. */
-      '<div class="mob-rail-head">' + ui.set([ui.btn('', { icon: tight ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
-        attrs: ' data-rail-toggle aria-expanded="' + !tight + '" aria-controls="mob-rail" aria-label="' + toggleName + '"' +
-          ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + toggleName + '"' })]) + '</div>' +
-      '<div class="mob-rail-scroll">' +
+
+    $('mob-rail-head').innerHTML =
+      /* Collapse / open: one icon-only ghost Button, as on the documentation
+         site. Wide screens only. */
+      ui.set([ui.btn('', { icon: tight ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
+        attrs: ' data-rail-toggle aria-expanded="' + !tight + '" aria-controls="mob-rail"' + tipAttrs(toggleName) })]) +
+      /* Collapsed, the search is an icon that opens the rail at the field. */
+      (tight ? ui.set([ui.btn('', { icon: 'fa-regular fa-magnifying-glass', attrs: ' data-rail-search' + tipAttrs('Search') })]) : '');
+
+    var body = '';
+    if (!app) {
+      body =
         '<nav aria-label="Client and policies">' +
           '<ul class="nav flex-column mob-nav">' +
             railLink('#c/summary', onClient, M.ICON.client, 'Client', c.name, null, 'mob-rail-client') +
           '</ul>' +
-          '<h2 class="label-01 mob-side-label' + (tight ? ' visually-hidden' : '') + '" id="mob-rail-policies">Policies</h2>' +
-          railPolicies(r.scope === 'policy' ? r.p.id : null) +
+          (tight ? railPolicyMenu(r.scope === 'policy' ? r.p.id : null) : railPolicies(r.scope === 'policy' ? r.p.id : null)) +
         '</nav>' +
-        ui.set([railButton(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action') +
-      '</div>' +
-      /* Client support opens a side panel: a ghost Button, as the new
-         designs draw it (Menu has no dark-theme treatment). */
-      '<div class="mob-rail-foot">' + ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
-        attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]) + '</div>';
+        ui.set([railButton(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'secondary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })], 'mob-rail-action');
+    }
+    $('mob-rail-body').innerHTML = body;
+    /* Client support opens a side panel: a ghost Button, as the new designs
+       draw it. It needs a client, so not at app level. */
+    $('mob-rail-foot').innerHTML = app ? '' : ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
+      attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]);
+    $('mob-rail-foot').hidden = app;
+
+    var rec = $('mob-record');
+    var tb = $('mob-toolbar');
+    rec.hidden = app;
+    tb.hidden = app || onClient;
+    if (app) { rec.innerHTML = ''; tb.innerHTML = ''; return; }
 
     var head = onClient
       ? ['Client record', c.name]
       : [t(c.product) + ' policy', r.p.ref];
-    var html =
+    rec.innerHTML =
       '<div class="text-block mob-record-head"><span class="eyebrow">' + esc(head[1]) + '</span><h2 class="title-02" id="mob-record-title">' + head[0] + '</h2></div>' +
       '<nav aria-labelledby="mob-record-title" class="mob-record-nav">' +
         navGroups(onClient ? [{ group: 'Client', icon: M.ICON.client, children: M.CLIENT_NAV }] : M.policyNav(r.p), r.page, r) +
       '</nav>';
-    $('mob-record').innerHTML = html;
 
-    var tb = $('mob-toolbar');
-    tb.hidden = onClient;
     tb.innerHTML = onClient ? '' : toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy');
-    var first = tb.querySelector('[data-action]');
+    var first = tb.querySelector('[data-toolbar-item]');
     if (first) first.tabIndex = 0;
     orientToolbar();
   }
@@ -358,13 +427,20 @@
   }
 
   /* ============================================================= Search
-     In the top bar, beside the wordmark, as in current Mobius. Running a
-     search opens the results. Below 1280px the same form moves into the
-     drawer, above the modules. */
+     At the top of the rail, on every page. Running a search opens the
+     results. */
   var searchForm = $('mob-search');
   var searchInput = $('mob-search-input');
-  var searchHome = searchForm.parentNode;
-  var searchNext = searchForm.nextSibling;
+
+  /* In the drawer the toolbar lies flat, above the record's pages. */
+  function orientToolbar() {
+    var flat = narrow.matches;
+    var body = document.querySelector('.mob-toolbar-body');
+    if (body) body.setAttribute('aria-orientation', flat ? 'horizontal' : 'vertical');
+    Array.prototype.forEach.call(document.querySelectorAll('.mob-toolbar [data-bs-toggle=tooltip]'), function (b) {
+      b.setAttribute('data-bs-placement', flat ? 'top' : 'right');
+    });
+  }
 
   function syncSearch(r) {
     searchInput.value = r.scope === 'app' && r.page === 'search' ? S.query : '';
@@ -379,21 +455,6 @@
   }
 
   searchForm.addEventListener('submit', function (e) { e.preventDefault(); runSearch(searchInput.value); });
-
-  /* In the drawer the toolbar lies flat, above the record's pages. */
-  function orientToolbar() {
-    var flat = narrow.matches;
-    var body = document.querySelector('.mob-toolbar-body');
-    if (body) body.setAttribute('aria-orientation', flat ? 'horizontal' : 'vertical');
-    Array.prototype.forEach.call(document.querySelectorAll('.mob-toolbar [data-bs-toggle=tooltip]'), function (b) {
-      b.setAttribute('data-bs-placement', flat ? 'top' : 'right');
-    });
-  }
-
-  function placeSearch() {
-    if (narrow.matches) $('mob-drawer-search').appendChild(searchForm);
-    else searchHome.insertBefore(searchForm, searchNext);
-  }
 
   /* ========================================================== User menu
      Under the avatar, as current Mobius has it: the user's name, the
@@ -419,7 +480,6 @@
   var firstRender = true;
   function go() {
     S.step = 0;
-    S.railOpen = false;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -540,6 +600,9 @@
     var key = confirmKey;
     confirmTrigger = null;
     confirmKey = null;
+    /* An item of a closed Menu cannot take focus: its Menu's trigger does. */
+    var menu = trigger && trigger.closest('.dropdown-menu');
+    if (menu) trigger = menu.parentNode.querySelector('.menu-toggle');
     if (trigger && document.contains(trigger)) trigger.focus();
     else {
       var again = document.querySelector('[data-action="' + key + '"], [data-confirm="' + key + '"]');
@@ -605,15 +668,14 @@
   menuButton.addEventListener('click', openDrawer);
   scrim.addEventListener('click', function () { closeDrawer(true); });
   sidebar.addEventListener('keydown', function (e) { if (drawerOpen()) wrapTab(sidebar, e); });
-  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); placeSearch(); if (R) render(); });
-  placeSearch();
+  narrow.addEventListener('change', function (e) { if (!e.matches) closeDrawer(false); if (R) render(); });
 
   /* =============================================================== Events */
 
   function dialogOpen() {
     /* Anything that Escape should close first: a panel, a confirmation,
        or the user menu. */
-    return !!document.querySelector('.modal.show, .offcanvas.show, .mob-user-menu .dropdown-menu.show');
+    return !!document.querySelector('.modal.show, .offcanvas.show, .dropdown-menu.show');
   }
 
   document.addEventListener('click', function (e) {
@@ -622,9 +684,8 @@
     /* The skip link moves focus without touching the route. */
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
-    if (el.closest('[data-rail-toggle]')) { setRail(!S.railOpen, true); return; }
-    /* A click anywhere outside the open rail closes it. */
-    if (S.railOpen && !el.closest('#mob-rail')) setRail(false, false);
+    if (el.closest('[data-rail-toggle]')) { setRail(railCollapsed(), '[data-rail-toggle]'); return; }
+    if (el.closest('[data-rail-search]')) { setRail(true, '#mob-search-input'); return; }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
     /* Breadcrumb overflow items are Menu buttons (Code & specs); each goes to its page. */
     var goEl = el.closest('[data-go]');
@@ -704,7 +765,7 @@
   document.addEventListener('keydown', function (e) {
     var bar = e.target.closest && e.target.closest('[role=toolbar]');
     if (!bar) return;
-    var items = Array.prototype.slice.call(bar.querySelectorAll('[data-action]'));
+    var items = Array.prototype.slice.call(bar.querySelectorAll('[data-toolbar-item]'));
     var i = items.indexOf(e.target);
     if (i < 0) return;
     var n = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 }[e.key];
@@ -732,20 +793,18 @@
     document.body.classList.toggle('mob-hide-terms', !this.checked);
   });
 
-  /* Opening or closing the rail re-renders it; focus stays on its toggle. */
-  function setRail(open, keepFocus) {
-    if (narrow.matches || S.railOpen === open) return;
-    S.railOpen = open;
-    Shell.disposeTooltips($('mob-rail'));
+  /* Opening or closing the rail is the user's choice: it holds on every
+     page and is remembered in this browser. Focus goes to `focusSel`. */
+  function setRail(open, focusSel) {
+    if (narrow.matches) return;
+    S.railPref = open;
+    try { localStorage.setItem('mob-rail', open ? 'open' : 'closed'); } catch (e) { /* not stored */ }
+    Shell.disposeTooltips(sidebar);
     renderSide(R);
-    Shell.initTooltips($('mob-rail'));
-    if (keepFocus) document.querySelector('[data-rail-toggle]').focus();
+    Shell.initTooltips(sidebar);
+    var f = focusSel && document.querySelector(focusSel);
+    if (f) f.focus();
   }
-
-  /* Escape closes the open rail, back to its toggle. */
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && S.railOpen && !dialogOpen()) { setRail(false, true); }
-  });
 
   /* Escape closes the drawer. A panel or confirmation open on top of it
      closes first, by itself. */
