@@ -92,10 +92,20 @@
      to one per screen context"). A page's primary is its heading action
      where it has one; otherwise its one main card action. Side panels and
      confirmations are their own context and keep their own primary.
-     `href` makes it an anchor — only for heading actions that open a page. */
+
+     Hierarchy, so the page is not a wall of outlined Buttons:
+       primary    the one main action of the screen
+       secondary  only beside the primary in the page heading, a filter
+                  form's Apply, and Back in a flow
+       ghost      everything else — card and table actions. This is the
+                  default. As in Buckholt's table-action pattern, a ghost
+                  action carries its icon and its label.
+     Icons in a set are all or none (Common actions): a set gets icons only
+     when every action in it has a recognised icon.
+     `href` makes it an anchor — only for actions that open a page. */
   function btn(label, o) {
     o = o || {};
-    var cls = 'btn btn-' + (o.variant || 'secondary') + (o.danger ? ' btn-danger' : '') + (o.size ? ' btn-' + o.size : '');
+    var cls = 'btn btn-' + (o.variant || 'ghost') + (o.danger ? ' btn-danger' : '') + (o.size ? ' btn-' + o.size : '');
     var inner = (o.icon ? '<div class="btn-icon"><i class="' + o.icon + '" aria-hidden="true"></i></div>' : '') +
       (label ? '<span class="button-label">' + t(label) + '</span>' : '') + (o.after || '');
     var attrs = o.attrs || '';
@@ -103,18 +113,45 @@
     return '<button type="button" class="' + cls + '"' + attrs + (o.disabled ? ' disabled' : '') + '>' + inner + '</button>';
   }
 
+  /* Action icons: the Buckholt catalogue's mapping where it has one; GAP
+     where it does not (listed in PROTOTYPE.md). */
+  var AI = {
+    add: 'fa-regular fa-plus', edit: 'fa-regular fa-pencil', filter: 'fa-regular fa-bars-filter',
+    clear: 'fa-regular fa-xmark', pdf: 'fa-regular fa-file-pdf', download: 'fa-regular fa-arrow-down-to-bracket',
+    upload: 'fa-regular fa-arrow-up-from-bracket', bin: 'fa-regular fa-trash-can', view: 'fa-regular fa-eye',
+    notify: 'fa-regular fa-bell', email: 'fa-regular fa-envelope', save: 'fa-regular fa-floppy-disk',
+    more: 'fa-regular fa-chevron-down', fewer: 'fa-regular fa-chevron-up',
+    sms: 'fa-regular fa-message-sms', print: 'fa-regular fa-print'      // GAP, GAP
+  };
+
   /* Button set. `button-set` stays the last class: Buckholt's set rules match
      `[class$=-set]`, so a modifier must come before it. */
   function set(buttons, modifier) {
     return '<div class="' + (modifier ? modifier + ' ' : '') + 'button-set">' + buttons.join('') + '</div>';
   }
 
-  /* An action that opens a panel from inside a value cell. A Button, not a
-     Link: it does something in place rather than navigating. */
+  /* A value that opens a panel (Policy summary, Excesses, Endorsements): a
+     Buckholt standalone Link. It acts in place rather than navigating, so it
+     is role="button", and Space works on it as well as Enter. A Link has no
+     disabled state, so an unavailable one is plain muted text. */
   function panelButton(label, key, arg, disabled) {
-    return btn(label, { variant: 'ghost', size: 'sm',
-      attrs: ' data-panel="' + key + '"' + (arg != null ? ' data-arg="' + esc(arg) + '"' : '') + ' aria-haspopup="dialog"',
-      disabled: disabled });
+    if (disabled) return '<span class="mob-not-set">' + t(label) + '</span>';
+    return '<a class="link-standalone" href="#" role="button" data-panel="' + key + '"' +
+      (arg != null ? ' data-arg="' + esc(arg) + '"' : '') + ' aria-haspopup="dialog">' + t(label) + '</a>';
+  }
+
+  /* Show more / load more and similar in-place actions on tables and content:
+     a left-aligned Buckholt standalone Link (`.icon` before the text, as
+     documented). It acts in place, so it is role="button". */
+  function moreLink(label, attrs, icon) {
+    return '<a class="link-standalone mob-link" href="#" role="button"' + (attrs || '') + '>' +
+      (icon ? '<span class="icon"><i class="' + icon + '" aria-hidden="true"></i></span>' : '') + t(label) + '</a>';
+  }
+
+  /* Navigation from inside a card: Buckholt standalone Link with its arrow. */
+  function standalone(label, url) {
+    return '<a class="link-standalone mob-link" href="' + url + '">' +
+      '<span class="icon"><i class="fa-regular fa-arrow-right" aria-hidden="true"></i></span>' + t(label) + '</a>';
   }
 
   /* -------------------------------------------------------------------- Card
@@ -191,9 +228,11 @@
 
   /* Statistics tiles: a Key-value grid of stacked, flipped pairs, so the
      figure leads and the label sits under it. */
-  function tiles(arr, columns) {
-    return '<div class="grid key-value-grid" style="--columns: ' + (columns || 1) + ';">' + arr.map(function (x) {
-      return '<div class="key-value-item">' +
+  /* `spanFirst` lets the first tile take the full row, so one grid can hold
+     a 1 + 2 arrangement with the grid's own gap between every tile. */
+  function tiles(arr, columns, spanFirst) {
+    return '<div class="grid key-value-grid" style="--columns: ' + (columns || 1) + ';">' + arr.map(function (x, i) {
+      return '<div class="key-value-item"' + (spanFirst && i === 0 ? ' style="grid-column: 1 / -1;"' : '') + '>' +
         '<div class="key-value key-value-stacked key-value-flipped key-value-lg">' +
           '<span class="key">' + t(x[1]) + '</span>' +
           '<span class="value">' + t(x[0]) + '</span>' +
@@ -211,8 +250,10 @@
     o = o || {};
     return '<div class="table-container">' +
       '<div class="table-content">' +
-        '<table class="table' + (o.cls ? ' ' + o.cls : '') + '">' +
-          (o.caption ? '<caption class="visually-hidden">' + t(o.caption) + '</caption>' : '') +
+        /* Named with aria-label rather than a visually hidden <caption>: a
+           caption keeps 1px of height inside `.table-content`, which then
+           scrolls vertically. */
+        '<table class="table' + (o.cls ? ' ' + o.cls : '') + '"' + (o.caption ? ' aria-label="' + esc(plain(o.caption)) + '"' : '') + '>' +
           '<thead><tr>' + head.map(function (h) {
             /* A column with no visible heading still gets a name: '' is an
                actions column, { hidden: 'Select' } names it explicitly. */
@@ -340,6 +381,16 @@
     }).join('') + '</div>';
   }
 
+  /* A filter bar: Buckholt inputs across the Bootstrap grid at the card's
+     full width, with its action at the end of the fields, left aligned
+     (Forms: actions at the completion point). Not `.form-body`, which is
+     capped at 36rem for a stacked form and squeezes three columns. */
+  function filterBar(items, actions, label) {
+    return '<form class="mob-filters"' + (label ? ' role="search" aria-label="' + esc(label) + '"' : '') + ' onsubmit="return false">' +
+      fieldGrid(items, 3) + (actions && actions.length ? set(actions) : '') +
+    '</form>';
+  }
+
   function list(items) {
     return '<ul class="list">' + items.map(function (x) { return '<li class="list-item">' + x + '</li>'; }).join('') + '</ul>';
   }
@@ -367,13 +418,11 @@
     var total = F.policies.length;
     var rest = total - S.polShown;
     if (rest > 0) {
-      return btn(where === 'table' ? 'Load ' + Math.min(5, rest) + ' more' : 'Load ' + Math.min(5, rest) + ' more (' + rest + ' remaining)', {
-        variant: 'secondary', size: size || 'sm', icon: 'fa-regular fa-chevron-down',
-        attrs: ' data-more="1" data-focus-id="more-' + where + '"' });
+      return moreLink(where === 'table' ? 'Load ' + Math.min(5, rest) + ' more' : 'Load ' + Math.min(5, rest) + ' more (' + rest + ' remaining)',
+        ' data-more="1" data-focus-id="more-' + where + '"', AI.more);
     }
     if (total > 5) {
-      return btn('Show fewer', { variant: 'secondary', size: size || 'sm', icon: 'fa-regular fa-chevron-up',
-        attrs: ' data-more="0" data-focus-id="more-' + where + '"' });
+      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', AI.fewer);
     }
     return '';
   }
@@ -392,7 +441,7 @@
       { hrefs: shown.map(function (p) { return policyHref(p); }), caption: 'Client policies' }) +
       '<div class="mob-table-foot">' +
         '<p class="support-01" aria-live="polite">Showing 1 to ' + shown.length + ' of ' + F.policies.length + ', most recent first</p>' +
-        (more ? set([more]) : '') +
+        more +
       '</div>';
   }
 
@@ -403,17 +452,18 @@
   }
 
   function activityFilters(prefix, policy) {
-    return fieldGrid([
+    return filterBar([
       input(prefix + 'd', 'Start date to end date', '01/10/2026 to 01/10/2026'),
       input(prefix + 'o', 'Operator', ''),
       select(prefix + 't', 'Activity type', ['Select']),
       input(prefix + 'c', 'Client ref', F.client.ref, 'text', true),
       input(prefix + 'p', 'Policy / quote ref', policy ? policy.ref : '', 'text', !!policy),
       select(prefix + 's', 'Policy status', [policy ? policy.status : 'Select'])
-    ], 3) +
-    set([btn('Apply filters', { variant: 'primary', size: 'sm' }),
-      btn('Save as PDF', { variant: 'secondary', size: 'sm', attrs: ' data-toast="Audit trail saved as PDF"' })]);
+    ], [btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter activity');
   }
+
+  /* Acts on the whole audit trail, so it sits in the card heading. */
+  function savePdf() { return btn('Save as PDF', { size: 'sm', icon: AI.pdf, attrs: ' data-toast="Audit trail saved as PDF"' }); }
 
   /* ================================================================== App */
 
@@ -422,20 +472,17 @@
       var c = F.client;
       return [
         stack([
-          card('Search results', form([
-            fieldGrid([
-              select('sb', 'Brand', ['Select', 'Krypton']),
-              select('sl', 'Line of business', ['Select', 'Open Market Motor']),
-              select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
-            ], 3),
-            set([btn('Apply', { variant: 'secondary' }), btn('Clear', { variant: 'ghost' })])
-          ])),
+          card('Search results', filterBar([
+            select('sb', 'Brand', ['Select', 'Krypton']),
+            select('sl', 'Line of business', ['Select', 'Open Market Motor']),
+            select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
+          ], [btn('Apply', { variant: 'secondary', icon: AI.filter }), btn('Clear', { icon: AI.clear })], 'Filter search results')),
           card('1 client found for “' + F.search.query + '”',
             table(['Name', 'Reference', 'Address', 'Postcode'],
               [[cell('<a href="#c/summary"><strong>' + esc(c.name) + '</strong></a>'), c.ref, c.addressShort, c.postcode]],
               { hrefs: ['#c/summary'], caption: 'Clients found' }) +
             fields([['Email address', c.email], ['[[Date of birth]]', c.dob], ['Policies', F.policies.length + ' linked']]) +
-            set([btn('Open client', { variant: 'secondary', size: 'sm', href: '#c/summary' })]) +
+            standalone('Open client', '#c/summary') +
             '<div class="text-block"><h3 class="title-01">Client policies</h3></div>' +
             policiesTable())
         ])
@@ -454,26 +501,26 @@
       var c = F.client;
       var st = F.clientStats;
       return [columns([
-        card('Client header', empty('No client header set.'), { actions: [btn('Add', { size: 'sm', attrs: ' data-panel="cheader" aria-haspopup="dialog"' })] }),
+        card('Client header', empty('No client header set.'), { actions: [btn('Add', { size: 'sm', icon: AI.add, attrs: ' data-panel="cheader" aria-haspopup="dialog"' })] }),
         card('Client details', fields([['Name', c.name], ['Date of birth', c.dob], ['Client reference', c.ref],
           ['Telephone', c.tel], ['Email', c.email], ['Address', c.address]])),
         card('Client policies', policiesTable(), { sub: 'Select a policy to open it' }),
-        card('Linked clients', empty('There are no linked clients.'), { id: 'linked', actions: [btn('Add client link', { size: 'sm', attrs: ' data-panel="clink" aria-haspopup="dialog"' })] }),
+        card('Linked clients', empty('There are no linked clients.'), { id: 'linked', actions: [btn('Add client link', { size: 'sm', icon: AI.add, attrs: ' data-panel="clink" aria-haspopup="dialog"' })] }),
         card('Suggested links', empty('There are no suggested clients.')),
-        card('Connected clients', empty('This client doesn’t have any connected clients.'), { actions: [btn('Add client connection', { size: 'sm', attrs: ' data-panel="cconn" aria-haspopup="dialog"' })] })
+        card('Connected clients', empty('This client doesn’t have any connected clients.'), { actions: [btn('Add client connection', { size: 'sm', icon: AI.add, attrs: ' data-panel="cconn" aria-haspopup="dialog"' })] })
       ], [
         card('Statistics', tiles([[st.livePolicies, '[[Live policies]]'], [st.gwp, 'Total active GWP'], [st.outstanding, 'Total outstanding balance']]) +
-          set([btn('Show statistics for more clients', { variant: 'ghost', size: 'sm', attrs: ' data-toast="Statistics for more clients"' })])),
-        card('Additional info', tiles([[st.openClaims, 'Open claims']]) + tiles([[st.connected, 'Connected clients'], [st.loyaltyYears, 'Loyalty years']], 2)),
+          moreLink('Show statistics for more clients', ' data-toast="Statistics for more clients"')),
+        card('Additional info', tiles([[st.openClaims, 'Open claims'], [st.connected, 'Connected clients'], [st.loyaltyYears, 'Loyalty years']], 2, true)),
         card('Open customer portal access', switchInput('mob-portal-access', 'Client access to Open Customer Portal', 'Customer portal access'))
       ])];
     },
     business: function () {
       return [stack([
-        card('Client policies', empty('Select a policy to display its business details and business contacts below.') +
+        card('Client policies',
           table(['[[Reference]]', 'Status', '[[Business line]]', '[[Cover start]]'], F.policies.map(function (p) {
             return [p.ref, cell(statusTag(p)), F.client.businessLine, p.start.split(' ')[0]];
-          }), { caption: 'Client policies' })),
+          }), { caption: 'Client policies' }), { sub: 'Select a policy to display its business details and business contacts below.' }),
         card('Business details', empty('There are no business details.')),
         card('Business contacts', empty('There are no business contacts.'))
       ])];
@@ -488,12 +535,12 @@
       ])];
     },
     cactivity: function () {
-      return [card('Activity', empty('Activity shows the full audit trail record. Search by date range and filter by multiple criteria. You can preview each activity and save the audit trail as a PDF.') +
-        form([activityFilters('ca', null)]) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Activity' }))];
+      return [card('Activity', activityFilters('ca', null) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Activity' }),
+        { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria. You can preview each activity and save the audit trail as a PDF.', actions: [savePdf()] })];
     },
     ccomplaints: function () {
-      return [card('Complaints', empty('There are no complaints.'), { actions: [btn('Add complaint', { variant: 'primary', size: 'sm', attrs: ' data-panel="ccomplaint" aria-haspopup="dialog"' })] })];
+      return [card('Complaints', empty('There are no complaints.'), { actions: [btn('Add complaint', { variant: 'primary', size: 'sm', icon: AI.add, attrs: ' data-panel="ccomplaint" aria-haspopup="dialog"' })] })];
     },
     checks: function () {
       return [card('Sanctions checks', table(['Status', 'Matches above threshold', 'Operator', 'Date and time'], F.sanctionsChecks, { caption: 'Sanctions checks' }),
@@ -510,14 +557,14 @@
       var body = '';
       if (c[1].length) {
         body += o.editable
-          ? form([fieldGrid(c[1].map(function (f, i) {
+          ? form(c[1].map(function (f, i) {
               return input(sec.key + '-' + id('f') + '-' + i, f[0], o.blank ? '' : fill(f[1], p));
-            }))])
+            }))
           : fields(o.blank ? c[1].map(function (f) { return [f[0], '']; }) : c[1], 3, p);
       }
       var tb = c[2] && F.policyDetailTables[c[2]];
       if (tb) {
-        if (tb.message) body += empty(tb.message) + (o.consentAdd ? set([btn('Add', { size: 'sm', attrs: ' data-panel="consent" aria-haspopup="dialog"' })]) : '');
+        if (tb.message) body += empty(tb.message) + (o.consentAdd ? set([btn('Add', { size: 'sm', icon: AI.add, attrs: ' data-panel="consent" aria-haspopup="dialog"' })]) : '');
         else if (o.blank) { if (tb.empty) body += empty(tb.empty); }
         else body += table(tb.head, tb.rows, { caption: c[0] });
       }
@@ -555,7 +602,7 @@
       : p.kind === 'incomplete' ? empty(rq) : empty('No add-ons for this policy.');
 
     return [columns([
-      card('Policy header', empty('No policy header set.'), { actions: [btn('Edit', { size: 'sm', attrs: ' data-panel="header" aria-haspopup="dialog"' })] }),
+      card('Policy header', empty('No policy header set.'), { actions: [btn('Edit', { size: 'sm', icon: AI.edit, attrs: ' data-panel="header" aria-haspopup="dialog"' })] }),
       card('Client details', clientDetailsFields()),
       card('Policy details', fields([['[[Reference]]', p.ref], ['Business line', F.client.businessLine], ['Brand', F.client.brand],
         ['Policy status', statusText(p), true], ['Inception date', p.inception], ['Premium', p.premium],
@@ -607,23 +654,24 @@
             }).join('') + '</div>' +
           '</div>';
       return [columns([
+        /* The page's main action closes the card, as Form's documented
+           actions do: the primary Button, then a standalone Link. */
         card('Premium and product', premium +
-          '<div class="mob-split">' +
-            set([
-              btn('Amend risk', { size: 'sm', href: policyHref(p, 'amendquote') }),
-              btn('Edit premium', { size: 'sm', disabled: dec, attrs: ' data-panel="editpremium" aria-haspopup="dialog"' }),
-              btn('Select payment plan', { size: 'sm', disabled: dec, attrs: ' data-panel="payplan" aria-haspopup="dialog"' })
-            ]) +
-            set([btn('Convert to policy', { variant: 'primary', size: 'sm', disabled: dec, attrs: ' data-confirm="convert" aria-haspopup="dialog"' })]) +
-          '</div>'),
+          '<div class="form-actions mob-form-actions">' +
+            btn('Convert to policy', { variant: 'primary', disabled: dec, attrs: ' data-confirm="convert" aria-haspopup="dialog"' }) +
+            standalone('Amend risk', policyHref(p, 'amendquote')) +
+          '</div>', { actions: [
+          btn('Edit premium', { size: 'sm', disabled: dec, attrs: ' data-panel="editpremium" aria-haspopup="dialog"' }),
+          btn('Select payment plan', { size: 'sm', disabled: dec, attrs: ' data-panel="payplan" aria-haspopup="dialog"' })
+        ] }),
         card('Quotes', table(['[[Scheme]]', 'Premium', 'Deposit', 'Total payable'], dec ? q.declined : q.quoted, { caption: 'Quotes' }) +
-          set([btn('Load more quotes', { size: 'sm', attrs: ' data-toast="More quotes loaded"' })]))
+          moreLink('Load more quotes', ' data-toast="More quotes loaded"', AI.more))
       ], [
-        card('Insurer authorisation code', empty('There is no authorisation code applied to this quote.'), { actions: [btn('Add', { size: 'sm', attrs: ' data-panel="authcode" aria-haspopup="dialog"' })] }),
-        card('Excesses', dec ? empty('Not available.') : kvTable(q.excesses), dec ? {} : { actions: [btn('View / edit', { size: 'sm', attrs: ' data-panel="excesses" aria-haspopup="dialog"' })] }),
+        card('Insurer authorisation code', empty('There is no authorisation code applied to this quote.'), { actions: [btn('Add', { size: 'sm', icon: AI.add, attrs: ' data-panel="authcode" aria-haspopup="dialog"' })] }),
+        card('Excesses', dec ? empty('Not available.') : kvTable(q.excesses), dec ? {} : { actions: [btn('View / edit', { size: 'sm', icon: AI.edit, attrs: ' data-panel="excesses" aria-haspopup="dialog"' })] }),
         card('Endorsements', empty('There are no endorsements applied to this policy.')),
         card('Add-ons', empty('There are no quoted add-ons for this quote.')),
-        card('Policy notes', empty('There are no notes for this policy.'), { actions: [btn('View / edit', { size: 'sm', attrs: ' data-panel="note" aria-haspopup="dialog"' })] })
+        card('Policy notes', empty('There are no notes for this policy.'), { actions: [btn('View / edit', { size: 'sm', icon: AI.edit, attrs: ' data-panel="note" aria-haspopup="dialog"' })] })
       ])];
     },
 
@@ -640,17 +688,17 @@
         card('Summary', fields([['Account name', F.client.name], ['Reference', p.ref], ['Payment made by', 'Policyholder'],
           ['Current balance due', '£0.00'], ['Total outstanding balance', '£0.00'], ['Full name', 'Motor API Automation']]) +
           table(['Statistics', 'Year to date', 'Last year'], stats, { caption: 'Statistics' }), { actions: txActions }),
-        card('Open items', empty('There is no data to display.') +
-          set([btn('Cash', { size: 'sm', attrs: ' data-toast="Cash allocation opened"' }), btn('Match', { size: 'sm', attrs: ' data-toast="Match opened"' }), btn('View', { size: 'sm', disabled: true })])),
+        card('Open items', empty('There is no data to display.'), { actions: [
+          btn('Cash', { size: 'sm', attrs: ' data-toast="Cash allocation opened"' }), btn('Match', { size: 'sm', attrs: ' data-toast="Match opened"' }), btn('View', { size: 'sm', disabled: true })] }),
         card('Settled items', (settled
           ? table(['Created', 'Reference', 'Due', 'Type', 'Method', 'Amount', 'Settled', 'Payment ref', 'Card ending', 'Expiry'], settled, { caption: 'Settled items' })
-          : empty('There is no data to display.')) + set([btn('View', { size: 'sm', disabled: true })]))
+          : empty('There is no data to display.')), { actions: [btn('View', { size: 'sm', icon: AI.view, disabled: true })] })
       ])];
     },
 
     plan: function () {
       return [stack([
-        card('Payment plan', fields(F.paymentPlan) + set([btn('Cancel plan', { size: 'sm', disabled: true }), btn('Amend', { size: 'sm', disabled: true })])),
+        card('Payment plan', fields(F.paymentPlan), { actions: [btn('Cancel plan', { size: 'sm', disabled: true }), btn('Amend', { size: 'sm', disabled: true })] }),
         card('Outstanding transactions on the policy', empty('There is no data to display.'))
       ])];
     },
@@ -661,7 +709,7 @@
 
     dd: function () {
       return [stack([
-        card('Direct Debit details', empty('There is no data to display.'), { actions: [btn('Add', { size: 'sm', attrs: ' data-panel="ddadd" aria-haspopup="dialog"' })] }),
+        card('Direct Debit details', empty('There is no data to display.'), { actions: [btn('Add', { size: 'sm', icon: AI.add, attrs: ' data-panel="ddadd" aria-haspopup="dialog"' })] }),
         card('Current bank account details', fields([['Sort code', 'N/A'], ['Account number', 'N/A'], ['Holder', 'N/A'], ['Reference', 'N/A'], ['DD stop', '']]))
       ])];
     },
@@ -681,7 +729,7 @@
       return [card('Diary', tabs(['Outstanding', 'History'], [
         table(['Created', 'Operator', 'Assigned to', 'Action type', 'Due date and time', 'Last note'], F.diary, { caption: 'Outstanding diary entries' }),
         empty('No completed diary entries.')
-      ]), { actions: [btn('Add diary entry', { variant: 'primary', size: 'sm', attrs: ' data-panel="diary" aria-haspopup="dialog"' })] })];
+      ]), { actions: [btn('Add diary entry', { variant: 'primary', size: 'sm', icon: AI.add, attrs: ' data-panel="diary" aria-haspopup="dialog"' })] })];
     },
 
     docs: function () {
@@ -693,26 +741,26 @@
           cell('<a href="#" data-noop>' + esc(n) + '</a>')];
       });
       return [card('Documents',
-        form([fieldGrid([
+        filterBar([
           select('df', 'Documents for', ['Policy', 'Client']),
           '<div class="mob-field-action">' + set([btn('Complaint selection: All', { size: 'sm', disabled: true })]) + '</div>'
-        ])]) +
+        ]) +
         tabs(['Documents', 'Archive'], [
           table([{ hidden: 'Select' }, 'Document'], docRows, { caption: 'Documents' }) +
             '<div class="mob-table-foot"><p class="support-01">Showing 1 to 5 of ' + d.total + '</p>' +
-            set([btn('Load more', { size: 'sm', attrs: ' data-toast="Would load the next 5 of ' + d.total + '"' })]) + '</div>',
+            moreLink('Load more', ' data-toast="Would load the next 5 of ' + d.total + '"', AI.more) + '</div>',
           empty('No archived documents.')
-        ]) +
-        set(['Edit', 'Download', 'Notify', 'SMS client', 'Email client', 'Print client'].map(function (l) {
-          return btn(l, { size: 'sm', disabled: true });
-        })))];
+        ]), { actions: [['Edit', AI.edit], ['Download', AI.download], ['Notify', AI.notify], ['SMS client', AI.sms],
+          ['Email client', AI.email], ['Print client', AI.print]].map(function (a) {
+          return btn(a[0], { size: 'sm', icon: a[1], disabled: true });
+        }) })];
     },
 
     notes: function () {
       var n = F.policyNote;
       return [card('Notes',
         tabs(['Policy', 'Client'], [
-          form([fieldGrid([select('nt', 'Note type filter', ['Select']), input('nc', 'Created by filter', '')])]) +
+          filterBar([select('nt', 'Note type filter', ['Select']), input('nc', 'Created by filter', '')]) +
           '<div class="card card-secondary mob-note">' +
             '<div class="card-body">' +
               '<div class="mob-card-head">' +
@@ -723,38 +771,37 @@
             '</div>' +
           '</div>',
           empty('No client notes.')
-        ]), { actions: [btn('Add note', { variant: 'primary', size: 'sm', attrs: ' data-panel="note" aria-haspopup="dialog"' })] })];
+        ]), { actions: [btn('Add note', { variant: 'primary', size: 'sm', icon: AI.add, attrs: ' data-panel="note" aria-haspopup="dialog"' })] })];
     },
 
     checklist: function () {
       return [stack([
         card('Checklist details', form([input('ce', 'Excess', ''), input('cd', 'D.O.C.', ''), input('cs', 'Security', ''), input('cm', 'Mileage', ''), input('cr', 'Renewal', '')]) +
-          set([btn('Save', { variant: 'secondary', size: 'sm', attrs: ' data-toast="Checklist saved"' })])),
+          set([btn('Save', { variant: 'secondary', attrs: ' data-toast="Checklist saved"' })])),
         card('Outstanding items',
-          empty('The outstanding items are documents that the customer is required to provide.') +
-          tabs(['Current items', 'Other items'], [empty('There is no data to display.'), empty('There is no data to display.')]) +
-          set([btn('Request via portal', { size: 'sm', disabled: true })]),
-          { actions: [btn('Add item', { variant: 'secondary', size: 'sm', attrs: ' data-panel="additem" aria-haspopup="dialog"' })] }),
+          tabs(['Current items', 'Other items'], [empty('There is no data to display.'), empty('There is no data to display.')]),
+          { sub: 'The outstanding items are documents that the customer is required to provide.', actions: [
+            btn('Request via portal', { size: 'sm', disabled: true }),
+            btn('Add item', { size: 'sm', attrs: ' data-panel="additem" aria-haspopup="dialog"' })] }),
         card('Sale status', form([
           yesNo('s1', 'Opt out of day one inflation increase?', 'No'),
           yesNo('s2', 'Was the sale advised?', 'No'),
           yesNo('s3', 'Opt out of automatic renewal?', 'Yes')
         ]) +
-          '<div class="mob-split">' +
-            set([btn('Cancel', { variant: 'ghost', size: 'sm' })]) +
-            set([btn('Continue', { variant: 'primary', size: 'sm', attrs: ' data-toast="Checklist complete"' })]) +
-          '</div>')
+          /* In-page form: primary first, left aligned (Forms pattern). */
+          set([btn('Continue', { variant: 'primary', attrs: ' data-toast="Checklist complete"' }), btn('Cancel')]))
       ])];
     },
 
     attachments: function () {
-      return [card('Attachments', empty('There are no attachments.') +
-        set([btn('Download', { size: 'sm', disabled: true }), btn('Delete', { size: 'sm', danger: true, disabled: true })]),
-        { actions: [btn('Upload', { variant: 'primary', size: 'sm', attrs: ' data-toast="Choose a file to upload"' })] })];
+      return [card('Attachments', empty('There are no attachments.'), { actions: [
+        btn('Download', { size: 'sm', icon: AI.download, disabled: true }),
+        btn('Delete', { size: 'sm', icon: AI.bin, danger: true, disabled: true }),
+        btn('Upload', { variant: 'primary', size: 'sm', icon: AI.upload, attrs: ' data-toast="Choose a file to upload"' })] })];
     },
 
     complaints: function () {
-      return [card('Complaints', empty('There are no complaints.'), { actions: [btn('Add complaint', { variant: 'primary', size: 'sm', attrs: ' data-panel="ccomplaint" aria-haspopup="dialog"' })] })];
+      return [card('Complaints', empty('There are no complaints.'), { actions: [btn('Add complaint', { variant: 'primary', size: 'sm', icon: AI.add, attrs: ' data-panel="ccomplaint" aria-haspopup="dialog"' })] })];
     },
 
     agent: function (p) {
@@ -789,9 +836,9 @@
     },
 
     activity: function (p) {
-      return [card('Activity', empty('Activity shows the full audit trail record. Search by date range and filter by multiple criteria.') +
-        form([activityFilters('pa', p)]) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Activity' }))];
+      return [card('Activity', activityFilters('pa', p) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Activity' }),
+        { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria.', actions: [savePdf()] })];
     },
 
     amend: function (p) { return flowAmend(p); },
@@ -846,7 +893,7 @@
     if (c === 0) {
       body = card('Contact details',
           table(['Telephone number', 'Type'], F.contactNumbers.map(function (r) { return [r[0], '[[' + r[1] + ']]']; }), { caption: 'Telephone numbers' }) +
-          set([btn('Add telephone', { size: 'sm', attrs: ' data-panel="addtel" aria-haspopup="dialog"' })]) +
+          set([btn('Add telephone', { size: 'sm', icon: AI.add, attrs: ' data-panel="addtel" aria-haspopup="dialog"' })]) +
           form([input('ae', 'Email address', F.client.email, 'email')])) +
         card('Stop renewal', form([yesNo('sr', 'Stop renewal', p.stopRenewal || 'No')]));
     } else if (c === 1) {
@@ -870,7 +917,7 @@
       select('pb', 'Brand', ['Krypton']),
       select('pl', 'Business line', ['Open Market Motor', 'Open Market Commercial Vehicle']),
       select('pa', 'Agent', ['No Agent']),
-      set([btn('Add introducer', { size: 'sm', attrs: ' data-panel="introducer" aria-haspopup="dialog"' })])
+      set([btn('Add introducer', { size: 'sm', icon: AI.add, attrs: ' data-panel="introducer" aria-haspopup="dialog"' })])
     ]));
   }
 
@@ -927,7 +974,7 @@
           [cell('<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="post-1" aria-label="Insurer fee"></div>', true), 'Insurer Fee', '0', '0', '0'],
           [cell('<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="post-2" aria-label="Admin fee"></div>', true), 'Admin Fee', '0', '0', '0']
         ], { caption: 'Postings' }) +
-        set([btn('Add', { size: 'sm' })]) +
+        set([btn('Add', { size: 'sm', icon: AI.add })]) +
         '<p><strong>Total:</strong> £0.00</p>', 'Transaction posted'];
     },
     portal: function () {
@@ -1030,7 +1077,7 @@
               ' aria-label="' + q[1] + (n ? ', ' + n + ' new' : '') + '"' +
               ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + q[1] + '">' +
             '<div class="btn-icon"><i class="' + q[2] + '" aria-hidden="true"></i></div>' +
-            (n ? '<span class="badge badge-floating" aria-hidden="true">' + n + '</span>' : '') +
+            (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
           '</a>';
         }), 'button-set-nowrap') + '</nav>';
       }
@@ -1055,7 +1102,7 @@
       return set(['<button type="button" class="btn btn-ghost mob-badged" data-panel="cnotes" aria-haspopup="dialog"' +
           ' aria-label="' + notesLabel + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Client notes">' +
           '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
-          (n ? '<span class="badge badge-floating" aria-hidden="true">' + n + '</span>' : '') +
+          (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
         '</button>']) +
         set([
           btn('View claims', { variant: 'secondary', attrs: ' data-panel="cclaims" aria-haspopup="dialog"' }),
