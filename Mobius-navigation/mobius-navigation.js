@@ -46,7 +46,8 @@
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
   /* railOverride: the rail opened (true) or collapsed (false) with its
-     toggle on this page, or null. Reset on every route. */
+     toggle, or null (open). It lasts across pages: the rail no longer
+     collapses by itself. */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). */
   var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
@@ -128,7 +129,7 @@
      everything is open and there are no toggles. */
   function railCollapsed() {
     if (narrow.matches) return false;
-    return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
+    return S.railOverride === false;
   }
 
   /* A collapsed control is icon-only: its accessible name, and a Tooltip to
@@ -261,12 +262,11 @@
     }).join('') + '</ul>';
   }
 
-  /* The menu:
-       rail    search; at client and policy level the client (User meta),
-               their policies, Add new quote and Client support
-       record  at client level the client record's pages; at policy level
-               the policy's menu
-       toolbar at policy level: the policy's actions */
+  /* The menu adds a column as you go deeper (Laurence, 7 October 2026):
+       rail    the client: their details, the client's pages, their
+               policies and Client support. On every client and policy page.
+       record  only once a policy is open: the policy, its actions and its
+               menu, beside the rail with that policy marked in it. */
   function renderSide(r) {
     var c = F.client;
     var app = r.scope === 'app';
@@ -290,47 +290,55 @@
       /* Collapsed: one icon button per category, each opening the rail
          there; the actions become icon-only Buttons. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Client: ' + c.name,
+        expander('rail', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client: ' + c.name,
           /* Avatar extra small, so it sits in the strip like the icons. */
           '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>', onClient) +
         expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
           '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy) +
       '</ul>';
     } else if (!app) {
+      /* The client's pages, then their policies. */
       body = '<nav aria-label="Client and policies">' +
+          '<ul class="nav flex-column mob-nav mob-rail-pages" aria-label="Client pages">' +
+            M.clientPages().map(function (n) { return navLink(n.id, n.label, n.icon, onClient ? r.page : null, '#c/' + n.id); }).join('') +
+          '</ul>' +
           railPolicies(curPolicy) +
         '</nav>';
     }
-    /* Add new quote is in the client's menu now, first under Client. */
-    $('mob-rail-body').innerHTML = body;
+    var railBody = $('mob-rail-body');
+    railBody.innerHTML = body;
+    /* The open policy stays in view beside its menu: the rail scrolls (by
+       itself, not the page) to bring it up when it is below the fold. */
+    var open = onPolicy && railBody.querySelector('.mob-rail-policies a[aria-current]');
+    if (open) {
+      var top = open.getBoundingClientRect().top - railBody.getBoundingClientRect().top + railBody.scrollTop;
+      if (top + open.offsetHeight > railBody.scrollTop + railBody.clientHeight) railBody.scrollTop = top - railBody.clientHeight / 2 + open.offsetHeight / 2;
+    }
     /* Client support opens a side panel: a ghost Button. It needs a
        client, so not at app level. */
     $('mob-rail-foot').innerHTML = app ? '' : ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
       attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]);
     $('mob-rail-foot').hidden = app;
 
+    /* The policy column: only once a policy is open. */
     var rec = $('mob-record');
-    rec.hidden = app;
-    if (app) { rec.innerHTML = ''; return; }
+    rec.hidden = !onPolicy;
+    sidebar.classList.toggle('mob-has-record', onPolicy);
+    if (!onPolicy) { rec.innerHTML = ''; return; }
 
-    /* The record column, as before: the client record's pages, or the
-       policy's menu. The head names the record: the client's name or the
-       policy reference with its status Tag, then the title. */
-    var nav = onClient ? M.clientNav() : M.policyNav(r.p);
-    /* The head, at policy level only, in User meta's type: the line of
-       business with the status Tag, over the reference, like the policy's
-       row in the rail, then the policy's actions in a row under it. A
-       client page has none: the client is in the rail beside it, and the
-       menu's own "Client" group names it. */
+    var nav = M.policyNav(r.p);
+    /* The head, in User meta's type: the line of business with the status
+       Tag, over the reference, like the policy's row in the rail, then the
+       policy's actions in a row under it. */
     var label = c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
-    rec.innerHTML = (!onPolicy ? '' :
+    rec.innerHTML = (
       '<div class="mob-record-head">' +
         '<div class="mob-rail-row"><h2 class="mob-record-title" id="mob-record-title">' + t(label) + '</h2>' + ui.statusTag(r.p, true) + '</div>' +
         '<span class="mob-rail-sub mob-record-ref">' + esc(r.p.ref) + '</span>' +
         '<div class="mob-toolbar" id="mob-toolbar">' + toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
       '</div>') +
-      '<nav aria-label="' + esc(onClient ? 'Client record' : label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
+      '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
       '</nav>';
 
@@ -668,7 +676,6 @@
     /* Opening a client or policy from the search closes it. */
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
-    S.railOverride = null;
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
