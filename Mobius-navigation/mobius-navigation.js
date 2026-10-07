@@ -145,14 +145,14 @@
       tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + inner + '</button></li>';
   }
 
-  /* The client, centred like a profile (Laurence's design, 7 October
-     2026): the initials Avatar (its default 48px, the largest Buckholt
-     documents), the name (Title 01) and the reference under it. Not a
-     link (Laurence, 7 October 2026). */
+  /* The client: Buckholt's User meta (the runtime's `.user-meta`), the
+     small initials Avatar beside the name and reference (Laurence, 7
+     October 2026: back from the centred profile). Plain text, not a link. */
   function clientMeta(c) {
-    return '<div class="avatar" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-      '<span class="title-01 mob-rail-name">' + esc(c.name) + '</span>' +
-      '<span class="mob-rail-ref">' + esc(c.ref) + '</span>';
+    return '<div class="user-meta user-meta-compact">' +
+      '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+      '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
+    '</div>';
   }
 
   /* The client's policies, open rail: Page navigation, one link per
@@ -277,9 +277,9 @@
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    /* The head, as in Laurence's design: the client, centred, as plain
-       text (Client overview in the menu is the way to the client), and the
-       collapse button at its top right. Collapsed, only the button. */
+    /* The head: the client in User meta, as plain text (Client overview
+       below is the way to the client), and the collapse button at its
+       right. Collapsed, only the button. */
     $('mob-rail-head').innerHTML = app ? '' :
       (tight ? '' : '<div class="mob-rail-client">' + clientMeta(c) + '</div>') +
       columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');

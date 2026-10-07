@@ -90,8 +90,8 @@ stay one click away from any policy.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (320px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). The head: the **client centred like a profile** (Laurence, 7 October 2026): the initials Avatar, the name (Title 01) and the reference under it, as plain text, not a link, with the collapse button at the head's top right. Then the **client's pages**, flat, with their icons: **Client overview** (Home), **Add new quote**, Business details, Transactions, Activity, Complaints, Client checks. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot. On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
-| Policy column (policy pages only, no collapse button; 336px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, then the **policy's actions in a row** under it (below), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
+| Rail (304px open), as in Laurence's Figma design | **No colour of its own**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). The head: the **client in User meta** (the small initials Avatar beside the name and reference; a long name wraps, it is never cut short), as plain text, not a link, with the collapse button at its right. Then the **client's pages**, flat, with their icons: **Client overview** (Home), **Add new quote**, Business details, Transactions, Activity, Complaints, Client checks. Then **Policies**: one link per policy (an expressive-dark **Icon block** with the Car, the line of business with the status Tag on its line, wrapping under it when long, and the reference); "Show 2 more" / "Show fewer"; **Client support** at the foot. On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Icon block (`.icon-block.expressive-dark`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
+| Policy column (policy pages only, no collapse button; 304px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the line of business ("Open Market Motor") with its status Tag, over the reference, like the policy's row in the rail, then the **policy's actions in a row** under it (below), and the policy's pages in **always-open groups** (no accordion). Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Policy actions (in the policy's head) | Every action of the policy's status, as icons in one row under the title, like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
@@ -299,19 +299,17 @@ translate cleared), with the count in visually hidden text.
 
 > **Gap:** `.badge` and this design are not in Buckholt's documentation.
 
-### 4a. The client is shown as a centred profile
+### 4a. The client is shown with User meta
 
-The client was first shown with the runtime's User meta (Avatar beside the name and reference).
-Laurence's later design centres it: the Avatar above, the name, then the reference. User meta is
-a row and has **no documentation or Code & specs** here (the live build names it
-`.account-meta`, `discrepancies/build-provenance.md`), so the centred head is composed from
-documented parts instead: Avatar at its default size, the name in Title 01, the reference in the
-secondary text colour. The design's Avatar is larger than 48px, but Buckholt documents nothing
-larger than its default (`.avatar-sm` and `.avatar-xs` are the only other sizes), so it stays
-at 48px.
+The client is shown with the runtime's User meta: the small initials Avatar (`.avatar-sm`)
+beside the name and reference. A centred profile (Avatar above the name) was tried and
+dropped (Laurence, 7 October 2026): it took twice the height. Buckholt has **no User meta
+documentation or Code & specs** in this repository. The markup follows the runtime's own
+selectors in `css/buckholt.css`: `.user-meta.user-meta-compact`, `.avatar`,
+`.user-meta-body > .user-meta-first + span`. The live reference build names the same component
+`.account-meta` (`discrepancies/build-provenance.md`), so on live this markup would be unstyled.
 
-> **Gap to raise with Buckholt:** a profile or record header (centred Avatar, name, reference),
-> and an Avatar size above 48px if the design needs it.
+> **Gap to raise with Buckholt:** document User meta / Account meta and settle its class name.
 
 ### 4b. Incomplete takes the info status
 
@@ -435,6 +433,14 @@ example 3).
 
 ### 11. Small layout fixes, all scoped to this feature
 
+- **Tightened menus (Laurence, 7 October 2026).** Both columns are 304px (from 320 and 336),
+  which gives Main 48px more at policy level (824px at 1440). Menu items in both columns are
+  **40px high**, below Buckholt's smallest Page navigation size (`.nav-sm`, 44px): a local
+  choice, still far above the 24px minimum target size. **Gap to raise with Buckholt:** a
+  compact Page navigation size for dense application menus. The rail's sides are 8px (its links
+  carry their own inner padding), a policy row is 58px (was 66), and the client head is User
+  meta. At 1440 x 900 the policy list now starts 452px down the rail (was 572).
+
 - **The page's two columns also stack when Main is narrow.** Bootstrap's `.col-xl-8` /
   `.col-xl-4` follow the viewport, but beside the two menu columns Main is far narrower than the
   viewport: at 1440px the side column could not fit a statistic such as "£1,867.00". A container
@@ -482,7 +488,7 @@ Awesome), and Typekit was absent.
     names, Tooltips, one Tab stop and arrow-key movement
   - quick-link labels and tooltips
   - columns by level: on a client page the rail only, with the client's pages in it; on a
-    policy page the rail stays open (320px) with the open policy marked and in view, and the
+    policy page the rail stays open (304px) with the open policy marked and in view, and the
     policy column beside it; the rail collapses only by hand, and stays so
   - the collapsed rail: no floating menus; the client as its Avatar; Policies as one Shield
     button with a Tooltip that opens the rail (320px) with focus on the open policy; no search in

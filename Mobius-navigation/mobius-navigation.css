@@ -140,7 +140,7 @@
 .mob-rail {
   display: flex;
   flex-direction: column;
-  width: 20rem;                                       /* room for a policy's title and status */
+  width: 19rem;                                       /* 304px: room for a policy's title and status */
   flex: 0 0 auto;
 }
 /* The rail's head: the client and the collapse button. */
@@ -161,32 +161,23 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacer-05);
-  padding: var(--spacer-05) var(--spacer-04);
+  padding: var(--spacer-03) var(--spacer-03) var(--spacer-05);   /* 8px sides: the links carry their own inner padding */
 }
 .mob-rail-foot { flex: 0 0 auto; padding: var(--spacer-03) var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
 .mob-rail-foot .button-set { margin-top: 0; }
 
-/* The client, centred like a profile; not a link (Client overview in the
-   menu leads to the client). The collapse button at the head's top right. */
-.mob-rail-head:has(.mob-rail-client) { position: relative; justify-content: center; padding-top: var(--spacer-05); }
-.mob-rail-head:has(.mob-rail-client) .mob-column-toggle { position: absolute; top: var(--spacer-04); right: var(--spacer-04); }
-.mob-rail-client {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacer-02);
-  min-width: 0;
-  max-width: 100%;
-  text-align: center;
-}
-.mob-rail-client .avatar { margin-bottom: var(--spacer-03); }
-.mob-rail-name { color: var(--text-primary); overflow-wrap: anywhere; }
-.mob-rail-ref { font-size: 0.875rem; line-height: 1.25rem; color: var(--text-secondary); overflow-wrap: anywhere; }
-.mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0; color: var(--text-secondary); }
+/* The client: User meta beside the collapse button. A long name wraps
+   (a client's name is never cut short); the reference does not break. */
+.mob-rail-client { flex: 1 1 auto; min-width: 0; }
+.mob-rail-client .user-meta { min-width: 0; }
+.mob-rail-client .user-meta-body { min-width: 0; }
+.mob-rail-client .mob-rail-name { overflow-wrap: anywhere; }
+.mob-rail-client .mob-rail-ref { white-space: nowrap; }
+.mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-03); color: var(--text-secondary); }
 
 /* A policy: Icon block, the line of business over the reference, and the
    status Tag. Page navigation's own link states. */
-.mob-rail-policies .nav-link { height: auto; min-width: 0; padding: var(--spacer-03); gap: var(--spacer-03); align-items: center; }
+.mob-rail-policies .nav-link { height: auto; min-width: 0; padding: var(--spacer-02) var(--spacer-03); gap: var(--spacer-03); align-items: center; }
 .mob-rail-policies .icon-block { flex: 0 0 auto; }
 .mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
 .mob-rail-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacer-02) var(--spacer-03); }
@@ -197,7 +188,7 @@
 
 /* The record column: the client record's pages, or the policy's menu. */
 .mob-record {
-  width: 21rem;                                       /* room for the policy's actions in one row */
+  width: 19rem;                                       /* 304px: room for the policy's actions in one row */
   flex: 0 0 auto;
   overflow-y: auto;
   display: flex;
@@ -210,7 +201,7 @@
 .mob-record-nav { padding: 0 var(--spacer-04) var(--spacer-05); }
 .mob-record-nav:first-child { padding-top: var(--spacer-05); }   /* a client page: no head */
 /* User meta's type: the name line, then the reference. */
-.mob-record-head { display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-05) var(--spacer-05) var(--spacer-05); }
+.mob-record-head { display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
 .mob-record-title { margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow-wrap: anywhere; }
 .mob-record-ref { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; }
 
@@ -279,7 +270,12 @@
   padding-left: var(--spacer-03);
   border-left: 1px solid var(--ui-border-02);
 }
-.mob-subnav .nav-link { --nav-link-height: 2.75rem; }   /* Buckholt's own `.nav-sm` height */
+/* Menu items 40px high (Laurence, 7 October 2026: tighter menus). This is
+   below Buckholt's smallest Page navigation size (`.nav-sm`, 44px), so it is
+   a local choice, recorded as a gap; still well above the 24px minimum
+   target size. */
+.mob-record-nav .nav-link,
+.mob-rail-pages .nav-link { --nav-link-height: 2.5rem; }
 
 /* ------------------------------------------------------- Search Modal
    The search field, then recent searches (Buckholt Menu shown in place:
