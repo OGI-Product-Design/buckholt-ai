@@ -153,9 +153,9 @@ the prototype's:
 
 | Status | Groups | Menu actions | Heading |
 | --- | --- | --- | --- |
-| Live | Policy (details, claims, Amend policy, Add new quote), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
+| Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
 | Prospect | Quote, Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
-| Automatic Decline | Quote, Policy (details, Amend policy, Add new quote; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
+| Automatic Decline | Quote, Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
 | Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
 | Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | Add new quote (primary) |
 
@@ -189,9 +189,24 @@ here.").
   to policy) use one Buckholt Modal in the page source (Code & specs example 1). The confirm
   Button is `btn-primary`, and `btn-primary btn-danger` for Cancel policy only. Focus starts on
   Cancel, Tab wraps inside, Escape closes it, and focus returns to the trigger.
-- **Amend policy and Add new quote in the menu (Laurence, 7 October 2026).** In current Mobius
-  they are menu items, so they are pages in the **Policy** group, after Policy details and Claims
-  (which of them a status has follows the prototype's `policyFlows`, the same as the heading).
+- **Amend policy in the menu (Laurence, 7 October 2026).** In current Mobius it is a menu item,
+  so it is a page in the **Policy** group, after Policy details and Claims (whether a status has
+  it follows the prototype's `policyFlows`, the same as the heading).
+- **Add new quote is in the client menu only (Laurence, 8 October 2026).** It was in both the
+  client menu and each policy's Policy group; a new quote is the client's, so it has one place
+  in the navigation. A policy's heading keeps its Add new quote Button.
+- **The rule for where an action goes (Laurence and Jon, 8 October 2026).**
+  - **A menu item is a link that takes you somewhere new**, away from the page you are on. Add
+    new quote and Amend policy start journeys, but each opens a new page, so they are menu
+    items. (Katerina suggested they are actions rather than navigation; the rule above decides
+    it.)
+  - **A Button on a page** opens a side panel on that page, to change what is visible, or makes
+    a change happen on the page you are on.
+  - **The actions in the menu** (the policy column's Actions) belong to the policy as a whole,
+    not to any one page.
+  - A page heading can still offer a menu item's journey as a Button where it is the page's main
+    next step (Add new quote on Client overview, Amend policy on Policy overview): a shortcut
+    beside the content, not a second home in the navigation.
   **Admin fee and Manual credit / debit open side panels**, so they are not menu items: they are
   Buttons on the Account summary page only. **Transaction documents is removed** (Laurence, 7
   October 2026); its placeholder page went with it.
