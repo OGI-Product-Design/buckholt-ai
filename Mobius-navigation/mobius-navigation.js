@@ -12,21 +12,25 @@
    A policy page its status does not have redirects to that policy's
    overview, and an unknown client page to the Client overview.
 
-   The menu is rebuilt on every route change. Following the new designs it
-   is two columns at client and policy level, and nothing at app level:
+   The menu is rebuilt on every route change. It is two columns at client
+   and policy level, and nothing at app level:
 
-     rail     (on the page background) the client, the client's policies,
-              Add new quote, Client support
-     record   (a white panel, inset 8px) "Client" or the policy, with the
-              policy's actions in a row of icon Buttons under its title, and
-              its pages in always-open groups
+     rail     the client (User meta), the client's menu (Client overview,
+              then the "Client" group), their policies, Client support
+     record   (a white panel, inset 8px) once a policy is open: the policy,
+              its actions in a row of icon Buttons under its title, and its
+              pages in always-open groups
+
+   The systems (Broking, Activity, Renewals, Bordereau, Accounts) are in the
+   system menu at the top right, and the search field is next to the
+   wordmark; it opens the search Modal.
 
    Menu actions only happen in place. A side panel opens in the shared
    prototype Blade (`prototype/blade.js`) and its menu item stays pressed
    while it is open; a confirmation opens the Buckholt Modal in this page.
    Both trap focus, close on Escape and give focus back to what opened them.
 
-   Below 992px the menu becomes a drawer behind the Menu button.
+   Below 1024px the menu becomes a drawer behind the Menu button.
    ============================================================================ */
 (function () {
   'use strict';
@@ -50,8 +54,10 @@
      room; once it has been opened or collapsed by hand, that choice stays
      from page to page (Laurence, 7 October 2026). */
   /* query: the last search run; modalQuery: the search shown in the search
-     Modal (null shows recent searches). */
-  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null };
+     Modal (null shows recent searches). searchOpen: the result rows opened
+     in place; searchFilter and searchSort: the results' filters and sort.
+     A new search resets all three. */
+  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchSort: null };
   P.init(S);
 
   var R = null;
@@ -84,11 +90,6 @@
 
   function icon(cls, extra) {
     return '<i class="' + cls + (extra ? ' ' + extra : '') + '" aria-hidden="true"></i>';
-  }
-
-  /* A section of the menu, labelled by its own heading. */
-  function sectionLabel(id, text) {
-    return '<h2 class="label-01 mob-side-label" id="' + id + '">' + t(text) + '</h2>';
   }
 
   /* Buckholt Page navigation: `.nav > .nav-item > .nav-link`, the icon
@@ -248,6 +249,8 @@
      with the group's icon (not a link: a group is not a page), then its
      pages, indented past the icon with a rule down the left. */
   function navGroups(items, cur, r) {
+    /* `r` gives the links' level: the client's menu links to client pages
+       even on a policy page. */
     return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
       if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
       var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
@@ -275,8 +278,16 @@
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
 
-    /* The client is named in the Broking bar above, so the rail has no
-       head: it starts with the client's pages. */
+    /* The head: the client in User meta (the runtime's `.user-meta`), the
+       Avatar beside the name over the reference, level with the policy's
+       head in the next column (Laurence, 8 October 2026). Collapsed, only
+       the Avatar shows; the name stays for assistive technology. */
+    $('mob-rail-head').innerHTML = app ? '' :
+      '<div class="user-meta mob-rail-client">' +
+        '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+        '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
+      '</div>';
+    $('mob-rail-head').hidden = app;
 
     var curPolicy = onPolicy ? r.p.id : null;
     var body = '';
@@ -290,12 +301,10 @@
           '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy) +
       '</ul>';
     } else if (!app) {
-      /* The client's pages, then their policies. */
-      body = '<nav aria-label="Client and policies">' +
-          sectionLabel('mob-rail-client-label', 'Client') +
-          '<ul class="nav flex-column mob-nav mob-rail-pages" aria-labelledby="mob-rail-client-label">' +
-            M.clientPages().map(function (n) { return navLink(n.id, n.label, n.icon, onClient ? r.page : null, '#c/' + n.id); }).join('') +
-          '</ul>' +
+      /* The client's menu, built as the policy's is (the overview, then
+         an always-open group), then their policies. */
+      body = '<nav aria-label="' + esc(c.name) + '">' +
+          '<div class="mob-rail-pages">' + navGroups(M.clientNav(), onClient ? r.page : null, { scope: 'client' }) + '</div>' +
           railPolicies(curPolicy) +
         '</nav>';
     }
@@ -331,11 +340,13 @@
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML = (
       '<div class="mob-record-head">' +
-        /* One policy here, so its status is the small status Tag, above
-           the reference (Laurence, 7 October 2026); the rail's list keeps
-           the lighter dots. */
-        '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
-        '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
+        /* One policy here, so its status is the small status Tag, at the
+           right of the reference (Laurence, 8 October 2026); the rail's
+           list keeps the lighter dots. */
+        '<div class="mob-record-titlebar">' +
+          '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
+          '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
+        '</div>' +
         '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
         /* Labelled "Actions", as the menus' sections are. */
         '<div class="mob-toolbar" id="mob-toolbar"><h3 class="label-01 mob-toolbar-label" id="mob-toolbar-label">Actions</h3>' +
@@ -351,21 +362,15 @@
   }
 
   /* In the drawer (below 1024px) on a policy page, the policy's menu comes
-     first, then the client's pages and policies, then the modules: what you
-     are most likely to want is at the top (Laurence, 7 October 2026).
+     first, then the client's pages and policies: what you are most likely
+     to want is at the top (Laurence, 7 October 2026).
      Moved in the DOM, not just drawn in that order, so Tab follows it.
      Beside the page, the rail goes back to the left of the policy column. */
   function arrangeDrawer(r) {
     var cols = sidebar.querySelector('.mob-columns');
-    var rail = $('mob-rail'), rec = $('mob-record'), mods = $('mob-drawer-modules');
-    var first = narrow.matches && r.scope === 'policy';
-    if (first) {
-      if (cols.firstElementChild !== rec) cols.insertBefore(rec, rail);
-      if (cols.nextElementSibling !== mods) sidebar.insertBefore(mods, cols.nextSibling);
-    } else {
-      if (cols.firstElementChild !== rail) cols.insertBefore(rail, rec);
-      if (mods.nextElementSibling !== cols) sidebar.insertBefore(mods, cols);
-    }
+    var rail = $('mob-rail'), rec = $('mob-record');
+    if (narrow.matches && r.scope === 'policy') { if (cols.firstElementChild !== rec) cols.insertBefore(rec, rail); }
+    else if (cols.firstElementChild !== rail) cols.insertBefore(rail, rec);
   }
 
   /* A reference too long for its line ends in "…" and shows in full in a
@@ -434,9 +439,8 @@
   function titleFor(r) {
     var tt = (M.TITLES[r.scope] || {})[r.page] || ['', ''];
     var title = tt[0].replace('@query', S.query || '');
-    /* No eyebrow on client and policy pages: the Broking bar names the
-       client and the policy column names the policy (Laurence, 7 October
-       2026). */
+    /* No eyebrow on client and policy pages: the rail names the client
+       and the policy column names the policy (Laurence, 7 October 2026). */
     var eyebrow = r.scope === 'app' ? tt[1] : '';
     return { title: title, eyebrow: eyebrow };
   }
@@ -473,8 +477,9 @@
        Dashboard. */
     if (R.scope === 'app' && R.page === 'search') { S.pendingSearch = S.query; location.replace('#dashboard'); return false; }
     Shell.disposeTooltips($('sidebar'));
-    renderModules(R);
-    renderModuleBar(R);
+    renderSystems(R);
+    /* No client menu at app level, so no Menu button for it either. */
+    $('mob-menu-open').parentNode.hidden = R.scope === 'app';
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
@@ -482,25 +487,55 @@
     return true;
   }
 
-  /* ============================================================ Modules
-     The system modules, as Buckholt Page navigation with icons (the icon
-     straight inside the link). Client and policy pages belong to Broking.
-     The same list is written into the drawer for narrow screens. */
-  function renderModules(r) {
-    var cur = r.scope === 'app' && ['dashboard', 'search', 'newclient'].indexOf(r.page) < 0 ? r.page : 'dashboard';
-    var list = function (extra) {
-      return '<ul class="nav' + (extra ? ' ' + extra : '') + '">' + M.MODULES.map(function (m) {
-        var on = m.id === cur;
-        return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
-          icon(m.icon) + t(m.label) + '</a></li>';
-      }).join('') + '</ul>';
-    };
-    $('mob-modules').innerHTML = list('');
-    $('mob-drawer-modules').innerHTML = list('flex-column mob-nav');
+  /* ============================================================ Systems
+     The system menu at the top right (Laurence, 8 October 2026): an
+     icon-only Menu button whose panel holds the systems as large Response
+     buttons, the icon over the label, two to a row. One Radio group with
+     the current system checked; client and policy pages are Broking's.
+     Picking one (a click, or Enter / Space) goes there; the arrow keys
+     only move through them, as in any Radio group, so the keyboard can
+     look without leaving the page. */
+  function currentSystem(r) {
+    return r.scope === 'app' && ['dashboard', 'search', 'newclient'].indexOf(r.page) < 0 ? r.page : 'dashboard';
   }
+  function renderSystems(r) {
+    var cur = currentSystem(r);
+    $('mob-systems-panel').innerHTML =
+      '<div class="input">' +
+        '<div class="input-label"><label class="form-label visually-hidden" id="mob-systems-label">Systems</label></div>' +
+        '<div class="response response-btn-input" role="radiogroup" aria-labelledby="mob-systems-label">' +
+          M.MODULES.map(function (m) {
+            var id = 'mob-system-' + m.id;
+            return '<input type="radio" class="btn-check" name="mob-system" id="' + id + '" value="' + m.id + '"' + (m.id === cur ? ' checked' : '') + '>' +
+              '<label class="btn btn-response btn-response-lg" for="' + id + '">' +
+                '<span class="icon">' + icon(m.icon) + '</span>' + t(m.label) +
+              '</label>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+  }
+  function goSystem(id) {
+    bootstrap.Dropdown.getOrCreateInstance($('mob-systems-toggle')).hide();
+    if (id === currentSystem(R)) { $('mob-systems-toggle').focus(); return; }
+    location.hash = '#' + id;
+  }
+  $('mob-systems-panel').addEventListener('click', function (e) {
+    var label = e.target.closest('label.btn-response');
+    if (label) goSystem(label.previousElementSibling.value);
+  });
+  $('mob-systems-panel').addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.name === 'mob-system') { e.preventDefault(); goSystem(e.target.value); }
+  });
+  /* Opened, focus goes to the current system; closed, the checked one is
+     the current system again. */
+  $('mob-systems-toggle').addEventListener('shown.bs.dropdown', function () {
+    var on = $('mob-systems-panel').querySelector('input:checked');
+    if (on) on.focus();
+  });
+  $('mob-systems-toggle').addEventListener('hidden.bs.dropdown', function () { if (R) renderSystems(R); });
 
   /* ============================================================= Search
-     The field at the top of the rail opens the search in a large Buckholt
+     The field in the top bar opens the search in a large Buckholt
      Modal (Jon's suggestion), so the page you are on stays behind it.
      Opening it shows recent searches (a Menu shown in place: Down arrow
      moves into it, Up / Down move through it, picking one runs it).
@@ -508,6 +543,8 @@
      policy from them closes it. */
   var searchModalEl = $('mob-search-modal');
   var searchModal = new bootstrap.Modal(searchModalEl);
+  var searchForm = $('mob-search');
+  var searchInput = $('mob-search-input');
   var modalForm = $('mob-search-modal-form');
   var modalInput = $('mob-search-modal-input');
   var modalBody = $('mob-search-modal-body');
@@ -558,17 +595,14 @@
   }
 
   /* The body: recent searches until a search is run, then its results
-     (the Search results page's own content). Create new client is in the
-     Broking bar, not here (Laurence, 7 October 2026). */
+     (the Search results page's own content). No Create new client here
+     (Laurence, 7 October 2026): it is in the Dashboard's heading. */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
     if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
     var prev = S.query;
     S.query = S.modalQuery;
-    modalBody.innerHTML =
-      '<div class="mob-search-results">' +
-        P.app.search().join('') +
-      '</div>';
+    modalBody.innerHTML = P.app.search().join('');
     S.query = prev;
     Shell.initTooltips(modalBody);
   }
@@ -583,6 +617,8 @@
   function runModalSearch(q) {
     q = String(q || '').trim();
     if (!q) { S.modalQuery = null; renderSearchBody(); modalInput.focus(); return; }
+    /* A new search starts with every row closed and no filters. */
+    if (q !== S.modalQuery) { S.searchOpen = {}; S.searchFilter = {}; S.searchSort = null; }
     S.modalQuery = q;
     S.query = q;
     modalInput.value = q;
@@ -593,9 +629,29 @@
   searchModalEl.addEventListener('shown.bs.modal', function () { modalInput.focus(); modalInput.select(); });
   /* Back to the field that opened it, without reopening the search. */
   searchModalEl.addEventListener('hidden.bs.modal', function () {
-    if (S.searchTrigger && document.contains(S.searchTrigger)) { S.reopenGuard = true; S.searchTrigger.focus(); S.reopenGuard = false; }
+    if (S.searchTrigger && document.contains(S.searchTrigger)) S.searchTrigger.focus();
     S.searchTrigger = null;
+    searchInput.value = '';
   });
+
+  /* The top bar's field opens the Modal on a click, Enter, Down arrow or
+     the first character typed, which carries over into the Modal's field.
+     A pointer press opens it without focusing the field, so the field's
+     focus ring is not left showing behind it, and focus is not put back
+     on it afterwards. Opened from the keyboard, focus returns to the field
+     when the Modal closes. */
+  searchInput.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    S.searchTrigger = null;
+    openSearch();
+  });
+  searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
+    e.preventDefault();
+    S.searchTrigger = searchInput;
+    openSearch(e.key.length === 1 ? e.key : '');
+  });
+  searchForm.addEventListener('submit', function (e) { e.preventDefault(); });
 
 
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
@@ -620,60 +676,53 @@
       if (i === 0) modalInput.focus(); else items[i - 1].focus();
     }
   });
+  /* Re-draws the results and puts focus back on the control used. */
+  function redrawResults(focusId) {
+    renderSearchBody();
+    var el = focusId && modalBody.querySelector('[data-focus-id="' + focusId + '"]');
+    if (el) el.focus();
+  }
   modalBody.addEventListener('click', function (e) {
     var b = e.target.closest('[data-recent]');
-    if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); }
+    if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); return; }
+    /* A client or policy row opens in place, and closes again: from its
+       toggle, or (with a pointer) anywhere else on the row. */
+    var row = e.target.closest('tr.mob-search-row');
+    var tg = e.target.closest('[data-search-toggle]') ||
+      (row && !e.target.closest('a, button, input, select, label') ? row.querySelector('[data-search-toggle]') : null);
+    if (tg) {
+      var key = tg.getAttribute('data-search-toggle');
+      S.searchOpen[key] = !S.searchOpen[key];
+      redrawResults(tg.getAttribute('data-focus-id'));
+      return;
+    }
+    /* A sortable column: ascending, then descending. */
+    var so = e.target.closest('[data-search-sort]');
+    if (so) {
+      var col = so.getAttribute('data-search-sort');
+      S.searchSort = { col: col, dir: S.searchSort && S.searchSort.col === col ? -S.searchSort.dir : 1 };
+      redrawResults(so.getAttribute('data-focus-id'));
+      return;
+    }
+    if (e.target.closest('[data-search-apply]')) {
+      var v = function (id) { var x = $(id); return x && x.selectedIndex > 0 ? x.value : ''; };
+      S.searchFilter = { brand: v('sb'), lob: v('sl'), status: v('ss') };
+      redrawResults('sf-apply');
+      return;
+    }
+    if (e.target.closest('[data-search-clear]')) { S.searchFilter = {}; redrawResults('sf-clear'); }
   });
 
 
 
-  /* ========================================================= Broking bar
-     On every Broking page: the Dashboard, Create new client, and client and
-     policy pages. Not in the other modules, whose search (if any) is their
-     own. Create new client is Broking-wide, so it sits here. */
-  function inBroking(r) {
-    return r.scope !== 'app' || ['dashboard', 'search', 'newclient'].indexOf(r.page) >= 0;
-  }
-  function renderModuleBar(r) {
-    var on = inBroking(r);
-    var bar = $('mob-module-bar');
-    Shell.disposeTooltips(bar);
-    bar.hidden = !on;
-    document.querySelector('.layout').classList.toggle('mob-in-broking', on);
-    var c = F.client;
-    var nc = M.APP_ACTIONS.newclient;
-    var tip = function (name) { return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + esc(name) + '"'; };
-    /* Left: a back arrow up one level (Laurence, 7 October 2026): from a
-       policy to the client, from the client or Create new client to the
-       Dashboard. An icon-only ghost Button, its name in a Tooltip; not on
-       the Dashboard itself. Then the open client in User meta, in one line. */
-    var up = r.scope === 'policy' ? ['#c/summary', 'Back to client'] : ['#dashboard', 'Back to dashboard'];
-    var record = r.scope === 'client' || r.scope === 'policy';
-    $('mob-module-context').innerHTML = !on ? '' :
-      (r.page === 'dashboard' && r.scope === 'app' ? '' :
-        ui.btn('', { icon: 'fa-regular fa-arrow-left', href: up[0], attrs: tip(up[1]) })) +
-      (record ? '<div class="user-meta user-meta-compact mob-bar-client">' +
-        '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-        '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
-      '</div>' : '');
-    /* Right: Create new client (a ghost Button; not while creating one),
-       then the search, an icon-only secondary Button at the far right so
-       it holds its place (Laurence, 7 October 2026). */
-    $('mob-module-actions').innerHTML = !on ? '' :
-      (r.page !== 'newclient' ? ui.btn(nc.label, { variant: 'ghost', icon: nc.icon, href: '#' + nc.to }) : '') +
-      ui.btn('', { variant: 'secondary', icon: 'fa-regular fa-magnifying-glass', attrs: ' id="mob-search-open" data-open-search aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/"' + tip('Search clients and policies') });
-    Shell.initTooltips(bar);
-  }
-
-
-  /* "/" opens the search anywhere in Broking, unless you are typing. */
+  /* "/" opens the search anywhere, unless you are typing. */
   document.addEventListener('keydown', function (e) {
     if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
     var t = e.target;
     if (t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
-    if (!R || !inBroking(R) || dialogOpen()) return;
+    if (!R || dialogOpen() || drawerOpen()) return;
     e.preventDefault();
-    S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+    S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : searchInput;
     openSearch();
   });
 
@@ -714,7 +763,7 @@
        shut. */
     if (firstRender) requestAnimationFrame(function () { requestAnimationFrame(function () { sidebar.classList.remove('mob-no-anim'); }); });
     firstRender = false;
-    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = $('mob-search-open'); runModalSearch(q); openSearch(q); }
+    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; runModalSearch(q); openSearch(q); }
   }
 
   /* ============================================================== Toasts */
@@ -914,8 +963,6 @@
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
     if (el.closest('[data-rail-toggle]')) { S.railOverride = railCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
-    var os = el.closest('[data-open-search]');
-    if (os) { S.searchTrigger = os; openSearch(); return; }
     var ex = el.closest('[data-expand]');
     if (ex) {
       S.railOverride = true;

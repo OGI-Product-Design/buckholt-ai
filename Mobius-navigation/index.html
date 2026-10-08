@@ -24,10 +24,11 @@
   <!-- ======================================================================
        STATIC APPLICATION CHROME — the shared Mobius top bar
        (`prototype/app-shell.css`). Its contents are Buckholt components:
-       the Menu button (narrow screens), the
-       system modules as Page navigation with icons, the "Show wording
-       changes" review aid
-       (Switch), and the user menu under the avatar (Menu button + Avatar).
+       the Menu button (narrow screens), the search field (a Text input that
+       opens the search Modal), the "Show wording changes" review aid
+       (Switch), the system menu (an icon-only Menu button whose panel holds
+       the systems as large Response buttons) and the user menu under the
+       avatar (Menu button + Avatar).
        ====================================================================== -->
   <header class="app-bar">
     <div class="button-set mob-menu-button-set">
@@ -39,9 +40,24 @@
 
     <a class="app-bar-logo" href="#dashboard">Mobius</a>
 
-    <!-- System modules: Page navigation, the icon straight inside each link.
-         Written by mobius-navigation.js so the current module is marked. -->
-    <nav class="mob-modules" aria-label="Modules" id="mob-modules"></nav>
+    <!-- Search: Buckholt Text input with its search icon, next to the
+         wordmark. It does not search by itself: a click, Enter, Down arrow
+         or the first character typed opens the search Modal, carrying the
+         character over. "/" opens it from anywhere, and the field says so. -->
+    <form class="mob-app-search" role="search" id="mob-search" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="mob-search-input" class="form-label visually-hidden">Search clients and policies</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" class="form-control" id="mob-search-input" enterkeyhint="search"
+            aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">
+          <!-- The hint in place of a placeholder: "Type / to search". -->
+          <span class="mob-search-hint" aria-hidden="true"><span class="mob-search-hint-long">Type <kbd>/</kbd> to search</span><span class="mob-search-hint-short">Search</span></span>
+        </div>
+      </div>
+    </form>
 
     <div class="app-bar-right">
       <!-- Dev / review aid: highlights wording that differs from current
@@ -61,6 +77,20 @@
         <time class="app-bar-date" id="app-clock-date" datetime="2026-10-01">01 October 2026</time>
       </div>
 
+      <!-- System menu: Buckholt Menu button with an icon-only ghost trigger
+           (as the Overflow menu, Code & specs example 3) and its Tooltip on
+           the wrapper. Its panel holds the systems (Broking, Activity,
+           Renewals, Bordereau, Accounts) as large Response buttons with
+           icons (Response button Code & specs example 8): one Radio group,
+           the current system checked. Written by mobius-navigation.js. -->
+      <div class="menu mob-systems" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Switch system">
+        <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+          aria-label="Switch system" aria-controls="mob-systems-panel">
+          <div class="btn-icon"><i class="fa-regular fa-grid" aria-hidden="true"></i></div>
+        </button>
+        <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel"></div>
+      </div>
+
       <!-- User menu: Buckholt Menu button (Code & specs example 1) whose
            trigger is the user's Avatar. Bootstrap Dropdown gives the
            keyboard behaviour. Items are written by mobius-navigation.js. -->
@@ -77,26 +107,10 @@
   </header>
 
   <!-- ======================================================================
-       BROKING BAR — under the top bar on every Broking page (Dashboard,
-       Create new client, client and policy pages), not in the other
-       modules. Search is Broking's (clients and policies), so it sits here
-       rather than in the global top bar or in the client's menu. On the
-       left: a back arrow to the Dashboard and the open client. On the
-       right: the search (an icon Button opening the search Modal; "/" does
-       too) and Create new client, a Broking-wide action.
-       ====================================================================== -->
-  <div class="mob-module-bar" id="mob-module-bar" role="region" aria-label="Broking" hidden>
-    <div class="mob-module-context" id="mob-module-context"></div>
-    <div class="button-set mob-module-actions" id="mob-module-actions"></div>
-  </div>
-
-  <!-- ======================================================================
        THE MENU — Buckholt from here down. Two columns at client and policy
-       level, as in the new designs: the blue rail (the client and their
-       policies) and the record column (that record's pages and actions).
-       The rail is on every page, with the search at its top; the record
-       column and toolbar only on client and policy pages. Below 1024px it
-       is a drawer, which also takes the modules from the top bar.
+       level: the rail (the client, their pages and their policies) and,
+       once a policy is open, the policy column (its actions and pages).
+       Nothing at app level. Below 1024px it is a drawer.
        ====================================================================== -->
   <aside id="sidebar" class="mob-sidebar mob-no-anim" aria-label="Menu">
     <div class="mob-drawer-head">
@@ -107,13 +121,11 @@
         </button>
       </div>
     </div>
-    <!-- On narrow screens the modules move in here. -->
-    <nav class="mob-drawer-modules" aria-label="Modules" id="mob-drawer-modules"></nav>
-
     <div class="mob-columns">
       <!-- The rail: the selected client's menu, written by
            mobius-navigation.js. -->
       <div class="mob-rail" id="mob-rail">
+        <div class="mob-rail-head" id="mob-rail-head"></div>
         <div class="mob-rail-scroll" id="mob-rail-body"></div>
         <div class="mob-rail-foot" id="mob-rail-foot"></div>
       </div>

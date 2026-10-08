@@ -59,7 +59,9 @@
     attachment: 'fa-regular fa-paperclip',             // GAP
     history: 'fa-regular fa-clock-rotate-left',        // Recent
     documents: 'fa-regular fa-files',                  // Documents
-    newClient: 'fa-regular fa-user-plus'               // GAP
+    newClient: 'fa-regular fa-user-plus',              // GAP
+    clientGroup: 'fa-regular fa-address-card',         // GAP
+    systems: 'fa-regular fa-grid'                      // GAP: the system menu
   };
 
   /* ------------------------------------------------------------ Policy level */
@@ -115,15 +117,19 @@
     }
   };
 
-  /* The client's pages, flat, in the rail under the client: the overview,
-     then the rest. */
-  function clientPages() {
-    return [{ id: 'summary', label: '[[Client overview]]', icon: ICON.home }].concat(CLIENT_NAV);
+  /* The client's menu, built like the policy's (Laurence, 8 October 2026):
+     the overview on its own, then a "Client" group holding the client's
+     other pages, without icons of their own. */
+  function clientNav() {
+    return [
+      { id: 'summary', label: '[[Client overview]]', icon: ICON.client },
+      { group: 'Client', icon: ICON.clientGroup, children: CLIENT_NAV.map(function (n) { return { id: n.id, label: n.label }; }) }
+    ];
   }
 
   function policyNav(p) {
     return [
-      { id: 'summary', label: '[[Policy overview]]', icon: ICON.home },
+      { id: 'summary', label: '[[Policy overview]]', icon: ICON.policies },   // the Shield, not the House (Laurence, 8 October 2026)
       GROUPS.quote(p), GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
     ].filter(Boolean);
   }
@@ -285,7 +291,7 @@
     POLICY_ACTIONS: POLICY_ACTIONS,
     QUICK_LINKS: QUICK_LINKS,
     CLIENT_NAV: CLIENT_NAV,
-    clientPages: clientPages,
+    clientNav: clientNav,
     CLIENT_ACTIONS: CLIENT_ACTIONS,
     MODULES: MODULES,
     APP_ACTIONS: APP_ACTIONS,
