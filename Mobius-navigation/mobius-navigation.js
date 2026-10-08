@@ -329,7 +329,7 @@
      (Dashboard › … › client › policy › page), and past two below 768px
      (Dashboard › … › page). */
   var phone = window.matchMedia('(max-width: 767.98px)');
-  function crumbs(r, title) {
+  function crumbs(r, title, keepOverride) {
     var c = F.client;
     var trail = [];
     if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
@@ -351,7 +351,7 @@
         : '<li class="breadcrumb-item active" aria-current="page">' + t(x[0]) + '</li>';
     };
     var html;
-    var keep = phone.matches ? 1 : 3;
+    var keep = keepOverride || (phone.matches ? 1 : 3);
     if (trail.length > keep + 1) {
       var hidden = trail.slice(1, trail.length - keep);
       html = item(trail[0]) +
@@ -388,22 +388,57 @@
     var panels = r.scope === 'app' ? P.app[r.page]() : r.scope === 'client' ? P.client[r.page]() : P.policy[r.page](r.p);
     var actions = P.heading(r);
 
+    /* The breadcrumbs and the record's actions share one row above the
+       title (Laurence, 8 October 2026): the heading stays the title alone,
+       as Heading attachment asks, and the actions sit with the record's
+       location. Not sticky. */
+    var trail = crumbs(r, tt.title);
     main.innerHTML =
       '<div class="page-panel">' +
-        crumbs(r, tt.title) +
+        (trail || actions ? '<div class="mob-page-bar">' + trail +
+          (actions ? '<div class="mob-heading-actions">' + actions + '</div>' : '') + '</div>' : '') +
         '<div class="mob-heading">' +
           '<div class="text-block">' +
             (tt.eyebrow ? '<span class="eyebrow">' + t(tt.eyebrow) + '</span>' : '') +
             '<h1 class="display-01" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
           '</div>' +
-          (actions ? '<div class="mob-heading-actions">' + actions + '</div>' : '') +
         '</div>' +
       '</div>' +
       panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('');
 
     document.title = 'Mobius · ' + plain(tt.title).replace(/[“”]/g, '');
+    fitBar();
     Shell.initTooltips(main);
   }
+
+  /* The breadcrumbs and the actions share a row. When they do not fit, the
+     trail's middle folds into Breadcrumb's documented overflow menu (Dashboard
+     › … › page) so the actions stay beside it; only if that still does not
+     fit do the actions drop under the trail. Run on every page and whenever
+     Main changes width. */
+  function fitBar() {
+    var main = $('mob-page');
+    var bar = main.querySelector('.mob-page-bar');
+    var act = bar && bar.querySelector('.mob-heading-actions');
+    var nav = bar && bar.querySelector('.mob-crumbs');
+    if (!act || !nav || !R) return;
+    var tt = titleFor(R);
+    /* Wrapped when the actions start below the breadcrumbs' bottom edge. */
+    var fits = function () { var n = bar.querySelector('.mob-crumbs'); return act.offsetTop < n.offsetTop + n.offsetHeight; };
+    Shell.disposeTooltips(nav);
+    nav.outerHTML = crumbs(R, tt.title);
+    if (!fits()) bar.querySelector('.mob-crumbs').outerHTML = crumbs(R, tt.title, 1);
+    Shell.initTooltips(bar.querySelector('.mob-crumbs'));
+  }
+  /* Main changes width with the window and when the client menu opens or
+     collapses: refit then. */
+  var fitTimer = null, fitWidth = 0;
+  new ResizeObserver(function (entries) {
+    var w = Math.round(entries[0].contentRect.width);
+    if (w === fitWidth) return;
+    fitWidth = w;
+    clearTimeout(fitTimer); fitTimer = setTimeout(fitBar, 50);
+  }).observe($('main'));
 
   function render() {
     R = parse();
