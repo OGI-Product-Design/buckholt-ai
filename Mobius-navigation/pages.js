@@ -1307,15 +1307,15 @@
      icon and its count badge on the Button's corner. */
   function clientTools(R) {
     /* Client support: the Circle-heart; once extra support is in place, the
-       solid status check, in the success status colour as a success Tag
-       draws it (Laurence, 8 October 2026). The name says it too. */
+       solid status check, in the Button's own colour (Laurence, 8 October
+       2026: the shape says it, no green). The name says it too. */
     var on = !!F.client.supportOn;
     var onPolicy = R.scope === 'policy';
     var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
     var what = onPolicy ? 'Policy notes' : 'Client notes';
     return set([
       '<button type="button" class="btn btn-ghost" data-panel="support" aria-haspopup="dialog">' +
-        '<div class="btn-icon"><i class="' + (on ? ICON.supportOn + ' mob-support-on' : ICON.support) + '" aria-hidden="true"></i></div>' +
+        '<div class="btn-icon"><i class="' + (on ? ICON.supportOn : ICON.support) + '" aria-hidden="true"></i></div>' +
         '<span class="button-label">Client support' + (on ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span>' +
       '</button>',
       '<button type="button" class="btn btn-ghost mob-badged" data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog">' +
