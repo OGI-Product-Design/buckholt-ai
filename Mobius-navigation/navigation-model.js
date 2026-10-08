@@ -61,7 +61,9 @@
     documents: 'fa-regular fa-files',                  // Documents
     newClient: 'fa-regular fa-user-plus',              // GAP
     clientGroup: 'fa-regular fa-address-card',         // GAP
-    systems: 'fa-regular fa-grid'                      // GAP: the system menu
+    systems: 'fa-regular fa-grid',                     // GAP: the system menu
+    support: 'fa-regular fa-circle-heart',             // GAP: Client support
+    supportOn: 'fa-solid fa-circle-heart'              // GAP: Client support, extra support in place
   };
 
   /* ------------------------------------------------------------ Policy level */

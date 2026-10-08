@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="../prototype/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261008-2">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261008-6">
 </head>
 <body class="mob-hide-terms">
 
@@ -60,6 +60,23 @@
         </div>
       </div>
     </form>
+
+    <!-- Create new client, next to the search (Laurence, 8 October 2026):
+         Broking-wide, so it sits in the top bar, not on one page. It opens
+         a page, so it is a link styled as a secondary Button. Below 1280px
+         the bar has no room for its label, so the icon-only Button (its
+         name in aria-label and a Tooltip) shows instead; only one is ever
+         displayed. -->
+    <div class="mob-app-create button-set" id="mob-create-client">
+      <a class="btn btn-secondary mob-create-full" href="#newclient">
+        <div class="btn-icon"><i class="fa-regular fa-user-plus" aria-hidden="true"></i></div>
+        <span class="button-label">Create new client</span>
+      </a>
+      <a class="btn btn-secondary mob-create-icon" href="#newclient" aria-label="Create new client"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create new client">
+        <div class="btn-icon"><i class="fa-regular fa-user-plus" aria-hidden="true"></i></div>
+      </a>
+    </div>
 
     <div class="app-bar-right">
       <!-- Dev / review aid: highlights wording that differs from current
@@ -250,9 +267,9 @@
 <script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
-<script src="fixtures.js?v=20261008-2"></script>
-<script src="navigation-model.js?v=20261008-2"></script>
-<script src="pages.js?v=20261008-2"></script>
-<script src="mobius-navigation.js?v=20261008-2"></script>
+<script src="fixtures.js?v=20261008-6"></script>
+<script src="navigation-model.js?v=20261008-6"></script>
+<script src="pages.js?v=20261008-6"></script>
+<script src="mobius-navigation.js?v=20261008-6"></script>
 </body>
 </html>

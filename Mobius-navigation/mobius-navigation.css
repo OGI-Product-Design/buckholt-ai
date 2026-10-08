@@ -42,7 +42,17 @@
    The Text input next to the wordmark: it opens the search Modal. Its
    label is visually hidden; the field takes what room the bar has, up to
    24rem. */
-.mob-app-search { flex: 0 1 24rem; min-width: 0; margin-right: var(--spacer-05); }
+.mob-app-search { flex: 0 1 24rem; min-width: 0; margin-right: var(--spacer-04); }
+/* Create new client, straight after the search. */
+.mob-app-create { flex: 0 0 auto; align-self: center; margin: 0 var(--spacer-05) 0 0; }
+/* Below 1280px the bar cannot hold its label: the icon-only Button shows
+   instead of the labelled one. */
+.mob-create-icon { display: none; }
+@media (max-width: 1279.98px) {
+  .mob-create-full { display: none; }
+  .mob-create-icon { display: inline-flex; }
+}
+.mob-app-create[hidden] { display: none; }
 .mob-app-search .input-label { display: none; }
 .mob-app-search .form-control { cursor: pointer; }
 /* "Type / to search", as GitHub has it (suggested to Laurence, 8 October
@@ -71,6 +81,7 @@
 /* Below 768px the field gives way to the system menu and the avatar. */
 @media (max-width: 767.98px) {
   .mob-app-search { flex: 1 1 0; margin-right: var(--spacer-03); }
+  .mob-app-create { margin-right: var(--spacer-03); }
 }
 
 /* Up to 1680px the bar cannot hold everything at full size: the review
@@ -446,6 +457,7 @@
 .mob-table-foot .button-set { margin-top: 0; }
 .mob-heading-actions > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-toolbar-body > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.app-bar > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-rail-foot > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-card-head [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-split [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
@@ -458,6 +470,14 @@
    runtime `.badge.badge-floating` by binding its own custom properties to
    Buckholt tokens; nothing is restyled with values of its own. */
 .mob-badged { position: relative; }
+/* Client support with extra support in place: the solid heart in the
+   secondary expressive colour (Buckholt's purple), on the ghost Button's
+   own label properties. */
+.mob-support-on {
+  --button-label: var(--expressive-secondary-deep);
+  --button-label-hover: var(--expressive-secondary-deep);
+  --button-label-focus: var(--expressive-secondary-deep);
+}
 .mob-count {
   --badge-background: var(--action-danger-01);
   --badge-border: var(--action-danger-01);
@@ -642,6 +662,10 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 
 @media (max-width: 575.98px) {
+  /* The top bar holds the Menu button, the wordmark, the search, Create new
+     client, the system menu and the avatar at 360px: the right-hand ones
+     sit 8px apart. */
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-03); }
   /* Progress keeps a 22rem minimum, wider than a phone's content column.
      Relaxed for the flow progress only, as responsive/component-guidance.md
      recommends (application layer, not Buckholt). */
