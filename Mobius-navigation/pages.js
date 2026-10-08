@@ -73,6 +73,15 @@
   };
 
   function statusText(p) { return t(STATUS[p.status].label); }
+  /* The status as an eyebrow with a dot in its status colour (the Tag's
+     own border colour), the text in the primary colour: the menus' compact
+     status (Laurence, 7 October 2026; not Buckholt). The text carries the
+     meaning; the dot only reinforces it. */
+  function statusDot(p, extra) {
+    return '<span class="eyebrow mob-status mob-status-' + STATUS[p.status].variant + (extra ? ' ' + extra : '') + '">' +
+      '<span class="mob-status-dot" aria-hidden="true"></span>' + statusText(p) + '</span>';
+  }
+
   /* `small` is the documented `.tag-sm`, used where space is tight (the
      menu). The small status Tag is drawn without its icon, as Tag's own
      Code & specs example 5 draws it. */
@@ -1342,7 +1351,7 @@
 
   global.MobiusPages = {
     init: function (state) { S = state; },
-    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText,
+    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot,
       loadMoreButton: loadMoreButton, shownPolicies: shownPolicies, policyHref: policyHref },
     app: app,
     client: client,

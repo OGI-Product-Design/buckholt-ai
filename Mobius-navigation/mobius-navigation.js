@@ -148,24 +148,36 @@
   }
 
 
-  /* The client's policies, open rail: a group like the client's, then one
-     Page navigation link per policy, its reference followed by its small
-     status Tag (Tag Code & specs example 5), nothing else (Laurence,
-     8 October 2026: back to documented Buckholt). The 5 most recent, then
-     "Show 2 more". */
+  /* The client's policies, open rail: Page navigation, one link per
+     policy: the status, the Car, the reference over the line of business,
+     and a chevron. The 5 most recent, then "Show 2 more". */
   function railPolicies(curId) {
-    return '<div class="mob-group">' +
-      '<h3 class="label-01 mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</h3>' +
-      '<ul class="nav flex-column mob-nav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+    /* A group like the client's above it (Laurence, 8 October 2026): the
+       Shield and "Policies" as its label, then the policies indented under
+       a rule, then Show more. */
+    return '<ul class="nav flex-column mob-nav"><li class="nav-item mob-group">' +
+      '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
+      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-            esc(p.ref) + ui.statusTag(p, true) +
+            /* The status as an eyebrow, plain text above the row (Laurence,
+               7 October 2026: in place of the Tag). No Car of its own: the
+               group's Shield labels the list, the line of business says
+               Motor, and indented under the group's rule the reference
+               needs the room (Laurence, 8 October 2026). */
+            ui.statusDot(p, 'mob-rail-status') +
+            /* The reference leads (it is what tells the rows apart), the
+               line of business under it. */
+            '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(p.ref) + '</span>' +
+              '<span class="mob-rail-sub">' + esc(F.client.businessLine) + '</span></span>' +
+            /* A right chevron: the policy opens the next column. */
+            icon('fa-regular fa-chevron-right', 'mob-rail-chevron') +
           '</a>' +
         '</li>';
       }).join('') + '</ul>' +
       '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>' +
-    '</div>';
+    '</li></ul>';
   }
 
   /* A column's collapse / open control: one icon-only ghost Button, as on
@@ -176,25 +188,22 @@
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
-  /* A navigation group, always open: its heading (Buckholt's `label-01` type
-     set, the group's icon before it, as the documentation site's own side
-     navigation heads its sections), then its pages as plain Page
-     navigation, Buckholt's default size, no indent and no rule (Laurence,
-     8 October 2026: back to documented Buckholt). An item that is not in a
-     group is a Page navigation list of its own. */
+  /* A navigation group, always open (Laurence, 7 October 2026): its label
+     with the group's icon (not a link: a group is not a page), then its
+     pages, indented past the icon with a rule down the left. */
   function navGroups(items, cur, r) {
     /* `r` gives the links' level: the client's menu links to client pages
        even on a policy page. */
-    return items.map(function (n) {
-      if (!n.children) return '<ul class="nav flex-column mob-nav">' + navLink(n.id, n.label, n.icon, cur, href(r, n.id)) + '</ul>';
+    return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
+      if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
       var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
-      return '<div class="mob-group">' +
-        '<h3 class="label-01 mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</h3>' +
-        '<ul class="nav flex-column mob-nav" aria-labelledby="' + gid + '">' +
+      return '<li class="nav-item mob-group">' +
+        '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
+        '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
           n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
         '</ul>' +
-      '</div>';
-    }).join('');
+      '</li>';
+    }).join('') + '</ul>';
   }
 
   /* The menu adds a column as you go deeper (Laurence, 7 October 2026):
@@ -219,7 +228,7 @@
     $('mob-rail-head').innerHTML = app ? '' :
       '<div class="user-meta mob-rail-client">' +
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-        '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
+        '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
       '</div>';
     $('mob-rail-head').hidden = app;
 
@@ -275,10 +284,10 @@
            right of the reference (Laurence, 8 October 2026); the rail's
            list keeps the lighter dots. */
         '<div class="mob-record-titlebar">' +
-          '<h2 class="title-01 mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
+          '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
           '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
         '</div>' +
-        '<p class="body-01 mob-record-ref">' + t(label) + '</p>' +
+        '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
@@ -303,7 +312,7 @@
   /* A reference too long for its line ends in "…" and shows in full in a
      Tooltip (Laurence, 7 October 2026). Only where it is actually cut. */
   function tipTruncated() {
-    Array.prototype.forEach.call(sidebar.querySelectorAll('.mob-record-title'), function (el) {
+    Array.prototype.forEach.call(sidebar.querySelectorAll('.mob-rail-title, .mob-record-title'), function (el) {
       if (el.scrollWidth > el.clientWidth + 1) {
         el.setAttribute('data-bs-toggle', 'tooltip');
         el.setAttribute('data-bs-title', el.textContent);
