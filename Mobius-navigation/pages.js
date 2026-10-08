@@ -1354,9 +1354,13 @@
       return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' + attrs(k) + '>' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) + '</button></li>';
     };
-    var more = '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="More actions">' +
-      '<button type="button" class="btn btn-ghost menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
-        '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
+    /* "More", labelled (Laurence, 8 October 2026): Menu button Code & specs
+       example 1 (the label, then the caret), as a ghost Button to match
+       the actions beside it. Labelled, it needs no Tooltip. */
+    var more = '<div class="menu mob-overflow">' +
+      '<button type="button" class="btn btn-ghost menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<span class="button-label">More<span class="visually-hidden"> actions</span></span>' +
+        '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
         '<ul class="menu-body" role="menu">' +
@@ -1370,7 +1374,10 @@
         '</ul>' +
       '</div>' +
     '</div>';
-    return (shown.length ? set(shown.map(function (k) { return btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) }); }), 'mob-policy-actions') : '') + more;
+    /* A rule between the actions and More, as between the client's tools
+       and the actions. */
+    return (shown.length ? set(shown.map(function (k) { return btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) }); }), 'mob-policy-actions') +
+      '<div class="mob-heading-rule mob-more-rule" aria-hidden="true"></div>' : '') + more;
   }
 
   function heading(R) {

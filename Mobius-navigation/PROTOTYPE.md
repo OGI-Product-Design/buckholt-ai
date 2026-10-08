@@ -293,8 +293,9 @@ are now **labelled ghost Buttons in the page heading** of every policy page, aft
 and Policy notes and a rule (Laurence, 8 October 2026: icon-only and at the bottom, they were
 hidden and hard to understand).
 
-- The everyday actions show; **More actions** (Menu button Code & specs example 3: an icon-only
-  ghost `.menu-toggle` with `fa-ellipsis-vertical` and its Tooltip on the Menu wrapper) holds
+- The everyday actions show, then a rule, then **More** (Laurence, 8 October 2026: labelled, as
+  in the Figma toolbar; Menu button Code & specs example 1, the label then the caret, as a ghost
+  Button; read out as "More actions"). It holds
   Copy policy and Customer portal settings, then, below a Menu divider, **Stop and Cancel**
   (Mark, 7 October 2026: destructive, so not one click away). Cancel is Menu's danger item. Each
   still asks for confirmation; focus returns to "More actions" when it closes.
