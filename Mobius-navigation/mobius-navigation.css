@@ -78,6 +78,27 @@
 .mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
 .mob-systems .menu-panel { z-index: 1035; }
+/* The trigger carries the current system's name. Below 1280px it sits 8px
+   from the clock; on a phone the name is kept for assistive technology but
+   not drawn, and the caret alone opens the menu. */
+@media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
+@media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
+/* On the narrowest phones the search field shows only its icon (it is
+   still the field: a tap opens the search), and the right-hand controls sit
+   4px apart, so the bar fits at 360px. */
+@media (max-width: 429.98px) {
+  .mob-app-search { flex: 0 0 2.75rem; }
+  .mob-app-search .form-control::placeholder { color: transparent; }
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
+  .app-bar-logo { margin-right: var(--spacer-03); }
+  .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
+}
+@media (max-width: 575.98px) {
+  .mob-systems .button-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+}
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button
    chrome of its own; focus is drawn round the Avatar. */

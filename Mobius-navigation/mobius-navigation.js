@@ -464,15 +464,17 @@
      The system menu at the top right: an icon-only Menu button whose panel
      is Menu's documented Link variant, one link per system with its icon
      (Laurence, 8 October 2026: back to documented Buckholt, in place of
-     Response buttons). Client and policy pages are Broking's; the current
-     system is `aria-current="page"`. */
+     Response buttons). Its trigger is labelled with the current system, so
+     the top bar says where you are. Client and policy pages are Broking's;
+     the current system is `aria-current="page"`. */
   function currentSystem(r) {
     return r.scope === 'app' && ['dashboard', 'search', 'newclient'].indexOf(r.page) < 0 ? r.page : 'dashboard';
   }
   function renderSystems(r) {
     var cur = currentSystem(r);
+    /* The trigger's label is the current system. */
+    $('mob-system-current').innerHTML = t(M.MODULES.filter(function (m) { return m.id === cur; })[0].label);
     $('mob-systems-items').innerHTML =
-      '<li role="none"><h6 class="menu-section-header">Systems</h6></li>' +
       M.MODULES.map(function (m) {
         var on = m.id === cur;
         return '<li role="none"><a class="menu-item" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
@@ -586,7 +588,8 @@
      focus ring is not left showing behind it, and focus is not put back
      on it afterwards. Opened from the keyboard, focus returns to the field
      when the Modal closes. */
-  searchInput.addEventListener('mousedown', function (e) {
+  /* On the field or its icon (on a narrow phone the icon covers it). */
+  searchForm.addEventListener('mousedown', function (e) {
     e.preventDefault();
     S.searchTrigger = null;
     openSearch();

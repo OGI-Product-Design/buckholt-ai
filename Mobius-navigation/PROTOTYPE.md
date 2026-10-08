@@ -73,12 +73,17 @@ and with it the module links across the top bar:
   GitHub does (suggested to Laurence, 8 October 2026), in Text input's own placeholder style;
   "/" opens the search from anywhere unless you are typing in a field, and
   `aria-keyshortcuts="/"` gives the key to assistive technology.
-- **The system menu, beside the avatar.** An icon-only ghost Menu button (as the Overflow menu,
-  Menu button Code & specs example 3, with its Tooltip "Switch system"). Its panel is **Menu's
-  documented Link variant**: a "Systems" section header, then one `a.menu-item` per system
-  (Broking, Activity, Renewals, Bordereau, Accounts) with its icon; the current one is
-  `aria-current="page"` (client and policy pages are Broking's). Buckholt documents no system or
-  app switcher, so the switcher itself is a gap to raise; the parts are documented.
+- **The system menu, beside the avatar.** A **labelled ghost Menu button** (Menu button Code &
+  specs example 1: the label, then the caret) whose **label is the current system**, so the top
+  bar says where you are ("Broking ▾"; read out as "System: Broking") (Laurence, 8 October 2026).
+  Its panel is **Menu's documented Link variant**: one `a.menu-item` per system (Broking,
+  Activity, Renewals, Bordereau, Accounts) with its icon, no section header; the current one is
+  `aria-current="page"` (client and policy pages are Broking's). Below 576px the label is kept
+  for assistive technology but not drawn, and the caret alone opens it. Buckholt documents no
+  system or app switcher, so the switcher itself is a gap to raise; the parts are documented.
+- **The top bar on narrow screens.** Between 768 and 1280px the search field is at most 20rem,
+  leaving room for the longest system name; below 430px the field shows only its icon (a tap on
+  it still opens the search) and the right-hand controls sit 4px apart, so the bar fits at 360px.
 - **Create new client, next to the search** (Laurence, 8 October 2026): a secondary Button
   (an anchor, as it opens a page) with the User-plus icon and its label; below 1280px the bar
   has no room for the label, so an icon-only version with its name and Tooltip shows instead.
@@ -160,7 +165,7 @@ Laurence asked for the best experience for system-level navigation. The decision
 
 | Need | Built with | Why |
 | --- | --- | --- |
-| Systems: Broking, Activity, Renewals, Bordereau, Accounts | The **system menu** beside the avatar (Laurence, 8 October 2026): an icon-only ghost Menu button whose panel is Menu's Link variant, one link per system with its icon, the current one `aria-current="page"` (see "The top bar" above). The same at every width | The prototype's "Dashboard" is the Broking system, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026). The top bar's horizontal module links were removed to give the search the room next to the wordmark |
+| Systems: Broking, Activity, Renewals, Bordereau, Accounts | The **system menu** beside the avatar (Laurence, 8 October 2026): a labelled ghost Menu button showing the current system ("Broking ▾") whose panel is Menu's Link variant, one link per system with its icon, the current one `aria-current="page"` (see "The top bar" above). The same at every width | The prototype's "Dashboard" is the Broking system, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026). The top bar's horizontal module links were removed to give the search the room next to the wordmark |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar, a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is the page's one primary, in the heading | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | What can I search? (in the search Modal) | A ghost Button with the Info icon to the right of the Modal's search field, as current Mobius has it. It opens a floating help panel: the title with a close Button, a Buckholt List per group (list heading and items), the tip, and "Learn more" as a standalone Link with the External-link icon; current Mobius wording in sentence case. Escape closes the panel first, back to its Button. **Buckholt has no Popover** (no `.popover` styles in `buckholt.css`, and no Bootstrap stylesheet is loaded), so the panel is a Menu panel (`.menu-panel.dropdown-menu`) on Bootstrap Dropdown, with fixed positioning so it floats over the Modal's scrolling body | Gap to raise with Buckholt: a documented Popover |
 | Search results (Laurence, 8 October 2026, after current Mobius) | In the search Modal, not a page. "{n} clients found for “{query}”", then the **filters straight above the results, not in a Card** (Brand, Line of business, Policy status, Clear and Apply; Apply keeps the clients with a policy that matches), then **one Accordion item per client** (Accordion Code & specs; the strict pass, 8 October 2026, in place of undocumented expandable Table rows), headed with the name and reference. Opening one shows a standalone **View client** Link (an Accordion header is a Button, so it cannot be the link), the client's reference, address, postcode, email and date of birth, and **their policies in a Table**, each policy number the link to the policy. Eight sample clients come back for "motor"; only the prototype's own client and its policies open, and the samples say so in a toast. An open client stays open when the filters change. A no-results state. An old `#search/{query}` link opens the Modal with that search over the Dashboard | Accordion, Table, Key-value pairs, Link, Tag |

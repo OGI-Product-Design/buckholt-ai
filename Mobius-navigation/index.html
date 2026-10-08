@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="../prototype/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261008-24">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261008-29">
 </head>
 <body class="mob-hide-terms">
 
@@ -96,16 +96,16 @@
         <time class="app-bar-date" id="app-clock-date" datetime="2026-10-01">01 October 2026</time>
       </div>
 
-      <!-- System menu: Buckholt Menu button with an icon-only ghost trigger
-           (as the Overflow menu, Code & specs example 3) and its Tooltip on
-           the wrapper. Its panel is Menu's documented Link variant: one
-           `a.menu-item` per system (Broking, Activity, Renewals, Bordereau,
-           Accounts) with its icon, the current one `aria-current="page"`.
-           Written by mobius-navigation.js. -->
-      <div class="menu mob-systems" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Switch system">
-        <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-          aria-label="Switch system" aria-controls="mob-systems-panel">
-          <div class="btn-icon"><i class="fa-regular fa-grid" aria-hidden="true"></i></div>
+      <!-- System menu: Buckholt Menu button (Code & specs example 1: the
+           label, then the caret), as a ghost Button. Its label is the
+           current system ("Broking"), so the top bar says where you are; it
+           is read out as "System: Broking". Its panel is Menu's documented
+           Link variant: one `a.menu-item` per system with its icon, the
+           current one `aria-current="page"`. Written by mobius-navigation.js. -->
+      <div class="menu mob-systems">
+        <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-systems-panel">
+          <span class="button-label"><span class="visually-hidden">System: </span><span id="mob-system-current">Broking</span></span>
+          <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
         </button>
         <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel" aria-labelledby="mob-systems-toggle">
           <ul class="menu-body" role="menu" id="mob-systems-items"></ul>
@@ -269,9 +269,9 @@
 <script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
-<script src="fixtures.js?v=20261008-24"></script>
-<script src="navigation-model.js?v=20261008-24"></script>
-<script src="pages.js?v=20261008-24"></script>
-<script src="mobius-navigation.js?v=20261008-24"></script>
+<script src="fixtures.js?v=20261008-29"></script>
+<script src="navigation-model.js?v=20261008-29"></script>
+<script src="pages.js?v=20261008-29"></script>
+<script src="mobius-navigation.js?v=20261008-29"></script>
 </body>
 </html>
