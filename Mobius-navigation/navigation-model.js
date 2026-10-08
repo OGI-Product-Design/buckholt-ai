@@ -77,6 +77,10 @@
          policyFlows', the same as the page heading. */
       var fl = policyFlows(p);
       [fl.primary].concat(fl.secondary).forEach(function (k) {
+        /* Add new quote is the client's, in the client menu only (Laurence,
+           8 October 2026): one place in the navigation. A policy's
+           heading keeps its Add new quote Button. */
+        if (k === 'newquote') return;
         ch.push({ id: POLICY_ACTIONS[k].to, label: POLICY_ACTIONS[k].label });
       });
       return ch.length ? { group: 'Policy', icon: ICON.policy, children: ch } : null;
