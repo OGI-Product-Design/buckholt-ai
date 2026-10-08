@@ -78,7 +78,8 @@ and with it the module links across the top bar:
   bar says where you are ("Broking ▾"; read out as "System: Broking") (Laurence, 8 October 2026).
   Its panel is **Menu's documented Link variant**: one `a.menu-item` per system (Broking,
   Activity, Renewals, Bordereau, Accounts) with its icon, no section header; the current one is
-  `aria-current="page"` (client and policy pages are Broking's). Below 576px the label is kept
+  `aria-current="page"`, drawn in Menu's own active colours (its pressed state's label and tint)
+  with a tick at its end, so it is not marked by colour alone (client and policy pages are Broking's). Below 576px the label is kept
   for assistive technology but not drawn, and the caret alone opens it. Buckholt documents no
   system or app switcher, so the switcher itself is a gap to raise; the parts are documented.
 - **The top bar on narrow screens.** Between 768 and 1280px the search field is at most 20rem,
