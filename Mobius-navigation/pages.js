@@ -1326,6 +1326,53 @@
     ]);
   }
 
+  /* The policy's actions, labelled, in the heading of every policy page
+     (Laurence, 8 October 2026: at the foot of the policy column, icon-only,
+     they were easy to miss and hard to read). Each is a ghost Button that
+     acts in place, a side panel or a confirmation; a panel's stays pressed
+     while it is open. The everyday ones show; the rest are behind
+     Buckholt's Overflow menu (Menu button Code & specs example 3): Copy
+     policy and Customer portal settings (rarely used, set once), then,
+     below a divider, Stop and Cancel (destructive; Cancel is the danger
+     item). */
+  var OVERFLOW = ['copy', 'portal'];
+  var DESTRUCTIVE = ['stop', 'cancel'];
+  function policyTools(p) {
+    var A = M.POLICY_ACTIONS;
+    var ids = [];
+    M.policyActions(p).forEach(function (g) { ids = ids.concat(g.ids); });
+    var shown = ids.filter(function (k) { return OVERFLOW.indexOf(k) < 0 && DESTRUCTIVE.indexOf(k) < 0; });
+    var rare = ids.filter(function (k) { return OVERFLOW.indexOf(k) >= 0; });
+    var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
+    var attrs = function (k) {
+      var a = A[k];
+      return ' data-action="' + k + '" data-scope="policy"' +
+        (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === k) + '"' : '') + ' aria-haspopup="dialog"';
+    };
+    var item = function (k) {
+      var a = A[k];
+      return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' + attrs(k) + '>' +
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) + '</button></li>';
+    };
+    var more = '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="More actions">' +
+      '<button type="button" class="btn btn-ghost menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
+        '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
+      '</button>' +
+      '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
+        '<ul class="menu-body" role="menu">' +
+          /* When the page is too narrow for the labelled actions, they fold
+             in here (CSS shows these and hides the Buttons). */
+          shown.map(function (k) { return item(k).replace('<li role="none">', '<li role="none" class="mob-fold">'); }).join('') +
+          (shown.length ? '<li role="none" class="mob-fold"><hr class="menu-divider"></li>' : '') +
+          rare.map(item).join('') +
+          (rare.length && risky.length ? '<li role="none"><hr class="menu-divider"></li>' : '') +
+          risky.map(item).join('') +
+        '</ul>' +
+      '</div>' +
+    '</div>';
+    return (shown.length ? set(shown.map(function (k) { return btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) }); }), 'mob-policy-actions') : '') + more;
+  }
+
   function heading(R) {
     /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
        a new page; a Button on a page opens a side panel there or changes
@@ -1338,7 +1385,9 @@
     /* The client's tools, Buttons opening side panels on the page: Client
        notes (with its count) and Client support, on every client and policy
        page (Laurence, 8 October 2026). */
-    if (R.scope === 'client' || R.scope === 'policy') return clientTools(R);
+    if (R.scope === 'client') return clientTools(R);
+    /* On a policy page the policy's actions follow, after a rule. */
+    if (R.scope === 'policy') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' + policyTools(R.p);
     return '';
   }
 

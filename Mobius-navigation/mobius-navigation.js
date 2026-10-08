@@ -17,9 +17,9 @@
 
      rail     the client (User meta), the client's menu (Client overview,
               then the "Client" group), their policies, Client support
-     record   (a white panel, inset 8px) once a policy is open: the policy,
-              its pages in always-open groups, and its actions in a row of
-              icon Buttons at the foot
+     record   (a white panel, inset 8px) once a policy is open: the policy
+              and its pages in always-open groups. Its actions are in the
+              page heading
 
    The systems (Broking, Activity, Renewals, Bordereau, Accounts) are in the
    system menu at the top right, and the search field is next to the
@@ -188,59 +188,6 @@
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
-  /* Actions: a row of icon Buttons under the policy's title, like the
-     inline actions of a mail client's reading pane. Every action is an
-     icon-only ghost Button with its accessible name and the Tooltip
-     Buckholt requires for icon-only Buttons. Each group (Policy, MTA,
-     Renewal, Customer portal) is a Button set; groups are divided by a rule, Stop and Cancel come
-     last, and Cancel is the danger variant. A panel action stays pressed
-     while its panel is open. One Tab stop: arrow keys move along it. */
-  var DESTRUCTIVE = ['stop', 'cancel'];
-  function toolbar(groups, defs, scope) {
-    var button = function (key) {
-      var a = defs[key];
-      var name = plain(a.label);
-      return '<button type="button" class="btn btn-ghost" tabindex="-1" data-toolbar-item' +
-        ' data-action="' + key + '" data-scope="' + scope + '" aria-label="' + esc(name) + '"' +
-        (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === key) + '" aria-haspopup="dialog"' : '') +
-        (a.kind === 'confirm' ? ' aria-haspopup="dialog"' : '') +
-        ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="' + esc(name) + '">' +
-        '<div class="btn-icon">' + icon(a.icon) + '</div>' +
-      '</button>';
-    };
-    var risky = [];
-    var sets = [];
-    groups.forEach(function (g) {
-      var ids = g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
-      risky = risky.concat(g.ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; }));
-      if (ids.length) sets.push('<div class="button-set" role="group"' + (g.sub ? ' aria-label="' + esc(plain(g.sub)) + '"' : '') + '>' + ids.map(button).join('') + '</div>');
-    });
-    /* Stop and Cancel are destructive, so they are not one click away: they
-       sit behind Buckholt's Overflow menu (Menu button Code & specs
-       example 3: ghost icon-only trigger, `fa-ellipsis-vertical`), which
-       opens below. Cancel is Menu's danger item. It ends the row, after a
-       rule, away from the everyday actions. */
-    var foot = '';
-    if (risky.length) {
-      foot = '<div class="mob-toolbar-foot"><div class="mob-toolbar-rule" role="separator"></div>' +
-        '<div class="menu mob-overflow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="More actions">' +
-        '<button type="button" class="btn btn-ghost menu-toggle" tabindex="-1" data-toolbar-item id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
-          '<div class="btn-icon"><i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i></div>' +
-        '</button>' +
-        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-more-actions">' +
-          '<ul class="menu-body" role="menu">' + risky.map(function (key) {
-            var a = defs[key];
-            return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' +
-              ' data-action="' + key + '" data-scope="' + scope + '" aria-haspopup="dialog">' + icon(a.icon) + t(a.label) + '</button></li>';
-          }).join('') + '</ul>' +
-        '</div>' +
-      '</div></div>';
-    }
-    return '<div class="mob-toolbar-body" role="toolbar" aria-labelledby="mob-toolbar-label" aria-orientation="horizontal">' +
-      sets.join('<div class="mob-toolbar-rule" role="separator"></div>') + foot +
-    '</div>';
-  }
-
   /* A navigation group, always open (Laurence, 7 October 2026): its label
      with the group's icon (not a link: a group is not a page), then its
      pages, indented past the icon with a rule down the left. */
@@ -344,16 +291,9 @@
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
-      '</nav>' +
-      /* The actions are the column's foot, always in view under the menu
-         (Laurence, 8 October 2026), so the policy's head and menu start
-         level with the client's in the rail. Labelled "Actions", as the
-         menus' sections are. */
-      '<div class="mob-toolbar" id="mob-toolbar"><h3 class="label-01 mob-toolbar-label" id="mob-toolbar-label">Actions</h3>' +
-        toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>';
-
-    var first = rec.querySelector('[data-toolbar-item]');
-    if (first) first.tabIndex = 0;
+      '</nav>';
+    /* The policy's actions are in the page heading, labelled, beside Client
+       support and Policy notes (Laurence, 8 October 2026). */
     tipTruncated();
   }
 
@@ -905,7 +845,7 @@
     if (e.key !== 'Tab') return;
     var items = Array.prototype.filter.call(
       container.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'),
-      /* Visible, and in the Tab order: the toolbar's roving items at -1 are not. */
+      /* Visible, and in the Tab order. */
       function (n) { return n.offsetParent !== null && n.tabIndex !== -1; });
     if (!items.length) return;
     var first = items[0];
@@ -1055,23 +995,6 @@
     if (el.closest('a, button, input, select, textarea, label')) return;
     var row = el.closest('tr[data-href]');
     if (row) location.hash = row.getAttribute('data-href').replace(/^#/, '');
-  });
-
-  /* The toolbar is one Tab stop (roving tabindex): Left / Right, Home and
-     End move along it (Down stays with the Overflow menu's toggle). */
-  document.addEventListener('keydown', function (e) {
-    var bar = e.target.closest && e.target.closest('[role=toolbar]');
-    if (!bar) return;
-    var items = Array.prototype.slice.call(bar.querySelectorAll('[data-toolbar-item]'));
-    var i = items.indexOf(e.target);
-    if (i < 0) return;
-    var n = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 }[e.key];
-    if (n == null) return;
-    e.preventDefault();
-    n = (n + items.length) % items.length;
-    items[i].tabIndex = -1;
-    items[n].tabIndex = 0;
-    items[n].focus();
   });
 
   /* Links that act in place are role="button": Space activates them too. */
