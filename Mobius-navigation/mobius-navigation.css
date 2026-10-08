@@ -90,7 +90,7 @@
 .mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
 .mob-systems .menu-panel { z-index: 1035; --menu-padding-x: var(--spacer-03); --menu-padding-y: var(--spacer-03); }
-.mob-systems .response-btn-input { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mob-systems .response-btn-input { display: grid; grid-template-columns: repeat(2, minmax(7.5rem, 1fr)); }   /* each column at least a large Response button's own minimum width, so the panel never squeezes them */
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button
    chrome of its own; focus is drawn round the Avatar. */
@@ -157,6 +157,10 @@
 /* User meta has 8px padding of its own, so the head gives 8px less. */
 .mob-has-record .mob-rail-head { padding-top: calc(var(--spacer-04) + 1px); padding-left: calc(var(--spacer-04) + 1px); }
 .mob-rail-client { min-width: 0; align-items: flex-start; }   /* the name's top level with the reference's */
+/* Ruled off from the menu under it, as the policy's head is from its menu
+   (Laurence, 8 October 2026). The rule runs the width of the rows under it. */
+.mob-rail-head { position: relative; padding-bottom: var(--spacer-03); }   /* with User meta's own 8px, the rule is level with the policy head's */
+.mob-rail-head::after { content: ""; position: absolute; left: var(--spacer-03); right: var(--spacer-03); bottom: 0; border-bottom: 1px solid var(--ui-border-02); }
 .mob-rail-client .user-meta-body { display: flex; flex-direction: column; min-width: 0; }
 /* The policy head's type: the name (16px, medium) over the reference (14px,
    light, secondary). */
@@ -180,8 +184,7 @@
 .mob-rail-foot .button-set { margin-top: 0; }
 
 .mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-04);   /* in line with the links' text and the status eyebrows */ color: var(--text-secondary); }
-/* Policies are ruled off from the client's pages above them. */
-.mob-rail #mob-rail-policies { display: block; align-self: stretch; margin-top: var(--spacer-04); padding-top: var(--spacer-05); border-top: 1px solid var(--ui-border-02); }
+.mob-rail #mob-rail-policies { display: block; margin-top: var(--spacer-05); }
 
 /* A policy: Icon block, the line of business over the reference, and the
    status Tag. Page navigation's own link states. */
@@ -232,10 +235,11 @@
   border: 1px solid var(--ui-border-02);              /* Card's border colour */
   border-radius: var(--border-radius-md);             /* 8px */
 }
-.mob-record-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 var(--spacer-04) var(--spacer-05); }   /* only the menu scrolls: the head and actions stay put */
-.mob-record-nav:first-child { padding-top: var(--spacer-05); }   /* a client page: no head */
+.mob-record-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--spacer-03) var(--spacer-04) var(--spacer-05); }   /* only the menu scrolls: the head and actions stay put. 8px from the head's rule, as the rail's menu is from the client's */
 /* User meta's type: the name line, then the reference. */
-.mob-record-head { display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
+.mob-record-head { position: relative; display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
+/* Ruled off from the menu, level with the rule under the client in the rail. */
+.mob-record-head::after { content: ""; position: absolute; left: var(--spacer-04); right: var(--spacer-04); bottom: 0; border-bottom: 1px solid var(--ui-border-02); }
 /* The reference, and the status Tag at its right. */
 .mob-record-titlebar { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); min-width: 0; }
 .mob-record-status { flex: 0 0 auto; display: flex; }
@@ -359,24 +363,26 @@
    it; the details row holds the client's (or policy's) fields with its
    actions at the right, then the client's policies. */
 .mob-search-row { cursor: pointer; }
-.mob-search-row.mob-search-open > td { background-color: var(--ui-background-02); }
 .mob-search-table .col-fit .btn { margin: calc(-1 * var(--spacer-02)) 0; }   /* the small toggle sits in the row's line */
 .mob-search-detail > td { padding-top: var(--spacer-04); padding-bottom: var(--spacer-05); }
 .mob-search-detail-body { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-05); }
 .mob-search-detail-body > .mob-fields { flex: 1 1 24rem; }
-.mob-search-detail-actions { margin-top: 0; }
+.mob-search-detail-actions { display: flex; align-items: center; gap: var(--spacer-05); }
+/* Only the row under the pointer takes Table's hover tint: a details row
+   holding a policies table is not tinted when one of its rows is. */
+.mob-search-detail { --table-hover-background: transparent; }
 .mob-search-sub { margin: var(--spacer-05) 0 var(--spacer-03); }
 .mob-search-results > .support-01 { margin: 0; }
 
 /* The policy's actions: a row of icon-only ghost Buttons (Button's medium
-   icon-only size) under the title, a rule between groups, the Overflow
-   menu last. It wraps if a status has more actions than fit. */
+   icon-only size) at the foot of the policy column, a rule between groups,
+   the Overflow menu last. The foot stays in view while the menu above it
+   scrolls, ruled off from it (Laurence, 8 October 2026). */
 .mob-toolbar {
-  /* Ruled off above and below (Laurence, 7 October 2026). */
-  margin-top: var(--spacer-04);
+  flex: 0 0 auto;
+  margin: 0 var(--spacer-04);
   padding: var(--spacer-04) 0;
   border-top: 1px solid var(--ui-border-02);
-  border-bottom: 1px solid var(--ui-border-02);
 }
 .mob-toolbar-label { margin: 0 0 var(--spacer-02); color: var(--text-secondary); }   /* as the rail's section labels */
 .mob-toolbar-body { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--spacer-02); margin-left: calc(-1 * var(--spacer-03)); }   /* the first icon lines up with the title */
@@ -613,6 +619,9 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-rail-scroll, .mob-record, .mob-record-nav { overflow: visible; }
 
   .mob-record { margin: var(--spacer-03); }
+  /* In the drawer the whole drawer scrolls, so the actions stick to its
+     bottom edge. */
+  .mob-toolbar { position: sticky; bottom: 0; z-index: 1; background-color: var(--ui-background-01); }
 
   .mob-terms { display: none; }
 }

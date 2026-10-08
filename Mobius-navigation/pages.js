@@ -580,9 +580,9 @@
           x.policies.map(function (p, i) {
             var key = 'p:' + x.id + ':' + i;
             var rowId = 'mob-sr-' + x.id + '-' + i;
-            var view = p[10]
-              ? btn('View', { variant: 'secondary', href: policyHref(p[10]) })
-              : btn('View', { variant: 'secondary', attrs: SAMPLE_TOAST });
+            /* Text links, not Buttons: a results list of many rows would
+               otherwise be a wall of Buttons (Laurence, 8 October 2026). */
+            var view = p[10] ? standalone('View policy', policyHref(p[10])) : moreLink('View policy', SAMPLE_TOAST, 'fa-regular fa-arrow-right');
             return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
                 '<td class="col-fit">' + rowToggle(key, rowId, p[0]) + '</td>' +
                 '<td>' + esc(p[0]) + '</td><td>' + esc(p[1]) + '</td><td>' + statusTag({ status: p[2] }) + '</td>' +
@@ -591,7 +591,7 @@
               (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="7">' +
                 '<div class="mob-search-detail-body">' +
                   fields([['Policy expiry', p[6]], ['Brand / agent', p[7]], ['Premium', p[8]], ['Scheme', p[9]]], 4) +
-                  set([view], 'mob-search-detail-actions') +
+                  '<div class="mob-search-detail-actions">' + view + '</div>' +
                 '</div>' +
               '</td></tr>' : '');
           }).join('') +
@@ -629,7 +629,6 @@
             found.map(function (x) {
               var key = 'c:' + x.id;
               var rowId = 'mob-sr-' + x.id;
-              var viewAttrs = x.real ? '' : SAMPLE_TOAST;
               return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
                   '<td class="col-fit">' + rowToggle(key, rowId, x.name) + '</td>' +
                   '<td><strong>' + esc(x.name) + '</strong></td><td>' + esc(x.ref) + '</td><td>' + esc(x.address) + '</td><td>' + esc(x.postcode) + '</td>' +
@@ -637,10 +636,11 @@
                 (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="5">' +
                   '<div class="mob-search-detail-body">' +
                     fields([['Email address', x.email], ['[[Date of birth]]', x.dob]], 2) +
-                    set([
-                      btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: viewAttrs }),
-                      btn('Add new quote', { variant: 'secondary', icon: AI.add, href: x.real ? '#c/newquote' : '#', attrs: viewAttrs })
-                    ], 'mob-search-detail-actions') +
+                    '<div class="mob-search-detail-actions">' +
+                      (x.real ? standalone('View client', '#c/summary') : moreLink('View client', SAMPLE_TOAST, 'fa-regular fa-arrow-right')) +
+                      (x.real ? '<a class="link-standalone mob-link" href="#c/newquote"><span class="icon"><i class="' + AI.add + '" aria-hidden="true"></i></span>Add new quote</a>'
+                        : moreLink('Add new quote', SAMPLE_TOAST, AI.add)) +
+                    '</div>' +
                   '</div>' +
                   '<div class="text-block mob-search-sub"><h4 class="title-01">Client policies</h4></div>' +
                   searchPolicies(x) +
