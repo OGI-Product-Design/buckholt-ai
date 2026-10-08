@@ -5,7 +5,7 @@ conventions of `Originators/` and `BACS-import/`. The structure, behaviour and w
 the prototype. The look comes from Buckholt.
 
 The sample data uses realistic people (Laurence, 8 October 2026): the client is **James
-Barnard** (BAR/J/08121986/0046, Harpenden), not the reference's "Reverend Motor API Automation"
+Barnard** (BAR/J/08121986/0046, Norwich), not the reference's "Reverend Motor API Automation"
 test account, and the diary, sanctions matches and search results use real-sounding names too.
 `reference/mobius-live-policy.html` keeps the original data, as captured.
 
