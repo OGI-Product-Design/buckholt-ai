@@ -196,10 +196,6 @@
 }
 .mob-rail-foot { flex: 0 0 auto; display: flex; align-items: center; gap: var(--spacer-03); padding: var(--spacer-03) var(--spacer-04); }   /* no rule: Client support is a plain link-like action, not a band */
 .mob-rail-foot .button-set { margin-top: 0; }
-/* Beside a policy, the foot's Buttons sit level with the policy's actions
-   at the foot of the next column (Laurence, 8 October 2026): that column's
-   8px inset and 1px border, then its 16px padding. */
-.mob-has-record .mob-rail-foot { padding-bottom: calc(var(--spacer-03) + 1px + var(--spacer-04)); }
 
 .mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-04);   /* in line with the links' text and the status eyebrows */ color: var(--text-secondary); }
 
@@ -390,31 +386,6 @@
 .mob-search-sub { margin: var(--spacer-05) 0 var(--spacer-03); }
 .mob-search-results > .support-01 { margin: 0; }
 
-/* The policy's actions: a row of icon-only ghost Buttons (Button's medium
-   icon-only size) at the foot of the policy column, a rule between groups,
-   the Overflow menu last. The foot stays in view while the menu above it
-   scrolls, ruled off from it (Laurence, 8 October 2026). */
-.mob-toolbar {
-  flex: 0 0 auto;
-  margin: 0 var(--spacer-04);
-  padding: var(--spacer-04) 0;
-  border-top: 1px solid var(--ui-border-02);
-}
-.mob-toolbar-label { margin: 0 0 var(--spacer-02); color: var(--text-secondary); }   /* as the rail's section labels */
-.mob-toolbar-body { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--spacer-02); margin-left: calc(-1 * var(--spacer-03)); }   /* the first icon lines up with the title */
-.mob-toolbar-foot { display: flex; align-items: center; gap: var(--spacer-02); }
-.mob-toolbar .mob-overflow { display: flex; }
-.mob-toolbar .button-set { margin: 0; gap: 0; flex-wrap: nowrap; }
-.mob-toolbar-rule { height: 1.5rem; border-left: 1px solid var(--ui-border-02); }
-
-/* Pressed while its panel is open: the ghost Button's own hover colours,
-   which it otherwise shows only under the pointer. */
-.mob-toolbar .btn[aria-pressed="true"] {
-  --button-label: var(--button-label-hover);
-  --button-background: var(--button-background-hover);
-}
-
-
 /* -------------------------------------------------------------------- Page */
 
 /* The page's two columns (Bootstrap `.col-xl-8` / `.col-xl-4`) follow the
@@ -448,6 +419,24 @@
   flex-wrap: wrap;
   gap: var(--spacer-04);
 }
+/* Between the client's tools and the policy's actions: a 24px rule. */
+.mob-heading-rule { align-self: center; height: 1.5rem; border-left: 1px solid var(--ui-border-02); }
+@media (max-width: 575.98px) { .mob-heading-rule { display: none; } }   /* the row wraps on a phone; a rule at a line's start reads as noise */
+.mob-heading-actions .mob-overflow { display: flex; }
+/* The policy's labelled actions fold into the More actions menu when the
+   page is too narrow to hold them on one row (Main under 62rem: 1280px, or
+   1440px with the client menu open). Client support and the notes stay. */
+.mob-overflow .mob-fold { display: none; }
+@container mob-main (max-width: 61.99rem) {
+  .mob-heading-actions .mob-policy-actions { display: none; }
+  .mob-overflow .mob-fold { display: list-item; list-style: none; }
+}
+/* Pressed while its panel is open: the ghost Button's own hover colours,
+   which it otherwise shows only under the pointer. */
+.mob-heading-actions .btn[aria-pressed="true"] {
+  --button-label: var(--button-label-hover);
+  --button-background: var(--button-background-hover);
+}
 /* Sets here sit side by side in a flex row, so the runtime's offsets for
    stacked sets (margin-top, and margin-bottom on a set with a following
    sibling) would only push them out of line with each other. */
@@ -456,7 +445,6 @@
 .mob-split .button-set,
 .mob-table-foot .button-set { margin-top: 0; }
 .mob-heading-actions > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
-.mob-toolbar-body > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .app-bar > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-rail-foot > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
 .mob-card-head [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
@@ -638,9 +626,6 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   .mob-rail-scroll, .mob-record, .mob-record-nav { overflow: visible; }
 
   .mob-record { margin: var(--spacer-03); }
-  /* In the drawer the whole drawer scrolls, so the actions stick to its
-     bottom edge. */
-  .mob-toolbar { position: sticky; bottom: 0; z-index: 1; background-color: var(--ui-background-01); }
 
   .mob-terms { display: none; }
 }

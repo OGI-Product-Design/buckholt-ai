@@ -60,7 +60,6 @@
     history: 'fa-regular fa-clock-rotate-left',        // Recent
     documents: 'fa-regular fa-files',                  // Documents
     newClient: 'fa-regular fa-user-plus',              // GAP
-    clientGroup: 'fa-regular fa-address-card',         // GAP
     systems: 'fa-regular fa-grid',                     // GAP: the system menu
     support: 'fa-regular fa-circle-heart',             // GAP: Client support
     supportOn: 'fa-solid fa-circle-check'              // Success status icon (as Tag's): extra support in place
@@ -70,7 +69,9 @@
 
   var GROUPS = {
     policy: function (p) {
-      var ch = [];
+      /* Policy overview is the group's first page, not an item of its own
+         (Laurence, 8 October 2026); the group takes the Shield. */
+      var ch = [{ id: 'summary', label: '[[Policy overview]]' }];
       if (p.kind !== 'incomplete') ch.push({ id: 'details', label: '[[Policy details]]' });
       if (p.kind !== 'decline') ch.push({ id: 'claims', label: 'Claims' });
       /* Amend policy and Add new quote are menu items in current Mobius
@@ -85,7 +86,7 @@
         if (k === 'newquote') return;
         ch.push({ id: POLICY_ACTIONS[k].to, label: POLICY_ACTIONS[k].label });
       });
-      return ch.length ? { group: 'Policy', icon: ICON.policy, children: ch } : null;
+      return { group: 'Policy', icon: ICON.policies, children: ch };
     },
     transactions: function (p) {
       return p.kind === 'decline' ? null : { group: 'Transactions', icon: ICON.money, children: [
@@ -123,14 +124,14 @@
      other pages, without icons of their own. */
   function clientNav() {
     return [
-      { id: 'summary', label: '[[Client overview]]', icon: ICON.client },
-      { group: 'Client', icon: ICON.clientGroup, children: CLIENT_NAV.map(function (n) { return { id: n.id, label: n.label }; }) }
+      /* Client overview is the group's first page (Laurence, 8 October
+         2026); the group takes the User icon. */
+      { group: 'Client', icon: ICON.client, children: [{ id: 'summary', label: '[[Client overview]]' }].concat(CLIENT_NAV.map(function (n) { return { id: n.id, label: n.label }; })) }
     ];
   }
 
   function policyNav(p) {
     return [
-      { id: 'summary', label: '[[Policy overview]]', icon: ICON.policies },   // the Shield, not the House (Laurence, 8 October 2026)
       GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
     ].filter(Boolean);
   }

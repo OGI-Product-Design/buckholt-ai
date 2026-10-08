@@ -103,9 +103,9 @@ stay one click away from any policy.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (272px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border; 272px inside the inset, so a long reference such as AADD000000000666 fits under the Policies rule), as the policy column is; once a policy opens, the panel passes to the policy column. Collapsed at client level it stays the white panel, 64px wide (Laurence, 8 October 2026). **A head with the client in User meta** (small Avatar, the name over the reference, in the policy head's type), **level with the policy column's head** beside it, and **ruled off under it, the rule level with the policy head's** (Laurence, 8 October 2026); collapsed, only the Avatar shows. Then **the client's menu, built as the policy's is** (Laurence, 8 October 2026): **Client overview** (User icon) on its own, then a **"Client" group** (Address card icon; a gap in the catalogue) holding Add new quote, Business details, Transactions, Activity, Complaints and Client checks, indented under a rule, without icons of their own. Then **Policies, a group built the same way** (Laurence, 8 October 2026): the **Shield** and "Policies" as its label, then the policies **indented under a rule**, and "Show 2 more" in line with them. One link per policy: **no icon of its own** (the group has the Shield and each row says "Open Market Motor"; indented, the reference needs the room), the **status as an eyebrow** above it (Buckholt's `.eyebrow`, no Tag: Laurence, 7 October 2026) **with a dot in its status colour** (the Tag's own border colour, `--feedback-border-*`) and the text in the primary colour, also on the open policy (local CSS, not Buckholt; the text carries the meaning, the dot only reinforces it), then **the reference (16px, medium) over the line of business** (14px, light, secondary): the reference is what tells a client's policies apart (Laurence, 7 October 2026); a reference too long for its line ends in "…" and shows in full in a Tooltip. The same as the policy column's head; and a **right chevron**, centred on the row, showing the policy opens the next column. On the open policy the reference and chevron take the active colour, as the icon does. "Show 2 more" / "Show fewer"; the rail's **collapse button at the foot's right** (as in Outlook or VS Code; Client support moved to the page heading, 8 October 2026). Beside a policy, the collapse button sits level with the policy's actions in the next column (Laurence, 8 October 2026). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
-| Policy column (policy pages only, no collapse button; 304px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the reference with the **small status Tag at its right** (Laurence, 8 October 2026; there is only one policy here, so the Tag stands out without weighing a list down; the rail's list keeps the dots), over the line of business ("Open Market Motor"), a long reference truncated with its Tooltip, like the policy's row in the rail, ruled off under it, then the policy's pages in **always-open groups** (no accordion), starting level with the client's menu in the rail, then the **policy's actions in a row at the column's foot**, always in view while the menu scrolls, labelled "Actions" as the menus' sections are and ruled off above (Laurence, 8 October 2026: so the client and policy columns line up). In the drawer the foot sticks to the drawer's bottom edge. Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
-| Policy actions (at the policy column's foot) | Every action of the policy's status, as icons in one row at the foot of the policy column (moved from under the title, Laurence, 8 October 2026), like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
+| Rail (272px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border; 272px inside the inset, so a long reference such as AADD000000000666 fits under the Policies rule), as the policy column is; once a policy opens, the panel passes to the policy column. Collapsed at client level it stays the white panel, 64px wide (Laurence, 8 October 2026). **A head with the client in User meta** (small Avatar, the name over the reference, in the policy head's type), **level with the policy column's head** beside it, and **ruled off under it, the rule level with the policy head's** (Laurence, 8 October 2026); collapsed, only the Avatar shows. Then **the client's menu: one "Client" group with the User icon** (Laurence, 8 October 2026: the overview is the group's first page, not an item of its own): Client overview, Add new quote, Business details, Transactions, Activity, Complaints and Client checks, indented under a rule. Then **Policies, a group built the same way** (Laurence, 8 October 2026): the **Shield** and "Policies" as its label, then the policies **indented under a rule**, and "Show 2 more" in line with them. One link per policy: **no icon of its own** (the group has the Shield and each row says "Open Market Motor"; indented, the reference needs the room), the **status as an eyebrow** above it (Buckholt's `.eyebrow`, no Tag: Laurence, 7 October 2026) **with a dot in its status colour** (the Tag's own border colour, `--feedback-border-*`) and the text in the primary colour, also on the open policy (local CSS, not Buckholt; the text carries the meaning, the dot only reinforces it), then **the reference (16px, medium) over the line of business** (14px, light, secondary): the reference is what tells a client's policies apart (Laurence, 7 October 2026); a reference too long for its line ends in "…" and shows in full in a Tooltip. The same as the policy column's head; and a **right chevron**, centred on the row, showing the policy opens the next column. On the open policy the reference and chevron take the active colour, as the icon does. "Show 2 more" / "Show fewer"; the rail's **collapse button at the foot's right** (as in Outlook or VS Code; Client support moved to the page heading, 8 October 2026). Beside a policy, the collapse button sits level with the policy's actions in the next column (Laurence, 8 October 2026). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
+| Policy column (policy pages only, no collapse button; 304px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the reference with the **small status Tag at its right** (Laurence, 8 October 2026; there is only one policy here, so the Tag stands out without weighing a list down; the rail's list keeps the dots), over the line of business ("Open Market Motor"), a long reference truncated with its Tooltip, like the policy's row in the rail, ruled off under it, then the policy's pages in **always-open groups** (no accordion), the first the **"Policy" group with the Shield**, Policy overview its first page (Laurence, 8 October 2026), starting level with the client's menu in the rail, then the **policy's actions in a row at the column's foot**, always in view while the menu scrolls, labelled "Actions" as the menus' sections are and ruled off above (Laurence, 8 October 2026: so the client and policy columns line up). In the drawer the foot sticks to the drawer's bottom edge. Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
+| Policy actions (in the page heading) | In the heading of **every policy page**, after Client support and Policy notes and a 24px rule (Laurence, 8 October 2026: icon-only at the foot of the policy column they were easy to miss and hard to read). The everyday ones as **labelled ghost Buttons** with their icons (Add MTA, Policy extension, Renewal invite; Reinstate policy when Lapsed); the rest behind the **"⋮" More actions** Overflow menu: Copy policy and Customer portal settings (rarely used, set once), then below a divider Stop and Cancel (destructive; Cancel is the danger item). When Main is narrower than 62rem (1280px, or 1440px with the client menu open) the labelled actions **fold into the top of More actions**, so the row never wraps | Ghost Buttons with `.btn-icon` and `.button-label`, in a Button set; Menu button Code & specs example 3 for More actions. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
 columns are open follows where you are:
@@ -208,8 +208,8 @@ here.").
     it.)
   - **A Button on a page** opens a side panel on that page, to change what is visible, or makes
     a change happen on the page you are on.
-  - **The actions in the menu** (the policy column's Actions) belong to the policy as a whole,
-    not to any one page.
+  - **The policy's actions** belong to the policy as a whole, not to any one page, so they are in
+    the heading of every policy page (they were the policy column's Actions until 8 October 2026).
   - So **page headings do not repeat menu items** (Laurence, 8 October 2026): Add new quote is
     gone from the Client overview and Policy overview headings, and Amend policy from the Policy
     overview and Policy details headings. Policy details' read-only note points to Amend policy in
@@ -249,11 +249,10 @@ excess names and "Automatic Decline" are kept as data.
 - Navigation items are links, with `aria-current="page"` on the single current page, in the
   record column. In the rail, the open client or policy is marked `aria-current="true"` (the
   current item of a set): it is the current record, not the current page.
-- Actions are buttons in a toolbar (deviation 2). Group headers in the policy menu are disclosure
-  Buttons (`aria-expanded`, `aria-controls`); focus stays on a header when it opens or closes.
+- The policy's actions are labelled Buttons in the page heading (deviation 2).
 - Panels and confirmations trap focus, close on Escape and return focus to their trigger. When
   re-rendering replaced the trigger, focus goes to its successor.
-- Icon-only controls (collapsed menu items, toolbar actions, Client notes, Menu, Close menu) have `aria-label` and a
+- Icon-only controls (collapsed menu items, More actions, the system menu, Menu, Close menu) have `aria-label` and a
   Tooltip using the options from Tooltip's Code & specs example 3.
 - A route change moves focus to the page `<h1>`. A skip link goes to it too.
 - **Drawer**: below 992px the menu becomes a drawer behind the Menu button. While it is open,
@@ -286,36 +285,32 @@ specs does not show. The prototype draws the current page in black; Buckholt's
 > **Gap to raise with Buckholt:** a documented vertical / side navigation, including grouped
 > sections and a dark rail like the documentation site's.
 
-### 2. Actions in a toolbar (7 October 2026)
+### 2. The policy's actions in the page heading (8 October 2026)
 
-The actions used to be a Menu shown in place at the foot of the record column, then an
-Adobe-like 48px vertical strip beside it. Laurence then asked for them as a **row of inline
-actions under the policy's title**, like a mail client's reading pane, with the policy menu a
-little wider (336px) to hold them. Buckholt has **no Toolbar component**, so the row is assembled
-from documented parts: icon-only ghost Buttons (40px, Button's medium icon-only size), each with
-an accessible name and a Tooltip below it (Buckholt's requirement for icon-only Buttons), grouped
-in Button sets.
+The actions were a Menu at the foot of the record column, then a vertical strip, then a row of
+icon-only Buttons under the policy's title and, briefly, at the foot of the policy column. They
+are now **labelled ghost Buttons in the page heading** of every policy page, after Client support
+and Policy notes and a rule (Laurence, 8 October 2026: icon-only and at the bottom, they were
+hidden and hard to understand).
 
-- It is an ARIA `toolbar` (`aria-label="Policy actions"`, `aria-orientation="horizontal"`), one
-  Tab stop with a roving tabindex: Left / Right, Home and End move along it. Each group is a `role="group"` named
-  after the prototype's section header; the rules between groups are separators.
+- The everyday actions show; **More actions** (Menu button Code & specs example 3: an icon-only
+  ghost `.menu-toggle` with `fa-ellipsis-vertical` and its Tooltip on the Menu wrapper) holds
+  Copy policy and Customer portal settings, then, below a Menu divider, **Stop and Cancel**
+  (Mark, 7 October 2026: destructive, so not one click away). Cancel is Menu's danger item. Each
+  still asks for confirmation; focus returns to "More actions" when it closes.
 - A panel action is `aria-pressed="true"` while its panel is open, drawn with the ghost Button's
-  own hover colours. Panels and confirmations still return focus to the toolbar Button.
-- **Stop and Cancel are behind an Overflow menu** (Mark, 7 October 2026: they are destructive,
-  so not one click away). It is Menu button's Code & specs example 3: an icon-only ghost
-  `.menu-toggle` with `fa-ellipsis-vertical`, named "More actions" with its Tooltip on the Menu
-  wrapper (as Breadcrumb's overflow menu does), **at the end of the row** after a rule, away
-  from the everyday actions, and opening its Menu below. Its Tooltip sits above it and hides
-  while the Menu is open, so the two never overlap (the breadcrumb's "…" does the same). Cancel is
-  Menu's danger item, which Buckholt draws red on hover. Each still asks for confirmation; when
-  the confirmation closes, focus returns to the "More actions" trigger.
-- Below 1024px, in the drawer, it stays in the policy's head.
-- Lost from the old Menu: the visible labels and the trailing panel / page icons. Icon-only
-  actions rely on recognisable icons; MTA (`fa-swap-arrows`) and Stop (`fa-circle-pause`) are
-  catalogue gaps (see deviation 9).
+  own hover colours.
+- **Narrow pages fold the labelled actions into More actions** (a container query on Main, under
+  62rem), above Copy policy, so the heading never wraps the actions onto a second line. On a phone
+  the rule before them is not drawn.
+- They are no longer a `role="toolbar"` with a roving tabindex: each is its own Tab stop, as
+  Buttons in a heading are.
 
-> **Gap to raise with Buckholt:** a documented Toolbar (a row of icon Buttons), including grouping,
-> pressed state and keyboard model.
+> **Buckholt guidance to weigh:** Heading attachment says to keep one closely related attachment
+> and "not turn the heading row into a general toolbar". This heading is a plain flex row (as in
+> Originators and BACS Import), not the Heading attachment component, but with Client support,
+> Policy notes, three actions and More actions it is close to a toolbar. A documented page-level
+> action bar would settle it: a gap to raise with Buckholt.
 
 ### 3. Heading actions that open pages are anchors styled as Buttons
 
@@ -411,12 +406,11 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Attachments | `fa-paperclip` |
 | Create new client | `fa-user-plus` |
 | Bordereau module | `fa-list` |
-| The "Client" group in the client menu | `fa-address-card` |
 | The system menu | `fa-grid` |
 | Search result rows: sort direction | `fa-sort-up` / `fa-sort-down` (Table documents only `fa-sort`) |
 
-Policy overview uses the catalogue's **Shield**, not Home (Laurence, 8 October 2026), and Client
-overview the **User** icon.
+The Policy group uses the catalogue's **Shield** and the Client group the **User** icon (Laurence,
+8 October 2026); the overviews are their groups' first pages.
 
 ### 10. "Create new client" is in the top bar, not the menu
 
