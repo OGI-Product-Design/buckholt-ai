@@ -57,7 +57,7 @@
 
     /* The user's recent searches (most recent first), shown when they open
        the search. A search they run is added to the top for the session. */
-    recentSearches: ['Barnard', 'PUCO0068', 'BAR/J/08121986/0046', 'AL5 2JR'],
+    recentSearches: ['Barnard', 'PUCO0068', 'BAR/J/08121986/0046', 'NR2 2PA'],
 
     /* Sample clients a search can bring back: for "Barnard", James Barnard
        (the prototype's own client, the only one that opens) and other
@@ -131,9 +131,9 @@
       initials: 'JB',
       ref: 'BAR/J/08121986/0046',
       dob: '08/12/1986',
-      address: '14 Willow Lane, Harpenden, Hertfordshire, AL5 2JR',
-      addressShort: '14 Willow Lane, Harpenden, Hertfordshire',
-      postcode: 'AL5 2JR',
+      address: '22 Unthank Road, Norwich, Norfolk, NR2 2PA',
+      addressShort: '22 Unthank Road, Norwich, Norfolk',
+      postcode: 'NR2 2PA',
       email: 'james.barnard@outlook.com',
       tel: '07700 900481',
       since: '30/12/2017',
@@ -281,7 +281,7 @@
         ['Cover date and time', [['[[Cover start]]', '@start'], ['[[Cover end]]', '@end']]]
       ] },
       { key: 'business', title: '[[Invoicing details]]', cards: [
-        ['Invoicing address', [['House name / number', '14'], ['Postcode', 'AL5 2JR'], ['Street', 'Willow Lane'], ['Locality', ''], ['City', 'Harpenden'], ['County', 'Hertfordshire']]],
+        ['Invoicing address', [['House name / number', '22'], ['Postcode', 'NR2 2PA'], ['Street', 'Unthank Road'], ['Locality', ''], ['City', 'Norwich'], ['County', 'Norfolk']]],
         ['Additional contacts', [], 'contacts'],
         ['VAT', [['Business VAT registered', 'No'], ['Reference', '']]],
         ['Employer reference number', [['Employer reference number', '']]]
@@ -312,7 +312,7 @@
     /* The named tables and empty messages policyDetail refers to. `empty` is
        what the blank (Create new client) version shows instead. */
     policyDetailTables: {
-      telephones: { head: ['Telephone', 'Type', 'Extension', 'Ex directory'], rows: [['07700 900481', 'Mobile', '', 'No'], ['01582 760213', 'Home', '', 'No']], empty: null },
+      telephones: { head: ['Telephone', 'Type', 'Extension', 'Ex directory'], rows: [['07700 900481', 'Mobile', '', 'No'], ['01603 621847', 'Home', '', 'No']], empty: null },
       contacts: { head: ['Name', 'Title'], rows: [['Claire Barnard', 'Spouse']], empty: 'No additional contacts.' },
       drivers: { head: ['Title', 'Forename', 'Surname', 'Date of birth', '[[Relationship to policyholder]]'], rows: [['Mr', 'James', 'Barnard', '08/12/1986', '[[Policyholder]]']], empty: 'No drivers added.' },
       noDataConsent: { message: 'No data processing consent entered.' },
