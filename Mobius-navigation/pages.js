@@ -1209,8 +1209,15 @@
       ]), 'Portal settings saved'];
     },
     support: function () {
-      return ['Client support', form([input('su', 'Search help articles', '')]) +
-        placeholder('The existing Client support content sits here. It used to be a button in the blue bar.'), null];
+      /* Whether the client has extra support in place: the Switch sets the
+         heading's heart (outline, or solid in purple). */
+      return ['Client support', form([
+          '<div class="form-check form-switch">' +
+            '<input class="form-check-input" type="checkbox" role="switch" id="su-on"' + (F.client.supportOn ? ' checked' : '') + '>' +
+            '<div class="input-label"><label class="form-check-label" for="su-on">Extra support in place</label></div>' +
+          '</div>',
+          input('su', 'Search help articles', '')]) +
+        placeholder('The existing Client support content sits here.'), 'Saved', 'Save'];
     },
     header: function () { return ['Policy header', form([textarea('h1', 'Header text', 4)]), 'Policy header saved']; },
     cheader: function () { return ['Client header', form([textarea('ch', 'Header text', 4)]), 'Client header saved']; },
@@ -1283,31 +1290,42 @@
   /* ===================================================== Heading actions
      Actions that open a page go in the page heading, never the menu. */
 
+  function clientTools() {
+    var n = F.clientNotes.length;
+    var notesLabel = 'Client notes' + (n ? ', ' + n + ' note' + (n > 1 ? 's' : '') : ', none');
+    /* Client support: the Circle-heart, outline; solid and in the secondary
+       expressive colour (purple, apart from the blue actions and red
+       counts) once extra support is in place. The shape and the name say it
+       too, not the colour alone. */
+    var on = !!F.client.supportOn;
+    return set([
+      '<button type="button" class="btn btn-ghost mob-badged" data-panel="cnotes" aria-haspopup="dialog"' +
+        ' aria-label="' + notesLabel + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Client notes">' +
+        '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
+        (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
+      '</button>',
+      /* Labelled, the heart leading (Laurence, 8 October 2026): it needs
+         its name in view. The state is read out after it. */
+      '<button type="button" class="btn btn-ghost' + (on ? ' mob-support-on' : '') + '" data-panel="support" aria-haspopup="dialog">' +
+        '<div class="btn-icon"><i class="' + (on ? ICON.supportOn : ICON.support) + '" aria-hidden="true"></i></div>' +
+        '<span class="button-label">Client support' + (on ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span>' +
+      '</button>'
+    ]);
+  }
+
   function heading(R) {
     /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
        a new page; a Button on a page opens a side panel there or changes
        something on it. So the page headings no longer repeat menu items:
        Amend policy and Add new quote are in the menus, not here. */
 
-    /* Create new client opens a page, so it is a heading action: on the
-       Dashboard, Broking's home (Laurence, 8 October 2026, now the Broking
-       bar is gone). */
-    if (R.scope === 'app' && R.page === 'dashboard') {
-      var nc = M.APP_ACTIONS.newclient;
-      return set([btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })]);
-    }
+    /* Create new client is in the top bar, next to the search (Laurence,
+       8 October 2026). */
 
-    if (R.scope === 'client' && R.page === 'summary') {
-      var n = F.clientNotes.length;
-      var notesLabel = 'Client notes' + (n ? ', ' + n + ' note' + (n > 1 ? 's' : '') : ', none');
-      return set(['<button type="button" class="btn btn-ghost mob-badged" data-panel="cnotes" aria-haspopup="dialog"' +
-          ' aria-label="' + notesLabel + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Client notes">' +
-          '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
-          (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
-        '</button>']);
-      /* No View claims: in current Mobius it is a link out to another
-         system, not part of the client (Laurence, 8 October 2026). */
-    }
+    /* The client's tools, Buttons opening side panels on the page: Client
+       notes (with its count) and Client support, on every client and policy
+       page (Laurence, 8 October 2026). */
+    if (R.scope === 'client' || R.scope === 'policy') return clientTools();
     return '';
   }
 

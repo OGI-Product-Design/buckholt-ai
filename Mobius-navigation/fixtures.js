@@ -139,7 +139,10 @@
       product: 'Motor',
       brand: 'Krypton',
       riskInfo: 'Registration: TBA1',
-      insurer: 'N/A'
+      insurer: 'N/A',
+      /* Extra support in place (Client support's Switch). On, so the
+         heading's solid purple heart shows; switch it off in the panel. */
+      supportOn: true
     },
 
     policies: POLICIES,

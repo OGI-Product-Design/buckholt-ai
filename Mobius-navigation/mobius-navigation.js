@@ -180,14 +180,6 @@
     '</li></ul>';
   }
 
-  /* A rail Button: labelled when the rail is open, icon-only with its
-     accessible name and Tooltip when collapsed. */
-  function railButton(label, o) {
-    if (!railCollapsed()) return ui.btn(label, o);
-    o = Object.assign({}, o, { attrs: (o.attrs || '') + tipAttrs(plain(label)) });
-    return ui.btn('', o);
-  }
-
   /* A column's collapse / open control: one icon-only ghost Button, as on
      the documentation site. */
   function columnToggle(attr, collapsed, what) {
@@ -322,13 +314,10 @@
       var top = open.getBoundingClientRect().top - railBody.getBoundingClientRect().top + railBody.scrollTop;
       if (top + open.offsetHeight > railBody.scrollTop + railBody.clientHeight) railBody.scrollTop = top - railBody.clientHeight / 2 + open.offsetHeight / 2;
     }
-    /* Client support opens a side panel: a ghost Button. It needs a
-       client, so not at app level. */
-    /* The foot: Client support, and the collapse button at its right (as
-       in Outlook or VS Code), now the rail has no head. */
-    $('mob-rail-foot').innerHTML = app ? '' : ui.set([railButton(M.GLOBAL_ACTIONS.support.label, { icon: M.GLOBAL_ACTIONS.support.icon,
-      attrs: ' data-action="support" data-scope="global" aria-haspopup="dialog"' })]) +
-      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
+    /* The foot: the collapse button at its right (as in Outlook or VS
+       Code). Client support is an icon Button in the overview headings,
+       beside Client notes (Laurence, 8 October 2026). */
+    $('mob-rail-foot').innerHTML = app ? '' : columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
     $('mob-rail-foot').hidden = app;
 
     /* The policy column: only once a policy is open. */
@@ -487,6 +476,8 @@
     renderSystems(R);
     /* No client menu at app level, so no Menu button for it either. */
     $('mob-menu-open').parentNode.hidden = R.scope === 'app';
+    /* Not while creating one. */
+    $('mob-create-client').hidden = R.scope === 'app' && R.page === 'newclient';
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
@@ -842,6 +833,16 @@
       if (!text) { field.focus(); return; }
       F.clientNotes.unshift({ by: F.user.name, at: '01/10/2026 15:26', text: text });
       pendingRender = true;
+    }
+    /* Client support: whether extra support is in place, which the heading's
+       heart shows. */
+    if (S.panelKey === 'support') {
+      var sw = $('su-on');
+      if (sw && sw.checked !== !!F.client.supportOn) {
+        F.client.supportOn = sw.checked;
+        blade.toastMessage = sw.checked ? 'Extra support in place' : 'Extra support removed';
+        pendingRender = true;
+      } else blade.toastMessage = null;
     }
     var msg = blade.toastMessage;
     blade.close();

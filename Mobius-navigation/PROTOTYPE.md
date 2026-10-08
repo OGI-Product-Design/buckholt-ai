@@ -86,8 +86,10 @@ and with it the module links across the top bar:
   keys only move through them, as in any Radio group, so the keyboard can look without leaving
   the page. Using Response buttons to navigate is Laurence's call: Buckholt documents them for
   answers, and documents no system or app switcher, so this is a gap to raise.
-- **Create new client** is a secondary Button in the **Dashboard's heading** (it opens a page,
-  so it is a heading action), no longer in a bar on every Broking page.
+- **Create new client, next to the search** (Laurence, 8 October 2026): a secondary Button
+  (an anchor, as it opens a page) with the User-plus icon and its label; below 1280px the bar
+  has no room for the label, so an icon-only version with its name and Tooltip shows instead.
+  Not shown while creating a client. It is Broking-wide, so it is no longer on the Dashboard.
 - **No back arrow.** The breadcrumbs say where you are and go back up.
 
 **A column for each level (Laurence, 7 October 2026).** Before this, the second column held the
@@ -101,7 +103,7 @@ stay one click away from any policy.
 
 | Column | Contents | Built with |
 | --- | --- | --- |
-| Rail (272px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border; 272px inside the inset, so a long reference such as AADD000000000666 fits under the Policies rule), as the policy column is; once a policy opens, the panel passes to the policy column. Collapsed at client level it stays the white panel, 64px wide (Laurence, 8 October 2026). **A head with the client in User meta** (small Avatar, the name over the reference, in the policy head's type), **level with the policy column's head** beside it, and **ruled off under it, the rule level with the policy head's** (Laurence, 8 October 2026); collapsed, only the Avatar shows. Then **the client's menu, built as the policy's is** (Laurence, 8 October 2026): **Client overview** (User icon) on its own, then a **"Client" group** (Address card icon; a gap in the catalogue) holding Add new quote, Business details, Transactions, Activity, Complaints and Client checks, indented under a rule, without icons of their own. Then **Policies, a group built the same way** (Laurence, 8 October 2026): the **Shield** and "Policies" as its label, then the policies **indented under a rule**, and "Show 2 more" in line with them. One link per policy: **no icon of its own** (the group has the Shield and each row says "Open Market Motor"; indented, the reference needs the room), the **status as an eyebrow** above it (Buckholt's `.eyebrow`, no Tag: Laurence, 7 October 2026) **with a dot in its status colour** (the Tag's own border colour, `--feedback-border-*`) and the text in the primary colour, also on the open policy (local CSS, not Buckholt; the text carries the meaning, the dot only reinforces it), then **the reference (16px, medium) over the line of business** (14px, light, secondary): the reference is what tells a client's policies apart (Laurence, 7 October 2026); a reference too long for its line ends in "…" and shows in full in a Tooltip. The same as the policy column's head; and a **right chevron**, centred on the row, showing the policy opens the next column. On the open policy the reference and chevron take the active colour, as the icon does. "Show 2 more" / "Show fewer"; **Client support** at the foot, with the rail's **collapse button at the foot's right** (as in Outlook or VS Code). Beside a policy, the foot's Buttons sit level with the policy's actions in the next column (Laurence, 8 October 2026). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
+| Rail (272px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border; 272px inside the inset, so a long reference such as AADD000000000666 fits under the Policies rule), as the policy column is; once a policy opens, the panel passes to the policy column. Collapsed at client level it stays the white panel, 64px wide (Laurence, 8 October 2026). **A head with the client in User meta** (small Avatar, the name over the reference, in the policy head's type), **level with the policy column's head** beside it, and **ruled off under it, the rule level with the policy head's** (Laurence, 8 October 2026); collapsed, only the Avatar shows. Then **the client's menu, built as the policy's is** (Laurence, 8 October 2026): **Client overview** (User icon) on its own, then a **"Client" group** (Address card icon; a gap in the catalogue) holding Add new quote, Business details, Transactions, Activity, Complaints and Client checks, indented under a rule, without icons of their own. Then **Policies, a group built the same way** (Laurence, 8 October 2026): the **Shield** and "Policies" as its label, then the policies **indented under a rule**, and "Show 2 more" in line with them. One link per policy: **no icon of its own** (the group has the Shield and each row says "Open Market Motor"; indented, the reference needs the room), the **status as an eyebrow** above it (Buckholt's `.eyebrow`, no Tag: Laurence, 7 October 2026) **with a dot in its status colour** (the Tag's own border colour, `--feedback-border-*`) and the text in the primary colour, also on the open policy (local CSS, not Buckholt; the text carries the meaning, the dot only reinforces it), then **the reference (16px, medium) over the line of business** (14px, light, secondary): the reference is what tells a client's policies apart (Laurence, 7 October 2026); a reference too long for its line ends in "…" and shows in full in a Tooltip. The same as the policy column's head; and a **right chevron**, centred on the row, showing the policy opens the next column. On the open policy the reference and chevron take the active colour, as the icon does. "Show 2 more" / "Show fewer"; the rail's **collapse button at the foot's right** (as in Outlook or VS Code; Client support moved to the page heading, 8 October 2026). Beside a policy, the collapse button sits level with the policy's actions in the next column (Laurence, 8 October 2026). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
 | Policy column (policy pages only, no collapse button; 304px) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the reference with the **small status Tag at its right** (Laurence, 8 October 2026; there is only one policy here, so the Tag stands out without weighing a list down; the rail's list keeps the dots), over the line of business ("Open Market Motor"), a long reference truncated with its Tooltip, like the policy's row in the rail, ruled off under it, then the policy's pages in **always-open groups** (no accordion), starting level with the client's menu in the rail, then the **policy's actions in a row at the column's foot**, always in view while the menu scrolls, labelled "Actions" as the menus' sections are and ruled off above (Laurence, 8 October 2026: so the client and policy columns line up). In the drawer the foot sticks to the drawer's bottom edge. Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
 | Policy actions (at the policy column's foot) | Every action of the policy's status, as icons in one row at the foot of the policy column (moved from under the title, Laurence, 8 October 2026), like a mail client's inline actions, in the prototype's groups (Policy · MTA · Renewal · Customer portal), a rule between groups; **Stop and Cancel behind a "⋮" Overflow menu** at the end. Hover or focus shows the action's name. A status with more actions than fit wraps to a second row | Icon-only ghost Buttons (Button's documented icon-only structure, medium size) with `aria-label` and the Tooltip Buckholt requires for icon-only Buttons, in Button sets. The Overflow menu is Menu button's Code & specs example 3. See deviation 2 |
 
@@ -126,7 +128,7 @@ columns are open follows where you are:
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: **Client pages (one User icon button)** (the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
   **Policies (one Shield icon button)**,
-  spaced evenly; Client support becomes an icon-only Button. **Pressing a
+  spaced evenly. **Pressing a
   category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
   rail rather than a floating menu): focus moves to the current client page or the open policy. Every collapsed control has its accessible name and a
   Tooltip.
@@ -223,8 +225,8 @@ here.").
 - **Heading actions** open pages, so they are anchors with Button styling. The Policy overview's
   quick links (Documents, Attachments, Notes, History) are gone (Laurence, 7 October 2026):
   their counts are badges on those pages' links in the policy menu instead, read out as
-  ", 3 new". Client overview's heading has only the Client notes icon Button (it opens its side
-  panel) with its count badge. Adding a client note updates the badge.
+  ", 3 new". Every client and policy page's heading has Client notes and Client support (below).
+  Adding a client note updates the badge.
 
 ## Policy lists
 
@@ -318,9 +320,8 @@ in Button sets.
 ### 3. Heading actions that open pages are anchors styled as Buttons
 
 Button says "use Button for actions, Link for navigation". A heading action that opens a page
-is an `<a class="btn">`, so it keeps link semantics. Since 8 October 2026 the only one is Create
-new client on the Dashboard (Broking's home has no menu); Add new quote and Amend policy are menu
-items only.
+is an `<a class="btn">`, so it keeps link semantics. Since 8 October 2026 none is in a page heading: Create
+new client is in the top bar; Add new quote and Amend policy are menu items only.
 
 ### 4. Count badges follow Mark's badge design
 
@@ -417,16 +418,28 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 Policy overview uses the catalogue's **Shield**, not Home (Laurence, 8 October 2026), and Client
 overview the **User** icon.
 
-### 10. "Create new client" is in the Dashboard's heading, not the menu
+### 10. "Create new client" is in the top bar, not the menu
 
 The reference prototype listed it as an app-level menu action. It opens a page, so it is an
 anchor styled as a Button. It was the Search results heading's primary (6 October 2026), then in
-the Broking bar (7 October); with the bar gone (8 October) it is a secondary Button in the
-Dashboard's heading, so it never competes with a page's own primary.
+the Broking bar (7 October), then the Dashboard's heading; since 8 October it is a secondary
+Button next to the search in the top bar, on every page, so it never competes with a page's own
+primary.
 
-**Client support** is in the menu foot only once a client is open, at client and policy level.
-It is not shown on Broking, the other modules or Create new client, because there is no
-client yet.
+**Client notes and Client support** are in the page heading on **every client and policy
+page** (Laurence, 8 October 2026), Buttons that open their side panels on the page:
+
+- **Client notes**: the icon-only ghost Button (Sticky note, Tooltip) with its count badge.
+- **Client support**: a labelled ghost Button, the **Circle-heart** leading. When the client has
+  **extra support in place** (the Switch in its panel; on for the sample client), the heart is
+  **solid** and the Button is in the **secondary expressive colour** (`--expressive-secondary-deep`,
+  Buckholt's purple, apart from the blue actions and red counts), bound to the ghost Button's own
+  label properties. Otherwise the heart is outline and the Button is the usual ghost. The shape
+  and ", extra support in place" in its name say it too, not the colour alone. Circle-heart is
+  not in the icon catalogue: a gap.
+
+Neither is shown on Broking, the other modules or Create new client: there is no client yet.
+Client support has left the rail's foot, which now holds only the collapse button.
 
 ### 10a. One primary Button per screen
 
@@ -436,7 +449,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Dashboard | none (Create new client is secondary, in the heading) | Apply (filters) |
+| Dashboard | none (Create new client is secondary, in the top bar) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a primary, it is the page's one
@@ -571,8 +584,8 @@ Awesome), and Typekit was absent.
   - the top bar: no Broking bar or module links; the search field next to the wordmark; the
     icon-only system menu beside the avatar; the client in User meta at the head of the rail,
     its Avatar in line with the menu icons; the client menu built as the policy's
-  - the app level: no left menu, no Client support, Create new client in the Dashboard's
-    heading, opening the flow
+  - the app level: no left menu, no Client support, Create new client in the top bar,
+    opening the flow
 - **Broking, systems, search and breadcrumbs (37 assertions)**: opens on the Dashboard; the
   system menu (five large Response buttons, Broking checked in its checked style with focus on the toggle, Tab to it, two to a row, arrow keys
   move without going, Enter and a click go); the two Tabs switch; the filter actions sit at the
