@@ -502,9 +502,9 @@
      email, postcode or address of the client, or any policy reference. */
   /* ====================================================== Search results
      After current Mobius's search results (Laurence, 8 October 2026): one
-     row per client found, which opens in place to show the client's email
-     and date of birth, View client and Add new quote, and the client's
-     policies; each policy opens in place too, with View. The filters sit
+     row per client found, its name the link to the client, which opens in
+     place to show the client's email and date of birth and their policies;
+     each policy, its number the link to it, opens in place too. The filters sit
      straight above the table, not in a Card. Name, Reference, Address and
      Postcode sort (Table's documented sortable header). Buckholt's Table
      documents no expandable rows, so a row's toggle is an icon-only ghost
@@ -580,18 +580,17 @@
           x.policies.map(function (p, i) {
             var key = 'p:' + x.id + ':' + i;
             var rowId = 'mob-sr-' + x.id + '-' + i;
-            /* Text links, not Buttons: a results list of many rows would
-               otherwise be a wall of Buttons (Laurence, 8 October 2026). */
-            var view = p[10] ? standalone('View policy', policyHref(p[10])) : moreLink('View policy', SAMPLE_TOAST, 'fa-regular fa-arrow-right');
+            /* The policy number is the link to the policy; no separate
+               View (Laurence, 8 October 2026). */
+            var num = p[10] ? '<a href="' + policyHref(p[10]) + '">' + esc(p[0]) + '</a>' : '<a href="#" role="button"' + SAMPLE_TOAST + '>' + esc(p[0]) + '</a>';
             return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
                 '<td class="col-fit">' + rowToggle(key, rowId, p[0]) + '</td>' +
-                '<td>' + esc(p[0]) + '</td><td>' + esc(p[1]) + '</td><td>' + statusTag({ status: p[2] }) + '</td>' +
+                '<td>' + num + '</td><td>' + esc(p[1]) + '</td><td>' + statusTag({ status: p[2] }) + '</td>' +
                 '<td>' + esc(p[3]) + '</td><td>' + esc(p[4]) + '</td><td>' + esc(p[5]) + '</td>' +
               '</tr>' +
               (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="7">' +
                 '<div class="mob-search-detail-body">' +
                   fields([['Policy expiry', p[6]], ['Brand / agent', p[7]], ['Premium', p[8]], ['Scheme', p[9]]], 4) +
-                  '<div class="mob-search-detail-actions">' + view + '</div>' +
                 '</div>' +
               '</td></tr>' : '');
           }).join('') +
@@ -631,16 +630,14 @@
               var rowId = 'mob-sr-' + x.id;
               return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
                   '<td class="col-fit">' + rowToggle(key, rowId, x.name) + '</td>' +
-                  '<td><strong>' + esc(x.name) + '</strong></td><td>' + esc(x.ref) + '</td><td>' + esc(x.address) + '</td><td>' + esc(x.postcode) + '</td>' +
+                  /* The client's name is the link to the client; no
+                     separate View client or Add new quote (Laurence,
+                     8 October 2026). */
+                  '<td>' + (x.real ? '<a href="#c/summary">' + esc(x.name) + '</a>' : '<a href="#" role="button"' + SAMPLE_TOAST + '>' + esc(x.name) + '</a>') + '</td><td>' + esc(x.ref) + '</td><td>' + esc(x.address) + '</td><td>' + esc(x.postcode) + '</td>' +
                 '</tr>' +
                 (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="5">' +
                   '<div class="mob-search-detail-body">' +
                     fields([['Email address', x.email], ['[[Date of birth]]', x.dob]], 2) +
-                    '<div class="mob-search-detail-actions">' +
-                      (x.real ? standalone('View client', '#c/summary') : moreLink('View client', SAMPLE_TOAST, 'fa-regular fa-arrow-right')) +
-                      (x.real ? '<a class="link-standalone mob-link" href="#c/newquote"><span class="icon"><i class="' + AI.add + '" aria-hidden="true"></i></span>Add new quote</a>'
-                        : moreLink('Add new quote', SAMPLE_TOAST, AI.add)) +
-                    '</div>' +
                   '</div>' +
                   '<div class="text-block mob-search-sub"><h4 class="title-01">Client policies</h4></div>' +
                   searchPolicies(x) +
