@@ -312,11 +312,12 @@
   /* ----------------------------------------------------------------- Inputs
      Buckholt Text input, Select, Text area, Radio and Checkbox, each with a
      real label paired to its control. */
-  function input(fid, label, value, type, readonly) {
+  function input(fid, label, value, type, readonly, placeholder) {
     return '<div class="input">' +
       '<div class="input-label"><label for="' + fid + '" class="form-label">' + t(label) + '</label></div>' +
       '<div class="response text-input">' +
-        '<input type="' + (type || 'text') + '" class="form-control" id="' + fid + '" value="' + esc(value || '') + '"' + (readonly ? ' readonly' : '') + '>' +
+        '<input type="' + (type || 'text') + '" class="form-control" id="' + fid + '" value="' + esc(value || '') + '"' + (readonly ? ' readonly' : '') +
+          (placeholder ? ' placeholder="' + esc(placeholder) + '"' : '') + '>' +
       '</div>' +
     '</div>';
   }
@@ -504,10 +505,10 @@
      After current Mobius's search results, in documented Buckholt
      (Laurence, 8 October 2026): the count, the filters straight above the
      results (not in a Card), then one Accordion item per client found
-     (Accordion Code & specs). Opening a client shows their details, a
-     standalone Link to the client and their policies in a Table, each
-     policy number the link to the policy. An Accordion header is a Button,
-     so it cannot hold the client's link; the Link is the first thing inside.
+     (Accordion Code & specs). Opening a client shows their details, their
+     5 most recent policies in a Table (each policy number the link to the
+     policy; "Show 2 more" loads the rest), and View client at the bottom
+     right. An Accordion header is a Button, so it cannot hold the link.
      Only the prototype's own client and policies open; the others are
      samples, and opening one says so. */
   var SAMPLE_TOAST = ' data-toast="A sample result: only Reverend Motor API Automation opens in this prototype"';
@@ -538,13 +539,22 @@
     });
   }
 
+  /* The client's 5 most recent policies, then "Show 2 more" (as the
+     client's other policy lists), which loads the rest in place. */
   function searchPolicies(x) {
     if (!x.policies.length) return empty('This client has no policies.');
+    var all = !!(S.searchMore || {})[x.id];
+    var shown = all ? x.policies : x.policies.slice(0, 5);
+    var rest = x.policies.length - 5;
+    var more = rest > 0 ? (all
+      ? moreLink('Show fewer', ' data-search-more="' + x.id + '" data-focus-id="sm-' + x.id + '"', AI.fewer)
+      : moreLink('Show ' + rest + ' more', ' data-search-more="' + x.id + '" data-focus-id="sm-' + x.id + '"', AI.more)) : '';
     return table(['Quote / policy number', '[[Cover start]]', 'Status', 'Product', 'Insurer', 'Premium'],
-      x.policies.map(function (p) {
+      shown.map(function (p) {
         var num = p[10] ? '<a href="' + policyHref(p[10]) + '">' + esc(p[0]) + '</a>' : '<a href="#" role="button"' + SAMPLE_TOAST + '>' + esc(p[0]) + '</a>';
         return [cell(num), p[1], cell(statusTag({ status: p[2] })), p[3], p[4], p[8]];
-      }), { caption: x.name + '’s policies' });
+      }), { caption: x.name + '’s policies' }) +
+      (rest > 0 ? '<div class="mob-table-foot"><p class="support-01" aria-live="polite">Showing 1 to ' + shown.length + ' of ' + x.policies.length + ', most recent first</p>' + more + '</div>' : '');
   }
 
   function searchResults() {
@@ -558,7 +568,7 @@
       pick(select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle']), fl.lob),
       pick(select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
-        btn('Apply', { variant: 'secondary', icon: AI.filter, attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
+        btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
     var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
     if (!found.length) {
       return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + filters +
@@ -580,10 +590,13 @@
             '</h4>' +
             '<div id="' + id + '" class="accordion-collapse collapse' + (on ? ' show' : '') + '" data-search-key="c:' + x.id + '">' +
               '<div class="accordion-body">' +
-                (x.real ? standalone('View client', '#c/summary') : moreLink('View client', SAMPLE_TOAST, 'fa-regular fa-arrow-right')) +
                 fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
-                '<div class="text-block"><h5 class="title-01">Client policies</h5></div>' +
                 searchPolicies(x) +
+                /* View client: a secondary Button (it opens a page, so a link
+                   styled as one) at the bottom right, where Button places a
+                   contained layout's action. Not primary: several clients can
+                   be open at once, and a screen has one primary. */
+                set([btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST })], 'button-set-end') +
               '</div>' +
             '</div>' +
           '</div>';
@@ -615,29 +628,30 @@
     dashboard: function () {
       var d = F.outstandingDiary;
       var sc = F.sanctionMatches;
+      /* Seven filters were too many in one row (Laurence, 8 October 2026).
+         In view: one search for the quote / policy number or client name,
+         Action type, and Assigned to (it starts as you). Brand, Agent and
+         Due date range are in a More filters side panel: Forms recommends a
+         side panel for more than five inputs. */
       var diary = card('Outstanding diary actions',
         filterBar([
-          input('dq', 'Quote / policy number', ''),
-          select('db', 'Brand', ['Select', 'Krypton', 'Tungsten']),
-          select('da', 'Agent', ['Select', 'Dubnium']),
-          input('dc', 'Client name', ''),
+          input('dq', 'Search', '', 'text', false, 'Policy number or client'),
           select('dt', 'Action type', ['All', 'Cheaper quote', 'NB accepted', 'Quote saved', 'Cancel RTA letter due']),
-          input('dr', 'Due date range', ''),
           input('dw', 'Assigned to', F.user.name)
-        ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter outstanding diary actions') +
+        ], [btn('More filters', { icon: AI.filter, attrs: ' data-panel="diaryfilters" aria-haspopup="dialog"' }), btn('Clear', { icon: AI.clear }),
+            btn('Apply filters', { variant: 'secondary' })], 'Filter outstanding diary actions') +
         table(['Quote / policy number', 'Brand', 'Agent', 'Client name', 'Action type', 'Due date', 'Days overdue', 'Assigned to'],
           d.rows.map(function (r) {
             return [r[0], r[1], r[2] || '–', cell('<a href="#c/summary">' + esc(r[3]) + '</a>'), r[4], r[5], r[6], cell(person(r[7]))];
           }), { caption: 'Outstanding diary actions' }) +
         tableFoot(d.rows.length, d.total, '6 diary actions'));
       var sanctions = card('Sanctions check matches',
+        /* Client reference, policy reference and client name are one search. */
         filterBar([
           select('ss1', 'Status', ['All', 'Error, check not performed', 'Some matches overridden', 'Matches above threshold']),
-          input('ss2', 'Client reference', ''),
-          input('ss3', 'Policy reference', ''),
-          input('ss4', 'Client name', ''),
+          input('ss2', 'Search', '', 'text', false, 'Reference or client'),
           input('ss5', 'Business source code', '')
-        ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary', icon: AI.filter })], 'Filter sanctions check matches') +
+        ], [btn('Clear', { icon: AI.clear }), btn('Apply filters', { variant: 'secondary' })], 'Filter sanctions check matches') +
         table(['Status', 'Matches above threshold', 'Highest match quality', 'Date and time', 'Client reference', 'Policy reference', 'Client name', 'Business source code'],
           sc.rows.map(function (r) {
             var st = SANCTION[r[0]];
@@ -1221,6 +1235,14 @@
           '<p class="support-01">' + t(x.title) + ' · ' + t(x.at) + '</p><p>' + x.lines.map(t).join('<br>') + '</p>' +
         '</div></div>' +
         form([textarea('pn', 'Add a note', 4)]), 'Policy note added', 'Add note'];
+    },
+    /* The Dashboard diary's less used filters. */
+    diaryfilters: function () {
+      return ['More filters', form([
+        select('db', 'Brand', ['Select', 'Krypton', 'Tungsten']),
+        select('da', 'Agent', ['Select', 'Dubnium']),
+        input('dr', 'Due date range', '')
+      ]), 'Filters applied', 'Apply filters'];
     },
     clink: function () { return ['Add client link', form([input('cl', 'Search for a client', '')]), 'Client linked']; },
     cconn: function () { return ['Add client connection', form([input('cc', 'Search for a client', ''), select('ct', 'Connection type', ['Select'])]), 'Connection added']; },

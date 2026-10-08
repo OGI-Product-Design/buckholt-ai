@@ -57,7 +57,7 @@
      Modal (null shows recent searches). searchOpen: the clients opened in
      the results' Accordion; searchFilter: the results' filters.
      A new search resets both. */
-  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {} };
+  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
   P.init(S);
 
   var R = null;
@@ -569,7 +569,7 @@
     q = String(q || '').trim();
     if (!q) { S.modalQuery = null; renderSearchBody(); modalInput.focus(); return; }
     /* A new search starts with every row closed and no filters. */
-    if (q !== S.modalQuery) { S.searchOpen = {}; S.searchFilter = {}; }
+    if (q !== S.modalQuery) { S.searchOpen = {}; S.searchFilter = {}; S.searchMore = {}; }
     S.modalQuery = q;
     S.query = q;
     modalInput.value = q;
@@ -643,7 +643,15 @@
       redrawResults('sf-apply');
       return;
     }
-    if (e.target.closest('[data-search-clear]')) { S.searchFilter = {}; redrawResults('sf-clear'); }
+    if (e.target.closest('[data-search-clear]')) { S.searchFilter = {}; redrawResults('sf-clear'); return; }
+    /* A client's policies: Show N more / Show fewer, in place. */
+    var sm = e.target.closest('[data-search-more]');
+    if (sm) {
+      e.preventDefault();
+      var cid = sm.getAttribute('data-search-more');
+      S.searchMore[cid] = !S.searchMore[cid];
+      redrawResults(sm.getAttribute('data-focus-id'));
+    }
   });
   /* The Accordion opens and closes a client itself (Bootstrap Collapse);
      its state is kept so a filter or a fresh draw leaves it as it was. */
