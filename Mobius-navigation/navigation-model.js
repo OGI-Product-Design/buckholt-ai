@@ -63,7 +63,7 @@
     clientGroup: 'fa-regular fa-address-card',         // GAP
     systems: 'fa-regular fa-grid',                     // GAP: the system menu
     support: 'fa-regular fa-circle-heart',             // GAP: Client support
-    supportOn: 'fa-solid fa-circle-heart'              // GAP: Client support, extra support in place
+    supportOn: 'fa-solid fa-circle-check'              // Success status icon (as Tag's): extra support in place
   };
 
   /* ------------------------------------------------------------ Policy level */

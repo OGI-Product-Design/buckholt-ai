@@ -470,14 +470,10 @@
    runtime `.badge.badge-floating` by binding its own custom properties to
    Buckholt tokens; nothing is restyled with values of its own. */
 .mob-badged { position: relative; }
-/* Client support with extra support in place: the solid heart in the
-   secondary expressive colour (Buckholt's purple), on the ghost Button's
-   own label properties. */
-.mob-support-on {
-  --button-label: var(--expressive-secondary-deep);
-  --button-label-hover: var(--expressive-secondary-deep);
-  --button-label-focus: var(--expressive-secondary-deep);
-}
+/* Client support with extra support in place: the solid status check in the
+   success status colour, as a success Tag draws its icon. Only the icon. */
+.mob-support-on { color: var(--feedback-message-success); }
+
 .mob-count {
   --badge-background: var(--action-danger-01);
   --badge-border: var(--action-danger-01);
