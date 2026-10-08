@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="../prototype/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261008-34">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261008-36">
 </head>
 <body class="mob-hide-terms">
 
@@ -233,11 +233,13 @@
               <div class="response text-input">
                 <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
                 <input type="text" class="form-control" id="mob-search-modal-input" placeholder="Search by name, reference or email"
-                  enterkeyhint="search" aria-describedby="mob-search-modal-hint">
+                  enterkeyhint="search" aria-describedby="mob-search-modal-try mob-search-modal-hint">
                 <!-- Buckholt's clear button (Text input Code & specs example 6),
                      driven by components/form/form.js. -->
                 <button type="button" class="input-btn input-clear" aria-label="Clear"></button>
               </div>
+              <!-- Text input's helper text: what to try in this prototype. -->
+              <small class="form-helper" id="mob-search-modal-try">For this prototype, search for “Barnard” and open James Barnard.</small>
             </div>
             <p class="visually-hidden" id="mob-search-modal-hint">Press the down arrow for recent searches.</p>
           </form>
@@ -269,9 +271,9 @@
 <script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
-<script src="fixtures.js?v=20261008-34"></script>
-<script src="navigation-model.js?v=20261008-34"></script>
-<script src="pages.js?v=20261008-34"></script>
-<script src="mobius-navigation.js?v=20261008-34"></script>
+<script src="fixtures.js?v=20261008-36"></script>
+<script src="navigation-model.js?v=20261008-36"></script>
+<script src="pages.js?v=20261008-36"></script>
+<script src="mobius-navigation.js?v=20261008-36"></script>
 </body>
 </html>
