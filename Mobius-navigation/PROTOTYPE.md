@@ -151,13 +151,13 @@ system menu, which stays in the top bar at every width.
 `policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
 the prototype's:
 
-| Status | Groups | Menu actions | Heading |
+| Status | Groups | Menu actions | Heading Buttons |
 | --- | --- | --- | --- |
-| Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
-| Prospect | Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
-| Automatic Decline | Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
-| Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
-| Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | Add new quote (primary) |
+| Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | none |
+| Prospect | Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | none |
+| Automatic Decline | Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | none |
+| Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | none |
+| Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | none |
 
 ## System navigation (7 October 2026)
 
@@ -198,7 +198,7 @@ here.").
   overview). The menu's "Quote" group is gone.
 - **Add new quote is in the client menu only (Laurence, 8 October 2026).** It was in both the
   client menu and each policy's Policy group; a new quote is the client's, so it has one place
-  in the navigation. A policy's heading keeps its Add new quote Button.
+  in the navigation.
 - **The rule for where an action goes (Laurence and Jon, 8 October 2026).**
   - **A menu item is a link that takes you somewhere new**, away from the page you are on. Add
     new quote and Amend policy start journeys, but each opens a new page, so they are menu
@@ -208,9 +208,12 @@ here.").
     a change happen on the page you are on.
   - **The actions in the menu** (the policy column's Actions) belong to the policy as a whole,
     not to any one page.
-  - A page heading can still offer a menu item's journey as a Button where it is the page's main
-    next step (Add new quote on Client overview, Amend policy on Policy overview): a shortcut
-    beside the content, not a second home in the navigation.
+  - So **page headings do not repeat menu items** (Laurence, 8 October 2026): Add new quote is
+    gone from the Client overview and Policy overview headings, and Amend policy from the Policy
+    overview and Policy details headings. Policy details' read-only note points to Amend policy in
+    the policy menu (Add new quote in the client menu for a Lapsed policy).
+  - **No View claims on Client overview** (Laurence, 8 October 2026): in current Mobius it is a
+    link out to another system, not part of the client. Its side panel is gone with it.
   **Admin fee and Manual credit / debit open side panels**, so they are not menu items: they are
   Buttons on the Account summary page only. **Transaction documents is removed** (Laurence, 7
   October 2026); its placeholder page went with it.
@@ -220,9 +223,8 @@ here.").
 - **Heading actions** open pages, so they are anchors with Button styling. The Policy overview's
   quick links (Documents, Attachments, Notes, History) are gone (Laurence, 7 October 2026):
   their counts are badges on those pages' links in the policy menu instead, read out as
-  ", 3 new". Client overview has the
-  Client notes icon Button with its count badge, "View claims" (secondary) and "Add new quote"
-  (primary). Adding a client note updates the badge.
+  ", 3 new". Client overview's heading has only the Client notes icon Button (it opens its side
+  panel) with its count badge. Adding a client note updates the badge.
 
 ## Policy lists
 
@@ -315,9 +317,10 @@ in Button sets.
 
 ### 3. Heading actions that open pages are anchors styled as Buttons
 
-Button says "use Button for actions, Link for navigation". "Add new quote" and "Amend policy"
-open a page, and the brief puts them in the heading as buttons. They are `<a class="btn">`, as in
-the prototype, so they keep link semantics.
+Button says "use Button for actions, Link for navigation". A heading action that opens a page
+is an `<a class="btn">`, so it keeps link semantics. Since 8 October 2026 the only one is Create
+new client on the Dashboard (Broking's home has no menu); Add new quote and Amend policy are menu
+items only.
 
 ### 4. Count badges follow Mark's badge design
 
@@ -436,7 +439,7 @@ are secondary here:
 | Dashboard | none (Create new client is secondary, in the heading) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
-Where a page has a heading action it is the primary; otherwise the primary is the page's one
+Where a page has a primary, it is the page's one
 main card action (for example Add complaint, New sanctions check, Convert to policy). Side panels
 and confirmations are their own screen context, and each keeps one primary: Save or the confirm
 action. An audit across all 120 routes, every flow step, every side panel and the confirmation
