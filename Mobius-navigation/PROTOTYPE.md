@@ -225,7 +225,7 @@ here.").
 - **Heading actions** open pages, so they are anchors with Button styling. The Policy overview's
   quick links (Documents, Attachments, Notes, History) are gone (Laurence, 7 October 2026):
   their counts are badges on those pages' links in the policy menu instead, read out as
-  ", 3 new". Every client and policy page's heading has Client notes and Client support (below).
+  ", 3 new". Every client and policy page's heading has Client support and Client / Policy notes (below).
   Adding a client note updates the badge.
 
 ## Policy lists
@@ -426,17 +426,19 @@ the Broking bar (7 October), then the Dashboard's heading; since 8 October it is
 Button next to the search in the top bar, on every page, so it never competes with a page's own
 primary.
 
-**Client notes and Client support** are in the page heading on **every client and policy
-page** (Laurence, 8 October 2026), Buttons that open their side panels on the page:
+**Client support and the notes** are in the page heading on **every client and policy page**
+(Laurence, 8 October 2026): two labelled **ghost** Buttons (Button guidance pairs like with
+like), opening their side panels on the page, Client support first:
 
-- **Client notes**: the icon-only ghost Button (Sticky note, Tooltip) with its count badge.
-- **Client support**: a labelled ghost Button, the **Circle-heart** leading. When the client has
-  **extra support in place** (the Switch in its panel; on for the sample client), the heart is
-  **solid** and the Button is in the **secondary expressive colour** (`--expressive-secondary-deep`,
-  Buckholt's purple, apart from the blue actions and red counts), bound to the ghost Button's own
-  label properties. Otherwise the heart is outline and the Button is the usual ghost. The shape
-  and ", extra support in place" in its name say it too, not the colour alone. Circle-heart is
-  not in the icon catalogue: a gap.
+- **Client support**: the **Circle-heart** leading. When the client has **extra support in
+  place** (the Switch in its panel; on for the sample client), it becomes the **solid status
+  check** (`fa-solid fa-circle-check`, the icon a success Tag uses) in the success status colour
+  (`--feedback-message-success`, as the Tag draws it); the label stays the ghost Button's. The
+  shape and ", extra support in place" in its name say it too, not the colour alone.
+  Circle-heart is not in the icon catalogue: a gap.
+- **Client notes** on a client page, **Policy notes** on a policy page: the Note icon and the
+  label, with the count badge on the Button's corner (Mark's design). Policy notes opens a side
+  panel with the policy's notes and a field to add one; the full Notes page stays in the menu.
 
 Neither is shown on Broking, the other modules or Create new client: there is no client yet.
 Client support has left the rail's foot, which now holds only the collapse button.

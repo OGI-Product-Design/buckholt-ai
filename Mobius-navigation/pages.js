@@ -1269,6 +1269,16 @@
         }).join('') : empty('There are no client notes.')) +
         form([textarea('cn', 'Add a note', 4)]), 'Client note added', 'Add note'];
     },
+    /* The policy's notes, from its heading's Policy notes Button: the notes,
+       then a field to add one. The full Notes page stays in the menu. */
+    pnotes: function () {
+      var x = F.policyNote;
+      return ['Policy notes',
+        '<div class="card card-secondary mob-note"><div class="card-body">' +
+          '<p class="support-01">' + t(x.title) + ' · ' + t(x.at) + '</p><p>' + x.lines.map(t).join('<br>') + '</p>' +
+        '</div></div>' +
+        form([textarea('pn', 'Add a note', 4)]), 'Policy note added', 'Add note'];
+    },
     clink: function () { return ['Add client link', form([input('cl', 'Search for a client', '')]), 'Client linked']; },
     cconn: function () { return ['Add client connection', form([input('cc', 'Search for a client', ''), select('ct', 'Connection type', ['Select'])]), 'Connection added']; },
     ccomplaint: function () {
@@ -1290,25 +1300,28 @@
   /* ===================================================== Heading actions
      Actions that open a page go in the page heading, never the menu. */
 
-  function clientTools() {
-    var n = F.clientNotes.length;
-    var notesLabel = 'Client notes' + (n ? ', ' + n + ' note' + (n > 1 ? 's' : '') : ', none');
-    /* Client support: the Circle-heart, outline; solid and in the secondary
-       expressive colour (purple, apart from the blue actions and red
-       counts) once extra support is in place. The shape and the name say it
-       too, not the colour alone. */
+  /* The record's tools in the page heading of every client and policy page
+     (Laurence, 8 October 2026): two labelled ghost Buttons opening side
+     panels on the page, Client support first, then the notes ("Client
+     notes" on a client page, "Policy notes" on a policy page) with the Note
+     icon and its count badge on the Button's corner. */
+  function clientTools(R) {
+    /* Client support: the Circle-heart; once extra support is in place, the
+       solid status check, in the success status colour as a success Tag
+       draws it (Laurence, 8 October 2026). The name says it too. */
     var on = !!F.client.supportOn;
+    var onPolicy = R.scope === 'policy';
+    var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
+    var what = onPolicy ? 'Policy notes' : 'Client notes';
     return set([
-      '<button type="button" class="btn btn-ghost mob-badged" data-panel="cnotes" aria-haspopup="dialog"' +
-        ' aria-label="' + notesLabel + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Client notes">' +
-        '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
-        (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
-      '</button>',
-      /* Labelled, the heart leading (Laurence, 8 October 2026): it needs
-         its name in view. The state is read out after it. */
-      '<button type="button" class="btn btn-ghost' + (on ? ' mob-support-on' : '') + '" data-panel="support" aria-haspopup="dialog">' +
-        '<div class="btn-icon"><i class="' + (on ? ICON.supportOn : ICON.support) + '" aria-hidden="true"></i></div>' +
+      '<button type="button" class="btn btn-ghost" data-panel="support" aria-haspopup="dialog">' +
+        '<div class="btn-icon"><i class="' + (on ? ICON.supportOn + ' mob-support-on' : ICON.support) + '" aria-hidden="true"></i></div>' +
         '<span class="button-label">Client support' + (on ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span>' +
+      '</button>',
+      '<button type="button" class="btn btn-ghost mob-badged" data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog">' +
+        '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
+        '<span class="button-label">' + what + '<span class="visually-hidden">, ' + (n ? n + ' note' + (n > 1 ? 's' : '') : 'none') + '</span></span>' +
+        (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
       '</button>'
     ]);
   }
@@ -1325,7 +1338,7 @@
     /* The client's tools, Buttons opening side panels on the page: Client
        notes (with its count) and Client support, on every client and policy
        page (Laurence, 8 October 2026). */
-    if (R.scope === 'client' || R.scope === 'policy') return clientTools();
+    if (R.scope === 'client' || R.scope === 'policy') return clientTools(R);
     return '';
   }
 
