@@ -149,21 +149,24 @@
 
 
   /* The client's policies, open rail: Page navigation, one link per
-     policy, as in the Figma design: an Icon block (expressive dark, the
-     Car), the line of business and the reference, and the status Tag. The
-     5 most recent, then "Show 2 more". */
+     policy: the status, the Car, the reference over the line of business,
+     and a chevron. The 5 most recent, then "Show 2 more". */
   function railPolicies(curId) {
-    return '<h2 class="label-01 mob-side-label" id="mob-rail-policies">Policies</h2>' +
-      '<ul class="nav flex-column mob-nav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+    /* A group like the client's above it (Laurence, 8 October 2026): the
+       Shield and "Policies" as its label, then the policies indented under
+       a rule, then Show more. */
+    return '<ul class="nav flex-column mob-nav"><li class="nav-item mob-group">' +
+      '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
+      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
             /* The status as an eyebrow, plain text above the row (Laurence,
-               7 October 2026: in place of the Tag), then a small Car icon
-               (no Icon block) beside the line of business over the
-               reference, in the policy head's type. */
+               7 October 2026: in place of the Tag). No Car of its own: the
+               group's Shield labels the list, the line of business says
+               Motor, and indented under the group's rule the reference
+               needs the room (Laurence, 8 October 2026). */
             ui.statusDot(p, 'mob-rail-status') +
-            icon(M.ICON.motor, 'mob-rail-icon') +
             /* The reference leads (it is what tells the rows apart), the
                line of business under it. */
             '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(p.ref) + '</span>' +
@@ -173,7 +176,8 @@
           '</a>' +
         '</li>';
       }).join('') + '</ul>' +
-      '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>';
+      '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>' +
+    '</li></ul>';
   }
 
   /* A rail Button: labelled when the rail is open, icon-only with its
