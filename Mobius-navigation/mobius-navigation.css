@@ -428,7 +428,7 @@
    1440px with the client menu open). Client support and the notes stay. */
 .mob-overflow .mob-fold { display: none; }
 @container mob-main (max-width: 61.99rem) {
-  .mob-heading-actions .mob-policy-actions { display: none; }
+  .mob-heading-actions .mob-policy-actions, .mob-heading-actions .mob-more-rule { display: none; }
   .mob-overflow .mob-fold { display: list-item; list-style: none; }
 }
 /* Pressed while its panel is open: the ghost Button's own hover colours,
