@@ -18,8 +18,8 @@
      rail     the client (User meta), the client's menu (Client overview,
               then the "Client" group), their policies, Client support
      record   (a white panel, inset 8px) once a policy is open: the policy,
-              its actions in a row of icon Buttons under its title, and its
-              pages in always-open groups
+              its pages in always-open groups, and its actions in a row of
+              icon Buttons at the foot
 
    The systems (Broking, Activity, Renewals, Bordereau, Accounts) are in the
    system menu at the top right, and the search field is next to the
@@ -334,8 +334,8 @@
     if (!onPolicy) { rec.innerHTML = ''; return; }
 
     var nav = M.policyNav(r.p);
-    /* The head: the status Tag, the reference over the line of business,
-       then the policy's actions in a row under it. */
+    /* The head: the reference with its status Tag, over the line of
+       business; then the menu; then the policy's actions at the foot. */
     var label = c.businessLine;
     /* Always open, with no collapse button (Laurence, 7 October 2026). */
     rec.innerHTML = (
@@ -348,13 +348,16 @@
           '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
         '</div>' +
         '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
-        /* Labelled "Actions", as the menus' sections are. */
-        '<div class="mob-toolbar" id="mob-toolbar"><h3 class="label-01 mob-toolbar-label" id="mob-toolbar-label">Actions</h3>' +
-          toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>' +
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
-      '</nav>';
+      '</nav>' +
+      /* The actions are the column's foot, always in view under the menu
+         (Laurence, 8 October 2026), so the policy's head and menu start
+         level with the client's in the rail. Labelled "Actions", as the
+         menus' sections are. */
+      '<div class="mob-toolbar" id="mob-toolbar"><h3 class="label-01 mob-toolbar-label" id="mob-toolbar-label">Actions</h3>' +
+        toolbar(M.policyActions(r.p), M.POLICY_ACTIONS, 'policy') + '</div>';
 
     var first = rec.querySelector('[data-toolbar-item]');
     if (first) first.tabIndex = 0;
@@ -526,12 +529,10 @@
   $('mob-systems-panel').addEventListener('keydown', function (e) {
     if ((e.key === 'Enter' || e.key === ' ') && e.target.name === 'mob-system') { e.preventDefault(); goSystem(e.target.value); }
   });
-  /* Opened, focus goes to the current system; closed, the checked one is
-     the current system again. */
-  $('mob-systems-toggle').addEventListener('shown.bs.dropdown', function () {
-    var on = $('mob-systems-panel').querySelector('input:checked');
-    if (on) on.focus();
-  });
+  /* Closed, the checked one is the current system again. Opening it leaves
+     focus on its toggle (Tab moves to the current system): focusing the
+     checked Radio straight away showed Response button's focus look in
+     place of its checked one. */
   $('mob-systems-toggle').addEventListener('hidden.bs.dropdown', function () { if (R) renderSystems(R); });
 
   /* ============================================================= Search
