@@ -54,10 +54,10 @@
      room; once it has been opened or collapsed by hand, that choice stays
      from page to page (Laurence, 7 October 2026). */
   /* query: the last search run; modalQuery: the search shown in the search
-     Modal (null shows recent searches). searchOpen: the result rows opened
-     in place; searchFilter and searchSort: the results' filters and sort.
-     A new search resets all three. */
-  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchSort: null };
+     Modal (null shows recent searches). searchOpen: the clients opened in
+     the results' Accordion; searchFilter: the results' filters.
+     A new search resets both. */
+  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {} };
   P.init(S);
 
   var R = null;
@@ -148,36 +148,24 @@
   }
 
 
-  /* The client's policies, open rail: Page navigation, one link per
-     policy: the status, the Car, the reference over the line of business,
-     and a chevron. The 5 most recent, then "Show 2 more". */
+  /* The client's policies, open rail: a group like the client's, then one
+     Page navigation link per policy, its reference followed by its small
+     status Tag (Tag Code & specs example 5), nothing else (Laurence,
+     8 October 2026: back to documented Buckholt). The 5 most recent, then
+     "Show 2 more". */
   function railPolicies(curId) {
-    /* A group like the client's above it (Laurence, 8 October 2026): the
-       Shield and "Policies" as its label, then the policies indented under
-       a rule, then Show more. */
-    return '<ul class="nav flex-column mob-nav"><li class="nav-item mob-group">' +
-      '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
-      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+    return '<div class="mob-group">' +
+      '<h3 class="label-01 mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</h3>' +
+      '<ul class="nav flex-column mob-nav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-            /* The status as an eyebrow, plain text above the row (Laurence,
-               7 October 2026: in place of the Tag). No Car of its own: the
-               group's Shield labels the list, the line of business says
-               Motor, and indented under the group's rule the reference
-               needs the room (Laurence, 8 October 2026). */
-            ui.statusDot(p, 'mob-rail-status') +
-            /* The reference leads (it is what tells the rows apart), the
-               line of business under it. */
-            '<span class="mob-rail-text"><span class="mob-rail-title">' + esc(p.ref) + '</span>' +
-              '<span class="mob-rail-sub">' + esc(F.client.businessLine) + '</span></span>' +
-            /* A right chevron: the policy opens the next column. */
-            icon('fa-regular fa-chevron-right', 'mob-rail-chevron') +
+            esc(p.ref) + ui.statusTag(p, true) +
           '</a>' +
         '</li>';
       }).join('') + '</ul>' +
       '<div class="mob-more">' + ui.loadMoreButton('side') + '</div>' +
-    '</li></ul>';
+    '</div>';
   }
 
   /* A column's collapse / open control: one icon-only ghost Button, as on
@@ -188,22 +176,25 @@
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
-  /* A navigation group, always open (Laurence, 7 October 2026): its label
-     with the group's icon (not a link: a group is not a page), then its
-     pages, indented past the icon with a rule down the left. */
+  /* A navigation group, always open: its heading (Buckholt's `label-01` type
+     set, the group's icon before it, as the documentation site's own side
+     navigation heads its sections), then its pages as plain Page
+     navigation, Buckholt's default size, no indent and no rule (Laurence,
+     8 October 2026: back to documented Buckholt). An item that is not in a
+     group is a Page navigation list of its own. */
   function navGroups(items, cur, r) {
     /* `r` gives the links' level: the client's menu links to client pages
        even on a policy page. */
-    return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
-      if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
+    return items.map(function (n) {
+      if (!n.children) return '<ul class="nav flex-column mob-nav">' + navLink(n.id, n.label, n.icon, cur, href(r, n.id)) + '</ul>';
       var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
-      return '<li class="nav-item mob-group">' +
-        '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
-        '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
+      return '<div class="mob-group">' +
+        '<h3 class="label-01 mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</h3>' +
+        '<ul class="nav flex-column mob-nav" aria-labelledby="' + gid + '">' +
           n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
         '</ul>' +
-      '</li>';
-    }).join('') + '</ul>';
+      '</div>';
+    }).join('');
   }
 
   /* The menu adds a column as you go deeper (Laurence, 7 October 2026):
@@ -228,7 +219,7 @@
     $('mob-rail-head').innerHTML = app ? '' :
       '<div class="user-meta mob-rail-client">' +
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-        '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
+        '<div class="user-meta-body"><span class="user-meta-first">' + esc(c.name) + '</span><span>' + esc(c.ref) + '</span></div>' +
       '</div>';
     $('mob-rail-head').hidden = app;
 
@@ -284,10 +275,10 @@
            right of the reference (Laurence, 8 October 2026); the rail's
            list keeps the lighter dots. */
         '<div class="mob-record-titlebar">' +
-          '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
+          '<h2 class="title-01 mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
           '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
         '</div>' +
-        '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
+        '<p class="body-01 mob-record-ref">' + t(label) + '</p>' +
       '</div>') +
       '<nav aria-label="' + esc(label + ' ' + r.p.ref) + '" class="mob-record-nav">' +
         navGroups(nav, r.page, r) +
@@ -312,7 +303,7 @@
   /* A reference too long for its line ends in "…" and shows in full in a
      Tooltip (Laurence, 7 October 2026). Only where it is actually cut. */
   function tipTruncated() {
-    Array.prototype.forEach.call(sidebar.querySelectorAll('.mob-rail-title, .mob-record-title'), function (el) {
+    Array.prototype.forEach.call(sidebar.querySelectorAll('.mob-record-title'), function (el) {
       if (el.scrollWidth > el.clientWidth + 1) {
         el.setAttribute('data-bs-toggle', 'tooltip');
         el.setAttribute('data-bs-title', el.textContent);
@@ -461,49 +452,24 @@
   }
 
   /* ============================================================ Systems
-     The system menu at the top right (Laurence, 8 October 2026): an
-     icon-only Menu button whose panel holds the systems as large Response
-     buttons, the icon over the label, two to a row. One Radio group with
-     the current system checked; client and policy pages are Broking's.
-     Picking one (a click, or Enter / Space) goes there; the arrow keys
-     only move through them, as in any Radio group, so the keyboard can
-     look without leaving the page. */
+     The system menu at the top right: an icon-only Menu button whose panel
+     is Menu's documented Link variant, one link per system with its icon
+     (Laurence, 8 October 2026: back to documented Buckholt, in place of
+     Response buttons). Client and policy pages are Broking's; the current
+     system is `aria-current="page"`. */
   function currentSystem(r) {
     return r.scope === 'app' && ['dashboard', 'search', 'newclient'].indexOf(r.page) < 0 ? r.page : 'dashboard';
   }
   function renderSystems(r) {
     var cur = currentSystem(r);
-    $('mob-systems-panel').innerHTML =
-      '<div class="input">' +
-        '<div class="input-label"><label class="form-label visually-hidden" id="mob-systems-label">Systems</label></div>' +
-        '<div class="response response-btn-input" role="radiogroup" aria-labelledby="mob-systems-label">' +
-          M.MODULES.map(function (m) {
-            var id = 'mob-system-' + m.id;
-            return '<input type="radio" class="btn-check" name="mob-system" id="' + id + '" value="' + m.id + '"' + (m.id === cur ? ' checked' : '') + '>' +
-              '<label class="btn btn-response btn-response-lg" for="' + id + '">' +
-                '<span class="icon">' + icon(m.icon) + '</span>' + t(m.label) +
-              '</label>';
-          }).join('') +
-        '</div>' +
-      '</div>';
+    $('mob-systems-items').innerHTML =
+      '<li role="none"><h6 class="menu-section-header">Systems</h6></li>' +
+      M.MODULES.map(function (m) {
+        var on = m.id === cur;
+        return '<li role="none"><a class="menu-item" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
+          icon(m.icon) + t(m.label) + (on ? '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
+      }).join('');
   }
-  function goSystem(id) {
-    bootstrap.Dropdown.getOrCreateInstance($('mob-systems-toggle')).hide();
-    if (id === currentSystem(R)) { $('mob-systems-toggle').focus(); return; }
-    location.hash = '#' + id;
-  }
-  $('mob-systems-panel').addEventListener('click', function (e) {
-    var label = e.target.closest('label.btn-response');
-    if (label) goSystem(label.previousElementSibling.value);
-  });
-  $('mob-systems-panel').addEventListener('keydown', function (e) {
-    if ((e.key === 'Enter' || e.key === ' ') && e.target.name === 'mob-system') { e.preventDefault(); goSystem(e.target.value); }
-  });
-  /* Closed, the checked one is the current system again. Opening it leaves
-     focus on its toggle (Tab moves to the current system): focusing the
-     checked Radio straight away showed Response button's focus look in
-     place of its checked one. */
-  $('mob-systems-toggle').addEventListener('hidden.bs.dropdown', function () { if (R) renderSystems(R); });
 
   /* ============================================================= Search
      The field in the top bar opens the search in a large Buckholt
@@ -589,7 +555,7 @@
     q = String(q || '').trim();
     if (!q) { S.modalQuery = null; renderSearchBody(); modalInput.focus(); return; }
     /* A new search starts with every row closed and no filters. */
-    if (q !== S.modalQuery) { S.searchOpen = {}; S.searchFilter = {}; S.searchSort = null; }
+    if (q !== S.modalQuery) { S.searchOpen = {}; S.searchFilter = {}; }
     S.modalQuery = q;
     S.query = q;
     modalInput.value = q;
@@ -656,25 +622,6 @@
   modalBody.addEventListener('click', function (e) {
     var b = e.target.closest('[data-recent]');
     if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); return; }
-    /* A client or policy row opens in place, and closes again: from its
-       toggle, or (with a pointer) anywhere else on the row. */
-    var row = e.target.closest('tr.mob-search-row');
-    var tg = e.target.closest('[data-search-toggle]') ||
-      (row && !e.target.closest('a, button, input, select, label') ? row.querySelector('[data-search-toggle]') : null);
-    if (tg) {
-      var key = tg.getAttribute('data-search-toggle');
-      S.searchOpen[key] = !S.searchOpen[key];
-      redrawResults(tg.getAttribute('data-focus-id'));
-      return;
-    }
-    /* A sortable column: ascending, then descending. */
-    var so = e.target.closest('[data-search-sort]');
-    if (so) {
-      var col = so.getAttribute('data-search-sort');
-      S.searchSort = { col: col, dir: S.searchSort && S.searchSort.col === col ? -S.searchSort.dir : 1 };
-      redrawResults(so.getAttribute('data-focus-id'));
-      return;
-    }
     if (e.target.closest('[data-search-apply]')) {
       var v = function (id) { var x = $(id); return x && x.selectedIndex > 0 ? x.value : ''; };
       S.searchFilter = { brand: v('sb'), lob: v('sl'), status: v('ss') };
@@ -683,6 +630,10 @@
     }
     if (e.target.closest('[data-search-clear]')) { S.searchFilter = {}; redrawResults('sf-clear'); }
   });
+  /* The Accordion opens and closes a client itself (Bootstrap Collapse);
+     its state is kept so a filter or a fresh draw leaves it as it was. */
+  modalBody.addEventListener('shown.bs.collapse', function (e) { var k = e.target.getAttribute('data-search-key'); if (k) S.searchOpen[k] = true; });
+  modalBody.addEventListener('hidden.bs.collapse', function (e) { var k = e.target.getAttribute('data-search-key'); if (k) S.searchOpen[k] = false; });
 
 
 
