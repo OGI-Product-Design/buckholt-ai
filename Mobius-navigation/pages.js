@@ -848,8 +848,9 @@
 
     details: function (p) {
       var secs = F.policyDetail;
-      var primary = M.POLICY_ACTIONS[M.policyFlows(p).primary];
-      return [empty('Read only. Use ' + primary.label + ' at the top of the page to make changes.')].concat(secs.map(function (s) {
+      var k = M.policyFlows(p).primary;
+      var where = k === 'newquote' ? 'Add new quote in the client menu' : M.POLICY_ACTIONS[k].label + ' in the policy menu';
+      return [empty('Read only. Use ' + where + ' to make changes.')].concat(secs.map(function (s) {
         return '<div class="text-block"><h2 class="headline-01">' + t(s.title) + '</h2></div>' + detailCards(s, p);
       }));
     },
@@ -1261,10 +1262,6 @@
         }).join('') : empty('There are no client notes.')) +
         form([textarea('cn', 'Add a note', 4)]), 'Client note added', 'Add note'];
     },
-    cclaims: function () {
-      return ['Client claims', note('There are no existing claims for this client.') +
-        '<div class="text-block"><h3 class="title-01">Loss ratio</h3></div>' + lossRatio(), null];
-    },
     clink: function () { return ['Add client link', form([input('cl', 'Search for a client', '')]), 'Client linked']; },
     cconn: function () { return ['Add client connection', form([input('cc', 'Search for a client', ''), select('ct', 'Connection type', ['Select'])]), 'Connection added']; },
     ccomplaint: function () {
@@ -1287,21 +1284,10 @@
      Actions that open a page go in the page heading, never the menu. */
 
   function heading(R) {
-    if (R.scope === 'policy' && (R.page === 'summary' || R.page === 'details')) {
-      var p = R.p;
-      var fl = M.policyFlows(p);
-      /* The quick links (Documents, Attachments, Notes, History) that were
-         here are gone: their counts are badges on those pages' links in the
-         policy menu. */
-      var labelled = [];
-      if (R.page === 'summary') fl.secondary.forEach(function (k) {
-        var a = M.POLICY_ACTIONS[k];
-        labelled.push(btn(a.label, { variant: 'secondary', icon: a.icon, href: policyHref(p, a.to) }));
-      });
-      var pa = M.POLICY_ACTIONS[fl.primary];
-      labelled.push(btn(pa.label, { variant: 'primary', icon: pa.icon, href: policyHref(p, pa.to) }));
-      return set(labelled);
-    }
+    /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
+       a new page; a Button on a page opens a side panel there or changes
+       something on it. So the page headings no longer repeat menu items:
+       Amend policy and Add new quote are in the menus, not here. */
 
     /* Create new client opens a page, so it is a heading action: on the
        Dashboard, Broking's home (Laurence, 8 October 2026, now the Broking
@@ -1318,11 +1304,9 @@
           ' aria-label="' + notesLabel + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Client notes">' +
           '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
           (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
-        '</button>']) +
-        set([
-          btn('View claims', { variant: 'secondary', attrs: ' data-panel="cclaims" aria-haspopup="dialog"' }),
-          btn(M.CLIENT_ACTIONS.cnewquote.label, { variant: 'primary', icon: M.CLIENT_ACTIONS.cnewquote.icon, href: '#c/newquote' })
-        ]);
+        '</button>']);
+      /* No View claims: in current Mobius it is a link out to another
+         system, not part of the client (Laurence, 8 October 2026). */
     }
     return '';
   }
