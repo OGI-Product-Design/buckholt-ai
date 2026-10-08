@@ -147,11 +147,10 @@
 
     policies: POLICIES,
 
-    /* Client notes start with one note; notes added in the panel are put at
-       the top of this list for the rest of the session. */
-    clientNotes: [
-      { by: 'Laurence Abbott', at: '01/10/2026 13:29', text: '[Sample client note]' }
-    ],
+    /* Client notes: none, as in current Mobius for this client (Laurence,
+       8 October 2026); the one note is the policy's (policyNote). Notes added
+       in the panel are put at the top of this list for the session. */
+    clientNotes: [],
 
     /* Counts shown as badges on the Policy overview quick links. */
     quickLinkCounts: { docs: 3, attachments: 0, notes: 1, history: 0 },

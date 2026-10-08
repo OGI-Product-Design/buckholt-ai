@@ -436,7 +436,8 @@ like), opening their side panels on the page, Client support first:
   blue (Laurence, 8 October 2026: no green). The shape and ", extra support in place" in its
   name say it.
   Circle-heart is not in the icon catalogue: a gap.
-- **Client notes** on a client page, **Policy notes** on a policy page: the Note icon and the
+- **Client notes** on a client page, **Policy notes** on a policy page (the sample client has no
+  client notes and one policy note, as in current Mobius): the Note icon and the
   label, with the count badge on the Button's corner (Mark's design). Policy notes opens a side
   panel with the policy's notes and a field to add one; the full Notes page stays in the menu.
 
