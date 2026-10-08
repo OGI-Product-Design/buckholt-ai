@@ -13,7 +13,9 @@
 <!-- Prototype-only. Shared application chrome and blade, then this feature. -->
 <link rel="stylesheet" href="../prototype/app-shell.css">
 <link rel="stylesheet" href="../prototype/blade.css">
-<link rel="stylesheet" href="mobius-navigation.css">
+<!-- ?v= is bumped with every change, so browsers fetch this prototype's
+     own files afresh rather than an old cached copy. -->
+<link rel="stylesheet" href="mobius-navigation.css?v=20261008-1">
 </head>
 <body class="mob-hide-terms">
 
@@ -248,9 +250,9 @@
 <script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
-<script src="fixtures.js"></script>
-<script src="navigation-model.js"></script>
-<script src="pages.js"></script>
-<script src="mobius-navigation.js"></script>
+<script src="fixtures.js?v=20261008-1"></script>
+<script src="navigation-model.js?v=20261008-1"></script>
+<script src="pages.js?v=20261008-1"></script>
+<script src="mobius-navigation.js?v=20261008-1"></script>
 </body>
 </html>

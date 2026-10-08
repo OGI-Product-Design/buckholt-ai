@@ -1096,13 +1096,14 @@
     '</div>';
   }
 
-  function flowNav(cur, total, cancelHref, finishMsg) {
+  /* finishHref: where Save goes, when not back to where Cancel goes. */
+  function flowNav(cur, total, cancelHref, finishMsg, finishHref) {
     return '<div class="mob-split">' +
       set([btn('Cancel', { variant: 'ghost', href: cancelHref })].concat(
         cur > 0 ? [btn('Back', { variant: 'secondary', attrs: ' data-step="' + (cur - 1) + '"' })] : [])) +
       set([cur < total - 1
         ? btn('Next', { variant: 'primary', attrs: ' data-step="' + (cur + 1) + '"' })
-        : btn('Save', { variant: 'primary', attrs: ' data-finish="' + cancelHref + '" data-msg="' + esc(finishMsg) + '"' })]) +
+        : btn('Save', { variant: 'primary', attrs: ' data-finish="' + (finishHref || cancelHref) + '" data-msg="' + esc(finishMsg) + '"' })]) +
     '</div>';
   }
 
@@ -1130,7 +1131,9 @@
     var c = Math.min(S.step, secs.length - 1);
     return [progress(secs.map(function (s) { return s.title; }), c),
       stack([detailCards(secs[c], p, { editable: c !== 2 && c !== 3 })]),
-      flowNav(c, secs.length, policyHref(p), 'Quote re-run')];
+      /* Re-running the quote ends on its Quote summary, as in current
+         Mobius; Cancel goes back to the policy. */
+      flowNav(c, secs.length, policyHref(p), 'Quote re-run', policyHref(p, 'quote'))];
   }
 
   function productSelection() {
