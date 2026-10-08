@@ -432,9 +432,9 @@ like), opening their side panels on the page, Client support first:
 
 - **Client support**: the **Circle-heart** leading. When the client has **extra support in
   place** (the Switch in its panel; on for the sample client), it becomes the **solid status
-  check** (`fa-solid fa-circle-check`, the icon a success Tag uses) in the success status colour
-  (`--feedback-message-success`, as the Tag draws it); the label stays the ghost Button's. The
-  shape and ", extra support in place" in its name say it too, not the colour alone.
+  check** (`fa-solid fa-circle-check`, the icon a success Tag uses), in the ghost Button's own
+  blue (Laurence, 8 October 2026: no green). The shape and ", extra support in place" in its
+  name say it.
   Circle-heart is not in the icon catalogue: a gap.
 - **Client notes** on a client page, **Policy notes** on a policy page: the Note icon and the
   label, with the count badge on the Button's corner (Mark's design). Policy notes opens a side

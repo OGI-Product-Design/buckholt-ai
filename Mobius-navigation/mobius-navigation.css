@@ -470,9 +470,6 @@
    runtime `.badge.badge-floating` by binding its own custom properties to
    Buckholt tokens; nothing is restyled with values of its own. */
 .mob-badged { position: relative; }
-/* Client support with extra support in place: the solid status check in the
-   success status colour, as a success Tag draws its icon. Only the icon. */
-.mob-support-on { color: var(--feedback-message-success); }
 
 .mob-count {
   --badge-background: var(--action-danger-01);
