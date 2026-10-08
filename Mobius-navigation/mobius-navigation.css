@@ -648,6 +648,45 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 
 
+/* ------------------------------------------------------------- Scrollbars
+   Vertical scrollbars 6px wide (Laurence, 8 October 2026): the page, the
+   two menu columns, the drawer, the search Modal and its help panel. A
+   grey thumb on no track (Buckholt's disabled grey, the stronger border
+   grey under the pointer). Horizontal scrollbars (wide tables) keep the
+   browser's own. Buckholt documents no scrollbar style: local CSS. Firefox
+   has no exact width, so it takes its thin scrollbar. */
+html::-webkit-scrollbar,
+.mob-rail-scroll::-webkit-scrollbar,
+.mob-record-nav::-webkit-scrollbar,
+.mob-sidebar::-webkit-scrollbar,
+#mob-search-modal .modal-body::-webkit-scrollbar,
+.mob-search-help .menu-panel::-webkit-scrollbar { width: 6px; }
+html::-webkit-scrollbar-track,
+.mob-rail-scroll::-webkit-scrollbar-track,
+.mob-record-nav::-webkit-scrollbar-track,
+.mob-sidebar::-webkit-scrollbar-track,
+#mob-search-modal .modal-body::-webkit-scrollbar-track,
+.mob-search-help .menu-panel::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb,
+.mob-rail-scroll::-webkit-scrollbar-thumb,
+.mob-record-nav::-webkit-scrollbar-thumb,
+.mob-sidebar::-webkit-scrollbar-thumb,
+#mob-search-modal .modal-body::-webkit-scrollbar-thumb,
+.mob-search-help .menu-panel::-webkit-scrollbar-thumb { background-color: var(--disabled-03); border-radius: var(--border-radius-full); }
+html::-webkit-scrollbar-thumb:hover,
+.mob-rail-scroll::-webkit-scrollbar-thumb:hover,
+.mob-record-nav::-webkit-scrollbar-thumb:hover,
+.mob-sidebar::-webkit-scrollbar-thumb:hover,
+#mob-search-modal .modal-body::-webkit-scrollbar-thumb:hover,
+.mob-search-help .menu-panel::-webkit-scrollbar-thumb:hover { background-color: var(--ui-border-01); }
+@supports not selector(::-webkit-scrollbar) {
+  html, .mob-rail-scroll, .mob-record-nav, .mob-sidebar, #mob-search-modal .modal-body, .mob-search-help .menu-panel {
+    scrollbar-width: thin;
+    scrollbar-color: var(--disabled-03) transparent;
+  }
+}
+
+
 /* ---------------------------------------------------- Show wording changes
    A dev / review aid, not product UI. Marks each terminology change from
    current Mobius (reference/mobius-terminology-log.xlsx, "Prototype

@@ -489,6 +489,11 @@ example 3).
   stacked-set offsets: `margin-top`, and the `margin-bottom` it gives a set that has a following
   sibling. Left on, that margin pushed the Client notes button 4px above View claims and Add new
   quote.
+- **Vertical scrollbars are 6px** (Laurence, 8 October 2026): the page, the two menu columns, the
+  drawer, the search Modal and its help panel. A grey thumb (`--disabled-03`, `--ui-border-01`
+  under the pointer) on no track. Horizontal scrollbars on wide tables keep the browser's own.
+  Buckholt documents no scrollbar style, so this is local CSS; Firefox, which has no exact width,
+  takes its thin scrollbar.
 - Breakpoints use the **local** build's scale (576 / 768 / 992 / 1200 / 1400), like every other
   prototype here. On the live reference scale they would land at other widths.
 
