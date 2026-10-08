@@ -378,7 +378,7 @@
 /* The results' Accordion: a client's body stacks its Link, details and
    policies a Panel's gap apart. */
 .mob-search-results .accordion-body { display: flex; flex-direction: column; gap: var(--spacer-05); }
-.mob-search-results .accordion-body > .link-standalone { align-self: flex-start; }
+.mob-search-results .accordion-body > .button-set { margin-top: 0; }
 .mob-search-results > .support-01 { margin: 0; }
 
 /* -------------------------------------------------------------------- Page */
