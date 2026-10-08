@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="../prototype/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261008-20">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261008-23">
 </head>
 <body class="mob-hide-terms">
 
@@ -53,10 +53,10 @@
         </div>
         <div class="response text-input">
           <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-          <input type="text" class="form-control" id="mob-search-input" enterkeyhint="search"
+          <!-- The placeholder says how to reach it from the keyboard, as GitHub
+               does, in Text input's own placeholder style. -->
+          <input type="text" class="form-control" id="mob-search-input" placeholder="Type / to search" enterkeyhint="search"
             aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">
-          <!-- The hint in place of a placeholder: "Type / to search". -->
-          <span class="mob-search-hint" aria-hidden="true"><span class="mob-search-hint-long">Type <kbd>/</kbd> to search</span><span class="mob-search-hint-short">Search</span></span>
         </div>
       </div>
     </form>
@@ -98,16 +98,18 @@
 
       <!-- System menu: Buckholt Menu button with an icon-only ghost trigger
            (as the Overflow menu, Code & specs example 3) and its Tooltip on
-           the wrapper. Its panel holds the systems (Broking, Activity,
-           Renewals, Bordereau, Accounts) as large Response buttons with
-           icons (Response button Code & specs example 8): one Radio group,
-           the current system checked. Written by mobius-navigation.js. -->
+           the wrapper. Its panel is Menu's documented Link variant: one
+           `a.menu-item` per system (Broking, Activity, Renewals, Bordereau,
+           Accounts) with its icon, the current one `aria-current="page"`.
+           Written by mobius-navigation.js. -->
       <div class="menu mob-systems" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Switch system">
         <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false"
           aria-label="Switch system" aria-controls="mob-systems-panel">
           <div class="btn-icon"><i class="fa-regular fa-grid" aria-hidden="true"></i></div>
         </button>
-        <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel"></div>
+        <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel" aria-labelledby="mob-systems-toggle">
+          <ul class="menu-body" role="menu" id="mob-systems-items"></ul>
+        </div>
       </div>
 
       <!-- User menu: Buckholt Menu button (Code & specs example 1) whose
@@ -267,9 +269,9 @@
 <script src="../components/form/form.js"></script>
 <script src="../prototype/app-shell.js"></script>
 <script src="../prototype/blade.js"></script>
-<script src="fixtures.js?v=20261008-20"></script>
-<script src="navigation-model.js?v=20261008-20"></script>
-<script src="pages.js?v=20261008-20"></script>
-<script src="mobius-navigation.js?v=20261008-20"></script>
+<script src="fixtures.js?v=20261008-23"></script>
+<script src="navigation-model.js?v=20261008-23"></script>
+<script src="pages.js?v=20261008-23"></script>
+<script src="mobius-navigation.js?v=20261008-23"></script>
 </body>
 </html>
