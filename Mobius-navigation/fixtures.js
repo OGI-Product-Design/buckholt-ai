@@ -142,9 +142,10 @@
       brand: 'Krypton',
       riskInfo: 'Registration: KX19 FHD',
       insurer: 'N/A',
-      /* Extra support in place (Client support's Switch). On, so Client
-         support shows its check; switch it off in the panel. */
-      supportOn: true
+      /* Extra support in place (Client support's Switch). Off as standard
+         (Laurence, 8 October 2026); switch it on in the panel and Client
+         support shows its check. */
+      supportOn: false
     },
 
     policies: POLICIES,

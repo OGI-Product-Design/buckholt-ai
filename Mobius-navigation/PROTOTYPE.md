@@ -428,7 +428,7 @@ primary.
 like), opening their side panels on the page, Client support first:
 
 - **Client support**: the **Circle-heart** leading. When the client has **extra support in
-  place** (the Switch in its panel; on for the sample client), it becomes the **solid status
+  place** (the Switch in its panel; off as standard, Laurence, 8 October 2026), it becomes the **solid status
   check** (`fa-solid fa-circle-check`, the icon a success Tag uses), in the ghost Button's own
   blue (Laurence, 8 October 2026: no green). The shape and ", extra support in place" in its
   name say it.
