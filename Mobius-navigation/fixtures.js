@@ -4,9 +4,10 @@
 
    Every record, row and value the prototype shows, in one place, so it can be
    swapped for real API responses later without touching the rendering code.
-   All of it is the sample data from `reference/mobius-live-policy.html`,
-   copied as-is: the client "Reverend Motor API Automation", their 7 policies,
-   and the sample rows each page shows.
+   It follows the sample data in `reference/mobius-live-policy.html` (the 7
+   policies, the pages' sample rows), with the obvious test names replaced by
+   realistic ones (Laurence, 8 October 2026): the client is James Barnard,
+   and the dashboard, sanctions and search rows name real-sounding people.
 
    Wording conventions used in the strings below:
 
@@ -56,33 +57,32 @@
 
     /* The user's recent searches (most recent first), shown when they open
        the search. A search they run is added to the top for the session. */
-    recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
+    recentSearches: ['Barnard', 'PUCO0068', 'BAR/J/08121986/0046', 'AL5 2JR'],
 
-    /* Sample clients a search can bring back, after current Mobius's
-       results for "motor": one row per client, each with its policies.
-       Only the first, the prototype's own client, opens; the others are
-       there to show what a search with many results looks like. A policy
-       row: [reference, cover start, status, product, insurer, risk info,
-       expiry, brand / agent, premium, scheme]. */
+    /* Sample clients a search can bring back: for "Barnard", James Barnard
+       (the prototype's own client, the only one that opens) and other
+       Barnards with a mix of motor and household policies. A policy row:
+       [reference, cover start, status, product, insurer, risk info, expiry,
+       brand / agent, premium, scheme]. */
     searchClients: [
-      { id: 'rm', real: true },
-      { id: 'c2', name: 'Motor API Automation', ref: 'API/M/28091996/0002', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'motor.api@email.com', dob: '28/09/1996', policies: [
-        ['999/096/Y045/TGS', '20/12/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '19/12/2026', 'Krypton / N/A', '£612.00', 'Mobius Private Car'],
-        ['999/403/Y061/TGS', '02/07/2023', 'Incomplete', 'Open Market Motor', 'N/A', 'Registration: TBA1', '01/07/2024', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
-      { id: 'c3', name: 'Motor1 API Automation1', ref: 'API/M/30081996/0118', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'motor1@email.com', dob: '30/08/1996', policies: [
-        ['ZZ0002221', '08/12/2021', 'Lapsed', 'Open Market Motor', 'Allianz Insurance PLC', 'Registration: TBA1', '07/12/2022', 'Krypton / Dubnium', '£540.00', 'Mobius Private Car']] },
-      { id: 'c4', name: 'Motor SGS', ref: 'SGS/M/01081989/0002', address: 'Unit 6 Leylands Farm, Nobs Crook, Colden Common, Winchester', postcode: 'SO21 1TH', email: 'sgs@email.com', dob: '01/08/1989', policies: [
-        ['999/408/Y061/TGS', '08/12/2021', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: SG21 ABC', '07/12/2022', 'Tungsten / N/A', '£0.00', 'Mobius Private Car'],
-        ['999/643/Y061/TGS', '08/12/2021', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: SG21 ABC', '07/12/2022', 'Tungsten / N/A', '£0.00', 'Mobius Private Car'],
-        ['ZZ0003557', '02/03/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: SG21 ABC', '01/03/2027', 'Tungsten / N/A', '£701.00', 'Mobius Private Car']] },
-      { id: 'c5', name: 'abc Motor ZZ09', ref: 'MOT/A/10111974/0020', address: 'TGSL, Winnall Manor Road, Winnall, Winchester', postcode: 'WR2 6NJ', email: 'abc.motor@email.com', dob: '10/11/1974', policies: [
-        ['ZZ0900000000710', '14/02/2025', 'Prospect', 'Open Market Motor', '1st Quote Insurance', 'Registration: AB74 CDE', '13/02/2026', 'Krypton / N/A', '£488.50', 'Mobius Private Car']] },
-      { id: 'c6', name: 'Motor Test Refer', ref: 'API/M/20101997/0020', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'refer@email.com', dob: '20/10/1997', policies: [
-        ['999/007/Y341/TGS', '08/08/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '07/08/2026', 'Krypton / N/A', '£781.00', 'Mobius Private Car'],
-        ['999/096/Y045/TGS', '20/12/2023', 'Incomplete', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '19/12/2024', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
-      { id: 'c7', name: 'Test1 Motorcycle ZZ09', ref: 'MOT/T/10111974/0026', address: 'TGSL, Winnall Manor Road, Winnall, Winchester', postcode: 'SO23 0LB', email: 'test1@email.com', dob: '10/11/1974', policies: [
-        ['999/064/Y248/TGS', '05/09/2022', 'Incomplete', 'Open Market Motorcycle', 'N/A', 'N/A', '04/09/2023', 'Krypton / N/A', '£0.00', 'Mobius Motorcycle']] },
-      { id: 'c8', name: 'Integration Motorcycle', ref: 'MOT/I/10101989/0001', address: 'House, Street', postcode: 'JE2 7TY', email: 'integration@email.com', dob: '10/10/1989', policies: [] }
+      { id: 'jb', real: true },
+      { id: 'sb', name: 'Sarah Barnard', ref: 'BAR/S/14031979/0012', address: '3 Church Street, Tring, Hertfordshire', postcode: 'HP23 5AE', email: 'sarah.barnard@gmail.com', dob: '14/03/1979', policies: [
+        ['HH0004812', '02/05/2026', 'Live', 'Open Market Household', 'Aviva', 'Property: 3 Church Street', '01/05/2027', 'Krypton / N/A', '£384.20', 'Mobius Home'],
+        ['PUCO0071', '19/01/2026', 'Live', 'Open Market Motor', 'Ageas', 'Registration: LV21 KTN', '18/01/2027', 'Krypton / N/A', '£596.00', 'Mobius Private Car']] },
+      { id: 'tb', name: 'Tom Barnard', ref: 'BAR/T/22071992/0003', address: '41 Kingsley Road, Luton, Bedfordshire', postcode: 'LU3 1AB', email: 'tom.barnard92@outlook.com', dob: '22/07/1992', policies: [
+        ['HH0003390', '11/08/2024', 'Lapsed', 'Open Market Household', 'AXA Insurance', 'Property: 41 Kingsley Road', '10/08/2025', 'Krypton / N/A', '£212.75', 'Mobius Home']] },
+      { id: 'mb', name: 'Margaret Barnard', ref: 'BAR/M/03111958/0007', address: '8 Orchard Close, St Albans, Hertfordshire', postcode: 'AL1 4HP', email: 'm.barnard@btinternet.com', dob: '03/11/1958', policies: [
+        ['HH0002277', '30/09/2026', 'Live', 'Open Market Household', 'Aviva', 'Property: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£512.40', 'Mobius Home'],
+        ['HH0002278', '30/09/2026', 'Live', 'Open Market Household', 'Aviva', 'Contents: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£146.90', 'Mobius Home Contents'],
+        ['ZZ0003612', '12/09/2026', 'Prospect', 'Open Market Motor', 'Allianz Insurance PLC', 'Registration: YA18 PWZ', '11/09/2027', 'Tungsten / N/A', '£455.30', 'Mobius Private Car']] },
+      { id: 'db', name: 'Daniel Barnard-Hughes', ref: 'BAR/D/19051988/0021', address: '27 Avebury Boulevard, Milton Keynes', postcode: 'MK9 2FX', email: 'dan.bh@icloud.com', dob: '19/05/1988', policies: [
+        ['999/112/Z402/TGS', '04/10/2026', 'Incomplete', 'Open Market Motor', 'N/A', 'Registration: MK70 RDB', '03/10/2027', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
+      { id: 'pb', name: 'Priya Barnard', ref: 'BAR/P/27091995/0002', address: 'Flat 6, 112 St Albans Road, Watford', postcode: 'WD17 1JJ', email: 'priya.barnard@gmail.com', dob: '27/09/1995', policies: [
+        ['HH0005020', '15/10/2026', 'Prospect', 'Open Market Household', 'Ageas', 'Contents: Flat 6, 112 St Albans Road', '14/10/2027', 'Krypton / N/A', '£118.60', 'Mobius Home Contents']] },
+      { id: 'eb', name: 'Edward Barnard', ref: 'BAR/E/09021965/0004', address: 'The Old Rectory, High Street, Ampthill', postcode: 'MK45 2NG', email: 'edward.barnard@hotmail.co.uk', dob: '09/02/1965', policies: [
+        ['HH0001045', '01/03/2026', 'Live', 'Open Market Household', 'AXA Insurance', 'Property: The Old Rectory', '28/02/2027', 'Tungsten / N/A', '£1,204.80', 'Mobius Home'],
+        ['PUCO0049', '17/06/2026', 'Live', 'Open Market Motor', 'Ageas', 'Registration: EB65 RRD', '16/06/2027', 'Tungsten / N/A', '£842.00', 'Mobius Private Car'],
+        ['ZZ0002984', '17/06/2025', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: EB65 RRD', '16/06/2026', 'Tungsten / N/A', '£0.00', 'Mobius Private Car']] }
     ],
 
     /* "What can I search?" in the search Modal. Current Mobius wording, in
@@ -101,12 +101,12 @@
     outstandingDiary: {
       total: '14,334',
       rows: [
-        ['ZZ0002931', 'Tungsten', '', 'Mr Motor DTEST', 'Cheaper quote', '01/03/2021', '2046', ['SS', 'System']],
-        ['ZZ0002929', 'Tungsten', '', 'Mr Motor DTEST', 'Cheaper quote', '05/03/2021', '2042', ['SS', 'System']],
-        ['ZZ/000000479', 'Tungsten', '', 'Mrs Miroslav 1234 adasd', 'NB accepted', '10/06/2021', '1945', null],
-        ['ZZ/000000479', 'Tungsten', '', 'Mrs Miroslav 1234 adasd', 'Quote saved', '10/06/2021', '1945', ['MU', 'MB User3']],
-        ['999/001/X172/TES', 'Krypton', 'Dubnium', 'Miss Forename Katwoj HH Krypton SubAgent Introducer', 'Cancel RTA letter due', '11/07/2021', '1914', ['SS', 'System']],
-        ['ZZ0000018', 'Krypton', 'Dubnium', 'Mr Kamil Test', 'Cancel RTA letter due', '11/07/2021', '1914', ['SS', 'System']]
+        ['ZZ0002931', 'Tungsten', '', 'Mr David Okafor', 'Cheaper quote', '01/03/2021', '2046', ['SS', 'System']],
+        ['ZZ0002929', 'Tungsten', '', 'Mrs Helen Price', 'Cheaper quote', '05/03/2021', '2042', ['SS', 'System']],
+        ['ZZ/000000479', 'Tungsten', '', 'Miss Chloe Bennett', 'NB accepted', '10/06/2021', '1945', null],
+        ['ZZ/000000479', 'Tungsten', '', 'Miss Chloe Bennett', 'Quote saved', '10/06/2021', '1945', ['RK', 'Rachel King']],
+        ['999/001/X172/TES', 'Krypton', 'Dubnium', 'Mr Ravi Sharma', 'Cancel RTA letter due', '11/07/2021', '1914', ['SS', 'System']],
+        ['ZZ0000018', 'Krypton', 'Dubnium', 'Mrs Fiona MacLeod', 'Cancel RTA letter due', '11/07/2021', '1914', ['TW', 'Tom Walsh']]
       ]
     },
     /* [status, matches above threshold, highest match quality, date and time,
@@ -114,11 +114,11 @@
     sanctionMatches: {
       total: '40',
       rows: [
-        ['error', '', '', '08/02/2022 21:28', 'PC-/T/28111979/0001', '', 'Test PC-One', 'Mobius UI'],
+        ['error', '', '', '08/02/2022 21:28', 'COL/P/28111979/0001', '', 'Peter Collins', 'Mobius UI'],
         ['overridden', '10', '76%', '17/02/2022 13:00', 'ALI/A/01011990/0001', '999/001/X342/WEB', 'Amin Ali', 'Digital'],
-        ['error', '', '', '17/02/2022 13:47', 'HOO/A/01111990/0001', 'ZZ0002906', 'amin hoover', 'Digital'],
+        ['error', '', '', '17/02/2022 13:47', 'HOO/A/01111990/0001', 'ZZ0002906', 'Amin Hoover', 'Digital'],
         ['above', '10', '74%', '24/02/2022 08:48', 'HOO/A/01011990/0004', '', 'Amin Hoover', 'Mobius UI'],
-        ['above', '1', '74%', '05/04/2022 11:00', 'TES/T/10051986/0005', '', 'Test Test', 'Mobius UI'],
+        ['above', '1', '74%', '05/04/2022 11:00', 'TUR/G/10051986/0005', '', 'Grace Turner', 'Mobius UI'],
         ['overridden', '5', '74%', '12/04/2022 09:06', '', '', 'Amin Ali', 'Mobius UI']
       ]
     },
@@ -127,23 +127,23 @@
     userMenu: ['Unlock records', 'Clear cache', 'Change password', 'Release notes', 'Cookie policy'],
 
     client: {
-      name: 'Reverend Motor API Automation',
-      initials: 'RM',
-      ref: 'API/M/08121996/0046',
-      dob: '08/12/1996',
-      address: '2 Fernbank, La Butte, St. Peter Port, Guernsey, GY1 1XA',
-      addressShort: '2 Fernbank, La Butte, St. Peter Port, Guernsey',
-      postcode: 'GY1 1XA',
-      email: 'aman@email.com',
-      tel: '00888888888',
+      name: 'James Barnard',
+      initials: 'JB',
+      ref: 'BAR/J/08121986/0046',
+      dob: '08/12/1986',
+      address: '14 Willow Lane, Harpenden, Hertfordshire, AL5 2JR',
+      addressShort: '14 Willow Lane, Harpenden, Hertfordshire',
+      postcode: 'AL5 2JR',
+      email: 'james.barnard@outlook.com',
+      tel: '07700 900481',
       since: '30/12/2017',
       businessLine: 'Open Market Motor',
       product: 'Motor',
       brand: 'Krypton',
-      riskInfo: 'Registration: TBA1',
+      riskInfo: 'Registration: KX19 FHD',
       insurer: 'N/A',
-      /* Extra support in place (Client support's Switch). On, so the
-         heading's solid purple heart shows; switch it off in the panel. */
+      /* Extra support in place (Client support's Switch). On, so Client
+         support shows its check; switch it off in the panel. */
       supportOn: true
     },
 
@@ -195,7 +195,7 @@
     ],
 
     creditCards: [
-      ['**********5262', 'Motor API Automation', '05/31', 'Yes', 'Yes']
+      ['**********5262', 'Mr J Barnard', '05/31', 'Yes', 'Yes']
     ],
 
     diary: [
@@ -204,7 +204,7 @@
     ],
 
     documents: {
-      names: ['2nd Nested Doc, Copy.doc', '3rd Nested Doc, Copy.doc', 'AuthTest.doc', 'CV, New Business Pack (Post).zip', 'Highway Certificate.doc'],
+      names: ['Certificate of motor insurance.pdf', 'Policy schedule.pdf', 'Statement of fact.pdf', 'New business pack (post).zip', 'Direct Debit mandate.pdf'],
       total: 18
     },
 
@@ -248,7 +248,7 @@
     },
 
     driver: { dob: '08/12/1996' },
-    vehicle: { reg: 'TBA1', make: 'Mercedes', model: 'E220 AMG Sport CDI Auto', mileage: '15,000' },
+    vehicle: { reg: 'KX19 FHD', make: 'Mercedes', model: 'E220 AMG Sport CDI Auto', mileage: '15,000' },
 
     contactNumbers: [
       ['00888888888', 'Fax', '2345', 'No'],
@@ -275,14 +275,14 @@
        (which shows the same labels with every value blank). */
     policyDetail: [
       { key: 'proposer', title: '[[Policyholder details]]', cards: [
-        ['Personal details', [['Client reference', '@clientRef'], ['Private individual or other', 'Private individual'], ['Title', 'Reverend'], ['Forename', 'Motor'], ['Other initials', 'Dd'], ['Surname', 'Api Automation'], ['Date of birth', '08/12/1996'], ['Gender', 'Female'], ['Credit check consent', 'Not asked']]],
+        ['Personal details', [['Client reference', '@clientRef'], ['Private individual or other', 'Private individual'], ['Title', 'Mr'], ['Forename', 'James'], ['Other initials', 'R'], ['Surname', 'Barnard'], ['Date of birth', '08/12/1986'], ['Gender', 'Male'], ['Credit check consent', 'Not asked']]],
         ['Contact details', [['Email address', '@email']], 'telephones'],
         ['Cover date and time', [['[[Cover start]]', '@start'], ['[[Cover end]]', '@end']]]
       ] },
       { key: 'business', title: '[[Invoicing details]]', cards: [
-        ['Invoicing address', [['House name / number', '2 Fernbank'], ['Postcode', 'GY1 1XA'], ['Street', 'La Butte'], ['Locality', 'St. Peter Port'], ['City', 'Guernsey'], ['County', '']]],
+        ['Invoicing address', [['House name / number', '14'], ['Postcode', 'AL5 2JR'], ['Street', 'Willow Lane'], ['Locality', ''], ['City', 'Harpenden'], ['County', 'Hertfordshire']]],
         ['Additional contacts', [], 'contacts'],
-        ['VAT', [['Business VAT registered', 'Yes'], ['Reference', '21021']]],
+        ['VAT', [['Business VAT registered', 'No'], ['Reference', '']]],
         ['Employer reference number', [['Employer reference number', '']]]
       ] },
       { key: 'consent', title: 'Consent screen', cards: [
@@ -294,7 +294,7 @@
         ['Driver details', [], 'drivers']
       ] },
       { key: 'vehicle', title: 'Vehicle details', cards: [
-        ['Vehicle details', [['Registration', 'TBA1'], ['Make', 'Mercedes'], ['Model', 'E220 AMG Sport CDI Auto'], ['Chassis number', 'WDD2120022A036530'], ['Type', 'AMG Sport CDI'], ['CC', '2143'], ['Year of manufacture', '01/01/2014'], ['Fuel', 'Diesel'], ['Gearbox', 'Automatic'], ['Colour', 'Silver'], ['Body type', 'Saloon'], ['Doors', '4'], ['Seats', '5'], ['ABI code', '32120769']]]
+        ['Vehicle details', [['Registration', 'KX19 FHD'], ['Make', 'Mercedes'], ['Model', 'E220 AMG Sport CDI Auto'], ['Chassis number', 'WDD2120022A036530'], ['Type', 'AMG Sport CDI'], ['CC', '2143'], ['Year of manufacture', '01/01/2014'], ['Fuel', 'Diesel'], ['Gearbox', 'Automatic'], ['Colour', 'Silver'], ['Body type', 'Saloon'], ['Doors', '4'], ['Seats', '5'], ['ABI code', '32120769']]]
       ] },
       { key: 'cover', title: 'Vehicle cover', cards: [
         ['Cover details', [['Who is to be insured', 'Insured only'], ['Cover', 'Comprehensive'], ['Voluntary excess', '200']]],
@@ -311,9 +311,9 @@
     /* The named tables and empty messages policyDetail refers to. `empty` is
        what the blank (Create new client) version shows instead. */
     policyDetailTables: {
-      telephones: { head: ['Telephone', 'Type', 'Extension', 'Ex directory'], rows: [['00888888888', 'Fax', '2345', 'No'], ['00111222333', 'Fax', '2345', 'No']], empty: null },
-      contacts: { head: ['Name', 'Title'], rows: [['Test Contact', 'Test Title']], empty: 'No additional contacts.' },
-      drivers: { head: ['Title', 'Forename', 'Surname', 'Date of birth', '[[Relationship to policyholder]]'], rows: [['Reverend', 'Motor', 'API Automation', '08/12/1996', '[[Policyholder]]']], empty: 'No drivers added.' },
+      telephones: { head: ['Telephone', 'Type', 'Extension', 'Ex directory'], rows: [['07700 900481', 'Mobile', '', 'No'], ['01582 760213', 'Home', '', 'No']], empty: null },
+      contacts: { head: ['Name', 'Title'], rows: [['Claire Barnard', 'Spouse']], empty: 'No additional contacts.' },
+      drivers: { head: ['Title', 'Forename', 'Surname', 'Date of birth', '[[Relationship to policyholder]]'], rows: [['Mr', 'James', 'Barnard', '08/12/1986', '[[Policyholder]]']], empty: 'No drivers added.' },
       noDataConsent: { message: 'No data processing consent entered.' },
       noMarketingConsent: { message: 'No marketing consent entered.' },
       noContactConsent: { message: 'No consent to contact entered.' }

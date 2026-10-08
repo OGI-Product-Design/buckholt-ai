@@ -511,7 +511,7 @@
      right. An Accordion header is a Button, so it cannot hold the link.
      Only the prototype's own client and policies open; the others are
      samples, and opening one says so. */
-  var SAMPLE_TOAST = ' data-toast="A sample result: only Reverend Motor API Automation opens in this prototype"';
+  var SAMPLE_TOAST = ' data-toast="A sample result: only James Barnard opens in this prototype"';
 
   function searchClients() {
     var c = F.client;
@@ -552,7 +552,10 @@
     return table(['Quote / policy number', '[[Cover start]]', 'Status', 'Product', 'Insurer', 'Premium'],
       shown.map(function (p) {
         var num = p[10] ? '<a href="' + policyHref(p[10]) + '">' + esc(p[0]) + '</a>' : '<a href="#" role="button"' + SAMPLE_TOAST + '>' + esc(p[0]) + '</a>';
-        return [cell(num), p[1], cell(statusTag({ status: p[2] })), p[3], p[4], p[8]];
+        /* The product with its icon: the House for household, the Car for
+           motor. */
+        var prod = '<span class="mob-product"><i class="' + (/Household/.test(p[3]) ? ICON.home : ICON.motor) + '" aria-hidden="true"></i>' + esc(p[3]) + '</span>';
+        return [cell(num), p[1], cell(statusTag({ status: p[2] })), cell(prod), p[4], p[8]];
       }), { caption: x.name + '’s policies' }) +
       (rest > 0 ? '<div class="mob-table-foot"><p class="support-01" aria-live="polite">Showing 1 to ' + shown.length + ' of ' + x.policies.length + ', most recent first</p>' + more + '</div>' : '');
   }
@@ -570,9 +573,12 @@
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
         btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
     var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
+    /* No results: the filters only show when they are what emptied the
+       list, so they can be cleared. */
     if (!found.length) {
-      return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + filters +
-        empty('Check the name, reference or email and search again, or clear the filters.') + '</div>';
+      var filtered = !!(fl.brand || fl.lob || fl.status);
+      return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + (filtered ? filters : '') +
+        empty(filtered ? 'No client matches these filters. Clear them, or search again.' : 'Check the name, reference or email and search again.') + '</div>';
     }
     var n = found.length;
     return '<div class="mob-search-results">' +
@@ -869,7 +875,7 @@
       ] : null;
       return [stack([
         card('Summary', fields([['Account name', F.client.name], ['Reference', p.ref], ['Payment made by', 'Policyholder'],
-          ['Current balance due', '£0.00'], ['Total outstanding balance', '£0.00'], ['Full name', 'Motor API Automation']]) +
+          ['Current balance due', '£0.00'], ['Total outstanding balance', '£0.00'], ['Full name', 'James Barnard']]) +
           table(['Statistics', 'Year to date', 'Last year'], stats, { caption: 'Statistics' }), { actions: txActions }),
         card('Open items', empty('There is no data to display.'), { actions: [
           btn('Cash', { size: 'sm', attrs: ' data-toast="Cash allocation opened"' }), btn('Match', { size: 'sm', attrs: ' data-toast="Match opened"' }), btn('View', { size: 'sm', disabled: true })] }),

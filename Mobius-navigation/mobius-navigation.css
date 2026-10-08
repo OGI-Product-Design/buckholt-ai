@@ -342,14 +342,21 @@
 .mob-record-nav .nav-link,
 .mob-rail-pages .nav-link { --nav-link-height: 2rem; }
 
+/* Side panels: their contents (a form, an Alert, notes, a table) stack a
+   Panel's gap apart, 32px, so a field never sits on the Alert under it
+   (Laurence, 8 October 2026). */
+[id^="mob-panel-"] .blade-body { display: flex; flex-direction: column; gap: var(--spacer-06); }
+
 /* ------------------------------------------------------- Search Modal
    The search field, then recent searches (Buckholt Menu shown in place:
    the documentation's demo-only `.show` and `.position-relative`, with the
    panel's own custom properties bound to "no shadow, no padding, full
    width"), or the results. */
-/* The field and "What can I search?" share a centre line (the field is
-   44px, the Button 40px). */
-.mob-search-modal-bar { display: flex; align-items: center; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+/* The field (with its prototype helper text below) and "What can I
+   search?" align to the field's top; the Button sits centred on the 44px
+   field. */
+.mob-search-modal-bar { display: flex; align-items: flex-start; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+.mob-search-help { margin-top: 0.125rem; }   /* the 40px Button centred on the 44px field, above the field's helper text */
 /* The Modal's scrolling body has no padding, so it cut off the field's
    focus ring (Text input's own: the border plus a 1px ring outside it). A
    few pixels of room, given back by a matching negative margin so nothing
@@ -381,6 +388,8 @@
    policies a Panel's gap apart. */
 .mob-search-results .accordion-body { display: flex; flex-direction: column; gap: var(--spacer-05); }
 .mob-search-results .accordion-body > .button-set { margin-top: 0; }
+/* A product with its icon, in a policies table. */
+.mob-product { display: inline-flex; align-items: center; gap: var(--spacer-03); white-space: nowrap; }
 .mob-search-results > .support-01 { margin: 0; }
 
 /* -------------------------------------------------------------------- Page */
