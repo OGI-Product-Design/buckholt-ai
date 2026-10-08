@@ -338,7 +338,14 @@
    the documentation's demo-only `.show` and `.position-relative`, with the
    panel's own custom properties bound to "no shadow, no padding, full
    width"), or the results. */
-.mob-search-modal-bar { display: flex; align-items: flex-start; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+/* The field and "What can I search?" share a centre line (the field is
+   44px, the Button 40px). */
+.mob-search-modal-bar { display: flex; align-items: center; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+/* The Modal's scrolling body has no padding, so it cut off the field's
+   focus ring (Text input's own: the border plus a 1px ring outside it). A
+   few pixels of room, given back by a matching negative margin so nothing
+   moves (Laurence, 8 October 2026). */
+#mob-search-modal .modal-body { padding: var(--spacer-02); margin: calc(-1 * var(--spacer-02)); }
 .mob-search-modal-form { flex: 1 1 auto; min-width: 0; }
 .mob-search-help { flex: 0 0 auto; }
 .mob-search-help .button-set { margin: 0; }
