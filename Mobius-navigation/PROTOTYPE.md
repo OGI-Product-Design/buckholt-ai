@@ -154,8 +154,8 @@ the prototype's:
 | Status | Groups | Menu actions | Heading |
 | --- | --- | --- | --- |
 | Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | Add new quote (secondary), Amend policy (primary) |
-| Prospect | Quote, Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
-| Automatic Decline | Quote, Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
+| Prospect | Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | Add new quote, Amend policy |
+| Automatic Decline | Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | Add new quote, Amend policy |
 | Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | Amend policy |
 | Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | Add new quote (primary) |
 
@@ -192,6 +192,10 @@ here.").
 - **Amend policy in the menu (Laurence, 7 October 2026).** In current Mobius it is a menu item,
   so it is a page in the **Policy** group, after Policy details and Claims (whether a status has
   it follows the prototype's `policyFlows`, the same as the heading).
+- **Quote summary is not a menu item (Laurence, 8 October 2026).** It is where amending a quote
+  ends, as in current Mobius: for a Prospect, Automatic Decline or Incomplete policy, Amend policy
+  runs the quote again and Save lands on its Quote summary (Cancel goes back to the Policy
+  overview). The menu's "Quote" group is gone.
 - **Add new quote is in the client menu only (Laurence, 8 October 2026).** It was in both the
   client menu and each policy's Policy group; a new quote is the client's, so it has one place
   in the navigation. A policy's heading keeps its Add new quote Button.
@@ -504,6 +508,9 @@ example 3).
   stacked-set offsets: `margin-top`, and the `margin-bottom` it gives a set that has a following
   sibling. Left on, that margin pushed the Client notes button 4px above View claims and Add new
   quote.
+- **This prototype's own files carry a version** (`?v=` in `index.html`), bumped with every
+  change, so a browser fetches them afresh instead of running an old cached copy (an old menu
+  script kept showing Add new quote in the policy menu after it had been removed).
 - **Vertical scrollbars are 6px** (Laurence, 8 October 2026): the page, the two menu columns, the
   drawer, the search Modal and its help panel. A grey thumb (`--disabled-03`, `--ui-border-01`
   under the pointer) on no track. Horizontal scrollbars on wide tables keep the browser's own.

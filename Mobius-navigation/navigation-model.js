@@ -85,11 +85,6 @@
       });
       return ch.length ? { group: 'Policy', icon: ICON.policy, children: ch } : null;
     },
-    quote: function (p) {
-      return (p.kind === 'prospect' || p.kind === 'decline')
-        ? { group: 'Quote', icon: ICON.quote, children: [{ id: 'quote', label: 'Quote summary' }] }
-        : null;
-    },
     transactions: function (p) {
       return p.kind === 'decline' ? null : { group: 'Transactions', icon: ICON.money, children: [
         { id: 'tx', label: '[[Account summary]]' },
@@ -134,7 +129,7 @@
   function policyNav(p) {
     return [
       { id: 'summary', label: '[[Policy overview]]', icon: ICON.policies },   // the Shield, not the House (Laurence, 8 October 2026)
-      GROUPS.quote(p), GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
+      GROUPS.policy(p), GROUPS.transactions(p), GROUPS.corr(p), GROUPS.more(p)
     ].filter(Boolean);
   }
 
@@ -196,7 +191,15 @@
     });
     var fl = policyFlows(p);
     [fl.primary].concat(fl.secondary).forEach(function (a) { ids.push(POLICY_ACTIONS[a].to); });
+    /* Quote summary is not a menu page (Laurence, 8 October 2026): it is
+       where amending a quote ends, as in current Mobius, for a policy that
+       is still a quote. */
+    if (hasQuote(p)) ids.push('quote');
     return ids;
+  }
+
+  function hasQuote(p) {
+    return p.kind === 'prospect' || p.kind === 'decline' || p.kind === 'incomplete';
   }
 
   /* Policy overview quick links: [page, label, icon, count key]. */
