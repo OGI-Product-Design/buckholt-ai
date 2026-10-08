@@ -209,7 +209,7 @@
      Fields are stacked Key-value pairs on the Bootstrap grid, so the column
      count follows the breakpoints rather than a local grid. */
   function fields(arr, cols, p) {
-    var col = cols === 2 ? 'col-12 col-md-6' : 'col-12 col-sm-6 col-lg-4';
+    var col = cols === 2 ? 'col-12 col-md-6' : cols === 4 ? 'col-12 col-sm-6 col-lg-3' : 'col-12 col-sm-6 col-lg-4';
     return '<div class="row gy-4 mob-fields">' + arr.map(function (f) {
       var v = fill(f[1], p);
       return '<div class="' + col + '">' +
@@ -500,12 +500,157 @@
 
   /* Does the mock data hold anything for this search? Name, reference,
      email, postcode or address of the client, or any policy reference. */
-  function matches(q) {
-    var n = String(q || '').trim().toLowerCase();
-    if (!n) return false;
+  /* ====================================================== Search results
+     After current Mobius's search results (Laurence, 8 October 2026): one
+     row per client found, which opens in place to show the client's email
+     and date of birth, View client and Add new quote, and the client's
+     policies; each policy opens in place too, with View. The filters sit
+     straight above the table, not in a Card. Name, Reference, Address and
+     Postcode sort (Table's documented sortable header). Buckholt's Table
+     documents no expandable rows, so a row's toggle is an icon-only ghost
+     Button in its first cell (`aria-expanded`, `aria-controls`, Tooltip)
+     and its details are the next row; a gap, recorded in PROTOTYPE.md.
+     Only the prototype's own client and policies open; the other results
+     are samples, and opening one says so. */
+  var SAMPLE_TOAST = ' data-toast="A sample result: only Reverend Motor API Automation opens in this prototype"';
+
+  function searchClients() {
     var c = F.client;
-    return [c.name, c.ref, c.email, c.postcode, c.address].concat(F.policies.map(function (p) { return p.ref; }))
-      .some(function (v) { return String(v).toLowerCase().indexOf(n) >= 0; });
+    return F.searchClients.map(function (x) {
+      if (!x.real) return x;
+      return { id: x.id, real: true, name: c.name, ref: c.ref, address: c.addressShort, postcode: c.postcode, email: c.email, dob: c.dob,
+        policies: F.policies.map(function (p) {
+          return [p.ref, p.start.split(' ')[0], p.status, c.businessLine, c.insurer, c.riskInfo, p.end.split(' ')[0], c.brand + ' / N/A', p.premium, 'Mobius Private Car', p];
+        }) };
+    });
+  }
+
+  function searchFound(q) {
+    var n = String(q || '').trim().toLowerCase();
+    if (!n) return [];
+    var fl = S.searchFilter || {};
+    var hit = function (v) { return String(v).toLowerCase().indexOf(n) >= 0; };
+    var list = searchClients().filter(function (x) {
+      return [x.name, x.ref, x.email, x.postcode, x.address].some(hit) || x.policies.some(function (p) { return hit(p[0]); });
+    }).filter(function (x) {
+      if (!fl.brand && !fl.lob && !fl.status) return true;
+      return x.policies.some(function (p) {
+        return (!fl.brand || p[7].indexOf(fl.brand) === 0) && (!fl.lob || p[3] === fl.lob) && (!fl.status || p[2] === fl.status);
+      });
+    });
+    var so = S.searchSort;
+    if (so) list.sort(function (a, b) { return String(a[so.col]).localeCompare(String(b[so.col])) * so.dir; });
+    return list;
+  }
+
+  /* A row's toggle: an icon-only ghost Button, small, with its Tooltip. */
+  function rowToggle(key, rowId, name) {
+    var on = !!(S.searchOpen || {})[key];
+    var label = (on ? 'Hide ' : 'Show ') + name;
+    return btn('', { size: 'sm', icon: on ? 'fa-regular fa-chevron-down' : 'fa-regular fa-chevron-right',
+      attrs: ' data-search-toggle="' + esc(key) + '" data-focus-id="st-' + esc(key) + '" aria-expanded="' + on + '" aria-controls="' + rowId + '"' +
+        ' aria-label="' + esc(label) + '" data-bs-toggle="tooltip" data-bs-title="' + esc(on ? 'Hide details' : 'Show details') + '"' });
+  }
+
+  function sortHeader(col, label) {
+    var so = S.searchSort;
+    var on = so && so.col === col;
+    return '<th scope="col" class="table-sort-header"' + (on ? ' aria-sort="' + (so.dir > 0 ? 'ascending' : 'descending') + '"' : '') + '>' +
+      '<button class="table-sort" type="button" data-search-sort="' + col + '" data-focus-id="ss-' + col + '" aria-label="Sort by ' + esc(label) + '">' +
+        '<div class="table-header-label">' + t(label) + '</div>' +
+        '<div class="table-sort-icon"><i class="fa-solid ' + (on ? (so.dir > 0 ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort') + '" aria-hidden="true"></i></div>' +
+      '</button>' +
+    '</th>';
+  }
+
+  function hiddenHeader(name) {
+    return '<th scope="col" class="col-fit"><div class="table-header-label"><span class="visually-hidden">' + esc(name) + '</span></div></th>';
+  }
+
+  function searchPolicies(x) {
+    if (!x.policies.length) return empty('This client has no policies.');
+    var open = S.searchOpen || {};
+    return '<div class="table-container"><div class="table-content">' +
+      '<table class="table no-italics mob-search-table" aria-label="' + esc(x.name) + '’s policies">' +
+        '<thead><tr>' + hiddenHeader('Details') +
+          ['Quote / policy number', '[[Cover start]]', 'Status', 'Product', 'Insurer', 'Risk info'].map(function (h) {
+            return '<th scope="col"><div class="table-header-label">' + t(h) + '</div></th>';
+          }).join('') + '</tr></thead>' +
+        '<tbody><tr class="table-gap"><td colspan="100%"></td></tr>' +
+          x.policies.map(function (p, i) {
+            var key = 'p:' + x.id + ':' + i;
+            var rowId = 'mob-sr-' + x.id + '-' + i;
+            var view = p[10]
+              ? btn('View', { variant: 'secondary', href: policyHref(p[10]) })
+              : btn('View', { variant: 'secondary', attrs: SAMPLE_TOAST });
+            return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
+                '<td class="col-fit">' + rowToggle(key, rowId, p[0]) + '</td>' +
+                '<td>' + esc(p[0]) + '</td><td>' + esc(p[1]) + '</td><td>' + statusTag({ status: p[2] }) + '</td>' +
+                '<td>' + esc(p[3]) + '</td><td>' + esc(p[4]) + '</td><td>' + esc(p[5]) + '</td>' +
+              '</tr>' +
+              (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="7">' +
+                '<div class="mob-search-detail-body">' +
+                  fields([['Policy expiry', p[6]], ['Brand / agent', p[7]], ['Premium', p[8]], ['Scheme', p[9]]], 4) +
+                  set([view], 'mob-search-detail-actions') +
+                '</div>' +
+              '</td></tr>' : '');
+          }).join('') +
+        '</tbody>' +
+      '</table>' +
+    '</div></div>';
+  }
+
+  function searchResults() {
+    var q = S.query;
+    var found = searchFound(q);
+    var fl = S.searchFilter || {};
+    var open = S.searchOpen || {};
+    var pick = function (html, v) { return v ? html.replace('<option>' + v + '</option>', '<option selected>' + v + '</option>') : html; };
+    var filters = filterBar([
+      pick(select('sb', 'Brand', ['Select', 'Krypton', 'Tungsten']), fl.brand),
+      pick(select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle']), fl.lob),
+      pick(select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
+    ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
+        btn('Apply', { variant: 'secondary', icon: AI.filter, attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
+    var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
+    if (!found.length) {
+      return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + filters +
+        empty('Check the name, reference or email and search again, or clear the filters.') + '</div>';
+    }
+    var n = found.length;
+    return '<div class="mob-search-results">' +
+      head(n + ' client' + (n > 1 ? 's' : '') + ' found for “' + esc(q) + '”') +
+      filters +
+      '<div class="table-container"><div class="table-content">' +
+        '<table class="table no-italics mob-search-table" aria-labelledby="mob-search-count">' +
+          '<thead><tr>' + hiddenHeader('Details') + sortHeader('name', 'Name') + sortHeader('ref', '[[Reference]]') +
+            sortHeader('address', 'Address') + sortHeader('postcode', 'Postcode') + '</tr></thead>' +
+          '<tbody><tr class="table-gap"><td colspan="100%"></td></tr>' +
+            found.map(function (x) {
+              var key = 'c:' + x.id;
+              var rowId = 'mob-sr-' + x.id;
+              var viewAttrs = x.real ? '' : SAMPLE_TOAST;
+              return '<tr class="mob-search-row' + (open[key] ? ' mob-search-open' : '') + '">' +
+                  '<td class="col-fit">' + rowToggle(key, rowId, x.name) + '</td>' +
+                  '<td><strong>' + esc(x.name) + '</strong></td><td>' + esc(x.ref) + '</td><td>' + esc(x.address) + '</td><td>' + esc(x.postcode) + '</td>' +
+                '</tr>' +
+                (open[key] ? '<tr class="mob-search-detail" id="' + rowId + '"><td colspan="5">' +
+                  '<div class="mob-search-detail-body">' +
+                    fields([['Email address', x.email], ['[[Date of birth]]', x.dob]], 2) +
+                    set([
+                      btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: viewAttrs }),
+                      btn('Add new quote', { variant: 'secondary', icon: AI.add, href: x.real ? '#c/newquote' : '#', attrs: viewAttrs })
+                    ], 'mob-search-detail-actions') +
+                  '</div>' +
+                  '<div class="text-block mob-search-sub"><h4 class="title-01">Client policies</h4></div>' +
+                  searchPolicies(x) +
+                '</td></tr>' : '');
+            }).join('') +
+          '</tbody>' +
+        '</table>' +
+      '</div></div>' +
+      '<p class="support-01">Showing 1 to ' + n + ' of ' + n + '</p>' +
+    '</div>';
   }
 
   /* Sanctions check status: a status Tag, so the status is never colour
@@ -563,37 +708,10 @@
       return [tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
     },
 
-    /* The results of a search run from the menu. Matching is against the
-       mock client and their policies, so swapping in a real search API only
-       replaces matches(). */
-    search: function () {
-      var c = F.client;
-      var q = S.query;
-      var found = matches(q);
-      var filters = card('Search results', filterBar([
-        select('sb', 'Brand', ['Select', 'Krypton']),
-        select('sl', 'Line of business', ['Select', 'Open Market Motor']),
-        select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'])
-      ], [btn('Clear', { icon: AI.clear }), btn('Apply', { variant: 'secondary', icon: AI.filter })], 'Filter search results'));
-      if (!found) {
-        return [stack([filters,
-          card('No clients found for “' + q + '”', empty('Check the name, reference or email and search again, or create a new client.'))])];
-      }
-      return [
-        stack([
-          filters,
-          card('1 client found for “' + q + '”',
-            table(['Name', 'Reference', 'Address', 'Postcode'],
-              [[cell('<a href="#c/summary"><strong>' + esc(c.name) + '</strong></a>'), c.ref, c.addressShort, c.postcode]],
-              { hrefs: ['#c/summary'], caption: 'Clients found' }) +
-            /* The client's name is the link to the client: no separate
-               "Open client" link repeating it. */
-            fields([['Email address', c.email], ['[[Date of birth]]', c.dob], ['Policies', F.policies.length + ' linked']]) +
-            '<div class="text-block"><h3 class="title-01">Client policies</h3></div>' +
-            policiesTable())
-        ])
-      ];
-    },
+    /* The results of a search, shown in the search Modal. Matching is
+       against the sample clients and their policies, so swapping in a real
+       search API only replaces searchFound(). */
+    search: function () { return [searchResults()]; },
 
     /* The other Mobius modules are outside this prototype. */
     activity: function () { return [card('Activity', placeholder('The existing Mobius Activity module sits here.'))]; },
@@ -1185,7 +1303,13 @@
       return set(labelled);
     }
 
-    /* Create new client is in the Broking bar, on every Broking page. */
+    /* Create new client opens a page, so it is a heading action: on the
+       Dashboard, Broking's home (Laurence, 8 October 2026, now the Broking
+       bar is gone). */
+    if (R.scope === 'app' && R.page === 'dashboard') {
+      var nc = M.APP_ACTIONS.newclient;
+      return set([btn(nc.label, { variant: 'secondary', icon: nc.icon, href: '#' + nc.to })]);
+    }
 
     if (R.scope === 'client' && R.page === 'summary') {
       var n = F.clientNotes.length;

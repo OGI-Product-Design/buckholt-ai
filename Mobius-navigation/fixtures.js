@@ -56,6 +56,33 @@
        the search. A search they run is added to the top for the session. */
     recentSearches: ['motor', 'PUCO0068', 'API/M/08121996/0046', 'GY1 1XA'],
 
+    /* Sample clients a search can bring back, after current Mobius's
+       results for "motor": one row per client, each with its policies.
+       Only the first, the prototype's own client, opens; the others are
+       there to show what a search with many results looks like. A policy
+       row: [reference, cover start, status, product, insurer, risk info,
+       expiry, brand / agent, premium, scheme]. */
+    searchClients: [
+      { id: 'rm', real: true },
+      { id: 'c2', name: 'Motor API Automation', ref: 'API/M/28091996/0002', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'motor.api@email.com', dob: '28/09/1996', policies: [
+        ['999/096/Y045/TGS', '20/12/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '19/12/2026', 'Krypton / N/A', '£612.00', 'Mobius Private Car'],
+        ['999/403/Y061/TGS', '02/07/2023', 'Incomplete', 'Open Market Motor', 'N/A', 'Registration: TBA1', '01/07/2024', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
+      { id: 'c3', name: 'Motor1 API Automation1', ref: 'API/M/30081996/0118', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'motor1@email.com', dob: '30/08/1996', policies: [
+        ['ZZ0002221', '08/12/2021', 'Lapsed', 'Open Market Motor', 'Allianz Insurance PLC', 'Registration: TBA1', '07/12/2022', 'Krypton / Dubnium', '£540.00', 'Mobius Private Car']] },
+      { id: 'c4', name: 'Motor SGS', ref: 'SGS/M/01081989/0002', address: 'Unit 6 Leylands Farm, Nobs Crook, Colden Common, Winchester', postcode: 'SO21 1TH', email: 'sgs@email.com', dob: '01/08/1989', policies: [
+        ['999/408/Y061/TGS', '08/12/2021', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: SG21 ABC', '07/12/2022', 'Tungsten / N/A', '£0.00', 'Mobius Private Car'],
+        ['999/643/Y061/TGS', '08/12/2021', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: SG21 ABC', '07/12/2022', 'Tungsten / N/A', '£0.00', 'Mobius Private Car'],
+        ['ZZ0003557', '02/03/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: SG21 ABC', '01/03/2027', 'Tungsten / N/A', '£701.00', 'Mobius Private Car']] },
+      { id: 'c5', name: 'abc Motor ZZ09', ref: 'MOT/A/10111974/0020', address: 'TGSL, Winnall Manor Road, Winnall, Winchester', postcode: 'WR2 6NJ', email: 'abc.motor@email.com', dob: '10/11/1974', policies: [
+        ['ZZ0900000000710', '14/02/2025', 'Prospect', 'Open Market Motor', '1st Quote Insurance', 'Registration: AB74 CDE', '13/02/2026', 'Krypton / N/A', '£488.50', 'Mobius Private Car']] },
+      { id: 'c6', name: 'Motor Test Refer', ref: 'API/M/20101997/0020', address: '2 Fernbank, La Butte, St. Peter Port, Guernsey', postcode: 'GY1 1XA', email: 'refer@email.com', dob: '20/10/1997', policies: [
+        ['999/007/Y341/TGS', '08/08/2023', 'Live', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '07/08/2026', 'Krypton / N/A', '£781.00', 'Mobius Private Car'],
+        ['999/096/Y045/TGS', '20/12/2023', 'Incomplete', 'Open Market Motor', '1st Quote Insurance', 'Registration: TBA1', '19/12/2024', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
+      { id: 'c7', name: 'Test1 Motorcycle ZZ09', ref: 'MOT/T/10111974/0026', address: 'TGSL, Winnall Manor Road, Winnall, Winchester', postcode: 'SO23 0LB', email: 'test1@email.com', dob: '10/11/1974', policies: [
+        ['999/064/Y248/TGS', '05/09/2022', 'Incomplete', 'Open Market Motorcycle', 'N/A', 'N/A', '04/09/2023', 'Krypton / N/A', '£0.00', 'Mobius Motorcycle']] },
+      { id: 'c8', name: 'Integration Motorcycle', ref: 'MOT/I/10101989/0001', address: 'House, Street', postcode: 'JE2 7TY', email: 'integration@email.com', dob: '10/10/1989', policies: [] }
+    ],
+
     /* "What can I search?" in the search Modal. Current Mobius wording, in
        sentence case. */
     searchHelp: {
