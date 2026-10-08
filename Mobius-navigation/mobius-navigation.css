@@ -138,9 +138,11 @@
 /* At client level the rail is the only column, so it takes the white
    panel the policy column has (inset 8px, 8px radius, Card's border)
    rather than sitting bare on the page background (Laurence, 7 October
-   2026). Once a policy is open the panel moves to the policy column. */
+   2026). Once a policy is open the panel moves to the policy column.
+   Collapsed at client level it stays the panel, 64px wide (Laurence,
+   8 October 2026: bare, the strip read as a grey gap). */
 @media (min-width: 1024px) {
-  .mob-sidebar:not(.mob-has-record):not(.mob-rail-collapsed) .mob-rail {
+  .mob-sidebar:not(.mob-has-record) .mob-rail {
     margin: var(--spacer-03);
     width: 17rem;                                     /* its own 272px inside the inset, so a long reference fits under the Policies rule */
     overflow: hidden;
@@ -148,6 +150,7 @@
     border: 1px solid var(--ui-border-02);
     border-radius: var(--border-radius-md);
   }
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4rem; }
 }
 /* The head: the client in User meta, level with the policy's head in the
    next column. Its content starts where that head's does: 8px inset, the
