@@ -78,6 +78,15 @@
 .mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
 .mob-systems .menu-panel { z-index: 1035; }
+/* The current system: Menu's own active colours (its pressed state's label
+   and tint), and a tick at the item's end. */
+.mob-systems .menu-item[aria-current="page"] {
+  display: flex;
+  align-items: center;
+  color: var(--menu-item-label-active);
+  background-color: var(--menu-item-background-active);
+}
+.mob-systems .mob-menu-current { margin-left: auto; padding-left: var(--spacer-04); }
 /* The trigger carries the current system's name. Below 1280px it sits 8px
    from the clock; on a phone the name is kept for assistive technology but
    not drawn, and the caret alone opens the menu. */
