@@ -413,6 +413,17 @@
 .mob-heading h1:focus { outline: none; }
 .mob-heading h1:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.25rem; }
 
+/* The breadcrumbs on the left, the record's actions on the right, in one
+   row above the title; the actions drop under the breadcrumbs when there
+   is no room. */
+.mob-page-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-03) var(--spacer-05); }
+.mob-page-bar .mob-crumbs { min-width: 0; }
+.mob-page-bar .mob-heading-actions { margin-left: auto; gap: var(--spacer-02); }   /* ghost Buttons carry their own padding, so 4px between them */
+.mob-page-bar .mob-heading-actions .button-set { gap: var(--spacer-02); }
+.mob-page-bar .mob-heading-rule { margin: 0 var(--spacer-03); }
+/* The renewal badge inside More: at the item's end, its own size. */
+.mob-overflow .menu-item { display: flex; align-items: center; }
+.mob-overflow .menu-item .mob-count-inline { flex: 0 0 auto; width: auto; margin-left: auto; padding-inline: var(--padding-02); }
 .mob-heading-actions {
   display: flex;
   align-items: center;

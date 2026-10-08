@@ -1335,14 +1335,19 @@
      policy and Customer portal settings (rarely used, set once), then,
      below a divider, Stop and Cancel (destructive; Cancel is the danger
      item). */
-  var OVERFLOW = ['copy', 'portal'];
+  /* In More: everything but the most used (Laurence, 8 October 2026), in
+     this order; Stop and Cancel after a divider. */
+  var OVERFLOW = ['extend', 'renew', 'copy', 'portal'];
   var DESTRUCTIVE = ['stop', 'cancel'];
   function policyTools(p) {
     var A = M.POLICY_ACTIONS;
     var ids = [];
     M.policyActions(p).forEach(function (g) { ids = ids.concat(g.ids); });
     var shown = ids.filter(function (k) { return OVERFLOW.indexOf(k) < 0 && DESTRUCTIVE.indexOf(k) < 0; });
-    var rare = ids.filter(function (k) { return OVERFLOW.indexOf(k) >= 0; });
+    var rare = OVERFLOW.filter(function (k) { return ids.indexOf(k) >= 0; });
+    /* The renewal window is open: Renewal invite is due, so it and More
+       carry a count badge (Mark's design), read out as "renewal due". */
+    var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
     var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
     var attrs = function (k) {
       var a = A[k];
@@ -1352,15 +1357,18 @@
     var item = function (k) {
       var a = A[k];
       return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' + attrs(k) + '>' +
-        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) + '</button></li>';
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) +
+        (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
+      '</button></li>';
     };
     /* "More", labelled (Laurence, 8 October 2026): Menu button Code & specs
        example 1 (the label, then the caret), as a ghost Button to match
        the actions beside it. Labelled, it needs no Tooltip. */
     var more = '<div class="menu mob-overflow">' +
-      '<button type="button" class="btn btn-ghost menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
-        '<span class="button-label">More<span class="visually-hidden"> actions</span></span>' +
+      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<span class="button-label">More<span class="visually-hidden"> actions' + (due ? ', renewal due' : '') + '</span></span>' +
         '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
+        (due ? '<span class="badge badge-floating mob-count" aria-hidden="true">1</span>' : '') +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
         '<ul class="menu-body" role="menu">' +

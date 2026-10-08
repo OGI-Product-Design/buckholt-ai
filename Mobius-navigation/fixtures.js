@@ -38,7 +38,9 @@
      first. `kind` decides which pages and actions the policy gets; see
      navigation-model.js. */
   var POLICIES = [
-    { id: 'puco0068', ref: 'PUCO0068', status: 'Live', kind: 'live', inception: '11/09/2026', premium: '£520.00', start: '11/09/2026 09:27', end: '10/09/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-09-11' },
+    /* renewalOpen: the policy's renewal window is open, so Renewal invite
+       carries a badge (on PUCO0068 to show it). */
+    { id: 'puco0068', ref: 'PUCO0068', status: 'Live', kind: 'live', renewalOpen: true, inception: '11/09/2026', premium: '£520.00', start: '11/09/2026 09:27', end: '10/09/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-09-11' },
     { id: 'puco0052', ref: 'PUCO0052', status: 'Live', kind: 'live', inception: '24/08/2026', premium: '£625.00', start: '24/08/2026 00:00', end: '23/08/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC.slice(0, 2), coverStart: '2026-08-24' },
     { id: 'aad666', ref: 'AADD000000000666', status: 'Live', kind: 'live', inception: '30/04/2026', premium: '£722.00', start: '30/04/2026 00:09', end: '29/04/2027 23:59', dur: '12 months', ipn: 'LGN0658EDRY', stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-04-30' },
     { id: 'y341', ref: '999/006/Y341/TGS', status: 'Automatic Decline', kind: 'decline', inception: '25/12/2025', premium: '£0.00', start: '25/12/2025 09:26', end: '24/12/2026 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', coverStart: '2025-12-25' },

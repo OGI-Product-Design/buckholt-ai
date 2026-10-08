@@ -143,7 +143,7 @@
     amendQuote: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
     amendRisk: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
-    mta: { label: 'Add MTA', icon: ICON.swap, kind: 'panel' },
+    mta: { label: '[[Make an MTA]]', icon: ICON.edit, kind: 'panel' },   // "Make an MTA" with the pen (Laurence, 8 October 2026)
     extend: { label: 'Policy extension', icon: ICON.time, kind: 'panel' },
     renew: { label: 'Renewal invite', icon: ICON.renew, kind: 'confirm' },
     stop: { label: 'Stop policy', icon: ICON.pause, kind: 'confirm' },
