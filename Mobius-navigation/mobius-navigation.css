@@ -492,6 +492,15 @@
   box-shadow: var(--shadow-xs);
 }
 
+/* In a menu the count is grey, not red (Laurence, 9 October 2026):
+   Buckholt's neutral surface, border and primary text. The red stays on
+   Buttons. */
+.mob-count.mob-count-inline {
+  --badge-background: var(--ui-background-04);
+  --badge-border: var(--ui-border-02);
+  --badge-label: var(--text-primary);
+}
+
 /* Cards: Text block on the left, the card's action on the right. */
 .mob-card-head {
   display: flex;

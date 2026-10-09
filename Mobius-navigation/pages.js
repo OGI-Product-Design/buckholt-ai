@@ -1273,8 +1273,8 @@
 
   /* The record's tools in the page heading of every client and policy page
      (Laurence, 8 October 2026): two labelled ghost Buttons opening side
-     panels on the page, Client support first, then the notes ("Client
-     notes" on a client page, "Policy notes" on a policy page) with the Note
+     panels on the page, Client support first, then the notes ("Add client
+     notes" on a client page, "Add policy notes" on a policy page) with the Note
      icon and its count badge on the Button's corner. */
   function clientTools(R) {
     /* Client support: the Circle-heart; once extra support is in place, the
@@ -1283,7 +1283,7 @@
     var on = !!F.client.supportOn;
     var onPolicy = R.scope === 'policy';
     var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
-    var what = onPolicy ? 'Policy notes' : 'Client notes';
+    var what = onPolicy ? 'Add policy notes' : 'Add client notes';
     return set([
       '<button type="button" class="btn btn-ghost" data-panel="support" aria-haspopup="dialog">' +
         '<div class="btn-icon"><i class="' + (on ? ICON.supportOn : ICON.support) + '" aria-hidden="true"></i></div>' +

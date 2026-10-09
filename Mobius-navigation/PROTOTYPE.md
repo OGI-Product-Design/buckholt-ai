@@ -331,8 +331,10 @@ tokens: `--action-danger-01`, `--text-light`, `--border-radius-full` and `--shad
 over 999 read "999+". The badge is `aria-hidden`, and the count is in the Button's accessible
 name.
 
-In the policy menu the same badge sits inline at the end of a link (the floating offsets and
-translate cleared), with the count in visually hidden text.
+In the policy menu, and on Renewal invite inside More, the same badge sits inline at the end of
+a link (the floating offsets and translate cleared), with the count in visually hidden text.
+**In a menu it is grey, not red** (Laurence, 9 October 2026): `--ui-background-04`, a
+`--ui-border-02` border and `--text-primary`. The red stays on Buttons (the notes and More).
 
 > **Gap:** `.badge` and this design are not in Buckholt's documentation.
 
@@ -433,7 +435,7 @@ like), opening their side panels on the page, Client support first:
   blue (Laurence, 8 October 2026: no green). The shape and ", extra support in place" in its
   name say it.
   Circle-heart is not in the icon catalogue: a gap.
-- **Client notes** on a client page, **Policy notes** on a policy page (the sample client has no
+- **Add client notes** on a client page, **Add policy notes** on a policy page (labels from Laurence, 9 October 2026) (the sample client has no
   client notes and one policy note, as in current Mobius): the Note icon and the
   label, with the count badge on the Button's corner (Mark's design). Policy notes opens a side
   panel with the policy's notes and a field to add one; the full Notes page stays in the menu.
