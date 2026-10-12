@@ -557,6 +557,39 @@ the normal type.
 
 ---
 
+## The Mobius look (12 October 2026)
+
+An alternative skin so users can see the proposed navigation in the product they know
+(Laurence, 12 October 2026). **Only the look changes.** The navigation and every page are the
+same markup in both looks (a test compares them); nothing Mobius lacks is added (no client
+banner) and nothing moves.
+
+- **Switching:** a floating Switch at the bottom right, "Current Mobius look" (a review aid,
+  not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The choice
+  is remembered in the browser. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
+  so the page is drawn in the right look first time.
+- **How:** `mobius-skin.css` is scoped to `html[data-skin="mobius"]` and does nothing
+  otherwise. It mostly re-points Buckholt's own tokens (action, link, text, border, radius,
+  page spacing, blade header), so every component follows; direct rules cover the menu
+  columns, card header strips, the page title and the top bar.
+- **What it looks like:** the rail is the Mobius sidebar blue (`#294fad`) with white type and
+  the current page in the flyout navy (`#221e5e`); the policy column is the flyout navy with
+  the current page in blue; both run full height, flush. Cards have Mobius's light grey header
+  strip and 3px corners; key values are bold; table headers are light grey; Buttons are flat
+  with 1px borders; links are not underlined; the page title is Mobius's small uppercase label
+  ("POLICY OVERVIEW"); the wordmark reads "open gi"; the system menu is Mobius's outlined box;
+  side panels keep the blue header Mobius already has. Pages are denser: 20px padding and gaps
+  in place of Buckholt's 32–64px.
+- **Sources:** colours measured from the Mobius screenshots supplied (1 October 2026); the
+  field border (`#D6D9DD`) and font (Proxima Soft, which Buckholt shares) from Mobius's
+  `styles.9e66120df568944b.css`. That file is mostly Angular Material and the date picker;
+  Mobius's own layout styles are `@import`ed from `skyfolkcdnendpoint.azureedge.net`, which
+  this environment's network policy blocked.
+  **Gap:** with those four files (`icons/style.css`, `css/styles/styles.css`,
+  `style-colors.css`, `style.css`) the skin could use Mobius's exact values and icons.
+- **Not covered:** Mobius's own icon set (the skin keeps the Font Awesome icons) and its
+  blue search-results table header (search is the new design's Accordion).
+
 ## Verification
 
 Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so the Bootstrap
