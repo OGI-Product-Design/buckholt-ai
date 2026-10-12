@@ -1,0 +1,261 @@
+/* ==========================================================================
+   Mobius skin — the same prototype, dressed as current Mobius
+   (Laurence, 12 October 2026).
+
+   The navigation stays exactly as designed: top bar, client rail, policy
+   column, breadcrumbs with the actions, side panels, search. Only the look
+   changes, back to Mobius as it is today, so users can see the proposed
+   changes without a new visual language getting in the way. Nothing is
+   added that Mobius does not have (no client banner) and nothing moves.
+
+   Everything here is scoped to `html[data-skin="mobius"]`; with the toggle
+   off, this file does nothing. Values are measured from the Mobius
+   screenshots supplied (1 October 2026) and from Mobius's own
+   styles.9e66120df568944b.css where it covers them (field border #D6D9DD,
+   Proxima Soft). Mobius's main stylesheets come from its CDN, which this
+   environment could not reach, so the rest is sampled from the screenshots.
+
+   Mostly it re-points Buckholt's own tokens, so every component follows;
+   the few direct rules are for the menu columns, cards and page heading.
+   ========================================================================== */
+
+html[data-skin="mobius"] {
+  /* Mobius palette, sampled. */
+  --mobius-blue: #294fad;          /* sidebar, buttons, links */
+  --mobius-blue-hover: #3a5fbd;
+  --mobius-navy: #221e5e;          /* sidebar flyout and its current item */
+  --mobius-tint: #ebeffa;          /* light blue wash */
+  --mobius-text: #1d1e1c;
+  --mobius-border: #d6d9dd;        /* cards and fields (Mobius CSS) */
+  --mobius-cap: #fafafa;           /* card header strip */
+  --mobius-table-head: #f3f3f3;
+  --mobius-page: #fcfcfe;
+  --mobius-avatar: #96c2d7;        /* Mobius CSS's light blue */
+
+  /* Buckholt's semantic tokens, re-pointed. */
+  --text-primary: var(--mobius-text);
+  --text-active: var(--mobius-blue);
+  --ui-background-02: var(--mobius-page);
+  --ui-border-02: var(--mobius-border);
+  --action-01: var(--mobius-blue);
+  --action-02: var(--mobius-blue-hover);
+  --action-03: var(--mobius-navy);
+  --action-04: var(--mobius-tint);
+  --action-08: var(--mobius-blue);
+  --action-text-01: var(--mobius-blue);
+  --focus-01: var(--mobius-blue);
+  --link-colour: var(--mobius-blue);
+  --link-icon: var(--mobius-blue);
+  --link-hover: var(--mobius-navy);
+  --link-icon-hover: var(--mobius-navy);
+  --link-visited: var(--mobius-blue);
+  --link-icon-visited: var(--mobius-blue);
+  --link-decoration: none;         /* Mobius links are not underlined */
+  --link-decoration-hover: underline;
+
+  /* Mobius corners are barely rounded. */
+  --border-radius-sm: 3px;
+  --border-radius-md: 3px;
+  --border-radius-lg: 4px;
+
+  /* Mobius pages are denser than Buckholt's rhythm. */
+  /* The frame's padding derives from these: 20px down; 20px across once
+     the container's own 16px gutter is added back. */
+  --page-body-spacing-y: 1.25rem;
+  --page-body-spacing-x: 1.25rem;
+  --page-frame-gap: 1.25rem;
+  --page-pane-gap: 1.25rem;
+  --page-panel-gap: 1.25rem;
+
+  --blade-header-background: var(--mobius-blue);
+}
+html[data-skin="mobius"] body { background-color: var(--mobius-page); color: var(--mobius-text); }
+
+/* ------------------------------------------------------------- Top bar */
+html[data-skin="mobius"] .app-bar { border-bottom-color: #efefef; }
+html[data-skin="mobius"] .app-bar-logo { color: var(--mobius-blue); font-weight: 600; letter-spacing: -0.02em; text-transform: lowercase; }
+html[data-skin="mobius"] .mob-app-search .form-control { border-color: var(--mobius-border); }
+/* The system menu: Mobius's outlined "Dashboard" box. */
+html[data-skin="mobius"] .mob-systems > .btn {
+  --button-border: var(--mobius-blue);
+  --button-border-hover: var(--mobius-blue);
+  --button-background-hover: var(--mobius-tint);
+  justify-content: space-between;
+}
+@media (min-width: 576px) { html[data-skin="mobius"] .mob-systems > .btn { min-width: 6.5rem; } }
+html[data-skin="mobius"] .app-bar-time { color: var(--mobius-blue); font-weight: 500; }
+html[data-skin="mobius"] .mob-avatar-toggle .avatar { --avatar-background: var(--mobius-avatar); --avatar-label: var(--mobius-navy); background-color: var(--mobius-avatar); color: var(--mobius-navy); }
+
+/* ------------------------------------------------------------- Buttons
+   Mobius buttons: flat, 1px border, 3px corners; outlined blue (secondary)
+   or solid blue (primary). */
+html[data-skin="mobius"] .btn {
+  --button-border-bottom-width: 1px;
+  --button-radius: 3px;
+  --button-shadow: none;
+}
+html[data-skin="mobius"] .btn-sm { --button-height: 1.75rem; }
+
+/* ------------------------------------------------------------- Menu columns
+   The rail is the Mobius sidebar: blue, white type, the current page in the
+   flyout's navy. The policy column is the flyout: navy, the current page in
+   the sidebar's blue. Both run the full height, flush, as Mobius's do. */
+html[data-skin="mobius"] .mob-sidebar { background-color: var(--mobius-blue); }
+html[data-skin="mobius"] .mob-rail,
+html[data-skin="mobius"] .mob-rail .nav,
+html[data-skin="mobius"] .mob-record,
+html[data-skin="mobius"] .mob-record .nav {
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.82);
+  --ui-border-02: rgba(255, 255, 255, 0.22);
+  --nav-link: #ffffff;
+  --nav-link-hover: #ffffff;
+  --nav-link-background-hover: rgba(255, 255, 255, 0.1);
+  --nav-link-active: #ffffff;
+  --nav-link-border-focus: #ffffff;
+  --nav-link-radius: 0;
+  --link-colour: #ffffff;
+  --link-hover: #ffffff;
+  --link-icon: #ffffff;
+  --link-icon-hover: #ffffff;
+  --link-decoration: underline;
+  --action-text-01: #ffffff;
+  --action-04: rgba(255, 255, 255, 0.12);
+  --focus-01: #ffffff;
+  color: #ffffff;
+}
+html[data-skin="mobius"] .mob-rail,
+html[data-skin="mobius"] .mob-rail .nav { --nav-link-background-active: var(--mobius-navy); }
+html[data-skin="mobius"] .mob-record,
+html[data-skin="mobius"] .mob-record .nav { --nav-link-background-active: var(--mobius-blue); }
+html[data-skin="mobius"] .mob-rail { background-color: var(--mobius-blue); }
+html[data-skin="mobius"] .mob-record { background-color: var(--mobius-navy); }
+/* Ghost Buttons in the columns (the collapse toggle, Show more, the icon strip). */
+html[data-skin="mobius"] .mob-rail .btn,
+html[data-skin="mobius"] .mob-record .btn {
+  --button-label: #ffffff;
+  --button-label-hover: #ffffff;
+  --button-background-hover: rgba(255, 255, 255, 0.12);
+  --button-label-active: #ffffff;
+  --button-background-active: var(--mobius-navy);
+  --button-border-active: transparent;
+  --button-label-focus: #ffffff;
+  --button-background-focus: transparent;
+}
+html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: var(--mobius-navy); }
+@media (min-width: 1024px) {
+  html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail,
+  html[data-skin="mobius"] .mob-record { margin: 0; border: 0; border-radius: 0; }
+  html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: var(--mobius-blue); }
+  /* The policy column is flush now (no 8px inset, no 1px border), so the
+     rail's head drops the 9px it carried to stay level with it. */
+  html[data-skin="mobius"] .mob-has-record .mob-rail-head { padding-top: var(--spacer-03); }
+}
+/* Status dots stay readable on blue: a white ring. */
+html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }
+/* Inline counts in the menu: white on the dark column. */
+html[data-skin="mobius"] .mob-count.mob-count-inline {
+  --badge-background: rgba(255, 255, 255, 0.18);
+  --badge-border: transparent;
+  --badge-label: #ffffff;
+}
+/* The policy's status Tag keeps its own (light) colours on navy. */
+html[data-skin="mobius"] .mob-record-status .tag { --text-primary: var(--mobius-text); }
+html[data-skin="mobius"] .mob-rail .avatar { background-color: var(--mobius-avatar); color: var(--mobius-navy); }
+
+/* ------------------------------------------------------------- Page heading
+   Mobius titles a page with a small uppercase label ("RECORD SUMMARY"). */
+html[data-skin="mobius"] #mob-title {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------- Cards
+   A Mobius card: a light grey header strip with a rule under it, a 3px
+   corner, 16px padding. */
+html[data-skin="mobius"] .card {
+  --card-radius: 3px;
+  --card-border: var(--mobius-border);
+  --card-padding-x: 1rem;
+  --card-padding-y: 1rem;
+  --card-body-gap: 1rem;
+}
+html[data-skin="mobius"] .mob-card > .card-body { padding-top: 0; }
+html[data-skin="mobius"] .mob-card-head {
+  margin: 0 calc(var(--card-padding-x) * -1);
+  padding: 0.75rem var(--card-padding-x);
+  min-height: 3.25rem;
+  align-items: center;
+  background-color: var(--mobius-cap);
+  border-bottom: 1px solid var(--mobius-border);
+  border-radius: 3px 3px 0 0;
+}
+html[data-skin="mobius"] .mob-card-head .title-02 { font-size: 1.0625rem; line-height: 1.5rem; font-weight: 600; }
+html[data-skin="mobius"] .mob-card-head p { font-size: 0.875rem; }
+
+/* Key-value pairs: Mobius sets the label light and the value bold. */
+html[data-skin="mobius"] #main .key-value .value,
+html[data-skin="mobius"] #main .keyvalue .value { font-weight: 600; }
+
+/* ------------------------------------------------------------- Tables */
+html[data-skin="mobius"] #main .table,
+html[data-skin="mobius"] .blade .table,
+html[data-skin="mobius"] .modal .table { font-size: 0.875rem; }
+html[data-skin="mobius"] #main .table a,
+html[data-skin="mobius"] .modal .table a { text-decoration: none; }
+html[data-skin="mobius"] .table thead th { background-color: var(--mobius-table-head); color: var(--mobius-text); font-weight: 600; }
+
+/* ------------------------------------------------------------- Fields */
+html[data-skin="mobius"] .form-control,
+html[data-skin="mobius"] .form-select { border-color: var(--mobius-border); border-radius: 3px; }
+
+/* Field labels: Mobius's are smaller and medium weight. */
+html[data-skin="mobius"] #main .form-label,
+html[data-skin="mobius"] .blade .form-label { font-size: 0.9375rem; line-height: 1.375rem; font-weight: 500; }
+
+/* ------------------------------------------------------------- Tags
+   Mobius's status pill: fully rounded. */
+html[data-skin="mobius"] .tag { --tag-radius: var(--border-radius-full); border-radius: var(--border-radius-full); }
+
+/* ------------------------------------------------------------- Modals and menus */
+html[data-skin="mobius"] .modal { --modal-radius: 3px; }
+html[data-skin="mobius"] .accordion { --accordion-radius: 3px; }
+html[data-skin="mobius"] .menu,
+html[data-skin="mobius"] .dropdown-menu { --menu-radius: 3px; --dropdown-radius: 3px; }
+
+/* The drawer's close button (narrow screens) sits on the blue. */
+html[data-skin="mobius"] .mob-drawer-head .btn {
+  --button-label: #ffffff;
+  --button-label-hover: #ffffff;
+  --button-background-hover: rgba(255, 255, 255, 0.12);
+  --button-label-focus: #ffffff;
+  --button-background-focus: transparent;
+}
+
+/* ------------------------------------------------------------- Floating toggle
+   Not part of either design: a review control, bottom right, to switch
+   between the Buckholt look and the Mobius one. */
+.mob-skin-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1060;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.5rem 0.875rem;
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(26, 26, 26, 0.16));
+}
+.mob-skin-toggle .form-check-label { white-space: nowrap; }
+/* The page can scroll clear of it, so it never hides a page's last Button. */
+body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
+/* Toasts stack above the toggle rather than under it. */
+body:has(.mob-skin-toggle) .app-toasts { bottom: 4rem; }
+@media (max-width: 575.98px) { .mob-skin-toggle { right: 0.5rem; bottom: 0.5rem; padding: 0.25rem 0.625rem; } }
+@media print { .mob-skin-toggle { display: none; } }
