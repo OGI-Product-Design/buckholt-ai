@@ -6,7 +6,8 @@
 
    The look comes from, in order: `?skin=mobius` or `?skin=buckholt` in the
    address (so a link can open either), then the reviewer's last choice in
-   this browser, then Buckholt. A floating Switch, bottom right, flips it. */
+   this browser, then the Mobius look (the default, Laurence, 12 October
+   2026). A floating Switch, bottom right, flips it. */
 (function () {
   'use strict';
   var KEY = 'mob-skin';
@@ -17,7 +18,7 @@
 
   var fromUrl = (/[?&]skin=(mobius|buckholt)\b/.exec(location.search) || [])[1];
   if (fromUrl) store(fromUrl);
-  var skin = fromUrl || stored() || 'buckholt';
+  var skin = fromUrl || stored() || 'mobius';
 
   /* Mobius's wordmark is "open gi"; the Buckholt look keeps "Mobius". */
   function apply(v) {

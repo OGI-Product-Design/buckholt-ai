@@ -564,6 +564,8 @@ An alternative skin so users can see the proposed navigation in the product they
 same markup in both looks (a test compares them); nothing Mobius lacks is added (no client
 banner) and nothing moves.
 
+- **The default** (Laurence, 12 October 2026): the prototype opens in the Mobius look; the
+  Buckholt look is the alternative.
 - **Switching:** a floating Switch at the bottom right, "Current Mobius look" (a review aid,
   not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The choice
   is remembered in the browser. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
