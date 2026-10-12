@@ -8,8 +8,9 @@
    changes without a new visual language getting in the way. Nothing is
    added that Mobius does not have (no client banner) and nothing moves.
 
-   Everything here is scoped to `html[data-skin="mobius"]`; with the toggle
-   off, this file does nothing. Values are measured from the Mobius
+   Everything here is scoped to `html[data-skin="mobius"]`, the default
+   look (Laurence, 12 October 2026); switched to Buckholt, this file does
+   nothing. Values are measured from the Mobius
    screenshots supplied (1 October 2026) and from Mobius's own
    styles.9e66120df568944b.css where it covers them (field border #D6D9DD,
    Proxima Soft). Mobius's main stylesheets come from its CDN, which this
