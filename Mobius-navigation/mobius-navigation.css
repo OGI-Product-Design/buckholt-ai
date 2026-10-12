@@ -241,7 +241,7 @@
 
 /* The record column: the client record's pages, or the policy's menu. */
 .mob-record {
-  width: 19rem;                                       /* 304px: room for the policy's actions in one row */
+  width: 17rem;                                       /* 272px, the same as the rail (Laurence, 12 October 2026): its actions moved to the breadcrumb row, so it no longer needs 304px */
   flex: 0 0 auto;
   overflow: hidden;                                   /* its menu scrolls inside it */
   display: flex;
