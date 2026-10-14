@@ -11,8 +11,8 @@
 
      Shell.escapeHtml(value)
      Shell.wireChrome()                         makes the static chrome inert
-     Shell.startClock()                         live top-bar clock
-     Shell.showToast(message, variant)          Buckholt Toast, bottom right
+     Shell.startClock(fixedAt)                  top-bar clock, live or pinned
+     Shell.showToast(message, variant, opts)    Buckholt Toast, bottom right
      Shell.initTooltips(root)
      Shell.disposeTooltips(root)
 
@@ -58,8 +58,8 @@
      are shown.
      ==================================================================== */
 
-  function renderClock() {
-    var now = new Date();
+  function renderClock(at) {
+    var now = at || new Date();
     var time = document.getElementById('app-clock-time');
     var date = document.getElementById('app-clock-date');
     if (!time || !date) return;
@@ -76,12 +76,23 @@
       String(now.getDate()).padStart(2, '0'));
   }
 
-  function startClock() {
+  /* With no argument the clock shows the real time and ticks on the minute,
+     which is what Originators and Import do.
+
+     With a Date it shows that instant and does not tick. BACS Calendar needs
+     this: `calendar-spec.md` 11.1 fixes TODAY at 13 October 2026, 13:24 and
+     3.3 says the top bar comes from the same constant, because the grid
+     below marks 13 October as today and a live clock would contradict it. */
+  function startClock(fixedAt) {
+    if (fixedAt) {
+      renderClock(fixedAt);
+      return;
+    }
     renderClock();
     var msToNextMinute = 60000 - (Date.now() % 60000);
     global.setTimeout(function () {
       renderClock();
-      global.setInterval(renderClock, 60000);
+      global.setInterval(function () { renderClock(); }, 60000);
     }, msToNextMinute);
   }
 
@@ -107,32 +118,78 @@
     error: 'fa-circle-exclamation'
   };
 
-  function showToast(message, variant) {
+  /* showToast(message)
+     showToast(message, variant)
+     showToast(message, variant, { note, delay, action: { label, name, onClick } })
+
+     The first two forms are what Originators and Import call and are
+     unchanged. The options are for BACS Calendar, whose toasts carry a note
+     and an Undo (spec 10) — Toast's Code & specs example 2 documents
+     `.toast-note` and example 5 documents `.toast-contextbar` holding a
+     control, so both are the component's own slots.
+
+     Returns a handle: `{ element, dismiss() }`. `dismiss()` is what lets a
+     new toast replace the one on screen.
+
+     Bootstrap's own Toast pauses its timer while the pointer is over the
+     toast or focus is inside it, which is the pause spec 10 asks for. */
+  function showToast(message, variant, options) {
     var container = document.querySelector('.app-toasts');
     if (!container) return null;
 
+    options = options || {};
     variant = TOAST_ICONS[variant] ? variant : 'success';
 
     var el = document.createElement('div');
     el.className = 'toast toast-' + variant;
-    el.setAttribute('role', 'alert');
-    el.setAttribute('aria-live', 'assertive');
-    el.setAttribute('aria-atomic', 'true');
+
+    /* A container that is already a live region announces its own children,
+       so a second role on the toast would make two. Only toasts dropped into
+       a plain container carry the Code & specs `role="alert"`. */
+    if (!container.hasAttribute('role')) {
+      el.setAttribute('role', 'alert');
+      el.setAttribute('aria-live', 'assertive');
+      el.setAttribute('aria-atomic', 'true');
+    }
+
+    var body = '<div class="toast-message"><h6>' + escapeHtml(message) + '</h6></div>';
+    if (options.note) {
+      body += '<div class="toast-note">' + escapeHtml(options.note) + '</div>';
+    }
+    if (options.action) {
+      /* Buckholt ships `button.link-standalone` — a button with the Link's
+         colour and no padding, which is how the frames draw Undo. */
+      body += '<div class="toast-contextbar">' +
+        '<button type="button" class="link-standalone" data-toast-action' +
+        (options.action.name ? ' aria-label="' + escapeHtml(options.action.name) + '"' : '') +
+        '>' + escapeHtml(options.action.label) + '</button></div>';
+    }
+
     el.innerHTML = '' +
       '<div class="toast-content">' +
         '<span class="toast-icon">' +
           '<i class="fa-solid ' + TOAST_ICONS[variant] + '" aria-hidden="true"></i>' +
         '</span>' +
-        '<div class="toast-body">' +
-          '<div class="toast-message"><h6>' + escapeHtml(message) + '</h6></div>' +
-        '</div>' +
+        '<div class="toast-body">' + body + '</div>' +
       '</div>';
 
     container.appendChild(el);
-    var toast = new bootstrap.Toast(el);
+
+    var toast = options.delay
+      ? new bootstrap.Toast(el, { delay: options.delay })
+      : new bootstrap.Toast(el);
+
     el.addEventListener('hidden.bs.toast', function () { el.remove(); });
+
+    if (options.action) {
+      el.querySelector('[data-toast-action]').addEventListener('click', function () {
+        toast.hide();
+        options.action.onClick();
+      });
+    }
+
     toast.show();
-    return el;
+    return { element: el, dismiss: function () { toast.hide(); } };
   }
 
 

@@ -991,8 +991,12 @@
 
   /* ==================================================================== Routing
      Section 15: `#/import` and `#/import/{id}`, with the BACS tabs at
-     `#/process`, `#/import`, `#/originators` and `#/calendar`. Originators is
-     its own page, built from its own spec, so its tab is a real link to it.
+     `#/process` and `#/import`. Originators and Calendar are their own
+     pages, each built from its own spec, so their tabs are real links.
+
+     `#/calendar` is kept as a route so an old link still resolves, but it now
+     redirects to the Calendar page rather than drawing a placeholder. Process
+     is still a placeholder.
      ====================================================================== */
 
   function parseRoute() {
@@ -1002,7 +1006,7 @@
     if (parts[0] === 'import' && parts[1]) return { name: 'detail', id: parts[1] };
     if (parts[0] === 'policy') return { name: 'policy', ref: decodeURIComponent(parts.slice(1).join('/')) };
     if (parts[0] === 'process') return { name: 'placeholder', title: 'Process' };
-    if (parts[0] === 'calendar') return { name: 'placeholder', title: 'Calendar' };
+    if (parts[0] === 'calendar') return { name: 'calendar' };
     return { name: 'list' };
   }
 
@@ -1046,6 +1050,13 @@
     if (route.name === 'policy') {
       placeholder('Policy ' + route.ref,
         'The policy record is outside this prototype. Use the back link, or the Import tab, to return.');
+      return;
+    }
+
+    if (route.name === 'calendar') {
+      /* Calendar used to be a placeholder here. It is its own page now, so an
+         old `#/calendar` link hands over to it. */
+      location.replace('../BACS-calendar/index.html');
       return;
     }
 

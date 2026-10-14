@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar — component example</title>
+
+<!--
+  Standalone example for the Calendar component, as `calendar-spec.md`
+  section 3.2 asks for: every day-cell state, the today marker, and the month
+  picker.
+
+  NOT BUCKHOLT. The Calendar is new; see `calendar.md`. Everything around the
+  grid — the chevrons, the month button, the month buttons in the picker and
+  the "Current month" link — is Buckholt, and is here so the example shows
+  the component as it is actually assembled.
+
+  The page is static markup with no script, so what you see is what the CSS
+  does. The month picker is shown open by having its `hidden` attribute
+  removed; on a real page the page's own script toggles it.
+
+  Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet.
+-->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../css/buckholt.css">
+<link rel="stylesheet" href="../css/buckholt-ai-fixes.css">
+<link rel="stylesheet" href="calendar.css">
+<style>
+  /* Page furniture for this example only. Nothing here belongs to the
+     component. */
+  body { padding: 3rem; background-color: var(--ui-background-01); }
+  .eg { margin-bottom: 4rem; }
+  .eg > h2 { margin-bottom: 1.5rem; }
+  .eg-states { max-width: 60rem; }
+  /* Room for the open popover, which floats. */
+  .eg-picker { padding-bottom: 22rem; }
+</style>
+</head>
+<body>
+
+<div class="text-block eg">
+  <h1 class="headline-03">Calendar</h1>
+  <p>
+    The month grid, the day cells and the month picker. Everything else on a
+    calendar page is Buckholt.
+  </p>
+</div>
+
+
+<!-- ========================================================= Cell states -->
+<section class="eg eg-states">
+  <div class="text-block">
+    <h2 class="headline-02">Day cell states</h2>
+  </div>
+
+  <div class="calendar">
+    <div class="calendar-grid">
+      <span class="calendar-weekday label-02">Monday</span>
+      <span class="calendar-weekday label-02">Tuesday</span>
+      <span class="calendar-weekday label-02">Wednesday</span>
+      <span class="calendar-weekday label-02">Thursday</span>
+      <span class="calendar-weekday label-02">Friday</span>
+      <span class="calendar-weekday label-02">Sat</span>
+      <span class="calendar-weekday label-02">Sun</span>
+
+      <!-- Default: a future working day that is not a collection day -->
+      <button type="button" class="calendar-cell calendar-cell--default" aria-pressed="false"
+              aria-label="Monday 19 October 2026">
+        <span class="calendar-cell-date">19</span>
+      </button>
+
+      <!-- Selected: a future working day that is a collection day -->
+      <button type="button" class="calendar-cell calendar-cell--selected" aria-pressed="true"
+              aria-label="Tuesday 20 October 2026, collection day">
+        <span class="calendar-cell-date">20</span>
+        <span class="calendar-cell-label">Collection day</span>
+      </button>
+
+      <!-- Read-only, past collection day -->
+      <div class="calendar-cell calendar-cell--readonly">
+        <span class="calendar-cell-date">21</span>
+        <span class="calendar-cell-label">Collected</span>
+      </div>
+
+      <!-- Read-only, sent, today or later -->
+      <div class="calendar-cell calendar-cell--readonly">
+        <span class="calendar-cell-date">22</span>
+        <span class="calendar-cell-label">Collection day</span>
+      </div>
+
+      <!-- Read-only, past working day that did not collect -->
+      <div class="calendar-cell calendar-cell--readonly">
+        <span class="calendar-cell-date">23</span>
+      </div>
+
+      <!-- Disabled: weekend, no label -->
+      <div class="calendar-cell calendar-cell--disabled">
+        <span class="calendar-cell-date">24</span>
+      </div>
+
+      <!-- Blank: outside the displayed month -->
+      <div class="calendar-cell calendar-cell--blank" aria-hidden="true"></div>
+
+      <!-- Today marker, on a read-only cell -->
+      <div class="calendar-cell calendar-cell--readonly">
+        <span class="calendar-cell-date calendar-cell-date--today">13</span>
+        <span class="calendar-cell-label">Collection day</span>
+      </div>
+
+      <!-- Today marker, on a default cell -->
+      <button type="button" class="calendar-cell calendar-cell--default" aria-pressed="false"
+              aria-label="Tuesday 13 October 2026, today">
+        <span class="calendar-cell-date calendar-cell-date--today">13</span>
+      </button>
+
+      <!-- Disabled: bank holiday, labelled -->
+      <div class="calendar-cell calendar-cell--disabled">
+        <span class="calendar-cell-date">25</span>
+        <span class="calendar-cell-label">Bank holiday</span>
+      </div>
+
+      <div class="calendar-cell calendar-cell--blank" aria-hidden="true"></div>
+      <div class="calendar-cell calendar-cell--blank" aria-hidden="true"></div>
+      <div class="calendar-cell calendar-cell--disabled"><span class="calendar-cell-date">31</span></div>
+      <div class="calendar-cell calendar-cell--blank" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================== Month picker -->
+<section class="eg eg-picker">
+  <div class="text-block">
+    <h2 class="headline-02">Month bar and month picker</h2>
+    <p>
+      Shown open. The month button carries Buckholt's own <code>.active</code>
+      Button treatment while the picker is up.
+    </p>
+  </div>
+
+  <div class="calendar">
+    <div class="calendar-monthbar">
+      <button type="button" class="btn btn-ghost" aria-label="Previous month">
+        <div class="btn-icon"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></div>
+      </button>
+
+      <div class="calendar-monthbar-picker">
+        <button type="button" class="btn btn-ghost active" aria-expanded="true"
+                aria-haspopup="dialog" aria-controls="eg-month-picker">
+          <span class="button-label">October 2026</span>
+        </button>
+
+        <div class="calendar-popover" id="eg-month-picker" role="dialog" aria-label="Choose a month">
+          <div class="calendar-popover-head">
+            <button type="button" class="btn btn-ghost" aria-label="Previous year">
+              <div class="btn-icon"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></div>
+            </button>
+            <span class="calendar-popover-year title-01">2026</span>
+            <button type="button" class="btn btn-ghost" aria-label="Next year">
+              <div class="btn-icon"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></div>
+            </button>
+          </div>
+
+          <div class="response response-btn-input" role="radiogroup" aria-label="Month">
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m0" disabled>
+            <label class="btn btn-response" for="eg-m0">Jan</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m1" disabled>
+            <label class="btn btn-response" for="eg-m1">Feb</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m2" disabled>
+            <label class="btn btn-response" for="eg-m2">Mar</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m3" disabled>
+            <label class="btn btn-response" for="eg-m3">Apr</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m4" disabled>
+            <label class="btn btn-response" for="eg-m4">May</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m5" disabled>
+            <label class="btn btn-response" for="eg-m5">Jun</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m6">
+            <label class="btn btn-response" for="eg-m6">Jul</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m7">
+            <label class="btn btn-response" for="eg-m7">Aug</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m8">
+            <label class="btn btn-response" for="eg-m8">Sep</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m9" checked>
+            <label class="btn btn-response" for="eg-m9">Oct</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m10">
+            <label class="btn btn-response" for="eg-m10">Nov</label>
+            <input type="radio" class="btn-check" name="eg-month" id="eg-m11">
+            <label class="btn btn-response" for="eg-m11">Dec</label>
+          </div>
+
+          <div class="calendar-popover-foot">
+            <button type="button" class="link-standalone link-02">Current month</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-ghost" aria-label="Next month">
+        <div class="btn-icon"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
