@@ -1,3 +1,29 @@
+# What the deployment does NOT serve.
+#
+# `wrangler.jsonc` points at the repository root, so without this file every
+# commit is published: the specs, the Figma frames, Buckholt's own saved
+# documentation, the lot. The deployment exists to serve the clickable
+# prototypes and nothing else.
+#
+# Same pattern format as .gitignore, but written as a plain blocklist with no
+# negation: gitignore cannot re-include a file underneath an excluded
+# directory, and quietly publishing something because a clever pattern did
+# not do what it looked like it did is not a risk worth taking.
+#
+# What stays public, and all that needs to be:
+#
+#     prototypes/**/*.html .css .js     the prototypes themselves
+#     css/buckholt.css                  the runtime they load
+#     css/buckholt-ai-fixes.css
+#     components/*/*.js                 dropdown.js and form.js are loaded by
+#                                       the pages; tabs.js is the same kind of
+#                                       thing and is design-system runtime
+#
+# Checked: nothing a running prototype loads is excluded below — the pages
+# reach outside their own folder for exactly those four files, and no HTML,
+# CSS or JS anywhere references a .png.
+
+# ----------------------------------------------------------------- tooling
 .git/**
 .github/**
 .wrangler/**
@@ -7,3 +33,43 @@ wrangler.jsonc
 wrangler.toml
 .assetsignore
 .gitignore
+.cursorrules
+
+# -------------------------------------------------------- unreleased design
+# The Figma frames behind every prototype: unreleased product design, and the
+# bulk of the repository. Only the specs link to them, and the specs are not
+# served either.
+**/screenshots/**
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+
+# ------------------------------------------------------- specs and internals
+# Every spec, every PROTOTYPE.md and SPEC-CHANGES.md, every README, the agent
+# rules, the discrepancy and verification records. None of it is needed to
+# run a prototype and all of it is internal.
+**/*.md
+
+# Reference material taken from the live product.
+prototypes/Mobius-navigation/reference/**
+**/*.xlsx
+**/*.csv
+
+# ---------------------------------------------------- Buckholt's own documents
+# 40 saved pages from buck.88mph.design. They are the markup evidence the
+# parity check reads; they are not ours to republish.
+code-specs-html/**
+
+# ------------------------------------------------------- docs and test pages
+# `components/*/examples.html` and the pattern pages are documentation, and
+# the test pages are a harness. The component *scripts* stay: the prototypes
+# load them.
+components/**/*.html
+patterns/**
+foundations/**
+responsive/**
+discrepancies/**
+verification/**
+test/**
