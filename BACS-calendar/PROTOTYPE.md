@@ -143,19 +143,26 @@ Buckholt's own `.dropdown-menu` max-height, not a new one.
 This is a Buckholt limitation, not a Calendar one: any Buckholt multiselect
 near the bottom of a container does it. Raised as **C1**.
 
-### 7. The clock on this page is pinned
+### 7. The top bar does not come from TODAY
 
 Spec 3.3 and 11.1: "The top bar date and time come from the same TODAY
-constant as the calendar." The grid marks 13 October 2026 as today, so a live
-clock would contradict the page below it.
+constant as the calendar." **It does not.** The clock shows the real time, as
+it does on Originators and Import.
 
-`Shell.startClock()` gained an optional instant: with no argument it is the
-live, ticking clock Originators and Import have had since 30 September; with
-one it shows that instant and does not tick. **This page is the only one that
-passes an instant**, so the clock differs between tabs — pinned on Calendar,
-live on the other two. Flagged as **A3**: making the whole prototype pinned,
-or leaving Calendar live, are both one-line changes, and it is your call
-which reads better.
+The build was pinned to TODAY first, which is what the spec asks for and
+which keeps this page internally consistent — the grid marks 13 October 2026
+as today. But that made the clock jump whenever you changed tab, and one
+clock across the whole prototype was preferred. Settled on 15 October 2026.
+
+The cost is visible and worth stating: **the top bar and the grid disagree
+about what day it is.** The bar says today's real date; the calendar still
+marks 13 October 2026 as today, because `TODAY` drives the seed data, the
+read-only cut-off and every figure in spec 11.5. Nothing below the top bar
+changed.
+
+`Shell.startClock()` is back to taking no argument, so the clock code in
+`prototype/app-shell.js` is byte-identical to what it was before this
+feature; only its comment changed. Recorded as **A3**.
 
 ### 8. The month-bar controls are 40px, not 44px
 
@@ -209,14 +216,14 @@ section 11.5's table is checked directly against `data/calendar.js` in Node.
 | Suite | What it covers | Assertions |
 | --- | --- | --- |
 | `check-data` | Section 11 in Node: TODAY, the 74 sent batches, every row of the 11.5 table, the CA-02-01 correction, cell states and labels, day-of-month resolution, override add/remove, snapshot and restore | 42 |
-| `t-flows` | CA-00 overview, CA-01 month navigation and the picker, CA-02 add and remove, CA-06 bank holidays, cell states, copy, the pinned clock | 58 |
+| `t-flows` | CA-00 overview, CA-01 month navigation and the picker, CA-02 add and remove, CA-06 bank holidays, cell states, copy, the live clock | 59 |
 | `t-modal` | CA-03, CA-04 and CA-05 end to end: the three options, Collect on, the empty-selection rule, saving, the toasts, Undo, Cancel, and saving with no change | 66 |
 | `t-a11y` | Accessible names, `aria-pressed`, non-focusable read-only and disabled cells, keyboard operation, the 3px focus ring, picker and modal focus behaviour, overflow | 32 |
 | `t-resp` | Fifteen widths from 1920 to 320: no page overflow, seven columns, the weekday-name switch, the modal at 375px | 47 |
 | `t-regress` | Originators and BACS Import unchanged, the new tab links, the old `#/calendar` route, Process still a placeholder, and `Shell.showToast` still behaving for its existing callers | 20 |
 | `check-source-parity.py` | Buckholt canonical markup, both directions | PASS |
 
-**265 assertions, all passing**, plus source parity.
+**266 assertions, all passing**, plus source parity.
 
 ### What the mirror cannot check
 

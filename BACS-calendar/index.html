@@ -26,11 +26,12 @@
        Styled by `prototype/app-shell.css`; behaviour from
        `prototype/app-shell.js`.
 
-       The clock is pinned here, unlike the other two pages. Calendar spec
-       11.1 sets `TODAY` to 13 October 2026, 13:24 and section 3.3 says the
-       top bar date and time come from that same constant — the calendar
-       marks 13 October as today, so a live clock would contradict the grid
-       it sits above. `Shell.startClock(CalendarData.TODAY)` pins it.
+       The clock is live, as it is on the other two pages. The values below
+       are what the Calendar frames draw, corrected per spec section 12, and
+       they are only what shows before the script runs — `Shell.startClock()`
+       replaces them with the real time. Spec 3.3 asks for the top bar to
+       come from the calendar's own `TODAY`; one clock across the whole
+       prototype was preferred. See deviation 7 in PROTOTYPE.md.
        ====================================================================== -->
   <header class="app-bar">
     <a class="app-bar-logo" href="#">open gi</a>

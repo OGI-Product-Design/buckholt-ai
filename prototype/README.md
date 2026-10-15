@@ -7,7 +7,7 @@ may be read as design-system guidance.
 | File | What it is |
 |---|---|
 | `app-shell.css` | The static Mobius chrome: top bar, left navigation, and the toast stack's position. Reproduced by visually inspecting OR-00-01 and IM-00-01, then placed in Buckholt's own `layout-03` grid areas. Both specs record this chrome as static. |
-| `app-shell.js` | `Shell` — the top-bar clock (live, or pinned to a given instant), `showToast(message, variant, options)` (Buckholt Toast, optionally with a note and an action), tooltip init/dispose (Buckholt Tooltip), HTML escaping, and `wireChrome()`, which makes the chrome links and the current tab inert. |
+| `app-shell.js` | `Shell` — the live top-bar clock, `showToast(message, variant, options)` (Buckholt Toast, optionally with a note and an action), tooltip init/dispose (Buckholt Tooltip), HTML escaping, and `wireChrome()`, which makes the chrome links and the current tab inert. |
 | `blade.css`, `blade.js` | `Blade` — a right-edge panel with a scrim, a focus trap, Esc to close and focus return. Buckholt has no blade; `bacs-import-spec.md` section 13.1 defines one and asks for it as a reusable component. Built on the Bootstrap 5.1.3 Offcanvas plugin the app already loads, with its own CSS from Buckholt tokens, because `css/buckholt.css` ships no `.offcanvas` rule. |
 
 Two further shared pieces live outside this folder because they are not
@@ -51,8 +51,7 @@ above a page's sticky layers and below Bootstrap's modal backdrop (1050), the mo
 
 ```js
 Shell.wireChrome();                                        // chrome links and the current tab do nothing
-Shell.startClock();                                        // ticks on the minute
-Shell.startClock(someDate);                                // pinned, does not tick
+Shell.startClock();                                        // real time, ticks on the minute
 Shell.showToast('File submitted for import', 'success');   // info | success | warning | error
 Shell.showToast('Schedule saved', 'success', {             // returns { element, dismiss() }
   note: 'Every working day.',                              // Toast's .toast-note
