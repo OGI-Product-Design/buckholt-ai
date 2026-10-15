@@ -158,7 +158,7 @@ and 64px gap, `.page-pane` 64px gap, `.page-panel` 32px gap — measured at 1440
 in both.
 
 The Frame's horizontal padding is **48px**, not 64px, in **both** builds — a documentation
-imprecision rather than a build difference. `CLAUDE.md`, `README.md` and `mobius/README.md` were
+imprecision rather than a build difference. `AGENTS.md`, `README.md` and `mobius/README.md` were
 corrected on 9 September 2026; `patterns/page-layout/rules.md` still states "4rem / 64px" and was
 deliberately left alone, because it transcribes documented Buckholt intent. See
 [`known-issues.md` → Page layout — Frame padding](known-issues.md).

@@ -2,6 +2,19 @@
 
 Handoff summary. For detail, follow the links; nothing here is duplicated from the files it points at.
 
+> **Snapshot, 7 October 2026.** This describes the Buckholt half of the
+> repository, which is unchanged. Two things have happened since and are not
+> covered below:
+>
+> - The application prototypes moved into **[`prototypes/`](prototypes/)**, so
+>   the source of truth and the work built with it are now obviously
+>   separated. See [`prototypes/README.md`](prototypes/README.md).
+> - The instruction file is **[`AGENTS.md`](AGENTS.md)**, read by Cursor,
+>   Claude Code and Codex alike. `CLAUDE.md` and `.cursorrules` are pointers
+>   to it.
+>
+> [`README.md`](README.md) is the current map.
+
 ## What this repository is
 
 A **source-backed design-system companion for Buckholt**. It exists so that an AI coding or design
@@ -47,7 +60,7 @@ Rules that make the hierarchy hold:
 
 ## Where an AI should start
 
-1. **`CLAUDE.md`** — the operating rules. Read first, every time.
+1. **`AGENTS.md`** — the operating rules. Read first, every time.
 2. **`CANONICAL-MARKUP.md`** — what may and may not be changed in canonical examples.
 3. **`patterns/`** — for a page or a screen, establish structure before choosing components
    (`page-layout` first; then `forms`, `input-rows`, `lookup`, `common-actions` as relevant).
@@ -121,7 +134,7 @@ finding.
 ## Repository map
 
 ```
-CLAUDE.md                    operating rules for agents — read first
+AGENTS.md                    operating rules for agents — read first
 CANONICAL-MARKUP.md          what may and may not change in canonical examples
 
 components/<name>/           rules.md (usage) + examples.html (canonical markup, source evidence)

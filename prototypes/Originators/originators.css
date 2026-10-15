@@ -1,0 +1,312 @@
+/* ============================================================================
+   Originators prototype — prototype-only stylesheet
+   ============================================================================
+
+   Loads LAST, after:
+       https://use.typekit.net/vtl2xbn.css
+       https://kit.fontawesome.com/ca92816a31.js
+       ../../css/buckholt.css
+       ../../css/buckholt-ai-fixes.css
+       ../shared/app-shell.css
+
+   What is in this file, and why
+   -----------------------------
+   1. STATIC APPLICATION CHROME. Moved to `prototypes/shared/app-shell.css`, which
+      Originators and BACS Import share.
+
+   2. PROTOTYPE LAYOUT ONLY. A small number of arrangement rules for things
+      Buckholt does not document a container for (the originator card row, the
+      two-part section head, the table toolbar). They set position and size.
+      They never restyle a Buckholt component.
+
+   3. BUCKHOLT VARIABLE BINDINGS. Two states the screens need that Buckholt
+      documents no class for. Each one sets a variable Buckholt already
+      declares, to a value from Buckholt's own token set — no new colours, no
+      overridden component rules. Each is commented with what it binds and why.
+
+   4. STICKY ACTION BAR AND TABLE HEADER. OR-00 specifies this in detail.
+      It is the one place this file overrides a Buckholt rule: Buckholt's
+      `.table-content` is a scroll container, and a sticky table header cannot
+      work inside one. That override is scoped to this table, handed back at
+      narrow widths, and logged for Buckholt in SPEC-CHANGES.md (C9).
+
+   Apart from that one rule, nothing here overrides `buckholt.css` or
+   `buckholt-ai-fixes.css`. Every selector is `ori-` prefixed or reached
+   through an `ori-` ancestor, except `html`, which carries the page's
+   `scroll-padding-top`.
+   ============================================================================ */
+
+
+/* ============================================================================
+   1. STATIC APPLICATION CHROME — NOT BUCKHOLT
+   Moved to `prototypes/shared/app-shell.css` when BACS Import was added, so both
+   features share one top bar and left navigation instead of each carrying a
+   copy. Nothing about it changed; the measurements and comments went with it.
+   ============================================================================ */
+
+
+/* ============================================================================
+   2. PROTOTYPE LAYOUT ONLY
+   Position and size. No component appearance is set here.
+   ============================================================================ */
+
+/* Section head: a Text block on the left, one action on the right.
+   Buckholt's Heading attachment is deliberately NOT used — its documented
+   attachments are a close Button, a Standalone link, a Tag or an Icon block,
+   and its rules say not to turn the heading row into a general toolbar. */
+.ori-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.ori-section-head > .btn { flex: 0 0 auto; }
+
+/* Card internals: the Icon block sits beside the name rather than above it,
+   and the footer carries badges on the left with actions on the right. */
+.ori-card-identity { display: flex; align-items: center; gap: 1rem; }
+.ori-card-identity .icon-block { flex: 0 0 auto; margin-bottom: 0; }
+.ori-card-identity .text-block { flex: 1 1 auto; min-width: 0; }
+.ori-card-identity .text-block > * { overflow-wrap: anywhere; }
+
+/* The runtime gives `.card-footer` a tinted background but no bottom corner
+   radii, and `.card` does not clip (`overflow: visible`), so the footer's square
+   corners bleed past the card's 16px radius. Bootstrap's own base ships that
+   radius rule; this build dropped it along with the rest of Card's footer
+   documentation. The expression is Buckholt's own — `.card-header-tabs
+   .nav-link.active` already uses `calc(var(--card-radius) -
+   var(--card-border-width))`. Recorded in PROTOTYPE.md as a runtime gap. */
+#ori-cards .card-footer {
+  border-bottom-left-radius: calc(var(--card-radius) - var(--card-border-width));
+  border-bottom-right-radius: calc(var(--card-radius) - var(--card-border-width));
+}
+
+.ori-card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ori-card-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+/* Buckholt gives every Button set a flow offset, `margin-top: 0.5rem`, for a set
+   that follows content in normal flow. These three sets are positioned by a flex
+   parent instead, so the offset displaces them. Buckholt cancels it the same way
+   inside a component that positions its own actions — `.versatile-actions
+   .button-set { margin: 0 }`, present in both builds — and this mirrors that
+   precedent. It is NOT `.button-set-no-offset`, which Mark confirmed on
+   9 September 2026 is undocumented and experimental. */
+.ori-section-head > .button-set,
+.ori-card-footer-row .button-set,
+.ori-toolbar-actions .button-set { margin: 0; }
+
+/* The row count is table metadata, so it sits close under the table rather
+   than at the Panel's 32px item rhythm. Measured on OR-00-01: the count's line
+   box starts about 21px below the table's last row border. `--spacer-05` (24px)
+   is the nearest documented Buckholt spacing token; the scale has no 20px step. */
+.ori-table-region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);
+}
+
+.ori-row-count { margin: 0; }
+
+/* Product-assignments toolbar: filters left, selection actions right. */
+.ori-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ori-toolbar-filters { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.ori-toolbar-filters > .input { width: 15.5rem; }
+
+.ori-toolbar-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+/* The Search products field is drawn without a visible label, so it is bottom
+   aligned with the labelled Originator dropdown beside it. */
+.ori-selection-count { white-space: nowrap; margin: 0; }
+
+/* Selected-products panel inside the Reassign modal. */
+.ori-selected-panel {
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--ui-overlay-02);
+}
+
+.ori-selected-panel-more { margin: 0; }
+
+.ori-modal-section { display: flex; flex-direction: column; gap: 0.5rem; }
+
+
+/* ============================================================================
+   3. BUCKHOLT VARIABLE BINDINGS
+   Two states the screens need that Buckholt documents no class for. Each
+   sets a variable Buckholt already declares, to a value from Buckholt's own
+   token set. No new colour is introduced and no component rule is overridden.
+   Both are recorded as gaps in PROTOTYPE.md.
+   ============================================================================ */
+
+/* (a) Selected table row (OR-06-02).
+   `.table` declares `--table-background-state` and consumes it in
+   `box-shadow: inset 0 0 0 9999px var(--table-background-state, …)`, but no
+   shipped class ever sets it. This binds Buckholt's own row-state hook to
+   `--action-04`, the light blue Buckholt already uses for a selected
+   interactive surface (`--nav-link-background-active`, `--tag-border`
+   on a selected Tag). Measured on OR-06-02: #E8EDFA. */
+.ori-table tr.ori-row-selected {
+  --table-background-state: var(--action-04);
+}
+
+/* (b) Clickable row (OR-00 "Rows and header checkbox").
+   Buckholt's Table already ships the hover background — `.table tr:hover td`
+   uses `--table-hover-background` — so the hover state is Buckholt's. Table
+   documents no clickable-row state, so only the pointer affordance is added.
+   Recorded as a gap in PROTOTYPE.md. */
+.ori-table tbody tr[data-product] { cursor: pointer; }
+
+/* The toast container and its `--toast-max-width` binding moved to
+   `prototypes/shared/app-shell.css`, alongside the shared `Shell.showToast()`. */
+
+
+/* ============================================================================
+   4. STICKY ACTION BAR AND TABLE HEADER (OR-00)
+
+   Two sticky layers. Their offsets are CSS variables set from measurements in
+   `originators.js` (a ResizeObserver on the top bar and the action bar),
+   because the bar wraps onto two lines at narrow widths. The values here are
+   fallbacks for the moment before script runs.
+   ============================================================================ */
+
+/* The 1px sentinel in the flow just above the action bar. The negative margin
+   gives back the Panel's own 32px gap and the 1px the strip adds, so the drawn
+   spacing between the helper text and the bar is unchanged. */
+.ori-sticky-sentinel {
+  height: 1px;
+  margin-bottom: calc((var(--page-panel-gap) + 1px) * -1);
+}
+
+/* Layer 1: the action bar, directly under the top app bar. Bootstrap's
+   `.sticky-top` is `top: 0`, so the offset is set here instead. The page
+   surface is `--ui-background-02`, the colour `body` already carries.
+
+   The padding is what keeps the bar's own breathing room once it is stuck:
+   without it the controls sit flush against the top bar above and the table
+   header below. The matching negative margin gives the space back to the flow,
+   so the resting layout is drawn exactly as before — measured at 1920px, the
+   search field and the table start at the same y with and without these two
+   lines. A sticky offset positions the border box, not the margin box, so the
+   negative margin does not move the bar once it is stuck. */
+.ori-toolbar {
+  position: sticky;
+  top: var(--app-header-height, 4.75rem);
+  z-index: 30;
+  padding-block: var(--spacer-04);
+  margin-block: calc(var(--spacer-04) * -1);
+  background-color: var(--ui-background-02);
+}
+
+/* Layer 2: the table header cells, directly under the action bar.
+
+   Buckholt's `--table-header-background` is a translucent overlay
+   (`--ui-overlay-03`, rgba(26,26,26,0.07)), so rows would show through it as
+   they scroll underneath. Rather than change the colour, the page surface is
+   painted behind it: `background-color` supplies the opaque page colour and
+   Buckholt's own header colour is layered over it as a background image, which
+   composites to exactly what the header already looks like at rest. A
+   background on `thead tr` does not work — the row's background belongs to the
+   table's background layer and does not travel with a sticky cell. */
+.ori-table thead th {
+  position: sticky;
+  top: calc(var(--app-header-height, 4.75rem) + var(--ori-action-bar-height, 0px));
+  z-index: 20;
+  background-color: var(--ui-background-02);
+  background-image: linear-gradient(var(--table-header-background), var(--table-header-background));
+}
+
+/* No clipping ancestor. Buckholt's `.table-content` is `overflow-x: auto`,
+   which makes `overflow-y` compute to `auto` as well, so it becomes the
+   scrollport a sticky header binds to and the header stops sticking to the
+   page. OR-00 asks for the table not to sit in an overflow container, so it is
+   switched off for this table only. The three columns wrap rather than
+   overflow, so no horizontal scrolling is lost. Logged for Buckholt in
+   SPEC-CHANGES.md. */
+.ori-table .table-content { overflow: visible; }
+
+/* Shadow when stuck. `--shadow-xs` is the documented lowest elevation in
+   `foundations/shadows`. It sits under the table header; when an empty state
+   has replaced the table there is no header row, so it sits under the bar. */
+#ori-assignments.is-stuck .ori-table thead th { box-shadow: var(--shadow-xs); }
+#ori-assignments.is-stuck:not(:has(thead)) .ori-toolbar { box-shadow: var(--shadow-xs); }
+
+/* Keyboard focus: a row that takes focus is scrolled clear of all three layers
+   rather than under them. `html` is this page's scroll container. */
+html { scroll-padding-top: var(--ori-sticky-height, 0px); }
+
+
+/* ============================================================================
+   Empty states (OR-04-03, OR-05-05) use Buckholt Text block. Nothing to style.
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   Narrow viewports.
+   These breakpoints are the prototype's own. They are set on the LOCAL build's
+   Bootstrap scale (576 / 768 / 992 / 1200 / 1400), because `css/buckholt.css`
+   — the build this repository loads, and the build whose `.col` classes the
+   modal input rows use — ships that scale. The live reference build breaks at
+   896 / 1088 / 1312 / 1520 / 1720 instead, so every figure below is measured
+   on the local scale and would land at a different viewport on the live build.
+   Flagged, per AGENTS.md, rather than silently changed.
+   ---------------------------------------------------------------------------- */
+
+@media (max-width: 575.98px) {
+  .ori-toolbar-filters > .input { width: 100%; }
+  .ori-toolbar-filters { width: 100%; }
+  .ori-section-head { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  .ori-section-head > .btn { align-self: flex-start; }
+
+  /* Below this width the three columns no longer fit — measured at 375px, the
+     table's minimum is 347px in a 311px column, so the page itself overflows.
+     This is the case OR-00 anticipates ("if the table ever needs horizontal
+     scrolling"), so Buckholt's own `.table-content` scroller is handed back its
+     job. */
+  .ori-table .table-content { overflow-x: auto; }
+
+  /* The table header cannot stick here, and this is the one place in the page
+     where that is forced rather than chosen. `.table-content` is a scroll
+     container again (above), so a sticky `thead th` binds to that scrollport
+     instead of the page and its offset pushes the header row down inside the
+     table — measured at 375px, 340px down, below the first row. `position:
+     static` is the only correct answer while the scroller is back.
+
+     Buckholt's Tag is why the scroller is needed: `.tag` is `white-space:
+     nowrap` with a fixed `height: 2rem`, so the originator chip cannot wrap and
+     the Originator column cannot go below 177px. That is the component behaving
+     as documented, not a defect. See SPEC-CHANGES.md C9.
+
+     The action bar still sticks. It is what OR-00 is actually for — keeping
+     search, the filter, the selection text and the actions in reach while the
+     user ticks rows — and that matters more on a phone, not less. */
+  .ori-table thead th { position: static; }
+
+  /* With no header row pinned, a focused row only has to clear the top bar and
+     the action bar. */
+  html {
+    scroll-padding-top: calc(var(--app-header-height, 4.75rem) + var(--ori-action-bar-height, 0px));
+  }
+
+  /* The bar stacks to four or five rows at this width, so it is tightened where
+     that costs nothing: half the vertical padding and the Panel's 16px step
+     between the two groups instead of 32px. Measured at 375px, that takes the
+     pinned bar from 296px to 264px. */
+  .ori-toolbar {
+    gap: var(--spacer-04);
+    padding-block: var(--spacer-03);
+    margin-block: calc(var(--spacer-03) * -1);
+  }
+}

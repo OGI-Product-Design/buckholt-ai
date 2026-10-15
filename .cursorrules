@@ -1,0 +1,8 @@
+Read AGENTS.md in the repository root.
+
+That file holds the whole instruction set, and it is deliberately the only
+copy so the rules cannot drift between one agent and another. This repository
+is used from Cursor, Claude Code and Codex alike.
+
+This file exists only for Cursor versions that predate AGENTS.md support;
+current Cursor reads AGENTS.md directly. Do not add rules here.
