@@ -331,7 +331,7 @@ content row. The default `.btn-close` is **32px**. Two consequences:
 
 **The second is now corrected here**, by corrections 7 and 8, added 29 September 2026
 with an entry in `discrepancies/known-issues.md` and an assertion in
-`test/runtime-verification/`. The earlier audit had measured the wrong element:
+`tools/runtime-verification/`. The earlier audit had measured the wrong element:
 against the **first line of the message** the icon and the body already agree, and it
 is the close control that is low. Aligning the control alone, with an offset derived
 from `--btn-close-height`, fixes every case including multi-line, and avoids both

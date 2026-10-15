@@ -27,7 +27,7 @@ not already cover the case.
 - Compatibility corrections. Those go in `css/buckholt-ai-fixes.css`, which is for verified
   mismatches between documented intent and runtime behaviour — not for behaviour Buckholt never
   defined.
-- Style-guide presentation. `test/style-guide/` carries its own shell CSS for page layout; it is
+- Style-guide presentation. `tools/style-guide/` carries its own shell CSS for page layout; it is
   marked as such in that file and is not guidance about Buckholt.
 
 ## Evidence order
@@ -52,7 +52,7 @@ silent:
 
 ## How the audit was run
 
-`test/style-guide/index.html` was rendered at **320px, 375px, 768px and 1400px** and every component
+`tools/style-guide/index.html` was rendered at **320px, 375px, 768px and 1400px** and every component
 section measured for: document-level horizontal overflow, elements wider than the viewport, elements
 escaping their container, and demo frames scrolling unexpectedly. Overlay and navigation behaviour —
 Modal sizing, Dropdown and Menu placement, Tabs overflow, button and link set wrapping — was

@@ -4,7 +4,7 @@
 > be cited as documented Buckholt behaviour unless the Evidence column says Buckholt documents or
 > implements it.
 
-Audited at 320px, 375px, 768px and 1400px against `test/style-guide/index.html` on 7 September 2026,
+Audited at 320px, 375px, 768px and 1400px against `tools/style-guide/index.html` on 7 September 2026,
 with Proxima Soft, the Buckholt Font Awesome kit, `css/buckholt.css`, `css/buckholt-ai-fixes.css`,
 the Bootstrap 5.1.3 **JavaScript** bundle, jQuery and the three Buckholt component scripts loaded.
 
@@ -215,7 +215,7 @@ bar inside it carries the 22rem minimum.
 
 ## What the style guide does about this
 
-`test/style-guide/` contains a small amount of **page-layout** CSS so the catalogue itself is usable
+`tools/style-guide/` contains a small amount of **page-layout** CSS so the catalogue itself is usable
 on a phone: the shell collapses to a single column, its padding reduces below 30rem, and a demo whose
 component carries a documented minimum width scrolls inside its own frame (`.sg-demo-scroll`) rather
 than pushing the page sideways.

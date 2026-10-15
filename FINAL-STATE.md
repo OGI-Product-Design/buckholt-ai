@@ -9,9 +9,10 @@ Handoff summary. For detail, follow the links; nothing here is duplicated from t
 > - The application prototypes moved into **[`prototypes/`](prototypes/)**, so
 >   the source of truth and the work built with it are now obviously
 >   separated. See [`prototypes/README.md`](prototypes/README.md).
-> - The instruction file is **[`AGENTS.md`](AGENTS.md)**, read by Cursor,
->   Claude Code and Codex alike. `CLAUDE.md` and `.cursorrules` are pointers
->   to it.
+> - The instruction file is **[`AGENTS.md`](AGENTS.md)**, the single copy
+>   read by Cursor, Claude Code and Codex alike.
+> - The checks live in `test/`, and the style guide and runtime harness
+>   moved to `tools/` — they are pages to look at, not tests.
 >
 > [`README.md`](README.md) is the current map.
 
@@ -75,18 +76,18 @@ complete Bootstrap 5.3 build and the live documentation site loads only its own 
 `dropdown.js`, `form.js`, `tabs.js`. **jQuery must precede `form.js`** or several documented
 enhancements fail silently.
 
-To see the result: **[`test/style-guide/`](test/style-guide/index.html)** is the visual catalogue.
-**[`test/runtime-verification/`](test/runtime-verification/index.html)** is the QA view that supports
+To see the result: **[`tools/style-guide/`](tools/style-guide/index.html)** is the visual catalogue.
+**[`tools/runtime-verification/`](tools/runtime-verification/index.html)** is the QA view that supports
 it.
 
 ## Current confidence
 
 | Area | State |
 | --- | --- |
-| **Source verified** | **Machine-checked, passing.** The 40 supplied Code & specs pages are committed in `code-specs-html/`. `test/source-parity/check-source-parity.py` verifies both directions: 218 documented HTML blocks all present in the repository, and all 289 repository example blocks present in the documented source — so nothing was dropped and nothing was invented. Table alone is `SOURCE PARTIAL` (no Code & specs page supplied). `verification/component-source-status.md` |
-| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 6 documented runtime corrections re-asserted live. `test/runtime-verification/` |
+| **Source verified** | **Machine-checked, passing.** The 40 supplied Code & specs pages are committed in `code-specs-html/`. `test/source-parity.py` verifies both directions: 218 documented HTML blocks all present in the repository, and all 289 repository example blocks present in the documented source — so nothing was dropped and nothing was invented. Table alone is `SOURCE PARTIAL` (no Code & specs page supplied). `verification/component-source-status.md` |
+| **Runtime tested** | All 41 rendered from byte-exact canonical markup against the full dependency contract; every finding classified; all 6 documented runtime corrections re-asserted live. `tools/runtime-verification/` |
 | **Runtime *verified*** | **None.** No component has advanced from `RUNTIME PENDING` — see the caveat below. `verification/runtime-status.md` |
-| **Responsive** | `test/style-guide/` audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow (re-confirmed 9 September 2026). `test/runtime-verification/` **does** overflow at 375 and 320 — it renders canonical markup unwrapped, without the containers a real page supplies; recorded as an open finding in `discrepancies/known-issues.md`. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
+| **Responsive** | `tools/style-guide/` audited at 320 / 375 / 768 / desktop with zero page-level horizontal overflow (re-confirmed 9 September 2026). `tools/runtime-verification/` **does** overflow at 375 and 320 — it renders canonical markup unwrapped, without the containers a real page supplies; recorded as an open finding in `discrepancies/known-issues.md`. 2 components documented responsive, 8 handled by the runtime, 4 needing application guidance, 27 clean. `responsive/component-guidance.md` |
 | **Application level** | Selection and dismiss behaviour for Tag and Card, Slider synchronisation, the Table `data-cdt-*` controller and Dropdown single-select labelling are product responsibilities, documented and deliberately not implemented. |
 | **Source partial** | Table only — supplied from a Usage page, with no Code & specs source. |
 | **Build provenance** | **Settled.** Mark confirmed the reference build: Code & specs documentation + live `compiled.css?v=2.3`. The reference breakpoint scale is `896/1088/1312/1520/1720`. `css/buckholt.css` is a newer, different build — it is what the repository loads, but it must not reinterpret older canonical documentation. `discrepancies/build-provenance.md` |
@@ -147,6 +148,6 @@ discrepancies/               known-issues.md — current-state issue register
 verification/                source status, runtime status, and the classification framework
 responsive/                  NON-CANONICAL application-level responsive guidance
 
-test/style-guide/            the visual catalogue — what Buckholt looks like
-test/runtime-verification/   the QA view — what works, what needs attention, and why
+tools/style-guide/            the visual catalogue — what Buckholt looks like
+tools/runtime-verification/   the QA view — what works, what needs attention, and why
 ```

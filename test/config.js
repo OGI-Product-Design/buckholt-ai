@@ -8,7 +8,7 @@
 
    Both can be overridden:
 
-     BASE_URL=http://localhost:3000 node test/prototypes/flows.js
+     BASE_URL=http://localhost:3000 node test/calendar-flows.js
 */
 const path = require('path');
 

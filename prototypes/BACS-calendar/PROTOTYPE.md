@@ -75,7 +75,7 @@ beside `components/`, rather than inside it.
 
 `components/` is the Buckholt catalogue. Every folder in it is verified
 against a Code & specs page in `code-specs-html/` by
-`test/source-parity/check-source-parity.py`, in both directions. A component
+`test/source-parity.py`, in both directions. A component
 Buckholt has never documented cannot be verified that way, and filing it
 there would present an invention as canonical — which is the one thing
 `AGENTS.md` is most insistent about. The spec's own file names

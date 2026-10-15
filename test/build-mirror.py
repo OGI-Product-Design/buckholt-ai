@@ -23,13 +23,13 @@ Do not measure either against a design in the mirror.
 
 Usage
 -----
-    python3 test/prototypes/build-mirror.py [DEST]
+    python3 test/build-mirror.py [DEST]
     cd DEST && python3 -m http.server 8098
 
 DEST defaults to a sibling of the repository, `../buckholt-mirror`.
 
 The vendored Bootstrap and Font Awesome are fetched once with `npm pack` into
-`test/prototypes/.vendor/`, which is gitignored.
+`test/.vendor/`, which is gitignored.
 """
 import os
 import shutil
@@ -38,7 +38,7 @@ import sys
 import tarfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))
+ROOT = os.path.dirname(HERE)
 VENDOR = os.path.join(HERE, '.vendor')
 
 BOOTSTRAP = ('bootstrap', '5.1.3', 'package/dist/js/bootstrap.bundle.min.js')

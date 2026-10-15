@@ -68,7 +68,7 @@ Before declaring a newly ingested component complete:
 If this comparison has not been performed, say that the component still requires source-parity verification rather than presenting it as fully verified.
 
 > **The Code & specs pages are in `code-specs-html/`.** Step 1 above is therefore machine-checkable,
-> and is checked: `python3 test/source-parity/check-source-parity.py` compares every documented code
+> and is checked: `python3 test/source-parity.py` compares every documented code
 > block against `components/*/examples.html` **and** every repository example back against the
 > documented source. Run it after any change to a canonical example. A change that cannot pass it in
 > both directions is not canonical.

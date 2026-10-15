@@ -18,7 +18,7 @@ own component folder, which is what this is.
 
 Top level, beside `components/`, not inside it. `components/` is the Buckholt
 catalogue: every folder in it is source-verified against a Code & specs page
-in `code-specs-html/`, and `test/source-parity/check-source-parity.py` checks
+in `code-specs-html/`, and `test/source-parity.py` checks
 both directions. A component Buckholt has never documented cannot be
 verified that way, and putting it there would present an invention as
 canonical. Keeping it out is the same choice `prototypes/shared/blade.css` makes for
