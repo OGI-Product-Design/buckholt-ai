@@ -1,0 +1,104 @@
+/* ============================================================================
+   BACS Calendar — page layout
+   ============================================================================
+
+   NOT BUCKHOLT, and not the calendar component either. Everything the grid,
+   the day cells and the month picker need lives in `calendar/calendar.css`.
+   This file holds only what is true of this page: how the schedule options
+   stack inside the Modal, the Collect on panel's inset rule, and the phone
+   scroller around the grid.
+
+   Nothing here restyles a Buckholt component. Where a Buckholt value needed
+   changing for this page it is done by rebinding Buckholt's own variable,
+   not by overriding its rules.
+
+   Load order:
+       https://use.typekit.net/vtl2xbn.css
+       https://kit.fontawesome.com/ca92816a31.js
+       css/buckholt.css
+       css/buckholt-ai-fixes.css
+       prototype/app-shell.css
+       calendar/calendar.css
+       bacs-calendar.css      <- this file
+   ============================================================================ */
+
+
+/* ======================================================================
+   Toasts
+   ======================================================================
+   `prototype/app-shell.css` narrows the shared toast to the 320px the
+   Originators and Import frames draw. The Calendar frames draw 352px, which
+   is Buckholt's own `--toast-max-width` default, and these toasts carry a
+   title, a note and an Undo action rather than one line. Rebinding
+   Buckholt's variable restores its default for this page only; the other two
+   features are untouched.
+   ====================================================================== */
+
+.app-toasts .toast { --toast-max-width: 22rem; }
+
+
+/* ======================================================================
+   Grid scroller
+   ======================================================================
+   Seven columns cannot shrink indefinitely. Below the sm step
+   `calendar.css` gives the grid a minimum width and this scroller carries
+   it, so the page itself never develops a horizontal scrollbar.
+
+   It is focusable because a scrollable region must be reachable from the
+   keyboard; above the sm step there is nothing to scroll, but the tab stop
+   is harmless and the region keeps its accessible name either way.
+   ====================================================================== */
+
+/* Only below the sm step, where `calendar.css` gives the grid a minimum
+   width, is there anything to scroll. Above it the fr tracks always fit, and
+   making a scroll container anyway costs a 1px scrollbar from sub-pixel
+   track rounding and clips the day cells' focus rings. */
+@media (max-width: 575.98px) {
+  .cal-grid-scroller {
+    overflow-x: auto;
+  }
+}
+
+.cal-grid-scroller:focus-visible {
+  outline: 3px solid var(--focus-01);
+  outline-offset: 2px;
+}
+
+
+/* ======================================================================
+   Collection schedule modal
+   ====================================================================== */
+
+/* The three selectable Cards. `.page-panel` already puts 32px between the
+   options block and the Collect on panel; inside the block the options sit
+   closer, as CA-03-01 draws them. */
+.cal-schedule-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+/* "Shown only when Set days of the month is selected, directly under the
+   options, inset with a blue left rule." */
+.cal-collect-on {
+  padding-left: var(--spacer-05);
+  border-left: 2px solid var(--action-01);
+}
+
+.cal-collect-on[hidden] { display: none; }
+
+/* Buckholt's multiselect pins its options list directly below the toggle —
+   `dropdown.js` sets the offset itself, so Popper never gets to flip it — and
+   `data-bs-auto-close="false"` keeps it open while you choose. Spec 9.2 wants
+   the list to "float over the content below", and in this modal the content
+   below is the footer: measured at 1920 x 1206 the list runs y697–950 over a
+   footer at y743–791, so a click aimed at Save lands on Day 2 instead.
+
+   Reserving the list's own height while it is open keeps Save reachable
+   without touching the component. The list then floats over empty space, and
+   the space goes again when the list closes. The figure is Buckholt's own
+   `.dropdown-menu` max-height, not a new one. Logged as a Buckholt ticket in
+   SPEC-CHANGES.md; the real fix upstream is to let the list flip. */
+#cal-collect-on:has(.dropdown-menu.show) {
+  margin-bottom: 15.8125rem;
+}
