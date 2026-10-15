@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found</title>
+
+<!--
+  GitHub Pages serves this file for any path it cannot find, which makes it
+  the only way to redirect on Pages — there is no `_redirects` equivalent.
+  (`_redirects` in the repository root is read by Cloudflare, and Cloudflare
+  serves only the Mobius navigation prototype.)
+
+  The prototypes moved into `prototypes/` on 15 October 2026. Rather than
+  leave three stub folders at the repository root with the same names as the
+  real prototypes — which read as though nothing had moved — this one file
+  forwards every old link.
+
+  Delete the redirect block once nothing points at the old paths. The page
+  itself is worth keeping either way.
+-->
+
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    padding: 2rem;
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #1a1a1a; background: #fbfbfb;
+  }
+  main { max-width: 34rem; }
+  h1 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 1rem; font-weight: 600; }
+  p { margin: 0 0 1rem; color: #454545; }
+  ul { margin: 0; padding-left: 1.25rem; }
+  li { margin-bottom: .375rem; }
+  a { color: #0f40c5; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #f5f5f5; background: #111; }
+    p { color: #bbb; }
+    a { color: #8fb0ff; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Page not found</h1>
+  <p id="moved" hidden>That prototype has moved. Taking you there now&hellip;</p>
+  <p>The prototypes are here:</p>
+  <ul>
+    <li><a href="/buckholt-ai/prototypes/Originators/">Originators</a></li>
+    <li><a href="/buckholt-ai/prototypes/BACS-import/">BACS Import</a></li>
+    <li><a href="/buckholt-ai/prototypes/BACS-calendar/">BACS Calendar</a></li>
+    <li><a href="/buckholt-ai/tools/style-guide/">Buckholt style guide</a></li>
+  </ul>
+</main>
+
+<script>
+/* Forward the pre-15-October URLs. The old paths were /<base>/Originators/…
+   and the same for BACS-import and BACS-calendar; they are now one level
+   deeper, under /prototypes/.
+
+   The `indexOf` guard stops a loop: if a path that already contains
+   /prototypes/ 404s, it is a genuine 404 and must not be rewritten again. */
+(function () {
+  var MOVED = /^(.*?)\/(Originators|BACS-import|BACS-calendar)(\/.*)?$/;
+  var m = location.pathname.match(MOVED);
+  if (!m || m[1].indexOf('/prototypes') !== -1) return;
+
+  document.getElementById('moved').hidden = false;
+  location.replace(m[1] + '/prototypes/' + m[2] + (m[3] || '/') +
+                   location.search + location.hash);
+}());
+</script>
+</body>
+</html>

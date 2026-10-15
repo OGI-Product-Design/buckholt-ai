@@ -31,14 +31,12 @@ This one is deployed separately, from `wrangler.jsonc`. Its old URL,
 | **Buckholt style guide** — every documented component, rendered against the real runtime | https://ogi-product-design.github.io/buckholt-ai/tools/style-guide/ |
 | **Runtime verification harness** — what renders correctly and what needs attention | https://ogi-product-design.github.io/buckholt-ai/tools/runtime-verification/ |
 
-## If a link 404s
+## If an old link 404s
 
-The prototypes moved into `prototypes/` on 15 October 2026. The three BACS
-URLs above changed with them, and GitHub Pages has no redirect mechanism, so
-a stub page sits at each old path and forwards you. Those stubs are the only
-reason `Originators/`, `BACS-import/` and `BACS-calendar/` still exist at the
-repository root — they hold nothing else and can go once nothing points at
-them.
+The prototypes moved into `prototypes/` on 15 October 2026, so the three
+BACS URLs changed. GitHub Pages has no redirect mechanism, so `404.html` at
+the repository root forwards the old paths to the new ones. Nothing to do —
+old links land in the right place.
 
 ## Running them locally instead
 

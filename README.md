@@ -25,6 +25,7 @@ anything else here:
 buckholt-ai/
 ├── AGENTS.md            ← the rules, for every agent
 ├── PROTOTYPES.md        ← live links
+├── 404.html                forwards the pre-move prototype URLs
 ├── README.md  CANONICAL-MARKUP.md  FINAL-STATE.md
 │
 ├── css/                 ← BUCKHOLT: the runtime stylesheet
@@ -39,15 +40,11 @@ buckholt-ai/
 ├── test/                ← runs and passes or fails: test/README.md
 ├── tools/                  pages you open and look at: tools/README.md
 │
-├── prototypes/          ← NOT BUCKHOLT, see prototypes/README.md
-│   ├── shared/             Mobius chrome and the Blade
-│   ├── calendar/           a component Buckholt does not document
-│   ├── data/               shared seed data
-│   ├── Originators/  BACS-import/  BACS-calendar/
-│   └── Mobius-navigation/
-│
-└── Originators/  BACS-import/  BACS-calendar/
-            three stubs forwarding the old GitHub Pages URLs; nothing else
+└── prototypes/          ← NOT BUCKHOLT, see prototypes/README.md
+    ├── shared/             used by more than one prototype:
+    │     app-shell, blade, calendar/ (a component), data/
+    ├── Originators/  BACS-import/  BACS-calendar/
+    └── Mobius-navigation/
 ```
 
 **Running anything:** the prototypes are no-build — open any

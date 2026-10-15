@@ -6,7 +6,7 @@ open and look at are in [`../tools/`](../tools/), not here.
 | File | Checks | Assertions |
 | --- | --- | --- |
 | `source-parity.py` | `components/*/examples.html` against the saved Buckholt Code & specs pages in `code-specs-html/`, **in both directions** — nothing documented dropped, nothing invented. | — |
-| `calendar-data.js` | The collection-day rules in `prototypes/data/calendar.js`. Pure Node, no browser. | 42 |
+| `calendar-data.js` | The collection-day rules in `prototypes/shared/data/calendar.js`. Pure Node, no browser. | 42 |
 | `calendar-flows.js` | BACS Calendar CA-00 to CA-06: cell states, month navigation, the picker, bank holidays. | 59 |
 | `calendar-modal.js` | The collection schedule modal end to end, the toasts and Undo. | 66 |
 | `accessibility.js` | Accessible names, `aria-pressed`, non-focusable cells, keyboard operation, focus rings, overflow. | 32 |
