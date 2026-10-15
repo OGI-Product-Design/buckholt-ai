@@ -15,6 +15,13 @@
 Each is a clickable, no-build prototype: open its `index.html` directly in a
 browser. Everything is relative and nothing is compiled.
 
+They are also deployed: `wrangler.jsonc` serves the repository root, so every
+folder here is a URL too — `/prototypes/Mobius-navigation/`,
+`/prototypes/BACS-calendar/` and so on. **The URLs changed when this folder
+was created on 15 October 2026**, so `_redirects` in the repository root
+sends every old link to its new home with a 301. Links shared before the
+move still work; tested against a local Workers runtime.
+
 | Folder | Feature | Built from |
 | --- | --- | --- |
 | `Originators/` | Accounts › BACS › Originators | `originators-spec.md` + `screenshots/` |

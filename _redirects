@@ -1,0 +1,39 @@
+# Cloudflare redirects
+#
+# `wrangler.jsonc` serves the repository root as static assets, so every
+# folder here is also a URL. When the prototypes moved into `prototypes/`
+# on 15 October 2026 their URLs moved with them, which would have broken
+# every link already shared — the Mobius navigation one above all, since
+# that is what the Worker is named for.
+#
+# These keep the old URLs working. 301, because the move is permanent.
+#
+# Format is one rule per line: source, destination, status. `:splat` carries
+# whatever matched the `*`. Workers parses this file rather than serving it.
+# https://developers.cloudflare.com/workers/static-assets/redirects/
+
+# The prototype the deployment is named for.
+/Mobius-navigation       /prototypes/Mobius-navigation/index.html   301
+/Mobius-navigation/      /prototypes/Mobius-navigation/index.html   301
+/Mobius-navigation/*     /prototypes/Mobius-navigation/:splat       301
+
+# The three BACS tabs. They link to each other with relative paths, so a
+# visitor who lands on an old URL is redirected once and then stays inside
+# `prototypes/`.
+/Originators             /prototypes/Originators/index.html         301
+/Originators/            /prototypes/Originators/index.html         301
+/Originators/*           /prototypes/Originators/:splat             301
+
+/BACS-import             /prototypes/BACS-import/index.html         301
+/BACS-import/            /prototypes/BACS-import/index.html         301
+/BACS-import/*           /prototypes/BACS-import/:splat             301
+
+/BACS-calendar           /prototypes/BACS-calendar/index.html       301
+/BACS-calendar/          /prototypes/BACS-calendar/index.html       301
+/BACS-calendar/*         /prototypes/BACS-calendar/:splat           301
+
+# Shared assets, in case an old page is still cached and asks for them.
+# `prototype/` was renamed to `shared/` in the move.
+/prototype/*             /prototypes/shared/:splat                  301
+/calendar/*              /prototypes/calendar/:splat                301
+/data/*                  /prototypes/data/:splat                    301
