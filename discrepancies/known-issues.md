@@ -177,7 +177,7 @@ produced our file, not against the design system.
 
 Confirmed identically in **both** builds. The obvious remedy in each case would mean editing
 canonical Buckholt markup or promoting an undocumented runtime helper, which
-`CANONICAL-MARKUP.md` and `CLAUDE.md` forbid. The CSS rule stays until Buckholt clarifies.
+`CANONICAL-MARKUP.md` and `AGENTS.md` forbid. The CSS rule stays until Buckholt clarifies.
 
 ## Alert — 4px vertical offset of the label when the documented close control is present
 
@@ -409,7 +409,7 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   padding. An implementation that reproduces `padding: 4rem` literally, or that omits the
   `.container`, will be 16px out on each side.
 - **Not changed:** `patterns/page-layout/rules.md` transcribes documented Buckholt intent and is
-  not rewritten from runtime measurement. `CLAUDE.md`, `README.md` and `mobius/README.md`
+  not rewritten from runtime measurement. `AGENTS.md`, `README.md` and `mobius/README.md`
   summarise runtime behaviour and have been corrected to state both axes.
 - **Build difference:** below 768px `css/buckholt.css` sets `--page-body-spacing-x: 2rem`,
   narrowing the Frame's horizontal padding to **16px**. The live build has no such override and
@@ -439,7 +439,7 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   | **Structural / semantic hooks** | `.alert-body`, `.alert-note`, `.toast-note`, `.avatar-img`, `.avatar-initials`, `.data-number`, `.no-italics`, `.table-sort-header`, `.table-checkbox-header`, `.expressive-primary`, `.multi-input`, `.textarea-input`, `.submenu-item-selectable` | Carry meaning in the DOM but no styling. Harmless; an application may target them. |
   | **WordPress wrappers** | `.wp-block-acf-tabs`, `.element_block`, `.align`, `.simple_table` | **Not Buckholt API.** Mark confirmed 9 September 2026 that these are WordPress-added wrappers; ignore them. Preserved in canonical markup because they sit inside the documented code block, but they carry no Buckholt meaning and applications should omit them. |
 
-- **Why this is not a defect list:** per `CLAUDE.md`'s evidence discipline, a class is not missing
+- **Why this is not a defect list:** per `AGENTS.md`'s evidence discipline, a class is not missing
   merely because no rule exists. These are identical in both builds, so none is a local build
   regression. The list exists so a future agent does not "fix" a rendering by inventing rules for
   them, and does not delete them from canonical markup for being unstyled.

@@ -1,6 +1,48 @@
 # Buckholt AI
 
-A lean, machine-readable companion for using the Buckholt design system accurately in coding agents such as Claude Code, Cursor and Codex.
+A lean, machine-readable companion for using the Buckholt design system accurately in coding agents such as Cursor, Claude Code and Codex.
+
+## Start here
+
+**The rules live in [`AGENTS.md`](AGENTS.md)** — one copy, read by every
+agent. `CLAUDE.md` and `.cursorrules` are pointers to it and hold nothing of
+their own, so the rules cannot drift between one tool and another.
+
+The repository has **two halves**, and the difference matters more than
+anything else here:
+
+| | What it is | Treat it as |
+| --- | --- | --- |
+| **Everything except `prototypes/`** | Buckholt: the design system and the evidence behind it | The single source of truth. Read-only unless you are explicitly changing the system. |
+| **[`prototypes/`](prototypes/)** | Mobius PAS application work built *with* Buckholt | Examples of use. **Never** evidence of what Buckholt is. |
+
+```text
+buckholt-ai/
+├── AGENTS.md            ← the rules (CLAUDE.md, .cursorrules point here)
+├── README.md  CANONICAL-MARKUP.md  FINAL-STATE.md
+│
+├── css/                 ← BUCKHOLT: the runtime stylesheet
+├── components/             41 components: rules.md + examples.html
+├── foundations/            colour, type, spacing, radius, shadow, icons
+├── patterns/               how pages and forms are composed
+├── code-specs-html/        the saved Buckholt doc pages: markup evidence
+├── discrepancies/          verified documentation/runtime differences
+├── verification/           what has been checked, and how
+├── responsive/
+│
+├── test/                ← four suites, see test/README.md
+│
+└── prototypes/          ← NOT BUCKHOLT, see prototypes/README.md
+    ├── shared/             Mobius chrome and the Blade
+    ├── calendar/           a component Buckholt does not document
+    ├── data/               shared seed data
+    ├── Originators/  BACS-import/  BACS-calendar/
+    └── Mobius-navigation/
+```
+
+**Running anything:** the prototypes are no-build — open any
+`prototypes/*/index.html` straight in a browser. For the tests, see
+[`test/README.md`](test/README.md).
 
 ## Goal
 
@@ -26,76 +68,41 @@ Old SCSS, old token maps, screenshots, Figma and earlier interpreted AI specific
 
 ## Structure
 
-```text
-buckholt-ai/
-├── README.md
-├── CLAUDE.md
-├── css/
-│   ├── buckholt.css
-│   └── buckholt-ai-fixes.css
-├── foundations/
-│   ├── colour/
-│   ├── iconography/
-│   ├── radius/
-│   ├── shadows/
-│   ├── spacing/
-│   └── typography/
-├── patterns/
-│   ├── common-actions/
-│   ├── forms/
-│   ├── input-rows/
-│   ├── lookup/
-│   └── page-layout/
-├── discrepancies/
-│   ├── build-provenance.md
-│   └── known-issues.md
-└── components/
-    ├── accordion/
-    ├── alert/
-    ├── avatar/
-    ├── breadcrumb/
-    ├── button/
-    ├── card/
-    ├── checkbox/
-    ├── collapse/
-    ├── dropdown/
-    ├── form/
-    ├── heading-attachment/
-    ├── icon-block/
-    ├── input-group/
-    ├── input-row/
-    ├── key-value-pair/
-    ├── link/
-    ├── list/
-    ├── lookup/
-    ├── menu/
-    ├── menu-button/
-    ├── modal/
-    ├── multi-field-input/
-    ├── nested-inputs/
-    ├── number-input/
-    ├── page-navigation/
-    ├── progress-bar/
-    ├── radio/
-    ├── response-button/
-    ├── select/
-    ├── slider/
-    ├── summary-meta/
-    ├── switch/
-    ├── table/
-    ├── tabs/
-    ├── tag/
-    ├── text-area/
-    ├── text-block/
-    ├── text-input/
-    ├── toast/
-    ├── tooltip/
-    └── versa-tile/
-```
+The two halves are mapped under **Start here**. The detail:
 
-Each documented component folder contains `rules.md` and `examples.html`. Components with documented behaviour scripts also carry their supplied JavaScript where applicable.
+### Buckholt — the source of truth
+
+| Folder | What it holds |
+| --- | --- |
+| `css/` | `buckholt.css`, the complete runtime, and `buckholt-ai-fixes.css`, the thin verified correction layer. |
+| `components/` | 41 components, each with `rules.md` and `examples.html`. |
+| `foundations/` | Colour, iconography, radius, shadows, spacing, typography. |
+| `patterns/` | Page layout, forms, input rows, lookup, common actions. |
+| `code-specs-html/` | The 40 saved Buckholt **Code & specs** documentation pages. Each embeds that component's canonical markup; `test/source-parity/` diffs `components/*/examples.html` against them in both directions. This is why an agent cannot invent markup. |
+| `discrepancies/` | `known-issues.md` and `build-provenance.md` — verified differences between the documentation, the local build and the live build. |
+| `verification/` | Source and runtime verification status, and the framework for changing it. |
+| `responsive/` | Responsive guidance. |
+
+The 41 component folders are:
+
+`accordion`, `alert`, `avatar`, `breadcrumb`, `button`, `card`, `checkbox`,
+`collapse`, `dropdown`, `form`, `heading-attachment`, `icon-block`,
+`input-group`, `input-row`, `key-value-pair`, `link`, `list`, `lookup`,
+`menu`, `menu-button`, `modal`, `multi-field-input`, `nested-inputs`,
+`number-input`, `page-navigation`, `progress-bar`, `radio`,
+`response-button`, `select`, `slider`, `summary-meta`, `switch`, `table`,
+`tabs`, `tag`, `text-area`, `text-block`, `text-input`, `toast`, `tooltip`,
+`versa-tile`.
+
+Components with documented behaviour scripts also carry their supplied JavaScript.
 
 Patterns are guidance for composition. They do not create a competing styling/runtime layer; they teach the AI how to structure pages and combine documented Buckholt components correctly.
+
+### Not Buckholt
+
+`prototypes/` and `test/`, each with its own README. See
+[`prototypes/README.md`](prototypes/README.md) and
+[`test/README.md`](test/README.md).
 
 ## Foundations
 
@@ -176,7 +183,7 @@ Read the component's `rules.md` and `examples.html` before implementation. Impor
 >
 > Bootstrap **JavaScript is a separate dependency and is required**: the live site loads
 > the 5.1.3 bundle, active, for the ten components with `data-bs-*` hooks. Keep it.
-> See `CLAUDE.md` → Runtime dependencies.
+> See `AGENTS.md` → Runtime dependencies.
 
 
 For Bootstrap-driven Buckholt behaviour such as tooltips, dropdown menus, alerts, accordions, modals, tabs and toasts, also load:
@@ -199,7 +206,7 @@ Use the component-supplied scripts only when their documented behaviour is neede
 
 For a complete page, coding agents should read in this order:
 
-1. `CLAUDE.md`
+1. `AGENTS.md`
 2. `patterns/page-layout/rules.md`
 3. any other relevant pattern guidance (`forms`, `input-rows`, `lookup`, `common-actions`)
 4. relevant foundations

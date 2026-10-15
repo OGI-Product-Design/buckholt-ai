@@ -1,0 +1,354 @@
+/* ============================================================================
+   Calendar — month grid, day cells and month picker
+   ============================================================================
+
+   NOT BUCKHOLT. `calendar-spec.md` section 3.1 records that "the calendar is
+   new to Buckholt. Nothing in Buckholt covers the month grid, the day cell
+   states or the month picker popover", and section 3.2 asks for it as a new
+   component folder. Nothing in this file may be read as a Buckholt rule.
+
+   What this file does NOT draw, because Buckholt already has it:
+
+     month button, month navigation chevrons   Button (ghost)
+     month picker's twelve month buttons       Response button
+     "Current month"                           Link (standalone, link-02)
+     everything on the page around the grid    Card, Heading attachment,
+                                               Modal, Dropdown, Toast, Tag
+
+   Every colour, space, radius and shadow below is a Buckholt token. The four
+   component-scoped variables at the top exist only where Buckholt has no
+   token for the value, and each is listed in `calendar.md` under
+   "New values".
+
+   Load order: after `css/buckholt.css` and `css/buckholt-ai-fixes.css`.
+   ============================================================================ */
+
+.calendar {
+  /* ------------------------------------------------------------ New values
+     Four values the Figma uses that Buckholt has no token for. See
+     `calendar.md`. Everything else on this block resolves to a Buckholt
+     token. */
+  --calendar-cell-height: 5.5rem;              /* 88px, measured from CA-00-01 */
+  /* Weekday : weekend column ratio, measured at 274px : 80px on CA-00-01.
+     The whole track list is one variable because `fr` cannot be multiplied
+     inside `calc()`, so the ratio cannot be held as a bare number. */
+  --calendar-columns:
+    repeat(5, minmax(0, 3.4fr))
+    repeat(2, minmax(0, 1fr));
+  --calendar-badge-size: 1.5rem;               /* 24px circle, measured */
+
+  /* ------------------------------------------------------- Buckholt tokens */
+  --calendar-gap: var(--spacer-02);            /* 4px between cells */
+  --calendar-cell-padding: var(--spacer-03);   /* 8px */
+  --calendar-cell-radius: var(--border-radius-sm);          /* 6px, measured */
+
+  --calendar-cell-background: var(--ui-background-01);
+  --calendar-cell-border: var(--ui-border-02);
+
+  /* The raised bottom edge. Buckholt's own Button draws its raised edge with
+     `calc(1px + 0.125rem)`; the day cell borrows that idiom rather than
+     inventing a thickness. */
+  --calendar-cell-edge-width: calc(1px + 0.125rem);         /* 3px */
+  --calendar-cell-edge: var(--ui-border-01);                /* see calendar.md */
+
+  --calendar-cell-selected-background: var(--expressive-pale);
+  --calendar-cell-selected-border: var(--action-01);
+  --calendar-cell-selected-label: var(--expressive-deep);
+
+  --calendar-cell-readonly-border: var(--ui-border-03);
+  --calendar-cell-disabled-background: var(--ui-background-04);
+  --calendar-cell-blank-background: var(--ui-background-02);
+
+  --calendar-badge-background: var(--ui-overlay-02);
+  --calendar-badge-today-background: var(--expressive-soft);
+
+  --calendar-label: var(--text-secondary);
+  --calendar-focus: var(--focus-01);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);                       /* 24px, month bar to grid */
+}
+
+
+/* ======================================================================
+   Month bar
+   ======================================================================
+   Chevrons and the month button are Buckholt ghost Buttons; this rule only
+   places them. `.calendar-monthbar-picker` is the positioning context the
+   popover anchors to, so the popover's left edge lines up with the month
+   button's, as CA-01-01 draws it.
+   ====================================================================== */
+
+.calendar-monthbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-02);
+}
+
+.calendar-monthbar-picker {
+  position: relative;
+}
+
+
+/* ======================================================================
+   Month picker popover
+   ======================================================================
+   Floating panel. Buckholt's own floating panels (Dropdown, Menu) use
+   `--shadow-sm`, so this one does too. It is hidden with the `hidden`
+   attribute, so it is out of the accessibility tree and out of the tab order
+   when closed without any CSS of its own.
+   ====================================================================== */
+
+.calendar-popover {
+  position: absolute;
+  top: calc(100% + var(--spacer-02));
+  left: 0;
+  z-index: 20;
+  width: 15rem;                                /* 240px, measured from CA-01-01 */
+  padding: var(--spacer-04);                   /* 16px */
+  background-color: var(--ui-background-01);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-popover[hidden] { display: none; }
+
+.calendar-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacer-02);
+  margin-bottom: var(--spacer-04);
+}
+
+/* The year sits between the two chevrons and takes the space they leave, so
+   it stays centred whatever the chevrons measure. */
+.calendar-popover-year {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+/* Spec 7 draws the months as a 3 x 4 grid. Buckholt's Response button
+   container is a wrapping flex row, so the rows come out ragged: a Button is
+   only as wide as its label plus padding, and `Sep` is not `May`. Scoped to
+   the popover, the container becomes a three-column grid. Only the container
+   changes — the Buttons, their canonical markup and every one of their
+   states stay Buckholt's, and the 8px gap is still the one
+   `.response-btn-input` sets.
+
+   Three 1fr tracks in the popover's 208px of content, with that 8px gap,
+   come to 64px each, which is both the width CA-01-01 draws and Buckholt's
+   own `--button-min-width`. */
+.calendar-popover .response-btn-input {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.calendar-popover-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacer-05);                /* 24px, measured on CA-01-01 */
+}
+
+
+/* ======================================================================
+   Grid
+   ======================================================================
+   One grid holds the weekday headers and the day cells, so a header can
+   never drift out of line with its column: both are placed by the same
+   `grid-template-columns`.
+
+   Weekend columns are narrower than weekday columns (spec 5.1). The ratio is
+   held as a number rather than a width so the whole grid scales with the
+   page instead of the weekend strips staying fixed while the weekdays
+   stretch.
+   ====================================================================== */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: var(--calendar-columns);
+  gap: var(--calendar-gap);
+}
+
+/* The weekday names are column headers and are typed as Buckholt types its
+   own: `.table th` is 16px / 24px / 500 / 0.25px in `--text-secondary`, which
+   is `.label-02` plus that colour, and is what CA-00-01 draws. The type set
+   is a documented class and goes on the element; only the colour and the
+   space below the row are set here. */
+.calendar-weekday {
+  padding-bottom: var(--spacer-03);            /* 8px, + the 4px row gap */
+  color: var(--text-secondary);
+}
+
+
+/* ======================================================================
+   Day cells
+   ======================================================================
+   Every cell is the same box whatever its state and whatever its element:
+   an interactive cell is a `<button>`, a read-only or disabled one is a
+   `<div>`, and a blank one is a `<div>` with no content. Keeping the box
+   identical is what holds the rows level.
+
+   `space-between` puts the date badge at the top and the label at the
+   bottom; with no label the badge still sits at the top.
+   ====================================================================== */
+
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacer-02);
+  min-height: var(--calendar-cell-height);
+  padding: var(--calendar-cell-padding);
+  text-align: left;
+  background-color: var(--calendar-cell-background);
+  border: 1px solid transparent;
+  border-radius: var(--calendar-cell-radius);
+}
+
+/* A button carries the browser's own font and appearance; reset only those,
+   not anything Buckholt draws. */
+button.calendar-cell {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+
+.calendar-cell-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--calendar-badge-size);
+  height: var(--calendar-badge-size);
+  font-size: 0.875rem;                         /* 14px, measured */
+  line-height: 1.25rem;
+  color: var(--text-primary);
+  background-color: var(--calendar-badge-background);
+  border-radius: var(--border-radius-full);
+}
+
+/* "Today's date badge is filled light blue. It sits on top of whatever state
+   the cell has." Only the badge changes; the cell keeps its own state. */
+.calendar-cell-date--today {
+  background-color: var(--calendar-badge-today-background);
+}
+
+.calendar-cell-label {
+  font-size: 1rem;                             /* 16px, measured */
+  line-height: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.16px;
+  color: var(--calendar-label);
+}
+
+
+/* ---------------------------------------------------------------- Default
+   "White fill, light grey border, heavier grey bottom edge (raised)." */
+
+.calendar-cell--default {
+  border-color: var(--calendar-cell-border);
+  border-bottom-width: var(--calendar-cell-edge-width);
+  border-bottom-color: var(--calendar-cell-edge);
+}
+
+
+/* --------------------------------------------------------------- Selected
+   "Pale blue fill, blue border and heavier blue bottom edge, label in
+   blue." */
+
+.calendar-cell--selected {
+  background-color: var(--calendar-cell-selected-background);
+  border-color: var(--calendar-cell-selected-border);
+  border-bottom-width: var(--calendar-cell-edge-width);
+}
+
+.calendar-cell--selected .calendar-cell-label {
+  color: var(--calendar-cell-selected-label);
+}
+
+
+/* -------------------------------------------------------------- Read-only
+   "White fill, faint border, no raised edge, label in grey." */
+
+.calendar-cell--readonly {
+  border-color: var(--calendar-cell-readonly-border);
+}
+
+
+/* ---------------------------------------------------------------- Disabled
+   "Grey fill." The border token is the same translucent
+   `--ui-border-03` the read-only cell uses; over the grey fill it composites
+   to the darker edge the Figma draws, which is why one token serves both. */
+
+.calendar-cell--disabled {
+  background-color: var(--calendar-cell-disabled-background);
+  border-color: var(--calendar-cell-readonly-border);
+}
+
+
+/* ------------------------------------------------------------------ Blank
+   "Very light grey fill, no date." Outside the displayed month. */
+
+.calendar-cell--blank {
+  background-color: var(--calendar-cell-blank-background);
+}
+
+
+/* ------------------------------------------------------- Hover and focus
+   "Hover (Default and Selected only): border turns blue."
+
+   The focus ring is 3px, which spec 5.2 asks for, drawn in Buckholt's own
+   `--focus-01`. It is an `outline` rather than Buckholt's Button
+   `box-shadow`, so it clears the cell's raised bottom edge instead of
+   sitting under it. */
+
+button.calendar-cell:hover {
+  border-color: var(--calendar-cell-selected-border);
+}
+
+button.calendar-cell:focus-visible {
+  outline: 3px solid var(--calendar-focus);
+  outline-offset: 2px;
+}
+
+
+/* ======================================================================
+   Narrow viewports
+   ======================================================================
+   These breakpoints are the prototype's own, set on the LOCAL build's
+   Bootstrap scale (576 / 768 / 992 / 1200 / 1400), because `css/buckholt.css`
+   ships that scale. The live reference build breaks at
+   896 / 1088 / 1312 / 1520 / 1720, so every figure here would land at a
+   different viewport there. Flagged, per AGENTS.md, rather than silently
+   changed.
+
+   Below the md step the seven columns cannot hold a weekday cell wide enough
+   to read a label in, so the weekday names shorten to three letters and the
+   columns go even. Below the sm step the grid scrolls sideways at a fixed
+   minimum width rather than crushing: the page owns the scroller.
+   ====================================================================== */
+
+@media (max-width: 767.98px) {
+  .calendar {
+    --calendar-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .calendar-cell {
+    --calendar-cell-height: 4.5rem;
+  }
+
+  .calendar-cell-label {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .calendar-grid {
+    min-width: 32rem;                          /* 512px, scrolled by the page */
+  }
+}

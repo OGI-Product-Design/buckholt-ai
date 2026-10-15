@@ -15,3 +15,6 @@ Thumbs.db
 node_modules/
 dist/
 build/
+
+# Offline dependencies vendored by test/prototypes/build-mirror.py
+test/prototypes/.vendor/

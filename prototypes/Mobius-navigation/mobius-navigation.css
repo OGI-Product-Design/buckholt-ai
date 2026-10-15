@@ -1,0 +1,749 @@
+/* ============================================================================
+   Mobius navigation prototype — feature stylesheet
+   ============================================================================
+
+   Prototype-only. Loaded after buckholt.css, buckholt-ai-fixes.css and the
+   shared prototype shell. It does three kinds of thing, and nothing else:
+
+   1. Page layout Buckholt leaves to the application: the menu column, the
+      drawer, the record strip, heading rows.
+   2. Binds a Buckholt component's OWN custom properties to Buckholt tokens
+      where the component is used in a place it was not drawn for (the Menu
+      shown in place, the Card in a narrow column). No rule restyles a
+      component with values of its own.
+   3. The "Show wording changes" review aid.
+
+   Every selector is `mob-` prefixed or scoped under one. Colours, spacing,
+   radii and shadows are Buckholt tokens; there are no raw colour values.
+
+   Breakpoints are on the LOCAL build's Bootstrap scale (576 / 768 / 992 /
+   1200 / 1400), because css/buckholt.css — the build this repository loads,
+   and whose .col-* classes the pages use — ships that scale. The live
+   reference build breaks at 896 / 1088 / 1312 / 1520 / 1720, so each figure
+   would land at a different viewport there. Flagged, per AGENTS.md.
+   ============================================================================ */
+
+
+/* ------------------------------------------------------------------ Top bar
+   The shared app bar carries this prototype's contents. Only additions. */
+
+.mob-menu-button-set { display: none; margin: 0 var(--spacer-03) 0 calc(var(--spacer-03) * -1); }
+.app-bar .button-set { margin-top: 0; }               /* the set is placed by the bar, not by flow */
+
+.mob-terms {
+  align-self: center;
+  margin: 0 var(--spacer-05) 0 0;
+  white-space: nowrap;
+}
+
+
+
+/* ---------------------------------------------------------------- Search
+   The Text input next to the wordmark: it opens the search Modal. Its
+   label is visually hidden; the field takes what room the bar has, up to
+   24rem. */
+.mob-app-search { flex: 0 1 24rem; min-width: 0; margin-right: var(--spacer-04); }
+/* Create new client, straight after the search. */
+.mob-app-create { flex: 0 0 auto; align-self: center; margin: 0 var(--spacer-05) 0 0; }
+/* Below 1280px the bar cannot hold its label: the icon-only Button shows
+   instead of the labelled one. */
+.mob-create-icon { display: none; }
+@media (max-width: 1279.98px) {
+  .mob-create-full { display: none; }
+  .mob-create-icon { display: inline-flex; }
+}
+.mob-app-create[hidden] { display: none; }
+.mob-app-search .input-label { display: none; }
+
+.mob-app-search .input, .mob-app-search .response, .mob-app-search .form-control { min-width: 0; }
+/* Below 768px the field gives way to the system menu and the avatar. */
+@media (max-width: 767.98px) {
+  .mob-app-search { flex: 1 1 0; margin-right: var(--spacer-03); }
+  .mob-app-create { margin-right: var(--spacer-03); }
+}
+
+/* Up to 1680px the bar cannot hold everything at full size: the review
+   switch keeps its label as its accessible name but stops drawing it. */
+@media (min-width: 1024px) and (max-width: 1679.98px) {
+  .mob-terms .form-check-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .mob-terms .form-check-input { margin: 0; }
+}
+
+/* ----------------------------------------------------------- System menu
+   An icon-only Menu button beside the avatar; its panel is Menu's Link
+   variant. The panel opens over the page, under the top bar's own menus. */
+.mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
+.mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
+.mob-systems .menu-panel { z-index: 1035; }
+/* The current system: Menu's own active colours (its pressed state's label
+   and tint), and a tick at the item's end. */
+.mob-systems .menu-item[aria-current="page"] {
+  display: flex;
+  align-items: center;
+  color: var(--menu-item-label-active);
+  background-color: var(--menu-item-background-active);
+}
+.mob-systems .mob-menu-current { margin-left: auto; padding-left: var(--spacer-04); }
+/* The trigger carries the current system's name. Below 1280px it sits 8px
+   from the clock; on a phone the name is kept for assistive technology but
+   not drawn, and the caret alone opens the menu. */
+@media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
+@media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
+/* On the narrowest phones the search field shows only its icon (it is
+   still the field: a tap opens the search), and the right-hand controls sit
+   4px apart, so the bar fits at 360px. */
+@media (max-width: 429.98px) {
+  .mob-app-search { flex: 0 0 2.75rem; }
+  .mob-app-search .form-control::placeholder { color: transparent; }
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
+  .app-bar-logo { margin-right: var(--spacer-03); }
+  .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
+}
+@media (max-width: 575.98px) {
+  .mob-systems .button-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+}
+
+/* The user menu's trigger is the Avatar itself, so the toggle has no Button
+   chrome of its own; focus is drawn round the Avatar. */
+.mob-user-menu { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
+.mob-avatar-toggle { padding: 0; background: none; border: 0; border-radius: 50%; cursor: pointer; }
+.mob-avatar-toggle:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
+.mob-user-menu .menu-panel { z-index: 1035; }
+
+
+/* -------------------------------------------------------------------- Menu
+   Two columns in Buckholt's layout-03 `sidebar` area, as in the new
+   designs: the rail and the record column. They stay in view under the
+   sticky top bar and each scrolls on its own. At app level there is
+   nothing in them, so the area is not drawn. */
+
+.mob-sidebar {
+  position: sticky;
+  top: var(--app-header-height);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--app-header-height));
+  /* Like a mail client (Laurence, 7 October 2026): the rail has no colour
+     of its own, it sits on the page background; the record column is a
+     white panel inset beside it. */
+  background-color: var(--ui-background-02);
+  z-index: 2;                                          /* its floating Menus open over Main */
+}
+/* The menu is the selected client's: at app level it is not drawn. */
+.mob-sidebar.mob-side-empty { display: none; }
+.mob-record[hidden], .mob-rail-foot[hidden], .mob-rail-head[hidden], .mob-menu-button-set[hidden] { display: none; }
+
+.mob-drawer-head { display: none; }
+
+.mob-columns { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
+
+/* The rail, as in the Figma design: Buckholt's light theme on the page's
+   own background, divided from the record column by a rule. */
+.mob-rail {
+  display: flex;
+  flex-direction: column;
+  width: 17rem;                                       /* 272px: room for a policy's title (the status is above it) */
+  flex: 0 0 auto;
+}
+/* At client level the rail is the only column, so it takes the white
+   panel the policy column has (inset 8px, 8px radius, Card's border)
+   rather than sitting bare on the page background (Laurence, 7 October
+   2026). Once a policy is open the panel moves to the policy column.
+   Collapsed at client level it stays the panel, 64px wide (Laurence,
+   8 October 2026: bare, the strip read as a grey gap). */
+@media (min-width: 1024px) {
+  .mob-sidebar:not(.mob-has-record) .mob-rail {
+    margin: var(--spacer-03);
+    width: 17rem;                                     /* its own 272px inside the inset, so a long reference fits under the Policies rule */
+    overflow: hidden;
+    background-color: var(--ui-background-01);
+    border: 1px solid var(--ui-border-02);
+    border-radius: var(--border-radius-md);
+  }
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4rem; }
+}
+/* The head: the client in User meta, level with the policy's head in the
+   next column. Its content starts where that head's does: 8px inset, the
+   1px border, then 16px; on the bare rail (beside a policy) that inset is
+   padding instead. Sideways the Avatar starts where the menu's icons do. */
+.mob-rail-head { flex: 0 0 auto; display: flex; min-width: 0; padding: var(--spacer-03) var(--spacer-03) 0 var(--spacer-04); }
+/* User meta has 8px padding of its own, so the head gives 8px less. */
+.mob-has-record .mob-rail-head { padding-top: calc(var(--spacer-04) + 1px); padding-left: calc(var(--spacer-04) + 1px); }
+.mob-rail-client { min-width: 0; align-items: flex-start; }   /* the name's top level with the reference's */
+/* Ruled off from the menu under it, as the policy's head is from its menu
+   (Laurence, 8 October 2026). The rule runs the width of the rows under it. */
+.mob-rail-head { position: relative; padding-bottom: var(--spacer-03); }   /* with User meta's own 8px, the rule is level with the policy head's */
+.mob-rail-head::after { content: ""; position: absolute; left: var(--spacer-03); right: var(--spacer-03); bottom: 0; border-bottom: 1px solid var(--ui-border-02); }
+.mob-rail-client .user-meta-body { display: flex; flex-direction: column; min-width: 0; }
+/* The policy head's type: the name (16px, medium) over the reference (14px,
+   light, secondary). */
+.mob-rail-name { font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mob-rail-ref { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* The rail's collapse button sits at the right of its foot. */
+.mob-column-toggle { margin-top: 0; margin-left: auto; flex: 0 0 auto; }
+
+
+.mob-rail-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);
+  padding: var(--spacer-03) var(--spacer-03) var(--spacer-05);   /* 8px sides: the links carry their own inner padding */
+}
+.mob-rail-foot { flex: 0 0 auto; display: flex; align-items: center; gap: var(--spacer-03); padding: var(--spacer-03) var(--spacer-04); }   /* no rule: Client support is a plain link-like action, not a band */
+.mob-rail-foot .button-set { margin-top: 0; }
+
+.mob-rail .mob-side-label { margin: var(--spacer-05) 0 var(--spacer-03); padding: 0 var(--spacer-04);   /* in line with the links' text and the status eyebrows */ color: var(--text-secondary); }
+
+/* A policy: the status eyebrow, the reference over the line of business,
+   and a chevron. Page navigation's own link states. */
+.mob-rail-policies .nav-link {
+  height: auto; min-width: 0; padding: var(--spacer-03) var(--nav-link-padding-x);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--nav-link-gap); align-items: start;
+}
+.mob-rail-policies .mob-rail-status { grid-column: 1; grid-row: 1; margin: 0; }
+.mob-rail-policies .mob-rail-text { grid-column: 1; grid-row: 2; }
+/* On the open policy the reference and chevron take Page navigation's
+   active colour, as the icon does; the status and line of business do not. */
+.mob-rail-policies .nav-link.active .mob-rail-title,
+.mob-rail-policies .nav-link.active .mob-rail-chevron { color: inherit; }
+/* The chevron, centred on the whole row: the policy opens the next column. */
+.mob-rail-policies .mob-rail-chevron { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 0.875rem; color: var(--text-secondary); }
+/* The status: a dot in its status colour, then the text in the primary
+   colour, on the open policy too (not Page navigation's active colour). */
+.mob-status { display: inline-flex; align-items: center; gap: var(--spacer-03); }
+.mob-rail-policies .nav-link .mob-status,
+.mob-record-head .mob-status { color: var(--text-primary); }
+.mob-status-dot { flex: 0 0 auto; width: 0.5rem; height: 0.5rem; border-radius: 50%; align-self: center; background-color: var(--mob-status-colour, currentColor); }
+.mob-status-success { --mob-status-colour: var(--feedback-border-success); }
+.mob-status-warning { --mob-status-colour: var(--feedback-border-warning); }
+.mob-status-error { --mob-status-colour: var(--feedback-border-error); }
+.mob-status-info { --mob-status-colour: var(--feedback-border-info); }
+.mob-rail-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+.mob-rail-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacer-02) var(--spacer-03); }
+/* The policy head's type: the title (16px, medium) over the reference
+   (14px, light, secondary). */
+.mob-rail-title { min-width: min(100%, 8.5rem); font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mob-rail-sub { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mob-more { margin-top: var(--spacer-04); }
+/* Show more lines up with the policies over it, past the group's rule. */
+.mob-group > .mob-more { margin-left: calc(var(--nav-link-padding-x) * 2 + 0.625rem + 1px + var(--spacer-03)); }   /* the sub-list's indent, its 1px rule, its padding, then the link's */
+
+/* The record column: the client record's pages, or the policy's menu. */
+.mob-record {
+  width: 17rem;                                       /* 272px, the same as the rail (Laurence, 12 October 2026): its actions moved to the breadcrumb row, so it no longer needs 304px */
+  flex: 0 0 auto;
+  overflow: hidden;                                   /* its menu scrolls inside it */
+  display: flex;
+  flex-direction: column;
+  margin: var(--spacer-03) var(--spacer-03) var(--spacer-03) 0;   /* 8px in from the top and bottom */
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);              /* Card's border colour */
+  border-radius: var(--border-radius-md);             /* 8px */
+}
+.mob-record-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--spacer-03) var(--spacer-04) var(--spacer-05); }   /* only the menu scrolls: the head and actions stay put. 8px from the head's rule, as the rail's menu is from the client's */
+/* User meta's type: the name line, then the reference. */
+.mob-record-head { position: relative; display: flex; flex-direction: column; min-width: 0; padding: var(--spacer-04); }
+/* Ruled off from the menu, level with the rule under the client in the rail. */
+.mob-record-head::after { content: ""; position: absolute; left: var(--spacer-04); right: var(--spacer-04); bottom: 0; border-bottom: 1px solid var(--ui-border-02); }
+/* The reference, and the status Tag at its right. */
+.mob-record-titlebar { display: flex; align-items: center; justify-content: space-between; gap: var(--spacer-03); min-width: 0; }
+.mob-record-status { flex: 0 0 auto; display: flex; }
+.mob-record-title { margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0.25px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }   /* a long reference ends in "…", in full in a Tooltip */
+.mob-record-ref { font-size: 0.875rem; line-height: 1.25rem; font-weight: 300; letter-spacing: 0.25px; }
+
+/* Wide screens, collapsed: a 64px strip of icons, in the flow, so the
+   column beside it moves over rather than being covered. Each category is
+   one icon button that opens the rail there. The record column does not
+   collapse. */
+@media (min-width: 1024px) {
+  .mob-rail { transition: width 0.15s ease-in-out; }
+  /* Not on first load: the rail starts in its state, it does not slide
+     into it (removed once the first page has been drawn). */
+  .mob-no-anim .mob-rail { transition: none; }
+  .mob-rail-collapsed .mob-rail { width: 4rem; }
+  .mob-rail-collapsed .mob-column-toggle { margin-left: 0; }
+  .mob-rail-collapsed .mob-rail-scroll { padding-inline: var(--spacer-03); gap: var(--spacer-05); }
+
+  .mob-rail-collapsed .mob-rail-foot .button-set { justify-content: center; }
+  .mob-rail-collapsed .mob-rail-foot { padding-inline: 0; flex-direction: column; }
+  /* Collapsed, the head is the Avatar alone, centred on the strip. */
+  .mob-rail-collapsed .mob-rail-head { justify-content: center; padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-client .user-meta-body {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .mob-rail { transition: none; }
+}
+
+/* A strip of icons: one per category, evenly spaced and centred. */
+.mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
+.mob-strip-item { list-style: none; }
+.mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
+/* The current category is marked in the light active tint Page navigation
+   uses for its current page, not the ghost Button's solid pressed colour
+   (which `.btn.active` would otherwise draw). */
+.mob-strip .btn.active {
+  --button-label-active: var(--action-text-01);
+  --button-background-active: var(--action-04);
+  --button-border-active: transparent;
+}
+/* The client's Avatar (extra small) is centred in a button the size of the others. */
+.mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
+
+.mob-side-label {
+  margin: 0 0 var(--spacer-03);
+  padding: 0 var(--spacer-04);
+  color: var(--text-secondary);
+}
+
+/* Page navigation, stacked. Page navigation wraps by default; stacked, a
+   wrapping column would size its links to their content rather than the
+   column. Long labels wrap rather than running out of the column. */
+.mob-nav { --nav-gap: var(--spacer-01); flex-wrap: nowrap; }
+.mob-nav .nav-link { width: 100%; text-align: left; white-space: normal; }
+.mob-nav .nav-link > i { width: 1.25rem; flex: 0 0 auto; text-align: center; }
+
+/* A group, always open: its label (not a link), then its pages, indented
+   past the icon with a rule down the left, as the design draws it. */
+.mob-group { margin-top: var(--spacer-04); }
+.mob-group-label {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-link-gap);
+  padding: var(--spacer-02) var(--nav-link-padding-x);
+  color: var(--text-primary);
+}
+.mob-group-label > i { width: 1.25rem; flex: 0 0 auto; text-align: center; }
+
+/* A count at the end of a link (Mark's badge design, inline). */
+.mob-count-inline { --badge-translate-y: 0; position: static; top: auto; right: auto; transform: none; flex: 0 0 auto; margin-left: auto; box-shadow: none; }
+.mob-subnav {
+  margin-left: calc(var(--nav-link-padding-x) + 0.625rem);
+  padding-left: var(--spacer-03);
+  border-left: 1px solid var(--ui-border-02);
+}
+/* Menu items 32px high (Laurence, 7 October 2026: tighter menus, as a
+   dense application menu). This is below Buckholt's smallest Page
+   navigation size (`.nav-sm`, 44px), so it is a local choice, recorded as a
+   gap; still above the 24px minimum target size. */
+.mob-record-nav .nav-link,
+.mob-rail-pages .nav-link { --nav-link-height: 2rem; }
+
+/* Side panels: their contents (a form, an Alert, notes, a table) stack a
+   Panel's gap apart, 32px, so a field never sits on the Alert under it
+   (Laurence, 8 October 2026). */
+[id^="mob-panel-"] .blade-body { display: flex; flex-direction: column; gap: var(--spacer-06); }
+
+/* ------------------------------------------------------- Search Modal
+   The search field, then recent searches (Buckholt Menu shown in place:
+   the documentation's demo-only `.show` and `.position-relative`, with the
+   panel's own custom properties bound to "no shadow, no padding, full
+   width"), or the results. */
+/* The field (with its prototype helper text below) and "What can I
+   search?" align to the field's top; the Button sits centred on the 44px
+   field. */
+.mob-search-modal-bar { display: flex; align-items: flex-start; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+.mob-search-help { margin-top: 0.125rem; }   /* the 40px Button centred on the 44px field, above the field's helper text */
+/* The Modal's scrolling body has no padding, so it cut off the field's
+   focus ring (Text input's own: the border plus a 1px ring outside it). A
+   few pixels of room, given back by a matching negative margin so nothing
+   moves (Laurence, 8 October 2026). */
+#mob-search-modal .modal-body { padding: var(--spacer-02); margin: calc(-1 * var(--spacer-02)); }
+.mob-search-modal-form { flex: 1 1 auto; min-width: 0; }
+.mob-search-help { flex: 0 0 auto; }
+.mob-search-help .button-set { margin: 0; }
+/* The help panel: a Menu panel holding text, so it is wider and padded. */
+/* Buckholt has no Popover; this help panel stands in for one, on UI
+   background 04 (Laurence, 8 October 2026), Menu's own background property. */
+.mob-search-help .menu-panel { --menu-background: var(--ui-background-04); --menu-min-width: 20rem; --menu-max-width: 22rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+.mob-search-help-body { display: flex; flex-direction: column; gap: var(--spacer-04); padding: var(--spacer-03) var(--spacer-04); }
+.mob-search-help-body .heading { align-items: flex-start; }
+.mob-search-modal-form .input-label { display: none; }
+.mob-menu-inline {
+  --menu-shadow: none;
+  --menu-background: transparent;
+  --menu-padding-x: 0;
+  --menu-padding-y: 0;
+  --menu-min-width: 0;
+  --menu-max-width: none;
+  z-index: auto;
+}
+.mob-recent .menu-item { display: flex; align-items: center; height: auto; min-height: var(--menu-item-height); white-space: normal; text-align: left; }
+.mob-search-results { display: flex; flex-direction: column; gap: var(--spacer-05); }
+.mob-search-results > .button-set { margin-top: 0; }
+/* The results' Accordion: a client's body stacks its Link, details and
+   policies a Panel's gap apart. */
+.mob-search-results .accordion-body { display: flex; flex-direction: column; gap: var(--spacer-05); }
+.mob-search-results .accordion-body > .button-set { margin-top: 0; }
+/* A product with its icon, in a policies table. */
+.mob-product { display: inline-flex; align-items: center; gap: var(--spacer-03); white-space: nowrap; }
+.mob-search-results > .support-01 { margin: 0; }
+
+/* -------------------------------------------------------------------- Page */
+
+/* The page's two columns (Bootstrap `.col-xl-8` / `.col-xl-4`) follow the
+   viewport, but beside the two menu columns Main is much narrower than the
+   viewport: at 1440px the side column was too narrow for a statistic such
+   as "£1,867.00". So they also stack when Main is narrower than 60rem,
+   32px apart, a Panel's gap, as between the Cards themselves. */
+#main { container: mob-main / inline-size; }
+.mob-columns-row { row-gap: var(--spacer-06); }
+@container mob-main (max-width: 59.99rem) {
+  .mob-columns-row > [class*=col-xl-] { width: 100%; }
+}
+
+/* Page heading: Text block on the left, heading actions on the right. A
+   plain flex row, as in Originators and BACS Import: Heading attachment
+   documents one attachment and says not to make the heading a toolbar. */
+.mob-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacer-05);
+}
+.mob-heading .text-block { min-width: 0; }
+.mob-heading h1:focus { outline: none; }
+.mob-heading h1:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.25rem; }
+
+/* The breadcrumbs on the left, the record's actions on the right, in one
+   row above the title; the actions drop under the breadcrumbs when there
+   is no room. */
+.mob-page-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--spacer-03) var(--spacer-05); }
+.mob-page-bar .mob-crumbs { min-width: 0; }
+.mob-page-bar .mob-heading-actions { margin-left: auto; gap: var(--spacer-02); }   /* ghost Buttons carry their own padding, so 4px between them */
+.mob-page-bar .mob-heading-actions .button-set { gap: var(--spacer-02); }
+.mob-page-bar .mob-heading-rule { margin: 0 var(--spacer-03); }
+/* The renewal badge inside More: at the item's end, its own size. */
+.mob-overflow .menu-item { display: flex; align-items: center; }
+.mob-overflow .menu-item .mob-count-inline { flex: 0 0 auto; width: auto; margin-left: auto; padding-inline: var(--padding-02); }
+.mob-heading-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacer-04);
+}
+/* Between the client's tools and the policy's actions: a 24px rule. */
+.mob-heading-rule { align-self: center; height: 1.5rem; border-left: 1px solid var(--ui-border-02); }
+@media (max-width: 575.98px) { .mob-heading-rule { display: none; } }   /* the row wraps on a phone; a rule at a line's start reads as noise */
+.mob-heading-actions .mob-overflow { display: flex; }
+/* The policy's labelled actions fold into the More actions menu when the
+   page is too narrow to hold them on one row (Main under 62rem: 1280px, or
+   1440px with the client menu open). Client support and the notes stay. */
+.mob-overflow .mob-fold { display: none; }
+@container mob-main (max-width: 61.99rem) {
+  .mob-heading-actions .mob-policy-actions, .mob-heading-actions .mob-more-rule { display: none; }
+  .mob-overflow .mob-fold { display: list-item; list-style: none; }
+}
+/* Pressed while its panel is open: the ghost Button's own hover colours,
+   which it otherwise shows only under the pointer. */
+.mob-heading-actions .btn[aria-pressed="true"] {
+  --button-label: var(--button-label-hover);
+  --button-background: var(--button-background-hover);
+}
+/* Sets here sit side by side in a flex row, so the runtime's offsets for
+   stacked sets (margin-top, and margin-bottom on a set with a following
+   sibling) would only push them out of line with each other. */
+.mob-heading-actions .button-set,
+.mob-card-head .button-set,
+.mob-split .button-set,
+.mob-table-foot .button-set { margin-top: 0; }
+.mob-heading-actions > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.app-bar > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-rail-foot > [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-card-head [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-split [class$=-set][class|=button][class*=-set][class|=button]:has(~ *),
+.mob-table-foot [class$=-set][class|=button][class*=-set][class|=button]:has(~ *) { margin-bottom: 0; }
+
+
+/* Count badge, to Mark's badge design (not yet in Buckholt's documentation):
+   a red circle with a white count, centred on the top-right corner of the
+   Button it counts for, widening to a pill for "999+". Built on Buckholt's
+   runtime `.badge.badge-floating` by binding its own custom properties to
+   Buckholt tokens; nothing is restyled with values of its own. */
+.mob-badged { position: relative; }
+
+.mob-count {
+  --badge-background: var(--action-danger-01);
+  --badge-border: var(--action-danger-01);
+  --badge-label: var(--text-light);
+  --badge-radius: var(--border-radius-full);
+  --badge-padding-x: var(--padding-02);
+  top: calc(var(--spacer-03) * -1);
+  right: calc(var(--spacer-03) * -1);
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  font-size: var(--typescale-02);
+  font-weight: 500;
+  box-shadow: var(--shadow-xs);
+}
+
+/* In a menu the count is grey, not red (Laurence, 9 October 2026):
+   Buckholt's neutral surface, border and primary text. The red stays on
+   Buttons. */
+.mob-count.mob-count-inline {
+  --badge-background: var(--ui-background-04);
+  --badge-border: var(--ui-border-02);
+  --badge-label: var(--text-primary);
+}
+
+/* Cards: Text block on the left, the card's action on the right. */
+.mob-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacer-04);
+}
+.mob-card-head .text-block { min-width: 0; }
+.mob-card { height: auto; }
+
+.mob-empty { margin: 0; color: var(--text-secondary); }
+.mob-not-set { font-weight: 300; color: var(--text-secondary); }
+.mob-fields .value { overflow-wrap: anywhere; }
+
+/* Two Button sets at either end of a row: flow navigation, quote actions. */
+.mob-split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacer-04);
+}
+.mob-split p { margin: 0; }
+
+.mob-table-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacer-03);
+}
+.mob-table-foot p { margin: 0; }
+
+/* A visually hidden column heading is absolutely positioned. Without a
+   containing block inside the table's own scroller it is placed against the
+   Card instead, outside `.table-content`, and widens the whole page when the
+   table scrolls. Making the scroller its containing block keeps it inside. */
+#main .table-content { position: relative; }
+
+/* Clickable rows keep Buckholt's own row hover; only the pointer is added. */
+.mob-row-link { cursor: pointer; }
+
+/* Filter bar: content-width fields that wrap, the actions on the right in
+   line with the fields' bottom edge (as in BACS import). 14rem keeps three
+   fields and the actions on one row in Main at 1440px. */
+.mob-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--spacer-05) var(--spacer-04); }
+/* The fields wrapper takes no box, so the actions flow on the last row of
+   fields rather than dropping under all of them. */
+.mob-filter-fields { display: contents; }
+.mob-filter-fields > .input { width: 14rem; }
+.mob-filters .button-set { margin-top: 0; }
+.mob-filters .mob-filter-actions { margin-left: auto; }
+
+/* A person in a table: Avatar and name on one line. */
+.mob-person { display: flex; align-items: center; gap: var(--spacer-03); white-space: nowrap; }
+
+/* Card heading actions sit at the right; when they wrap under the heading
+   they stay right aligned. */
+.mob-card-head > .button-set { justify-content: flex-end; margin-left: auto; }
+
+/* Fields across the grid, and a Button set that lines up with them. */
+/* Row and column spacing come from Buckholt's own `.input-row` gutters. */
+.mob-field-action { display: flex; align-items: flex-end; height: 100%; }
+.mob-inline-checks { flex-direction: row; flex-wrap: wrap; column-gap: var(--spacer-05); }
+fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
+
+/* Quote premium: the figure on the left, the totals on the right. */
+.mob-premium {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacer-05);
+}
+
+/* Timeline view of the policy history: date, then the entry. */
+.mob-timeline { display: flex; align-items: flex-start; gap: var(--spacer-05); }
+.mob-timeline-date { flex: 0 0 6rem; margin: var(--spacer-04) 0 0; }
+.mob-timeline .versatile { flex: 1 1 auto; }
+
+.mob-note { height: auto; }
+.mob-note p { margin: 0; }
+
+/* Key-value tables in narrow cards: the key column a little narrower. */
+.mob-kv-table { --keyvalue-key-col: 1fr; --keyvalue-value-col: 1fr; align-items: center; }
+.mob-kv-table .value { overflow-wrap: anywhere; }
+/* A standalone Link in a value cell sits at the value column's left edge. */
+.mob-kv-table .link-standalone { justify-self: start; }
+.mob-link { align-self: flex-start; }
+/* Form actions at the end of a card: the card body's gap already spaces it. */
+.mob-form-actions { margin-top: 0; gap: var(--spacer-04); }
+
+.mob-placeholder .alert-message h6 { font-weight: 600; }
+
+
+/* -------------------------------------------------------------- Narrow: drawer
+   Below 1024px two menu columns would leave Main too narrow, so the menu
+   leaves the grid and becomes a drawer from the left, opened by the Menu
+   button. It stacks the rail over the record column. Above the top bar (1030) and
+   below a Bootstrap modal backdrop (1050), so a panel or confirmation
+   opened from the drawer covers it. */
+
+.mob-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  background-color: var(--black-tint-60);
+  backdrop-filter: blur(0.5rem);
+}
+
+@media (max-width: 1023.98px) {
+  .layout[data-layout=layout-03] { grid-template-areas: "header" "main" "footer"; grid-template-columns: 1fr; }
+
+  .mob-menu-button-set { display: flex; }
+
+  .mob-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1045;
+    display: flex;
+    width: min(20rem, 88vw);
+    height: 100%;
+    margin: 0;
+    overflow-y: auto;
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in-out, visibility 0s linear 0.2s;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .mob-sidebar.is-open {
+    visibility: visible;
+    transform: none;
+    transition: transform 0.2s ease-in-out, visibility 0s;
+  }
+
+  .mob-drawer-head {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacer-03) var(--spacer-03) 0;
+  }
+  .mob-drawer-head .button-set { margin-top: 0; }
+
+  /* One scrolling drawer: the columns stack and grow to their content. */
+  .mob-columns { flex: 0 0 auto; flex-direction: column; min-height: auto; margin-top: var(--spacer-04); }
+  .mob-rail, .mob-record { width: auto; }
+  .mob-rail-foot .mob-column-toggle { display: none; }   /* the drawer has its own Close */
+  .mob-rail-scroll, .mob-record, .mob-record-nav { overflow: visible; }
+
+  .mob-record { margin: var(--spacer-03); }
+
+  .mob-terms { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-sidebar, .mob-sidebar.is-open { transition: none; }
+}
+
+@media (max-width: 767.98px) {
+  .mob-timeline { flex-direction: column; gap: var(--spacer-03); }
+  .mob-timeline-date { flex: none; margin: 0; }
+}
+
+@media (max-width: 575.98px) {
+  /* The top bar holds the Menu button, the wordmark, the search, Create new
+     client, the system menu and the avatar at 360px: the right-hand ones
+     sit 8px apart. */
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-03); }
+  /* Progress keeps a 22rem minimum, wider than a phone's content column.
+     Relaxed for the flow progress only, as responsive/component-guidance.md
+     recommends (application layer, not Buckholt). */
+  #mob-page .progress { min-width: 0; }
+  .app-bar-status { display: none; }
+  .mob-filter-fields > .input { width: 100%; }
+}
+
+
+/* ------------------------------------------------------------- Scrollbars
+   Vertical scrollbars 6px wide (Laurence, 8 October 2026): the page, the
+   two menu columns, the drawer, the search Modal and its help panel. A
+   grey thumb on no track (Buckholt's disabled grey, the stronger border
+   grey under the pointer). Horizontal scrollbars (wide tables) keep the
+   browser's own. Buckholt documents no scrollbar style: local CSS. Firefox
+   has no exact width, so it takes its thin scrollbar. */
+html::-webkit-scrollbar,
+.mob-rail-scroll::-webkit-scrollbar,
+.mob-record-nav::-webkit-scrollbar,
+.mob-sidebar::-webkit-scrollbar,
+#mob-search-modal .modal-body::-webkit-scrollbar,
+.mob-search-help .menu-panel::-webkit-scrollbar { width: 6px; }
+html::-webkit-scrollbar-track,
+.mob-rail-scroll::-webkit-scrollbar-track,
+.mob-record-nav::-webkit-scrollbar-track,
+.mob-sidebar::-webkit-scrollbar-track,
+#mob-search-modal .modal-body::-webkit-scrollbar-track,
+.mob-search-help .menu-panel::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb,
+.mob-rail-scroll::-webkit-scrollbar-thumb,
+.mob-record-nav::-webkit-scrollbar-thumb,
+.mob-sidebar::-webkit-scrollbar-thumb,
+#mob-search-modal .modal-body::-webkit-scrollbar-thumb,
+.mob-search-help .menu-panel::-webkit-scrollbar-thumb { background-color: var(--disabled-03); border-radius: var(--border-radius-full); }
+html::-webkit-scrollbar-thumb:hover,
+.mob-rail-scroll::-webkit-scrollbar-thumb:hover,
+.mob-record-nav::-webkit-scrollbar-thumb:hover,
+.mob-sidebar::-webkit-scrollbar-thumb:hover,
+#mob-search-modal .modal-body::-webkit-scrollbar-thumb:hover,
+.mob-search-help .menu-panel::-webkit-scrollbar-thumb:hover { background-color: var(--ui-border-01); }
+@supports not selector(::-webkit-scrollbar) {
+  html, .mob-rail-scroll, .mob-record-nav, .mob-sidebar, #mob-search-modal .modal-body, .mob-search-help .menu-panel {
+    scrollbar-width: thin;
+    scrollbar-color: var(--disabled-03) transparent;
+  }
+}
+
+
+/* ---------------------------------------------------- Show wording changes
+   A dev / review aid, not product UI. Marks each terminology change from
+   current Mobius (reference/mobius-terminology-log.xlsx, "Prototype
+   change"). The tertiary expressive family is Buckholt's pink. */
+
+mark.mob-term {
+  padding: 0 0.0625rem;
+  color: inherit;
+  background-color: var(--expressive-tertiary-pale);
+  border-radius: var(--border-radius-xs);
+  text-decoration: underline;
+  text-decoration-color: var(--expressive-tertiary-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.1875rem;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* On a filled surface (the current page, a status Tag, a primary Button)
+   the tint is dropped and only the underline remains. */
+.nav-link.active mark.mob-term,
+.tag mark.mob-term,
+.btn-primary mark.mob-term { background-color: transparent; }
+
+.mob-hide-terms mark.mob-term {
+  padding: 0;
+  background-color: transparent;
+  text-decoration: none;
+}

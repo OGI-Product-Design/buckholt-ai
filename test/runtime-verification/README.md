@@ -140,7 +140,7 @@ Styles, in this order:
 >
 > Bootstrap **JavaScript is a separate dependency and is required**: the live site loads
 > the 5.1.3 bundle, active, for the ten components with `data-bs-*` hooks. Keep it.
-> See `CLAUDE.md` → Runtime dependencies.
+> See `AGENTS.md` → Runtime dependencies.
 
 
 Behaviour, at the end of the body:

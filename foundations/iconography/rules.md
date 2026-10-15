@@ -8,7 +8,7 @@ Icons visually represent actions or concepts, helping users navigate, understand
 
 - Buckholt Iconography documentation: `https://buck.88mph.design/styles/iconography/`
 - Buckholt Icon catalogue: `https://buck.88mph.design/styles/iconography/icon-catalogue/`
-- Runtime dependency: the approved Font Awesome kit recorded in `README.md` and `CLAUDE.md`
+- Runtime dependency: the approved Font Awesome kit recorded in `README.md` and `AGENTS.md`
 
 ## Library and style
 
