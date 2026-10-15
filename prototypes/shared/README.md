@@ -15,7 +15,7 @@ chrome:
 
 | Path | What it is |
 |---|---|
-| `calendar/` | The Calendar component — month grid, day cells and month picker. Not Buckholt: `calendar-spec.md` section 3 records that Buckholt covers none of it and asks for it as its own component folder. See `calendar/calendar.md`. |
+| `shared/calendar/` | The Calendar component — month grid, day cells and month picker. Not Buckholt: `calendar-spec.md` section 3 records that Buckholt covers none of it and asks for it as its own component folder. See `calendar/calendar.md`. |
 | `data/calendar.js` | `CalendarData` — collection-day data and rules, shared so Process can read collection days when it is built (`calendar-spec.md` 11.4). |
 
 **The chrome markup itself lives in each page's own HTML, not here.** It is

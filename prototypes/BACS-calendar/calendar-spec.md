@@ -55,9 +55,9 @@ Collection days set here are the dates offered when creating a BACS run on the P
    - icon buttons (chevrons).
 3. **The calendar is new to Buckholt.** Nothing in Buckholt covers the month grid, the day cell states or the month picker popover. Build these as a new component.
 
-### 3.2 New `calendar/` component folder
+### 3.2 New `shared/calendar/` component folder
 
-Create a new folder called **`calendar/`** in the Git structure, alongside the existing Buckholt component folders, following the same convention as the other components:
+Create a new folder called **`shared/calendar/`** in the Git structure, alongside the existing Buckholt component folders, following the same convention as the other components:
 
 ```
 calendar/

@@ -26,7 +26,7 @@ There are **two deployments**, and they behave differently:
 
 | | Serves | Redirects for the old URLs |
 | --- | --- | --- |
-| **GitHub Pages** | the three BACS prototypes, and the repository verbatim | a stub `index.html` at each old path, because Pages has no redirect mechanism |
+| **GitHub Pages** | the three BACS prototypes, and the repository verbatim | `404.html` at the repository root, because Pages has no redirect mechanism |
 | **Cloudflare** (`wrangler.jsonc`) | Mobius navigation | `_redirects`, which only Cloudflare reads |
 
 `.assetsignore` narrows the **Cloudflare** deployment to what a prototype
@@ -54,13 +54,15 @@ before changing a prototype — they explain why things are as they are.
 
 ## Shared
 
-| Folder | What it is |
-| --- | --- |
-| `shared/` | The Mobius application chrome — top bar, left navigation, toast stack — and the Blade. Not Buckholt: both specs record the chrome as static, and Buckholt has no blade. See `shared/README.md`. |
-| `calendar/` | A month calendar: grid, day cells, month picker. Buckholt covers none of it, which is exactly why it is here and not in `components/`. See `calendar/calendar.md`. |
-| `data/` | Seed data shared between features. `calendar.js` holds the collection-day rules so the Process tab can read them when it is built. |
+Everything used by more than one prototype lives in `shared/`:
 
-Changing anything under `shared/`, `calendar/` or `data/` changes more than
+| Path | What it is |
+| --- | --- |
+| `shared/app-shell.*`, `shared/blade.*` | The Mobius application chrome — top bar, left navigation, toast stack — and the Blade. Not Buckholt: both specs record the chrome as static, and Buckholt has no blade. See `shared/README.md`. |
+| `shared/calendar/` | A month calendar **component**: grid, day cells, month picker. Not the same thing as the `BACS-calendar/` prototype, which is the page that uses it. Buckholt covers none of it, which is why it is here and not in `components/`. See `shared/calendar/calendar.md`. |
+| `shared/data/` | Seed data shared between features. `calendar.js` holds the collection-day rules so the Process tab can read them when it is built. |
+
+Changing anything under `shared/`, `shared/calendar/` or `shared/data/` changes more than
 one feature. `test/regression.js` exists to catch that.
 
 ## Before you change one
@@ -79,7 +81,7 @@ against a saved Code & specs page by
 Buckholt has never documented cannot be verified that way, so filing it
 there would present an invention as canonical.
 
-`calendar/` is the worked example: its spec asked for a new component
+`shared/calendar/` is the worked example: its spec asked for a new component
 folder, Buckholt documents no calendar, so it sits here with its own
 `calendar.md` explaining what it draws and — just as importantly — what it
 does not, because the chevrons, the month buttons and the links inside it

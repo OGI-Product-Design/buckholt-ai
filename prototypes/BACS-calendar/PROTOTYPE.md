@@ -16,7 +16,7 @@ shared:
 
 | Path | What it is |
 | --- | --- |
-| `calendar/` | The Calendar component: month grid, day cells, month picker. Spec 3.2 asks for it as its own folder. See `calendar/calendar.md`. |
+| `shared/calendar/` | The Calendar component: month grid, day cells, month picker. Spec 3.2 asks for it as its own folder. See `calendar/calendar.md`. |
 | `data/calendar.js` | `CalendarData` — the collection-day data and every rule in spec 11. Spec 11.4 asks for it in a shared location "so Process can read collection days later", and Process lives in the BACS Import prototype. |
 
 Open `index.html` directly in a browser. Everything is relative; nothing is
@@ -63,13 +63,13 @@ of the identifications were settled by measuring the Figma against
 | Modal, Toast, Page navigation, Link | As documented | |
 
 Only the month grid, the day cells and the month picker shell are new, and
-they are in `calendar/`.
+they are in `shared/calendar/`.
 
 ## Deviations
 
 ### 1. The folder for the new component is top level, not inside `components/`
 
-Spec 3.2 says "Create a new folder called `calendar/` in the Git structure,
+Spec 3.2 says "Create a new folder called `shared/calendar/` in the Git structure,
 alongside the existing Buckholt component folders". It is at the top level,
 beside `components/`, rather than inside it.
 

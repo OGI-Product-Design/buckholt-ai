@@ -13,7 +13,7 @@
 <!-- Prototype-only. Shared application chrome, then the calendar component,
      then this feature. -->
 <link rel="stylesheet" href="../shared/app-shell.css">
-<link rel="stylesheet" href="../calendar/calendar.css">
+<link rel="stylesheet" href="../shared/calendar/calendar.css">
 <link rel="stylesheet" href="bacs-calendar.css">
 </head>
 <body>
@@ -179,7 +179,7 @@
             </div>
 
             <!-- Panel: the calendar ---------------------------------------
-                 `.calendar` is the new component in `calendar/`. Everything
+                 `.calendar` is the new component in `shared/calendar/`. Everything
                  inside the month bar and the month picker is Buckholt;
                  `calendar.css` draws only the grid, the day cells and the
                  popover shell. -->
@@ -501,7 +501,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../shared/app-shell.js"></script>
 <script src="../../components/dropdown/dropdown.js"></script>
-<script src="../data/calendar.js"></script>
+<script src="../shared/data/calendar.js"></script>
 <script src="bacs-calendar.js"></script>
 </body>
 </html>

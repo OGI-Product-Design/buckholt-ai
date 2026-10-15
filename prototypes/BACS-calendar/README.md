@@ -31,6 +31,6 @@ Format **CA-FF-SS**: `CA` = Calendar, `FF` = flow, `SS` = screen within the flow
 
 ## Key build notes
 
-- The calendar is **new to Buckholt**. Use Buckholt components and tokens wherever they exist, and build the calendar grid, day cells and month picker in a new **`calendar/`** component folder (`calendar.md`, `calendar.css`, `example.html`). See spec section 3.
+- The calendar is **new to Buckholt**. Use Buckholt components and tokens wherever they exist, and build the calendar grid, day cells and month picker in a new **`shared/calendar/`** component folder (`calendar.md`, `calendar.css`, `example.html`). See spec section 3.
 - Build as the next tab in the **same prototype** as Originators and Import.
 - Some Figma frames contain data errors. Section 12 of the spec lists them; the spec wins.

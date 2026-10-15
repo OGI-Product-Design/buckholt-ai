@@ -27,9 +27,8 @@ buckholt-ai/
 ├── tools/           style guide, runtime harness        and tools
 │
 └── prototypes/                                       ← NOT BUCKHOLT
-    ├── shared/        app chrome, blade                 application work
-    ├── calendar/      a component Buckholt lacks
-    ├── data/          seed data
+    ├── shared/        app chrome, blade, calendar/      application work
+    │                  (a component Buckholt lacks), data/
     ├── Originators/  BACS-import/  BACS-calendar/
     └── Mobius-navigation/
 ```
@@ -47,7 +46,7 @@ So:
 - A component Buckholt has never documented belongs in `prototypes/`, not in
   `components/` — `components/` is verified against `code-specs-html/` by
   `test/source-parity.py`, and an undocumented component
-  cannot be. `prototypes/calendar/` is the worked example.
+  cannot be. `prototypes/shared/calendar/` is the worked example.
 - When building a prototype, read the Buckholt side first and reach for a
   documented component before writing any CSS of your own.
 
