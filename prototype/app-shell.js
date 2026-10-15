@@ -11,7 +11,7 @@
 
      Shell.escapeHtml(value)
      Shell.wireChrome()                         makes the static chrome inert
-     Shell.startClock(fixedAt)                  top-bar clock, live or pinned
+     Shell.startClock()                         live top-bar clock
      Shell.showToast(message, variant, opts)    Buckholt Toast, bottom right
      Shell.initTooltips(root)
      Shell.disposeTooltips(root)
@@ -52,14 +52,22 @@
 
 
   /* ==================================================================== Clock
-     The frames draw a fixed 13:24 / 03 September 2026. The clock shows the
-     real time instead, at Laurence's request on 30 September 2026. It ticks
-     on the minute boundary rather than every second, because only minutes
-     are shown.
+     The frames draw a fixed time — 13:24 / 03 September 2026 on the
+     Originators and Import frames, 13:24 / 13 October 2026 on the Calendar
+     ones. The clock shows the real time instead, on every page, at
+     Laurence's request on 30 September 2026 and again on 15 October. It
+     ticks on the minute boundary rather than every second, because only
+     minutes are shown.
+
+     BACS Calendar is the page this costs something: `calendar-spec.md` 11.1
+     fixes TODAY at 13 October 2026 and 3.3 asks for the top bar to come from
+     that same constant, so the bar and the grid below it disagree about what
+     day it is. That is the accepted trade for one clock across the
+     prototype.
      ==================================================================== */
 
-  function renderClock(at) {
-    var now = at || new Date();
+  function renderClock() {
+    var now = new Date();
     var time = document.getElementById('app-clock-time');
     var date = document.getElementById('app-clock-date');
     if (!time || !date) return;
@@ -76,23 +84,12 @@
       String(now.getDate()).padStart(2, '0'));
   }
 
-  /* With no argument the clock shows the real time and ticks on the minute,
-     which is what Originators and Import do.
-
-     With a Date it shows that instant and does not tick. BACS Calendar needs
-     this: `calendar-spec.md` 11.1 fixes TODAY at 13 October 2026, 13:24 and
-     3.3 says the top bar comes from the same constant, because the grid
-     below marks 13 October as today and a live clock would contradict it. */
-  function startClock(fixedAt) {
-    if (fixedAt) {
-      renderClock(fixedAt);
-      return;
-    }
+  function startClock() {
     renderClock();
     var msToNextMinute = 60000 - (Date.now() % 60000);
     global.setTimeout(function () {
       renderClock();
-      global.setInterval(function () { renderClock(); }, 60000);
+      global.setInterval(renderClock, 60000);
     }, msToNextMinute);
   }
 

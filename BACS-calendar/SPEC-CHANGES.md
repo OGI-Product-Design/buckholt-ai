@@ -43,27 +43,28 @@ The frames draw the summary-card labels in `#454545`. Buckholt's
 overriding a component default for, and both clear AA (9.59 : 1 and
 7.00 : 1). Flagged only so the difference is on the record.
 
-### A3. The pinned clock makes the tabs disagree — **decision needed**
+### A3. The top bar does not come from TODAY — **settled, spec needs amending**
 
-Spec 3.3 and 11.1: "The top bar date and time come from the same TODAY
-constant as the calendar." The prototype does that, and it is right for this
-page — the grid marks 13 October 2026 as today, so a live clock directly
-above it would contradict the page.
+Spec 3.3: "The top bar date and time come from the same **TODAY** constant as
+the calendar (section 11.1)."
 
-But Originators and BACS Import were changed on 30 September, at your
-request, to show the **real** time. So the clock now changes when you change
-tab: 13:24 / 13 October 2026 on Calendar, the real time on the other two.
+**Decided 15 October 2026: the clock stays live on every page**, Calendar
+included. Originators and BACS Import have shown the real time since
+30 September, and one clock across the prototype beat a clock that changed
+when you changed tab.
 
-`Shell.startClock()` takes an optional instant, so all three options are one
-line each:
+So the top bar and the calendar disagree about the date: the bar shows today,
+the grid still marks 13 October 2026 as today. `TODAY` is unchanged and still
+drives the seed data, the read-only cut-off and every figure in 11.5 — only
+the top bar is uncoupled from it.
 
-| Option | Change |
-| --- | --- |
-| Leave it | Calendar pinned, the other two live. What is built. |
-| Pin everything | Originators and Import pass the same constant. The prototype reads as one moment throughout. |
-| Live everywhere | Calendar drops the argument, and the top bar stops agreeing with the grid. |
+Suggested replacement for the section 3.3 bullet:
 
-Add whichever to spec 3.3.
+> - The top bar clock shows the **real** time on every tab, as the rest of
+>   the prototype does. It is deliberately **not** tied to `TODAY`: the
+>   calendar's today is fixed at 13 October 2026 by the seed data, so the bar
+>   and the grid will disagree about the date. A real build reading a live
+>   `TODAY` would not have the problem.
 
 ### A4. Phone layout is not specified — **decision needed**
 

@@ -492,8 +492,11 @@
     if (!C || !global.Shell) return;
 
     Shell.wireChrome();
-    /* Pinned to the calendar's own TODAY, per spec 3.3 and 11.1. */
-    Shell.startClock(C.TODAY);
+    /* Live, like the other two tabs. Spec 3.3 asks for the top bar to come
+       from the calendar's own TODAY, which would read 13 October 2026; the
+       prototype shows one clock throughout instead, at Laurence's request on
+       15 October 2026. See deviation 7 in PROTOTYPE.md. */
+    Shell.startClock();
 
     wireGrid();
     wireMonthBar();
