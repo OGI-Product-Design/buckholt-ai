@@ -10,7 +10,7 @@ audit methods are not kept — the corrections themselves are the record.
 **Every active fix lives in `css/buckholt-ai-fixes.css`.** `css/buckholt.css` is the upstream runtime
 snapshot and is never edited. Each fix below was re-verified on 7 September 2026 by measuring the
 affected property with the compatibility stylesheet removed, and each is re-asserted against the live
-runtime by `test/runtime-verification/`, so a fix that stops working reports itself.
+runtime by `tools/runtime-verification/`, so a fix that stops working reports itself.
 
 The layer holds **8 documented corrections**, expressed as **8 CSS rules**, all `ACTIVE FIX`. Alert
 and Toast each carry two: a horizontal correction (3, 4) and a vertical one (7, 8). Alert and Toast
@@ -335,7 +335,7 @@ canonical Buckholt markup or promoting an undocumented runtime helper, which
   accidentally covering for the missing close glyph — and only that one.
 - **Requirement:** the documented runtime contract names kit `ca92816a31`. That kit must be a Pro kit,
   or one whose regular face includes the documented glyphs.
-- **Detection:** `test/runtime-verification/` measures the glyph's advance width against a codepoint
+- **Detection:** `tools/runtime-verification/` measures the glyph's advance width against a codepoint
   no font defines and reports a `DEPENDENCY ISSUE` if they match, so this can no longer fail
   silently.
 - **Upstream action:** confirm the kit tier is intended, or give `.btn-close::before` a fallback so a
@@ -350,7 +350,7 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
 ## Runtime-verification harness — horizontal overflow at 375px and 320px
 
 - **Status:** `OPEN` — measured, not corrected. Pre-existing: identical at commit `8f327f3`, and
-  `test/runtime-verification/index.html` has not changed since.
+  `tools/runtime-verification/index.html` has not changed since.
 - **Evidence:** at both 375px and 320px the document reports `scrollWidth: 512` against the
   viewport width. 17 elements exceed the viewport: one is harness chrome (`table.rv-table`, the
   results table) and **16 sit inside `.rv-canonical`** — Buckholt markup. Giving the harness table
@@ -359,7 +359,7 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
   320px. Its ancestor chain carries no `min-width` above `0`/`auto` and no `max-width` below the
   shell's 1152px, so the width is coming from the component itself. `.key-value-item` and
   `.progress` overflow the same way.
-- **Scope — this is not the style guide.** `test/style-guide/` reports **zero** document-level
+- **Scope — this is not the style guide.** `tools/style-guide/` reports **zero** document-level
   horizontal overflow at 1440, 768, 375 and 320, re-confirmed 9 September 2026. The claims in
   `responsive/component-guidance.md` and `verification/runtime-status.md` are explicitly scoped to
   the style guide and remain accurate; `FINAL-STATE.md` stated it unscoped and has been corrected.
@@ -474,9 +474,9 @@ Documentation and runtime materially disagree. Neither is silently rewritten.
 Buckholt supplies the structure and the styling. No script in this repository supplies the behaviour.
 These are not defects; they are the boundary between the design system and the product.
 
-`test/style-guide/style-guide.js` stands in for several of them so the catalogue can be seen working.
+`tools/style-guide/style-guide.js` stands in for several of them so the catalogue can be seen working.
 That file is page-level only and is not a Buckholt API — each block is deleted when an upstream script
-provides the behaviour. `test/runtime-verification/` deliberately does **not** implement any of them.
+provides the behaviour. `tools/runtime-verification/` deliberately does **not** implement any of them.
 
 ## Tag — selection and dismiss
 
@@ -544,8 +544,8 @@ provides the behaviour. `test/runtime-verification/` deliberately does **not** i
 
 | Question | File |
 | --- | --- |
-| What does Buckholt look like? | `test/style-guide/` |
-| Does the documented markup render and behave correctly? | `test/runtime-verification/` |
+| What does Buckholt look like? | `tools/style-guide/` |
+| Does the documented markup render and behave correctly? | `tools/runtime-verification/` |
 | What corrections are active, and why? | `css/buckholt-ai-fixes.css` |
 | Is a component's source verified? | `verification/component-source-status.md` |
 | Is a component's runtime verified? | `verification/runtime-status.md` |

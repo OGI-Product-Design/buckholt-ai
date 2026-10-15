@@ -19,7 +19,7 @@ order, attributes and icon placement must match exactly.
 Non-HTML documented blocks (for example the Breadcrumb Sass snippet) are reported
 separately and are not failures - SCSS is not an implementation source.
 
-Usage:  python3 test/source-parity/check-source-parity.py [-v]
+Usage:  python3 test/source-parity.py [-v]
 Exit:   0 all components verified, 1 any mismatch
 """
 import glob
@@ -28,7 +28,7 @@ import os
 import re
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Documentation page name -> component folder. Table is absent by design: no Code &
 # specs page was supplied for it, which is why it is recorded SOURCE PARTIAL.

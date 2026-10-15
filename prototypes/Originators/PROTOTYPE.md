@@ -62,7 +62,7 @@ Open `index.html` directly in a browser. Everything is relative; nothing is buil
 
 `css/`, `components/`, `foundations/`, `patterns/`, `code-specs-html/`,
 `test/`, `verification/`, `discrepancies/` and `responsive/` are untouched,
-and `python3 test/source-parity/check-source-parity.py` still passes in both
+and `python3 test/source-parity.py` still passes in both
 directions.
 
 ---
@@ -336,7 +336,7 @@ itself — corrections 7 and 8 in `css/buckholt-ai-fixes.css`, added 29 Septembe
 align the close control to the first line for both Alert and Toast, with an offset
 derived from `--btn-close-height` so it is correct for the 32px and 24px controls
 alike. Recorded in `discrepancies/known-issues.md` and asserted by
-`test/runtime-verification/`. This prototype no longer exercises them, since its
+`tools/runtime-verification/`. This prototype no longer exercises them, since its
 toast has no close control, but the Alert warnings in the modals do.
 
 > **Still open for Buckholt:** `--toast-max-width` is 22rem while every frame draws
@@ -690,7 +690,7 @@ directly.
 **193 behavioural assertions** across five suites, all passing with no console or
 page errors at any viewport, plus the 54-assertion responsive sweep and the BACS
 Import suites (231 assertions) run as a regression check on the now-sticky shared top
-bar. `python3 test/source-parity/check-source-parity.py` passes in both directions.
+bar. `python3 test/source-parity.py` passes in both directions.
 
 | Flow | Verified |
 | --- | --- |

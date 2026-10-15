@@ -22,14 +22,20 @@ was created on 15 October 2026**, so `_redirects` in the repository root
 sends every old link to its new home with a 301. Links shared before the
 move still work; tested against a local Workers runtime.
 
-**The deployment serves the prototypes and nothing else.** `.assetsignore`
-in the repository root blocks everything not needed to run one — the specs,
-the Figma frames, every README and PROTOTYPE.md, Buckholt's own saved
-documentation, the component docs and the tests. What stays public is the
-prototypes' own HTML, CSS and JavaScript, `css/buckholt.css`,
-`css/buckholt-ai-fixes.css` and the component scripts the pages load. If a
-prototype starts needing another file from outside `prototypes/`, it has to
-be allowed there or it will 404 in the deployment while working locally.
+There are **two deployments**, and they behave differently:
+
+| | Serves | Redirects for the old URLs |
+| --- | --- | --- |
+| **GitHub Pages** | the three BACS prototypes, and the repository verbatim | a stub `index.html` at each old path, because Pages has no redirect mechanism |
+| **Cloudflare** (`wrangler.jsonc`) | Mobius navigation | `_redirects`, which only Cloudflare reads |
+
+`.assetsignore` narrows the **Cloudflare** deployment to what a prototype
+needs. It does nothing on GitHub Pages, and it is not a privacy control —
+this repository is public. If a prototype starts needing another file from
+outside `prototypes/`, allow it there or it will 404 on Cloudflare while
+working perfectly locally.
+
+[`../PROTOTYPES.md`](../PROTOTYPES.md) has the live links.
 
 | Folder | Feature | Built from |
 | --- | --- | --- |
@@ -55,7 +61,7 @@ before changing a prototype — they explain why things are as they are.
 | `data/` | Seed data shared between features. `calendar.js` holds the collection-day rules so the Process tab can read them when it is built. |
 
 Changing anything under `shared/`, `calendar/` or `data/` changes more than
-one feature. `test/prototypes/regress.js` exists to catch that.
+one feature. `test/regression.js` exists to catch that.
 
 ## Before you change one
 
@@ -69,7 +75,7 @@ one feature. `test/prototypes/regress.js` exists to catch that.
 
 `components/` is the Buckholt catalogue, and every folder in it is verified
 against a saved Code & specs page by
-`test/source-parity/check-source-parity.py`, in both directions. A component
+`test/source-parity.py`, in both directions. A component
 Buckholt has never documented cannot be verified that way, so filing it
 there would present an invention as canonical.
 

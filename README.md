@@ -4,9 +4,14 @@ A lean, machine-readable companion for using the Buckholt design system accurate
 
 ## Start here
 
-**The rules live in [`AGENTS.md`](AGENTS.md)** — one copy, read by every
-agent. `CLAUDE.md` and `.cursorrules` are pointers to it and hold nothing of
-their own, so the rules cannot drift between one tool and another.
+**Just want to click a prototype?** [`PROTOTYPES.md`](PROTOTYPES.md) has
+every live link.
+
+**The rules live in [`AGENTS.md`](AGENTS.md)** — one file, read by Cursor,
+Claude Code and Codex alike. There is no `CLAUDE.md` and no `.cursorrules`
+on purpose: Claude Code reads `AGENTS.md` precisely because no `CLAUDE.md`
+exists beside it (v2.1.277 or later), and Cursor reads it directly. One copy
+means the rules cannot drift between one tool and another.
 
 The repository has **two halves**, and the difference matters more than
 anything else here:
@@ -18,7 +23,8 @@ anything else here:
 
 ```text
 buckholt-ai/
-├── AGENTS.md            ← the rules (CLAUDE.md, .cursorrules point here)
+├── AGENTS.md            ← the rules, for every agent
+├── PROTOTYPES.md        ← live links
 ├── README.md  CANONICAL-MARKUP.md  FINAL-STATE.md
 │
 ├── css/                 ← BUCKHOLT: the runtime stylesheet
@@ -30,14 +36,18 @@ buckholt-ai/
 ├── verification/           what has been checked, and how
 ├── responsive/
 │
-├── test/                ← four suites, see test/README.md
+├── test/                ← runs and passes or fails: test/README.md
+├── tools/                  pages you open and look at: tools/README.md
 │
-└── prototypes/          ← NOT BUCKHOLT, see prototypes/README.md
-    ├── shared/             Mobius chrome and the Blade
-    ├── calendar/           a component Buckholt does not document
-    ├── data/               shared seed data
-    ├── Originators/  BACS-import/  BACS-calendar/
-    └── Mobius-navigation/
+├── prototypes/          ← NOT BUCKHOLT, see prototypes/README.md
+│   ├── shared/             Mobius chrome and the Blade
+│   ├── calendar/           a component Buckholt does not document
+│   ├── data/               shared seed data
+│   ├── Originators/  BACS-import/  BACS-calendar/
+│   └── Mobius-navigation/
+│
+└── Originators/  BACS-import/  BACS-calendar/
+            three stubs forwarding the old GitHub Pages URLs; nothing else
 ```
 
 **Running anything:** the prototypes are no-build — open any
@@ -52,7 +62,7 @@ This repository is deliberately evidence-led. It teaches coding agents only patt
 
 ## Source hierarchy
 
-1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied Code & specs pages are committed in **`code-specs-html/`**; `test/source-parity/check-source-parity.py` checks the canonical examples against them.
+1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour: usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied Code & specs pages are committed in **`code-specs-html/`**; `test/source-parity.py` checks the canonical examples against them.
 2. `css/buckholt.css` — what this repository loads at runtime. It is a **newer, different build** from the live documentation site's `compiled.css?v=2.3`. **The reference for this work is the Code & specs documentation plus the live build**; where they disagree, the reference wins, and the newer local CSS must not be used to reinterpret older canonical documentation. See `discrepancies/build-provenance.md`.
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only, loaded after the runtime when documented behaviour is known to render incorrectly.
 4. `foundations/<foundation>/` — concise shared design-system guidance extracted from documentation and checked against runtime CSS where useful.
@@ -78,7 +88,7 @@ The two halves are mapped under **Start here**. The detail:
 | `components/` | 41 components, each with `rules.md` and `examples.html`. |
 | `foundations/` | Colour, iconography, radius, shadows, spacing, typography. |
 | `patterns/` | Page layout, forms, input rows, lookup, common actions. |
-| `code-specs-html/` | The 40 saved Buckholt **Code & specs** documentation pages. Each embeds that component's canonical markup; `test/source-parity/` diffs `components/*/examples.html` against them in both directions. This is why an agent cannot invent markup. |
+| `code-specs-html/` | The 40 saved Buckholt **Code & specs** documentation pages. Each embeds that component's canonical markup; `test/` diffs `components/*/examples.html` against them in both directions. This is why an agent cannot invent markup. |
 | `discrepancies/` | `known-issues.md` and `build-provenance.md` — verified differences between the documentation, the local build and the live build. |
 | `verification/` | Source and runtime verification status, and the framework for changing it. |
 | `responsive/` | Responsive guidance. |
@@ -98,11 +108,17 @@ Components with documented behaviour scripts also carry their supplied JavaScrip
 
 Patterns are guidance for composition. They do not create a competing styling/runtime layer; they teach the AI how to structure pages and combine documented Buckholt components correctly.
 
+### Checks and tools
+
+| Folder | What it is |
+| --- | --- |
+| [`test/`](test/) | Everything that passes or fails from the command line: source parity, and 266 assertions over the prototypes. |
+| [`tools/`](tools/) | Pages you open and look at: the style guide, and the runtime verification harness. |
+
 ### Not Buckholt
 
-`prototypes/` and `test/`, each with its own README. See
-[`prototypes/README.md`](prototypes/README.md) and
-[`test/README.md`](test/README.md).
+[`prototypes/`](prototypes/) — the Mobius PAS application work. It has its
+own README and its own rules.
 
 ## Foundations
 

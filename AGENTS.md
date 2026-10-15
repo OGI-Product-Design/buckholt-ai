@@ -16,13 +16,15 @@ asked to change it.
 
 ```text
 buckholt-ai/
-├── AGENTS.md  README.md  CANONICAL-MARKUP.md
+├── AGENTS.md        the rules, for every agent: this file
+├── README.md  CANONICAL-MARKUP.md
 │
 ├── css/  components/  foundations/  patterns/        ← BUCKHOLT
 ├── code-specs-html/  discrepancies/  verification/      source of truth
 ├── responsive/
 │
-├── test/                                             ← checks over both
+├── test/            passes or fails, from the CLI    ← checks over both
+├── tools/           style guide, runtime harness        and tools
 │
 └── prototypes/                                       ← NOT BUCKHOLT
     ├── shared/        app chrome, blade                 application work
@@ -44,7 +46,7 @@ So:
   `components/`, `foundations/` or `patterns/`.
 - A component Buckholt has never documented belongs in `prototypes/`, not in
   `components/` — `components/` is verified against `code-specs-html/` by
-  `test/source-parity/check-source-parity.py`, and an undocumented component
+  `test/source-parity.py`, and an undocumented component
   cannot be. `prototypes/calendar/` is the worked example.
 - When building a prototype, read the Buckholt side first and reach for a
   documented component before writing any CSS of your own.
@@ -65,7 +67,7 @@ Component-specific Code & specs markup outranks generic cross-component conventi
 
 ## Source hierarchy
 
-1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied **Code & specs pages are committed in `code-specs-html/`** and are the authoritative markup evidence. `python3 test/source-parity/check-source-parity.py` verifies `components/*/examples.html` against them in both directions; run it after any change to a canonical example.
+1. **Buckholt documentation website** — primary source of truth for intended Digital Product design-system behaviour, including usage, hierarchy, accessibility, canonical markup, scales and design-system meaning. The supplied **Code & specs pages are committed in `code-specs-html/`** and are the authoritative markup evidence. `python3 test/source-parity.py` verifies `components/*/examples.html` against them in both directions; run it after any change to a canonical example.
 2. `css/buckholt.css` — current runtime implementation. Use real selectors, variables, states and browser behaviour. Undocumented runtime extras are implementation flexibility, not automatically canonical Buckholt guidance. **It is not the live build — read `discrepancies/build-provenance.md` before treating its behaviour as Buckholt's intent.**
 3. `css/buckholt-ai-fixes.css` — verified compatibility corrections only. Load after the runtime.
 4. `foundations/<foundation>/` — shared design-system guidance.

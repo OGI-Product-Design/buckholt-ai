@@ -1,5 +1,5 @@
 global.window = global;
-require('../../prototypes/data/calendar.js');
+require('../prototypes/data/calendar.js');
 var C = window.CalendarData;
 var pass = 0, fail = 0;
 function is(label, got, want) {

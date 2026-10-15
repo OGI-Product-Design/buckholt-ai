@@ -16,8 +16,8 @@ node_modules/
 dist/
 build/
 
-# Offline dependencies vendored by test/prototypes/build-mirror.py
-test/prototypes/.vendor/
+# Offline dependencies vendored by test/build-mirror.py
+test/.vendor/
 
 # Wrangler local dev state
 .wrangler/

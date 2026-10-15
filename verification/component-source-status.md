@@ -8,7 +8,7 @@ This file tracks source verification against rendered Buckholt documentation HTM
 source verification is repeatable rather than a one-time act of trust:
 
 ```
-python3 test/source-parity/check-source-parity.py
+python3 test/source-parity.py
 ```
 
 Last run 9 September 2026 — **PASS in both directions**:

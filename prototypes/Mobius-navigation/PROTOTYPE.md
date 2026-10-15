@@ -37,7 +37,7 @@ its CSS are dropped.
 
 `css/`, `components/`, `foundations/`, `patterns/`, `code-specs-html/`, `prototypes/shared/`,
 `verification/`, `discrepancies/`, `Originators/` and `BACS-import/` are untouched.
-`python3 test/source-parity/check-source-parity.py` still passes in both directions.
+`python3 test/source-parity.py` still passes in both directions.
 
 ---
 

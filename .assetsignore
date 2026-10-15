@@ -1,9 +1,16 @@
-# What the deployment does NOT serve.
+# What the CLOUDFLARE deployment does NOT serve.
 #
-# `wrangler.jsonc` points at the repository root, so without this file every
-# commit is published: the specs, the Figma frames, Buckholt's own saved
-# documentation, the lot. The deployment exists to serve the clickable
-# prototypes and nothing else.
+# Scope, because it is easy to over-read this file: it applies to the
+# Cloudflare Worker in `wrangler.jsonc` — the `mobius-nav` deployment — and
+# to nothing else. It has no effect on GitHub Pages, which serves the three
+# BACS prototypes and publishes the repository verbatim.
+#
+# It is also not a privacy control. **This repository is public**, so the
+# specs and the Figma frames are readable on github.com and on GitHub Pages
+# whatever this file says. What it does is keep the Cloudflare deployment to
+# what it is for: `wrangler.jsonc` points at the repository root, so without
+# this file that Worker publishes the whole tree, which is simply more
+# surface than it needs.
 #
 # Same pattern format as .gitignore, but written as a plain blocklist with no
 # negation: gitignore cannot re-include a file underneath an excluded
@@ -63,9 +70,9 @@ prototypes/Mobius-navigation/reference/**
 code-specs-html/**
 
 # ------------------------------------------------------- docs and test pages
-# `components/*/examples.html` and the pattern pages are documentation, and
-# the test pages are a harness. The component *scripts* stay: the prototypes
-# load them.
+# `components/*/examples.html` and the pattern pages are documentation; the
+# style guide and the runtime harness in `tools/` are for the team, not the
+# public. The component *scripts* stay: the prototypes load them.
 components/**/*.html
 patterns/**
 foundations/**
@@ -73,3 +80,4 @@ responsive/**
 discrepancies/**
 verification/**
 test/**
+tools/**

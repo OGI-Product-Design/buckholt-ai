@@ -10,7 +10,7 @@
 
   Each block below either initialises a documented Bootstrap component, or
   drives a documented interaction for which this repository ships no script.
-  Those gaps are recorded and classified in test/runtime-verification/ and in
+  Those gaps are recorded and classified in tools/runtime-verification/ and in
   discrepancies/known-issues.md; when an upstream script provides one of them,
   delete the corresponding block here.
 */

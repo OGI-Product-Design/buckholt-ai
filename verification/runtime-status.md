@@ -27,7 +27,7 @@ Current controlled target:
 
 ## Verification progress — 7 September 2026
 
-A controlled pass was run against `test/runtime-verification/`, which composes every source-verified
+A controlled pass was run against `tools/runtime-verification/`, which composes every source-verified
 `examples.html` byte-for-byte and re-asserts each compatibility fix against the live runtime.
 
 **Completed for all 41 components with source-verified markup:**
@@ -77,7 +77,7 @@ but the responsive work should be re-run against the reference scale before it i
    type and icon rendering are unverified. Under this framework a failed dependency gate voids the
    rendering judgement beneath it, so the gate is recorded as unmet rather than worked around.
 
-The matrix therefore stays `RUNTIME PENDING`. Re-run `test/runtime-verification/` in an environment
+The matrix therefore stays `RUNTIME PENDING`. Re-run `tools/runtime-verification/` in an environment
 with network access to the CDN dependencies and complete the per-component state checklist before
 advancing any row.
 
