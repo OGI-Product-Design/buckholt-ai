@@ -65,6 +65,41 @@ of the identifications were settled by measuring the Figma against
 Only the month grid, the day cells and the month picker shell are new, and
 they are in `shared/calendar/`.
 
+## Revision, 16 October 2026 — the dev-annotated Figma
+
+A dev-annotated export of the day-cell states ("Frame 15100") settled the
+five fills and strokes spec 5.2 could only give as "≈", and two things it did
+not mention at all. What changed:
+
+| | Was | Now |
+|---|---|---|
+| Selected fill | `--expressive-pale` | `--feedback-overlay-info` |
+| Disabled fill | `--ui-background-04` | `--disabled-overlay-01` |
+| Blank fill | `--ui-background-02` | `--ui-overlay-01` |
+| Read-only / disabled stroke | `--ui-border-03` | `--disabled-overlay-01` (same value, the annotated name) |
+| Read-only / disabled bottom padding | 8px | 10px, so labels line up with raised cells |
+| Date badge type | inherited 300 | `--typescale-02` / 500 / 0.25px |
+| Today's digits | `--text-primary` | `--expressive-rich` |
+| Content surface | `--body-background` (#fbfbfb) | `#ffffff`, via `.app-main-surface` |
+
+The surface is the one that mattered most. The new fills are **translucent
+overlays**, so what they come out as depends on what is behind them, and the
+page was on Buckholt's `#fbfbfb` while every BACS frame draws white. On
+`#fbfbfb` a disabled cell rendered `#EBEBEB` against the frame's `#EFEFEF`;
+on white it is `#EFEFEF` exactly. `prototypes/shared/app-shell.css` now
+carries `.app-main-surface` and the three BACS pages put it on `<main>`.
+
+The annotation's Active stroke (`clickable-border-hover`) was **not**
+followed: CA-03-03 exports at 2x and measures a flat `#0F40C5` on both the
+2px side band and the 6px bottom band, which is `--action-01` and the hex
+spec 5.2 gives. Recorded as A6 in `SPEC-CHANGES.md`, along with A7 for the
+surface.
+
+Deviation 2 below is unchanged and still stands: the Resting cell's raised
+edge stays `--ui-border-01`, because spec 5.3 requires 3:1 and the Figma's
+`#DADADA` is 1.40 : 1. It is the one place the prototype is visibly darker
+than the frame.
+
 ## Deviations
 
 ### 1. The folder for the new component is top level, not inside `components/`
@@ -215,15 +250,16 @@ section 11.5's table is checked directly against `data/calendar.js` in Node.
 
 | Suite | What it covers | Assertions |
 | --- | --- | --- |
-| `check-data` | Section 11 in Node: TODAY, the 74 sent batches, every row of the 11.5 table, the CA-02-01 correction, cell states and labels, day-of-month resolution, override add/remove, snapshot and restore | 42 |
-| `t-flows` | CA-00 overview, CA-01 month navigation and the picker, CA-02 add and remove, CA-06 bank holidays, cell states, copy, the live clock | 59 |
-| `t-modal` | CA-03, CA-04 and CA-05 end to end: the three options, Collect on, the empty-selection rule, saving, the toasts, Undo, Cancel, and saving with no change | 66 |
-| `t-a11y` | Accessible names, `aria-pressed`, non-focusable read-only and disabled cells, keyboard operation, the 3px focus ring, picker and modal focus behaviour, overflow | 32 |
-| `t-resp` | Fifteen widths from 1920 to 320: no page overflow, seven columns, the weekday-name switch, the modal at 375px | 47 |
-| `t-regress` | Originators and BACS Import unchanged, the new tab links, the old `#/calendar` route, Process still a placeholder, and `Shell.showToast` still behaving for its existing callers | 20 |
-| `check-source-parity.py` | Buckholt canonical markup, both directions | PASS |
+| `test/calendar-data.js` | Section 11 in Node: TODAY, the 74 sent batches, every row of the 11.5 table, the CA-02-01 correction, cell states and labels, day-of-month resolution, override add/remove, snapshot and restore | 42 |
+| `test/calendar-flows.js` | CA-00 overview, CA-01 month navigation and the picker, CA-02 add and remove, CA-06 bank holidays, cell states, copy, the live clock | 59 |
+| `test/calendar-modal.js` | CA-03, CA-04 and CA-05 end to end: the three options, Collect on, the empty-selection rule, saving, the toasts, Undo, Cancel, and saving with no change | 66 |
+| `test/calendar-tokens.js` | The day-cell fills, strokes, padding and badge type against the dev-annotated Figma, and the white content surface the translucent fills need | 34 |
+| `test/accessibility.js` | Accessible names, `aria-pressed`, non-focusable read-only and disabled cells, keyboard operation, the 3px focus ring, picker and modal focus behaviour, overflow | 32 |
+| `test/responsive.js` | Fifteen widths from 1920 to 320: no page overflow, seven columns, the weekday-name switch, the modal at 375px | 47 |
+| `test/regression.js` | Originators and BACS Import unchanged, the new tab links, the old `#/calendar` route, Process still a placeholder, and `Shell.showToast` still behaving for its existing callers | 20 |
+| `test/source-parity.py` | Buckholt canonical markup, both directions | PASS |
 
-**266 assertions, all passing**, plus source parity.
+**300 assertions, all passing**, plus source parity.
 
 ### What the mirror cannot check
 

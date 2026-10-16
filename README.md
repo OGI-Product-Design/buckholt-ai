@@ -109,7 +109,7 @@ Patterns are guidance for composition. They do not create a competing styling/ru
 
 | Folder | What it is |
 | --- | --- |
-| [`test/`](test/) | Everything that passes or fails from the command line: source parity, and 266 assertions over the prototypes. |
+| [`test/`](test/) | Everything that passes or fails from the command line: source parity, and 300 assertions over the prototypes. |
 | [`tools/`](tools/) | Pages you open and look at: the style guide, and the runtime verification harness. |
 
 ### Not Buckholt

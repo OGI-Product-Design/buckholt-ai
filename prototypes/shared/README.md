@@ -43,11 +43,21 @@ above a page's sticky layers and below Bootstrap's modal backdrop (1050), the mo
 ...
 <header class="app-bar"></header>
 <aside id="sidebar" class="app-sidenav"></aside>
+<main id="main" class="app-main-surface">
 ...
 <div class="toast-container app-toasts"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../shared/app-shell.js"></script>
 ```
+
+`.app-main-surface` puts the content area on **white**. Buckholt's
+`--body-background` is `#fbfbfb` and nothing between `<body>` and the page
+content paints over it, but the BACS frames all draw white — sampled in the
+right-hand page margin of OR-00-01, IM-00-01 and CA-00-01. It matters because
+Buckholt's state fills are translucent overlays and come out differently on a
+different surface. It is opt-in: the Mobius navigation prototype's own
+reference still shows `#fbfbfb`, so it does not carry the class. Anything
+sticky that repaints the page behind itself has to use the same colour.
 
 ```js
 Shell.wireChrome();                                        // chrome links and the current tab do nothing

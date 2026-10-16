@@ -67,6 +67,23 @@ directions.
 
 ---
 
+## Revision, 16 October 2026 — the content surface
+
+`<main>` carries `.app-main-surface` from `prototypes/shared/app-shell.css`,
+which puts the BACS content area on `#ffffff`. Buckholt's
+`--body-background` is `#fbfbfb` and nothing between `<body>` and the page
+content paints over it, but OR-00-01's right-hand page margin samples pure
+white, as IM-00-01's and CA-00-01's do.
+
+Two things here assumed the old surface and moved with it: the sticky
+`.ori-toolbar`, and the sticky `.ori-table thead th` base colour under
+Buckholt's translucent `--table-header-background`. Both repaint the page
+behind themselves, so both are now `--ui-background-01`. Change the surface
+again and both have to follow.
+
+The change came out of the BACS Calendar work; see
+`../BACS-calendar/SPEC-CHANGES.md` A7.
+
 ## Runtime contract
 
 Exactly the order `AGENTS.md` specifies, with the prototype stylesheet last:
