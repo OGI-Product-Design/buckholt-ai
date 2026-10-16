@@ -96,6 +96,72 @@ unreachable with this seed.
 
 ---
 
+### A6. The day-cell tokens, from the dev-annotated Figma — **settled, built**
+
+Added 16 October 2026, after a dev-annotated export of the day-cell states
+(Figma "Frame 15100") was supplied. It names a Buckholt token for every fill
+and stroke, which settles five values spec 5.2 could only give as "≈" under a
+column headed "confirm in Figma". The prototype now uses the named tokens.
+
+| Spec 5.2 says | Annotation names | Composites to | Built |
+|---|---|---|---|
+| Selected: pale blue fill ≈ #E8EDFB | `feedback-overlay-info` | #E8EDFA on white | yes |
+| Disabled: grey fill ≈ #EFEFEF | `disabled-overlay-01` | #EFEFEF on white | yes |
+| Blank: very light grey ≈ #FBFBFB | `ui-overlay-01` | #FCFCFC on white | yes |
+| Read-only: faint border | `disabled-overlay-01` | #EFEFEF on white | yes |
+| Resting/Read-only/Disabled fill | `card-background` | #FFFFFF | unchanged |
+
+Two further things the annotation settles:
+
+- **A cell with no raised edge pads 10px at the bottom**, annotated
+  `8px, 8px, 10px, 8px`, so that 10 + its 1px border equals the 8 + 3 of a
+  raised cell and the labels line up. The prototype padded 8px all round and
+  sat 2px low on read-only and disabled cells.
+- **The date badge is `--typescale-02` / weight 500 / 0.25px tracking**, and
+  today's digits are **`--expressive-rich`** on the `--expressive-soft`
+  badge. The prototype inherited the page's 300 weight and left the digits
+  `--text-primary`.
+
+Suggested spec wording for 5.2, replacing the four "≈" hexes:
+
+> Fills and strokes are Buckholt tokens, as the Figma annotates them:
+> Resting and Read-only `card-background`; Active `feedback-overlay-info`;
+> Disabled and every Read-only/Disabled stroke `disabled-overlay-01`; Blank
+> `ui-overlay-01`. These are translucent overlays — they are correct only on
+> the white content surface the frames draw.
+
+**One annotation is not followed.** It names the Active stroke
+`clickable-border-hover`, which `css/buckholt.css` hardcodes as `#1748d0` on
+`.card-clickable:hover`. CA-03-03 exports at 2x and its Selected cell's
+stroke measures a flat **`#0F40C5`** across both the 2px side band and the
+6px bottom band — `--action-01`, and the hex spec 5.2 already gives. The
+annotation names a token, the frame gives the value, and where they disagree
+the measurement wins. Worth checking whether the live Buckholt build's
+`clickable-border-hover` is `--action-01`; if it is, the local build's
+`#1748d0` is a build difference, not a design one.
+
+### A7. The content surface is white, not Buckholt's page colour — **settled, built**
+
+Not a calendar question, but it is what made the calendar's fills wrong, so
+it belongs here. Buckholt's `--body-background` is `#fbfbfb` and nothing
+between `<body>` and the page content paints over it. **Every BACS frame
+puts the content area on `#ffffff`** — sampled in the right-hand page margin
+of OR-00-01, IM-00-01 and CA-00-01, all three return pure white.
+
+Because Buckholt's state fills are translucent overlays, the surface changed
+what they came out as: a disabled cell rendered `#EBEBEB` against the frame's
+`#EFEFEF`, a blank cell `#F7F7F7` against `#FBFBFB`. On white they land on
+the frame values exactly.
+
+`prototypes/shared/app-shell.css` now carries `.app-main-surface`, which the
+three BACS pages put on `<main>`. It is opt-in because the Mobius navigation
+prototype's own reference still shows `#fbfbfb`. Originators' two sticky
+layers repainted the old surface behind themselves and were moved to white
+with it.
+
+Worth asking Buckholt whether an application content area is meant to be
+white or `--body-background`; `patterns/page-layout` does not say.
+
 ## B. Changes to the Figma frames
 
 Section 12 already covers the data errors. These are the two things it does
