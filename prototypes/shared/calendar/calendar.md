@@ -158,10 +158,28 @@ flat 2px band of `#DADADA` and its bottom edge a flat 6px band of the same
 colour. #DADADA is **1.40 : 1** against white — the edge is the only thing that marks a Default
 cell as interactive, so 1.4.11 applies to it.
 
-Rather than take the spec's suggested #858B91, which is not a Buckholt
-colour, the edge uses **`--ui-border-01` (#919191)**, Buckholt's own strong
-border token, at **3.15 : 1**. It clears the threshold and introduces no new
-value. The 1px side borders stay at `--ui-border-02` as drawn.
+**The component draws #DADADA, as the Figma does.** It was built with
+`--ui-border-01` (#919191, 3.15 : 1) to clear the threshold, and that was
+withdrawn on 16 October 2026: against the frame it reads as a heavy charcoal
+underline rather than a raised edge, and the whole cell changes character.
+Design made the call with both in front of them.
+
+So spec 5.3 is **not met at rest**, and that is a deliberate, recorded
+decision rather than an oversight. Two things narrow what is actually at
+risk:
+
+- **State is not carried by the edge.** A Selected cell is `--action-01` at
+  **8.20 : 1** *and* says "Collection day"; a Read-only or Disabled cell has
+  a different fill *and* its own label. Spec 5.2's "state is never shown by
+  colour alone" holds either way.
+- **Both interaction affordances clear 3:1 comfortably.** Hover turns the
+  whole border `--action-01` (**8.20 : 1**) and focus is a 3px `--focus-01`
+  ring (**7.31 : 1**). What is below 3:1 is the resting boundary of a
+  control that already sits inside a labelled grid of them.
+
+Recorded as A8 in `../../BACS-calendar/SPEC-CHANGES.md`, which proposes the
+spec wording to match. If 5.3 is reinstated, one line does it:
+`--calendar-cell-edge: var(--ui-border-01)`.
 
 ## Accessibility
 

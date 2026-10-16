@@ -52,9 +52,15 @@
 
   /* The raised bottom edge. Buckholt's own Button draws its raised edge with
      `calc(1px + 0.125rem)`; the day cell borrows that idiom rather than
-     inventing a thickness. */
+     inventing a thickness.
+
+     The edge is the SAME colour as the side borders, thickened — confirmed
+     on CA-00-01, which exports at 2x: a flat 2px band of #DADADA on top and
+     a flat 6px band of the same #DADADA below. It carried `--ui-border-01`
+     (#919191) until 16 October 2026, to clear spec 5.3's 3:1; that read far
+     heavier than the frame and was dropped. See `calendar.md`. */
   --calendar-cell-edge-width: calc(1px + 0.125rem);         /* 3px */
-  --calendar-cell-edge: var(--ui-border-01);                /* see calendar.md */
+  --calendar-cell-edge: var(--calendar-cell-border);        /* #dadada, as drawn */
 
   /* The Figma's dev annotations name a Buckholt token for every state fill
      and stroke; these are those tokens, not look-alike values.
