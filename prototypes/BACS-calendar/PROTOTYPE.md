@@ -80,6 +80,7 @@ not mention at all. What changed:
 | Read-only / disabled bottom padding | 8px | 10px, so labels line up with raised cells |
 | Date badge type | inherited 300 | `--typescale-02` / 500 / 0.25px |
 | Today's digits | `--text-primary` | `--expressive-rich` |
+| Resting raised edge | `--ui-border-01` (#919191) | `--ui-border-02` (#DADADA), as drawn |
 | Content surface | `--body-background` (#fbfbfb) | `#ffffff`, via `.app-main-surface` |
 
 The surface is the one that mattered most. The new fills are **translucent
@@ -95,10 +96,11 @@ followed: CA-03-03 exports at 2x and measures a flat `#0F40C5` on both the
 spec 5.2 gives. Recorded as A6 in `SPEC-CHANGES.md`, along with A7 for the
 surface.
 
-Deviation 2 below is unchanged and still stands: the Resting cell's raised
-edge stays `--ui-border-01`, because spec 5.3 requires 3:1 and the Figma's
-`#DADADA` is 1.40 : 1. It is the one place the prototype is visibly darker
-than the frame.
+The raised edge went the same way in a second pass the same day. It had
+stayed `--ui-border-01` for spec 5.3's 3:1 while the Figma draws `#DADADA`,
+and it was the one place the prototype was visibly darker than the frame.
+Design chose the frame. Deviation 2 below is withdrawn, and A8 in
+`SPEC-CHANGES.md` carries the accessibility position.
 
 ## Deviations
 
@@ -118,16 +120,26 @@ there would present an invention as canonical — which is the one thing
 `rules.md` / `examples.html`) point the same way. `prototypes/shared/blade.css` made
 the same choice for the Blade.
 
-### 2. The Default cell's raised edge is darker than the Figma
+### 2. The Default cell's raised edge follows the Figma, not spec 5.3
+
+**Withdrawn 16 October 2026.** This was a deviation and is no longer one:
+the edge is `--ui-border-02` (#DADADA), the same colour as the side borders,
+thickened — exactly as CA-00-01 draws it at 2x.
 
 Spec 5.3 requires 3:1 against white and says to darken the grey if the Figma
-falls short. It does: **#DADADA is 1.40 : 1**. The edge is the only thing
-marking a Default cell as interactive, so WCAG 1.4.11 applies to it.
+falls short. It does, badly: **#DADADA is 1.40 : 1**. The build ran with
+`--ui-border-01` (#919191, 3.15 : 1) until design saw the two side by side
+and called it: against the frame it reads as a heavy charcoal underline
+rather than a raised edge, and it changes the character of the whole grid.
 
-The spec suggests #858B91 (3.44 : 1). The build uses **`--ui-border-01`
-(#919191) at 3.15 : 1** instead — it clears the threshold and is a Buckholt
-token, where #858B91 would be a new colour. The 1px side borders stay
-`--ui-border-02` as drawn.
+So **spec 5.3 is not met at rest**, by decision. What that does and does not
+put at risk is set out in `../shared/calendar/calendar.md` under Contrast —
+in short, no state depends on the edge (every state carries a fill change
+and a text label), and both interaction affordances are well clear: hover is
+`--action-01` at 8.20 : 1 and focus a 3px `--focus-01` ring at 7.31 : 1.
+
+A8 in `SPEC-CHANGES.md` proposes the matching spec wording. Reinstating 5.3
+is one line: `--calendar-cell-edge: var(--ui-border-01)`.
 
 ### 3. The disabled cell's date is not muted
 

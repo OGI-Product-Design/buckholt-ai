@@ -37,9 +37,10 @@ const OVERLAY_07 = 'rgba(26, 26, 26, 0.07)';   // --disabled-overlay-01
   is('Resting fill', await css(D, 'backgroundColor'), WHITE);
   is('Resting side stroke', await css(D, 'borderTopColor'), 'rgb(218, 218, 218)');      // --ui-border-02
   is('Resting raised edge is 3px', await css(D, 'borderBottomWidth'), '3px');
-  // Spec 5.3, not the Figma: #DADADA is 1.40:1 and the edge is the only
-  // thing marking the cell interactive.
-  is('Resting raised edge darkened for 5.3', await css(D, 'borderBottomColor'), 'rgb(145, 145, 145)');
+  // The same colour as the sides, thickened — as CA-00-01 draws it. It is
+  // 1.40:1 and does not meet spec 5.3; A8 in SPEC-CHANGES.md is the
+  // decision and the argument.
+  is('Resting raised edge is the side border, thickened', await css(D, 'borderBottomColor'), 'rgb(218, 218, 218)');
   is('Resting padding', await css(D, 'padding'), '8px');
 
   // ---------- Read-only: card-background + disabled-overlay-01 ----------
