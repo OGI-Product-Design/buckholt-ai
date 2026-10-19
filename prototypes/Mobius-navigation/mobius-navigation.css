@@ -411,12 +411,6 @@
   .mob-client-menu.mob-all .mob-more { flex: 0 0 auto; }
 }
 
-/* The open policy as the way back to its menu: pressable, a deeper tint
-   under the pointer. */
-.mob-rail-policies .nav-link.active.mob-back { cursor: pointer; }
-.mob-rail-policies .nav-link.active.mob-back:hover { box-shadow: inset 0 0 0 100vmax var(--primary-tint-10); }
-html[data-skin="mobius"] .mob-rail-policies .nav-link.active.mob-back:hover { box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0.12); }
-
 /* The current category in the strip: Mark's solid square. */
 .mob-strip .btn.active {
   --button-label-active: var(--action-text-02);

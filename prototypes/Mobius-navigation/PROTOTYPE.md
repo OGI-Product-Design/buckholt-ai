@@ -213,9 +213,7 @@ no policy menu), with the open policy marked in its list; choosing that policy b
 back without leaving the page. A new page opens on its own menu. In the client's menu the
 **policies list scrolls only after Show more** (Mark): until then the five show in full and, on a
 short screen, the whole menu scrolls; after it, only the list scrolls, brought to the policies it
-added, with a fade at an edge that has more beyond it. On a policy page with the client's card
-shown, the open policy is marked and reads as pressable (a deeper tint under the pointer, a
-Tooltip, "Back to PUCO0068's menu"): it brings its menu back. When the breadcrumbs and the actions row still will not fit with the breadcrumbs
+added, with a fade at an edge that has more beyond it. When the breadcrumbs and the actions row still will not fit with the breadcrumbs
 shortened, the labelled actions fold into More, as on a narrow page.
 
 **Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
