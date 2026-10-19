@@ -153,17 +153,32 @@ strip in the previous round.
 Both columns are rebuilt on every route. At app level (Dashboard, the other modules, Create new
 client) there is no left menu, and below 1024px no Menu button either: the systems are in the
 system menu, which stays in the top bar at every width.
-`navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
-`policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
-the prototype's:
+**Status rules (19 October 2026), from Laurence's audit of live Mobius.** One object,
+`STATUS_RULES` in `navigation-model.js`, decides per status which navigation and which actions a
+policy gets; nothing else checks status for this. Navigation (a new page) and actions (something
+where you are) stay separate: `pages` and `entry` are menu items, `actions` are in the row beside
+the breadcrumbs. Hidden means not rendered. On every status: Policy overview, Correspondence, More
+details; Add new quote is client-level (the client menu) on every status; Customer portal settings
+stays on every status (configuration-driven in live, ignored for now).
 
-| Status | Groups | Menu actions | Heading Buttons |
-| --- | --- | --- | --- |
-| Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | none |
-| Prospect | Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | none |
-| Automatic Decline | Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | none |
-| Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | none |
-| Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | none |
+| Status | Sample | Policy details | Claims | Transactions | Entry points (menu) | Actions (row / More) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | Amend policy | Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
+| Cancelled | **none** | ✓ | ✓ | ✓ | Amend policy | Copy policy |
+| Lapsed | ZZ0900000000646 | ✓ | ✓ | ✓ | none | Reinstate policy; Copy policy |
+| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
+| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
+| Automatic refer | **none** | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
+| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote, Amend policy (quote) | Copy policy |
+| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | Amend policy (risk) | Copy policy |
+| Renewal invited | **none** | ✓ | ✓ | ✓ | Retrieve renewal quote*, Amend renewal* | Withdraw alternative quote* |
+| Renewal pending | **none** | ✓ | — | ✓ | none | none |
+| MTA quote | **none** | ✓ | ✓ | ✓ | none | Copy policy (**not audited**: the previous default, flagged) |
+
+\* In the audit but not built: no page or panel yet, so listed in the rule and not drawn.
+Retrieve quote opens the existing Quote summary page. Amend labels are unchanged ("Amend policy"
+on every status) until a label change is agreed; live says Amend details / Amend quote / Amend
+risk. Statuses without a sample record have rules but nothing to show them on.
 
 ## System navigation (7 October 2026)
 
