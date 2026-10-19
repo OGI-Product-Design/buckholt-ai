@@ -35,6 +35,9 @@
   margin: 0 var(--spacer-05) 0 0;
   white-space: nowrap;
 }
+/* Hidden for now (Laurence, 19 October 2026): the review aid stays in the
+   code, off, so it can come back by deleting this rule. */
+.app-bar .mob-terms { display: none; }
 
 
 

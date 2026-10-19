@@ -41,9 +41,9 @@
   var POLICIES = [
     /* renewalOpen: the policy's renewal window is open, so Renewal invite
        carries a badge (on PUCO0068 to show it). */
-    { id: 'puco0068', ref: 'PUCO0068', status: 'Live', kind: 'live', renewalOpen: true, inception: '11/09/2026', premium: '£520.00', start: '11/09/2026 09:27', end: '10/09/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-09-11' },
-    { id: 'puco0052', ref: 'PUCO0052', status: 'Live', kind: 'live', inception: '24/08/2026', premium: '£625.00', start: '24/08/2026 00:00', end: '23/08/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC.slice(0, 2), coverStart: '2026-08-24' },
-    { id: 'aad666', ref: 'AADD000000000666', status: 'Live', kind: 'live', inception: '30/04/2026', premium: '£722.00', start: '30/04/2026 00:09', end: '29/04/2027 23:59', dur: '12 months', ipn: 'LGN0658EDRY', stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-04-30' },
+    { id: 'puco0068', ref: 'PUCO0068', status: 'Policy', kind: 'live', renewalOpen: true, inception: '11/09/2026', premium: '£520.00', start: '11/09/2026 09:27', end: '10/09/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-09-11' },
+    { id: 'puco0052', ref: 'PUCO0052', status: 'Policy', kind: 'live', inception: '24/08/2026', premium: '£625.00', start: '24/08/2026 00:00', end: '23/08/2027 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', endorse: null, exc: STD_EXC.slice(0, 2), coverStart: '2026-08-24' },
+    { id: 'aad666', ref: 'AADD000000000666', status: 'Policy', kind: 'live', inception: '30/04/2026', premium: '£722.00', start: '30/04/2026 00:09', end: '29/04/2027 23:59', dur: '12 months', ipn: 'LGN0658EDRY', stopRenewal: 'No', endorse: null, exc: STD_EXC, coverStart: '2026-04-30' },
     { id: 'y341', ref: '999/006/Y341/TGS', status: 'Automatic Decline', kind: 'decline', inception: '25/12/2025', premium: '£0.00', start: '25/12/2025 09:26', end: '24/12/2026 23:59', dur: '12 months', ipn: null, stopRenewal: 'No', coverStart: '2025-12-25' },
     { id: 'zz646', ref: 'ZZ0900000000646', status: 'Lapsed', kind: 'lapsed', inception: '29/04/2025', premium: '£690.00', start: '29/04/2025 22:22', end: '28/04/2026 23:59', dur: '12 months', ipn: 'ZZ09PIN000000000659', stopRenewal: 'Yes', endorse: ['Agreed Annual Mileage'], exc: [['Requested Voluntary Excess', '£200.00'], ['Accidental Damage Fire and Theft', '£500.00'], ['6876', '£6,576.00']], coverStart: '2025-04-29' },
     { id: 'z315', ref: '999/018/Z315/TGS', status: 'Incomplete', kind: 'incomplete', inception: '02/03/2022', premium: '£0.00', start: '11/11/2023 17:00', end: '10/11/2024 23:59', dur: '12 months', ipn: null, coverStart: '2023-11-11' },
@@ -67,21 +67,21 @@
     searchClients: [
       { id: 'jb', real: true },
       { id: 'sb', name: 'Sarah Barnard', ref: 'BAR/S/14031979/0012', address: '3 Church Street, Tring, Hertfordshire', postcode: 'HP23 5AE', email: 'sarah.barnard@gmail.com', dob: '14/03/1979', policies: [
-        ['HH0004812', '02/05/2026', 'Live', 'Open Market Household', 'Aviva', 'Property: 3 Church Street', '01/05/2027', 'Krypton / N/A', '£384.20', 'Mobius Home'],
-        ['PUCO0071', '19/01/2026', 'Live', 'Open Market Motor', 'Ageas', 'Registration: LV21 KTN', '18/01/2027', 'Krypton / N/A', '£596.00', 'Mobius Private Car']] },
+        ['HH0004812', '02/05/2026', 'Policy', 'Open Market Household', 'Aviva', 'Property: 3 Church Street', '01/05/2027', 'Krypton / N/A', '£384.20', 'Mobius Home'],
+        ['PUCO0071', '19/01/2026', 'Policy', 'Open Market Motor', 'Ageas', 'Registration: LV21 KTN', '18/01/2027', 'Krypton / N/A', '£596.00', 'Mobius Private Car']] },
       { id: 'tb', name: 'Tom Barnard', ref: 'BAR/T/22071992/0003', address: '41 Kingsley Road, Luton, Bedfordshire', postcode: 'LU3 1AB', email: 'tom.barnard92@outlook.com', dob: '22/07/1992', policies: [
         ['HH0003390', '11/08/2024', 'Lapsed', 'Open Market Household', 'AXA Insurance', 'Property: 41 Kingsley Road', '10/08/2025', 'Krypton / N/A', '£212.75', 'Mobius Home']] },
       { id: 'mb', name: 'Margaret Barnard', ref: 'BAR/M/03111958/0007', address: '8 Orchard Close, St Albans, Hertfordshire', postcode: 'AL1 4HP', email: 'm.barnard@btinternet.com', dob: '03/11/1958', policies: [
-        ['HH0002277', '30/09/2026', 'Live', 'Open Market Household', 'Aviva', 'Property: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£512.40', 'Mobius Home'],
-        ['HH0002278', '30/09/2026', 'Live', 'Open Market Household', 'Aviva', 'Contents: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£146.90', 'Mobius Home Contents'],
+        ['HH0002277', '30/09/2026', 'Policy', 'Open Market Household', 'Aviva', 'Property: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£512.40', 'Mobius Home'],
+        ['HH0002278', '30/09/2026', 'Policy', 'Open Market Household', 'Aviva', 'Contents: 8 Orchard Close', '29/09/2027', 'Tungsten / N/A', '£146.90', 'Mobius Home Contents'],
         ['ZZ0003612', '12/09/2026', 'Prospect', 'Open Market Motor', 'Allianz Insurance PLC', 'Registration: YA18 PWZ', '11/09/2027', 'Tungsten / N/A', '£455.30', 'Mobius Private Car']] },
       { id: 'db', name: 'Daniel Barnard-Hughes', ref: 'BAR/D/19051988/0021', address: '27 Avebury Boulevard, Milton Keynes', postcode: 'MK9 2FX', email: 'dan.bh@icloud.com', dob: '19/05/1988', policies: [
         ['999/112/Z402/TGS', '04/10/2026', 'Incomplete', 'Open Market Motor', 'N/A', 'Registration: MK70 RDB', '03/10/2027', 'Krypton / N/A', '£0.00', 'Mobius Private Car']] },
       { id: 'pb', name: 'Priya Barnard', ref: 'BAR/P/27091995/0002', address: 'Flat 6, 112 St Albans Road, Watford', postcode: 'WD17 1JJ', email: 'priya.barnard@gmail.com', dob: '27/09/1995', policies: [
         ['HH0005020', '15/10/2026', 'Prospect', 'Open Market Household', 'Ageas', 'Contents: Flat 6, 112 St Albans Road', '14/10/2027', 'Krypton / N/A', '£118.60', 'Mobius Home Contents']] },
       { id: 'eb', name: 'Edward Barnard', ref: 'BAR/E/09021965/0004', address: 'The Old Rectory, High Street, Ampthill', postcode: 'MK45 2NG', email: 'edward.barnard@hotmail.co.uk', dob: '09/02/1965', policies: [
-        ['HH0001045', '01/03/2026', 'Live', 'Open Market Household', 'AXA Insurance', 'Property: The Old Rectory', '28/02/2027', 'Tungsten / N/A', '£1,204.80', 'Mobius Home'],
-        ['PUCO0049', '17/06/2026', 'Live', 'Open Market Motor', 'Ageas', 'Registration: EB65 RRD', '16/06/2027', 'Tungsten / N/A', '£842.00', 'Mobius Private Car'],
+        ['HH0001045', '01/03/2026', 'Policy', 'Open Market Household', 'AXA Insurance', 'Property: The Old Rectory', '28/02/2027', 'Tungsten / N/A', '£1,204.80', 'Mobius Home'],
+        ['PUCO0049', '17/06/2026', 'Policy', 'Open Market Motor', 'Ageas', 'Registration: EB65 RRD', '16/06/2027', 'Tungsten / N/A', '£842.00', 'Mobius Private Car'],
         ['ZZ0002984', '17/06/2025', 'Automatic Decline', 'Open Market Motor', 'Greenlight', 'Registration: EB65 RRD', '16/06/2026', 'Tungsten / N/A', '£0.00', 'Mobius Private Car']] }
     ],
 

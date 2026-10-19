@@ -65,7 +65,9 @@
      carries its text, so status never relies on colour alone. Incomplete
      has no status colour in the prototype; it takes the info variant. */
   var STATUS = {
-    'Live': { variant: 'success', icon: 'fa-circle-check', label: '[[Live]]' },
+    /* "Policy", as current Mobius names an in-force policy, not "Live"
+       (Laurence, 19 October 2026: so user sessions are not confused). */
+    'Policy': { variant: 'success', icon: 'fa-circle-check', label: 'Policy' },
     'Prospect': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Prospect' },
     'Lapsed': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Lapsed' },
     'Automatic Decline': { variant: 'error', icon: 'fa-circle-exclamation', label: 'Automatic Decline' },
@@ -569,7 +571,7 @@
     var filters = filterBar([
       pick(select('sb', 'Brand', ['Select', 'Krypton', 'Tungsten']), fl.brand),
       pick(select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle']), fl.lob),
-      pick(select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
+      pick(select('ss', 'Policy status', ['Select', 'Policy', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
         btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
     var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
