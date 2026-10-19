@@ -381,16 +381,11 @@
   .mob-has-record.mob-rail-collapsed .mob-rail-client .user-meta-body { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
 }
 /* Collapsed at client level, as Mark draws it (19 October 2026): a
-   narrower panel whose white card is only as tall as its icons, and no
-   current icon marked. */
+   narrower panel whose white card is only as tall as its icons. The menu
+   you were in stays marked (Laurence). */
 @media (min-width: 1024px) {
   .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 3.5rem; align-self: flex-start; }   /* 56px */
   .mob-rail-collapsed:not(.mob-has-record) .mob-rail-scroll { padding: var(--spacer-03); overflow: visible; }
-  .mob-rail-collapsed:not(.mob-has-record) .mob-strip .btn.active {
-    --button-label-active: var(--action-text-01);
-    --button-background-active: transparent;
-    --button-border-active: transparent;
-  }
 }
 /* A control refocused after a mouse press: no focus ring (quietFocus). */
 .btn.mob-quiet-focus:focus-visible { box-shadow: none; border-color: var(--button-border); background-color: var(--button-background); color: var(--button-label); }

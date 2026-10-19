@@ -205,7 +205,8 @@ the flush blue sidebar with the client on it and the policy's menu the navy flyo
 (below 1024px) keeps its layout, with the client at its top.
 
 **Mark's menu behaviour (19 October 2026).** The head's button collapses the **whole menu** to
-the strip (and opens it again); it stays collapsed from page to page until opened. **Only one
+the strip (and opens it again); it stays collapsed from page to page until opened. Collapsed, the
+strip keeps the menu you were in marked, Client or Policy (Laurence and Mark). **Only one
 menu shows at a time, and none twice**: on a policy page the strip and the policy's menu show;
 the strip's Client button brings back the client's full card, as at client level (no strip,
 no policy menu), with the open policy marked in its list; choosing that policy brings its menu
