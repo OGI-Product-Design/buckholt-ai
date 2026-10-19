@@ -724,6 +724,10 @@
         card('Settled items', empty('There are no settled items.'))
       ])];
     },
+    /* No claims in the sample data, so the empty state. */
+    cclaims: function () {
+      return [card('Claims', empty('There are no claims on any of this client’s policies.'))];
+    },
     cactivity: function () {
       return [card('Client activity', activityFilters('ca', null) +
         table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Client activity' }),

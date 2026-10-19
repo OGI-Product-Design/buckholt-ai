@@ -182,6 +182,11 @@ title, breadcrumb and the Quote summary's link follow the status. The activity p
 **Policy activity** and **Client activity** (the system-level Activity module keeps its name).
 Statuses without a sample record have rules but nothing to show them on.
 
+**Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
+**Claims** in the client menu, after Transactions: the client's claims across their policies,
+named as the policy menu names its page. The sample data has no claims, so it shows the empty
+state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
+
 ## System navigation (7 October 2026)
 
 Laurence asked for the best experience for system-level navigation. The decisions:
