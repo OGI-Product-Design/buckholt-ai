@@ -221,10 +221,23 @@
   function scrollToOpenPolicy() {
     var list = sidebar.querySelector('.mob-rail-policies');
     var open = list && list.querySelector('a[aria-current]');
-    if (!open) return;
+    if (!open) { scrollCues(list); return; }
     var top = open.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
     if (top < list.scrollTop || top + open.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top - list.clientHeight / 2 + open.offsetHeight / 2;
+    scrollCues(list);
   }
+  /* A list that scrolls fades at the edge that has more beyond it, so a
+     row cut by the edge reads as "more", not as broken. */
+  function scrollCues(list) {
+    if (!list) return;
+    var more = list.scrollHeight - list.clientHeight > 1;
+    list.classList.toggle('mob-more-above', more && list.scrollTop > 1);
+    list.classList.toggle('mob-more-below', more && list.scrollTop + list.clientHeight < list.scrollHeight - 1);
+  }
+  document.addEventListener('scroll', function (e) {
+    if (e.target && e.target.classList && e.target.classList.contains('mob-rail-policies')) scrollCues(e.target);
+  }, true);
+  window.addEventListener('resize', function () { scrollCues(sidebar.querySelector('.mob-rail-policies')); });
 
   function renderSide(r) {
     var c = F.client;
@@ -237,7 +250,10 @@
        (below 1024px) everything is open, as before. */
     var collapsed = navCollapsed();
     var view = onPolicy ? (S.sideView || 'policy') : 'client';
-    var tight = !app && !narrow.matches && (collapsed || onPolicy);   /* the rail is the strip */
+    /* The rail is the strip when collapsed, and beside a policy's menu;
+       with the client's menu chosen on a policy page it is the client's
+       full card, as at client level (Mark: no menu shown twice). */
+    var tight = !app && !narrow.matches && (collapsed || (onPolicy && view === 'policy'));
     /* The menu is the selected client's: at app level there is none. */
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
@@ -291,18 +307,10 @@
 
     /* The policy column: only once a policy is open. */
     var rec = $('mob-record');
-    var showRec = onPolicy && !collapsed;
+    var showRec = onPolicy && !collapsed && (view === 'policy' || narrow.matches);
     rec.hidden = !showRec;
     sidebar.classList.toggle('mob-has-record', showRec);
     if (!showRec) { rec.innerHTML = ''; return; }
-    /* The client's menu chosen beside a policy: in the column, in place
-       of the policy's. */
-    if (view === 'client' && !narrow.matches) {
-      rec.innerHTML = clientMenu(r, curPolicy, 'mob-record-nav');
-      tipTruncated();
-      scrollToOpenPolicy();
-      return;
-    }
 
     var nav = M.policyNav(r.p);
     /* The head: the reference with its status Tag, over the line of
@@ -467,7 +475,13 @@
     if (!fits()) bar.querySelector('.mob-crumbs').outerHTML = crumbs(R, tt.title, 1);
     /* Still too wide: the labelled actions fold into More, as they do on a
        narrow page. */
-    if (!fits()) bar.classList.add('mob-fold-actions');
+    if (!fits()) {
+      bar.classList.add('mob-fold-actions');
+      /* With the actions folded there may be room for the whole trail
+         again: show it if it fits, so both are not cut at once. */
+      bar.querySelector('.mob-crumbs').outerHTML = crumbs(R, tt.title);
+      if (!fits()) bar.querySelector('.mob-crumbs').outerHTML = crumbs(R, tt.title, 1);
+    }
     Shell.initTooltips(bar.querySelector('.mob-crumbs'));
   }
   /* Main changes width with the window and when the client menu opens or
@@ -959,6 +973,15 @@
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
     if (el.closest('[data-rail-toggle]')) { S.navCollapsed = !navCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
+    /* With the client's menu shown on a policy page, the open policy (marked
+       in the list) brings its own menu back, without leaving the page. */
+    var back = !narrow.matches && R.scope === 'policy' && S.sideView === 'client' && el.closest('.mob-rail-policies a[aria-current]');
+    if (back) {
+      e.preventDefault();
+      S.sideView = 'policy';
+      rerenderSide('.mob-record-nav a[aria-current], .mob-record-nav a');
+      return;
+    }
     var ex = el.closest('[data-view]');
     if (ex) {
       S.navCollapsed = false;

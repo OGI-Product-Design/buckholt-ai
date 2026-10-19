@@ -206,9 +206,10 @@ the flush blue sidebar with the client on it and the policy's menu the navy flyo
 
 **Mark's menu behaviour (19 October 2026).** The head's button collapses the **whole menu** to
 the strip (and opens it again); it stays collapsed from page to page until opened. **Only one
-menu shows at a time**: on a policy page the strip's two buttons choose it, Client (the client's
-pages and policies) or Policy (the policy's menu), beside the strip in the same place; the one
-showing is marked, and a new page opens on its own menu. In the client's menu only the
+menu shows at a time, and none twice**: on a policy page the strip and the policy's menu show;
+the strip's Client button brings back the client's full card, as at client level (no strip,
+no policy menu), with the open policy marked in its list; choosing that policy brings its menu
+back without leaving the page. A new page opens on its own menu. In the client's menu only the
 **policies list scrolls**; the client's pages and the Policies label stay put, with Show more
 under the list. When the breadcrumbs and the actions row still will not fit with the breadcrumbs
 shortened, the labelled actions fold into More, as on a narrow page.

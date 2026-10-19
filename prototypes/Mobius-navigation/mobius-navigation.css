@@ -400,13 +400,17 @@
    the client's pages and the Policies label stay put; the list scrolls
    under them, with Show more below it. */
 @media (min-width: 1024px) {
-  .mob-sidebar .mob-rail-scroll:has(> .mob-client-menu) { overflow: hidden; }
+  /* On a short screen the list keeps room for two rows and the whole
+     menu scrolls instead. */
   .mob-client-menu { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
-  .mob-record > .mob-client-menu { overflow: hidden; padding-top: var(--spacer-03); }
   .mob-client-menu .mob-rail-pages { flex: 0 0 auto; }
   .mob-client-menu > .mob-nav:last-child { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .mob-client-menu > .mob-nav:last-child > .mob-group { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
-  .mob-client-menu .mob-rail-policies { flex: 0 1 auto; min-height: 0; flex-wrap: nowrap; overflow-y: auto; }
+  .mob-client-menu .mob-rail-policies { flex: 0 1 auto; min-height: 12rem; flex-wrap: nowrap; overflow-y: auto; }
+  /* The edge with more beyond it fades (scrollCues). */
+  .mob-rail-policies.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); }
+  .mob-rail-policies.mob-more-above { -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); }
+  .mob-rail-policies.mob-more-above.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 3rem, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, transparent, #000 3rem, #000 calc(100% - 3rem), transparent); }
   .mob-client-menu .mob-rail-policies > .nav-item { flex: 0 0 auto; }
   .mob-client-menu .mob-more { flex: 0 0 auto; }
 }
