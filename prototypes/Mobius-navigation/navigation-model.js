@@ -300,6 +300,10 @@
     { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
+    /* Live Mobius's "View claims" on the client homepage (Laurence, 19
+       October 2026): the client's claims across their policies. Named
+       "Claims", as the policy menu names its page. */
+    { id: 'cclaims', label: 'Claims', icon: 'fa-regular fa-car-burst' },        // GAP: not in the icon catalogue
     { id: 'cactivity', label: 'Client activity', icon: ICON.activity },
     { id: 'ccomplaints', label: 'Complaints', icon: ICON.flag },
     { id: 'checks', label: 'Client checks', icon: ICON.checks }
@@ -355,7 +359,7 @@
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {
-      summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
+      summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'], cclaims: ['Claims', 'Client'],
       cactivity: ['Client activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
       newquote: ['Product selection', 'New quote']
     },
