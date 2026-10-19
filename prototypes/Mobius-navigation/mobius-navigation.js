@@ -375,6 +375,9 @@
   function titleFor(r) {
     var tt = (M.TITLES[r.scope] || {})[r.page] || ['', ''];
     var title = tt[0].replace('@query', S.query || '');
+    /* An amend page is titled as its status's menu item: Amend details,
+       Amend quote or Amend risk. */
+    if (r.scope === 'policy' && r.p && (r.page === 'amend' || r.page === 'amendquote') && M.amendLabel(r.p, r.page)) title = M.amendLabel(r.p, r.page);
     /* No eyebrow on client and policy pages: the rail names the client
        and the policy column names the policy (Laurence, 7 October 2026). */
     var eyebrow = r.scope === 'app' ? tt[1] : '';

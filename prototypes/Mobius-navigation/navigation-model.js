@@ -110,7 +110,7 @@
       return { group: 'More details', icon: ICON.info, children: [
         { id: 'agent', label: 'Agent / product details' },
         { id: 'history', label: 'History' },
-        { id: 'activity', label: 'Activity' }
+        { id: 'activity', label: 'Policy activity' }
       ] };
     }
   };
@@ -135,9 +135,10 @@
   /* kind: 'flow' opens a page, 'panel' opens a side panel in place,
      'confirm' asks for confirmation in place. */
   var POLICY_ACTIONS = {
-    amend: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amend' },
-    amendQuote: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
-    amendRisk: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
+    /* Live Mobius's labels, one per status (Laurence, 19 October 2026). */
+    amend: { label: 'Amend details', icon: ICON.edit, kind: 'flow', to: 'amend' },
+    amendQuote: { label: 'Amend quote', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
+    amendRisk: { label: 'Amend risk', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
     mta: { label: '[[Make an MTA]]', icon: ICON.edit, kind: 'panel' },   // "Make an MTA" with the pen (Laurence, 8 October 2026)
     extend: { label: 'Policy extension', icon: ICON.time, kind: 'panel' },
@@ -251,6 +252,13 @@
 
   /* The status's actions, in its rule's order (the row and More decide
      where each sits). */
+  /* The label of the entry point that opens this page for this status
+     ("Amend quote" or "Amend risk" share the quote amend page). */
+  function amendLabel(p, page) {
+    var k = entryPoints(p).filter(function (x) { return POLICY_ACTIONS[x].to === page; })[0];
+    return k ? POLICY_ACTIONS[k].label : null;
+  }
+
   function policyActions(p) {
     return [{ sub: null, ids: rulesFor(p).actions.filter(built) }];
   }
@@ -292,7 +300,7 @@
     { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
-    { id: 'cactivity', label: 'Activity', icon: ICON.activity },
+    { id: 'cactivity', label: 'Client activity', icon: ICON.activity },
     { id: 'ccomplaints', label: 'Complaints', icon: ICON.flag },
     { id: 'checks', label: 'Client checks', icon: ICON.checks }
   ];
@@ -348,7 +356,7 @@
     },
     client: {
       summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
-      cactivity: ['Activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
+      cactivity: ['Client activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
       newquote: ['Product selection', 'New quote']
     },
     policy: {
@@ -358,8 +366,9 @@
       diary: ['Diary', 'Correspondence'], docs: ['Documents', 'Correspondence'],
       notes: ['Notes', 'Correspondence'], checklist: ['Checklist', 'Correspondence'], attachments: ['Attachments', 'Correspondence'],
       complaints: ['Complaints', 'Correspondence'], agent: ['Agent / product details', 'More details'],
-      history: ['Policy history', 'More details'], activity: ['Activity', 'More details'],
-      amend: ['[[Amend policy]]', 'Policy action'], amendquote: ['[[Amend policy]]', 'Policy action'], newquote: ['Product selection', 'New quote']
+      history: ['Policy history', 'More details'], activity: ['Policy activity', 'More details'],
+      /* The amend pages take their status's label (amendLabel). */
+      amend: ['Amend details', 'Policy action'], amendquote: ['Amend quote', 'Policy action'], newquote: ['Product selection', 'New quote']
     }
   };
 
@@ -370,6 +379,7 @@
     policyFlows: policyFlows,
     STATUS_RULES: STATUS_RULES,
     rulesFor: rulesFor,
+    amendLabel: amendLabel,
     allowedPolicyPages: allowedPolicyPages,
     POLICY_ACTIONS: POLICY_ACTIONS,
     QUICK_LINKS: QUICK_LINKS,

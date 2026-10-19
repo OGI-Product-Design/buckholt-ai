@@ -163,22 +163,24 @@ stays on every status (configuration-driven in live, ignored for now).
 
 | Status | Sample | Policy details | Claims | Transactions | Entry points (menu) | Actions (row / More) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | Amend policy | Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
-| Cancelled | **none** | ✓ | ✓ | ✓ | Amend policy | Copy policy |
+| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | Amend details | Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
+| Cancelled | **none** | ✓ | ✓ | ✓ | Amend details | Copy policy |
 | Lapsed | ZZ0900000000646 | ✓ | ✓ | ✓ | none | Reinstate policy; Copy policy |
-| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
-| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
-| Automatic refer | **none** | ✓ | — | — | Retrieve quote, Amend policy (quote) | Copy policy |
-| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote, Amend policy (quote) | Copy policy |
-| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | Amend policy (risk) | Copy policy |
+| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
+| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
+| Automatic refer | **none** | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
+| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote, Amend quote | Copy policy |
+| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | Amend risk | Copy policy |
 | Renewal invited | **none** | ✓ | ✓ | ✓ | Retrieve renewal quote*, Amend renewal* | Withdraw alternative quote* |
 | Renewal pending | **none** | ✓ | — | ✓ | none | none |
 | MTA quote | **none** | ✓ | ✓ | ✓ | none | Copy policy (**not audited**: the previous default, flagged) |
 
 \* In the audit but not built: no page or panel yet, so listed in the rule and not drawn.
-Retrieve quote opens the existing Quote summary page. Amend labels are unchanged ("Amend policy"
-on every status) until a label change is agreed; live says Amend details / Amend quote / Amend
-risk. Statuses without a sample record have rules but nothing to show them on.
+Retrieve quote opens the existing Quote summary page. The amend labels are live Mobius's
+(Laurence, 19 October 2026): **Amend details**, **Amend quote**, **Amend risk**; the amend page's
+title, breadcrumb and the Quote summary's link follow the status. The activity pages are
+**Policy activity** and **Client activity** (the system-level Activity module keeps its name).
+Statuses without a sample record have rules but nothing to show them on.
 
 ## System navigation (7 October 2026)
 
