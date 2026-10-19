@@ -315,7 +315,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacer-03);
-    padding: var(--spacer-05) var(--spacer-04) var(--spacer-05) var(--spacer-05);
+    padding: calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-04) calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-05);   /* about 20px above the Avatar and below it to the card, as Mark draws it */
   }
   .mob-sidebar .mob-rail-head::after { content: none; }
   .mob-sidebar .mob-rail-head .mob-column-toggle { margin-left: auto; }
@@ -343,7 +343,11 @@
     border: 0;
     border-radius: 0;
   }
-  .mob-sidebar .mob-record-head { padding: var(--spacer-04) var(--spacer-03) var(--spacer-03) var(--spacer-04); }
+  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-03) var(--spacer-03) var(--spacer-04); }
+  /* Mark's tighter tops: the first group close under the card's edge or
+     the policy's head. */
+  .mob-sidebar .mob-rail-pages .mob-group:first-child { margin-top: var(--spacer-02); }
+  .mob-sidebar .mob-record-nav .mob-group:first-child { margin-top: var(--spacer-03); }
   .mob-sidebar .mob-record-head::after { content: none; }
   .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-02) var(--spacer-05) 0; }
   /* Collapsed head: the button above the Avatar, centred. */
@@ -353,6 +357,22 @@
   .mob-has-record.mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: auto; }
   .mob-has-record.mob-rail-collapsed .mob-rail-client .user-meta-body { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
 }
+/* Collapsed at client level, as Mark draws it (19 October 2026): a
+   narrower panel whose white card is only as tall as its icons, and no
+   current icon marked. */
+@media (min-width: 1024px) {
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 3rem; align-self: flex-start; }
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-scroll { padding: var(--spacer-02); overflow: visible; }
+  .mob-rail-collapsed:not(.mob-has-record) .mob-strip .btn.active {
+    --button-label-active: var(--action-text-01);
+    --button-background-active: transparent;
+    --button-border-active: transparent;
+  }
+}
+/* A control refocused after a mouse press: no focus ring (quietFocus). */
+.btn.mob-quiet-focus:focus-visible { box-shadow: none; border-color: var(--button-border); background-color: var(--button-background); color: var(--button-label); }
+.nav-link.mob-quiet-focus:focus:not(:hover):not(.active) { background-color: var(--nav-link-background); color: var(--nav-link); }
+
 /* The current category in the strip: Mark's solid square. */
 .mob-strip .btn.active {
   --button-label-active: var(--action-text-02);

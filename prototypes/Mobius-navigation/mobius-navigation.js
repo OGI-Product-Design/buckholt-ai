@@ -1055,7 +1055,20 @@
     /* A list of selectors is tried in order: the first that matches wins. */
     var f = null;
     (focusSel || '').split(',').some(function (sel) { f = sel.trim() && document.querySelector(sel.trim()); return !!f; });
-    if (f) f.focus();
+    if (f) quietFocus(f);
+  }
+
+  /* Focus goes back to the control that was pressed, so keyboard users
+     keep their place; after a mouse or touch press its focus ring is not
+     drawn (Mark's collapsed menu shows none), until the next key press. */
+  var pointerLast = false;
+  document.addEventListener('pointerdown', function () { pointerLast = true; }, true);
+  document.addEventListener('keydown', function () { pointerLast = false; }, true);
+  function quietFocus(el) {
+    el.focus();
+    if (!pointerLast) return;
+    el.classList.add('mob-quiet-focus');
+    el.addEventListener('blur', function off() { el.classList.remove('mob-quiet-focus'); el.removeEventListener('blur', off); });
   }
 
   /* Escape closes the drawer. A panel or confirmation open on top of it
