@@ -229,7 +229,10 @@
       '<div class="user-meta mob-rail-client">' +
         '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
         '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
-      '</div>';
+      '</div>' +
+      /* Mark's menu (19 October 2026): the head spans the menu, the client
+         at the top of both columns, the collapse button at its right. */
+      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
     $('mob-rail-head').hidden = app;
 
     var curPolicy = onPolicy ? r.p.id : null;
@@ -264,8 +267,9 @@
     /* The foot: the collapse button at its right (as in Outlook or VS
        Code). Client support is an icon Button in the overview headings,
        beside Client notes (Laurence, 8 October 2026). */
-    $('mob-rail-foot').innerHTML = app ? '' : columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
-    $('mob-rail-foot').hidden = app;
+    /* The collapse button moved to the head (Mark, 19 October 2026). */
+    $('mob-rail-foot').innerHTML = '';
+    $('mob-rail-foot').hidden = true;
 
     /* The policy column: only once a policy is open. */
     var rec = $('mob-record');
@@ -285,7 +289,9 @@
            list keeps the lighter dots. */
         '<div class="mob-record-titlebar">' +
           '<h2 class="mob-record-title" id="mob-record-title">' + esc(r.p.ref) + '</h2>' +
-          '<div class="mob-record-status">' + ui.statusTag(r.p, true) + '</div>' +
+          /* The status mark, at the right of the reference (Mark, 19
+             October 2026: in place of the small Tag). */
+          '<div class="mob-record-status">' + ui.statusMark(r.p) + '</div>' +
         '</div>' +
         '<span class="mob-rail-sub mob-record-ref">' + t(label) + '</span>' +
       '</div>') +
