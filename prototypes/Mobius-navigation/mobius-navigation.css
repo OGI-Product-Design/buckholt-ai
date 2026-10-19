@@ -343,11 +343,11 @@
     border: 0;
     border-radius: 0;
   }
-  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-01) var(--spacer-03) var(--spacer-04); }
+  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-03) var(--spacer-03) var(--spacer-05); }   /* Mark: the reference about 24px from the strip, the status dot 16px from the panel's edge */
   /* Mark's tighter tops: the first group close under the card's edge or
      the policy's head. */
   .mob-sidebar .mob-rail-pages .mob-group:first-child { margin-top: var(--spacer-02); }
-  .mob-sidebar .mob-record-nav .mob-group:first-child { margin-top: var(--spacer-03); }
+  .mob-sidebar .mob-record-nav .mob-group:first-child { margin-top: var(--spacer-02); }
   /* Mark's type and spacing (measured from his frame, 19 October 2026):
      the client 18px over a 14px reference beside a 48px Avatar; the
      policy 16px over a 16px line of business; group labels 16px, 8px
@@ -356,6 +356,9 @@
   .mob-sidebar .mob-rail-head .avatar { --avatar-size: 3rem; }
   .mob-sidebar .mob-rail-name { font-size: 1.125rem; line-height: 1.5rem; }
   .mob-sidebar .mob-record-ref { font-size: 1rem; line-height: 1.5rem; }
+  /* Group headings in the links' grey, not near-black: in Mark's frame
+     they read no heavier than the links under them. */
+  .mob-sidebar .mob-group-label { color: var(--text-secondary); }
   .mob-sidebar .mob-group { margin-top: calc(var(--spacer-04) + var(--spacer-02)); }   /* 20px: Mark's 53px from a group's last link to the next label */
   .mob-sidebar:not(.mob-rail-collapsed) .mob-rail-scroll { padding-left: var(--spacer-02); }
   .mob-sidebar .mob-subnav { padding-left: 0.625rem; --nav-gap: var(--spacer-01); }
@@ -366,7 +369,7 @@
   .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head .avatar { --avatar-size: 2.5rem; }
   .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head { padding: var(--spacer-04) 0 var(--spacer-03); gap: var(--spacer-03); }   /* with User meta's own 8px: 16px either side of the Avatar */
   .mob-sidebar .mob-record-head::after { content: none; }
-  .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-01) var(--spacer-05) var(--spacer-01); }
+  .mob-sidebar .mob-record-nav { padding: 0 0 var(--spacer-05) 0; }
   /* Collapsed head: the button above the Avatar, centred. */
   .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
   .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
@@ -403,7 +406,7 @@
 .mob-status-icon { flex: 0 0 auto; font-size: 0.75rem; color: var(--mob-status-colour); }
 .mob-status-error .mob-status-icon { font-size: 0.875rem; }
 .mob-status-mark { display: inline-flex; align-items: center; }
-.mob-status-mark .mob-status-dot { width: 0.625rem; height: 0.625rem; }
+.mob-status-mark .mob-status-dot { width: 0.75rem; height: 0.75rem; }   /* 12px, as Mark draws it */
 /* In the list the status reads quietly, in the secondary colour (Mark). */
 .mob-rail-policies .mob-rail-status { color: var(--text-secondary); }
 
