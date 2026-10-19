@@ -49,15 +49,15 @@
   /* polShown: how many
      policies every policy list shows. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
-  /* railOverride: the rail opened (true) or collapsed (false) by hand, or
-     null. Untouched, a policy page collapses the rail to leave the page
-     room; once it has been opened or collapsed by hand, that choice stays
-     from page to page (Laurence, 7 October 2026). */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). searchOpen: the clients opened in
      the results' Accordion; searchFilter: the results' filters.
      A new search resets both. */
-  var S = { polShown: 5, step: 0, railOverride: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
+  /* navCollapsed: the whole menu collapsed with its head's button (Mark,
+     19 October 2026); it stays so from page to page. sideView: on a
+     policy page, which one menu shows beside the strip, 'client' or
+     'policy' (null: the policy's); never both (Mark). */
+  var S = { polShown: 5, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
   P.init(S);
 
   var R = null;
@@ -129,10 +129,7 @@
      in place of floating menus). The record column is always open: it has
      no collapse button (Laurence). In the drawer (below 1024px)
      everything is open and there are no toggles. */
-  function railCollapsed() {
-    if (narrow.matches) return false;
-    return S.railOverride !== null ? !S.railOverride : R.scope === 'policy';
-  }
+  function navCollapsed() { return !narrow.matches && S.navCollapsed; }
 
   /* A collapsed control is icon-only: its accessible name, and a Tooltip to
      the right (Buckholt requires one for icon-only Buttons). */
@@ -141,9 +138,9 @@
   }
 
   /* A collapsed category: an icon-only ghost Button that opens its column
-     (`data-expand`) and moves focus to the category there (`data-focus`). */
-  function expander(column, focusSel, name, inner, on) {
-    return '<li class="mob-strip-item"><button type="button" class="btn btn-ghost' + (on ? ' active' : '') + '" data-expand="' + column + '" data-focus="' + esc(focusSel) + '"' +
+     (`data-view`) and moves focus there (`data-focus`). */
+  function expander(view, focusSel, name, inner, on) {
+    return '<li class="mob-strip-item"><button type="button" class="btn btn-ghost' + (on ? ' active' : '') + '" data-view="' + view + '" data-focus="' + esc(focusSel) + '"' +
       tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + inner + '</button></li>';
   }
 
@@ -211,15 +208,40 @@
                policies and Client support. On every client and policy page.
        record  only once a policy is open: the policy, its actions and its
                menu, beside the rail with that policy marked in it. */
+  /* The client's menu: their pages, then their policies; only the
+     policies scroll (Mark, 19 October 2026). */
+  function clientMenu(r, curPolicy, cls) {
+    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (cls ? ' ' + cls : '') + '">' +
+        '<div class="mob-rail-pages">' + navGroups(M.clientNav(), r.scope === 'client' ? r.page : null, { scope: 'client' }) + '</div>' +
+        railPolicies(curPolicy) +
+      '</nav>';
+  }
+  /* The open policy stays in view in the list: the list scrolls (by
+     itself, not the page) to bring it up when it is out of sight. */
+  function scrollToOpenPolicy() {
+    var list = sidebar.querySelector('.mob-rail-policies');
+    var open = list && list.querySelector('a[aria-current]');
+    if (!open) return;
+    var top = open.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+    if (top < list.scrollTop || top + open.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top - list.clientHeight / 2 + open.offsetHeight / 2;
+  }
+
   function renderSide(r) {
     var c = F.client;
     var app = r.scope === 'app';
     var onClient = r.scope === 'client';
     var onPolicy = r.scope === 'policy';
-    var tight = railCollapsed();
+    /* Mark's menu (19 October 2026): the head's button collapses the whole
+       menu to the strip; on a policy page the strip's two buttons choose
+       the one menu beside it, the client's or the policy's. In the drawer
+       (below 1024px) everything is open, as before. */
+    var collapsed = navCollapsed();
+    var view = onPolicy ? (S.sideView || 'policy') : 'client';
+    var tight = !app && !narrow.matches && (collapsed || onPolicy);   /* the rail is the strip */
     /* The menu is the selected client's: at app level there is none. */
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
+    sidebar.classList.toggle('mob-nav-collapsed', collapsed);
 
     /* The head: the client in User meta (the runtime's `.user-meta`), the
        Avatar beside the name over the reference, level with the policy's
@@ -232,38 +254,34 @@
       '</div>' +
       /* Mark's menu (19 October 2026): the head spans the menu, the client
          at the top of both columns, the collapse button at its right. */
-      columnToggle('data-rail-toggle aria-controls="mob-rail"', tight, 'client menu');
+      columnToggle('data-rail-toggle aria-controls="sidebar"', collapsed, 'menu');
     $('mob-rail-head').hidden = app;
 
     var curPolicy = onPolicy ? r.p.id : null;
     var body = '';
     if (tight) {
-      /* Collapsed: one icon button per category, each opening the rail
-         there; the actions become icon-only Buttons. */
+      /* The strip: the client's menu and the policy's, one button each.
+         Beside a policy the one showing is marked; collapsed, none is
+         (Mark). With no policy open, the Shield opens the client's menu at
+         their policies. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('rail', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client pages',
-          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', onClient) +
-        expander('rail', '.mob-rail-policies a[aria-current], .mob-rail-policies a', 'Policies (' + F.policies.length + ')',
-          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy) +
+        expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
+          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', !collapsed && onPolicy && view === 'client') +
+        expander(onPolicy ? 'policy' : 'client', onPolicy ? '.mob-record-nav a[aria-current], .mob-record-nav a' : '.mob-rail-policies a[aria-current], .mob-rail-policies a',
+          onPolicy ? 'Policy menu' : 'Policies (' + F.policies.length + ')',
+          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', !collapsed && onPolicy && view === 'policy') +
       '</ul>';
     } else if (!app) {
       /* The client's menu, built as the policy's is (the overview, then
          an always-open group), then their policies. */
-      body = '<nav aria-label="' + esc(c.name) + '">' +
-          '<div class="mob-rail-pages">' + navGroups(M.clientNav(), onClient ? r.page : null, { scope: 'client' }) + '</div>' +
-          railPolicies(curPolicy) +
-        '</nav>';
+      body = clientMenu(r, curPolicy);
     }
     var railBody = $('mob-rail-body');
     railBody.innerHTML = body;
     tipTruncated();
     /* The open policy stays in view beside its menu: the rail scrolls (by
        itself, not the page) to bring it up when it is below the fold. */
-    var open = onPolicy && railBody.querySelector('.mob-rail-policies a[aria-current]');
-    if (open) {
-      var top = open.getBoundingClientRect().top - railBody.getBoundingClientRect().top + railBody.scrollTop;
-      if (top + open.offsetHeight > railBody.scrollTop + railBody.clientHeight) railBody.scrollTop = top - railBody.clientHeight / 2 + open.offsetHeight / 2;
-    }
+    scrollToOpenPolicy();
     /* The foot: the collapse button at its right (as in Outlook or VS
        Code). Client support is an icon Button in the overview headings,
        beside Client notes (Laurence, 8 October 2026). */
@@ -273,9 +291,18 @@
 
     /* The policy column: only once a policy is open. */
     var rec = $('mob-record');
-    rec.hidden = !onPolicy;
-    sidebar.classList.toggle('mob-has-record', onPolicy);
-    if (!onPolicy) { rec.innerHTML = ''; return; }
+    var showRec = onPolicy && !collapsed;
+    rec.hidden = !showRec;
+    sidebar.classList.toggle('mob-has-record', showRec);
+    if (!showRec) { rec.innerHTML = ''; return; }
+    /* The client's menu chosen beside a policy: in the column, in place
+       of the policy's. */
+    if (view === 'client' && !narrow.matches) {
+      rec.innerHTML = clientMenu(r, curPolicy, 'mob-record-nav');
+      tipTruncated();
+      scrollToOpenPolicy();
+      return;
+    }
 
     var nav = M.policyNav(r.p);
     /* The head: the reference with its status Tag, over the line of
@@ -435,8 +462,12 @@
     /* Wrapped when the actions start below the breadcrumbs' bottom edge. */
     var fits = function () { var n = bar.querySelector('.mob-crumbs'); return act.offsetTop < n.offsetTop + n.offsetHeight; };
     Shell.disposeTooltips(nav);
+    bar.classList.remove('mob-fold-actions');
     nav.outerHTML = crumbs(R, tt.title);
     if (!fits()) bar.querySelector('.mob-crumbs').outerHTML = crumbs(R, tt.title, 1);
+    /* Still too wide: the labelled actions fold into More, as they do on a
+       narrow page. */
+    if (!fits()) bar.classList.add('mob-fold-actions');
     Shell.initTooltips(bar.querySelector('.mob-crumbs'));
   }
   /* Main changes width with the window and when the client menu opens or
@@ -706,6 +737,7 @@
     /* Opening a client or policy from the search closes it. */
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
+    S.sideView = null;                                /* a new page shows its own menu */
     closeDrawer(false);
     if (!render()) return;
     window.scrollTo(0, 0);
@@ -926,10 +958,11 @@
     /* The skip link moves focus without touching the route. */
     if (el.closest('[data-skip]')) { e.preventDefault(); $('mob-title').focus(); return; }
     if (el.closest('[data-close-menu]')) { closeDrawer(true); return; }
-    if (el.closest('[data-rail-toggle]')) { S.railOverride = railCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
-    var ex = el.closest('[data-expand]');
+    if (el.closest('[data-rail-toggle]')) { S.navCollapsed = !navCollapsed(); rerenderSide('[data-rail-toggle]'); return; }
+    var ex = el.closest('[data-view]');
     if (ex) {
-      S.railOverride = true;
+      S.navCollapsed = false;
+      if (R.scope === 'policy') S.sideView = ex.getAttribute('data-view');
       rerenderSide(ex.getAttribute('data-focus'));
       return;
     }

@@ -204,6 +204,15 @@ and Amend and Add new quote in the actions rows, not the menus. In the Mobius lo
 the flush blue sidebar with the client on it and the policy's menu the navy flyout. The drawer
 (below 1024px) keeps its layout, with the client at its top.
 
+**Mark's menu behaviour (19 October 2026).** The head's button collapses the **whole menu** to
+the strip (and opens it again); it stays collapsed from page to page until opened. **Only one
+menu shows at a time**: on a policy page the strip's two buttons choose it, Client (the client's
+pages and policies) or Policy (the policy's menu), beside the strip in the same place; the one
+showing is marked, and a new page opens on its own menu. In the client's menu only the
+**policies list scrolls**; the client's pages and the Policies label stay put, with Show more
+under the list. When the breadcrumbs and the actions row still will not fit with the breadcrumbs
+shortened, the labelled actions fold into More, as on a narrow page.
+
 **Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
 **Claims** in the client menu, after Transactions: the client's claims across their policies,
 named as the policy menu names its page. The sample data has no claims, so it shows the empty
