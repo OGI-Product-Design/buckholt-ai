@@ -156,8 +156,12 @@
       '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
       '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
         var on = p.id === curId;
+        /* The client's card shown on a policy page: the open policy is the
+           way back to its menu, so it reads as pressable (Mark). */
+        var back = on && R && R.scope === 'policy' && S.sideView === 'client';
         return '<li class="nav-item">' +
-          '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+          '<a class="nav-link' + (on ? ' active' : '') + (back ? ' mob-back' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') +
+            (back ? ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Back to ' + esc(p.ref) + '’s menu"' : '') + '>' +
             /* The status as an eyebrow, plain text above the row (Laurence,
                7 October 2026: in place of the Tag). No Car of its own: the
                group's Shield labels the list, the line of business says
@@ -211,7 +215,9 @@
   /* The client's menu: their pages, then their policies; only the
      policies scroll (Mark, 19 October 2026). */
   function clientMenu(r, curPolicy, cls) {
-    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (cls ? ' ' + cls : '') + '">' +
+    /* All the policies shown (after Show more): only then does the list
+       scroll on its own (Mark, 19 October 2026). */
+    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (S.polShown > 5 ? ' mob-all' : '') + (cls ? ' ' + cls : '') + '">' +
         '<div class="mob-rail-pages">' + navGroups(M.clientNav(), r.scope === 'client' ? r.page : null, { scope: 'client' }) + '</div>' +
         railPolicies(curPolicy) +
       '</nav>';
@@ -1007,6 +1013,10 @@
       render();
       scroller = document.querySelector('.mob-rail-scroll');
       if (scroller) scroller.scrollTop = y;
+      /* Shown more in the menu: the list now scrolls, brought to the first
+         policy it added. */
+      var list = focusId === 'more-side' && S.polShown > 5 && sidebar.querySelector('.mob-rail-policies');
+      if (list && list.children[5]) { list.scrollTop = list.children[5].offsetTop - list.offsetTop - 8; scrollCues(list); }
       /* From the search Modal: refresh its results and keep focus there. */
       if (inModal) {
         renderSearchBody();
