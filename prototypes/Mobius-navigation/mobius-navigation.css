@@ -370,7 +370,10 @@
   /* Collapsed head: the button above the Avatar, centred. */
   .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
   .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
-  .mob-has-record.mob-rail-collapsed .mob-rail-head { flex-direction: row; padding-inline: var(--spacer-05) var(--spacer-04); }
+  /* Beside a policy the Avatar is centred over the strip's icons, as
+     Mark draws it: the strip's centre is 8px + 36px in; less User meta's
+     own 8px and half the Avatar. */
+  .mob-has-record.mob-rail-collapsed .mob-rail-head { flex-direction: row; padding-inline: calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-04); }
   .mob-has-record.mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: auto; }
   .mob-has-record.mob-rail-collapsed .mob-rail-client .user-meta-body { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
 }
