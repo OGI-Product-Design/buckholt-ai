@@ -283,15 +283,15 @@
     var body = '';
     if (tight) {
       /* The strip: the client's menu and the policy's, one button each.
-         Beside a policy the one showing is marked; collapsed, none is
-         (Mark). With no policy open, the Shield opens the client's menu at
-         their policies. */
+         The menu you are in stays marked, collapsed or not (Laurence, 19
+         October 2026). With no policy open, the Shield opens the client's
+         menu at their policies. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
         expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
-          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', !collapsed && onPolicy && view === 'client') +
+          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client') +
         expander(onPolicy ? 'policy' : 'client', onPolicy ? '.mob-record-nav a[aria-current], .mob-record-nav a' : '.mob-rail-policies a[aria-current], .mob-rail-policies a',
           onPolicy ? 'Policy menu' : 'Policies (' + F.policies.length + ')',
-          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', !collapsed && onPolicy && view === 'policy') +
+          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy && view === 'policy') +
       '</ul>';
     } else if (!app) {
       /* The client's menu, built as the policy's is (the overview, then
