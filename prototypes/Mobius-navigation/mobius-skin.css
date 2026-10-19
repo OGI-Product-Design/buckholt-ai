@@ -165,6 +165,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-sidebar .mob-rail,
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: transparent; border: 0; border-radius: 0; }
   html[data-skin="mobius"] .mob-sidebar .mob-record { background-color: var(--mobius-navy); }
+  html[data-skin="mobius"] .mob-sidebar .mob-record-head { padding-right: var(--spacer-04); }
 }
 /* Status dots stay readable on blue: a white ring. */
 html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }

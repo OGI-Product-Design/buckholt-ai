@@ -307,7 +307,7 @@
     height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
     background-color: var(--ui-background-03);
     border: 1px solid var(--ui-border-02);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-xl);           /* 24px, as Mark draws it */
     overflow: hidden;
   }
   .mob-sidebar .mob-rail-head {
@@ -315,7 +315,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacer-03);
-    padding: calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-04) calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-05);   /* about 20px above the Avatar and below it to the card, as Mark draws it */
+    padding: var(--spacer-04) var(--spacer-04) var(--spacer-04) calc(var(--spacer-04) + var(--spacer-02));   /* with User meta's own 8px, Mark's 24px around the Avatar; the button 16px from the edge; the Avatar over the menu's group icons */
   }
   .mob-sidebar .mob-rail-head::after { content: none; }
   .mob-sidebar .mob-rail-head .mob-column-toggle { margin-left: auto; }
@@ -324,32 +324,49 @@
   .mob-sidebar .mob-rail,
   .mob-sidebar:not(.mob-has-record) .mob-rail {
     margin: 0;
-    width: 18rem;                                     /* 288px: room for a long reference under the Policies rule */
+    width: 19rem;                                     /* 304px: Mark's panel is about 322px */
     overflow: hidden;
     background-color: var(--ui-background-01);
     border: 1px solid var(--ui-border-03);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);           /* 16px */
   }
   /* Collapsed, or beside a policy: the card is a strip of icons. */
   .mob-sidebar.mob-rail-collapsed .mob-rail,
-  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4rem; }
-  .mob-rail-collapsed .mob-rail-scroll { padding: var(--spacer-04) var(--spacer-03); }
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4.5rem; }   /* 72px */
+  .mob-rail-collapsed .mob-rail-scroll { padding: var(--spacer-04); }
   /* The policy's menu: on the panel's grey, no card of its own; with the
      strip it fills the client card's width. */
   .mob-sidebar .mob-record {
-    width: 14rem;                                     /* with the 4rem strip, the client card's 18rem */
+    width: 14.5rem;                                   /* with the 4.5rem strip, the client card's 19rem */
     margin: 0;
     background-color: transparent;
     border: 0;
     border-radius: 0;
   }
-  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-03) var(--spacer-03) var(--spacer-04); }
+  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-01) var(--spacer-03) var(--spacer-04); }
   /* Mark's tighter tops: the first group close under the card's edge or
      the policy's head. */
   .mob-sidebar .mob-rail-pages .mob-group:first-child { margin-top: var(--spacer-02); }
   .mob-sidebar .mob-record-nav .mob-group:first-child { margin-top: var(--spacer-03); }
+  /* Mark's type and spacing (measured from his frame, 19 October 2026):
+     the client 18px over a 14px reference beside a 48px Avatar; the
+     policy 16px over a 16px line of business; group labels 16px, 8px
+     apart; links 14px, 12px in from their pill, the pill 10px from the
+     rule. */
+  .mob-sidebar .mob-rail-head .avatar { --avatar-size: 3rem; }
+  .mob-sidebar .mob-rail-name { font-size: 1.125rem; line-height: 1.5rem; }
+  .mob-sidebar .mob-record-ref { font-size: 1rem; line-height: 1.5rem; }
+  .mob-sidebar .mob-group { margin-top: calc(var(--spacer-04) + var(--spacer-02)); }   /* 20px: Mark's 53px from a group's last link to the next label */
+  .mob-sidebar:not(.mob-rail-collapsed) .mob-rail-scroll { padding-left: var(--spacer-02); }
+  .mob-sidebar .mob-subnav { padding-left: 0.625rem; --nav-gap: var(--spacer-01); }
+  .mob-sidebar .mob-subnav .nav-link { --nav-link-padding-x: 0.75rem; font-size: 0.875rem; line-height: 1.25rem; }   /* 32px rows, 34px apart */
+  /* The strip: 40px Buttons, 16px from the card's top, 4px apart. */
+  .mob-sidebar .mob-nav.mob-strip { --nav-gap: var(--spacer-02); }
+  /* Collapsed: a 56px card, a 40px Avatar 16px under the button. */
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head .avatar { --avatar-size: 2.5rem; }
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head { padding: var(--spacer-04) 0 var(--spacer-03); gap: var(--spacer-03); }   /* with User meta's own 8px: 16px either side of the Avatar */
   .mob-sidebar .mob-record-head::after { content: none; }
-  .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-02) var(--spacer-05) 0; }
+  .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-01) var(--spacer-05) var(--spacer-01); }
   /* Collapsed head: the button above the Avatar, centred. */
   .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
   .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
@@ -361,8 +378,8 @@
    narrower panel whose white card is only as tall as its icons, and no
    current icon marked. */
 @media (min-width: 1024px) {
-  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 3rem; align-self: flex-start; }
-  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-scroll { padding: var(--spacer-02); overflow: visible; }
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 3.5rem; align-self: flex-start; }   /* 56px */
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-scroll { padding: var(--spacer-03); overflow: visible; }
   .mob-rail-collapsed:not(.mob-has-record) .mob-strip .btn.active {
     --button-label-active: var(--action-text-01);
     --button-background-active: transparent;
