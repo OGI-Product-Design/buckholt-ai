@@ -155,7 +155,8 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
 /* Status dots stay readable on blue: a white ring. */
 html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }
 /* Inline counts in the menu: white on the dark column. */
-html[data-skin="mobius"] .mob-count.mob-count-inline {
+html[data-skin="mobius"] .mob-rail .mob-count.mob-count-inline,
+html[data-skin="mobius"] .mob-record .mob-count.mob-count-inline {
   --badge-background: rgba(255, 255, 255, 0.18);
   --badge-border: transparent;
   --badge-label: #ffffff;
