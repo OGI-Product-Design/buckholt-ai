@@ -850,7 +850,7 @@
         card('Premium and product', premium +
           '<div class="form-actions mob-form-actions">' +
             btn('Convert to policy', { variant: 'primary', disabled: dec, attrs: ' data-confirm="convert" aria-haspopup="dialog"' }) +
-            standalone('Amend risk', policyHref(p, 'amendquote')) +
+            standalone(M.amendLabel(p, 'amendquote') || 'Amend quote', policyHref(p, 'amendquote')) +
           '</div>', { actions: [
           btn('Edit premium', { size: 'sm', disabled: dec, attrs: ' data-panel="editpremium" aria-haspopup="dialog"' }),
           btn('Select payment plan', { size: 'sm', disabled: dec, attrs: ' data-panel="payplan" aria-haspopup="dialog"' })
