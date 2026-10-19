@@ -189,6 +189,21 @@ page, so each is a link styled as a ghost Button (and a link inside More when th
 This relaxes the 8 October rule that row Buttons never open pages. Add new quote is in the row on
 client pages only; a policy page reaches it through the client overview.
 
+**Mark's menu (19 October 2026).** Wide screens: the menu is one rounded grey panel
+(`--ui-background-03`, 16px radius, inset 8px). The client heads it, Avatar, name and reference,
+with the collapse button at its right, above both columns. At client level the client's menu is a
+white card (18rem) in the panel; on a policy page it is a white strip of icons (4rem) with the
+policy's menu beside it on the grey (14rem), so the panel keeps its width. The current icon in
+the strip is a solid blue square. Collapsed at client level: the button, the Avatar and the strip.
+The policy's head shows a status mark at the right of the reference (in place of the small Tag),
+with the status in text for assistive technology and a Tooltip. Status marks take the status's
+shape as well as its colour: a dot (Policy), a triangle (warning), a no-entry sign (error); the
+status text in the list is secondary. "Show 2 more" leads with a plus. Kept from our own
+decisions rather than the mock: "Policy" not "Live", Client activity, Claims in the client menu,
+and Amend and Add new quote in the actions rows, not the menus. In the Mobius look the panel is
+the flush blue sidebar with the client on it and the policy's menu the navy flyout. The drawer
+(below 1024px) keeps its layout, with the client at its top.
+
 **Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
 **Claims** in the client menu, after Transactions: the client's claims across their policies,
 named as the policy menu names its page. The sample data has no claims, so it shows the empty

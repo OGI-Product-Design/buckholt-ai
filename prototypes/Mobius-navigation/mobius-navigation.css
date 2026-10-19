@@ -291,18 +291,86 @@
   .mob-rail { transition: none; }
 }
 
+/* ------------------------------------------------------------- Mark's menu
+   Mark's restyle (19 October 2026), wide screens: the whole menu is one
+   rounded grey panel, inset 8px. The client heads it, with the collapse
+   button at its right, above both columns. At client level the client's
+   menu is a white card inside it; on a policy page the client's menu is a
+   white strip of icons and the policy's menu sits beside it on the grey,
+   so the panel keeps its width. Collapsed at client level the panel is a
+   narrow strip: the button, the Avatar, the icons. The drawer (below
+   1024px) keeps its own layout. */
+@media (min-width: 1024px) {
+  #sidebar.mob-sidebar {                              /* the id: Buckholt's #sidebar sets its own margin and radius */
+    margin: var(--spacer-03);
+    top: calc(var(--app-header-height) + var(--spacer-03));
+    height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
+    background-color: var(--ui-background-03);
+    border: 1px solid var(--ui-border-02);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .mob-sidebar .mob-rail-head {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacer-03);
+    padding: var(--spacer-05) var(--spacer-04) var(--spacer-05) var(--spacer-05);
+  }
+  .mob-sidebar .mob-rail-head::after { content: none; }
+  .mob-sidebar .mob-rail-head .mob-column-toggle { margin-left: auto; }
+  .mob-columns { padding: 0 var(--spacer-03) var(--spacer-03); }
+  /* The client's menu: the white card. */
+  .mob-sidebar .mob-rail,
+  .mob-sidebar:not(.mob-has-record) .mob-rail {
+    margin: 0;
+    width: 18rem;                                     /* 288px: room for a long reference under the Policies rule */
+    overflow: hidden;
+    background-color: var(--ui-background-01);
+    border: 1px solid var(--ui-border-03);
+    border-radius: var(--border-radius-md);
+  }
+  /* Collapsed, or beside a policy: the card is a strip of icons. */
+  .mob-sidebar.mob-rail-collapsed .mob-rail,
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4rem; }
+  .mob-rail-collapsed .mob-rail-scroll { padding: var(--spacer-04) var(--spacer-03); }
+  /* The policy's menu: on the panel's grey, no card of its own; with the
+     strip it fills the client card's width. */
+  .mob-sidebar .mob-record {
+    width: 14rem;                                     /* with the 4rem strip, the client card's 18rem */
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  .mob-sidebar .mob-record-head { padding: var(--spacer-04) var(--spacer-03) var(--spacer-03) var(--spacer-04); }
+  .mob-sidebar .mob-record-head::after { content: none; }
+  .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-02) var(--spacer-05) 0; }
+  /* Collapsed head: the button above the Avatar, centred. */
+  .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
+  .mob-has-record.mob-rail-collapsed .mob-rail-head { flex-direction: row; padding-inline: var(--spacer-05) var(--spacer-04); }
+  .mob-has-record.mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: auto; }
+  .mob-has-record.mob-rail-collapsed .mob-rail-client .user-meta-body { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+}
+/* The current category in the strip: Mark's solid square. */
+.mob-strip .btn.active {
+  --button-label-active: var(--action-text-02);
+  --button-background-active: var(--action-01);
+  --button-border-active: var(--action-01);
+}
+/* The status marks: a dot, a triangle, a no-entry sign. */
+.mob-status-icon { flex: 0 0 auto; font-size: 0.75rem; color: var(--mob-status-colour); }
+.mob-status-error .mob-status-icon { font-size: 0.875rem; }
+.mob-status-mark { display: inline-flex; align-items: center; }
+.mob-status-mark .mob-status-dot { width: 0.625rem; height: 0.625rem; }
+/* In the list the status reads quietly, in the secondary colour (Mark). */
+.mob-rail-policies .mob-rail-status { color: var(--text-secondary); }
+
 /* A strip of icons: one per category, evenly spaced and centred. */
 .mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
 .mob-strip-item { list-style: none; }
 .mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
-/* The current category is marked in the light active tint Page navigation
-   uses for its current page, not the ghost Button's solid pressed colour
-   (which `.btn.active` would otherwise draw). */
-.mob-strip .btn.active {
-  --button-label-active: var(--action-text-01);
-  --button-background-active: var(--action-04);
-  --button-border-active: transparent;
-}
 /* The client's Avatar (extra small) is centred in a button the size of the others. */
 .mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
 

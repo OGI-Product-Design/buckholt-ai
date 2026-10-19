@@ -79,9 +79,24 @@
      own border colour), the text in the primary colour: the menus' compact
      status (Laurence, 7 October 2026; not Buckholt). The text carries the
      meaning; the dot only reinforces it. */
+  /* Mark's menu (19 October 2026): the mark's shape follows the status,
+     a dot when all is well, a triangle for a warning, a no-entry sign for
+     an error, so colour is not the only signal. */
+  function statusMarkIcon(p) {
+    var v = STATUS[p.status].variant;
+    if (v === 'success') return '<span class="mob-status-dot" aria-hidden="true"></span>';
+    var ic = { warning: 'fa-solid fa-triangle', error: 'fa-regular fa-ban', info: 'fa-solid fa-circle-info' }[v];
+    return '<i class="' + ic + ' mob-status-icon" aria-hidden="true"></i>';
+  }
   function statusDot(p, extra) {
     return '<span class="eyebrow mob-status mob-status-' + STATUS[p.status].variant + (extra ? ' ' + extra : '') + '">' +
-      '<span class="mob-status-dot" aria-hidden="true"></span>' + statusText(p) + '</span>';
+      statusMarkIcon(p) + statusText(p) + '</span>';
+  }
+  /* The policy column's head: the mark alone, the status in text for
+     assistive technology and in a Tooltip. */
+  function statusMark(p) {
+    return '<span class="mob-status mob-status-' + STATUS[p.status].variant + ' mob-status-mark" data-bs-toggle="tooltip" data-bs-title="' + esc(plain(STATUS[p.status].label)) + '">' +
+      statusMarkIcon(p) + '<span class="visually-hidden">' + statusText(p) + '</span></span>';
   }
 
   /* `small` is the documented `.tag-sm`, used where space is tight (the
@@ -452,11 +467,12 @@
        design; the table keeps "Load 2 more" with its chevron. */
     var side = where !== 'table';
     if (rest > 0) {
+      /* The menu's "+ Show 2 more" (Mark, 19 October 2026). */
       return moreLink((side ? 'Show ' : 'Load ') + Math.min(5, rest) + ' more',
-        ' data-more="1" data-focus-id="more-' + where + '"', side ? null : AI.more);
+        ' data-more="1" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
     }
     if (total > 5) {
-      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? null : AI.fewer);
+      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
     }
     return '';
   }
@@ -1398,7 +1414,7 @@
 
   global.MobiusPages = {
     init: function (state) { S = state; },
-    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot,
+    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot, statusMark: statusMark,
       loadMoreButton: loadMoreButton, shownPolicies: shownPolicies, policyHref: policyHref },
     app: app,
     client: client,
