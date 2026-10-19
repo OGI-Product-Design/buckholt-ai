@@ -725,8 +725,8 @@
       ])];
     },
     cactivity: function () {
-      return [card('Activity', activityFilters('ca', null) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Activity' }),
+      return [card('Client activity', activityFilters('ca', null) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Client activity' }),
         { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria. You can preview each activity and save the audit trail as a PDF.', actions: [savePdf()] })];
     },
     ccomplaints: function () {
@@ -1023,8 +1023,8 @@
     },
 
     activity: function (p) {
-      return [card('Activity', activityFilters('pa', p) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Activity' }),
+      return [card('Policy activity', activityFilters('pa', p) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Policy activity' }),
         { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria.', actions: [savePdf()] })];
     },
 
