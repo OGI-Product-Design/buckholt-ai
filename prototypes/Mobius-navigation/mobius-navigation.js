@@ -156,12 +156,8 @@
       '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
       '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
         var on = p.id === curId;
-        /* The client's card shown on a policy page: the open policy is the
-           way back to its menu, so it reads as pressable (Mark). */
-        var back = on && R && R.scope === 'policy' && S.sideView === 'client';
         return '<li class="nav-item">' +
-          '<a class="nav-link' + (on ? ' active' : '') + (back ? ' mob-back' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') +
-            (back ? ' data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Back to ' + esc(p.ref) + '’s menu"' : '') + '>' +
+          '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
             /* The status as an eyebrow, plain text above the row (Laurence,
                7 October 2026: in place of the Tag). No Car of its own: the
                group's Shield labels the list, the line of business says
