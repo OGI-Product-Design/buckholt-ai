@@ -169,8 +169,11 @@
                 status and are not listed.
        entry    navigation too: entry points that open a journey's pages,
                 in the Policy group (keys of POLICY_ACTIONS with `to`).
-       actions  actions where you are, in the row beside the breadcrumbs:
-                side panels and confirmations (keys of POLICY_ACTIONS).
+       actions  the row beside the breadcrumbs (keys of POLICY_ACTIONS):
+                side panels and confirmations, and the amend journey
+                (Amend details / quote / risk), which sits there next to
+                Make an MTA though it opens a page (Laurence, 19 October
+                2026).
 
      Hidden means not rendered. Items marked `unbuilt` in POLICY_ACTIONS
      are listed so the rule is complete, but have no page or panel yet and
@@ -184,13 +187,13 @@
   var STATUS_RULES = {
     'Policy': {
       pages: ALL_PAGES,
-      entry: ['amend'],
-      actions: ['mta', 'extend', 'renew', 'copy', 'portal', 'stop', 'cancel']
+      entry: [],
+      actions: ['amend', 'mta', 'extend', 'renew', 'copy', 'portal', 'stop', 'cancel']
     },
     'Cancelled': {
       pages: ALL_PAGES,
-      entry: ['amend'],
-      actions: ['copy', 'portal']
+      entry: [],
+      actions: ['amend', 'copy', 'portal']
     },
     'Lapsed': {
       pages: ALL_PAGES,
@@ -199,33 +202,33 @@
     },
     'Prospect': {
       pages: QUOTE_PAGES,
-      entry: ['retrieve', 'amendQuote'],
-      actions: ['copy', 'portal']
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
     },
     'Automatic decline': {
       pages: QUOTE_PAGES,
-      entry: ['retrieve', 'amendQuote'],
-      actions: ['copy', 'portal']
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
     },
     'Automatic refer': {
       pages: QUOTE_PAGES,
-      entry: ['retrieve', 'amendQuote'],
-      actions: ['copy', 'portal']
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
     },
     'Client decline': {
       pages: ALL_PAGES,                                 // not in the audit's hide lists
-      entry: ['retrieve', 'amendQuote'],
-      actions: ['copy', 'portal']
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
     },
     'Incomplete': {
       pages: { details: false, claims: true, transactions: true },
-      entry: ['amendRisk'],
-      actions: ['copy', 'portal']
+      entry: [],
+      actions: ['amendRisk', 'copy', 'portal']
     },
     'Renewal invited': {
       pages: ALL_PAGES,
-      entry: ['retrieveRenewal', 'amendRenewal'],
-      actions: ['withdrawAlt', 'portal']
+      entry: ['retrieveRenewal'],
+      actions: ['amendRenewal', 'withdrawAlt', 'portal']
     },
     'Renewal pending': {
       pages: { details: true, claims: false, transactions: true },
@@ -249,13 +252,18 @@
   }
   var built = function (k) { return POLICY_ACTIONS[k] && !POLICY_ACTIONS[k].unbuilt; };
   function entryPoints(p) { return rulesFor(p).entry.filter(built); }
+  /* Everything of the status's that opens a page: menu entry points and
+     the row's journeys. */
+  function journeys(p) {
+    return entryPoints(p).concat(rulesFor(p).actions.filter(function (k) { return built(k) && POLICY_ACTIONS[k].kind === 'flow'; }));
+  }
 
   /* The status's actions, in its rule's order (the row and More decide
      where each sits). */
   /* The label of the entry point that opens this page for this status
      ("Amend quote" or "Amend risk" share the quote amend page). */
   function amendLabel(p, page) {
-    var k = entryPoints(p).filter(function (x) { return POLICY_ACTIONS[x].to === page; })[0];
+    var k = journeys(p).filter(function (x) { return POLICY_ACTIONS[x].to === page; })[0];
     return k ? POLICY_ACTIONS[k].label : null;
   }
 
@@ -266,7 +274,7 @@
   /* The status's main entry point (for the read-only Policy details note);
      with none, changes start from Add new quote in the client menu. */
   function policyFlows(p) {
-    var e = entryPoints(p).filter(function (k) { return k !== 'retrieve'; });
+    var e = journeys(p).filter(function (k) { return k !== 'retrieve'; });
     return { primary: e[0] || 'newquote', secondary: [] };
   }
 
@@ -278,9 +286,10 @@
       if (n.children) n.children.forEach(function (c) { ids.push(c.id); });
       else ids.push(n.id);
     });
+    journeys(p).forEach(function (k) { if (ids.indexOf(POLICY_ACTIONS[k].to) < 0) ids.push(POLICY_ACTIONS[k].to); });
     /* Quote summary is where amending a quote ends (Laurence, 8 October
        2026), and where Retrieve quote goes. */
-    if (entryPoints(p).some(function (k) { return POLICY_ACTIONS[k].to === 'amendquote' || POLICY_ACTIONS[k].to === 'quote'; })) ids.push('quote');
+    if (journeys(p).some(function (k) { return POLICY_ACTIONS[k].to === 'amendquote' || POLICY_ACTIONS[k].to === 'quote'; })) ids.push('quote');
     return ids;
   }
 
@@ -294,10 +303,9 @@
 
   /* ------------------------------------------------------------ Client level */
 
-  /* The client's pages, after Client overview: Add new quote first
-     (Laurence, 7 October 2026), then Business details. */
+  /* The client's pages, after Client overview. Add new quote is in the
+     client's actions row, not here (Laurence, 19 October 2026). */
   var CLIENT_NAV = [
-    { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
     /* Live Mobius's "View claims" on the client homepage (Laurence, 19

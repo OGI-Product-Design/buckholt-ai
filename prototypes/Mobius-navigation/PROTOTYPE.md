@@ -161,17 +161,17 @@ the breadcrumbs. Hidden means not rendered. On every status: Policy overview, Co
 details; Add new quote is client-level (the client menu) on every status; Customer portal settings
 stays on every status (configuration-driven in live, ignored for now).
 
-| Status | Sample | Policy details | Claims | Transactions | Entry points (menu) | Actions (row / More) |
+| Status | Sample | Policy details | Claims | Transactions | Entry points (menu) | Actions row (row / More) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | Amend details | Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
-| Cancelled | **none** | ✓ | ✓ | ✓ | Amend details | Copy policy |
+| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | none | Amend details, Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
+| Cancelled | **none** | ✓ | ✓ | ✓ | none | Amend details; Copy policy |
 | Lapsed | ZZ0900000000646 | ✓ | ✓ | ✓ | none | Reinstate policy; Copy policy |
-| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
-| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
-| Automatic refer | **none** | ✓ | — | — | Retrieve quote, Amend quote | Copy policy |
-| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote, Amend quote | Copy policy |
-| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | Amend risk | Copy policy |
-| Renewal invited | **none** | ✓ | ✓ | ✓ | Retrieve renewal quote*, Amend renewal* | Withdraw alternative quote* |
+| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Automatic refer | **none** | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote | Amend quote; Copy policy |
+| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | none | Amend risk; Copy policy |
+| Renewal invited | **none** | ✓ | ✓ | ✓ | Retrieve renewal quote* | Amend renewal*, Withdraw alternative quote* |
 | Renewal pending | **none** | ✓ | — | ✓ | none | none |
 | MTA quote | **none** | ✓ | ✓ | ✓ | none | Copy policy (**not audited**: the previous default, flagged) |
 
@@ -181,6 +181,13 @@ Retrieve quote opens the existing Quote summary page. The amend labels are live 
 title, breadcrumb and the Quote summary's link follow the status. The activity pages are
 **Policy activity** and **Client activity** (the system-level Activity module keeps its name).
 Statuses without a sample record have rules but nothing to show them on.
+
+**Amend and Add new quote in the actions rows (19 October 2026, Laurence and the team).** The
+amend journey (Amend details / quote / risk) sits in the policy's actions row next to Make an MTA,
+and Add new quote in the client's actions row after a rule, rather than in the menus. Both open a
+page, so each is a link styled as a ghost Button (and a link inside More when the row folds).
+This relaxes the 8 October rule that row Buttons never open pages. Add new quote is in the row on
+client pages only; a policy page reaches it through the client overview.
 
 **Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
 **Claims** in the client menu, after Transactions: the client's claims across their policies,
