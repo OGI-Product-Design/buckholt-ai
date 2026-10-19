@@ -248,6 +248,12 @@ mark uses the tertiary expressive pink. With the switch off, the same text rende
 terms (MTA, NCD, IPN, D.O.C.) are not expanded, per the brief and log T19. Data values such as
 excess names and "Automatic Decline" are kept as data.
 
+**The Show wording changes switch is hidden for now** (Laurence, 19 October 2026); the marks
+and the code stay, off. **An in-force policy's status reads "Policy"**, as current Mobius names
+it, not "Live" (Laurence, 19 October 2026, so user feedback sessions are not confused); it
+keeps the success colour. "Live policies" on the Statistics card and the History table's
+"Live" event type are other meanings and stay.
+
 ## Accessibility
 
 - Navigation items are links, with `aria-current="page"` on the single current page, in the
