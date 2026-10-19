@@ -358,7 +358,7 @@
   .mob-sidebar .mob-record-ref { font-size: 1rem; line-height: 1.5rem; }
   /* Group headings in the links' grey, not near-black: in Mark's frame
      they read no heavier than the links under them. */
-  .mob-sidebar .mob-group-label { color: var(--text-secondary); font-weight: 400; }   /* 400 (Laurence, 19 October 2026) */
+  .mob-sidebar .mob-group-label { color: var(--text-secondary); font-weight: 500; }   /* Medium, as in Mark's file (Laurence, 19 October 2026) */
   .mob-sidebar .mob-group { margin-top: calc(var(--spacer-04) + var(--spacer-02)); }   /* 20px: Mark's 53px from a group's last link to the next label */
   .mob-sidebar:not(.mob-rail-collapsed) .mob-rail-scroll { padding-left: var(--spacer-02); }
   .mob-sidebar .mob-subnav { padding-left: 0.625rem; --nav-gap: var(--spacer-01); }
