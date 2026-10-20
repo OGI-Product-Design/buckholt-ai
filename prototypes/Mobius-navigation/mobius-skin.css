@@ -240,6 +240,8 @@ html[data-skin="mobius"] .tag { --tag-radius: var(--border-radius-full); border-
 
 /* ------------------------------------------------------------- Modals and menus */
 html[data-skin="mobius"] .modal { --modal-radius: 3px; }
+/* The search modal takes Buckholt's rounding, like the side menu (Laurence, 20 October 2026). */
+html[data-skin="mobius"] #mob-search-modal { --modal-radius: 1rem; }
 html[data-skin="mobius"] .accordion { --accordion-radius: 3px; }
 html[data-skin="mobius"] .menu,
 html[data-skin="mobius"] .dropdown-menu { --menu-radius: 3px; --dropdown-radius: 3px; }

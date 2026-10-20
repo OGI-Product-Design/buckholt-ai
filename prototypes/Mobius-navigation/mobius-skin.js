@@ -4,21 +4,27 @@
    Mobius; without it the prototype is Buckholt. Loaded in <head> so the
    page is drawn in the right look first time, without a flash.
 
-   The look comes from, in order: `?skin=mobius` or `?skin=buckholt` in the
-   address (so a link can open either), then the reviewer's last choice in
-   this browser, then the Mobius look (the default, Laurence, 12 October
-   2026). A floating Switch, bottom right, flips it. */
+   Every visit opens in the Mobius look (Laurence, 20 October 2026), unless
+   the address says `?skin=buckholt`. The browser does not remember the
+   choice. A floating Switch, bottom right, flips the look and writes it
+   into the address, so a refresh keeps it but a fresh visit is Mobius. */
 (function () {
   'use strict';
-  var KEY = 'mob-skin';
   var root = document.documentElement;
 
-  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
-  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private window: not remembered */ } }
+  /* Choices remembered by earlier versions are cleared, so they no longer win. */
+  try { localStorage.removeItem('mob-skin'); } catch (e) { /* storage blocked */ }
 
-  var fromUrl = (/[?&]skin=(mobius|buckholt)\b/.exec(location.search) || [])[1];
-  if (fromUrl) store(fromUrl);
-  var skin = fromUrl || stored() || 'mobius';
+  var skin = (/[?&]skin=(mobius|buckholt)\b/.exec(location.search) || [])[1] || 'mobius';
+
+  /* Keep the address in step: ?skin=buckholt for Buckholt, nothing for Mobius. */
+  function toAddress(v) {
+    try {
+      var u = new URL(location.href);
+      if (v === 'buckholt') u.searchParams.set('skin', 'buckholt'); else u.searchParams.delete('skin');
+      history.replaceState(history.state, '', u.toString());
+    } catch (e) { /* file:// or old browser: the look still changes */ }
+  }
 
   /* Mobius's wordmark is "open gi"; the Buckholt look keeps "Mobius". */
   function apply(v) {
@@ -44,7 +50,7 @@
     apply(skin);
     document.getElementById('mob-skin-switch').addEventListener('change', function (e) {
       var v = e.target.checked ? 'mobius' : 'buckholt';
-      store(v);
+      toAddress(v);
       apply(v);
     });
   });
