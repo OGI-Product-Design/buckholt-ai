@@ -7,6 +7,9 @@ Revision 4 resolved every revision 3 finding in sections A and B except A16,
 B9 and B11, which are kept below with their original numbers. Section C is
 unchanged from revision 3; C15 and C16 are new.
 
+Revision 5 (same day) added A24–A29, B12 and C17, each under "New from the
+revision 5 build"; nothing earlier was edited.
+
 ## A. The spec
 
 16. **Minor:** the breadcrumb landmark name is "Breadcrumb" in the spec and
@@ -50,6 +53,46 @@ unchanged from revision 3; C15 and C16 are new.
     Confirm, or say the menu closes when focus leaves the items in either
     direction.
 
+### New from the revision 5 build
+
+24. **Open question 15: no card title wraps at the fixed width.** Inside a
+    284px card, Buckholt Card's 32px padding and 1px border leave 218px for
+    the title. In Card's `title-03` the titles measure (Proxima Soft / Arial
+    fallback): Third-Party Services 212 / 217px, User Management 196 / 197,
+    Onboarding Form 188 / 188, Policy Extensions 184 / 188, Audit Centre
+    134 / 133, AutoMATE 111 / 114. All six fit on one line in both fonts, so
+    OQ 15 can close as "no wrapping today". The margin is thin — 6px in
+    Proxima Soft, 1px in Arial — so any longer app name will wrap. Card height
+    is set by the descriptions (three lines in the tallest card), not the
+    titles: every card is 419px.
+25. **A17 and A18 no longer apply.** Revision 5's fixed 284px card and Card's
+    own `title-03` replace the revision 4 minimum-width rule and the
+    `title-02` workaround. A18's app-name limit still matters but changes: a
+    `title-03` title must stay within 218px, about 20 characters ("Third-Party
+    Services" is 20).
+26. **The capacities leave a 28–38px window for the page padding.** Five per
+    row at 1920 needs more than 28px each side; three at 992 needs at most
+    38px, and at most 29.5px if the 992 measurement included a classic 17px
+    Windows scrollbar. Built at 29px. Record production's actual horizontal
+    padding in the spec, and whether the UAT viewport widths were measured
+    with or without the scrollbar, so the table cannot drift from the
+    padding.
+27. **The grid's vertical spacing is unspecified.** The spec gives
+    production's horizontal gap (32px) but not the gap between rows or the
+    space above the first row. Built: 32px between rows, Buckholt's Frame
+    (64px) above. Add production's values.
+28. **"All cards share the height of the tallest card" is page-wide.** One
+    long description makes every card on the page taller, including rows
+    with short ones. CSS cannot do this and centre a part-filled final row at
+    the same time, so it is set by script. Confirm production does this, and
+    not "tallest in the row".
+29. **The capacity table goes below the designed width.** It lists 768px,
+    576px and below, but "Viewport" says layouts narrower than 1088px are not
+    designed. The grid meets the table down to 320px (with the side padding
+    reduced to 16px below 576px so a 284px card fits); the header does not —
+    it is 499px wide at 375px. Say whether the table is a requirement below
+    1088px or production behaviour noted for reference.
+
 ## B. The Figma frames
 
 9. **No frames** for the Test alert, the single-environment Tag, the app
@@ -58,6 +101,11 @@ unchanged from revision 3; C15 and C16 are new.
 11. **Export size.** The supplied PNGs are 3852 × 2165 — 2x of 1926 × 1082,
     not of the 1920 × 1080 frames, so they include a few pixels of canvas.
     Harmless; noted in case anyone measures from them.
+12. **The home frames no longer show the grid.** SH-00-01, SH-00-02 and
+    SH-02 draw six left-aligned 282px cards in one row at 1920px; revision 5
+    builds production's grid — five centred 284px cards then one at 1920px.
+    The spec's "Known screenshot differences" covers it, but anyone reading
+    the frames alone will build the wrong grid. Annotate or update the frames.
 
 ## C. Buckholt tickets
 
@@ -142,3 +190,15 @@ unchanged from revision 3; C15 and C16 are new.
     card, so six cards cannot fit across a 1920px page inside the documented
     Frame. Ask: document which title style Card uses in a grid, or a compact
     Card padding (`.card-sm` exists in the runtime but is undocumented).
+
+### New from the revision 5 build
+
+17. **No wrapping grid of fixed-width items (Gap 9).** Buckholt's Page layout
+    pattern uses Bootstrap's column grid, where items stretch with the
+    viewport and a part-filled last row is left-aligned. Production CH's home
+    needs fixed-width cards that wrap, with every row centred, and every card
+    the height of the tallest. Built: a wrapping flex row with centred
+    justification and a script for page-wide equal height. Ask: a documented
+    card-grid or tile-grid layout (fixed item width, gap, centring, equal
+    height), or confirm that column grids are the only Buckholt layout and
+    that the CH home is an exception.

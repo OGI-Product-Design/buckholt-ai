@@ -8,11 +8,12 @@
 - **Shell:** this document is the shell. CH feature specs reference it as "Shell: `CH-SHELL` spec" and describe only their own content, breadcrumb trail and the items listed under "Contract for feature specs".
 - **Viewpoint:** a client user only. No Open GI staff view, no tenant dropdown, no OGI-only apps, fields or behaviour. The prototype should look as close as possible to what a client sees.
 - **Source tags:** **[Figma]** target design (Navigation file and User Management file, frames in the Screen index), **[Observed]** UAT build of 15 Oct 2026, **[Context]** Andrej's briefing recorded in the CH product context (baseline 17 Oct 2026), **[Decision]** agreed with Andrej (dated) or, where marked "spec", decided in this spec at Andrej's request and pending his review, **[Assumption]** to be validated, **[Build]** finding from the Claude Code build of revision 3 (`SPEC-CHANGES.md`, 20 Oct 2026).
-- **Revision:** 4, 20 Oct 2026. Build findings applied. Ready for a second build pass.
+- **Revision:** 5, 20 Oct 2026. Home card grid now follows production CH (measured on UAT); card internals follow Buckholt.
 
 ## What changed in this revision
 | Area | Change |
 |---|---|
+| Revision 5: card grid | Replaces the revision 4 card rule. The grid keeps production CH behaviour, measured by Andrej on UAT on 20 Oct 2026: fixed-width cards that wrap and are centred, with set cards-per-row capacities. Each card's internals follow Buckholt Card. Illustrations keep their own proportions (no cropping). Card grid added as Gap 9. |
 | Revision 4: sources of truth | New rule: Figma decides arrangement; Buckholt decides sizes, spacing, colours, icons and component styling. Resolves the Figma vs Buckholt differences found in the build (avatar, menu panel, card spacing, icons, environment control styling). |
 | Revision 4: focus and announcements | Navigation now relies on the normal page-load behaviour (focus at the top, document title announced) instead of moving focus to the level 1 heading. Resolves the invisible focus on the home page heading. |
 | Revision 4: truncation | Truncated plain text (organisation name, current-page crumb) is not focusable; full text by hover Tooltip and accessible name. Gap 5 reworded: the gap is one long label, not a long trail. |
@@ -121,6 +122,7 @@ Notes
 - **Sources of truth:** **[Decision]** spec, 20 Oct 2026.
   - Figma decides arrangement: what is on each page, in what order and position, and which component each element is.
   - Buckholt decides sizes, spacing, colours, icons, typography and component styling. Where Figma's values differ (avatar size and colour, menu panel padding and width, card padding and title size, content spacing, icons such as the Mobius "Launch" icon, the Logout glyph and the breadcrumb chevron), Buckholt wins. Claude Code records each such difference once in `PROTOTYPE.md`; it is not a spec change.
+  - Exception: the home page card grid (card width, gaps, wrapping, alignment and cards per row) follows production CH, not Figma or Buckholt. **[Decision]** Andrej, 20 Oct 2026.
   - This spec decides behaviour and copy, and beats both on those.
 - **State:** held in memory, except the current environment, which persists across page navigation within the same browser tab so it carries into feature prototypes. A new tab starts from the seed rule (Live if it exists). This deliberately differs from the template default "a reload resets to the seed data". **[Decision]** spec.
 - **Static (inert) areas:**
@@ -147,7 +149,7 @@ Notes
 | Breadcrumb band | Breadcrumb | Single item (current, plain text); multi-item (links plus current) | Full-width band between header and content per Figma; truncation is Gap 5. |
 | Home heading | Heading | Level 1, visually hidden | |
 | App card | Card | Illustration, title, description, action | Only the Open button is interactive, so no clickable-card state is needed. Illustrations are Gap 6. |
-| Card grid | Bootstrap grid inside Panel | Equal-height cards per row, left-aligned, wrapping | Figma shows six cards in one row at desktop width. |
+| Card grid | None (not Bootstrap columns) | Fixed-width cards, wrapping, centred | Gap 9. Production CH behaviour, not Figma's six-per-row frame. |
 | Open button | Link styled as a Primary Button | Right-aligned at the bottom of the card **[Figma]**; Primary confirmed with the design system designer | Open navigates, so it is a link (Buckholt: Button for actions, Link for navigation). Accessible name includes the app name. **[Build]** |
 | Unsaved changes confirmation | Modal | Two actions | Used only through the feature contract. |
 | Skip link | None | | Gap 7. |
@@ -163,9 +165,10 @@ Not in `buckholt-reference.md` (commit `211e365`, 19 Oct 2026). Claude Code: con
 | 3 | Global environment alert | Persistent safety indicator for Test on every page, including inside apps | Alert | None | Full width, directly under the header and above the breadcrumb band, on every page while Test is current; not dismissible; not announced on page load, so no live-region role; message is not a heading, so it does not come before the page's level 1 heading in the outline. **[Build]** |
 | 4 | Menu with a non-interactive identity header | Avatar menu shows avatar, name and email above the actions | Menu button / Menu | None | Identity header is plain content, not focusable, not a menu item; separated from the actions by a divider; arrow keys move only between items |
 | 5 | Truncating one long crumb label | Buckholt's overflow approach collapses a long trail (many crumbs) but says nothing about a single long label; CH trails are at most three crumbs, so the overflow approach never triggers. This is not custom truncation of trails. **[Build]** | Breadcrumb plus Tooltip | None | A crumb label longer than about 32 characters truncates with an ellipsis. Linked crumbs show the full text in a Tooltip on hover and focus. The current-page crumb is plain text: Tooltip on hover only, not focusable (inside apps its full text is also the visible page heading). Accessible name is always the full text. Threshold is an **[Assumption]** |
-| 6 | App card illustrations | Each card has an illustration; Buckholt has no illustration set | Card media area | Supplied SVG assets | Shown full card width at the top of the card, as in Figma; decorative (no alternative text) |
+| 6 | App card illustrations | Each card has an illustration; Buckholt has no illustration set | Card media area | Supplied SVG assets | Shown full card width at the top of the card at the illustration's own proportions, never cropped (Buckholt's fixed-height media box would crop it, see build finding C6); decorative (no alternative text). **[Decision]** spec, 20 Oct 2026 |
 | 7 | Skip link | Keyboard users need to bypass the header on every page | None | None | First focusable element; hidden until focused; text "Skip to main content"; moves focus to Main |
 | 8 | App-level header navigation slot | AutoMATE already shows "Workflows" next to the CH lockup; other multi-journey apps will follow | Page navigation | AutoMATE (production) | Not built in this prototype. Reserved space only; the AutoMATE spec defines content and behaviour |
+| 9 | Wrapping grid of fixed-width cards | The CH home keeps its production grid: fixed card width, wrapping, rows centred. Buckholt's grid is column-based, so cards stretch with the viewport instead | Bootstrap grid | Production CH home | As in SH-00-01 Card layout |
 
 ## SH-00-01 · Home, Live, populated
 The page every client user lands on after sign-in: shows the organisation, the environment and the apps they can open.
@@ -203,7 +206,17 @@ Each card, top to bottom **[Figma]**: illustration (decorative), title (heading 
 ### Behaviour
 - **Open:** goes to the app's feature prototype base page if one exists, otherwise to SH-03-01 for that app. The current environment carries over.
 - **Hover and focus:** Buckholt defaults for Button and Link. Cards have no hover state of their own.
-- **Card layout:** cards have equal width and height within a row; Open buttons align along the bottom of the row. A card is never narrower than the width at which its illustration shows whole (not cropped) and its title fits on one line, so the number per row follows the viewport: six at 1920px, four at 1440px, three at 1088px. Cards are left-aligned; with fewer cards than fit in a row, the remaining space stays empty. Descriptions wrap and never truncate. **[Decision]** spec, 20 Oct 2026, replacing "fixed width" **[Build]**.
+- **Card grid:** follows production CH. **[Observed]** UAT, measured 20 Oct 2026; **[Decision]** Andrej, 20 Oct 2026.
+  - Every card has the same fixed width (284px in production) at every viewport; cards never stretch or shrink.
+  - Cards sit in rows with a fixed horizontal gap (32px in production), wrap onto new rows when the next card doesn't fit, and every row is centred on the page, including a final row with a single card.
+  - Cards per row (capacity), which the prototype must match:
+
+    | Viewport | 1920px | 1440px | 1280px | 1088px | 992px | 768px | 576px and below |
+    |---|---|---|---|---|---|---|---|
+    | Cards per row | 5 | 4 | 3 | 3 | 3 | 2 | 1 |
+
+  - Spacing values inside and around this grid come from production, not Buckholt's Frame padding; Claude Code adjusts whatever page padding is needed to hit these capacities and records it in `PROTOTYPE.md`.
+- **Card internals:** follow Buckholt Card (padding, title style, image treatment, description style, button placement, border and shape). Illustration at its own proportions, never cropped (Gap 6). Titles and descriptions wrap rather than truncate. All cards on the page share the height of the tallest card, and Open buttons sit at the bottom of each card, so buttons line up across a row.
 - **Organisation name:** plain text; truncates with an ellipsis when space runs out; full name in a Tooltip on hover; full name always in its accessible name. It is never focusable, truncated or not: a tab stop that appears only at some widths is more confusing than helpful, and the name is the user's own organisation. **[Decision]** spec, 20 Oct 2026.
 - **Header:** visible on every page; sticky on scroll. **[Assumption]**
 - **Document title:** "Applications | Configuration Hub".
@@ -216,7 +229,7 @@ Each card, top to bottom **[Figma]**: illustration (decorative), title (heading 
 | Populated (Test) | Test selected | SH-00-02. |
 | One environment | "Test only" seed | SH-00-03. |
 | Long names | "Long names" seed | Organisation name truncated with Tooltip; avatar initials "AM"; menu name and email wrap onto further lines where needed, never truncated. |
-| Many apps | "All apps" seed | Six cards: four then two at 1440px; six in one row at 1920px. |
+| Many apps | "All apps" seed | Six cards: five then one at 1920px; four then two at 1440px; three and three from 1280px to 992px; two per row at 768px; one per row at 576px and below. Every row centred. |
 | Empty | Not reachable after the tenant exists | Not built. |
 | Loading | Not shown (no sign-in or data loading is simulated) | Not built. |
 | Error | Out of scope ("app failed to load" spec) | Not built. |
@@ -362,7 +375,8 @@ What every CH feature spec can rely on without redescribing it, and what it must
 - Given Test is current inside an app, when the user selects "Live", then the user is on that app's base page in Live, filters and selections are reset, and the alert is gone.
 - Given the "Staged rollout" seed and the user is in AutoMATE in Test, when the user selects "Live", then the user lands on the home page and hears "Live environment selected. AutoMATE isn't available in Live."
 - Given the "Test only" seed, when the home page loads, then a non-interactive "Test" tag shows in place of the environment control and the Test alert is shown.
-- Given the "All apps" seed, then the six cards show in registry order: four then two at 1440px, and six in one row at 1920px, with every illustration uncropped and every title on one line.
+- Given the "All apps" seed, then the six cards show in registry order with the cards per row in the Card grid table at each listed viewport, every row centred, every card the same fixed width and height, and every illustration uncropped.
+- Given the default seed at 1440px, then the three cards sit in one centred row.
 - Given the "Long names" seed at 1088px, then no header item wraps, the organisation name is truncated, and its full name shows in a Tooltip on hover and is in its accessible name. (The organisation name truncates whenever space runs out; this seed at this width is the test case.) **[Build]**
 - Given the "Live only" seed, when the home page loads, then a non-interactive "Live" tag shows in place of the environment control and no Test alert is shown.
 - Given a direct link to an app not visible in the current environment, when it opens, then the home page shows.
@@ -388,7 +402,8 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | 10 | Should the Onboarding Form card stay first on the home page indefinitely, given it is view-only after onboarding? | PM | No |
 | 11 | ~~Card order~~ Resolved: Figma order. | | |
 | 12 | ~~Primary Open buttons on every card~~ Resolved: Primary confirmed with the design system designer. | | |
-| 13 | Is there a 1440px version of the home frame? All frames are 1920px; the card rule gives four per row at 1440px, which no frame shows. | Andrej | No |
+| 13 | ~~1440px home frame~~ Resolved: the grid follows production behaviour measured on UAT, 20 Oct 2026. | | |
+| 15 | With Buckholt's larger card padding and title style inside a fixed 284px card, longer titles (for example "Third-Party Services") may wrap to two lines, making every card taller. Accept, or widen the fixed card width? Prototype accepts wrapping. | Andrej | No |
 | 14 | Should the Live-only state exist in production at all (a client with no Test tenant)? Seeded so it can be tested. | PM | No |
 
 ## Known screenshot differences
@@ -403,7 +418,7 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | SH-REF-UM | Organisation "Greenlight", User Management page content | Shell parts only: breadcrumb band position and trail pattern |
 | All frames | Figma sizes, spacing, colours and icons (44px mint avatar, 16px menu padding and radius, card padding and title size, 32px content spacing, "Launch" and "ogi-logout" icons, chevron breadcrumb divider, "Select button group" styling) | Buckholt equivalents (see Sources of truth) |
 | All frames | Breadcrumb band drawn as part of the Header frame | Its own band in the same position and size |
-| All frames | 1920px only | Desktop-first at 1440px; card columns per the Card layout rule |
+| All frames | 1920px only; six cards in one row with about 34px edges | Production grid: five per row at 1920px, capacities per the Card grid table |
 | Home (current production, [Observed]) | Tenant selector with code, Release Notes in menu, serif fallback for the user name, unlabelled controls | As specified here |
 
 ## Changes from legacy

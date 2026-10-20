@@ -26,7 +26,7 @@
     <div id="ch-context"></div>
 
     <section class="page-body">
-      <div class="page-frame">
+      <div class="page-frame ch-home-frame">
         <div class="container-fluid">
           <div class="page-pane">
             <div class="page-panel">
@@ -51,16 +51,15 @@
     /* One Buckholt Card per visible app, in registry order: illustration
        (decorative), title as a level 2 heading, description, Primary Open.
        Open navigates, so it is a link styled as a Button; its accessible name
-       starts with the visible label. The title is `title-02`, not Card's
-       documented `title-03`: at `title-03` "Third-Party Services" needs a
-       276px card, and six per row at 1920px leaves 272px (PROTOTYPE.md). */
+       starts with the visible label. Card internals are Buckholt's,
+       including Card's documented `title-03` title. */
     function renderCards() {
       document.getElementById('ch-app-grid').innerHTML = CHShell.visibleApps().map(function (app) {
         return '<div class="card ch-app-card" data-app="' + esc(app.id) + '">' +
             '<img src="' + esc(CHShell.illustrationUrl(app)) + '" class="card-img" alt="">' +
             '<div class="card-body">' +
               '<div class="text-block">' +
-                '<h2 class="title-02">' + esc(app.name) + '</h2>' +
+                '<h2 class="title-03">' + esc(app.name) + '</h2>' +
                 '<p>' + esc(app.description) + '</p>' +
               '</div>' +
               '<a class="btn btn-primary ch-open" href="' + esc(CHShell.appUrl(app)) + '" ' +
@@ -76,8 +75,36 @@
       page: 'Applications',
       breadcrumb: [{ label: 'Applications' }]
     });
-    renderCards();
-    CHShell.onEnvironmentChange(renderCards);
+    /* Gap 9: every card is the height of the tallest card on the page, not
+       just the tallest in its row. Measured with the variable cleared, so a
+       card set taller earlier can shrink again (a resize, the font arriving,
+       a different card set after an environment switch). */
+    function equaliseCards() {
+      var grid = document.getElementById('ch-app-grid');
+      grid.style.removeProperty('--ch-card-height');
+      var tallest = 0;
+      grid.querySelectorAll('.ch-app-card').forEach(function (card) {
+        tallest = Math.max(tallest, card.getBoundingClientRect().height);
+      });
+      if (tallest) grid.style.setProperty('--ch-card-height', Math.ceil(tallest) + 'px');
+    }
+
+    function render() {
+      renderCards();
+      equaliseCards();
+      document.querySelectorAll('#ch-app-grid img').forEach(function (img) {
+        if (!img.complete) img.addEventListener('load', equaliseCards, { once: true });
+      });
+    }
+
+    render();
+    CHShell.onEnvironmentChange(render);
+    var frame = null;
+    window.addEventListener('resize', function () {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(equaliseCards);
+    });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equaliseCards);
   })();
 </script>
 </body>

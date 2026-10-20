@@ -3,9 +3,9 @@
 > **Not Buckholt.** Application work built *with* Buckholt. Nothing here is
 > design-system guidance; see [`../README.md`](../README.md).
 
-Built from [`ch-shell-spec.md`](ch-shell-spec.md) **revision 4** (20 Oct 2026)
+Built from [`ch-shell-spec.md`](ch-shell-spec.md) **revision 5** (20 Oct 2026)
 and the four frames in [`screenshots/`](screenshots/). First built 20 Oct 2026
-against revision 3; updated to revision 4 the same day.
+against revision 3; updated to revisions 4 and 5 the same day.
 
 ## Open it
 
@@ -23,8 +23,10 @@ tab; `?seed=northgate` goes back.
 
 - **SH-00 · Home.** Header, breadcrumb band ("Applications", current page), a
   visually hidden level 1 heading, and one Card per visible app in registry
-  order. Three cards in the default seed, six with `all-apps`: six per row at
-  1920px, four at 1440px, three at 1088px.
+  order, in production CH's grid: fixed 284px cards, 32px apart, wrapping,
+  every row centred. Three cards in the default seed (one centred row at
+  1440px), six with `all-apps`: 5+1 at 1920px, 4+2 at 1440px, 3+3 from 1280px
+  to 992px, two per row at 768px, one per row at 576px and below.
 - **SH-00-02 · Test.** The Test alert under the header, `[Test] ` in the
   document title, the Test card set.
 - **SH-00-03 · One environment.** A read-only Tag in place of the
@@ -149,8 +151,38 @@ memory resets by itself.
 
 Header and Main only — Buckholt `layout-03` with no sidebar or footer, flush
 surface. Main holds the context band first (Test alert, breadcrumb band), then
-Page body → Frame → Pane → Panel. The cards sit in the Panel in a CSS grid
-(see judgement call 13).
+Page body → Frame → Pane → Panel. The cards sit in the Panel in the
+production grid (Gap 9, and "Home page padding" below).
+
+## Home page padding (revision 5)
+
+The spec fixes cards per row at seven viewports and asks for whatever page
+padding produces them. Cards are 284px with a 32px gap, so *n* cards need
+*n* × 284 + (*n* − 1) × 32px: 284, 600, 916, 1232, 1548, 1864. With *P* the
+space either side of the grid:
+
+| Viewport | Cards per row | Condition | Bound on *P* |
+|---|---|---|---|
+| 1920 | 5 | 1920 − 2*P* < 1864 | *P* > 28 |
+| 1440 | 4 | 1440 − 2*P* ≥ 1232 | *P* ≤ 104 |
+| 1280 | 3 | 1280 − 2*P* < 1232 | *P* > 24 |
+| 1088 | 3 | 1088 − 2*P* ≥ 916 | *P* ≤ 86 |
+| 992 | 3 | 992 − 2*P* ≥ 916 | *P* ≤ 38 |
+| 768 | 2 | 768 − 2*P* ≥ 600 | *P* ≤ 84 |
+| 576 and below | 1 | 576 − 2*P* < 600 | any |
+
+So 28 < *P* ≤ 38. A classic 17px Windows scrollbar narrows the page by 17px,
+which tightens 992 to *P* ≤ 29.5. **Built: *P* = 29px**, which gives every
+capacity with and without a scrollbar. It is the Frame's horizontal padding
+set to 13px (`.ch-home-frame`, `--page-frame-padding-x: 0.8125rem`) plus the
+container's own 16px gutter, so the Page body → Frame → Pane → Panel
+structure stays. Below 576px the Frame padding drops to 0 (*P* = 16px), so a
+284px card still fits a 320px screen; one per row holds either way.
+
+Vertical spacing is unchanged — Buckholt's Frame (64px above the cards) and a
+32px row gap matching the horizontal gap. The spec gives production's
+horizontal values only. Only the home page uses `.ch-home-frame`; the
+placeholder page keeps Buckholt's Frame.
 
 ## Buckholt components used
 
@@ -168,7 +200,7 @@ Page body → Frame → Pane → Panel. The cards sit in the Panel in a CSS grid
 | Card | App cards | `.card`, direct-child `img.card-img`, `.card-body > .text-block` |
 | Button | Open | `.btn.btn-primary > .button-label`, on a link |
 | Modal | Unsaved-changes confirmation | Code & specs example 1 |
-| Typography | Throughout | `title-02` (card titles), `title-01`, `body-01`, `headline-02` |
+| Typography | Throughout | `title-03` (card titles, as Card documents), `title-01`, `body-01`, `headline-02` |
 | Common actions | Logout, External link | Labels and icons as documented |
 
 ## Buckholt gaps — all eight still gaps, all built here
@@ -185,9 +217,14 @@ documented, so none was dropped. All are in `shell/ch-shell.css` /
 | 3 | Global environment alert | Buckholt info Alert, square corners, inset to line up with the band, rendered into `#ch-context` above the breadcrumb on every page while Test is current. No `role`; the message is a `<p>`, not the canonical `h6`, with the reboot's 4px `p` margin removed so the alert stays the documented 48px. |
 | 4 | Menu identity header | `.ch-identity` inside `.menu-panel`, *before* `ul.menu-body`, so it is not an item and has nothing focusable; Tab never stops on it. |
 | 5 | Truncating one long crumb label | `max-width: 32ch` with ellipsis on each crumb; when a crumb is actually cut, its full text goes in a Tooltip — on hover and focus for a linked crumb, hover only for the current-page crumb, which is never focusable. |
-| 6 | App card illustrations | Supplied SVGs as the Card's `img.card-img`, `alt=""`, full card width at the asset's 250:160 proportions. |
+| 6 | App card illustrations | Supplied SVGs as the Card's `img.card-img`, `alt=""`, full card width at the asset's 250:160 proportions, never cropped (282 × 180px inside a 284px card). |
 | 7 | Skip link | First element in `<body>`; Bootstrap's `.visually-hidden-focusable` from `buckholt.css`; focuses `<main>`. |
 | 8 | App-level header navigation slot | `#ch-app-nav`, empty, `display: none` while empty. |
+| 9 | Wrapping grid of fixed-width cards (revision 5) | `.ch-app-grid`: a wrapping flex row, `justify-content: center`, 32px gap; each card `flex: 0 0 17.75rem` (284px). Every card is the height of the tallest card on the page: flex only equalises within a row, so the home script measures the tallest card (with the height cleared) and sets `--ch-card-height`, again on resize, font load, image load and environment change. Page padding as above. |
+
+Gaps 1–8 were checked against the repository for revision 3. Gap 9 is new in
+revision 5: Buckholt documents no wrapping fixed-width grid (its Page layout
+uses Bootstrap's column grid), so it is built here, not in `components/`.
 
 ## Avatar menu semantics
 
@@ -223,7 +260,9 @@ canonical example is untouched. Keyboard as built:
 ## Figma values replaced by Buckholt
 
 Revision 4: "Figma decides arrangement; Buckholt decides sizes, spacing,
-colours, icons, typography and component styling." Each difference, once:
+colours, icons, typography and component styling." Revision 5 adds one
+exception: the home card grid follows production CH (Gap 9). Each
+difference, once:
 
 | Element | Figma | Built (Buckholt) |
 |---|---|---|
@@ -234,9 +273,10 @@ colours, icons, typography and component styling." Each difference, once:
 | Environment control | "Select button group" (`#f1f5ff` fill, `#2249b1` outline when selected) | Response button checked state (`rgba(15,64,197,.1)`, `#3f66d1`) |
 | Breadcrumb divider | Chevron icon | Buckholt's default divider |
 | Card padding | 16px | 32px |
-| Card title | ~20px | `title-02`, 20px (see judgement call 12) |
+| Card title | ~20px | `title-03`, 24px — Card's documented title |
 | Card illustration | Inset by the card padding | Full card width (Gap 6, "full card width") |
-| Content spacing | Cards 32px below the band, 34px from the edge, 32px apart | Frame: 64px below the band and from the edge; Panel gap 32px |
+| Card width and grid | 282px cards, six in one row, left edge 34px | Production, not Buckholt: fixed 284px, 32px gap, centred rows, capacities per the spec (Gap 9) |
+| Content spacing | Cards 32px below the band | Buckholt Frame: 64px below the band; horizontal padding set for the capacities (above) |
 | Header bar | `#dadada` border + a 0.5px / 1.5px drop shadow | `--ui-border-02` + `--shadow-xs` |
 | Breadcrumb band | Drawn inside the Header frame | Its own band inside Main, same position and size |
 
@@ -274,23 +314,19 @@ colours, icons, typography and component styling." Each difference, once:
 11. **Only the top bar is sticky**, not the alert or the breadcrumb band. The
     environment control in the bar stays visible, and a sticky alert plus band
     would take 100px+ of every screen.
-12. **Card titles are `title-02`, not Card's documented `title-03`.** At
-    `title-03` the longest title, "Third-Party Services", is 210px; with Card's
-    32px padding and 1px border the card must be 276px, but six per row at
-    1920px leaves 272px (269px with a classic scrollbar). The spec's own rule
-    (six at 1920, titles on one line) and Buckholt's documented Card title
-    cannot both hold, so the title drops one step in Buckholt's own title
-    scale; type sets document title styles for card headings. Recorded in
-    SPEC-CHANGES A.
-13. **The card grid is a CSS grid, not Bootstrap's `.row` / `.col`.** The
-    rule is a minimum card width (16rem, derived in `ch-shell.css`), which
-    Bootstrap's fixed per-breakpoint fractions cannot express — and in the
-    local build 1440 and 1920 share a breakpoint tier (≥ 1400) yet need four
-    and six columns. `auto-fill` keeps spare tracks empty, so cards stay
-    left-aligned and the same width when a row is not full. The gap is the
-    Panel's 32px.
-14. **`.container-fluid`, not `.container`**, inside the Frame, so the cards
-    start at the left edge at every width, as in Figma.
+12. **Card titles are back to Card's documented `title-03`** (revision 5:
+    card internals follow Buckholt Card). The revision 4 build had dropped
+    them to `title-02` to fit six per row at 1920; the fixed 284px card no
+    longer needs it. No title wraps: the room for a title is 218px (284 −
+    64px padding − 2px border) and the longest, "Third-Party Services", is
+    212px in Proxima Soft and 217px in the Arial fallback.
+13. **The card grid is a wrapping flex row, not Bootstrap's `.row` /
+    `.col`** (Gap 9). Bootstrap columns stretch with the viewport and cannot
+    centre a part-filled final row; production's cards are fixed and every row
+    is centred.
+14. **`.container-fluid`, not `.container`**, inside the Frame, so the grid's
+    width is the page less the padding above at every viewport, rather than
+    Bootstrap's stepped container widths, which would change the capacities.
 15. **The card image is not cropped.** Buckholt's `.card-img` is a fixed
     10rem box with `object-fit: cover` (correction 6); Gap 6 sizes it by
     aspect ratio instead.
@@ -311,11 +347,18 @@ colours, icons, typography and component styling." Each difference, once:
     `sessionStorage` and written to a polite live region 100ms after the new
     page starts, so they follow the browser's own title announcement rather
     than racing it.
+22. **Every card is as tall as the tallest card on the page, set by
+    script.** CSS can make cards equal within a row (flex) or across rows (a
+    grid with `1fr` rows) but not both while also centring a part-filled final
+    row, which production requires. The script clears the height, measures,
+    and sets it again whenever the content or width can change.
 
 ## Tests
 
-`test/ch-shell.js` — **250 assertions**, every acceptance criterion in
-revision 4 (blocks `AC 1` to `AC 16`, in the spec's order), the accessibility
+`test/ch-shell.js` — **301 assertions**, every acceptance criterion in
+revision 5 (blocks `AC 1` to `AC 17`, in the spec's order; AC 7 checks cards
+per row, fixed width, centring, gap, equal height and uncropped illustrations
+at 1920, 1440, 1280, 1088, 992, 768, 576 and 375px), the accessibility
 requirements, the feature contract and Gap 5. Passes against the offline
 mirror and against the real build with Proxima Soft and the Pro kit. See
 [`../../test/README.md`](../../test/README.md).
@@ -327,9 +370,16 @@ mirror and against the real build with Proxima Soft and the Pro kit. See
   `.assetsignore` blocks every `*.svg`, so this prototype's lockup and
   illustrations would not load there. If CH is ever deployed to Cloudflare,
   `prototypes/CH-SHELL/assets/` needs allowing.
-- **Text widths.** AC 7 and AC 8 depend on the font. Both pass in the
-  mirror's Arial and in Proxima Soft; the margins are 13px (card width) and
-  25px (header) in Proxima Soft.
+- **Text widths.** AC 9 (Long names truncation) depends on the font; it
+  passes in the mirror's Arial and in Proxima Soft, with 25px to spare in
+  Proxima Soft. Card titles fit the fixed card with 6px to spare in Proxima
+  Soft and 1px in Arial.
+- **Scrollbars.** The capacities are derived for both overlay scrollbars
+  (the test browser) and a classic 17px Windows scrollbar; the second was
+  checked by arithmetic, not in a browser.
+- **Phone widths.** The card grid works down to 320px, but the header does
+  not (it is 499px wide at 375px); the spec does not design layouts below
+  1088px.
 - **Not built:** Release Notes, the "app failed to load" modal, loading
   feedback, sign-in, the Open GI staff view and tenant dropdown, and any
   app-level header navigation content — all out of scope in the spec.
