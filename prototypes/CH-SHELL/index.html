@@ -18,7 +18,7 @@
 <!-- SH-00 · Home. The chrome (skip link, top bar, Test alert, breadcrumb band)
      is drawn into #ch-header and #ch-context by shell/ch-shell.js; this page
      owns only its landmarks and its content. Seed variants: ?seed=long-names,
-     all-apps, test-only, staged-rollout (northgate is the default). -->
+     all-apps, test-only, staged-rollout, live-only (northgate is the default). -->
 <div class="layout" data-layout="layout-03" data-layout-surface="flush">
   <header id="ch-header"></header>
 
@@ -31,7 +31,7 @@
           <div class="page-pane">
             <div class="page-panel">
               <h1 class="visually-hidden">Applications</h1>
-              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 ch-app-grid" id="ch-app-grid"></div>
+              <div class="ch-app-grid" id="ch-app-grid"></div>
             </div>
           </div>
         </div>
@@ -51,24 +51,24 @@
     /* One Buckholt Card per visible app, in registry order: illustration
        (decorative), title as a level 2 heading, description, Primary Open.
        Open navigates, so it is a link styled as a Button; its accessible name
-       starts with the visible label. */
+       starts with the visible label. The title is `title-02`, not Card's
+       documented `title-03`: at `title-03` "Third-Party Services" needs a
+       276px card, and six per row at 1920px leaves 272px (PROTOTYPE.md). */
     function renderCards() {
       document.getElementById('ch-app-grid').innerHTML = CHShell.visibleApps().map(function (app) {
-        return '<div class="col">' +
-          '<div class="card ch-app-card" data-app="' + esc(app.id) + '">' +
+        return '<div class="card ch-app-card" data-app="' + esc(app.id) + '">' +
             '<img src="' + esc(CHShell.illustrationUrl(app)) + '" class="card-img" alt="">' +
             '<div class="card-body">' +
               '<div class="text-block">' +
-                '<h2 class="title-03">' + esc(app.name) + '</h2>' +
+                '<h2 class="title-02">' + esc(app.name) + '</h2>' +
                 '<p>' + esc(app.description) + '</p>' +
               '</div>' +
               '<a class="btn btn-primary ch-open" href="' + esc(CHShell.appUrl(app)) + '" ' +
-                 'aria-label="Open ' + esc(app.name) + '" data-ch-nav>' +
+                 'aria-label="Open ' + esc(app.name) + '">' +
                 '<span class="button-label">Open</span>' +
               '</a>' +
             '</div>' +
-          '</div>' +
-        '</div>';
+          '</div>';
       }).join('');
     }
 

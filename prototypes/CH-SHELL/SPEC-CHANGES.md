@@ -1,110 +1,60 @@
 # CH-SHELL — findings for the spec, the designs and Buckholt
 
-From building `ch-shell-spec.md` revision 3 on 20 Oct 2026. The spec copy in
+From building `ch-shell-spec.md` revision 4 on 20 Oct 2026. The spec copy in
 this folder is unedited; everything that should change in it is here.
+
+Revision 4 resolved every revision 3 finding in sections A and B except A16,
+B9 and B11, which are kept below with their original numbers. Section C is
+unchanged from revision 3; C15 and C16 are new.
 
 ## A. The spec
 
-1. **Gap 5 contradicts Buckholt's Breadcrumb guidance.** `components/breadcrumb/rules.md`
-   says: "Use the documented overflow approach for long trails rather than
-   inventing custom truncation." Built as the spec asks, but the spec should
-   say why: the documented overflow menu collapses *many crumbs*; it does
-   nothing for *one long label*. That distinction is the real gap (C5).
-2. **Truncated plain text cannot show a Tooltip "on focus" without a tab
-   stop.** The organisation name and the current-page crumb are not
-   focusable. Built: each gets `tabindex="0"` only while it is actually
-   truncated. The focus order in "Accessibility requirements" should list
-   that stop ("organisation name, when truncated") or drop the focus
-   requirement for plain text.
-3. **AC 8 depends on font metrics.** With Proxima Soft and no padding around
-   the avatar, the "Long names" organisation fits at 1088px with 7px to spare
-   and nothing truncates. It truncates once the avatar has Figma's 16px
-   Profile padding (built). Suggest: "the organisation name truncates when
-   space runs out; at 1088px with the Long names seed it is truncated", and
-   name the avatar's hit area in the header layout.
-4. **"Open" is navigation but specified as a Button.** Buckholt: Button for
-   actions, Link for navigation. Built as a link with Primary Button styling.
-   The mapping table should say "Button-styled link".
-5. **"The new page title is announced" (Focus on navigation).** Moving focus
-   to the level 1 heading announces the heading ("User Management"), not the
-   document title ("[Test] User Management | Configuration Hub"). Built as
-   heading focus. Either accept that, or specify a separate announcement.
-6. **The home `h1` is visually hidden but receives focus after navigation.**
-   A sighted keyboard user gets no visible focus indicator on the home page
-   after Open → back. Consider a visible title, or moving focus to Main
-   instead on the home page.
-7. **The Test alert and Buckholt's Alert semantics.** Alert's canonical
-   markup carries `role="alert"`. The spec's "not announced on page load" and
-   "polite announcement" rule it out. Built without the role; the spec should
-   state it so a production build does not copy the canonical markup.
-8. **"Cards share a fixed width" cannot hold with "six in one row at 1440"
-   and Figma's 282px at 1920.** Built as equal widths per row from the
-   Bootstrap grid (1 / 2 / 3 / 4 / 6 per row). At 1440 six cards are 192px
-   wide and titles wrap to two lines. Suggest "equal width within a row".
-9. **Menu keyboard model differs from Buckholt's.** The spec has arrow keys
-   between items; Buckholt's Menu guidance has Tab / Shift+Tab. Built per
-   spec. With one item it does not matter today; decide before the menu grows.
-10. **Spacing source.** "Figma for layout" and AGENTS' Frame / Pane / Panel
-    rhythm disagree: Figma puts cards 32px below the band and 34px from the
-    edge, Buckholt's Frame 64px and 64px. Built Buckholt's. State which wins.
-11. **Contract for feature specs: how a feature turns its app on.** Feature
-    specs should state two things the shell needs: the app's base-page path
-    and which seeds include it. In the prototype both are one line each in
-    `shell/ch-registry.js`.
-12. **Direct links to a hidden app.** Defined only for an environment
-    switch (SH-01 step 7). Built: a direct URL to an app not visible in the
-    current environment goes home, silently. Confirm, or specify an
-    announcement.
-13. **Breadcrumb on a base page links to itself.** "User Management > Users"
-    with "User Management" linking to the base page means, on Users, a link
-    to the current page. Built as specified; Open question 6 may want to
-    cover it.
-14. **Single-environment Live.** "Not seeded; included for completeness."
-    The shell supports it (Tag "Live", no alert); add a seed if it should be
-    testable.
-15. **Readiness checklist.** The screenshot item can now be ticked; the
-    "checked against the live repo" item is answered by section C (all eight
-    gaps confirmed, none dropped; Logout label "Logout").
 16. **Minor:** the breadcrumb landmark name is "Breadcrumb" in the spec and
     "breadcrumb" in Buckholt's markup. Built with the spec's.
+17. **The card rule cannot hold with Buckholt's documented Card title.** In
+    Card's Code & specs title style (`title-03`, 24px) "Third-Party Services"
+    is 210px; with Card's 32px padding and border the card must be 276px. Six
+    per row at 1920px leaves 272px (269px with a classic scrollbar), so AC 7
+    fails. Built with `title-02` (20px, 177px, card minimum 243px), which is
+    Buckholt's own next title step and matches Figma's ~20px. Either name
+    `title-02` for card titles in the spec, or relax AC 7.
+18. **App names need a length limit.** The card rule leaves a narrow window:
+    the minimum card width must be over 237px (so five never fit at 1440) and
+    at most 272px (so six fit at 1920). Built at 256px, which fits a
+    `title-02` title of about 190px — roughly 22 characters. A longer future
+    app name ("Policy Extension Configuration", for example) would wrap. Add a
+    maximum app-name length to the App registry rules.
+19. **The avatar's hit area is arrangement, and AC 8 depends on it.** With
+    Buckholt deciding spacing, the 16px either side of the avatar in Figma's
+    Profile frame could be read as a Figma value to drop. Without it the Long
+    names organisation fits at 1088px in Proxima Soft with 7px to spare and
+    AC 8 fails. Built with it. State the avatar's hit area in Gap 1.
+20. **Two revision 3 leftovers contradict revision 4:**
+    - "Changes from legacy", Keyboard row: "focus moves to the heading after
+      navigation". Should read "focus starts at the top after navigation".
+    - Gap 4, expected behaviour: "arrow keys move only between items". Under
+      the Tab model it should read "Tab never stops on the identity header".
+21. **SH-01 step 6 needs a scope.** "Focus stays on the selected option"
+    holds on the home page, which updates in place. Inside an app the switch
+    is a page load, so focus starts at the top ("Focus on navigation"). Built
+    that way; say "on the home page" in step 6.
+22. **Name the menu semantics, not just the keyboard.** SH-02 step 4 says the
+    semantics must match the Tab model and points at the Buckholt ticket on
+    Menu semantics — but that ticket (C9) asks for `menuitem` roles, which
+    belong to the arrow-key model. Built as a disclosure: the button exposes
+    `aria-expanded` and controls a plain list of buttons, with no menu roles.
+    State "disclosure" in the spec so production does not copy Buckholt's
+    `role="menu"`. See C15.
+23. **Shift+Tab from the first item is unspecified.** Built: focus moves back
+    to the avatar and the menu stays open (Tab past the last item closes it).
+    Confirm, or say the menu closes when focus leaves the items in either
+    direction.
 
 ## B. The Figma frames
 
-1. **The environment control is not a Buckholt component.** Figma uses a
-   "Select button group" with its own tokens (`ogi-comp-btn-togglegroup-*`,
-   selected `#f1f5ff` / `#2249b1`). Built from Buckholt Response button, whose
-   checked state is close but not identical (`rgba(15,64,197,.1)` /
-   `#3f66d1`). Either map the Figma component to Response button or raise it
-   as a new Buckholt variant (C2).
-2. **Mobius link icon and colour.** Figma uses a "Launch" icon and body-text
-   colour. Buckholt's External link common action is
-   `fa-arrow-up-right-from-square` in link colour. Built Buckholt's.
-3. **Avatar.** Figma: 44px, mint `#75f4de`, text `#2249b1`. Buckholt Avatar
-   documents 48 / 40 / 32px and an expressive palette; neither size nor
-   colour matches. Built `avatar-sm` (40px), default colour.
-4. **Logout icon.** Figma uses a custom "Actions/ogi-logout" glyph; Buckholt's
-   Logout is `fa-arrow-right-from-bracket`. The Release notes item uses the
-   "Icon/Misc/Temporary" placeholder.
-5. **Menu panel.** Figma: 16px padding, 16px radius, 247px wide. Buckholt
-   Menu: its own padding and radius, 160–288px. Built Buckholt's; the long
-   default email (`sophie.marchetti@northgate-insurance.co.uk`) wraps at
-   288px.
-6. **Content spacing and cards.** Cards 32px below the band, 34px from the
-   edge, 16px card padding, ~20px titles, illustration inset by the card
-   padding. Buckholt: 64px Frame padding, 32px Card padding, `title-03` (24px),
-   image full-bleed. Built Buckholt's.
-7. **The breadcrumb band is part of the Header frame** ("Breadcrumbs & Tenant
-   Information", 52px, `#fdfdfd`, 14px Light text, left and right borders).
-   Built as its own band inside Main; same position and size.
-8. **No 1440px frame.** All frames are 1920 × 1080, but the spec is
-   desktop-first at 1440 and the reference breakpoint is 1088. A 1440 frame
-   with six cards would show the title wrapping in B6.
 9. **No frames** for the Test alert, the single-environment Tag, the app
    placeholder, the unsaved-changes Modal, the Long names truncation, focus
    states or the skip link. All built from the spec.
-10. **The User Management frame's divider is a chevron icon.** Built with
-    Breadcrumb's documented `--breadcrumb-divider-icon: '>'` override, which is
-    a character, not an icon.
 11. **Export size.** The supplied PNGs are 3852 × 2165 — 2x of 1926 × 1082,
     not of the 1920 × 1080 frames, so they include a few pixels of canvas.
     Harmless; noted in case anyone measures from them.
@@ -174,3 +124,21 @@ this folder is unedited; everything that should change in it is here.
     points at no control (already in `discrepancies/known-issues.md`). In a
     header with no visible label the group needs `role="radiogroup"` and an
     `aria-label`; Buckholt could document the unlabelled case.
+
+### New from the revision 4 build
+
+15. **Menu's markup and Menu's keyboard guidance describe different
+    patterns.** The Code & specs markup is `ul.menu-body[role="menu"]` — the
+    ARIA menu pattern, which means one tab stop and arrow keys between items.
+    Menu's own keyboard guidance is Tab / Shift+Tab between items — the
+    disclosure pattern. A screen reader is told one model and the keyboard
+    behaves as the other. The prototype follows the guidance and drops the
+    roles (so the `menuitem` addition described in C9 is no longer in the
+    prototype). Ask: pick one. Either keep `role="menu"` and supply `menu.js`
+    with arrow-key support (C10), or document Menu as a disclosure and remove
+    `role="menu"` from the canonical markup.
+16. **Card's documented title is too large for dense card grids.** With
+    `title-03` and Card's 32px padding, a 20-character title needs a 276px
+    card, so six cards cannot fit across a 1920px page inside the documented
+    Frame. Ask: document which title style Card uses in a grid, or a compact
+    Card padding (`.card-sm` exists in the runtime but is undocumented).

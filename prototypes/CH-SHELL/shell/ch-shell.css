@@ -95,12 +95,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--text-primary);
-  border-radius: var(--border-radius-xs);
-}
-
-.ch-org:focus-visible {
-  outline: 0.125rem solid var(--text-active);
-  outline-offset: 0.125rem;
 }
 
 .ch-env-tag,
@@ -171,16 +165,13 @@
 }
 
 /* ---------------------------------------------------------- Gap 4: identity header
-   Plain content above the Menu's items: not focusable, not a menu item. */
-.ch-account-panel {
-  padding: 0.5rem;
-}
-
+   Plain content above the Menu's items: not focusable, not a menu item.
+   The panel keeps Buckholt's own padding (16px); only the avatar-to-text
+   gap is set here. */
 .ch-identity {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.5rem 0;
 }
 
 .ch-identity .avatar {
@@ -213,6 +204,13 @@
   --alert-padding-x: 1.375rem;
 }
 
+/* The message is a paragraph, not the canonical `h6` (spec revision 4). The
+   reboot gives `p` a 0.25rem top margin the `h6` does not have; without it
+   the alert is the same 48px as the documented markup. */
+.ch-env-alert .alert-message p {
+  margin: 0;
+}
+
 /* ---------------------------------------------------------- Breadcrumb band
    Full width between the header (and the Test alert) and the page content. */
 .ch-crumbs {
@@ -240,20 +238,35 @@
   vertical-align: bottom;
 }
 
-.ch-crumbs .ch-crumb-text:focus-visible {
-  outline: 0.125rem solid var(--text-active);
-  outline-offset: 0.125rem;
-  border-radius: var(--border-radius-xs);
+/* ---------------------------------------------------------- Card grid
+   Spec revision 4: equal width and height within a row, and a card never
+   narrower than the width at which its illustration is whole and its title
+   fits on one line — six per row at 1920px, four at 1440px, three at 1088px.
+
+   That rule is a minimum column width, which Bootstrap's grid cannot
+   express: its columns are fixed fractions per breakpoint, and in the local
+   build 1440 and 1920 fall in the same tier (>= 1400). So the columns are a
+   CSS grid, `auto-fill` so that with fewer cards than fit the remaining
+   tracks stay empty and cards stay left-aligned.
+
+   16rem (256px): the content box is the viewport less 128px (Frame 48px +
+   container 16px, each side) and the gap is the Panel's 32px, so
+   six fit at 1920 (<= 272px) but not seven (> 229px), four at 1440
+   (<= 304px) but not five (> 237px), three at 1088 (<= 299px) but not four
+   (> 216px). The longest title, "Third-Party Services" in `title-02`, is
+   177px, plus 64px of Card padding and 2px of border = 243px. */
+.ch-app-grid {
+  --ch-card-min-width: 16rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--ch-card-min-width), 100%), 1fr));
+  gap: var(--page-panel-gap);
 }
 
 /* ---------------------------------------------------------- Gap 6: app cards
-   Equal height within a row, illustration across the full card width at the
-   asset's own proportions (250 x 160), Open button bottom right. The
-   illustration is not cropped: Buckholt's `.card-img` is a fixed 10rem box,
-   which would cut the sides off at narrow card widths. */
-.ch-app-grid {
-  --bs-gutter-y: var(--page-panel-gap);
-}
+   Illustration across the full card width at the asset's own proportions
+   (250 x 160), Open button bottom right. The illustration is not cropped:
+   Buckholt's `.card-img` is a fixed 10rem box, which would cut the sides off
+   at narrow card widths. */
 
 .ch-app-card {
   height: 100%;
