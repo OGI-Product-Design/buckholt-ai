@@ -115,7 +115,7 @@ html[data-skin="mobius"] .mob-record .nav {
   --nav-link-background-hover: rgba(255, 255, 255, 0.1);
   --nav-link-active: #ffffff;
   --nav-link-border-focus: #ffffff;
-  --nav-link-radius: 0;
+  --nav-link-radius: 0.5rem;   /* Buckholt's rounded pill (Laurence, 20 October 2026) */
   --link-colour: #ffffff;
   --link-hover: #ffffff;
   --link-icon: #ffffff;
@@ -148,27 +148,25 @@ html[data-skin="mobius"] .mob-record .btn {
 html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: var(--mobius-navy); --button-border-active: var(--mobius-navy); }
 @media (min-width: 1024px) {
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail,
-  html[data-skin="mobius"] .mob-record { margin: 0; border: 0; border-radius: 0; }
+  html[data-skin="mobius"] .mob-record { margin: 0; border: 0; }
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: var(--mobius-blue); }
-  /* Mark's menu (19 October 2026), in Mobius's colours: the panel is the
-     blue sidebar, flush, with the client on it; no white cards; the policy
-     menu is the navy flyout. */
+  /* Mark's menu (19 October 2026), in Mobius's colours, with Buckholt's
+     shapes (Laurence, 20 October 2026): the blue sidebar is the rounded
+     panel, inset 8px with 24px corners, the client on it; the policy menu
+     is the navy flyout as a rounded card inside it. */
   html[data-skin="mobius"] #sidebar.mob-sidebar {
-    margin: 0;
-    top: var(--app-header-height);
-    height: calc(100vh - var(--app-header-height));
     background-color: var(--mobius-blue);
     border: 0;
-    border-radius: 0;
+    border-radius: 1.5rem;
   }
-  html[data-skin="mobius"] .mob-columns { padding: 0; }
   html[data-skin="mobius"] .mob-sidebar .mob-rail,
-  html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: transparent; border: 0; border-radius: 0; }
-  html[data-skin="mobius"] .mob-sidebar .mob-record { background-color: var(--mobius-navy); }
+  html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: transparent; border: 0; border-radius: 1rem; }
+  html[data-skin="mobius"] .mob-sidebar .mob-record { background-color: var(--mobius-navy); border-radius: 1rem; }
   html[data-skin="mobius"] .mob-sidebar .mob-record-head { padding-right: var(--spacer-04); }
-  /* No 8px inset here, so the Avatar moves in by as much to stay centred
-     over the strip. */
-  html[data-skin="mobius"] .mob-has-record.mob-rail-collapsed .mob-rail-head { padding-left: var(--spacer-02); }
+  html[data-skin="mobius"] .mob-sidebar .mob-record-nav { padding-right: var(--spacer-03); padding-left: var(--spacer-02); }
+  /* The strip's Buttons and the pills take Buckholt's 8px corners. */
+  html[data-skin="mobius"] .mob-strip .btn,
+  html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
 /* Status dots stay readable on blue: a white ring. */
 html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }
