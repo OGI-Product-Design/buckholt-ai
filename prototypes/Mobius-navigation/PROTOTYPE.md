@@ -627,10 +627,13 @@ same markup in both looks (a test compares them); nothing Mobius lacks is added 
 banner) and nothing moves.
 
 - **The default** (Laurence, 12 October 2026): the prototype opens in the Mobius look; the
-  Buckholt look is the alternative.
+  Buckholt look is the alternative. Since 20 October 2026 every fresh visit opens in Mobius,
+  whatever was chosen before.
 - **Switching:** a floating Switch at the bottom right, "Current Mobius look" (a review aid,
-  not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The choice
-  is remembered in the browser. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
+  not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The browser
+  does not remember the choice: flipping the Switch writes `?skin=buckholt` into the address
+  (or removes it for Mobius), so a refresh keeps the look but a fresh visit is Mobius. Choices
+  stored by earlier versions are cleared. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
   so the page is drawn in the right look first time.
 - **How:** `mobius-skin.css` is scoped to `html[data-skin="mobius"]` and does nothing
   otherwise. It mostly re-points Buckholt's own tokens (action, link, text, border, radius,
@@ -642,7 +645,8 @@ banner) and nothing moves.
   strip and 3px corners; key values are bold; table headers are light grey; Buttons are flat
   with 1px borders; links are not underlined; the page title is Mobius's small uppercase label
   ("POLICY OVERVIEW"); the wordmark reads "open gi"; the system menu is Mobius's outlined box;
-  side panels keep the blue header Mobius already has. Pages are denser: 20px padding and gaps
+  side panels keep the blue header Mobius already has. The search Modal takes Buckholt's 16px
+  corners (Laurence, 20 October 2026), matching the rounded menu; other Modals keep 3px. Pages are denser: 20px padding and gaps
   in place of Buckholt's 32–64px.
 - **Sources:** colours measured from the Mobius screenshots supplied (1 October 2026); the
   field border (`#D6D9DD`) and font (Proxima Soft, which Buckholt shares) from Mobius's

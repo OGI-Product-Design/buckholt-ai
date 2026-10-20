@@ -17,7 +17,7 @@ feel.** None of the prototype's CSS, colours or fonts are used.
 | `pages.js` | Every page, side panel and flow, built from Buckholt markup. |
 | `mobius-navigation.js` | Routing, the menu, side panels, confirmations, the drawer and the events. |
 | `mobius-navigation.css` | Prototype-only layout and bindings of Buckholt's own custom properties. |
-| `mobius-skin.css`, `mobius-skin.js` | The default look: the same prototype dressed as current Mobius (Buckholt is the alternative). Switched by the floating toggle at the bottom right, or `?skin=mobius` / `?skin=buckholt` in the address; the choice is remembered in the browser. |
+| `mobius-skin.css`, `mobius-skin.js` | The default look: the same prototype dressed as current Mobius (Buckholt is the alternative). Switched by the floating toggle at the bottom right, or `?skin=mobius` / `?skin=buckholt` in the address. Every fresh visit opens in Mobius; the Switch writes its choice into the address, so a refresh keeps it. |
 | `PROTOTYPE.md` | Build notes: what is Buckholt, every deviation and gap, and how it was verified. |
 | `reference/` | The source prototype and terminology log, unchanged. |
 
