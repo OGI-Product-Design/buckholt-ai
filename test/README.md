@@ -12,8 +12,9 @@ open and look at are in [`../tools/`](../tools/), not here.
 | `accessibility.js` | Accessible names, `aria-pressed`, non-focusable cells, keyboard operation, focus rings, overflow. | 32 |
 | `responsive.js` | Fifteen widths from 1920 to 320. | 47 |
 | `regression.js` | Originators and BACS Import still work, and the shared layer has not broken them. | 20 |
+| `ch-shell.js` | Configuration Hub shell: every acceptance criterion in `prototypes/CH-SHELL/ch-shell-spec.md`, its accessibility requirements, the feature contract and breadcrumb truncation. | 190 |
 
-**266 assertions.** `source-parity.py` is the one to run after touching
+**456 assertions.** `source-parity.py` is the one to run after touching
 anything in `components/`; it needs nothing but Python.
 
 ## Running the browser suites
@@ -37,6 +38,7 @@ node test/calendar-modal.js
 node test/accessibility.js
 node test/responsive.js
 node test/regression.js
+node test/ch-shell.js
 ```
 
 Each prints `N pass, M fail` and exits non-zero on a failure.

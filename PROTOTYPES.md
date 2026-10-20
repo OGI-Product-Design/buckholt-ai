@@ -15,6 +15,15 @@ anywhere.
 
 Process is still a placeholder inside BACS Import.
 
+## Configuration Hub — GitHub Pages
+
+| Prototype | Link |
+| --- | --- |
+| **CH shell** | https://ogi-product-design.github.io/buckholt-ai/prototypes/CH-SHELL/ |
+
+Seed variants: add `?seed=long-names`, `all-apps`, `test-only` or
+`staged-rollout`.
+
 ## Mobius navigation — Cloudflare
 
 | Prototype | Link |

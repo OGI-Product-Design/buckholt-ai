@@ -43,9 +43,15 @@ working perfectly locally.
 | `BACS-import/` | Accounts › BACS › Import | `bacs-import-spec.md` + `screenshots/` |
 | `BACS-calendar/` | Accounts › BACS › Calendar | `calendar-spec.md` + `screenshots/` |
 | `Mobius-navigation/` | Mobius navigation shell | `README.md` in that folder |
+| `CH-SHELL/` | Configuration Hub shell: header, environment, avatar menu, breadcrumb band, app-card home | `ch-shell-spec.md` + `screenshots/` |
 
 The first three are tabs of one application and link to each other. Process
 is still a placeholder inside `BACS-import/`.
+
+`CH-SHELL/` is a different product (Configuration Hub, not Mobius PAS) and
+its chrome is not the one in `shared/`. Every CH feature prototype loads the
+shell from `CH-SHELL/shell/` rather than copying it; `CH-SHELL/PROTOTYPE.md`,
+"How the shell is shared", says how.
 
 Every folder carries a **`PROTOTYPE.md`** recording what was built and every
 deviation from its spec, and most carry a **`SPEC-CHANGES.md`** feeding

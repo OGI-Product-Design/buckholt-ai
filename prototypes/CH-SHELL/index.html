@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications | Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the shared Configuration Hub shell. -->
+<link rel="stylesheet" href="shell/ch-shell.css">
+</head>
+<body>
+
+<!-- SH-00 · Home. The chrome (skip link, top bar, Test alert, breadcrumb band)
+     is drawn into #ch-header and #ch-context by shell/ch-shell.js; this page
+     owns only its landmarks and its content. Seed variants: ?seed=long-names,
+     all-apps, test-only, staged-rollout (northgate is the default). -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <h1 class="visually-hidden">Applications</h1>
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 ch-app-grid" id="ch-app-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="shell/ch-registry.js"></script>
+<script src="shell/ch-shell.js"></script>
+<script>
+  (function () {
+    'use strict';
+    var esc = CHShell.esc;
+
+    /* One Buckholt Card per visible app, in registry order: illustration
+       (decorative), title as a level 2 heading, description, Primary Open.
+       Open navigates, so it is a link styled as a Button; its accessible name
+       starts with the visible label. */
+    function renderCards() {
+      document.getElementById('ch-app-grid').innerHTML = CHShell.visibleApps().map(function (app) {
+        return '<div class="col">' +
+          '<div class="card ch-app-card" data-app="' + esc(app.id) + '">' +
+            '<img src="' + esc(CHShell.illustrationUrl(app)) + '" class="card-img" alt="">' +
+            '<div class="card-body">' +
+              '<div class="text-block">' +
+                '<h2 class="title-03">' + esc(app.name) + '</h2>' +
+                '<p>' + esc(app.description) + '</p>' +
+              '</div>' +
+              '<a class="btn btn-primary ch-open" href="' + esc(CHShell.appUrl(app)) + '" ' +
+                 'aria-label="Open ' + esc(app.name) + '" data-ch-nav>' +
+                '<span class="button-label">Open</span>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    CHShell.init({
+      page: 'Applications',
+      breadcrumb: [{ label: 'Applications' }]
+    });
+    renderCards();
+    CHShell.onEnvironmentChange(renderCards);
+  })();
+</script>
+</body>
+</html>
