@@ -30,6 +30,15 @@ Open `BACS-import/index.html`. Routes are hash routes: `#/import`,
 
 ---
 
+## Revision, 16 October 2026 — the content surface
+
+`<main>` carries `.app-main-surface` from `prototypes/shared/app-shell.css`,
+which puts the BACS content area on `#ffffff` rather than Buckholt's
+`--body-background` (`#fbfbfb`). IM-00-01's right-hand page margin samples
+pure white, as OR-00-01's and CA-00-01's do. Nothing in this feature assumed
+the old surface, so nothing else changed here. The change came out of the
+BACS Calendar work; see `../BACS-calendar/SPEC-CHANGES.md` A7.
+
 ## Runtime contract
 
 Loaded in this order, per `AGENTS.md`. There is no separate Bootstrap

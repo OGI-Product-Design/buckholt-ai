@@ -65,7 +65,9 @@
      carries its text, so status never relies on colour alone. Incomplete
      has no status colour in the prototype; it takes the info variant. */
   var STATUS = {
-    'Live': { variant: 'success', icon: 'fa-circle-check', label: '[[Live]]' },
+    /* "Policy", as current Mobius names an in-force policy, not "Live"
+       (Laurence, 19 October 2026: so user sessions are not confused). */
+    'Policy': { variant: 'success', icon: 'fa-circle-check', label: 'Policy' },
     'Prospect': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Prospect' },
     'Lapsed': { variant: 'warning', icon: 'fa-triangle-exclamation', label: 'Lapsed' },
     'Automatic Decline': { variant: 'error', icon: 'fa-circle-exclamation', label: 'Automatic Decline' },
@@ -77,9 +79,24 @@
      own border colour), the text in the primary colour: the menus' compact
      status (Laurence, 7 October 2026; not Buckholt). The text carries the
      meaning; the dot only reinforces it. */
+  /* Mark's menu (19 October 2026): the mark's shape follows the status,
+     a dot when all is well, a triangle for a warning, a no-entry sign for
+     an error, so colour is not the only signal. */
+  function statusMarkIcon(p) {
+    var v = STATUS[p.status].variant;
+    if (v === 'success') return '<span class="mob-status-dot" aria-hidden="true"></span>';
+    var ic = { warning: 'fa-solid fa-triangle', error: 'fa-regular fa-ban', info: 'fa-solid fa-circle-info' }[v];
+    return '<i class="' + ic + ' mob-status-icon" aria-hidden="true"></i>';
+  }
   function statusDot(p, extra) {
     return '<span class="eyebrow mob-status mob-status-' + STATUS[p.status].variant + (extra ? ' ' + extra : '') + '">' +
-      '<span class="mob-status-dot" aria-hidden="true"></span>' + statusText(p) + '</span>';
+      statusMarkIcon(p) + statusText(p) + '</span>';
+  }
+  /* The policy column's head: the mark alone, the status in text for
+     assistive technology and in a Tooltip. */
+  function statusMark(p) {
+    return '<span class="mob-status mob-status-' + STATUS[p.status].variant + ' mob-status-mark" data-bs-toggle="tooltip" data-bs-title="' + esc(plain(STATUS[p.status].label)) + '">' +
+      statusMarkIcon(p) + '<span class="visually-hidden">' + statusText(p) + '</span></span>';
   }
 
   /* `small` is the documented `.tag-sm`, used where space is tight (the
@@ -450,11 +467,12 @@
        design; the table keeps "Load 2 more" with its chevron. */
     var side = where !== 'table';
     if (rest > 0) {
+      /* The menu's "+ Show 2 more" (Mark, 19 October 2026). */
       return moreLink((side ? 'Show ' : 'Load ') + Math.min(5, rest) + ' more',
-        ' data-more="1" data-focus-id="more-' + where + '"', side ? null : AI.more);
+        ' data-more="1" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
     }
     if (total > 5) {
-      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? null : AI.fewer);
+      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
     }
     return '';
   }
@@ -569,7 +587,7 @@
     var filters = filterBar([
       pick(select('sb', 'Brand', ['Select', 'Krypton', 'Tungsten']), fl.brand),
       pick(select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle']), fl.lob),
-      pick(select('ss', 'Policy status', ['Select', 'Live', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
+      pick(select('ss', 'Policy status', ['Select', 'Policy', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
         btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
     var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
@@ -722,9 +740,13 @@
         card('Settled items', empty('There are no settled items.'))
       ])];
     },
+    /* No claims in the sample data, so the empty state. */
+    cclaims: function () {
+      return [card('Claims', empty('There are no claims on any of this client’s policies.'))];
+    },
     cactivity: function () {
-      return [card('Activity', activityFilters('ca', null) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Activity' }),
+      return [card('Client activity', activityFilters('ca', null) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description', 'Policy / quote ref', 'Policy status'], F.clientActivity, { caption: 'Client activity' }),
         { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria. You can preview each activity and save the audit trail as a PDF.', actions: [savePdf()] })];
     },
     ccomplaints: function () {
@@ -812,7 +834,7 @@
     details: function (p) {
       var secs = F.policyDetail;
       var k = M.policyFlows(p).primary;
-      var where = k === 'newquote' ? 'Add new quote in the client menu' : M.POLICY_ACTIONS[k].label + ' in the policy menu';
+      var where = k === 'newquote' ? 'Add new quote on the client overview' : M.amendLabel(p, M.POLICY_ACTIONS[k].to) + ' at the top of the page';
       return [empty('Read only. Use ' + where + ' to make changes.')].concat(secs.map(function (s) {
         return '<div class="text-block"><h2 class="headline-01">' + t(s.title) + '</h2></div>' + detailCards(s, p);
       }));
@@ -848,7 +870,7 @@
         card('Premium and product', premium +
           '<div class="form-actions mob-form-actions">' +
             btn('Convert to policy', { variant: 'primary', disabled: dec, attrs: ' data-confirm="convert" aria-haspopup="dialog"' }) +
-            standalone('Amend risk', policyHref(p, 'amendquote')) +
+            standalone(M.amendLabel(p, 'amendquote') || 'Amend quote', policyHref(p, 'amendquote')) +
           '</div>', { actions: [
           btn('Edit premium', { size: 'sm', disabled: dec, attrs: ' data-panel="editpremium" aria-haspopup="dialog"' }),
           btn('Select payment plan', { size: 'sm', disabled: dec, attrs: ' data-panel="payplan" aria-haspopup="dialog"' })
@@ -1021,8 +1043,8 @@
     },
 
     activity: function (p) {
-      return [card('Activity', activityFilters('pa', p) +
-        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Activity' }),
+      return [card('Policy activity', activityFilters('pa', p) +
+        table(['Date and time', 'Operator', 'Activity type', 'Description'], F.policyActivity, { caption: 'Policy activity' }),
         { sub: 'Activity shows the full audit trail record. Search by date range and filter by multiple criteria.', actions: [savePdf()] })];
     },
 
@@ -1327,6 +1349,9 @@
     };
     var item = function (k) {
       var a = A[k];
+      /* A journey opens a page: a link, not a button. */
+      if (a.kind === 'flow') return '<li role="none"><a class="menu-item" role="menuitem" href="' + policyHref(p, a.to) + '">' +
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(M.amendLabel(p, a.to) || a.label) + '</a></li>';
       return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' + attrs(k) + '>' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) +
         (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
@@ -1355,7 +1380,13 @@
     '</div>';
     /* A rule between the actions and More, as between the client's tools
        and the actions. */
-    return (shown.length ? set(shown.map(function (k) { return btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) }); }), 'mob-policy-actions') +
+    return (shown.length ? set(shown.map(function (k) {
+        /* The amend journey sits here next to Make an MTA (Laurence, 19
+           October 2026); it opens a page, so it is a link styled as a
+           Button. */
+        return A[k].kind === 'flow' ? btn(M.amendLabel(p, A[k].to) || A[k].label, { icon: A[k].icon, href: policyHref(p, A[k].to) })
+          : btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) });
+      }), 'mob-policy-actions') +
       '<div class="mob-heading-rule mob-more-rule" aria-hidden="true"></div>' : '') + more;
   }
 
@@ -1371,7 +1402,11 @@
     /* The client's tools, Buttons opening side panels on the page: Client
        notes (with its count) and Client support, on every client and policy
        page (Laurence, 8 October 2026). */
-    if (R.scope === 'client') return clientTools(R);
+    /* On a client page, Add new quote follows, after a rule (Laurence,
+       19 October 2026): it opens a page, so it is a link styled as a
+       Button. */
+    if (R.scope === 'client') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' +
+      set([btn('Add new quote', { icon: M.ICON.add, href: '#c/newquote' })], 'mob-client-actions');
     /* On a policy page the policy's actions follow, after a rule. */
     if (R.scope === 'policy') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' + policyTools(R.p);
     return '';
@@ -1379,7 +1414,7 @@
 
   global.MobiusPages = {
     init: function (state) { S = state; },
-    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot,
+    ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot, statusMark: statusMark,
       loadMoreButton: loadMoreButton, shownPolicies: shownPolicies, policyHref: policyHref },
     app: app,
     client: client,

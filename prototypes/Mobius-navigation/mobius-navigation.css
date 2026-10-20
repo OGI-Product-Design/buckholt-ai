@@ -35,6 +35,9 @@
   margin: 0 var(--spacer-05) 0 0;
   white-space: nowrap;
 }
+/* Hidden for now (Laurence, 19 October 2026): the review aid stays in the
+   code, off, so it can come back by deleting this rule. */
+.app-bar .mob-terms { display: none; }
 
 
 
@@ -288,18 +291,144 @@
   .mob-rail { transition: none; }
 }
 
+/* ------------------------------------------------------------- Mark's menu
+   Mark's restyle (19 October 2026), wide screens: the whole menu is one
+   rounded grey panel, inset 8px. The client heads it, with the collapse
+   button at its right, above both columns. At client level the client's
+   menu is a white card inside it; on a policy page the client's menu is a
+   white strip of icons and the policy's menu sits beside it on the grey,
+   so the panel keeps its width. Collapsed at client level the panel is a
+   narrow strip: the button, the Avatar, the icons. The drawer (below
+   1024px) keeps its own layout. */
+@media (min-width: 1024px) {
+  #sidebar.mob-sidebar {                              /* the id: Buckholt's #sidebar sets its own margin and radius */
+    margin: var(--spacer-03);
+    top: calc(var(--app-header-height) + var(--spacer-03));
+    height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
+    background-color: var(--ui-background-03);
+    border: 1px solid var(--ui-border-02);
+    border-radius: var(--border-radius-xl);           /* 24px, as Mark draws it */
+    overflow: hidden;
+  }
+  .mob-sidebar .mob-rail-head {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacer-03);
+    padding: var(--spacer-04) var(--spacer-04) var(--spacer-04) calc(var(--spacer-04) + var(--spacer-02));   /* with User meta's own 8px, Mark's 24px around the Avatar; the button 16px from the edge; the Avatar over the menu's group icons */
+  }
+  .mob-sidebar .mob-rail-head::after { content: none; }
+  .mob-sidebar .mob-rail-head .mob-column-toggle { margin-left: auto; }
+  .mob-columns { padding: 0 var(--spacer-03) var(--spacer-03); }
+  /* The client's menu: the white card. */
+  .mob-sidebar .mob-rail,
+  .mob-sidebar:not(.mob-has-record) .mob-rail {
+    margin: 0;
+    width: 19rem;                                     /* 304px: Mark's panel is about 322px */
+    overflow: hidden;
+    background-color: var(--ui-background-01);
+    border: 1px solid var(--ui-border-03);
+    border-radius: var(--border-radius-lg);           /* 16px */
+  }
+  /* Collapsed, or beside a policy: the card is a strip of icons. */
+  .mob-sidebar.mob-rail-collapsed .mob-rail,
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4.5rem; }   /* 72px */
+  .mob-rail-collapsed .mob-rail-scroll { padding: var(--spacer-04); }
+  /* The policy's menu: on the panel's grey, no card of its own; with the
+     strip it fills the client card's width. */
+  .mob-sidebar .mob-record {
+    width: 14.5rem;                                   /* with the 4.5rem strip, the client card's 19rem */
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  .mob-sidebar .mob-record-head { padding: var(--spacer-03) var(--spacer-03) var(--spacer-03) var(--spacer-05); }   /* Mark: the reference about 24px from the strip, the status dot 16px from the panel's edge */
+  /* Mark's tighter tops: the first group close under the card's edge or
+     the policy's head. */
+  .mob-sidebar .mob-rail-pages .mob-group:first-child { margin-top: var(--spacer-02); }
+  .mob-sidebar .mob-record-nav .mob-group:first-child { margin-top: var(--spacer-02); }
+  /* Mark's type and spacing (measured from his frame, 19 October 2026):
+     the client 18px over a 14px reference beside a 48px Avatar; the
+     policy 16px over a 16px line of business; group labels 16px, 8px
+     apart; links 14px, 12px in from their pill, the pill 10px from the
+     rule. */
+  .mob-sidebar .mob-rail-head .avatar { --avatar-size: 3rem; }
+  .mob-sidebar .mob-rail-name { font-size: 1.125rem; line-height: 1.5rem; }
+  .mob-sidebar .mob-record-ref { font-size: 1rem; line-height: 1.5rem; }
+  /* Group headings in the links' grey, not near-black: in Mark's frame
+     they read no heavier than the links under them. */
+  .mob-sidebar .mob-group-label { color: var(--text-secondary); font-weight: 500; }   /* Medium, as in Mark's file (Laurence, 19 October 2026) */
+  .mob-sidebar .mob-group { margin-top: calc(var(--spacer-04) + var(--spacer-02)); }   /* 20px: Mark's 53px from a group's last link to the next label */
+  .mob-sidebar:not(.mob-rail-collapsed) .mob-rail-scroll { padding-left: var(--spacer-02); }
+  .mob-sidebar .mob-subnav { padding-left: 0.625rem; --nav-gap: var(--spacer-01); }
+  .mob-sidebar .mob-subnav .nav-link { --nav-link-padding-x: 0.75rem; font-size: 0.875rem; line-height: 1.25rem; }   /* 32px rows, 34px apart */
+  /* The strip: 40px Buttons, 16px from the card's top, 4px apart. */
+  .mob-sidebar .mob-nav.mob-strip { --nav-gap: var(--spacer-02); }
+  /* Collapsed: a 56px card, a 40px Avatar 16px under the button. */
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head .avatar { --avatar-size: 2.5rem; }
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head { padding: var(--spacer-04) 0 var(--spacer-03); gap: var(--spacer-03); }   /* with User meta's own 8px: 16px either side of the Avatar */
+  .mob-sidebar .mob-record-head::after { content: none; }
+  .mob-sidebar .mob-record-nav { padding: 0 0 var(--spacer-05) 0; }
+  /* Collapsed head: the button above the Avatar, centred. */
+  .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
+  .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
+  /* Beside a policy the Avatar is centred over the strip's icons, as
+     Mark draws it: the strip's centre is 8px + 36px in; less User meta's
+     own 8px and half the Avatar. */
+  .mob-has-record.mob-rail-collapsed .mob-rail-head { flex-direction: row; padding-inline: calc(var(--spacer-03) + var(--spacer-02)) var(--spacer-04); }
+  .mob-has-record.mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: auto; }
+  .mob-has-record.mob-rail-collapsed .mob-rail-client .user-meta-body { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+}
+/* Collapsed at client level, as Mark draws it (19 October 2026): a
+   narrower panel whose white card is only as tall as its icons. The menu
+   you were in stays marked (Laurence). */
+@media (min-width: 1024px) {
+  .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 3.5rem; align-self: flex-start; }   /* 56px */
+  .mob-rail-collapsed:not(.mob-has-record) .mob-rail-scroll { padding: var(--spacer-03); overflow: visible; }
+}
+/* A control refocused after a mouse press: no focus ring (quietFocus). */
+.btn.mob-quiet-focus:focus-visible { box-shadow: none; border-color: var(--button-border); background-color: var(--button-background); color: var(--button-label); }
+.nav-link.mob-quiet-focus:focus:not(:hover):not(.active) { background-color: var(--nav-link-background); color: var(--nav-link); }
+
+/* The client's menu scrolls only its policies (Mark, 19 October 2026):
+   the client's pages and the Policies label stay put; the list scrolls
+   under them, with Show more below it. */
+@media (min-width: 1024px) {
+  /* Until Show more is pressed the list does not scroll: the five show in
+     full and, on a short screen, the whole menu scrolls (Mark). After it,
+     the list scrolls, keeping room for two rows. */
+  .mob-client-menu.mob-all { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .mob-client-menu.mob-all .mob-rail-pages { flex: 0 0 auto; }
+  .mob-client-menu.mob-all > .mob-nav:last-child { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .mob-client-menu.mob-all > .mob-nav:last-child > .mob-group { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .mob-client-menu.mob-all .mob-rail-policies { flex: 0 1 auto; min-height: 12rem; flex-wrap: nowrap; overflow-y: auto; }
+  /* The edge with more beyond it fades (scrollCues). */
+  .mob-rail-policies.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); }
+  .mob-rail-policies.mob-more-above { -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); }
+  .mob-rail-policies.mob-more-above.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 3rem, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, transparent, #000 3rem, #000 calc(100% - 3rem), transparent); }
+  .mob-client-menu.mob-all .mob-rail-policies > .nav-item { flex: 0 0 auto; }
+  .mob-client-menu.mob-all .mob-more { flex: 0 0 auto; }
+}
+
+/* The current category in the strip: Mark's solid square. */
+.mob-strip .btn.active {
+  --button-label-active: var(--action-text-02);
+  --button-background-active: var(--action-01);
+  --button-border-active: var(--action-01);
+}
+/* The status marks: a dot, a triangle, a no-entry sign. */
+.mob-status-icon { flex: 0 0 auto; font-size: 0.75rem; color: var(--mob-status-colour); }
+.mob-status-error .mob-status-icon { font-size: 0.875rem; }
+.mob-status-mark { display: inline-flex; align-items: center; }
+.mob-status-mark .mob-status-dot { width: 0.75rem; height: 0.75rem; }   /* 12px, as Mark draws it */
+/* In the list the status reads quietly, in the secondary colour (Mark). */
+.mob-rail-policies .mob-rail-status { color: var(--text-secondary); }
+
 /* A strip of icons: one per category, evenly spaced and centred. */
 .mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
 .mob-strip-item { list-style: none; }
 .mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
-/* The current category is marked in the light active tint Page navigation
-   uses for its current page, not the ghost Button's solid pressed colour
-   (which `.btn.active` would otherwise draw). */
-.mob-strip .btn.active {
-  --button-label-active: var(--action-text-01);
-  --button-background-active: var(--action-04);
-  --button-border-active: transparent;
-}
 /* The client's Avatar (extra small) is centred in a button the size of the others. */
 .mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
 
@@ -448,6 +577,10 @@
   .mob-heading-actions .mob-policy-actions, .mob-heading-actions .mob-more-rule { display: none; }
   .mob-overflow .mob-fold { display: list-item; list-style: none; }
 }
+/* And whenever the row still will not fit with the breadcrumbs shortened
+   (fitBar). */
+.mob-fold-actions .mob-heading-actions .mob-policy-actions, .mob-fold-actions .mob-heading-actions .mob-more-rule { display: none; }
+.mob-fold-actions .mob-overflow .mob-fold { display: list-item; list-style: none; }
 /* Pressed while its panel is open: the ghost Button's own hover colours,
    which it otherwise shows only under the pointer. */
 .mob-heading-actions .btn[aria-pressed="true"] {

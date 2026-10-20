@@ -28,6 +28,30 @@
    ============================================================================ */
 
 
+/* --------------------------------------------------- The content surface
+   Buckholt's `--body-background` is #fbfbfb and nothing between `<body>` and
+   the page content paints over it, so a Buckholt page puts its content on
+   #fbfbfb. Every BACS frame puts it on **white**: sampled in the right-hand
+   page margin of OR-00-01, IM-00-01 and CA-00-01, all three return
+   #ffffff exactly.
+
+   It matters beyond the obvious, because Buckholt's state fills are
+   translucent overlays. On #fbfbfb a Calendar disabled cell
+   (`--disabled-overlay-01`) composites to #ebebeb and a blank one
+   (`--ui-overlay-01`) to #f7f7f7; on white they land on the #efefef and
+   #fbfbfb that CA-00-01 draws. The surface is what makes the tokens come
+   out right, so it is set here rather than each overlay being replaced by a
+   look-alike opaque value.
+
+   Opt-in, on `<main>`, because this is the BACS application's surface and
+   not a Buckholt rule: the Mobius navigation prototype's own reference
+   crops still show #fbfbfb, and it does not carry the class. */
+
+.app-main-surface {
+  background-color: var(--ui-background-01);
+}
+
+
 /* ----------------------------------------------------------------- Top bar
    Measured from OR-00-01 at 2x (a 1920px frame), and re-checked against
    IM-00-01. The right-hand cells form one tight row: each divider butts

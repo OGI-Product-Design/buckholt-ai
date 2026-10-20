@@ -102,6 +102,7 @@ html[data-skin="mobius"] .btn-sm { --button-height: 1.75rem; }
    flyout's navy. The policy column is the flyout: navy, the current page in
    the sidebar's blue. Both run the full height, flush, as Mobius's do. */
 html[data-skin="mobius"] .mob-sidebar { background-color: var(--mobius-blue); }
+html[data-skin="mobius"] .mob-rail-head,
 html[data-skin="mobius"] .mob-rail,
 html[data-skin="mobius"] .mob-rail .nav,
 html[data-skin="mobius"] .mob-record,
@@ -114,7 +115,7 @@ html[data-skin="mobius"] .mob-record .nav {
   --nav-link-background-hover: rgba(255, 255, 255, 0.1);
   --nav-link-active: #ffffff;
   --nav-link-border-focus: #ffffff;
-  --nav-link-radius: 0;
+  --nav-link-radius: 0.5rem;   /* Buckholt's rounded pill (Laurence, 20 October 2026) */
   --link-colour: #ffffff;
   --link-hover: #ffffff;
   --link-icon: #ffffff;
@@ -132,6 +133,7 @@ html[data-skin="mobius"] .mob-record .nav { --nav-link-background-active: var(--
 html[data-skin="mobius"] .mob-rail { background-color: var(--mobius-blue); }
 html[data-skin="mobius"] .mob-record { background-color: var(--mobius-navy); }
 /* Ghost Buttons in the columns (the collapse toggle, Show more, the icon strip). */
+html[data-skin="mobius"] .mob-rail-head .btn,
 html[data-skin="mobius"] .mob-rail .btn,
 html[data-skin="mobius"] .mob-record .btn {
   --button-label: #ffffff;
@@ -143,26 +145,41 @@ html[data-skin="mobius"] .mob-record .btn {
   --button-label-focus: #ffffff;
   --button-background-focus: transparent;
 }
-html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: var(--mobius-navy); }
+html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: var(--mobius-navy); --button-border-active: var(--mobius-navy); }
 @media (min-width: 1024px) {
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail,
-  html[data-skin="mobius"] .mob-record { margin: 0; border: 0; border-radius: 0; }
+  html[data-skin="mobius"] .mob-record { margin: 0; border: 0; }
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: var(--mobius-blue); }
-  /* The policy column is flush now (no 8px inset, no 1px border), so the
-     rail's head drops the 9px it carried to stay level with it. */
-  html[data-skin="mobius"] .mob-has-record .mob-rail-head { padding-top: var(--spacer-03); }
+  /* Mark's menu (19 October 2026), in Mobius's colours, with Buckholt's
+     shapes (Laurence, 20 October 2026): the blue sidebar is the rounded
+     panel, inset 8px with 24px corners, the client on it; the policy menu
+     is the navy flyout as a rounded card inside it. */
+  html[data-skin="mobius"] #sidebar.mob-sidebar {
+    background-color: var(--mobius-blue);
+    border: 0;
+    border-radius: 1.5rem;
+  }
+  html[data-skin="mobius"] .mob-sidebar .mob-rail,
+  html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail { background-color: transparent; border: 0; border-radius: 1rem; }
+  html[data-skin="mobius"] .mob-sidebar .mob-record { background-color: var(--mobius-navy); border-radius: 1rem; }
+  html[data-skin="mobius"] .mob-sidebar .mob-record-head { padding-right: var(--spacer-04); }
+  html[data-skin="mobius"] .mob-sidebar .mob-record-nav { padding-right: var(--spacer-03); padding-left: var(--spacer-02); }
+  /* The strip's Buttons and the pills take Buckholt's 8px corners. */
+  html[data-skin="mobius"] .mob-strip .btn,
+  html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
 /* Status dots stay readable on blue: a white ring. */
 html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }
 /* Inline counts in the menu: white on the dark column. */
-html[data-skin="mobius"] .mob-count.mob-count-inline {
+html[data-skin="mobius"] .mob-rail .mob-count.mob-count-inline,
+html[data-skin="mobius"] .mob-record .mob-count.mob-count-inline {
   --badge-background: rgba(255, 255, 255, 0.18);
   --badge-border: transparent;
   --badge-label: #ffffff;
 }
 /* The policy's status Tag keeps its own (light) colours on navy. */
 html[data-skin="mobius"] .mob-record-status .tag { --text-primary: var(--mobius-text); }
-html[data-skin="mobius"] .mob-rail .avatar { background-color: var(--mobius-avatar); color: var(--mobius-navy); }
+html[data-skin="mobius"] .mob-rail-head .avatar, html[data-skin="mobius"] .mob-rail .avatar { background-color: var(--mobius-avatar); color: var(--mobius-navy); }
 
 /* ------------------------------------------------------------- Page heading
    Mobius titles a page with a small uppercase label ("RECORD SUMMARY"). */
@@ -223,6 +240,8 @@ html[data-skin="mobius"] .tag { --tag-radius: var(--border-radius-full); border-
 
 /* ------------------------------------------------------------- Modals and menus */
 html[data-skin="mobius"] .modal { --modal-radius: 3px; }
+/* The search modal takes Buckholt's rounding, like the side menu (Laurence, 20 October 2026). */
+html[data-skin="mobius"] #mob-search-modal { --modal-radius: 1rem; }
 html[data-skin="mobius"] .accordion { --accordion-radius: 3px; }
 html[data-skin="mobius"] .menu,
 html[data-skin="mobius"] .dropdown-menu { --menu-radius: 3px; --dropdown-radius: 3px; }

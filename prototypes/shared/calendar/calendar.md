@@ -85,26 +85,44 @@ which is what the component itself does below the md step.
 A cell is the same box in every state. Only its element changes: an
 interactive cell is a `<button>`, every other cell is a `<div>`.
 
-| Class | When | Element | Fill | Border |
+The Figma's dev annotations name a Buckholt token for every fill and every
+stroke, and those are the tokens below — not look-alike values.
+
+| Class | Figma state | Element | Fill | Stroke |
 |---|---|---|---|---|
-| `.calendar-cell--default` | Future working day, not collecting | `<button>` | `--ui-background-01` | `--ui-border-02`, 3px bottom in `--ui-border-01` |
-| `.calendar-cell--selected` | Future working day that collects | `<button>` | `--expressive-pale` | `--action-01`, 3px bottom |
-| `.calendar-cell--readonly` | Before today, or already sent | `<div>` | `--ui-background-01` | `--ui-border-03` |
-| `.calendar-cell--disabled` | Weekend or bank holiday | `<div>` | `--ui-background-04` | `--ui-border-03` |
-| `.calendar-cell--blank` | Outside the displayed month | `<div>` | `--ui-background-02` | none |
+| `.calendar-cell--default` | Resting | `<button>` | `card-background` → `--ui-background-01` | `clickable-border` → `--ui-border-02`, `1px 1px 3px 1px` |
+| `.calendar-cell--selected` | Active | `<button>` | `feedback-overlay-info` | `--action-01`, `1px 1px 3px 1px` |
+| `.calendar-cell--readonly` | Read-only | `<div>` | `card-background` → `--ui-background-01` | `disabled-overlay-01`, 1px |
+| `.calendar-cell--disabled` | Disabled | `<div>` | `disabled-overlay-01` | `disabled-overlay-01`, 1px |
+| `.calendar-cell--blank` | Blank | `<div>` | `ui-overlay-01` | none |
 
-Read-only and disabled cells share one border token. `--ui-border-03` is
-`rgba(26, 26, 26, 0.07)`, so it composites to `#EFEFEF` over the read-only
-cell's white and to `#E0E0E0` over the disabled cell's grey — which is
-exactly the pair the Figma draws, from a single token.
+**The fills are overlays, so the surface behind them is part of the
+result.** `--disabled-overlay-01` is `rgba(26, 26, 26, 0.07)`: over white it
+composites to `#EFEFEF`, which is the disabled cell CA-00-01 draws; over
+Buckholt's `--body-background` (`#fbfbfb`) it comes out `#EBEBEB`. Every BACS
+frame puts the content area on **white**, which is why `app-shell.css` sets
+`.app-main-surface`. Put this component on a different surface and the state
+fills move with it — that is the token working, not a bug, but check it
+against the design.
 
-The raised bottom edge is `calc(1px + 0.125rem)`, which is the expression
-Buckholt's own Button uses for its raised edge. The component borrows the
-idiom rather than inventing a thickness.
+The same one token draws the read-only and disabled strokes: over the
+read-only cell's white it is `#EFEFEF`, over the disabled cell's grey
+`#E0E0E0` — the pair the Figma draws, from a single token.
+
+**Stroke widths.** Resting and Active carry the raised bottom edge at
+`calc(1px + 0.125rem)`, the expression Buckholt's own Button uses; the
+component borrows the idiom rather than inventing a thickness. Read-only and
+disabled have no raised edge, and pad **10px** at the bottom instead of 8px
+(`--calendar-cell-padding-flat`) so that 10 + 1 equals the 8 + 3 above it and
+the labels of the two sit on the same line. The Figma annotates it as
+`8px, 8px, 10px, 8px`.
 
 **Today marker.** `.calendar-cell-date--today` fills the badge with
-`--expressive-soft`. It sits on top of whatever state the cell has and
-changes nothing else.
+`--expressive-soft` and sets the digits in `--expressive-rich`. It sits on
+top of whatever state the cell has and changes nothing else. Every date
+badge — today's included — is `--typescale-02` at `--font-weight-md` with
+0.25px tracking, in a 24px circle; the Figma annotates the text box inside it
+as 24 x 20.
 
 **Hover.** Default and Selected only: the border turns `--action-01`.
 Read-only, disabled and blank cells do not respond.
@@ -124,6 +142,7 @@ Values the Figma uses that Buckholt has no token for. Everything else in
 | `--calendar-cell-height` | `5.5rem` (88px) | Measured on CA-00-01. Buckholt has no cell or row height that fits. |
 | `--calendar-columns` | `repeat(5, minmax(0, 3.4fr)) repeat(2, minmax(0, 1fr))` | The 3.4 : 1 weekday-to-weekend ratio, measured. |
 | `--calendar-badge-size` | `1.5rem` (24px) | The date badge, measured. |
+| `--calendar-cell-padding-flat` | `0.625rem` (10px) | The bottom padding of a cell with no raised edge, annotated in the Figma. Buckholt's spacing scale steps 8px to 16px. |
 | `--calendar-popover` width | `15rem` (240px) | Measured on CA-01-01. Set directly on `.calendar-popover`. |
 
 ## Contrast
@@ -132,14 +151,35 @@ Spec 5.3: "The Default cell's bottom edge must reach 3:1 against white (WCAG
 1.4.11). If the Figma grey falls short, darken it slightly (around #858B91)
 and note it in `calendar.md`."
 
-It falls short. The Figma draws the bottom edge in **#DADADA**, which is
-**1.40 : 1** against white — the edge is the only thing that marks a Default
+It falls short. The Figma draws the bottom edge in **#DADADA** — confirmed
+by sampling CA-00-01, which exports at 2x: the Resting cell's top border is a
+flat 2px band of `#DADADA` and its bottom edge a flat 6px band of the same
+`#DADADA`, so the raised edge is the side border thickened, not a darker
+colour. #DADADA is **1.40 : 1** against white — the edge is the only thing that marks a Default
 cell as interactive, so 1.4.11 applies to it.
 
-Rather than take the spec's suggested #858B91, which is not a Buckholt
-colour, the edge uses **`--ui-border-01` (#919191)**, Buckholt's own strong
-border token, at **3.15 : 1**. It clears the threshold and introduces no new
-value. The 1px side borders stay at `--ui-border-02` as drawn.
+**The component draws #DADADA, as the Figma does.** It was built with
+`--ui-border-01` (#919191, 3.15 : 1) to clear the threshold, and that was
+withdrawn on 16 October 2026: against the frame it reads as a heavy charcoal
+underline rather than a raised edge, and the whole cell changes character.
+Design made the call with both in front of them.
+
+So spec 5.3 is **not met at rest**, and that is a deliberate, recorded
+decision rather than an oversight. Two things narrow what is actually at
+risk:
+
+- **State is not carried by the edge.** A Selected cell is `--action-01` at
+  **8.20 : 1** *and* says "Collection day"; a Read-only or Disabled cell has
+  a different fill *and* its own label. Spec 5.2's "state is never shown by
+  colour alone" holds either way.
+- **Both interaction affordances clear 3:1 comfortably.** Hover turns the
+  whole border `--action-01` (**8.20 : 1**) and focus is a 3px `--focus-01`
+  ring (**7.31 : 1**). What is below 3:1 is the resting boundary of a
+  control that already sits inside a labelled grid of them.
+
+Recorded as A8 in `../../BACS-calendar/SPEC-CHANGES.md`, which proposes the
+spec wording to match. If 5.3 is reinstated, one line does it:
+`--calendar-cell-edge: var(--ui-border-01)`.
 
 ## Accessibility
 

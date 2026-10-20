@@ -71,25 +71,21 @@
     policy: function (p) {
       /* Policy overview is the group's first page, not an item of its own
          (Laurence, 8 October 2026); the group takes the Shield. */
+      var r = rulesFor(p);
       var ch = [{ id: 'summary', label: '[[Policy overview]]' }];
-      if (p.kind !== 'incomplete') ch.push({ id: 'details', label: '[[Policy details]]' });
-      if (p.kind !== 'decline') ch.push({ id: 'claims', label: 'Claims' });
-      /* Amend policy and Add new quote are menu items in current Mobius
-         (Laurence, 7 October 2026). They open pages, so they sit in the
-         Policy group with its other pages. Which ones a status has is
-         policyFlows', the same as the page heading. */
-      var fl = policyFlows(p);
-      [fl.primary].concat(fl.secondary).forEach(function (k) {
-        /* Add new quote is the client's, in the client menu only (Laurence,
-           8 October 2026): one place in the navigation. A policy's
-           heading keeps its Add new quote Button. */
-        if (k === 'newquote') return;
+      if (r.pages.details) ch.push({ id: 'details', label: '[[Policy details]]' });
+      if (r.pages.claims) ch.push({ id: 'claims', label: 'Claims' });
+      /* The status's entry points into a journey (Retrieve quote, Amend…)
+         open pages, so they are navigation, in the Policy group with its
+         other pages. Add new quote is the client's, in the client menu
+         only (Laurence, 8 October 2026), whatever the status. */
+      entryPoints(p).forEach(function (k) {
         ch.push({ id: POLICY_ACTIONS[k].to, label: POLICY_ACTIONS[k].label });
       });
       return { group: 'Policy', icon: ICON.policies, children: ch };
     },
     transactions: function (p) {
-      return p.kind === 'decline' ? null : { group: 'Transactions', icon: ICON.money, children: [
+      return !rulesFor(p).pages.transactions ? null : { group: 'Transactions', icon: ICON.money, children: [
         { id: 'tx', label: '[[Account summary]]' },
         { id: 'plan', label: 'Payment plan' },
         { id: 'collections', label: 'Collections' },
@@ -114,7 +110,7 @@
       return { group: 'More details', icon: ICON.info, children: [
         { id: 'agent', label: 'Agent / product details' },
         { id: 'history', label: 'History' },
-        { id: 'activity', label: 'Activity' }
+        { id: 'activity', label: 'Policy activity' }
       ] };
     }
   };
@@ -139,9 +135,10 @@
   /* kind: 'flow' opens a page, 'panel' opens a side panel in place,
      'confirm' asks for confirmation in place. */
   var POLICY_ACTIONS = {
-    amend: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amend' },
-    amendQuote: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
-    amendRisk: { label: '[[Amend policy]]', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
+    /* Live Mobius's labels, one per status (Laurence, 19 October 2026). */
+    amend: { label: 'Amend details', icon: ICON.edit, kind: 'flow', to: 'amend' },
+    amendQuote: { label: 'Amend quote', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
+    amendRisk: { label: 'Amend risk', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
     mta: { label: '[[Make an MTA]]', icon: ICON.edit, kind: 'panel' },   // "Make an MTA" with the pen (Laurence, 8 October 2026)
     extend: { label: 'Policy extension', icon: ICON.time, kind: 'panel' },
@@ -153,56 +150,147 @@
     newquote: { label: 'Add new quote', icon: ICON.add, kind: 'flow', to: 'newquote' },
     copy: { label: '[[Copy policy]]', icon: ICON.copy, kind: 'confirm' },
     portal: { label: '[[Customer portal settings]]', icon: ICON.settings, kind: 'panel' },
-    cancel: { label: 'Cancel policy', icon: ICON.cancel, kind: 'confirm', danger: true }
+    cancel: { label: 'Cancel policy', icon: ICON.cancel, kind: 'confirm', danger: true },
+    /* In the live audit for Renewal invited, with no page or panel in the
+       prototype yet (and no Renewal invited record to show them): listed
+       for the rule, not drawn. */
+    retrieveRenewal: { label: 'Retrieve renewal quote', icon: ICON.reinstate, kind: 'flow', to: 'renewalquote', unbuilt: true },
+    amendRenewal: { label: 'Amend renewal', icon: ICON.edit, kind: 'flow', to: 'amendrenewal', unbuilt: true },
+    withdrawAlt: { label: 'Withdraw alternative quote', icon: ICON.cancel, kind: 'confirm', unbuilt: true }
   };
 
-  /* A group with `sub: null` is drawn below a divider: Stop and Cancel sit
-     together at the bottom of a live policy's actions. */
-  function policyActions(p) {
-    var g = [];
-    if (p.kind === 'live') {
-      g.push({ sub: 'Policy', ids: ['copy'] });
-      g.push({ sub: 'MTA', ids: ['mta', 'extend'] });
-      g.push({ sub: 'Renewal', ids: ['renew'] });
-      g.push({ sub: 'Customer portal', ids: ['portal'] });
-      g.push({ sub: null, ids: ['stop', 'cancel'] });
-    } else if (p.kind === 'lapsed') {
-      g.push({ sub: 'Policy', ids: ['reinstate', 'copy'] });
-      g.push({ sub: 'Customer portal', ids: ['portal'] });
-    } else {
-      g.push({ sub: 'Policy', ids: ['copy'] });
-      g.push({ sub: 'Customer portal', ids: ['portal'] });
+  /* =====================================================================
+     STATUS RULES — the one place that decides, per policy status, which
+     navigation and which actions a policy gets (Laurence, 19 October 2026,
+     from the audit of live Mobius). Edit here; nothing else checks status.
+
+       pages    navigation: the optional pages in the policy menu. Policy
+                overview, Correspondence and More details are on every
+                status and are not listed.
+       entry    navigation too: entry points that open a journey's pages,
+                in the Policy group (keys of POLICY_ACTIONS with `to`).
+       actions  the row beside the breadcrumbs (keys of POLICY_ACTIONS):
+                side panels and confirmations, and the amend journey
+                (Amend details / quote / risk), which sits there next to
+                Make an MTA though it opens a page (Laurence, 19 October
+                2026).
+
+     Hidden means not rendered. Items marked `unbuilt` in POLICY_ACTIONS
+     are listed so the rule is complete, but have no page or panel yet and
+     are not drawn. Add new quote is client-level (the client menu) on
+     every status, so it is not listed here. Customer portal settings
+     ("Portal options") is configuration-driven in live Mobius; it stays
+     on every status for now. Keys are the status labels, matched without
+     regard to case. */
+  var ALL_PAGES = { details: true, claims: true, transactions: true };
+  var QUOTE_PAGES = { details: true, claims: false, transactions: false };
+  var STATUS_RULES = {
+    'Policy': {
+      pages: ALL_PAGES,
+      entry: [],
+      actions: ['amend', 'mta', 'extend', 'renew', 'copy', 'portal', 'stop', 'cancel']
+    },
+    'Cancelled': {
+      pages: ALL_PAGES,
+      entry: [],
+      actions: ['amend', 'copy', 'portal']
+    },
+    'Lapsed': {
+      pages: ALL_PAGES,
+      entry: [],
+      actions: ['reinstate', 'copy', 'portal']
+    },
+    'Prospect': {
+      pages: QUOTE_PAGES,
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
+    },
+    'Automatic decline': {
+      pages: QUOTE_PAGES,
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
+    },
+    'Automatic refer': {
+      pages: QUOTE_PAGES,
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
+    },
+    'Client decline': {
+      pages: ALL_PAGES,                                 // not in the audit's hide lists
+      entry: ['retrieve'],
+      actions: ['amendQuote', 'copy', 'portal']
+    },
+    'Incomplete': {
+      pages: { details: false, claims: true, transactions: true },
+      entry: [],
+      actions: ['amendRisk', 'copy', 'portal']
+    },
+    'Renewal invited': {
+      pages: ALL_PAGES,
+      entry: ['retrieveRenewal'],
+      actions: ['amendRenewal', 'withdrawAlt', 'portal']
+    },
+    'Renewal pending': {
+      pages: { details: true, claims: false, transactions: true },
+      entry: [],
+      actions: ['portal']
+    },
+    /* Not audited: the prototype's existing default for a status it has no
+       rule for (every page, Copy and Customer portal settings). FLAG. */
+    'MTA quote': {
+      pages: ALL_PAGES,
+      entry: [],
+      actions: ['copy', 'portal']
     }
-    return g;
+  };
+  var DEFAULT_RULES = STATUS_RULES['MTA quote'];
+
+  function rulesFor(p) {
+    var want = String(p.status || '').toLowerCase();
+    for (var k in STATUS_RULES) if (k.toLowerCase() === want) return STATUS_RULES[k];
+    return DEFAULT_RULES;
+  }
+  var built = function (k) { return POLICY_ACTIONS[k] && !POLICY_ACTIONS[k].unbuilt; };
+  function entryPoints(p) { return rulesFor(p).entry.filter(built); }
+  /* Everything of the status's that opens a page: menu entry points and
+     the row's journeys. */
+  function journeys(p) {
+    return entryPoints(p).concat(rulesFor(p).actions.filter(function (k) { return built(k) && POLICY_ACTIONS[k].kind === 'flow'; }));
   }
 
-  /* Flows open a page, so they sit in the page heading instead of the menu. */
+  /* The status's actions, in its rule's order (the row and More decide
+     where each sits). */
+  /* The label of the entry point that opens this page for this status
+     ("Amend quote" or "Amend risk" share the quote amend page). */
+  function amendLabel(p, page) {
+    var k = journeys(p).filter(function (x) { return POLICY_ACTIONS[x].to === page; })[0];
+    return k ? POLICY_ACTIONS[k].label : null;
+  }
+
+  function policyActions(p) {
+    return [{ sub: null, ids: rulesFor(p).actions.filter(built) }];
+  }
+
+  /* The status's main entry point (for the read-only Policy details note);
+     with none, changes start from Add new quote in the client menu. */
   function policyFlows(p) {
-    if (p.kind === 'live') return { primary: 'amend', secondary: ['newquote'] };
-    if (p.kind === 'prospect' || p.kind === 'decline') return { primary: 'amendQuote', secondary: ['newquote'] };
-    if (p.kind === 'incomplete') return { primary: 'amendRisk', secondary: [] };
-    return { primary: 'newquote', secondary: [] };
+    var e = journeys(p).filter(function (k) { return k !== 'retrieve'; });
+    return { primary: e[0] || 'newquote', secondary: [] };
   }
 
-  /* Every page a policy of this status can show: its menu pages plus the
-     pages its heading flows open. Anything else redirects to the overview. */
+  /* Every page a policy of this status can show: its menu pages and the
+     pages its entry points open. Anything else redirects to the overview. */
   function allowedPolicyPages(p) {
     var ids = [];
     policyNav(p).forEach(function (n) {
       if (n.children) n.children.forEach(function (c) { ids.push(c.id); });
       else ids.push(n.id);
     });
-    var fl = policyFlows(p);
-    [fl.primary].concat(fl.secondary).forEach(function (a) { ids.push(POLICY_ACTIONS[a].to); });
-    /* Quote summary is not a menu page (Laurence, 8 October 2026): it is
-       where amending a quote ends, as in current Mobius, for a policy that
-       is still a quote. */
-    if (hasQuote(p)) ids.push('quote');
+    journeys(p).forEach(function (k) { if (ids.indexOf(POLICY_ACTIONS[k].to) < 0) ids.push(POLICY_ACTIONS[k].to); });
+    /* Quote summary is where amending a quote ends (Laurence, 8 October
+       2026), and where Retrieve quote goes. */
+    if (journeys(p).some(function (k) { return POLICY_ACTIONS[k].to === 'amendquote' || POLICY_ACTIONS[k].to === 'quote'; })) ids.push('quote');
     return ids;
-  }
-
-  function hasQuote(p) {
-    return p.kind === 'prospect' || p.kind === 'decline' || p.kind === 'incomplete';
   }
 
   /* Policy overview quick links: [page, label, icon, count key]. */
@@ -215,13 +303,16 @@
 
   /* ------------------------------------------------------------ Client level */
 
-  /* The client's pages, after Client overview: Add new quote first
-     (Laurence, 7 October 2026), then Business details. */
+  /* The client's pages, after Client overview. Add new quote is in the
+     client's actions row, not here (Laurence, 19 October 2026). */
   var CLIENT_NAV = [
-    { id: 'newquote', label: 'Add new quote', icon: ICON.add },
     { id: 'business', label: 'Business details', icon: ICON.business },
     { id: 'ctx', label: 'Transactions', icon: ICON.money },
-    { id: 'cactivity', label: 'Activity', icon: ICON.activity },
+    /* Live Mobius's "View claims" on the client homepage (Laurence, 19
+       October 2026): the client's claims across their policies. Named
+       "Claims", as the policy menu names its page. */
+    { id: 'cclaims', label: 'Claims', icon: 'fa-regular fa-car-burst' },        // GAP: not in the icon catalogue
+    { id: 'cactivity', label: 'Client activity', icon: ICON.activity },
     { id: 'ccomplaints', label: 'Complaints', icon: ICON.flag },
     { id: 'checks', label: 'Client checks', icon: ICON.checks }
   ];
@@ -276,8 +367,8 @@
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {
-      summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'],
-      cactivity: ['Activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
+      summary: ['[[Client overview]]', 'Client'], business: ['Business details', 'Client'], ctx: ['Transactions', 'Client'], cclaims: ['Claims', 'Client'],
+      cactivity: ['Client activity', 'Client'], ccomplaints: ['Complaints', 'Client'], checks: ['Client checks', 'Client'],
       newquote: ['Product selection', 'New quote']
     },
     policy: {
@@ -287,8 +378,9 @@
       diary: ['Diary', 'Correspondence'], docs: ['Documents', 'Correspondence'],
       notes: ['Notes', 'Correspondence'], checklist: ['Checklist', 'Correspondence'], attachments: ['Attachments', 'Correspondence'],
       complaints: ['Complaints', 'Correspondence'], agent: ['Agent / product details', 'More details'],
-      history: ['Policy history', 'More details'], activity: ['Activity', 'More details'],
-      amend: ['[[Amend policy]]', 'Policy action'], amendquote: ['[[Amend policy]]', 'Policy action'], newquote: ['Product selection', 'New quote']
+      history: ['Policy history', 'More details'], activity: ['Policy activity', 'More details'],
+      /* The amend pages take their status's label (amendLabel). */
+      amend: ['Amend details', 'Policy action'], amendquote: ['Amend quote', 'Policy action'], newquote: ['Product selection', 'New quote']
     }
   };
 
@@ -297,6 +389,9 @@
     policyNav: policyNav,
     policyActions: policyActions,
     policyFlows: policyFlows,
+    STATUS_RULES: STATUS_RULES,
+    rulesFor: rulesFor,
+    amendLabel: amendLabel,
     allowedPolicyPages: allowedPolicyPages,
     POLICY_ACTIONS: POLICY_ACTIONS,
     QUICK_LINKS: QUICK_LINKS,

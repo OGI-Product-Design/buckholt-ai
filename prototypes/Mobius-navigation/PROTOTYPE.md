@@ -153,17 +153,73 @@ strip in the previous round.
 Both columns are rebuilt on every route. At app level (Dashboard, the other modules, Create new
 client) there is no left menu, and below 1024px no Menu button either: the systems are in the
 system menu, which stays in the top bar at every width.
-`navigation-model.js` is a line-for-line port of the prototype's `GROUPS`, `policyNav`, `A`,
-`policyActions`, `policyFlows` and `allowedPolicyPages`. The status rules are therefore exactly
-the prototype's:
+**Status rules (19 October 2026), from Laurence's audit of live Mobius.** One object,
+`STATUS_RULES` in `navigation-model.js`, decides per status which navigation and which actions a
+policy gets; nothing else checks status for this. Navigation (a new page) and actions (something
+where you are) stay separate: `pages` and `entry` are menu items, `actions` are in the row beside
+the breadcrumbs. Hidden means not rendered. On every status: Policy overview, Correspondence, More
+details; Add new quote is client-level (the client menu) on every status; Customer portal settings
+stays on every status (configuration-driven in live, ignored for now).
 
-| Status | Groups | Menu actions | Heading Buttons |
-| --- | --- | --- | --- |
-| Live | Policy (details, claims, Amend policy), Transactions (no Transaction documents), Correspondence, More details | Copy · Add MTA, Policy extension · Renewal invite · Customer portal settings · *divider* · Stop, **Cancel** | none |
-| Prospect | Policy, Transactions, Correspondence, More details | Copy · Customer portal settings | none |
-| Automatic Decline | Policy (details, Amend policy; no claims), Correspondence, More details. **No Transactions** | Copy · Customer portal settings | none |
-| Incomplete | Policy (claims, Amend policy), Transactions, Correspondence, More details | Copy · Customer portal settings | none |
-| Lapsed | Policy, Transactions, Correspondence, More details | **Reinstate policy**, Copy · Customer portal settings | none |
+| Status | Sample | Policy details | Claims | Transactions | Entry points (menu) | Actions row (row / More) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Policy | PUCO0068, PUCO0052, AADD…666 | ✓ | ✓ | ✓ | none | Amend details, Make an MTA; Policy extension, Renewal invite, Copy policy, Customer portal settings, Stop, Cancel |
+| Cancelled | **none** | ✓ | ✓ | ✓ | none | Amend details; Copy policy |
+| Lapsed | ZZ0900000000646 | ✓ | ✓ | ✓ | none | Reinstate policy; Copy policy |
+| Prospect | ZZ0002966 | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Automatic decline | 999/006/Y341/TGS | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Automatic refer | **none** | ✓ | — | — | Retrieve quote | Amend quote; Copy policy |
+| Client decline | **none** | ✓ | ✓ | ✓ | Retrieve quote | Amend quote; Copy policy |
+| Incomplete | 999/018/Z315/TGS | — | ✓ | ✓ | none | Amend risk; Copy policy |
+| Renewal invited | **none** | ✓ | ✓ | ✓ | Retrieve renewal quote* | Amend renewal*, Withdraw alternative quote* |
+| Renewal pending | **none** | ✓ | — | ✓ | none | none |
+| MTA quote | **none** | ✓ | ✓ | ✓ | none | Copy policy (**not audited**: the previous default, flagged) |
+
+\* In the audit but not built: no page or panel yet, so listed in the rule and not drawn.
+Retrieve quote opens the existing Quote summary page. The amend labels are live Mobius's
+(Laurence, 19 October 2026): **Amend details**, **Amend quote**, **Amend risk**; the amend page's
+title, breadcrumb and the Quote summary's link follow the status. The activity pages are
+**Policy activity** and **Client activity** (the system-level Activity module keeps its name).
+Statuses without a sample record have rules but nothing to show them on.
+
+**Amend and Add new quote in the actions rows (19 October 2026, Laurence and the team).** The
+amend journey (Amend details / quote / risk) sits in the policy's actions row next to Make an MTA,
+and Add new quote in the client's actions row after a rule, rather than in the menus. Both open a
+page, so each is a link styled as a ghost Button (and a link inside More when the row folds).
+This relaxes the 8 October rule that row Buttons never open pages. Add new quote is in the row on
+client pages only; a policy page reaches it through the client overview.
+
+**Mark's menu (19 October 2026).** Wide screens: the menu is one rounded grey panel
+(`--ui-background-03`, 16px radius, inset 8px). The client heads it, Avatar, name and reference,
+with the collapse button at its right, above both columns. At client level the client's menu is a
+white card (18rem) in the panel; on a policy page it is a white strip of icons (4rem) with the
+policy's menu beside it on the grey (14rem), so the panel keeps its width. The current icon in
+the strip is a solid blue square. Collapsed at client level: the button, the Avatar and the strip.
+The policy's head shows a status mark at the right of the reference (in place of the small Tag),
+with the status in text for assistive technology and a Tooltip. Status marks take the status's
+shape as well as its colour: a dot (Policy), a triangle (warning), a no-entry sign (error); the
+status text in the list is secondary. "Show 2 more" leads with a plus. Kept from our own
+decisions rather than the mock: "Policy" not "Live", Client activity, Claims in the client menu,
+and Amend and Add new quote in the actions rows, not the menus. In the Mobius look the panel is
+the flush blue sidebar with the client on it and the policy's menu the navy flyout. The drawer
+(below 1024px) keeps its layout, with the client at its top.
+
+**Mark's menu behaviour (19 October 2026).** The head's button collapses the **whole menu** to
+the strip (and opens it again); it stays collapsed from page to page until opened. Collapsed, the
+strip keeps the menu you were in marked, Client or Policy (Laurence and Mark). **Only one
+menu shows at a time, and none twice**: on a policy page the strip and the policy's menu show;
+the strip's Client button brings back the client's full card, as at client level (no strip,
+no policy menu), with the open policy marked in its list; choosing that policy brings its menu
+back without leaving the page. A new page opens on its own menu. In the client's menu the
+**policies list scrolls only after Show more** (Mark): until then the five show in full and, on a
+short screen, the whole menu scrolls; after it, only the list scrolls, brought to the policies it
+added, with a fade at an edge that has more beyond it. When the breadcrumbs and the actions row still will not fit with the breadcrumbs
+shortened, the labelled actions fold into More, as on a narrow page.
+
+**Client claims (19 October 2026).** Live Mobius's "View claims" on the client homepage is now
+**Claims** in the client menu, after Transactions: the client's claims across their policies,
+named as the policy menu names its page. The sample data has no claims, so it shows the empty
+state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
 ## System navigation (7 October 2026)
 
@@ -247,6 +303,12 @@ a `<mark>` while **Show wording changes** is on (Buckholt Switch, small, in the 
 mark uses the tertiary expressive pink. With the switch off, the same text renders plain. Trade
 terms (MTA, NCD, IPN, D.O.C.) are not expanded, per the brief and log T19. Data values such as
 excess names and "Automatic Decline" are kept as data.
+
+**The Show wording changes switch is hidden for now** (Laurence, 19 October 2026); the marks
+and the code stay, off. **An in-force policy's status reads "Policy"**, as current Mobius names
+it, not "Live" (Laurence, 19 October 2026, so user feedback sessions are not confused); it
+keeps the success colour. "Live policies" on the Statistics card and the History table's
+"Live" event type are other meanings and stay.
 
 ## Accessibility
 
@@ -565,10 +627,13 @@ same markup in both looks (a test compares them); nothing Mobius lacks is added 
 banner) and nothing moves.
 
 - **The default** (Laurence, 12 October 2026): the prototype opens in the Mobius look; the
-  Buckholt look is the alternative.
+  Buckholt look is the alternative. Since 20 October 2026 every fresh visit opens in Mobius,
+  whatever was chosen before.
 - **Switching:** a floating Switch at the bottom right, "Current Mobius look" (a review aid,
-  not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The choice
-  is remembered in the browser. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
+  not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The browser
+  does not remember the choice: flipping the Switch writes `?skin=buckholt` into the address
+  (or removes it for Mobius), so a refresh keeps the look but a fresh visit is Mobius. Choices
+  stored by earlier versions are cleared. `mobius-skin.js` sets `html[data-skin="mobius"]` in `<head>`,
   so the page is drawn in the right look first time.
 - **How:** `mobius-skin.css` is scoped to `html[data-skin="mobius"]` and does nothing
   otherwise. It mostly re-points Buckholt's own tokens (action, link, text, border, radius,
@@ -580,7 +645,8 @@ banner) and nothing moves.
   strip and 3px corners; key values are bold; table headers are light grey; Buttons are flat
   with 1px borders; links are not underlined; the page title is Mobius's small uppercase label
   ("POLICY OVERVIEW"); the wordmark reads "open gi"; the system menu is Mobius's outlined box;
-  side panels keep the blue header Mobius already has. Pages are denser: 20px padding and gaps
+  side panels keep the blue header Mobius already has. The search Modal takes Buckholt's 16px
+  corners (Laurence, 20 October 2026), matching the rounded menu; other Modals keep 3px. Pages are denser: 20px padding and gaps
   in place of Buckholt's 32–64px.
 - **Sources:** colours measured from the Mobius screenshots supplied (1 October 2026); the
   field border (`#D6D9DD`) and font (Proxima Soft, which Buckholt shares) from Mobius's

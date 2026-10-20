@@ -192,8 +192,10 @@
 }
 
 /* Layer 1: the action bar, directly under the top app bar. Bootstrap's
-   `.sticky-top` is `top: 0`, so the offset is set here instead. The page
-   surface is `--ui-background-02`, the colour `body` already carries.
+   `.sticky-top` is `top: 0`, so the offset is set here instead. The bar has
+   to repaint the page surface it covers, which is `--ui-background-01`:
+   `app-shell.css` puts the BACS content area on white, as OR-00-01 draws it.
+   Change the surface there and this has to follow.
 
    The padding is what keeps the bar's own breathing room once it is stuck:
    without it the controls sit flush against the top bar above and the table
@@ -208,7 +210,7 @@
   z-index: 30;
   padding-block: var(--spacer-04);
   margin-block: calc(var(--spacer-04) * -1);
-  background-color: var(--ui-background-02);
+  background-color: var(--ui-background-01);
 }
 
 /* Layer 2: the table header cells, directly under the action bar.
@@ -225,7 +227,7 @@
   position: sticky;
   top: calc(var(--app-header-height, 4.75rem) + var(--ori-action-bar-height, 0px));
   z-index: 20;
-  background-color: var(--ui-background-02);
+  background-color: var(--ui-background-01);
   background-image: linear-gradient(var(--table-header-background), var(--table-header-background));
 }
 

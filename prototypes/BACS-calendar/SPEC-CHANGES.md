@@ -96,6 +96,129 @@ unreachable with this seed.
 
 ---
 
+### A6. The day-cell tokens, from the dev-annotated Figma — **settled, built**
+
+Added 16 October 2026, after a dev-annotated export of the day-cell states
+(Figma "Frame 15100") was supplied. It names a Buckholt token for every fill
+and stroke, which settles five values spec 5.2 could only give as "≈" under a
+column headed "confirm in Figma". The prototype now uses the named tokens.
+
+| Spec 5.2 says | Annotation names | Composites to | Built |
+|---|---|---|---|
+| Selected: pale blue fill ≈ #E8EDFB | `feedback-overlay-info` | #E8EDFA on white | yes |
+| Disabled: grey fill ≈ #EFEFEF | `disabled-overlay-01` | #EFEFEF on white | yes |
+| Blank: very light grey ≈ #FBFBFB | `ui-overlay-01` | #FCFCFC on white | yes |
+| Read-only: faint border | `disabled-overlay-01` | #EFEFEF on white | yes |
+| Resting/Read-only/Disabled fill | `card-background` | #FFFFFF | unchanged |
+
+Two further things the annotation settles:
+
+- **A cell with no raised edge pads 10px at the bottom**, annotated
+  `8px, 8px, 10px, 8px`, so that 10 + its 1px border equals the 8 + 3 of a
+  raised cell and the labels line up. The prototype padded 8px all round and
+  sat 2px low on read-only and disabled cells.
+- **The date badge is `--typescale-02` / weight 500 / 0.25px tracking**, and
+  today's digits are **`--expressive-rich`** on the `--expressive-soft`
+  badge. The prototype inherited the page's 300 weight and left the digits
+  `--text-primary`.
+
+Suggested spec wording for 5.2, replacing the four "≈" hexes:
+
+> Fills and strokes are Buckholt tokens, as the Figma annotates them:
+> Resting and Read-only `card-background`; Active `feedback-overlay-info`;
+> Disabled and every Read-only/Disabled stroke `disabled-overlay-01`; Blank
+> `ui-overlay-01`. These are translucent overlays — they are correct only on
+> the white content surface the frames draw.
+
+**One annotation is not followed.** It names the Active stroke
+`clickable-border-hover`, which `css/buckholt.css` hardcodes as `#1748d0` on
+`.card-clickable:hover`. CA-03-03 exports at 2x and its Selected cell's
+stroke measures a flat **`#0F40C5`** across both the 2px side band and the
+6px bottom band — `--action-01`, and the hex spec 5.2 already gives. The
+annotation names a token, the frame gives the value, and where they disagree
+the measurement wins. Worth checking whether the live Buckholt build's
+`clickable-border-hover` is `--action-01`; if it is, the local build's
+`#1748d0` is a build difference, not a design one.
+
+### A7. The content surface is white, not Buckholt's page colour — **settled, built**
+
+Not a calendar question, but it is what made the calendar's fills wrong, so
+it belongs here. Buckholt's `--body-background` is `#fbfbfb` and nothing
+between `<body>` and the page content paints over it. **Every BACS frame
+puts the content area on `#ffffff`** — sampled in the right-hand page margin
+of OR-00-01, IM-00-01 and CA-00-01, all three return pure white.
+
+Because Buckholt's state fills are translucent overlays, the surface changed
+what they came out as: a disabled cell rendered `#EBEBEB` against the frame's
+`#EFEFEF`, a blank cell `#F7F7F7` against `#FBFBFB`. On white they land on
+the frame values exactly.
+
+`prototypes/shared/app-shell.css` now carries `.app-main-surface`, which the
+three BACS pages put on `<main>`. It is opt-in because the Mobius navigation
+prototype's own reference still shows `#fbfbfb`. Originators' two sticky
+layers repainted the old surface behind themselves and were moved to white
+with it.
+
+Worth asking Buckholt whether an application content area is meant to be
+white or `--body-background`; `patterns/page-layout` does not say.
+
+### A8. Spec 5.3's 3:1 on the raised edge — **settled against the spec, wording needed**
+
+Spec 5.3: "The Default cell's bottom edge must reach **3:1** against white
+(WCAG 1.4.11). If the Figma grey falls short, darken it slightly (around
+#858B91) and note it in `calendar.md`."
+
+It falls short: the Figma draws **#DADADA**, which is **1.40 : 1**.
+Confirmed on CA-00-01 at 2x — the Resting cell's top border is a flat 2px
+band of #DADADA and its bottom edge a flat 6px band of the same #DADADA, so
+the raised edge is the side border thickened and not a darker colour at all.
+
+The prototype shipped `--ui-border-01` (#919191, 3.15 : 1) as the spec asks.
+Design reviewed it against the frame on 16 October 2026 and rejected it: at
+3px it reads as a heavy charcoal underline rather than a raised edge, and it
+changes the character of the grid. **The build now draws #DADADA**, so 5.3
+is not met at rest.
+
+Recorded here rather than quietly, because it is a real accessibility
+position and someone will ask. What is and is not at risk:
+
+| | Carried by | Against white |
+|---|---|---|
+| Selected state | `--action-01` border **and** the text "Collection day" | 8.20 : 1 |
+| Read-only / Disabled state | a fill change **and** a text label | — |
+| Hover | the whole border turns `--action-01` | 8.20 : 1 |
+| Focus | a 3px `--focus-01` ring, offset 2px | 7.31 : 1 |
+| **Resting boundary** | **the #DADADA edge** | **1.40 : 1** |
+
+No state is conveyed by the edge, so spec 5.2's "state is never shown by
+colour alone" still holds, and both interaction affordances are well clear
+of 3:1. What is below the threshold is the resting boundary of a control
+that already sits inside a labelled grid of identical controls under helper
+text telling the user to select a working day. That is the argument; it is
+not a clean pass, and 1.4.11 on the resting boundary is arguable either way.
+
+Suggested replacement for 5.3:
+
+> **5.3 Contrast.** The Default cell's raised edge is `--ui-border-02`, the
+> same token as its side borders, thickened to 3px — as the Figma draws it.
+> It is 1.40 : 1 against white and does not meet WCAG 1.4.11 at rest; this
+> is a deliberate decision taken on 16 October 2026 in favour of the design.
+> Interactivity and state must therefore not depend on it: hover takes the
+> whole border to `--action-01` (8.20 : 1), focus is a 3px `--focus-01` ring
+> (7.31 : 1), and every state that means something carries a text label as
+> well as a fill.
+
+If an audit reinstates 3:1, it is one line —
+`--calendar-cell-edge: var(--ui-border-01)` in
+`prototypes/shared/calendar/calendar.css` — and `--ui-border-01` is a
+Buckholt token, where the spec's suggested #858B91 would be a new colour.
+
+There is no third option on the token scale: the lightest neutral that
+clears 3:1 against white is **#949494**, and `--ui-border-01` is #919191,
+three steps darker than that limit. A compliant border cannot be a light
+one. Raised with Buckholt as C9, since Card, Text input, Select and Table
+all make the same trade silently.
+
 ## B. Changes to the Figma frames
 
 Section 12 already covers the data errors. These are the two things it does
@@ -210,3 +333,35 @@ these cards draw.
 
 Either document that the two halves are set independently and may be
 combined, or add the missing steps.
+
+### C9. 3:1 against white cannot be a light border, and Buckholt says nothing about the trade
+
+Raised by the Calendar's cell edge (A8), but it is not a Calendar problem.
+
+`--ui-border-02` is **#DADADA** at 1.40 : 1. The next step, `--ui-border-01`,
+is **#919191** at 3.15 : 1, and nothing sits between them — `--disabled-03`
+(#BABABA) is 1.94 : 1 and is a disabled-state token besides.
+
+The obvious ask would be a border token in the gap that still clears 3:1.
+**There isn't one to ask for.** Solving 1.05 / (L + 0.05) = 3 puts the
+lightest compliant neutral at **#949494**; `--ui-border-01` is #919191, three
+steps darker than the theoretical limit. Buckholt's scale is not missing a
+value — 3:1 against white simply does not look like a light border, and any
+token that meets it will read as mid-grey.
+
+So the trade is inherent, and every Buckholt component with a low-contrast
+resting boundary faces it: Card (`--card-border` is `--ui-border-02`), Text
+input, Select, Table. The Calendar is only where it got noticed, because
+spec 5.3 asked the question out loud.
+
+What would actually help is **guidance, not a token**: when a resting
+boundary is the only thing identifying a control, does Buckholt expect
+
+- `--ui-border-01`, accepting that it reads heavier than the designs; or
+- `--ui-border-02`, with the 1.4.11 argument carried by hover, focus and a
+  text label, which is what the Calendar now does and what Card already
+  does by default?
+
+Buckholt ships the second everywhere and documents neither. A line in
+`foundations/colour/` settling it would stop every feature re-litigating it,
+and would tell an auditor which answer is the house position.

@@ -9,12 +9,13 @@ open and look at are in [`../tools/`](../tools/), not here.
 | `calendar-data.js` | The collection-day rules in `prototypes/shared/data/calendar.js`. Pure Node, no browser. | 42 |
 | `calendar-flows.js` | BACS Calendar CA-00 to CA-06: cell states, month navigation, the picker, bank holidays. | 59 |
 | `calendar-modal.js` | The collection schedule modal end to end, the toasts and Undo. | 66 |
+| `calendar-tokens.js` | The day-cell fills, strokes, padding and badge type against the dev-annotated Figma — and the white content surface the translucent ones need. | 34 |
 | `accessibility.js` | Accessible names, `aria-pressed`, non-focusable cells, keyboard operation, focus rings, overflow. | 32 |
 | `responsive.js` | Fifteen widths from 1920 to 320. | 47 |
 | `regression.js` | Originators and BACS Import still work, and the shared layer has not broken them. | 20 |
 | `ch-shell.js` | Configuration Hub shell: every acceptance criterion in `prototypes/CH-SHELL/ch-shell-spec.md`, its accessibility requirements, the feature contract and breadcrumb truncation. | 190 |
 
-**456 assertions.** `source-parity.py` is the one to run after touching
+**490 assertions.** `source-parity.py` is the one to run after touching
 anything in `components/`; it needs nothing but Python.
 
 ## Running the browser suites
@@ -35,6 +36,7 @@ cd -
 node test/calendar-data.js
 node test/calendar-flows.js
 node test/calendar-modal.js
+node test/calendar-tokens.js
 node test/accessibility.js
 node test/responsive.js
 node test/regression.js
