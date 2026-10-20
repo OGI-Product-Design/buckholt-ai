@@ -1,0 +1,276 @@
+/* Configuration Hub shell.                                    NOT BUCKHOLT.
+
+   Application chrome for every CH page, and nothing else. Each block below
+   answers one of the "Buckholt gaps" in `ch-shell-spec.md` and says which.
+   The components inside it — Response button, Tag, Alert, Link, Avatar,
+   Menu, Breadcrumb, Tooltip, Card, Button, Modal — are Buckholt, and keep
+   their own styling; this file only places them and supplies what Buckholt
+   does not document. Values are Buckholt tokens wherever one exists;
+   measurements are Figma's (Navigation file, frame 1876:32304). */
+
+/* ---------------------------------------------------------- Page surface */
+#main {
+  background-color: var(--ui-background-02);
+}
+
+#main:focus {
+  outline: none;
+}
+
+/* ---------------------------------------------------------- Gap 7: skip link
+   Bootstrap's `.visually-hidden-focusable` (in buckholt.css) hides it until
+   focused; this only places it once it is visible. */
+.ch-skip-link:focus,
+.ch-skip-link:focus-within {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1100;
+  padding: 0.5rem 1rem;
+  background-color: var(--ui-background-01);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------------------------------------------------------- Gap 1: top bar
+   One row. Left: lockup, then the reserved app-navigation slot (Gap 8).
+   Right, in order: organisation + environment, Mobius link, avatar.
+   Sticky, like the Mobius chrome, at the same z-index (below Bootstrap's
+   modal backdrop at 1050). */
+.ch-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  min-height: 5.25rem;
+  padding: 0 1.25rem;
+  background-color: var(--ui-background-01);
+  border-bottom: 1px solid var(--ui-border-02);
+  box-shadow: var(--shadow-xs);
+}
+
+.ch-lockup {
+  display: inline-flex;
+  flex: none;
+  border-radius: var(--border-radius-xs);
+}
+
+.ch-lockup img {
+  display: block;
+}
+
+/* Gap 8: reserved, empty until a feature spec fills it. */
+.ch-app-nav {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.ch-app-nav:empty {
+  display: none;
+}
+
+.ch-bar-end {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: auto;
+  min-width: 0;
+}
+
+/* The organisation name is the only thing allowed to give way: it truncates
+   first, and nothing else in the bar wraps or shrinks. */
+.ch-tenant {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.ch-org {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+  border-radius: var(--border-radius-xs);
+}
+
+.ch-org:focus-visible {
+  outline: 0.125rem solid var(--text-active);
+  outline-offset: 0.125rem;
+}
+
+.ch-env-tag,
+.ch-mobius,
+.ch-account {
+  flex: none;
+}
+
+/* `.link-standalone` sets `align-self: flex-start`; in the bar it centres. */
+.ch-mobius {
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------- Gap 2: environment
+   Buckholt Response button (native radios), drawn as Figma's compact
+   segmented pill: a 1px outlined container, 34px options, and the
+   selected option outlined by Response button's own checked state. Only
+   the unselected options' border is made transparent, so the outline marks
+   the selected one — not colour alone. */
+.ch-env {
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 1px;
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: var(--border-radius-full);
+}
+
+.ch-env .btn-response {
+  --button-height: 2.125rem;
+  --button-min-width: 2.25rem;
+  --button-padding-x: 0.75rem;
+  --button-radius: var(--border-radius-full);
+  --button-border-bottom-width: var(--button-border-width);
+  /* `.btn-response` sets a literal `min-height: 2.75rem`, not the variable. */
+  min-height: var(--button-height);
+  white-space: nowrap;
+}
+
+.ch-env .btn-check:not(:checked) + .btn-response {
+  --button-border: transparent;
+  --button-background: transparent;
+}
+
+/* ---------------------------------------------------------- Gap 1: avatar
+   The avatar is the Menu button trigger. Buckholt has no avatar-trigger
+   variant, so the trigger is a bare button around a Buckholt Avatar.
+   Figma's "Profile" frame pads the avatar by 16px on each side, which puts
+   it — and the open menu's right edge — 36px in from the window edge. */
+.ch-account {
+  padding-inline: 1rem;
+}
+
+.ch-account-toggle {
+  display: flex;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: var(--border-radius-full);
+  cursor: pointer;
+}
+
+.ch-account-toggle:focus-visible {
+  outline: 0.125rem solid var(--text-active);
+  outline-offset: 0.125rem;
+}
+
+/* ---------------------------------------------------------- Gap 4: identity header
+   Plain content above the Menu's items: not focusable, not a menu item. */
+.ch-account-panel {
+  padding: 0.5rem;
+}
+
+.ch-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem 0;
+}
+
+.ch-identity .avatar {
+  flex: none;
+}
+
+.ch-identity-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+}
+
+.ch-identity-text p {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- Gap 3: Test alert
+   Full width, directly under the top bar and above the breadcrumb band, on
+   every page while Test is current. A Buckholt Alert, flattened to a
+   full-width band. */
+.ch-context {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Square corners, and the content lined up with the breadcrumb band's 30px
+   inset (1.375rem padding + the Alert's own 0.5rem content padding). */
+.ch-env-alert {
+  --alert-radius: 0;
+  --alert-padding-x: 1.375rem;
+}
+
+/* ---------------------------------------------------------- Breadcrumb band
+   Full width between the header (and the Test alert) and the page content. */
+.ch-crumbs {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.875rem;
+  background-color: var(--ui-background-02);
+  border-bottom: 1px solid var(--ui-border-02);
+}
+
+.ch-crumbs .breadcrumb {
+  flex-wrap: nowrap;
+  margin: 0;
+}
+
+/* Gap 5: a crumb longer than about 32 characters truncates. */
+.ch-crumbs .breadcrumb-link,
+.ch-crumbs .ch-crumb-text {
+  display: inline-block;
+  max-width: 32ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.ch-crumbs .ch-crumb-text:focus-visible {
+  outline: 0.125rem solid var(--text-active);
+  outline-offset: 0.125rem;
+  border-radius: var(--border-radius-xs);
+}
+
+/* ---------------------------------------------------------- Gap 6: app cards
+   Equal height within a row, illustration across the full card width at the
+   asset's own proportions (250 x 160), Open button bottom right. The
+   illustration is not cropped: Buckholt's `.card-img` is a fixed 10rem box,
+   which would cut the sides off at narrow card widths. */
+.ch-app-grid {
+  --bs-gutter-y: var(--page-panel-gap);
+}
+
+.ch-app-card {
+  height: 100%;
+}
+
+.ch-app-card .card-img {
+  height: auto;
+  aspect-ratio: 250 / 160;
+}
+
+.ch-app-card .card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.ch-app-card .ch-open {
+  align-self: flex-end;
+  margin-top: auto;
+}

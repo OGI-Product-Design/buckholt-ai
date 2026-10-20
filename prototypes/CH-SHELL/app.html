@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the shared Configuration Hub shell. -->
+<link rel="stylesheet" href="shell/ch-shell.css">
+</head>
+<body>
+
+<!-- SH-03-01 · App placeholder page, for an app with no feature prototype
+     yet: app.html?app=<registry id>. It is that app's base page as far as the
+     shell is concerned, so an environment switch reloads it. -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <div class="text-block">
+                <h1 class="headline-02" id="ch-placeholder-heading"></h1>
+                <p>This application isn&rsquo;t part of this prototype yet.</p>
+              </div>
+              <a class="link-standalone" id="ch-placeholder-back" href="index.html" data-ch-nav>Back to applications</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="shell/ch-registry.js"></script>
+<script src="shell/ch-shell.js"></script>
+<script>
+  (function () {
+    'use strict';
+    var app = CHShell.appById(new URLSearchParams(window.location.search).get('app'));
+    if (!app) {
+      window.location.replace(CHShell.homeUrl);
+      return;
+    }
+    document.getElementById('ch-placeholder-heading').textContent = app.name;
+    CHShell.init({
+      app: app.id,
+      breadcrumb: [{ label: app.name }]
+    });
+  })();
+</script>
+</body>
+</html>
