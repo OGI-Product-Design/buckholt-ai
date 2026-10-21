@@ -980,9 +980,6 @@ mark.mob-term {
   font-size: 1.75rem;
 }
 .mob-support-needs { display: flex; flex-wrap: wrap; gap: var(--spacer-03); margin: var(--spacer-05) 0 0; padding: 0; list-style: none; }
-.mob-tag-more { border: 0; cursor: pointer; font: inherit; }
-.mob-tag-more:hover { background-color: var(--action-04); }
-.mob-tag-more:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
 /* Cancel policy in More reads red at rest, not only on hover (Mark, 21
    October 2026); Buckholt's danger item colours on hover only. */
 .mob-tool-more .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }

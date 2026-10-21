@@ -148,8 +148,8 @@
       supportOn: false,
       /* Shown in the support needs Modal (Laurence, 21 October 2026). The
          three named needs and the "+3 more" are from Mark's design; the
-         other three are not named in it, so "+3 more" opens Client support
-         rather than listing them. */
+         other three are not named in it. "+3 more" is a plain Tag; Open
+         client support shows them all. */
       supportNeeds: ['Health', 'Hearing impairment', 'Addiction'],
       supportMore: 3
     },

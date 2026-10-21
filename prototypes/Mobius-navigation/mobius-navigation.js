@@ -579,8 +579,10 @@
     $('mob-support-needs').innerHTML = (c.supportNeeds || []).map(function (x) {
       return '<li><span class="tag"><span class="tag-label">' + esc(x) + '</span></span></li>';
     }).join('') +
-      (c.supportMore ? '<li><button type="button" class="tag mob-tag-more" data-support-more aria-label="' + c.supportMore + ' more support needs, open Client support">' +
-        '<span class="icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></span><span class="tag-label">' + c.supportMore + ' more</span></button></li>' : '');
+      /* "+3 more" is a plain Tag, not a control (Laurence, 21 October
+         2026): Open client support is how to see them all. */
+      (c.supportMore ? '<li><span class="tag"><span class="icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></span>' +
+        '<span class="tag-label">' + c.supportMore + ' more<span class="visually-hidden"> support needs</span></span></span></li>' : '');
     /* Opened from the search, wait for its Modal to close first. */
     var search = $('mob-search-modal');
     if (search.classList.contains('show') || document.querySelector('.modal-backdrop')) {
@@ -593,9 +595,6 @@
     return null;
   }
   $('mob-support-open').addEventListener('click', function () { supportToPanel = true; supportModal.hide(); });
-  supportEl.addEventListener('click', function (e) {
-    if (e.target.closest('[data-support-more]')) { supportToPanel = true; supportModal.hide(); }
-  });
   supportEl.addEventListener('shown.bs.modal', function () { $('mob-support-open').focus(); });
   supportEl.addEventListener('hidden.bs.modal', function () {
     if (supportToPanel) { supportToPanel = false; var tr = supportTrigger(); openPanel('support', null, tr); return; }

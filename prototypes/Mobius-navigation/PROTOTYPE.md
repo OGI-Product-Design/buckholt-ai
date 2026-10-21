@@ -385,8 +385,8 @@ breadcrumbs and the title.
 When the client has extra support in place, **the first time a broker opens their record in a
 visit** (from the Dashboard, the search or on load), a Buckholt Modal opens (Mark's design): the
 support icon in a teal tile, "This client has support needs", the explanation, the needs as Tags
-(Health, Hearing impairment, Addiction and "+3 more", from Mark's design; "+3 more" opens Client
-support, as the other three are not named), then **Close** (ghost) and **Open client support**
+(Health, Hearing impairment, Addiction and "+3 more", from Mark's design; "+3 more" is a plain
+Tag, not clickable, Laurence, 21 October 2026), then **Close** (ghost) and **Open client support**
 (the primary), which opens the Client support panel. Moving between the client's pages does not
 show it again. Client support is off as standard, so to see it: turn it on in Client support,
 go to the Dashboard and open the client again.
