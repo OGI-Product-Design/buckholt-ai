@@ -456,23 +456,24 @@
 
   var S = null; // the router's state, set by init()
 
-  /* "Show the 5 most recent policies, sorted by cover start, newest first,
-     with a Load more button." One count is shared by every policy list. */
-  function shownPolicies() { return F.policies.slice(0, S.polShown); }
+  /* "Show the 5 most recent policies, sorted by cover start, newest first."
+     Each list keeps its own count (Laurence, 21 October 2026): the menu's
+     ('side') and the client overview's table ('table') open independently. */
+  function shownPolicies(where) { return F.policies.slice(0, S.polShown[where || 'side']); }
 
   function loadMoreButton(where, size) {
     var total = F.policies.length;
-    var rest = total - S.polShown;
-    /* The menu's list reads "Show 2 more" with no icon, as in the Figma
-       design; the table keeps "Load 2 more" with its chevron. */
+    var rest = total - S.polShown[where];
+    /* Both read "Show 2 more" (Laurence, 21 October 2026: showing is not
+       loading); the menu's has the Plus (Mark, 19 October 2026), the
+       table's its chevron. */
     var side = where !== 'table';
     if (rest > 0) {
-      /* The menu's "+ Show 2 more" (Mark, 19 October 2026). */
-      return moreLink((side ? 'Show ' : 'Load ') + Math.min(5, rest) + ' more',
-        ' data-more="1" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
+      return moreLink('Show ' + Math.min(5, rest) + ' more',
+        ' data-more="1" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
     }
     if (total > 5) {
-      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
+      return moreLink('Show fewer', ' data-more="0" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
     }
     return '';
   }
@@ -480,7 +481,7 @@
   function policyHref(p, page) { return '#p/' + p.id + '/' + (page || 'summary'); }
 
   function policiesTable() {
-    var shown = shownPolicies();
+    var shown = shownPolicies('table');
     var c = F.client;
     var more = loadMoreButton('table');
     return table(['[[Reference]]', '[[Cover start]]', '[[Cover end]]', 'Status', '[[Business line]]', 'Insurer', 'Risk info'],

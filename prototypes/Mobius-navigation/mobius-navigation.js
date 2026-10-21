@@ -47,7 +47,8 @@
   F.policies.forEach(function (p) { POLICY_BY_ID[p.id] = p; });
 
   /* polShown: how many
-     policies every policy list shows. step: the current step of a flow. */
+     policies each policy list shows, the menu's (side) and the client
+     overview's table (table), apart. step: the current step of a flow. */
   /* query: the last search run, or null before the first one. */
   /* query: the last search run; modalQuery: the search shown in the search
      Modal (null shows recent searches). searchOpen: the clients opened in
@@ -57,7 +58,7 @@
      19 October 2026); it stays so from page to page. sideView: on a
      policy page, which one menu shows beside the strip, 'client' or
      'policy' (null: the policy's); never both (Mark). */
-  var S = { polShown: 5, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
+  var S = { polShown: { side: 5, table: 5 }, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
   P.init(S);
 
   var R = null;
@@ -154,7 +155,7 @@
        a rule, then Show more. */
     return '<ul class="nav flex-column mob-nav"><li class="nav-item mob-group">' +
       '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
-      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies().map(function (p) {
+      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies('side').map(function (p) {
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
@@ -213,7 +214,7 @@
   function clientMenu(r, curPolicy, cls) {
     /* All the policies shown (after Show more): only then does the list
        scroll on its own (Mark, 19 October 2026). */
-    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (S.polShown > 5 ? ' mob-all' : '') + (cls ? ' ' + cls : '') + '">' +
+    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (S.polShown.side > 5 ? ' mob-all' : '') + (cls ? ' ' + cls : '') + '">' +
         '<div class="mob-rail-pages">' + navGroups(M.clientNav(), r.scope === 'client' ? r.page : null, { scope: 'client' }) + '</div>' +
         railPolicies(curPolicy) +
       '</nav>';
@@ -1083,7 +1084,8 @@
     var more = el.closest('[data-more]');
     if (more) {
       var focusId = more.getAttribute('data-focus-id');
-      S.polShown = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown + 5) : 5;
+      var which = more.getAttribute('data-more-list') || 'side';
+      S.polShown[which] = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown[which] + 5) : 5;
       var scroller = document.querySelector('.mob-rail-scroll');
       var y = scroller ? scroller.scrollTop : 0;
       var inModal = !!more.closest('#mob-search-modal');
@@ -1092,7 +1094,7 @@
       if (scroller) scroller.scrollTop = y;
       /* Shown more in the menu: the list now scrolls, brought to the first
          policy it added. */
-      var list = focusId === 'more-side' && S.polShown > 5 && sidebar.querySelector('.mob-rail-policies');
+      var list = focusId === 'more-side' && S.polShown.side > 5 && sidebar.querySelector('.mob-rail-policies');
       if (list && list.children[5]) { list.scrollTop = list.children[5].offsetTop - list.offsetTop - 8; scrollCues(list); }
       /* From the search Modal: refresh its results and keep focus there. */
       if (inModal) {

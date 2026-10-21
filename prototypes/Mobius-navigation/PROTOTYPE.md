@@ -289,10 +289,12 @@ here.").
 
 ## Policy lists
 
-There is one shared count, which starts at 5. It is used by the rail, the Client overview's
-Client policies table and the search results. Each list is sorted by cover
-start, newest first. "Load 2 more (2 remaining)" becomes "Show fewer", and the table version
-reads "Showing 1 to 5 of 7, most recent first". After the list re-renders, focus stays on the
+Each list keeps **its own count**, starting at 5 (Laurence, 21 October 2026: the menu's list
+and the Client overview's Client policies table open independently; before, one shared count
+opened both). Each list is sorted by cover start, newest first. Both read **"Show 2 more"**
+(Laurence, 21 October 2026: showing is not loading; the menu's with the Plus, the table's with
+its chevron), which becomes "Show fewer", and the table version reads "Showing 1 to 5 of 7,
+most recent first". The search results keep their own per-client "Show 2 more". After the list re-renders, focus stays on the
 button that was pressed.
 
 ## Wording
