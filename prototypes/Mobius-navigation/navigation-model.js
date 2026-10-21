@@ -62,8 +62,8 @@
     newClient: 'fa-regular fa-user-plus',              // GAP
     systems: 'fa-regular fa-grid',                     // GAP: the system menu
     /* Mark's actions toolbar (Laurence, 21 October 2026). */
-    support: 'fa-regular fa-hand-holding-heart',       // GAP: Client support
-    supportOn: 'fa-solid fa-hand-holding-heart',       // GAP: extra support in place, in the teal (expressive quaternary)
+    support: 'fa-regular fa-hand-heart',       // GAP: Client support
+    supportOn: 'fa-solid fa-hand-heart',       // GAP: extra support in place, in the teal (expressive quaternary)
     pen: 'fa-regular fa-pen',                          // the amend journeys
     mta: 'mob-icon mob-icon-shield-pen',               // GAP: Make an MTA (a wizard). Not in Font Awesome: Mark's SVG, inlined in the CSS
     extend: 'fa-regular fa-calendar-plus',             // GAP: Policy extension
