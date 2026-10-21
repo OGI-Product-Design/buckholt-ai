@@ -1456,7 +1456,10 @@
     var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
     var everyday = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
     var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
-    groups.push(toolGroup('Policy actions', everyday.map(function (k) {
+    /* The changes to the policy (the amend journey and Make an MTA) are a
+       group of their own, above the rest (Laurence, 21 October 2026). */
+    var CHANGE = ['amend', 'amendQuote', 'amendRisk', 'amendRenewal', 'mta'];
+    var toolFor = function (k) {
       var a = A[k];
       if (a.kind === 'flow') return tool(M.amendLabel(p, a.to) || a.label, a.icon, { href: policyHref(p, a.to) });
       return tool(a.label, a.icon, {
@@ -1465,7 +1468,9 @@
         after: k === 'renew' && due ? badge(1) : '',
         attrs: ' data-action="' + k + '" data-scope="policy"' + (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === k) + '"' : '') + ' aria-haspopup="dialog"'
       });
-    })));
+    };
+    groups.push(toolGroup('Change the policy', everyday.filter(function (k) { return CHANGE.indexOf(k) >= 0; }).map(toolFor)));
+    groups.push(toolGroup('Policy actions', everyday.filter(function (k) { return CHANGE.indexOf(k) < 0; }).map(toolFor)));
     if (risky.length) {
       /* More: Buckholt's Overflow menu (Menu button Code & specs example 3),
          opening to the right; Pause, a divider, then Cancel, the danger

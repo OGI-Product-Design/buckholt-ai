@@ -367,8 +367,9 @@ breadcrumbs and the title.
   Tooltip on its right (on hover and on keyboard focus). Groups are split by a divider:
   1. **The client's tools:** Client support (`fa-hand-holding-heart`) and Add policy note / Add
      client note (`fa-note-sticky`, with its count badge).
-  2. **The record's actions**, from the status rules. On an in-force policy: Amend details
-     (`fa-pen`), Make an MTA (Mark's Shield-pen SVG, inlined in `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as Font Awesome has no Shield-pen; a wizard), Policy extension (`fa-calendar-plus`),
+  2. **The record's actions**, from the status rules, in two groups (Laurence, 21 October 2026):
+     the changes to the policy first, then the rest. On an in-force policy: Amend details
+     (`fa-pen`), Make an MTA (Mark's Shield-pen SVG, inlined in `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as Font Awesome has no Shield-pen; a wizard), a divider, Policy extension (`fa-calendar-plus`),
      Renewal invite (`fa-envelope`, with the "renewal due" badge), Copy policy (`fa-copy`),
      Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-shield-plus`, the
      catalogue's Shield-plus, Laurence, 21 October 2026; also in the search results and the
