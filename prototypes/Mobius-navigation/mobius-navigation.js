@@ -704,7 +704,7 @@
   });
   /* The Accordion opens and closes a client itself (Bootstrap Collapse);
      its state is kept so a filter or a fresh draw leaves it as it was. */
-  modalBody.addEventListener('shown.bs.collapse', function (e) { var k = e.target.getAttribute('data-search-key'); if (k) S.searchOpen[k] = true; });
+  modalBody.addEventListener('shown.bs.collapse', function (e) { var k = e.target.getAttribute('data-search-key'); if (k) { S.searchOpen = {}; S.searchOpen[k] = true; } });  /* one client open at a time */
   modalBody.addEventListener('hidden.bs.collapse', function (e) { var k = e.target.getAttribute('data-search-key'); if (k) S.searchOpen[k] = false; });
 
 
