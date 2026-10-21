@@ -623,17 +623,19 @@
                 esc(x.name) + ', ' + esc(x.ref) +
               '</button>' +
             '</h4>' +
-            '<div id="' + id + '" class="accordion-collapse collapse' + (on ? ' show' : '') + '" data-search-key="c:' + x.id + '">' +
+            /* One client open at a time (Laurence, 21 October 2026): opening
+               another closes it, so there is only ever one View client. */
+            '<div id="' + id + '" class="accordion-collapse collapse' + (on ? ' show' : '') + '" data-bs-parent="#mob-search-acc" data-search-key="c:' + x.id + '">' +
               '<div class="accordion-body">' +
                 /* The client's actions at the top, before their details and
                    policies (Laurence, 21 October 2026, from broker feedback):
                    View client and Add new quote, both links styled as
-                   Buttons as they open pages. View client is secondary, not
-                   primary: several clients can be open at once, and a screen
-                   has one primary. */
+                   Buttons as they open pages. View client is the primary
+                   (Laurence, 21 October 2026): only one client is open at a
+                   time, so the screen still has one primary. */
                 '<div class="mob-sr-top">' +
                   set([
-                    btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
+                    btn('View client', { variant: 'primary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
                     btn('Add new quote', { icon: M.ICON.add, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
                   ], 'mob-sr-actions') +
                   fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
