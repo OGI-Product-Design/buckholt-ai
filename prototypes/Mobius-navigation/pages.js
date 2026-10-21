@@ -637,7 +637,7 @@
                 '<div class="mob-sr-top">' +
                   set([
                     btn('View client', { variant: 'primary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
-                    btn('Add new quote', { icon: M.ICON.add, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
+                    btn('Add new quote', { icon: M.ICON.newQuote, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
                   ], 'mob-sr-actions') +
                   fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
                 '</div>' +
@@ -1447,7 +1447,7 @@
     ])];
     if (!onPolicy) {
       /* A client's one action: Add new quote, which opens a page. */
-      groups.push(toolGroup('Client actions', [tool('Add new quote', M.ICON.add, { href: '#c/newquote' })]));
+      groups.push(toolGroup('Client actions', [tool('Add new quote', M.ICON.newQuote, { href: '#c/newquote' })]));
       return groups.join('<hr class="mob-tool-divider">');
     }
     var p = R.p, A = M.POLICY_ACTIONS;
@@ -1507,7 +1507,7 @@
        19 October 2026): it opens a page, so it is a link styled as a
        Button. */
     if (R.scope === 'client') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' +
-      set([btn('Add new quote', { icon: M.ICON.add, href: '#c/newquote' })], 'mob-client-actions');
+      set([btn('Add new quote', { icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
     /* On a policy page the policy's actions follow, after a rule. */
     if (R.scope === 'policy') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' + policyTools(R.p);
     return '';
