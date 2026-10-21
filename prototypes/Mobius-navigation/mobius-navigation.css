@@ -918,7 +918,7 @@ mark.mob-term {
     padding: var(--spacer-04) 0;
     background-color: var(--ui-background-03);
     border: 1px solid var(--ui-border-02);
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-lg);           /* 16px (Laurence, 21 October 2026) */
     overflow-y: auto;                                  /* a short window: it scrolls rather than spill */
     scrollbar-width: none;
     z-index: 2;                                        /* its Menu opens over Main */

@@ -175,7 +175,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-actionbar {
     background-color: var(--mobius-blue);
     border: 0;
-    border-radius: 1.5rem;
+    border-radius: 1rem;                              /* 16px (Laurence, 21 October 2026) */
     --ui-border-02: rgba(255, 255, 255, 0.22);
     --focus-01: #ffffff;
   }
