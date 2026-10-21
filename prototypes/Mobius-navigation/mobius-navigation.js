@@ -518,6 +518,9 @@
     arrangeDrawer(R);
     renderPage(R);
     renderActionbar(R);
+    /* A client with extra support in place: the rule under the top bar
+       turns teal on their record (Mark, 21 October 2026). */
+    document.body.classList.toggle('mob-support-record', R.scope !== 'app' && !!F.client.supportOn);
     Shell.initTooltips($('sidebar'));
     /* Into a client record from outside it (the Dashboard, the search, or
        on first load): the support needs Modal, once a visit. */

@@ -365,7 +365,7 @@ breadcrumbs and the title.
   menu collapses. Not drawn on Broking or the other modules.
 - **Icon-only ghost Buttons** in the text colour, each with its name as `aria-label` and in a
   Tooltip on its right (on hover and on keyboard focus). Groups are split by a divider:
-  1. **The client's tools:** Client support (`fa-hand-holding-heart`) and Add policy note / Add
+  1. **The client's tools:** Client support (`fa-hand-heart`) and Add policy note / Add
      client note (`fa-note-sticky`, with its count badge).
   2. **The record's actions**, from the status rules, in two groups (Laurence, 21 October 2026):
      the changes to the policy first, then the rest. On an in-force policy: Amend details
@@ -381,7 +381,10 @@ breadcrumbs and the title.
   The confirmation says "Pause this policy?".
 - **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary;
   the pale teal on the Mobius blue), its icon solid; the client's Avatar takes the teal and
-  carries a small teal badge with the same icon (Buckholt's Avatar has no badge: a gap).
+  carries a small teal badge with the same icon (Buckholt's Avatar has no badge: a gap); and on
+  the client's record the rule under the top bar becomes 3px of the teal (expressive quaternary
+  deep), in both looks. The icon is Hand-heart (`fa-hand-heart`), not Hand-holding-heart
+  (Laurence, 21 October 2026).
 - **Below 1024px** the menu is a drawer, so the labelled heading row described below is used
   instead.
 
@@ -518,7 +521,7 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Business details | `fa-briefcase` |
 | Activity | `fa-wave-pulse` |
 | Pause policy | `fa-circle-pause` |
-| Client support | `fa-hand-holding-heart` |
+| Client support | `fa-hand-heart` |
 | Make an MTA | Mark's Shield-pen SVG (`.mob-icon-shield-pen`, inlined) |
 | Policy extension | `fa-calendar-plus` |
 | Notes / Client notes | `fa-note-sticky` |
@@ -559,7 +562,7 @@ there is only ever one View client on screen and it can be the primary (Laurence
 (Laurence, 8 October 2026): two labelled **ghost** Buttons (Button guidance pairs like with
 like), opening their side panels on the page, Client support first:
 
-- **Client support**: the **Hand-holding-heart** (Mark, 21 October 2026). When the client has
+- **Client support**: the **Hand-heart** (Mark, 21 October 2026). When the client has
   **extra support in place** (the Switch in its panel; off as standard, Laurence, 8 October
   2026), it is solid and in the teal, and ", extra support in place" is in its name. Not in the
   icon catalogue: a gap.
