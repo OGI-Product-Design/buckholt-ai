@@ -456,23 +456,24 @@
 
   var S = null; // the router's state, set by init()
 
-  /* "Show the 5 most recent policies, sorted by cover start, newest first,
-     with a Load more button." One count is shared by every policy list. */
-  function shownPolicies() { return F.policies.slice(0, S.polShown); }
+  /* "Show the 5 most recent policies, sorted by cover start, newest first."
+     Each list keeps its own count (Laurence, 21 October 2026): the menu's
+     ('side') and the client overview's table ('table') open independently. */
+  function shownPolicies(where) { return F.policies.slice(0, S.polShown[where || 'side']); }
 
   function loadMoreButton(where, size) {
     var total = F.policies.length;
-    var rest = total - S.polShown;
-    /* The menu's list reads "Show 2 more" with no icon, as in the Figma
-       design; the table keeps "Load 2 more" with its chevron. */
+    var rest = total - S.polShown[where];
+    /* Both read "Show 2 more" (Laurence, 21 October 2026: showing is not
+       loading); the menu's has the Plus (Mark, 19 October 2026), the
+       table's its chevron. */
     var side = where !== 'table';
     if (rest > 0) {
-      /* The menu's "+ Show 2 more" (Mark, 19 October 2026). */
-      return moreLink((side ? 'Show ' : 'Load ') + Math.min(5, rest) + ' more',
-        ' data-more="1" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
+      return moreLink('Show ' + Math.min(5, rest) + ' more',
+        ' data-more="1" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
     }
     if (total > 5) {
-      return moreLink('Show fewer', ' data-more="0" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
+      return moreLink('Show fewer', ' data-more="0" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
     }
     return '';
   }
@@ -480,7 +481,7 @@
   function policyHref(p, page) { return '#p/' + p.id + '/' + (page || 'summary'); }
 
   function policiesTable() {
-    var shown = shownPolicies();
+    var shown = shownPolicies('table');
     var c = F.client;
     var more = loadMoreButton('table');
     return table(['[[Reference]]', '[[Cover start]]', '[[Cover end]]', 'Status', '[[Business line]]', 'Insurer', 'Risk info'],
@@ -1410,6 +1411,86 @@
       '<div class="mob-heading-rule mob-more-rule" aria-hidden="true"></div>' : '') + more;
   }
 
+  /* ====================================================== Actions toolbar
+     Mark's design (Laurence, 21 October 2026): on wide screens the actions
+     leave the page heading for a column of icon-only Buttons beside the
+     menu, so the page itself can stay as current Mobius. Each Button has
+     its name as aria-label and in a Tooltip to its right. Groups are split
+     by a divider: the client's tools (Client support, the note), the
+     record's actions, then More with Pause and Cancel. Below 1024px the
+     menu is a drawer and the labelled heading row is used instead. */
+  function tool(label, iconCls, o) {
+    o = o || {};
+    var inner = '<div class="btn-icon"><i class="' + iconCls + '" aria-hidden="true"></i></div>' + (o.after || '');
+    var cls = 'btn btn-ghost mob-tool' + (o.cls ? ' ' + o.cls : '');
+    var a = ' aria-label="' + esc(plain(o.name || label)) + '" data-mob-tip="' + esc(plain(label)) + '"' + (o.attrs || '');
+    return o.href ? '<a class="' + cls + '" href="' + o.href + '"' + a + '>' + inner + '</a>'
+      : '<button type="button" class="' + cls + '"' + a + '>' + inner + '</button>';
+  }
+  function toolGroup(label, items) {
+    return items.length ? '<div class="mob-tool-group" role="group" aria-label="' + label + '">' + items.join('') + '</div>' : '';
+  }
+  function toolbar(R) {
+    if (R.scope !== 'client' && R.scope !== 'policy') return '';
+    var onPolicy = R.scope === 'policy';
+    var on = !!F.client.supportOn;
+    var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
+    var noteLabel = onPolicy ? 'Add policy note' : 'Add client note';
+    var badge = function (x) { return '<span class="badge badge-floating mob-count" aria-hidden="true">' + (x > 999 ? '999+' : x) + '</span>'; };
+    /* Client support in Mark's teal (expressive quaternary) once extra
+       support is in place; the name says so too. */
+    var groups = [toolGroup('Client', [
+      tool('Client support', on ? ICON.supportOn : ICON.support, { cls: on ? 'mob-support-on' : '',
+        name: 'Client support' + (on ? ', extra support in place' : ''), attrs: ' data-panel="support" aria-haspopup="dialog"' }),
+      tool(noteLabel, ICON.note, { cls: n ? 'mob-badged' : '', name: noteLabel + ', ' + (n ? n + ' note' + (n > 1 ? 's' : '') : 'none'),
+        attrs: ' data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog"', after: n ? badge(n) : '' })
+    ])];
+    if (!onPolicy) {
+      /* A client's one action: Add new quote, which opens a page. */
+      groups.push(toolGroup('Client actions', [tool('Add new quote', M.ICON.add, { href: '#c/newquote' })]));
+      return groups.join('<hr class="mob-tool-divider">');
+    }
+    var p = R.p, A = M.POLICY_ACTIONS;
+    var ids = [];
+    M.policyActions(p).forEach(function (g) { ids = ids.concat(g.ids); });
+    var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
+    var everyday = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
+    var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
+    groups.push(toolGroup('Policy actions', everyday.map(function (k) {
+      var a = A[k];
+      if (a.kind === 'flow') return tool(M.amendLabel(p, a.to) || a.label, a.icon, { href: policyHref(p, a.to) });
+      return tool(a.label, a.icon, {
+        cls: k === 'renew' && due ? 'mob-badged' : '',
+        name: a.label + (k === 'renew' && due ? ', renewal due' : ''),
+        after: k === 'renew' && due ? badge(1) : '',
+        attrs: ' data-action="' + k + '" data-scope="policy"' + (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === k) + '"' : '') + ' aria-haspopup="dialog"'
+      });
+    })));
+    if (risky.length) {
+      /* More: Buckholt's Overflow menu (Menu button Code & specs example 3),
+         opening to the right; Pause, a divider, then Cancel, the danger
+         item. */
+      /* Bootstrap allows one component per element, so More's Tooltip is
+         on its wrapper (it shows on the Button's focus too). */
+      groups.push('<div class="menu dropend mob-overflow mob-tool-more" data-mob-tip="More actions">' +
+        '<button type="button" class="btn btn-ghost mob-tool menu-toggle" id="mob-tool-more" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
+          '<div class="btn-icon"><i class="' + ICON.more + '" aria-hidden="true"></i></div>' +
+        '</button>' +
+        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-tool-more">' +
+          '<ul class="menu-body" role="menu">' +
+            risky.map(function (k, i) {
+              var a = A[k];
+              return (i ? '<li role="none"><hr class="menu-divider"></li>' : '') +
+                '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
+                  '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) + '</button></li>';
+            }).join('') +
+          '</ul>' +
+        '</div>' +
+      '</div>');
+    }
+    return groups.filter(Boolean).join('<hr class="mob-tool-divider">');
+  }
+
   function heading(R) {
     /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
        a new page; a Button on a page opens a side panel there or changes
@@ -1440,6 +1521,7 @@
     client: client,
     policy: policy,
     panels: panels,
-    heading: heading
+    heading: heading,
+    toolbar: toolbar
   };
 }(window));

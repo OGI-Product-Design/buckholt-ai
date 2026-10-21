@@ -168,6 +168,43 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-strip .btn,
   html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
+/* Mark's actions toolbar (21 October 2026): a blue rounded panel like the
+   menu, white icons. Extra support in place shows in the pale teal, which
+   reads on the blue. */
+@media (min-width: 1024px) {
+  html[data-skin="mobius"] .mob-actionbar {
+    background-color: var(--mobius-blue);
+    border: 0;
+    border-radius: 1.5rem;
+    --ui-border-02: rgba(255, 255, 255, 0.22);
+    --focus-01: #ffffff;
+  }
+}
+html[data-skin="mobius"] .mob-actionbar .mob-tool {
+  --button-radius: 0.5rem;
+  --button-label: #ffffff;
+  --button-label-hover: #ffffff;
+  --button-background-hover: rgba(255, 255, 255, 0.12);
+  --button-label-active: #ffffff;
+  --button-background-active: var(--mobius-navy);
+  --button-border-active: transparent;
+  --button-label-focus: #ffffff;
+  --button-background-focus: transparent;
+}
+html[data-skin="mobius"] .mob-actionbar .mob-tool.menu-toggle[aria-expanded="true"] { --button-background: var(--mobius-navy); }
+html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-support-on {
+  --button-label: var(--expressive-quaternary-soft);
+  --button-label-hover: var(--expressive-quaternary-soft);
+  --button-label-active: var(--expressive-quaternary-soft);
+  --button-label-focus: var(--expressive-quaternary-soft);
+}
+html[data-skin="mobius"] .mob-rail-head .avatar.expressive-quaternary {
+  background-color: var(--expressive-quaternary-soft);
+  color: var(--expressive-quaternary-rich);
+}
+html[data-skin="mobius"] .mob-avatar-badge { box-shadow: 0 0 0 2px var(--mobius-blue); }
+html[data-skin="mobius"] #mob-support-modal { --modal-radius: 1rem; }
+
 /* Status dots stay readable on blue: a white ring. */
 html[data-skin="mobius"] .mob-rail .mob-status-dot { box-shadow: 0 0 0 1px #ffffff; }
 /* Inline counts in the menu: white on the dark column. */

@@ -61,8 +61,14 @@
     documents: 'fa-regular fa-files',                  // Documents
     newClient: 'fa-regular fa-user-plus',              // GAP
     systems: 'fa-regular fa-grid',                     // GAP: the system menu
-    support: 'fa-regular fa-circle-heart',             // GAP: Client support
-    supportOn: 'fa-solid fa-circle-check'              // Success status icon (as Tag's): extra support in place
+    /* Mark's actions toolbar (Laurence, 21 October 2026). */
+    support: 'fa-regular fa-hand-holding-heart',       // GAP: Client support
+    supportOn: 'fa-solid fa-hand-holding-heart',       // GAP: extra support in place, in the teal (expressive quaternary)
+    pen: 'fa-regular fa-pen',                          // the amend journeys
+    mta: 'fa-regular fa-shield-pen',                   // GAP: Make an MTA (a wizard)
+    extend: 'fa-regular fa-calendar-plus',             // GAP: Policy extension
+    invite: 'fa-regular fa-envelope',                  // Email: Renewal invite
+    more: 'fa-regular fa-ellipsis'                     // Overflow
   };
 
   /* ------------------------------------------------------------ Policy level */
@@ -136,14 +142,15 @@
      'confirm' asks for confirmation in place. */
   var POLICY_ACTIONS = {
     /* Live Mobius's labels, one per status (Laurence, 19 October 2026). */
-    amend: { label: 'Amend details', icon: ICON.edit, kind: 'flow', to: 'amend' },
-    amendQuote: { label: 'Amend quote', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
-    amendRisk: { label: 'Amend risk', icon: ICON.edit, kind: 'flow', to: 'amendquote' },
+    amend: { label: 'Amend details', icon: ICON.pen, kind: 'flow', to: 'amend' },
+    amendQuote: { label: 'Amend quote', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
+    amendRisk: { label: 'Amend risk', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
-    mta: { label: '[[Make an MTA]]', icon: ICON.edit, kind: 'panel' },   // "Make an MTA" with the pen (Laurence, 8 October 2026)
-    extend: { label: 'Policy extension', icon: ICON.time, kind: 'panel' },
-    renew: { label: 'Renewal invite', icon: ICON.renew, kind: 'confirm' },
-    stop: { label: 'Stop policy', icon: ICON.pause, kind: 'confirm' },
+    mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
+    extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel' },
+    renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm' },
+    /* "Pause", not "Stop" (Mark, 21 October 2026): Stop read too like Cancel. */
+    stop: { label: 'Pause policy', icon: ICON.pause, kind: 'confirm' },
     reinstate: { label: 'Reinstate policy', icon: ICON.reinstate, kind: 'confirm' },
     fee: { label: 'Admin fee', icon: ICON.money, kind: 'panel' },
     manual: { label: 'Manual credit / debit', icon: ICON.money, kind: 'panel' },
@@ -155,7 +162,7 @@
        prototype yet (and no Renewal invited record to show them): listed
        for the rule, not drawn. */
     retrieveRenewal: { label: 'Retrieve renewal quote', icon: ICON.reinstate, kind: 'flow', to: 'renewalquote', unbuilt: true },
-    amendRenewal: { label: 'Amend renewal', icon: ICON.edit, kind: 'flow', to: 'amendrenewal', unbuilt: true },
+    amendRenewal: { label: 'Amend renewal', icon: ICON.pen, kind: 'flow', to: 'amendrenewal', unbuilt: true },
     withdrawAlt: { label: 'Withdraw alternative quote', icon: ICON.cancel, kind: 'confirm', unbuilt: true }
   };
 
@@ -350,7 +357,7 @@
      [title, body, confirm label, toast, destructive] */
   var CONFIRMS = {
     renew: ['Invite for renewal?', 'Are you sure you would like to invite this policy for renewal?', 'OK', 'Renewal invite sent', false],
-    stop: ['Stop this policy?', 'The policy will be stopped. This can be reversed later.', 'Stop policy', 'Policy stopped', false],
+    stop: ['Pause this policy?', 'The policy will be paused. This can be reversed later.', 'Pause policy', 'Policy paused', false],
     copy: ['Copy this policy?', 'A new policy will be created with the same client, driver and vehicle details.', 'Copy policy', 'Policy copied', false],
     cancel: ['Cancel this policy?', 'Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.', 'Cancel policy', 'Policy cancelled', true],
     reinstate: ['Reinstate this policy?', 'The lapsed policy will be reinstated with its previous cover dates.', 'Reinstate', 'Policy reinstated', false],

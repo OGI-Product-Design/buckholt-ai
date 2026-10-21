@@ -890,3 +890,96 @@ mark.mob-term {
   background-color: transparent;
   text-decoration: none;
 }
+
+/* ------------------------------------------------------- Actions toolbar
+   Mark's design (Laurence, 21 October 2026): on wide screens the client's
+   and the record's actions are a column of icon-only ghost Buttons beside
+   the menu, a rounded panel like it, 8px from it. The page heading keeps
+   only the breadcrumbs and the title, so the page can stay as current
+   Mobius. Groups are split by a divider. Below 1024px the menu is a drawer
+   and the labelled actions stay in the page heading. */
+.mob-actionbar { display: none; }
+@media (min-width: 1024px) {
+  .layout[data-layout=layout-03] {
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas: "header header header" "sidebar actions main" "footer footer footer";
+  }
+  .mob-actionbar {
+    grid-area: actions;
+    position: sticky;
+    top: calc(var(--app-header-height) + var(--spacer-03));
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 3.5rem;                                     /* 56px: a 40px Button with 8px either side */
+    height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
+    margin: var(--spacer-03) var(--spacer-03) var(--spacer-03) 0;
+    padding: var(--spacer-04) 0;
+    background-color: var(--ui-background-03);
+    border: 1px solid var(--ui-border-02);
+    border-radius: var(--border-radius-xl);
+    overflow-y: auto;                                  /* a short window: it scrolls rather than spill */
+    scrollbar-width: none;
+    z-index: 2;                                        /* its Menu opens over Main */
+  }
+  .mob-actionbar[hidden] { display: none; }
+  /* The labelled actions in the heading give way to the toolbar. */
+  .mob-heading-actions { display: none; }
+}
+.mob-tool-group { display: flex; flex-direction: column; align-items: center; gap: var(--spacer-02); }
+.mob-tool {
+  position: relative;
+  /* Mark's icons are the text colour, not the action blue. */
+  --button-label: var(--text-primary);
+  --button-label-hover: var(--text-primary);
+  --button-label-focus: var(--text-primary);
+}
+.mob-tool-divider { width: 2.5rem; margin: var(--spacer-04) 0; border: 0; border-top: 1px solid var(--ui-border-02); opacity: 1; }
+/* More, pressed while its menu is open (Mark). */
+.mob-tool.menu-toggle[aria-expanded="true"] { --button-background: var(--action-04); }
+.mob-tool-more .menu-panel { --menu-min-width: 13rem; }
+/* Extra support in place: Client support in the teal (Mark). */
+.mob-tool.mob-support-on {
+  --button-label: var(--expressive-quaternary-deep);
+  --button-label-hover: var(--expressive-quaternary-deep);
+  --button-label-active: var(--expressive-quaternary-deep);
+  --button-label-focus: var(--expressive-quaternary-deep);
+}
+
+/* ------------------------------------------------- Client support marks
+   The client's Avatar, with extra support in place, carries the support
+   icon at its foot (Mark, 21 October 2026). Buckholt's Avatar has no
+   badge: a gap. */
+.mob-avatar-wrap { position: relative; display: inline-flex; flex: 0 0 auto; }
+.mob-avatar-badge {
+  position: absolute;
+  right: -0.25rem;
+  bottom: -0.25rem;
+  display: grid;
+  place-items: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background-color: var(--expressive-quaternary-deep);
+  color: #ffffff;
+  font-size: 0.5625rem;
+}
+
+/* The support needs Modal (Mark, 21 October 2026): the icon in a teal
+   tile above the title, the needs as Tags. */
+#mob-support-modal .modal-header { flex-direction: column; align-items: flex-start; gap: var(--spacer-05); }
+.mob-support-tile {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  background-color: var(--expressive-pale);
+  color: var(--expressive-deep);
+  font-size: 1.75rem;
+}
+.mob-support-needs { display: flex; flex-wrap: wrap; gap: var(--spacer-03); margin: var(--spacer-05) 0 0; padding: 0; list-style: none; }
+/* Cancel policy in More reads red at rest, not only on hover (Mark, 21
+   October 2026); Buckholt's danger item colours on hover only. */
+.mob-tool-more .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
