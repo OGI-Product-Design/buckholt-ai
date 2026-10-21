@@ -65,10 +65,11 @@
     support: 'fa-regular fa-hand-holding-heart',       // GAP: Client support
     supportOn: 'fa-solid fa-hand-holding-heart',       // GAP: extra support in place, in the teal (expressive quaternary)
     pen: 'fa-regular fa-pen',                          // the amend journeys
-    mta: 'fa-regular fa-shield-pen',                   // GAP: Make an MTA (a wizard)
+    mta: 'mob-icon mob-icon-shield-pen',               // GAP: Make an MTA (a wizard). Not in Font Awesome: Mark's SVG, inlined in the CSS
     extend: 'fa-regular fa-calendar-plus',             // GAP: Policy extension
     invite: 'fa-regular fa-envelope',                  // Email: Renewal invite
-    more: 'fa-regular fa-ellipsis'                     // Overflow
+    more: 'fa-regular fa-ellipsis',                    // Overflow
+    newQuote: 'fa-regular fa-shield-plus'              // Shield-plus: Add new quote (Laurence, 21 October 2026)
   };
 
   /* ------------------------------------------------------------ Policy level */
@@ -154,7 +155,7 @@
     reinstate: { label: 'Reinstate policy', icon: ICON.reinstate, kind: 'confirm' },
     fee: { label: 'Admin fee', icon: ICON.money, kind: 'panel' },
     manual: { label: 'Manual credit / debit', icon: ICON.money, kind: 'panel' },
-    newquote: { label: 'Add new quote', icon: ICON.add, kind: 'flow', to: 'newquote' },
+    newquote: { label: 'Add new quote', icon: ICON.newQuote, kind: 'flow', to: 'newquote' },
     copy: { label: '[[Copy policy]]', icon: ICON.copy, kind: 'confirm' },
     portal: { label: '[[Customer portal settings]]', icon: ICON.settings, kind: 'panel' },
     cancel: { label: 'Cancel policy', icon: ICON.cancel, kind: 'confirm', danger: true },
@@ -327,7 +328,7 @@
   /* Client actions all live on the page next to what they affect, so the
      client menu has none (the prototype's CLIENT_ACTIONS is empty). */
   var CLIENT_ACTIONS = {
-    cnewquote: { label: 'Add new quote', icon: ICON.add, kind: 'flow', to: 'newquote' },
+    cnewquote: { label: 'Add new quote', icon: ICON.newQuote, kind: 'flow', to: 'newquote' },
     cnotes: { label: 'Client notes', icon: ICON.note, kind: 'panel' }
   };
 

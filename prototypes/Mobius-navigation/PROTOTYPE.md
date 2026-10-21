@@ -359,8 +359,8 @@ page heading (Mark's design, Laurence, 21 October 2026). The aim: the page itsel
 current Mobius, and the changes sit in the navigation on the left. The heading keeps only the
 breadcrumbs and the title.
 
-- **Shape:** a rounded panel like the menu's (24px corners, the same grey and border; blue in the
-  Mobius look), 56px wide, 8px to the right of the menu, the full height under the top bar. Its
+- **Shape:** a rounded panel (16px corners, Laurence, 21 October 2026; the menu's grey and border;
+  blue in the Mobius look), 56px wide, 8px to the right of the menu, the full height under the top bar. Its
   own grid column (`sidebar actions main`), so it stays put while the page scrolls and when the
   menu collapses. Not drawn on Broking or the other modules.
 - **Icon-only ghost Buttons** in the text colour, each with its name as `aria-label` and in a
@@ -368,9 +368,11 @@ breadcrumbs and the title.
   1. **The client's tools:** Client support (`fa-hand-holding-heart`) and Add policy note / Add
      client note (`fa-note-sticky`, with its count badge).
   2. **The record's actions**, from the status rules. On an in-force policy: Amend details
-     (`fa-pen`), Make an MTA (`fa-shield-pen`, a wizard), Policy extension (`fa-calendar-plus`),
+     (`fa-pen`), Make an MTA (Mark's Shield-pen SVG, inlined in `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as Font Awesome has no Shield-pen; a wizard), Policy extension (`fa-calendar-plus`),
      Renewal invite (`fa-envelope`, with the "renewal due" badge), Copy policy (`fa-copy`),
-     Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-plus`).
+     Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-shield-plus`, the
+     catalogue's Shield-plus, Laurence, 21 October 2026; also in the search results and the
+     narrow heading row).
   3. **More** (`fa-ellipsis`, Buckholt's Overflow menu, opening to the right): **Pause policy**
      (`fa-circle-pause`), a divider, then **Cancel policy** (`fa-circle-xmark`), red at rest (Mark).
      Only when the status has them.
@@ -516,7 +518,7 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | Activity | `fa-wave-pulse` |
 | Pause policy | `fa-circle-pause` |
 | Client support | `fa-hand-holding-heart` |
-| Make an MTA | `fa-shield-pen` |
+| Make an MTA | Mark's Shield-pen SVG (`.mob-icon-shield-pen`, inlined) |
 | Policy extension | `fa-calendar-plus` |
 | Notes / Client notes | `fa-note-sticky` |
 | Attachments | `fa-paperclip` |

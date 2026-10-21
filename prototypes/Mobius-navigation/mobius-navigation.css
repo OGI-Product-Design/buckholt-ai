@@ -918,7 +918,7 @@ mark.mob-term {
     padding: var(--spacer-04) 0;
     background-color: var(--ui-background-03);
     border: 1px solid var(--ui-border-02);
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-lg);           /* 16px (Laurence, 21 October 2026) */
     overflow-y: auto;                                  /* a short window: it scrolls rather than spill */
     scrollbar-width: none;
     z-index: 2;                                        /* its Menu opens over Main */
@@ -983,3 +983,19 @@ mark.mob-term {
 /* Cancel policy in More reads red at rest, not only on hover (Mark, 21
    October 2026); Buckholt's danger item colours on hover only. */
 .mob-tool-more .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
+
+/* Mark's Shield-pen for Make an MTA (Laurence, 21 October 2026): not in
+   Font Awesome, so his SVG's path is drawn as a mask in the current
+   colour, at Font Awesome's size, so it sits with the other icons. It is
+   inlined (a data URI) so it also draws when the page is opened as a
+   file. */
+.mob-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  -webkit-mask: var(--mob-icon) center / contain no-repeat;
+  mask: var(--mob-icon) center / contain no-repeat;
+}
+.mob-icon-shield-pen { --mob-icon: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 18 18%22%3E%3Cpath d=%22M7.07814 0.090625C7.20939 0.03125 7.35001 0 7.49376 0C7.63751 0 7.78126 0.03125 7.91251 0.090625L13.8 2.5875C14.4875 2.87813 15 3.55625 14.9969 4.375C14.9938 5.22813 14.8938 6.275 14.6406 7.39687C14.5063 7.44375 14.375 7.5 14.2438 7.56875C13.6875 7.85 13 8.525 12.5813 9.00313C13.2531 7.32812 13.4938 5.64062 13.4969 4.36875C13.4969 4.2125 13.4 4.05 13.2156 3.96875L7.49376 1.54375L1.77814 3.96875C1.59376 4.04688 1.49376 4.2125 1.49689 4.36875C1.51251 7.225 2.69689 12.1594 7.32189 14.3719C7.35626 14.3875 7.39064 14.3969 7.42501 14.4062C7.23126 14.7844 7.13439 15.1938 7.00626 15.85C6.89376 15.8188 6.78126 15.7781 6.67501 15.7281C1.28751 13.15 0.0125142 7.47813 1.4214e-05 4.37813C-0.00311079 3.55938 0.509389 2.88125 1.19689 2.59063L7.07814 0.090625ZM14.4625 9.2375C15.1531 8.54688 16.2719 8.54688 16.9625 9.2375C17.6531 9.92813 17.6531 11.0469 16.9625 11.7375L16.0625 12.6375L13.5625 10.1375L14.4625 9.2375ZM9.14064 14.5594L12.8563 10.8438L15.3563 13.3438L11.6406 17.0594C11.3625 17.3375 11.0063 17.5281 10.6188 17.6063L8.75626 17.9781C8.45001 18.0406 8.15939 17.7531 8.22189 17.4438L8.59376 15.5813C8.67189 15.1938 8.86251 14.8375 9.14064 14.5594Z%22/%3E%3C/svg%3E"); }
