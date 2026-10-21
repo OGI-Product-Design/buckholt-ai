@@ -95,12 +95,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--text-primary);
-  border-radius: var(--border-radius-xs);
-}
-
-.ch-org:focus-visible {
-  outline: 0.125rem solid var(--text-active);
-  outline-offset: 0.125rem;
 }
 
 .ch-env-tag,
@@ -171,16 +165,13 @@
 }
 
 /* ---------------------------------------------------------- Gap 4: identity header
-   Plain content above the Menu's items: not focusable, not a menu item. */
-.ch-account-panel {
-  padding: 0.5rem;
-}
-
+   Plain content above the Menu's items: not focusable, not a menu item.
+   The panel keeps Buckholt's own padding (16px); only the avatar-to-text
+   gap is set here. */
 .ch-identity {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.5rem 0;
 }
 
 .ch-identity .avatar {
@@ -213,6 +204,13 @@
   --alert-padding-x: 1.375rem;
 }
 
+/* The message is a paragraph, not the canonical `h6` (spec revision 4). The
+   reboot gives `p` a 0.25rem top margin the `h6` does not have; without it
+   the alert is the same 48px as the documented markup. */
+.ch-env-alert .alert-message p {
+  margin: 0;
+}
+
 /* ---------------------------------------------------------- Breadcrumb band
    Full width between the header (and the Test alert) and the page content. */
 .ch-crumbs {
@@ -240,25 +238,67 @@
   vertical-align: bottom;
 }
 
-.ch-crumbs .ch-crumb-text:focus-visible {
-  outline: 0.125rem solid var(--text-active);
-  outline-offset: 0.125rem;
-  border-radius: var(--border-radius-xs);
+/* ---------------------------------------------------------- Gap 9: card grid
+   Spec revision 5: the home keeps production CH's grid, measured on UAT —
+   every card a fixed 284px wide at every viewport, a fixed 32px horizontal
+   gap, wrapping when the next card does not fit, and every row centred,
+   including a final row of one. Buckholt's grid is column-based (cards
+   stretch with the viewport), so this is a flex row, not Bootstrap columns.
+
+   Capacities the spec fixes, and the page padding that produces them.
+   n cards need n x 284 + (n - 1) x 32px: 1 = 284, 2 = 600, 3 = 916,
+   4 = 1232, 5 = 1548, 6 = 1864. With P the padding either side of the grid:
+
+     1920 -> 5   needs 1920 - 2P < 1864        P > 28
+     1440 -> 4   needs 1440 - 2P >= 1232       P <= 104
+     1280 -> 3   needs 1280 - 2P < 1232        P > 24
+     1088 -> 3   needs 1088 - 2P >= 916        P <= 86
+      992 -> 3   needs  992 - 2P >= 916        P <= 38
+      768 -> 2   needs  768 - 2P >= 600        P <= 84
+      576 -> 1   needs  576 - 2P < 600         any P
+
+   so 28 < P <= 38. A classic (17px) Windows scrollbar narrows the page
+   too: then 992 needs P <= 29.5. P = 29px satisfies every row in both cases.
+   It is made of the Frame's horizontal padding (13px) plus the container's
+   own 16px gutter, so the Page body > Frame > Pane > Panel structure stays.
+   Vertical spacing stays Buckholt's Frame and Panel rhythm; production's
+   was not measured.
+
+   Below 576px one card per row is fixed whatever P is, so P drops to 16px
+   (Frame 0 + container 16) to keep a 284px card inside a 320px screen. */
+.ch-home-frame {
+  --page-frame-padding-x: 0.8125rem;
+}
+
+@media (max-width: 575.98px) {
+  .ch-home-frame {
+    --page-frame-padding-x: 0rem;
+  }
+}
+
+.ch-app-grid {
+  --ch-card-width: 17.75rem;
+  --ch-card-gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ch-card-gap);
+}
+
+/* Every card on the page is the height of the tallest one (spec), not just
+   the tallest in its row. Flex only equalises within a row, so the page
+   script measures the tallest card and sets --ch-card-height on the grid. */
+.ch-app-grid > .ch-app-card {
+  flex: 0 0 var(--ch-card-width);
+  width: var(--ch-card-width);
+  min-height: var(--ch-card-height, auto);
 }
 
 /* ---------------------------------------------------------- Gap 6: app cards
-   Equal height within a row, illustration across the full card width at the
-   asset's own proportions (250 x 160), Open button bottom right. The
-   illustration is not cropped: Buckholt's `.card-img` is a fixed 10rem box,
-   which would cut the sides off at narrow card widths. */
-.ch-app-grid {
-  --bs-gutter-y: var(--page-panel-gap);
-}
-
-.ch-app-card {
-  height: 100%;
-}
-
+   Illustration across the full card width at the asset's own proportions
+   (250 x 160), never cropped: Buckholt's `.card-img` is a fixed 10rem box,
+   which would cut the sides off. Open sits at the bottom of the card, so
+   buttons line up across a row. Everything else is Buckholt Card. */
 .ch-app-card .card-img {
   height: auto;
   aspect-ratio: 250 / 160;

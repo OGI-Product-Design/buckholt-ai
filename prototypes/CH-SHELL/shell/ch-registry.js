@@ -117,6 +117,17 @@
       environments: { live: 'NG01', test: 'NG02' },
       user: NORTHGATE_USER,
       apps: { live: DEFAULT_APPS, test: DEFAULT_APPS.concat(['automate']) }
+    },
+    'live-only': {
+      label: 'Live only',
+      organisation: 'Kestrel Mutual',
+      environments: { live: 'KM01' },
+      user: {
+        firstName: 'Priya',
+        lastName: 'Shah',
+        email: 'priya.shah@kestrel-mutual.co.uk'
+      },
+      apps: { live: DEFAULT_APPS }
     }
   };
 

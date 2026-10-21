@@ -79,10 +79,7 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
       return Math.abs(cb.right - bb.right) < 40 && Math.abs(cb.bottom - bb.bottom) < 40;
     })));
     ok('AC1 cards equal height', await p.evaluate(() => new Set([...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().height))).size === 1));
-    ok('AC1 cards left-aligned', await p.evaluate(() => {
-      const cards = [...document.querySelectorAll('.ch-app-card')].map(c => c.getBoundingClientRect());
-      return cards[0].left < 100 && cards[2].right < innerWidth / 2;
-    }));
+    is('AC1 card titles use Card\'s title-03', await p.evaluate(() => [...document.querySelectorAll('.ch-app-card h2')].every(h => h.classList.contains('title-03'))), true);
     is('AC1 no horizontal overflow', await p.evaluate(() => document.documentElement.scrollWidth), 1440);
     await p.context().close();
   }
@@ -105,6 +102,9 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     is('AC2 announcer is polite', await p.getAttribute('#ch-announcer', 'aria-live'), 'polite');
     is('AC2 alert not a live region', await p.evaluate(() => { const a = document.getElementById('ch-env-alert'); return String(a.getAttribute('role')) + '/' + String(a.getAttribute('aria-live')); }), 'null/null');
     is('AC2 alert not focusable', await p.evaluate(() => document.querySelectorAll('#ch-env-alert [tabindex], #ch-env-alert a, #ch-env-alert button').length), 0);
+    is('AC2 alert message is not a heading', await p.evaluate(() => document.querySelectorAll('#ch-env-alert h1, #ch-env-alert h2, #ch-env-alert h3, #ch-env-alert h4, #ch-env-alert h5, #ch-env-alert h6, #ch-env-alert [role=heading]').length), 0);
+    is('AC2 first heading on the page is the h1', await p.evaluate(() => document.querySelector('h1, h2, h3, h4, h5, h6').tagName), 'H1');
+    is('AC2 alert keeps Alert message type', await p.evaluate(() => getComputedStyle(document.querySelector('#ch-env-alert .alert-message p')).fontWeight), '500');
     is('AC2 stays on home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
     is('AC2 cards unchanged in Test', (await cardTitles(p)).length, 3);
     /* Selecting via the keyboard: arrow keys move and select, focus stays. */
@@ -134,7 +134,9 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     is('AC3 back home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
     is('AC3 Test still current', await checkedEnv(p), 'test');
     is('AC3 alert still shown', await p.locator('#ch-env-alert').count(), 1);
-    is('AC3 focus on h1 after lockup', await p.evaluate(() => document.activeElement.tagName + ':' + document.activeElement.textContent), 'H1:Applications');
+    is('AC3 lockup: normal page load, focus at the top', await p.evaluate(() => document.activeElement === document.body), true);
+    await p.keyboard.press('Tab');
+    is('AC3 lockup: next Tab is the skip link', await active(p), 'Skip to main content');
     /* A new tab starts from the seed rule. */
     const fresh = await open(browser, HOME);
     is('AC3 a new tab starts in Live', await checkedEnv(fresh), 'live');
@@ -157,7 +159,8 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     is('AC4 alert gone', await p.locator('#ch-env-alert').count(), 0);
     is('AC4 title', await p.title(), 'Third-Party Services | Configuration Hub');
     is('AC4 announced after the switch', await text(p, '#ch-announcer'), 'Live environment selected.');
-    is('AC4 focus on h1 after switch', await p.evaluate(() => document.activeElement.tagName), 'H1');
+    is('AC4 switch: normal page load, focus at the top', await p.evaluate(() => document.activeElement === document.body), true);
+    is('AC4 no heading made focusable', await p.evaluate(() => document.querySelector('main h1').hasAttribute('tabindex')), false);
     is('AC4 breadcrumb is base trail', await text(p, '#ch-context .breadcrumb'), 'Third-Party Services');
     await p.context().close();
   }
@@ -198,229 +201,344 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     await p.context().close();
   }
 
-  /* ===== AC 7 · all apps at 1440 ======================================= */
+  /* ===== AC 7 · all apps: production grid capacities, centred rows, fixed cards */
   {
-    const p = await open(browser, HOME + '?seed=all-apps', { width: 1440, height: 900 });
+    const p = await open(browser, HOME + '?seed=all-apps', { width: 1920, height: 1080 });
     is('AC7 six cards in registry order', (await cardTitles(p)).join(' / '), ALL_APPS.join(' / '));
-    ok('AC7 one row', await p.evaluate(() => new Set([...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().top))).size === 1));
-    ok('AC7 equal width', await p.evaluate(() => new Set([...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().width))).size === 1));
-    ok('AC7 descriptions never truncate', await p.evaluate(() => [...document.querySelectorAll('.ch-app-card .text-block p')].every(e => e.scrollWidth <= e.clientWidth && getComputedStyle(e).textOverflow !== 'ellipsis')));
-    is('AC7 no overflow', await p.evaluate(() => document.documentElement.scrollWidth), 1440);
-    await p.setViewportSize({ width: 1088, height: 900 });
-    await p.waitForTimeout(200);
-    ok('AC7 wraps at narrower widths', await p.evaluate(() => new Set([...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().top))).size > 1));
+    /* Cards per row, read from the layout: how many share each row's top. */
+    const rows = () => p.evaluate(() => {
+      const tops = [...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().top));
+      const counts = [];
+      tops.forEach((t, i) => { if (i === 0 || t !== tops[i - 1]) counts.push(1); else counts[counts.length - 1]++; });
+      return counts.join('+');
+    });
+    const layout = () => p.evaluate(() => {
+      const grid = document.getElementById('ch-app-grid').getBoundingClientRect();
+      const cards = [...document.querySelectorAll('.ch-app-card')];
+      const rowsOf = {};
+      cards.forEach(c => { const r = c.getBoundingClientRect(); (rowsOf[Math.round(r.top)] = rowsOf[Math.round(r.top)] || []).push(r); });
+      const rowList = Object.values(rowsOf);
+      return {
+        widths: [...new Set(cards.map(c => Math.round(c.getBoundingClientRect().width * 100) / 100))].join(','),
+        sameHeight: new Set(cards.map(c => Math.round(c.getBoundingClientRect().height))).size === 1,
+        /* Centred: equal space left and right of every row, final row included. */
+        centred: rowList.every(rs => Math.abs((rs[0].left - grid.left) - (grid.right - rs[rs.length - 1].right)) <= 1),
+        gap: rowList.filter(rs => rs.length > 1).every(rs => rs.slice(1).every((r, i) => Math.abs(r.left - rs[i].right - 32) <= 0.5)),
+        illustrationsWhole: cards.every(c => { const i = c.querySelector('img.card-img'); const r = i.getBoundingClientRect(); return Math.abs(r.width / r.height - 250 / 160) < 0.02 && Math.abs(r.width - c.getBoundingClientRect().width) <= 2; }),
+        descriptionsWhole: cards.every(c => { const d = c.querySelector('.text-block p'); return d.scrollWidth <= d.clientWidth && getComputedStyle(d).textOverflow !== 'ellipsis'; }),
+        buttonsAtBottom: cards.every(c => Math.abs(c.getBoundingClientRect().bottom - c.querySelector('.ch-open').getBoundingClientRect().bottom - 32) <= 2)
+      };
+    });
+    /* The capacity table in SH-00-01 "Card grid". 375px is in "576px and below". */
+    for (const [width, want] of [[1920, '5+1'], [1440, '4+2'], [1280, '3+3'], [1088, '3+3'], [992, '3+3'], [768, '2+2+2'], [576, '1+1+1+1+1+1'], [375, '1+1+1+1+1+1']]) {
+      await p.setViewportSize({ width, height: 1080 });
+      await p.waitForTimeout(250);
+      is('AC7 cards per row at ' + width, await rows(), want);
+      const l = await layout();
+      is('AC7 fixed 284px card width at ' + width, l.widths, '284');
+      ok('AC7 every card the same height at ' + width, l.sameHeight);
+      ok('AC7 every row centred at ' + width, l.centred);
+      ok('AC7 32px horizontal gap at ' + width, l.gap);
+      ok('AC7 illustrations uncropped at ' + width, l.illustrationsWhole);
+      ok('AC7 descriptions never truncate at ' + width, l.descriptionsWhole);
+      ok('AC7 Open buttons at the bottom of each card at ' + width, l.buttonsAtBottom);
+      if (width >= 576) {
+        is('AC7 no overflow at ' + width, await p.evaluate(() => document.documentElement.scrollWidth), width);
+      } else {
+        /* Below 576 only the grid is checked: the header is not designed
+           for phone widths (spec, Viewport) and overflows on its own. */
+        ok('AC7 cards inside the viewport at ' + width, await p.evaluate(() => [...document.querySelectorAll('.ch-app-card')].every(c => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })));
+      }
+    }
+    /* Card heights follow the tallest card, and shrink back when it does. */
+    await p.setViewportSize({ width: 1920, height: 1080 });
+    await p.waitForTimeout(250);
+    is('AC7 height is the tallest card\'s natural height', await p.evaluate(() => {
+      const grid = document.getElementById('ch-app-grid');
+      const set = parseFloat(grid.style.getPropertyValue('--ch-card-height'));
+      grid.style.removeProperty('--ch-card-height');
+      const natural = Math.ceil(Math.max(...[...grid.querySelectorAll('.ch-app-card')].map(c => c.getBoundingClientRect().height)));
+      grid.style.setProperty('--ch-card-height', set + 'px');
+      return set === natural;
+    }), true);
     await p.context().close();
   }
 
-  /* ===== AC 8 · long names at 1088 ===================================== */
+  /* ===== AC 8 · default seed at 1440: one centred row of three =========== */
+  {
+    const p = await open(browser, HOME, { width: 1440, height: 900 });
+    ok('AC8 three cards in one row', await p.evaluate(() => new Set([...document.querySelectorAll('.ch-app-card')].map(c => Math.round(c.getBoundingClientRect().top))).size === 1));
+    ok('AC8 the row is centred on the page', await p.evaluate(() => {
+      const cards = [...document.querySelectorAll('.ch-app-card')].map(c => c.getBoundingClientRect());
+      return Math.abs(cards[0].left - (innerWidth - cards[2].right)) <= 1;
+    }));
+    is('AC8 fixed 284px cards', await p.evaluate(() => [...new Set([...document.querySelectorAll('.ch-app-card')].map(c => c.getBoundingClientRect().width))].join(',')), '284');
+    await p.context().close();
+  }
+
+  /* ===== AC 9 · long names at 1088 ===================================== */
   {
     const p = await open(browser, HOME + '?seed=long-names', { width: 1088, height: 800 });
     await p.waitForTimeout(300);
     const org = 'Abbotsford Kingsley Commercial and Speciality Insurance Brokers';
-    is('AC8 header is one row (84px)', await p.evaluate(() => Math.round(document.getElementById('ch-header').getBoundingClientRect().height)), 84);
-    ok('AC8 no header item wraps', await p.evaluate(() => {
+    is('AC9 header is one row (84px)', await p.evaluate(() => Math.round(document.getElementById('ch-header').getBoundingClientRect().height)), 84);
+    ok('AC9 no header item wraps', await p.evaluate(() => {
       const items = ['.ch-lockup', '#ch-org', '.ch-env', '#ch-mobius', '#ch-account-toggle'].map(s => document.querySelector(s).getBoundingClientRect());
       const mid = items.map(r => r.top + r.height / 2);
       return mid.every(m => Math.abs(m - mid[0]) < 2) && document.querySelector('#ch-mobius').getClientRects().length === 1;
     }));
-    ok('AC8 header items in order', await p.evaluate(() => {
+    ok('AC9 header items in order', await p.evaluate(() => {
       const x = ['.ch-lockup', '#ch-org', '.ch-env', '#ch-mobius', '#ch-account-toggle'].map(s => document.querySelector(s).getBoundingClientRect().left);
       return x.every((v, i) => i === 0 || v > x[i - 1]);
     }));
-    ok('AC8 organisation truncated', await p.evaluate(() => { const e = document.getElementById('ch-org'); return e.scrollWidth > e.clientWidth && getComputedStyle(e).textOverflow === 'ellipsis'; }));
-    is('AC8 full name to assistive technology', await text(p, '#ch-org'), org);
-    is('AC8 full name in Tooltip', await p.getAttribute('#ch-org', 'data-bs-title'), org);
-    is('AC8 truncated name is focusable', await p.getAttribute('#ch-org', 'tabindex'), '0');
-    await p.focus('#ch-org');
+    ok('AC9 organisation truncated', await p.evaluate(() => { const e = document.getElementById('ch-org'); return e.scrollWidth > e.clientWidth && getComputedStyle(e).textOverflow === 'ellipsis'; }));
+    is('AC9 full name to assistive technology', await text(p, '#ch-org'), org);
+    is('AC9 full name in Tooltip', await p.getAttribute('#ch-org', 'data-bs-title'), org);
+    is('AC9 truncated name is not focusable', await p.evaluate(() => { const e = document.getElementById('ch-org'); return e.hasAttribute('tabindex') + '/' + e.tabIndex; }), 'false/-1');
+    await p.hover('#ch-org');
     await p.waitForTimeout(1000);
-    is('AC8 Tooltip on focus', await text(p, '.tooltip .tooltip-inner'), org);
-    is('AC8 no overflow at 1088', await p.evaluate(() => document.documentElement.scrollWidth), 1088);
-    is('AC8 Tooltip below the name, clear of the avatar', await p.evaluate(() => {
+    is('AC9 Tooltip on hover', await text(p, '.tooltip .tooltip-inner'), org);
+    is('AC9 no overflow at 1088', await p.evaluate(() => document.documentElement.scrollWidth), 1088);
+    is('AC9 Tooltip below the name, clear of the avatar', await p.evaluate(() => {
       const tip = document.querySelector('.tooltip').getBoundingClientRect(), org = document.getElementById('ch-org').getBoundingClientRect();
       return tip.top >= org.bottom;
     }), true);
-    is('AC8 initials AM', await text(p, '#ch-account-toggle .avatar-initials'), 'AM');
-    await p.evaluate(() => document.activeElement.blur());
+    is('AC9 initials AM', await text(p, '#ch-account-toggle .avatar-initials'), 'AM');
+    /* Tab order skips the name: lockup, then straight to the environment control. */
+    await p.focus('.ch-lockup');
+    await p.keyboard.press('Tab');
+    is('AC9 Tab passes over the name', await active(p), 'ch-env-live');
+    await p.mouse.move(600, 600);
     await p.waitForTimeout(300);
     await p.click('#ch-account-toggle');
     await p.waitForTimeout(300);
-    ok('AC8 menu name and email wrap, never truncate', await p.evaluate(() => {
+    ok('AC9 menu name and email wrap, never truncate', await p.evaluate(() => {
       const t = document.querySelector('.ch-identity-text');
       const email = document.querySelector('.ch-identity-email');
       return email.textContent === 'alexandra.montgomery-fairweather@abbotsfordkingsley-insurancebrokers.co.uk' &&
         email.scrollWidth <= email.clientWidth + 1 && email.getClientRects()[0].height > 24 &&
         getComputedStyle(t).textOverflow !== 'ellipsis';
     }));
-    ok('AC8 menu stays inside the viewport', await p.evaluate(() => { const r = document.getElementById('ch-account-panel').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }));
+    ok('AC9 menu stays inside the viewport', await p.evaluate(() => { const r = document.getElementById('ch-account-panel').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }));
     /* At 1440 the name has room and is not focusable. */
     await p.setViewportSize({ width: 1920, height: 900 });
     await p.waitForTimeout(300);
-    is('AC8 untruncated name has no tab stop', await p.getAttribute('#ch-org', 'tabindex'), null);
+    is('AC9 untruncated name has no Tooltip', await p.getAttribute('#ch-org', 'data-bs-title'), null);
+    is('AC9 untruncated name has no tab stop', await p.getAttribute('#ch-org', 'tabindex'), null);
     await p.context().close();
   }
 
-  /* ===== AC 9 · skip link ============================================== */
+  /* ===== AC 10 · Live only ============================================== */
+  {
+    const p = await open(browser, HOME + '?seed=live-only');
+    is('AC10 no environment radios', await p.locator('input[name=ch-environment]').count(), 0);
+    is('AC10 Live tag', await text(p, '#ch-env-tag'), 'Live');
+    is('AC10 tag not interactive', await p.evaluate(() => { const t = document.getElementById('ch-env-tag'); return t.tabIndex + '/' + t.querySelectorAll('input,button,a').length; }), '-1/0');
+    is('AC10 no Test alert', await p.locator('#ch-env-alert').count(), 0);
+    is('AC10 organisation', await text(p, '#ch-org'), 'Kestrel Mutual');
+    is('AC10 initials', await text(p, '#ch-account-toggle .avatar-initials'), 'PS');
+    is('AC10 avatar name', await p.getAttribute('#ch-account-toggle', 'aria-label'), 'Account menu for Priya Shah');
+    is('AC10 cards', (await cardTitles(p)).join(' / '), DEFAULT_CARDS.map(c => c[0]).join(' / '));
+    is('AC10 title', await p.title(), 'Applications | Configuration Hub');
+    await Promise.all([p.waitForNavigation(), p.click('.ch-app-card[data-app=user-management] .ch-open')]);
+    await settle(p);
+    is('AC10 inside an app, still Live, no alert', await p.evaluate(() => document.getElementById('ch-env-tag').textContent.trim() + '/' + document.querySelectorAll('#ch-env-alert').length), 'Live/0');
+    await p.context().close();
+  }
+
+  /* ===== AC 11 · direct link to a hidden app =========================== */
+  for (const [seed, id] of [['northgate', 'automate'], ['northgate', 'audit-centre'], ['live-only', 'policy-extensions']]) {
+    const p = await open(browser, HOME + '?seed=' + seed);
+    await p.goto(APP(id), { waitUntil: 'networkidle' });
+    await p.waitForTimeout(300);
+    is('AC11 ' + seed + ' ' + id + ' opens the home page', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
+    is('AC11 ' + seed + ' ' + id + ' with no message', await text(p, '#ch-announcer'), '');    await p.context().close();
+  }
+  {
+    const p = await open(browser, APP('not-an-app'));
+    await p.waitForTimeout(300);
+    is('AC11 unknown app id opens the home page', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
+    await p.context().close();
+  }
+
+  /* ===== AC 12 · skip link ============================================== */
   for (const url of [HOME, APP('user-management')]) {
     const p = await open(browser, url);
     await p.keyboard.press('Tab');
-    is('AC9 first Tab focuses the skip link ' + url.split('/').pop(), await active(p), 'Skip to main content');
-    ok('AC9 skip link visible when focused', await p.evaluate(() => document.activeElement.getBoundingClientRect().width > 50));
+    is('AC12 first Tab focuses the skip link ' + url.split('/').pop(), await active(p), 'Skip to main content');
+    ok('AC12 skip link visible when focused', await p.evaluate(() => document.activeElement.getBoundingClientRect().width > 50));
     await p.keyboard.press('Enter');
     await p.waitForTimeout(100);
-    is('AC9 focus moves into Main', await p.evaluate(() => document.activeElement.id === 'main' || document.getElementById('main').contains(document.activeElement)), true);
-    ok('AC9 skip link hidden when not focused', await p.evaluate(() => document.querySelector('.ch-skip-link').getBoundingClientRect().width <= 1));
+    is('AC12 focus moves into Main', await p.evaluate(() => document.activeElement.id === 'main' || document.getElementById('main').contains(document.activeElement)), true);
+    ok('AC12 skip link hidden when not focused', await p.evaluate(() => document.querySelector('.ch-skip-link').getBoundingClientRect().width <= 1));
     await p.context().close();
   }
 
-  /* ===== AC 10 · avatar menu by keyboard =============================== */
+  /* ===== AC 13 · avatar menu by keyboard =============================== */
   {
     const p = await open(browser, HOME);
     await p.focus('#ch-account-toggle');
-    is('AC10 avatar name', await p.getAttribute('#ch-account-toggle', 'aria-label'), 'Account menu for Sophie Marchetti');
-    is('AC10 closed state exposed', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'false');
+    is('AC13 avatar name', await p.getAttribute('#ch-account-toggle', 'aria-label'), 'Account menu for Sophie Marchetti');
+    is('AC13 closed state exposed', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'false');
     await p.keyboard.press('Enter');
     await p.waitForTimeout(300);
-    is('AC10 menu open', await p.isVisible('#ch-account-panel'), true);
-    is('AC10 open state exposed', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'true');
-    is('AC10 avatar in menu', await text(p, '.ch-identity .avatar-initials'), 'SM');
-    is('AC10 name', await text(p, '.ch-identity-name'), 'Sophie Marchetti');
-    is('AC10 email', await text(p, '.ch-identity-email'), 'sophie.marchetti@northgate-insurance.co.uk');
-    is('AC10 only item is Logout', (await p.$$eval('#ch-account-panel .menu-item', i => i.map(x => x.textContent.trim()))).join(','), 'Logout');
-    is('AC10 Logout icon (Buckholt common action)', await p.evaluate(() => document.querySelector('#ch-logout i').className), 'fa-regular fa-arrow-right-from-bracket');
-    is('AC10 no Release notes', (await text(p, '#ch-account-panel')).includes('Release'), false);
-    is('AC10 one divider', await p.locator('#ch-account-panel .menu-divider').count(), 1);
-    ok('AC10 divider between identity and Logout', await p.evaluate(() => {
+    is('AC13 menu open', await p.isVisible('#ch-account-panel'), true);
+    is('AC13 open state exposed', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'true');
+    is('AC13 avatar in menu', await text(p, '.ch-identity .avatar-initials'), 'SM');
+    is('AC13 name', await text(p, '.ch-identity-name'), 'Sophie Marchetti');
+    is('AC13 email', await text(p, '.ch-identity-email'), 'sophie.marchetti@northgate-insurance.co.uk');
+    is('AC13 only item is Logout', (await p.$$eval('#ch-account-panel .menu-item', i => i.map(x => x.textContent.trim()))).join(','), 'Logout');
+    is('AC13 Logout icon (Buckholt common action)', await p.evaluate(() => document.querySelector('#ch-logout i').className), 'fa-regular fa-arrow-right-from-bracket');
+    is('AC13 no Release notes', (await text(p, '#ch-account-panel')).includes('Release'), false);
+    is('AC13 one divider', await p.locator('#ch-account-panel .menu-divider').count(), 1);
+    ok('AC13 divider between identity and Logout', await p.evaluate(() => {
       const id = document.querySelector('.ch-identity').getBoundingClientRect(), hr = document.querySelector('#ch-account-panel .menu-divider').getBoundingClientRect(), lo = document.getElementById('ch-logout').getBoundingClientRect();
       return id.bottom <= hr.top + 1 && hr.bottom <= lo.top + 1;
     }));
-    is('AC10 focus on Logout', await active(p), 'ch-logout');
-    is('AC10 identity header not focusable', await p.evaluate(() => document.querySelectorAll('.ch-identity [tabindex], .ch-identity a, .ch-identity button').length), 0);
-    is('AC10 identity avatar hidden from AT', await p.getAttribute('.ch-identity .avatar', 'aria-hidden'), 'true');
-    await p.keyboard.press('ArrowDown');
-    is('AC10 arrows stay on items', await active(p), 'ch-logout');
+    is('AC13 focus on Logout', await active(p), 'ch-logout');
+    is('AC13 identity header not focusable', await p.evaluate(() => document.querySelectorAll('.ch-identity [tabindex], .ch-identity a, .ch-identity button').length), 0);
+    is('AC13 identity avatar hidden from AT', await p.getAttribute('.ch-identity .avatar', 'aria-hidden'), 'true');
+    /* Semantics match the Tab / Shift+Tab model: a disclosure, not an ARIA
+       menu (which would promise arrow keys and one tab stop). */
+    is('AC13 disclosure: toggle controls the panel', await p.getAttribute('#ch-account-toggle', 'aria-controls'), 'ch-account-panel');
+    is('AC13 disclosure: no menu roles', await p.evaluate(() => document.querySelectorAll('#ch-account [role=menu], #ch-account [role=menuitem], #ch-account [role=none], #ch-account [aria-haspopup]').length), 0);
+    is('AC13 disclosure: items are native buttons in a list', await p.evaluate(() => [...document.querySelectorAll('#ch-account-panel .menu-item')].every(b => b.tagName === 'BUTTON' && b.closest('ul.menu-body > li'))), true);
     await p.keyboard.press('Escape');
     await p.waitForTimeout(300);
-    is('AC10 Escape closes', await p.isVisible('#ch-account-panel'), false);
-    is('AC10 focus back on avatar', await active(p), 'ch-account-toggle');
-    /* Down Arrow and Space open it too; Tab out closes it. */
-    await p.keyboard.press('ArrowDown');
-    await p.waitForTimeout(300);
-    is('AC10 Down Arrow opens on Logout', await active(p), 'ch-logout');
-    await p.keyboard.press('Tab');
-    await p.waitForTimeout(300);
-    is('AC10 Tab out closes', await p.isVisible('#ch-account-panel'), false);
-    await p.focus('#ch-account-toggle');
+    is('AC13 Escape closes', await p.isVisible('#ch-account-panel'), false);
+    is('AC13 focus back on avatar', await active(p), 'ch-account-toggle');
+    /* Space opens it too. Shift+Tab goes back to the avatar, keeping the
+       menu open; Tab past the last item closes it. */
     await p.keyboard.press(' ');
     await p.waitForTimeout(300);
-    is('AC10 Space opens on Logout', await active(p), 'ch-logout');
+    is('AC13 Space opens on Logout', await active(p), 'ch-logout');
+    await p.keyboard.press('Shift+Tab');
+    await p.waitForTimeout(300);
+    is('AC13 Shift+Tab moves back to the avatar', await active(p), 'ch-account-toggle');
+    is('AC13 Shift+Tab keeps the menu open', await p.isVisible('#ch-account-panel'), true);
+    await p.keyboard.press('Tab');
+    await p.waitForTimeout(200);
+    is('AC13 Tab moves to Logout', await active(p), 'ch-logout');
+    await p.keyboard.press('Tab');
+    await p.waitForTimeout(300);
+    is('AC13 Tab past the last item closes', await p.isVisible('#ch-account-panel'), false);
+    is('AC13 Tab past the last item continues to the page', await active(p), 'Open Onboarding Form');
+    await p.focus('#ch-account-toggle');
+    await p.keyboard.press('Enter');
+    await p.waitForTimeout(300);
     await p.mouse.click(700, 600);
     await p.waitForTimeout(300);
-    is('AC10 click outside closes', await p.isVisible('#ch-account-panel'), false);
+    is('AC13 click outside closes', await p.isVisible('#ch-account-panel'), false);
     /* Tooltip on the avatar. */
     await p.hover('#ch-account-toggle');
     await p.waitForTimeout(1000);
-    is('AC10 avatar Tooltip', await text(p, '.tooltip .tooltip-inner'), 'Account menu');
-    is('AC10 serif fallback gone (Buckholt typeface)', await p.evaluate(() => /serif/i.test(getComputedStyle(document.querySelector('.ch-identity-name')).fontFamily.split(',')[0])), false);
+    is('AC13 avatar Tooltip', await text(p, '.tooltip .tooltip-inner'), 'Account menu');
+    is('AC13 serif fallback gone (Buckholt typeface)', await p.evaluate(() => /serif/i.test(getComputedStyle(document.querySelector('.ch-identity-name')).fontFamily.split(',')[0])), false);
     await p.context().close();
   }
 
-  /* ===== AC 11 · Open accessible names ================================= */
+  /* ===== AC 14 · Open accessible names ================================= */
   for (const seed of ['northgate', 'all-apps']) {
     const p = await open(browser, HOME + '?seed=' + seed);
     const names = await p.$$eval('.ch-app-card', cs => cs.map(c => [c.querySelector('h2').textContent.trim(), c.querySelector('.ch-open').getAttribute('aria-label'), c.querySelector('.ch-open').textContent.trim()]));
-    ok('AC11 every Open is "Open {App name}" (' + seed + ')', names.length && names.every(([n, label, visible]) => label === 'Open ' + n && visible === 'Open'));
+    ok('AC14 every Open is "Open {App name}" (' + seed + ')', names.length && names.every(([n, label, visible]) => label === 'Open ' + n && visible === 'Open'));
     await p.context().close();
   }
 
-  /* ===== AC 12 · Mobius and Logout are inert ========================== */
+  /* ===== AC 15 · Mobius and Logout are inert ========================== */
   {
     const p = await open(browser, HOME);
     const before = p.url();
     const pages = p.context().pages().length;
-    is('AC12 Mobius name', await p.getAttribute('#ch-mobius', 'aria-label'), 'Mobius (opens in a new tab)');
-    is('AC12 Mobius icon before label', await p.evaluate(() => { const a = document.getElementById('ch-mobius'); return a.firstElementChild.className + '|' + a.textContent.trim(); }), 'icon|Mobius');
-    is('AC12 Mobius uses External link icon', await p.evaluate(() => document.querySelector('#ch-mobius i').className), 'fa-regular fa-arrow-up-right-from-square');
+    is('AC15 Mobius name', await p.getAttribute('#ch-mobius', 'aria-label'), 'Mobius (opens in a new tab)');
+    is('AC15 Mobius icon before label', await p.evaluate(() => { const a = document.getElementById('ch-mobius'); return a.firstElementChild.className + '|' + a.textContent.trim(); }), 'icon|Mobius');
+    is('AC15 Mobius uses External link icon', await p.evaluate(() => document.querySelector('#ch-mobius i').className), 'fa-regular fa-arrow-up-right-from-square');
     await p.click('#ch-mobius');
     await p.waitForTimeout(400);
-    is('AC12 Mobius does not navigate', p.url(), before);
-    is('AC12 Mobius opens no tab', p.context().pages().length, pages);
+    is('AC15 Mobius does not navigate', p.url(), before);
+    is('AC15 Mobius opens no tab', p.context().pages().length, pages);
     await p.click('#ch-account-toggle');
     await p.waitForTimeout(300);
     await p.click('#ch-logout');
     await p.waitForTimeout(400);
-    is('AC12 Logout does not navigate', p.url(), before);
-    is('AC12 Logout closes the menu', await p.isVisible('#ch-account-panel'), false);
-    is('AC12 Logout returns focus to avatar', await active(p), 'ch-account-toggle');
+    is('AC15 Logout does not navigate', p.url(), before);
+    is('AC15 Logout closes the menu', await p.isVisible('#ch-account-panel'), false);
+    is('AC15 Logout returns focus to avatar', await active(p), 'ch-account-toggle');
     await p.context().close();
   }
 
-  /* ===== AC 13 · Open an app without a feature prototype =============== */
+  /* ===== AC 16 · Open an app without a feature prototype =============== */
   {
     const p = await open(browser, HOME);
     for (const [id, name] of [['onboarding-form', 'Onboarding Form'], ['third-party-services', 'Third-Party Services']]) {
       await p.goto(HOME, { waitUntil: 'networkidle' });
       await Promise.all([p.waitForNavigation(), p.click('.ch-app-card[data-app=' + id + '] .ch-open')]);
       await settle(p);
-      is('AC13 SH-03-01 URL ' + id, p.url(), APP(id));
-      is('AC13 breadcrumb ' + id, await text(p, '#ch-context .breadcrumb'), name);
-      is('AC13 crumb is current ' + id, await p.getAttribute('#ch-context .breadcrumb-item', 'aria-current'), 'page');
-      is('AC13 heading ' + id, await text(p, 'main h1'), name);
-      is('AC13 focus on heading ' + id, await p.evaluate(() => document.activeElement.tagName + ':' + document.activeElement.textContent), 'H1:' + name);
-      is('AC13 placeholder text ' + id, await text(p, 'main .text-block p'), 'This application isn’t part of this prototype yet.');
-      is('AC13 title ' + id, await p.title(), name + ' | Configuration Hub');
+      is('AC16 SH-03-01 URL ' + id, p.url(), APP(id));
+      is('AC16 breadcrumb ' + id, await text(p, '#ch-context .breadcrumb'), name);
+      is('AC16 crumb is current ' + id, await p.getAttribute('#ch-context .breadcrumb-item', 'aria-current'), 'page');
+      is('AC16 heading ' + id, await text(p, 'main h1'), name);
+      is('AC16 placeholder text ' + id, await text(p, 'main .text-block p'), 'This application isn’t part of this prototype yet.');
+      is('AC16 title ' + id, await p.title(), name + ' | Configuration Hub');
+      is('AC16 focus at the top after Open ' + id, await p.evaluate(() => document.activeElement === document.body), true);
+      is('AC16 heading not made focusable ' + id, await p.evaluate(() => document.querySelector('main h1').hasAttribute('tabindex')), false);
+      await p.keyboard.press('Tab');
+      is('AC16 next Tab is the skip link ' + id, await active(p), 'Skip to main content');
     }
     await Promise.all([p.waitForNavigation(), p.click('#ch-placeholder-back')]);
     await settle(p);
-    is('AC13 Back to applications goes home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
-    is('AC13 focus on home h1 after Back', await p.evaluate(() => document.activeElement.textContent), 'Applications');
+    is('AC16 Back to applications goes home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
+    is('AC16 hidden home heading never focused', await p.evaluate(() => document.activeElement === document.body && !document.querySelector('main h1').hasAttribute('tabindex')), true);
+    await p.keyboard.press('Tab');
+    is('AC16 after Back, next Tab is the skip link', await active(p), 'Skip to main content');
     await p.context().close();
   }
 
-  /* ===== AC 14 · unsaved changes confirmation ========================== */
+  /* ===== AC 17 · unsaved changes confirmation ========================== */
   {
     const p = await open(browser, APP('user-management'));
     await p.evaluate(() => CHShell.setUnsavedChanges(true));
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
-    is('AC14 modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
-    is('AC14 modal body', await text(p, '#ch-env-modal .modal-body'), 'You have unsaved changes on this page. If you switch now, they’ll be lost.');
-    is('AC14 actions, Primary last', (await p.$$eval('#ch-env-modal .modal-footer .btn', bs => bs.map(b => b.className.split(' ')[1] + ':' + b.textContent.trim()))).join(' | '),
+    is('AC17 modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
+    is('AC17 modal body', await text(p, '#ch-env-modal .modal-body'), 'You have unsaved changes on this page. If you switch now, they’ll be lost.');
+    is('AC17 actions, Primary last', (await p.$$eval('#ch-env-modal .modal-footer .btn', bs => bs.map(b => b.className.split(' ')[1] + ':' + b.textContent.trim()))).join(' | '),
        'btn-secondary:Stay on this page | btn-primary:Switch to Test');
-    is('AC14 environment not yet switched', await checkedEnv(p), 'live');
+    is('AC17 environment not yet switched', await checkedEnv(p), 'live');
     await p.click('#ch-env-modal-stay');
     await p.waitForTimeout(500);
-    is('AC14 Stay closes the modal', await p.isVisible('#ch-env-modal'), false);
-    is('AC14 Stay keeps Live', await checkedEnv(p), 'live');
-    is('AC14 Stay returns focus to Live', await active(p), 'ch-env-live');
-    is('AC14 Stay keeps the page', p.url(), APP('user-management'));
+    is('AC17 Stay closes the modal', await p.isVisible('#ch-env-modal'), false);
+    is('AC17 Stay keeps Live', await checkedEnv(p), 'live');
+    is('AC17 Stay returns focus to Live', await active(p), 'ch-env-live');
+    is('AC17 Stay keeps the page', p.url(), APP('user-management'));
     /* Escape and the close control behave like Stay. */
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await p.keyboard.press('Escape');
     await p.waitForTimeout(500);
-    is('AC14 Escape keeps Live', await checkedEnv(p), 'live');
-    is('AC14 Escape returns focus to Live', await active(p), 'ch-env-live');
+    is('AC17 Escape keeps Live', await checkedEnv(p), 'live');
+    is('AC17 Escape returns focus to Live', await active(p), 'ch-env-live');
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await p.click('#ch-env-modal .btn-close');
     await p.waitForTimeout(500);
-    is('AC14 close control keeps Live', await checkedEnv(p), 'live');
+    is('AC17 close control keeps Live', await checkedEnv(p), 'live');
     /* Switch discards and continues. */
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await Promise.all([p.waitForNavigation(), p.click('#ch-env-modal-switch')]);
     await settle(p);
-    is('AC14 Switch continues to Test', await checkedEnv(p), 'test');
-    is('AC14 Switch lands on base page', p.url(), APP('user-management'));
-    is('AC14 Switch shows alert', await text(p, '#ch-env-alert'), ALERT);
+    is('AC17 Switch continues to Test', await checkedEnv(p), 'test');
+    is('AC17 Switch lands on base page', p.url(), APP('user-management'));
+    is('AC17 Switch shows alert', await text(p, '#ch-env-alert'), ALERT);
     /* No unsaved changes, no modal. */
     await Promise.all([p.waitForNavigation(), p.click('label[for=ch-env-live]')]);
     await settle(p);
-    is('AC14 no modal without unsaved changes', await checkedEnv(p), 'live');
+    is('AC17 no modal without unsaved changes', await checkedEnv(p), 'live');
     await p.context().close();
   }
 
@@ -492,12 +610,26 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     is('Gap5 section Tooltip full text', await p.evaluate(() => document.querySelectorAll('#ch-context .breadcrumb-link')[1].getAttribute('data-bs-title')), LONG_SECTION);
     is('Gap5 section accessible name full text', await p.evaluate(() => document.querySelectorAll('#ch-context .breadcrumb-link')[1].textContent), LONG_SECTION);
     is('Gap5 current crumb Tooltip', await p.getAttribute('#ch-context .ch-crumb-text', 'data-bs-title'), LONG_ITEM);
-    is('Gap5 truncated current crumb focusable', await p.getAttribute('#ch-context .ch-crumb-text', 'tabindex'), '0');
+    is('Gap5 truncated current crumb not focusable', await p.evaluate(() => { const e = document.querySelector('#ch-context .ch-crumb-text'); return e.hasAttribute('tabindex') + '/' + e.tabIndex; }), 'false/-1');
     is('Gap5 short crumb not truncated', await p.evaluate(() => document.querySelector('#ch-context .breadcrumb-link').classList.contains('ch-truncated')), false);
     is('Gap5 breadcrumb on one line', await p.evaluate(() => { const items = [...document.querySelectorAll('#ch-context .breadcrumb-item')].map(i => Math.round(i.getBoundingClientRect().top)); return new Set(items).size; }), 1);
-    await p.focus('#ch-context .ch-crumb-text');
+    is('Gap5 Buckholt divider (no override)', await p.evaluate(() => document.querySelector('#ch-context nav').hasAttribute('style')), false);
+    await p.hover('#ch-context .ch-crumb-text');
     await p.waitForTimeout(1000);
-    is('Gap5 Tooltip on focus', await text(p, '.tooltip .tooltip-inner'), LONG_ITEM);
+    is('Gap5 current crumb Tooltip on hover', await text(p, '.tooltip .tooltip-inner'), LONG_ITEM);
+    await p.mouse.move(700, 600);
+    await p.waitForTimeout(400);
+    await p.focus('#ch-context .breadcrumb-item:nth-child(2) a');
+    await p.waitForTimeout(1000);
+    is('Gap5 linked crumb Tooltip on focus', await text(p, '.tooltip .tooltip-inner'), LONG_SECTION);
+    is('Gap5 linked crumb keeps link styling', await p.evaluate(() => document.querySelectorAll('#ch-context a[data-bs-toggle]').length), 0);
+    /* A breadcrumb link is an ordinary page load: focus at the top. */
+    await Promise.all([p.waitForNavigation(), p.click('#ch-context .breadcrumb-item:first-child a')]);
+    await settle(p);
+    is('Breadcrumb link: base page', p.url(), APP('user-management'));
+    is('Breadcrumb link: focus at the top', await p.evaluate(() => document.activeElement === document.body), true);
+    await p.keyboard.press('Tab');
+    is('Breadcrumb link: next Tab is the skip link', await active(p), 'Skip to main content');
     await context.close();
   }
 

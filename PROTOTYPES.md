@@ -21,8 +21,8 @@ Process is still a placeholder inside BACS Import.
 | --- | --- |
 | **CH shell** | https://ogi-product-design.github.io/buckholt-ai/prototypes/CH-SHELL/ |
 
-Seed variants: add `?seed=long-names`, `all-apps`, `test-only` or
-`staged-rollout`.
+Seed variants: add `?seed=long-names`, `all-apps`, `test-only`,
+`staged-rollout` or `live-only`.
 
 ## Mobius navigation — Cloudflare
 

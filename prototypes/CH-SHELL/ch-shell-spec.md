@@ -7,12 +7,18 @@
 - **Screen IDs:** `SH-FF-SS`. SH is the shell, FF the flow (00 = base page), SS the step. Screenshots in `screenshots/` are named by screen ID.
 - **Shell:** this document is the shell. CH feature specs reference it as "Shell: `CH-SHELL` spec" and describe only their own content, breadcrumb trail and the items listed under "Contract for feature specs".
 - **Viewpoint:** a client user only. No Open GI staff view, no tenant dropdown, no OGI-only apps, fields or behaviour. The prototype should look as close as possible to what a client sees.
-- **Source tags:** **[Figma]** target design (Navigation file and User Management file, frames in the Screen index), **[Observed]** UAT build of 15 Oct 2026, **[Context]** Andrej's briefing recorded in the CH product context (baseline 17 Oct 2026), **[Decision]** agreed with Andrej (dated) or, where marked "spec", decided in this spec at Andrej's request and pending his review, **[Assumption]** to be validated.
-- **Revision:** 3, 19 Oct 2026. App name, button hierarchy and tenant dropdown questions resolved. Ready for handoff once the screenshots are exported (see Readiness checklist).
+- **Source tags:** **[Figma]** target design (Navigation file and User Management file, frames in the Screen index), **[Observed]** UAT build of 15 Oct 2026, **[Context]** Andrej's briefing recorded in the CH product context (baseline 17 Oct 2026), **[Decision]** agreed with Andrej (dated) or, where marked "spec", decided in this spec at Andrej's request and pending his review, **[Assumption]** to be validated, **[Build]** finding from the Claude Code build of revision 3 (`SPEC-CHANGES.md`, 20 Oct 2026).
+- **Revision:** 5, 20 Oct 2026. Home card grid now follows production CH (measured on UAT); card internals follow Buckholt.
 
 ## What changed in this revision
 | Area | Change |
 |---|---|
+| Revision 5: card grid | Replaces the revision 4 card rule. The grid keeps production CH behaviour, measured by Andrej on UAT on 20 Oct 2026: fixed-width cards that wrap and are centred, with set cards-per-row capacities. Each card's internals follow Buckholt Card. Illustrations keep their own proportions (no cropping). Card grid added as Gap 9. |
+| Revision 4: sources of truth | New rule: Figma decides arrangement; Buckholt decides sizes, spacing, colours, icons and component styling. Resolves the Figma vs Buckholt differences found in the build (avatar, menu panel, card spacing, icons, environment control styling). |
+| Revision 4: focus and announcements | Navigation now relies on the normal page-load behaviour (focus at the top, document title announced) instead of moving focus to the level 1 heading. Resolves the invisible focus on the home page heading. |
+| Revision 4: truncation | Truncated plain text (organisation name, current-page crumb) is not focusable; full text by hover Tooltip and accessible name. Gap 5 reworded: the gap is one long label, not a long trail. |
+| Revision 4: cards | "Fixed width" replaced by "equal width within a row" and a minimum width that keeps the illustration whole and the title on one line (six per row at 1920px, four at 1440px, three at 1088px). |
+| Revision 4: other | Open is a link styled as a Primary Button. Test alert has no live-region role and no heading. Menu keyboard follows Buckholt (Tab, Shift+Tab). Live-only seed added. Direct links to a hidden app go home. Feature contract asks for base page and seeds. |
 | Revision 3 | App 5 renamed "Policy Extensions" (Figma fixed by Andrej). Primary Open button confirmed with the design system designer. Tenant dropdown confirmed as Open GI-only on the integration server; never shown to tenants on UAT or Live. |
 | Header | Layout, environment control and avatar menu checked against Figma. The client environment control is the two-option Live / Test control from the home frame; the "Open GI - ZZ09" dropdown frame is the Open GI staff tenant selector and is not built (see Known screenshot differences). |
 | Test alert | Approved by Andrej, 19 Oct 2026. Figma has no Test indicator; the alert in this spec is the design. |
@@ -106,13 +112,18 @@ Fictional organisations and people. Default seed is **Northgate**. The other var
 | All apps | "Northgate Insurance Services" | Live NG01, Test NG02 | Sophie Marchetti | as default | All six registry apps |
 | Test only (newly onboarded) | "Harbourside Underwriting" | Test HU01 only | Daniel Okafor | daniel.okafor@harbourside-underwriting.co.uk | Onboarding Form, User Management, Third-Party Services |
 | Staged rollout | "Northgate Insurance Services" | Live NG01, Test NG02 | Sophie Marchetti | as default | Live: default set. Test: default set plus AutoMATE |
+| Live only | "Kestrel Mutual" | Live KM01 only | Priya Shah | priya.shah@kestrel-mutual.co.uk | Onboarding Form, User Management, Third-Party Services |
 
 Notes
 - Tenant codes follow the observed format (ZZ09, BR01, AZ01). Whether Live and Test have different codes is an **[Assumption]**.
 - There is no empty-home variant: after the tenant exists the Onboarding Form card is always visible, and the pre-tenant state is out of scope.
 
 ## Prototype notes
-- **Sources of truth:** Figma screenshots for layout, this spec for behaviour and copy, Buckholt for component behaviour and styling.
+- **Sources of truth:** **[Decision]** spec, 20 Oct 2026.
+  - Figma decides arrangement: what is on each page, in what order and position, and which component each element is.
+  - Buckholt decides sizes, spacing, colours, icons, typography and component styling. Where Figma's values differ (avatar size and colour, menu panel padding and width, card padding and title size, content spacing, icons such as the Mobius "Launch" icon, the Logout glyph and the breadcrumb chevron), Buckholt wins. Claude Code records each such difference once in `PROTOTYPE.md`; it is not a spec change.
+  - Exception: the home page card grid (card width, gaps, wrapping, alignment and cards per row) follows production CH, not Figma or Buckholt. **[Decision]** Andrej, 20 Oct 2026.
+  - This spec decides behaviour and copy, and beats both on those.
 - **State:** held in memory, except the current environment, which persists across page navigation within the same browser tab so it carries into feature prototypes. A new tab starts from the seed rule (Live if it exists). This deliberately differs from the template default "a reload resets to the seed data". **[Decision]** spec.
 - **Static (inert) areas:**
   - Mobius link: real link appearance and accessible name; activating it does nothing in the prototype.
@@ -128,18 +139,18 @@ Notes
 | Page structure | Page layout with Header and Main regions only (no Sidebar, no Footer); Main: Page body > Frame > Pane > Panel | | Header content itself is a gap (application chrome). |
 | Lockup (Open GI logo and "Configuration Hub") | None | | Gap 1. Supplied as one SVG with outlined text, so it needs an accessible name from its link. |
 | Organisation name | Plain text in header | Truncation with Tooltip | Tooltip exists; header placement is part of Gap 1. |
-| Environment control (two environments) | Response button (radio, single-select) | Two options, compact, header placement | Gap 2. Figma shows a segmented pill with the selected option outlined. |
+| Environment control (two environments) | Response button (radio, single-select) | Two options, compact, grouped as one pill, header placement | Gap 2. Figma's "Select button group" maps to Response button; styling from Buckholt. |
 | Environment tag (one environment) | Tag | Neutral, informational | Not interactive. No Figma frame. |
-| Test alert | Alert | Informational, not dismissible | Placement under the header across all pages is Gap 3. |
+| Test alert | Alert | Informational, not dismissible, no live-region role, message as plain text (not a heading) | Placement and role choice are Gap 3. |
 | Mobius link | Link | External link common action (icon before label, as in Figma) | Opens in a new tab in production. |
 | Avatar button | Avatar inside Menu button | Initials, circular | Accessible name and Tooltip required (icon-only control). |
-| Avatar menu | Menu button / Menu | Identity header (avatar, name, email; non-interactive), divider, one item | Non-interactive identity header is Gap 4. |
+| Avatar menu | Menu button / Menu | Identity header (avatar, name, email; non-interactive), divider, one item | Non-interactive identity header is Gap 4. Keyboard per Buckholt Menu guidance. |
 | Logout | Menu item using the Logout common action | Buckholt label and icon | Label as fixed by Buckholt. |
 | Breadcrumb band | Breadcrumb | Single item (current, plain text); multi-item (links plus current) | Full-width band between header and content per Figma; truncation is Gap 5. |
 | Home heading | Heading | Level 1, visually hidden | |
 | App card | Card | Illustration, title, description, action | Only the Open button is interactive, so no clickable-card state is needed. Illustrations are Gap 6. |
-| Card grid | Bootstrap grid inside Panel | Equal-height cards per row, left-aligned, wrapping | Figma shows six cards in one row at desktop width. |
-| Open button | Button | Primary, right-aligned at the bottom of the card **[Figma]**; confirmed with the design system designer | Accessible name includes the app name. |
+| Card grid | None (not Bootstrap columns) | Fixed-width cards, wrapping, centred | Gap 9. Production CH behaviour, not Figma's six-per-row frame. |
+| Open button | Link styled as a Primary Button | Right-aligned at the bottom of the card **[Figma]**; Primary confirmed with the design system designer | Open navigates, so it is a link (Buckholt: Button for actions, Link for navigation). Accessible name includes the app name. **[Build]** |
 | Unsaved changes confirmation | Modal | Two actions | Used only through the feature contract. |
 | Skip link | None | | Gap 7. |
 | App-level header navigation slot | None | | Gap 8. Reserved, not built here. |
@@ -151,12 +162,13 @@ Not in `buckholt-reference.md` (commit `211e365`, 19 Oct 2026). Claude Code: con
 |---|---|---|---|---|---|
 | 1 | Application chrome: CH top bar with lockup, organisation area, external link and avatar | Every CH page needs it; Buckholt has a Header region but no top-bar component | Page layout Header region | `prototypes/shared/app-shell` (Mobius PAS chrome; structural precedent only, not CH's design) | Single row. Left: lockup as one link to home. Right, in order: organisation name with environment control, Mobius link, avatar. Reserved space after the lockup for app-level navigation (Gap 8). Sticky at the top on scroll **[Assumption]** |
 | 2 | Two-option environment switch (Live / Test) | The client control is a segmented either/or choice in the header. Switch is wrong (on/off, not two named states); Tabs and Page navigation change content or pages, not context; Dropdown would hide the current choice behind a click | Response button (radio, single-select) | Audit Centre Grouped / Individual (same gap) | Radio-group semantics; selection takes effect immediately; selected option shown by the outlined pill and not by colour alone |
-| 3 | Global environment alert | Persistent safety indicator for Test on every page, including inside apps | Alert | None | Full width, directly under the header and above the breadcrumb band, on every page while Test is current; not dismissible; not announced on page load |
+| 3 | Global environment alert | Persistent safety indicator for Test on every page, including inside apps | Alert | None | Full width, directly under the header and above the breadcrumb band, on every page while Test is current; not dismissible; not announced on page load, so no live-region role; message is not a heading, so it does not come before the page's level 1 heading in the outline. **[Build]** |
 | 4 | Menu with a non-interactive identity header | Avatar menu shows avatar, name and email above the actions | Menu button / Menu | None | Identity header is plain content, not focusable, not a menu item; separated from the actions by a divider; arrow keys move only between items |
-| 5 | Breadcrumb truncation | Long app, section or item names | Breadcrumb plus Tooltip | None | A crumb longer than about 32 characters truncates with an ellipsis; full text in a Tooltip on hover and focus; accessible name is always the full text. Threshold is an **[Assumption]** |
-| 6 | App card illustrations | Each card has an illustration; Buckholt has no illustration set | Card media area | Supplied SVG assets | Shown full card width at the top of the card, as in Figma; decorative (no alternative text) |
+| 5 | Truncating one long crumb label | Buckholt's overflow approach collapses a long trail (many crumbs) but says nothing about a single long label; CH trails are at most three crumbs, so the overflow approach never triggers. This is not custom truncation of trails. **[Build]** | Breadcrumb plus Tooltip | None | A crumb label longer than about 32 characters truncates with an ellipsis. Linked crumbs show the full text in a Tooltip on hover and focus. The current-page crumb is plain text: Tooltip on hover only, not focusable (inside apps its full text is also the visible page heading). Accessible name is always the full text. Threshold is an **[Assumption]** |
+| 6 | App card illustrations | Each card has an illustration; Buckholt has no illustration set | Card media area | Supplied SVG assets | Shown full card width at the top of the card at the illustration's own proportions, never cropped (Buckholt's fixed-height media box would crop it, see build finding C6); decorative (no alternative text). **[Decision]** spec, 20 Oct 2026 |
 | 7 | Skip link | Keyboard users need to bypass the header on every page | None | None | First focusable element; hidden until focused; text "Skip to main content"; moves focus to Main |
 | 8 | App-level header navigation slot | AutoMATE already shows "Workflows" next to the CH lockup; other multi-journey apps will follow | Page navigation | AutoMATE (production) | Not built in this prototype. Reserved space only; the AutoMATE spec defines content and behaviour |
+| 9 | Wrapping grid of fixed-width cards | The CH home keeps its production grid: fixed card width, wrapping, rows centred. Buckholt's grid is column-based, so cards stretch with the viewport instead | Bootstrap grid | Production CH home | As in SH-00-01 Card layout |
 
 ## SH-00-01 · Home, Live, populated
 The page every client user lands on after sign-in: shows the organisation, the environment and the apps they can open.
@@ -194,8 +206,18 @@ Each card, top to bottom **[Figma]**: illustration (decorative), title (heading 
 ### Behaviour
 - **Open:** goes to the app's feature prototype base page if one exists, otherwise to SH-03-01 for that app. The current environment carries over.
 - **Hover and focus:** Buckholt defaults for Button and Link. Cards have no hover state of their own.
-- **Card layout:** cards share a fixed width and, within a row, the same height; Open buttons align along the bottom of the row. Cards are left-aligned; with fewer cards than fit in a row, the remaining space stays empty. Descriptions wrap and never truncate.
-- **Organisation name:** truncates with an ellipsis when space runs out; full name in a Tooltip on hover and focus; full name is always available to assistive technology.
+- **Card grid:** follows production CH. **[Observed]** UAT, measured 20 Oct 2026; **[Decision]** Andrej, 20 Oct 2026.
+  - Every card has the same fixed width (284px in production) at every viewport; cards never stretch or shrink.
+  - Cards sit in rows with a fixed horizontal gap (32px in production), wrap onto new rows when the next card doesn't fit, and every row is centred on the page, including a final row with a single card.
+  - Cards per row (capacity), which the prototype must match:
+
+    | Viewport | 1920px | 1440px | 1280px | 1088px | 992px | 768px | 576px and below |
+    |---|---|---|---|---|---|---|---|
+    | Cards per row | 5 | 4 | 3 | 3 | 3 | 2 | 1 |
+
+  - Spacing values inside and around this grid come from production, not Buckholt's Frame padding; Claude Code adjusts whatever page padding is needed to hit these capacities and records it in `PROTOTYPE.md`.
+- **Card internals:** follow Buckholt Card (padding, title style, image treatment, description style, button placement, border and shape). Illustration at its own proportions, never cropped (Gap 6). Titles and descriptions wrap rather than truncate. All cards on the page share the height of the tallest card, and Open buttons sit at the bottom of each card, so buttons line up across a row.
+- **Organisation name:** plain text; truncates with an ellipsis when space runs out; full name in a Tooltip on hover; full name always in its accessible name. It is never focusable, truncated or not: a tab stop that appears only at some widths is more confusing than helpful, and the name is the user's own organisation. **[Decision]** spec, 20 Oct 2026.
 - **Header:** visible on every page; sticky on scroll. **[Assumption]**
 - **Document title:** "Applications | Configuration Hub".
 - **Keyboard:** see Accessibility requirements.
@@ -207,7 +229,7 @@ Each card, top to bottom **[Figma]**: illustration (decorative), title (heading 
 | Populated (Test) | Test selected | SH-00-02. |
 | One environment | "Test only" seed | SH-00-03. |
 | Long names | "Long names" seed | Organisation name truncated with Tooltip; avatar initials "AM"; menu name and email wrap onto further lines where needed, never truncated. |
-| Many apps | "All apps" seed | Six cards in one row at 1440px, wrapping at narrower widths. |
+| Many apps | "All apps" seed | Six cards: five then one at 1920px; four then two at 1440px; three and three from 1280px to 992px; two per row at 768px; one per row at 576px and below. Every row centred. |
 | Empty | Not reachable after the tenant exists | Not built. |
 | Loading | Not shown (no sign-in or data loading is simulated) | Not built. |
 | Error | Out of scope ("app failed to load" spec) | Not built. |
@@ -224,6 +246,7 @@ Differences from SH-00-01 only:
 - Environment control: "Test" selected. **[Figma]**
 - **Test alert** (informational, not dismissible), full width, directly under the header and above the breadcrumb band: **[Decision]** Andrej, 19 Oct 2026 (no Figma frame)
   - "You're in your Test environment. Changes here won't affect Live."
+  - Plain text, not a heading. Not announced when a page loads (no live-region role); SH-01 provides the announcement when the user switches.
   - The claim that Test changes never reach Live needs TL confirmation (Open questions 4); the copy may change, the alert stays.
 - Document title: "[Test] Applications | Configuration Hub". Helps users with several tabs open. **[Decision]** spec.
 - Cards: same set as Live unless the seed says otherwise ("Staged rollout" adds AutoMATE in Test).
@@ -274,7 +297,7 @@ Only when a feature prototype reports unsaved changes (see Contract for feature 
    - Divider.
    - Menu item: the Buckholt Logout common action (label and icon as Buckholt fixes them; Figma shows "Logout"). **[Decision]** Andrej, 19 Oct 2026.
 3. Activating Logout closes the menu. Nothing else happens in the prototype.
-4. Escape, Tab out, or a click outside closes the menu. Escape and item activation return focus to the avatar button.
+4. Keyboard follows Buckholt's Menu guidance: Tab and Shift+Tab move between items; Tab past the last item, Escape or a click outside closes the menu. Escape and item activation return focus to the avatar button. The menu's accessibility semantics must match this keyboard model (see Buckholt ticket on Menu semantics). **[Decision]** spec, 20 Oct 2026, replacing arrow keys **[Build]**.
 
 ### Rules
 - No "Release notes" item, no second divider, and no unread indicator on the avatar.
@@ -303,10 +326,14 @@ Used when an app has no feature prototype yet. Shows the in-app shell so breadcr
 - The app-name crumb links to the app's base page. On the base page itself the trail is "{App name} > {Base page name}", with the app-name crumb still a link (as in the User Management frame). Feature specs state their trail per screen ID.
 - Maximum depth: three crumbs (App > Section > Item). **[Observed]** pattern.
 - Long crumbs: Gap 5.
+- On an app's base page the app-name crumb links to the page the user is on. Accepted: it keeps the trail identical as users go deeper, and it is harmless for assistive technology because the current crumb is marked as current. **[Decision]** spec, 20 Oct 2026.
 - The breadcrumb always sits in the full-width band under the header (and under the Test alert when shown), never in the top bar and never inside the page content.
 
 ### Focus on navigation
-After any navigation inside the shell (Open, breadcrumb link, lockup link, environment switch that changes page), focus moves to the page's level 1 heading and the new page title is announced. **[Decision]** spec.
+Every navigation (Open, breadcrumb link, lockup link, an environment switch that changes page) behaves like a normal page load: focus starts at the top of the document, so the next Tab reaches the skip link, and screen readers announce the new document title. No focus is moved to the heading, so the visually hidden home heading never receives focus. If the build changes pages without a full page load, it must reproduce exactly this behaviour. **[Decision]** spec, 20 Oct 2026, replacing heading focus **[Build]**.
+
+### Direct links to a hidden app
+A direct link to an app that isn't visible in the current environment opens the home page, with no message. Production handling of unavailable apps belongs to the "app failed to load" spec. **[Decision]** spec, 20 Oct 2026, confirming the build.
 
 ## Contract for feature specs
 What every CH feature spec can rely on without redescribing it, and what it must state.
@@ -318,7 +345,8 @@ What every CH feature spec can rely on without redescribing it, and what it must
 
 **Feature specs must state**
 - The breadcrumb trail for every screen ID.
-- Which registry app they switch on in the seed, and any per-environment differences in their own seed data. Recommended: give Test visibly different sample data so testers can see the switch take effect.
+- Which registry app they switch on, its base page, and which seed variants include it. **[Build]**
+- Any per-environment differences in their own seed data. Recommended: give Test visibly different sample data so testers can see the switch take effect.
 - Whether any page has unsaved-changes state that should trigger the SH-01 confirmation.
 - App-level header navigation content, if the app has any (Gap 8).
 - Any deliberate override of this spec, under "Known screenshot differences" or a "Shell overrides" note. Overrides are discouraged.
@@ -334,10 +362,10 @@ What every CH feature spec can rely on without redescribing it, and what it must
   - Open buttons: "Open {App name}". The visible label "Open" starts the accessible name, so speech-input users can still say "click Open".
   - Breadcrumb: "Breadcrumb".
 - **Environment control keyboard:** Tab moves into the group onto the selected option; arrow keys move and select; selecting triggers SH-01.
-- **Announcements:** environment changes announced politely (SH-01 step 5). The Test alert is not announced on page load; it is reachable by reading the page. After navigation the new page title is announced.
-- **Menu:** Enter, Space or Down Arrow opens it and moves focus to Logout; Escape closes it and returns focus to the avatar button.
+- **Announcements:** environment changes announced politely (SH-01 step 5). The Test alert is not announced on page load; it is reachable by reading the page. After navigation the document title is announced by the normal page load (see Focus on navigation).
+- **Menu:** Enter or Space opens it and moves focus to Logout; Tab and Shift+Tab move between items; Escape closes it and returns focus to the avatar button.
 - **Colour:** the selected environment is shown by the outlined pill, not by colour alone; the Test state is carried by the alert text and the document title.
-- **Truncation:** every truncated text (organisation name, long crumbs) has its full text in a Tooltip on hover and focus and in its accessible name.
+- **Truncation:** every truncated text has its full text in its accessible name and in a Tooltip on hover. Focusable items (linked crumbs) also show the Tooltip on focus. Plain text (organisation name, current-page crumb) never becomes focusable to show a Tooltip.
 - **Illustrations and the avatar inside the menu:** decorative, ignored by assistive technology.
 
 ## Acceptance criteria
@@ -347,13 +375,16 @@ What every CH feature spec can rely on without redescribing it, and what it must
 - Given Test is current inside an app, when the user selects "Live", then the user is on that app's base page in Live, filters and selections are reset, and the alert is gone.
 - Given the "Staged rollout" seed and the user is in AutoMATE in Test, when the user selects "Live", then the user lands on the home page and hears "Live environment selected. AutoMATE isn't available in Live."
 - Given the "Test only" seed, when the home page loads, then a non-interactive "Test" tag shows in place of the environment control and the Test alert is shown.
-- Given the "All apps" seed at 1440px, then six cards show in one row in registry order.
-- Given the "Long names" seed at 1088px, then no header item wraps, the organisation name is truncated, and its full name is available in a Tooltip and to assistive technology.
+- Given the "All apps" seed, then the six cards show in registry order with the cards per row in the Card grid table at each listed viewport, every row centred, every card the same fixed width and height, and every illustration uncropped.
+- Given the default seed at 1440px, then the three cards sit in one centred row.
+- Given the "Long names" seed at 1088px, then no header item wraps, the organisation name is truncated, and its full name shows in a Tooltip on hover and is in its accessible name. (The organisation name truncates whenever space runs out; this seed at this width is the test case.) **[Build]**
+- Given the "Live only" seed, when the home page loads, then a non-interactive "Live" tag shows in place of the environment control and no Test alert is shown.
+- Given a direct link to an app not visible in the current environment, when it opens, then the home page shows.
 - Given any page, when the user presses Tab once from the top, then "Skip to main content" is focused and activating it moves focus into Main.
 - Given the avatar button is focused, when the user presses Enter, then the menu opens showing the avatar, name, email and the Logout item (and no Release notes item), and focus is on Logout; when the user presses Escape, then the menu closes and focus returns to the avatar button.
 - Given any card, then its Open button's accessible name is "Open {App name}".
 - Given the user activates the Mobius link or Logout, then the page does not navigate.
-- Given an app without a feature prototype, when the user selects Open, then SH-03-01 shows with breadcrumb "{App name}" and heading "{App name}", and focus is on the heading.
+- Given an app without a feature prototype, when the user selects Open, then SH-03-01 shows with breadcrumb "{App name}" and heading "{App name}", the document title is "{App name} | Configuration Hub", and the next Tab focuses the skip link.
 - Given a feature page reports unsaved changes, when the user selects the other environment, then the confirmation modal appears; "Stay on this page" keeps the environment and returns focus to the previously selected option.
 
 ## Open questions
@@ -371,6 +402,9 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | 10 | Should the Onboarding Form card stay first on the home page indefinitely, given it is view-only after onboarding? | PM | No |
 | 11 | ~~Card order~~ Resolved: Figma order. | | |
 | 12 | ~~Primary Open buttons on every card~~ Resolved: Primary confirmed with the design system designer. | | |
+| 13 | ~~1440px home frame~~ Resolved: the grid follows production behaviour measured on UAT, 20 Oct 2026. | | |
+| 15 | With Buckholt's larger card padding and title style inside a fixed 284px card, longer titles (for example "Third-Party Services") may wrap to two lines, making every card taller. Accept, or widen the fixed card width? Prototype accepts wrapping. | Andrej | No |
+| 14 | Should the Live-only state exist in production at all (a client with no Test tenant)? Seeded so it can be tested. | PM | No |
 
 ## Known screenshot differences
 | Screens | Screenshot shows | Build this instead |
@@ -382,6 +416,9 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | SH-02 | "Release notes" item with dividers | No Release notes item; one divider between the identity header and Logout |
 | Frame 1876-31793 | Tenant dropdown "Open GI - ZZ09" | Not built: shown only to Open GI users on the integration server, never to tenants on UAT or Live (Andrej, 19 Oct 2026). Clients get the Live / Test control |
 | SH-REF-UM | Organisation "Greenlight", User Management page content | Shell parts only: breadcrumb band position and trail pattern |
+| All frames | Figma sizes, spacing, colours and icons (44px mint avatar, 16px menu padding and radius, card padding and title size, 32px content spacing, "Launch" and "ogi-logout" icons, chevron breadcrumb divider, "Select button group" styling) | Buckholt equivalents (see Sources of truth) |
+| All frames | Breadcrumb band drawn as part of the Header frame | Its own band in the same position and size |
+| All frames | 1920px only; six cards in one row with about 34px edges | Production grid: five per row at 1920px, capacities per the Card grid table |
 | Home (current production, [Observed]) | Tenant selector with code, Release Notes in menu, serif fallback for the user name, unlabelled controls | As specified here |
 
 ## Changes from legacy
@@ -411,7 +448,7 @@ Export each frame as PNG into `screenshots/` under its screen ID before handoff.
 ---
 
 ## Readiness checklist (all must pass before handoff)
-- [ ] Every screen in the index has a section, and every section has a screenshot or an explicit "no frame". *Sections and frames done; PNG export into `screenshots/` pending.*
+- [x] Every screen in the index has a section, and every section has a screenshot or an explicit "no frame". *Exported by Claude Code, 20 Oct 2026.*
 - [x] All copy is final, quoted, and checked against the Tone of Voice guide. *Alert copy may change after Open questions 4.*
 - [x] Every interactive element appears in the Buckholt mapping or in Buckholt gaps.
 - [x] No HTML, class names, hex values or icon class strings anywhere in the spec.
@@ -419,7 +456,7 @@ Export each frame as PNG into `screenshots/` under its screen ID before handoff.
 - [x] Every state has defined copy.
 - [x] Open questions marked "Blocks build" are resolved or have an agreed assumption.
 - [x] Acceptance criteria cover every flow.
-- [ ] Checked against the current `buckholt-reference.md` (and the live repo if the reference is more than about two weeks old). *Reference is same-day; the live repo was not checked from chat, so Claude Code confirms the gap list and the Logout label.*
+- [x] Checked against the current `buckholt-reference.md` (and the live repo if the reference is more than about two weeks old). *Claude Code confirmed all eight gaps against the repo on 20 Oct 2026 (none dropped) and the Logout label ("Logout").*
 
 ## Handoff prompt for Claude Code
 > Build the prototype specified in `prototypes/CH-SHELL/ch-shell-spec.md`, with screenshots in `prototypes/CH-SHELL/screenshots/` and the SVG assets from `Navigation - Logo and navigation items.zip`. Build the shell so CH feature prototypes can reuse it without copying it. Follow `AGENTS.md` and its "complete page" reading order. Build every item under "Buckholt gaps" as prototype-local, never in `components/`, after confirming each is still a gap in the live repo. Record what you built and every deviation in `PROTOTYPE.md`, and findings for the spec, Figma and Buckholt in `SPEC-CHANGES.md`. Add assertions for the acceptance criteria and run the test suites. Work on a branch and open a PR. Don't commit to main.

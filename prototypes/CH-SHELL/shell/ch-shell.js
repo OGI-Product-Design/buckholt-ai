@@ -111,8 +111,9 @@
     storeSet(KEY_ENV, JSON.stringify({ seed: state.seedId, env: state.env }));
   }
 
-  /* A flash survives exactly one navigation: what to announce and whether to
-     move focus to the new page's level 1 heading. */
+  /* A flash survives exactly one navigation: what to announce on the next
+     page. It never moves focus — every navigation is a full page load, so
+     focus starts at the top of the document (spec, "Focus on navigation"). */
   function setFlash(flash) {
     storeSet(KEY_FLASH, JSON.stringify(flash));
   }
@@ -216,7 +217,7 @@
     header.innerHTML =
       /* Gap 1: lockup as one link home. The SVG's text is outlined, so the
          accessible name comes from the link and the image is decorative. */
-      '<a class="ch-lockup" href="' + HOME_URL + '" aria-label="Configuration Hub home" data-ch-nav>' +
+      '<a class="ch-lockup" href="' + HOME_URL + '" aria-label="Configuration Hub home">' +
         '<img src="' + new URL(LOCKUP, ASSETS).href + '" alt="" width="238" height="30">' +
       '</a>' +
 
@@ -243,10 +244,18 @@
         /* Buckholt Menu button composition. The Tooltip sits on the `.menu`
            wrapper, not on the toggle, because the toggle already carries
            data-bs-toggle="dropdown" — the same split Breadcrumb's documented
-           overflow example uses. Gap 4: the identity header. */
+           overflow example uses. Gap 4: the identity header.
+
+           Semantics follow the keyboard model. Buckholt's Menu guidance moves
+           between items with Tab and Shift+Tab, which is the disclosure
+           pattern: a button that exposes aria-expanded and controls a plain
+           list of buttons. `role="menu"` would promise arrow-key navigation
+           and a single tab stop instead, so it is left off the list. See
+           PROTOTYPE.md, "Avatar menu semantics". */
         '<div class="menu ch-account" id="ch-account" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Account menu">' +
           '<button type="button" class="menu-toggle ch-account-toggle" id="ch-account-toggle" ' +
-                  'data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account menu for ' + esc(name) + '">' +
+                  'data-bs-toggle="dropdown" aria-expanded="false" aria-controls="ch-account-panel" ' +
+                  'aria-label="Account menu for ' + esc(name) + '">' +
             '<div class="avatar avatar-sm" aria-hidden="true">' +
               '<div class="avatar-initials">' + ini + '</div>' +
             '</div>' +
@@ -261,13 +270,13 @@
                 '<p class="body-01 ch-identity-email">' + esc(user.email) + '</p>' +
               '</div>' +
             '</div>' +
-            '<ul class="menu-body" role="menu" aria-label="Account">' +
-              '<li role="none">' +
+            '<ul class="menu-body">' +
+              '<li>' +
                 '<hr class="menu-divider">' +
               '</li>' +
-              '<li role="none">' +
+              '<li>' +
                 /* The Logout common action: label and icon as Buckholt fixes them. */
-                '<button class="menu-item" type="button" role="menuitem" id="ch-logout">' +
+                '<button class="menu-item" type="button" id="ch-logout">' +
                   '<i class="fa-regular fa-arrow-right-from-bracket" aria-hidden="true"></i>Logout' +
                 '</button>' +
               '</li>' +
@@ -278,11 +287,13 @@
   }
 
   function alertMarkup() {
-    /* Gap 3. Buckholt Alert, info status, no close control. `role="alert"`
-       from the canonical example is left off on purpose: the alert is a
-       persistent indicator, it must not be announced on page load, and the
-       environment change already has its own polite announcement (SH-01
-       step 5). Recorded in PROTOTYPE.md and SPEC-CHANGES.md section C. */
+    /* Gap 3. Buckholt Alert, info status, no close control. Two departures
+       from the canonical example, both required by the spec: no
+       `role="alert"` (a persistent indicator must not be announced on page
+       load; the switch has its own polite announcement), and the message is
+       a paragraph, not an `h6`, so it does not sit ahead of the page's level
+       1 heading in the outline. `.alert-message *` styles any child, so the
+       message keeps Alert's message typography. */
     return '<div class="alert alert-info ch-env-alert" id="ch-env-alert">' +
              '<div class="alert-content">' +
                '<span class="alert-icon">' +
@@ -290,7 +301,7 @@
                '</span>' +
                '<div class="alert-body">' +
                  '<div class="alert-message">' +
-                   '<h6>' + esc(ALERT_TEXT) + '</h6>' +
+                   '<p>' + esc(ALERT_TEXT) + '</p>' +
                  '</div>' +
                '</div>' +
              '</div>' +
@@ -308,12 +319,12 @@
                '</li>';
       }
       return '<li class="breadcrumb-item">' +
-               '<a class="breadcrumb-link" href="' + esc(crumb.href) + '" data-ch-nav>' + esc(crumb.label) + '</a>' +
+               '<a class="breadcrumb-link" href="' + esc(crumb.href) + '">' + esc(crumb.label) + '</a>' +
              '</li>';
     }).join('');
-    /* The divider is set with the inline custom property Breadcrumb's Code &
-       specs documents; Figma draws a chevron. */
-    return '<nav style="--breadcrumb-divider-icon: \'>\';" aria-label="Breadcrumb">' +
+    /* Buckholt's own divider. Figma's chevron is one of the Figma values the
+       spec says Buckholt overrides (revision 4, "Sources of truth"). */
+    return '<nav aria-label="Breadcrumb">' +
              '<ol class="breadcrumb">' + items + '</ol>' +
            '</nav>';
   }
@@ -394,13 +405,14 @@
      restyles `a[data-bs-toggle=tooltip]` (inherited colour, dotted
      underline), which would make a truncated breadcrumb link look different
      from its neighbours. Placed below, because everything that truncates sits
-     at the top of the page. */
-  function addTooltip(el, title) {
+     at the top of the page. Plain text is never focusable, so its Tooltip is
+     hover only; a link's shows on hover and focus. */
+  function addTooltip(el, title, trigger) {
     if (!window.bootstrap) return;
     el.setAttribute('data-bs-title', title);
     var existing = bootstrap.Tooltip.getInstance(el);
     if (existing) existing.dispose();
-    new bootstrap.Tooltip(el, Object.assign({ title: title, placement: 'bottom' }, TOOLTIP_OPTIONS));
+    new bootstrap.Tooltip(el, Object.assign({ title: title, placement: 'bottom', trigger: trigger }, TOOLTIP_OPTIONS));
   }
 
   function removeTooltip(el) {
@@ -412,20 +424,17 @@
   }
 
   /* Organisation name and long crumbs (Gap 5) truncate with CSS. When the
-     text is actually cut, it gets the full text in a Tooltip and, if it is
-     not already focusable, a tab stop so the Tooltip is reachable by
-     keyboard. The full text is always in the DOM, so assistive technology
-     always reads all of it. */
+     text is actually cut, it gets the full text in a Tooltip. Nothing gains a
+     tab stop: the full text is always in the DOM, so assistive technology
+     always reads all of it, and plain text stays plain text. */
   function syncTruncation(el, focusable) {
     var full = el.textContent;
     var cut = el.scrollWidth > el.clientWidth + 1;
     if (cut) {
-      if (el.getAttribute('data-bs-title') !== full) addTooltip(el, full);
-      if (!focusable) el.setAttribute('tabindex', '0');
+      if (el.getAttribute('data-bs-title') !== full) addTooltip(el, full, focusable ? 'hover focus' : 'hover');
       el.classList.add('ch-truncated');
     } else if (el.classList.contains('ch-truncated')) {
       removeTooltip(el);
-      if (!focusable) el.removeAttribute('tabindex');
       el.classList.remove('ch-truncated');
     }
   }
@@ -443,13 +452,6 @@
     if (!region) return;
     region.textContent = '';
     window.setTimeout(function () { region.textContent = message; }, 100);
-  }
-
-  function focusHeading() {
-    var heading = document.querySelector('main h1');
-    if (!heading) return;
-    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
-    heading.focus();
   }
 
   /* ------------------------------------------------------------ environment */
@@ -484,15 +486,16 @@
     }
 
     /* Inside an app: the app's base page in the new environment, from a fresh
-       load, so filters, search, drawers and selections reset. If the app is
-       not in the new environment, the home page instead (SH-01 step 7). */
+       load, so filters, search, drawers and selections reset and focus starts
+       at the top of the document. If the app is not in the new environment,
+       the home page instead (SH-01 step 7). */
     state.unsaved = false;
     if (!isVisible(state.app.id, env)) {
-      setFlash({ announce: message + ' ' + state.app.name + ' isn’t available in ' + name + '.', focusHeading: true });
+      setFlash({ announce: message + ' ' + state.app.name + ' isn’t available in ' + name + '.' });
       window.location.assign(HOME_URL);
       return;
     }
-    setFlash({ announce: message, focusHeading: true });
+    setFlash({ announce: message });
     window.location.assign(baseUrl(state.app));
   }
 
@@ -556,7 +559,7 @@
 
     toggle.addEventListener('show.bs.dropdown', function () { tooltip.hide(); });
     toggle.addEventListener('shown.bs.dropdown', function () {
-      /* Enter, Space or Down Arrow opens the menu and moves focus to Logout. */
+      /* Enter or Space opens the menu and moves focus to Logout. */
       var first = items()[0];
       if (first) first.focus();
     });
@@ -569,26 +572,19 @@
       }
     });
 
-    /* Bootstrap 5.1.3 moves between `.dropdown-item`s only; Buckholt's items
-       are `.menu-item`, so arrow keys are handled here. They move only
-       between items — the identity header is not an item. Bootstrap's own
-       key handler is delegated from `document` in the capture phase and stops
+    /* Keyboard per Buckholt's Menu guidance: Tab and Shift+Tab move between
+       items natively (the identity header has nothing focusable, so it is
+       never reached). Escape closes; Bootstrap 5.1.3 then leaves focus on
+       the hidden item, so the shell returns it to the avatar. Bootstrap's
+       handler is delegated from `document` in the capture phase and stops
        propagation, so this listens on `window`, which captures first. */
     window.addEventListener('keydown', function (event) {
-      if (!panel.contains(event.target) || !panel.classList.contains('show')) return;
-      var list = items();
-      var index = list.indexOf(document.activeElement);
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        if (!list.length) return;
-        var step = event.key === 'ArrowDown' ? 1 : -1;
-        list[(index + step + list.length) % list.length].focus();
-      } else if (event.key === 'Escape') {
-        state.returnFocusToToggle = true;
-      }
+      if (event.key !== 'Escape' || !panel.contains(event.target) || !panel.classList.contains('show')) return;
+      state.returnFocusToToggle = true;
     }, true);
 
-    /* Tab out closes the menu (Bootstrap only does this on keyup). */
+    /* Tab past the last item closes the menu (Bootstrap only does this on
+       keyup). Shift+Tab back to the avatar keeps it open. */
     account.addEventListener('focusout', function (event) {
       if (!panel.classList.contains('show')) return;
       if (event.relatedTarget && !account.contains(event.relatedTarget)) dropdown.hide();
@@ -601,21 +597,13 @@
     });
   }
 
-  /* ------------------------------------------------------------ links */
+  /* ------------------------------------------------------------ links
+     Navigation needs nothing from the shell: every CH link is an ordinary
+     link and every page change is a full load, which is the behaviour the
+     spec asks for. Only inert links are handled. */
   function wireLinks() {
     document.addEventListener('click', function (event) {
-      var inert = event.target.closest('[data-ch-inert]');
-      if (inert) {
-        event.preventDefault();
-        return;
-      }
-      var nav = event.target.closest('[data-ch-nav]');
-      if (nav && !event.defaultPrevented && event.button === 0 &&
-          !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
-        /* Focus moves to the next page's level 1 heading (SH-03, "Focus on
-           navigation"). */
-        setFlash({ focusHeading: true });
-      }
+      if (event.target.closest('[data-ch-inert]')) event.preventDefault();
     });
   }
 
@@ -666,10 +654,7 @@
     });
 
     var flash = takeFlash();
-    if (flash) {
-      if (flash.focusHeading) focusHeading();
-      if (flash.announce) announce(flash.announce);
-    }
+    if (flash && flash.announce) announce(flash.announce);
     return true;
   }
 

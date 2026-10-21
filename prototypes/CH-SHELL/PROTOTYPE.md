@@ -3,8 +3,9 @@
 > **Not Buckholt.** Application work built *with* Buckholt. Nothing here is
 > design-system guidance; see [`../README.md`](../README.md).
 
-Built from [`ch-shell-spec.md`](ch-shell-spec.md) (revision 3, 19 Oct 2026)
-and the four frames in [`screenshots/`](screenshots/). Built 20 Oct 2026.
+Built from [`ch-shell-spec.md`](ch-shell-spec.md) **revision 5** (20 Oct 2026)
+and the four frames in [`screenshots/`](screenshots/). First built 20 Oct 2026
+against revision 3; updated to revisions 4 and 5 the same day.
 
 ## Open it
 
@@ -14,31 +15,44 @@ and the four frames in [`screenshots/`](screenshots/). Built 20 Oct 2026.
 | App placeholder | SH-03-01 | `app.html?app=<registry id>` — reached from any Open button |
 
 Seed variants have no visible UI. Add `?seed=` to any CH page:
-`northgate` (default), `long-names`, `all-apps`, `test-only`, `staged-rollout`.
-The choice is kept for the rest of the browser tab; `?seed=northgate` goes back.
+`northgate` (default), `long-names`, `all-apps`, `test-only`,
+`staged-rollout`, `live-only`. The choice is kept for the rest of the browser
+tab; `?seed=northgate` goes back.
 
 ## What was built
 
 - **SH-00 · Home.** Header, breadcrumb band ("Applications", current page), a
   visually hidden level 1 heading, and one Card per visible app in registry
-  order. Three cards in the default seed, six with `all-apps`.
+  order, in production CH's grid: fixed 284px cards, 32px apart, wrapping,
+  every row centred. Three cards in the default seed (one centred row at
+  1440px), six with `all-apps`: 5+1 at 1920px, 4+2 at 1440px, 3+3 from 1280px
+  to 992px, two per row at 768px, one per row at 576px and below.
 - **SH-00-02 · Test.** The Test alert under the header, `[Test] ` in the
   document title, the Test card set.
 - **SH-00-03 · One environment.** A read-only Tag in place of the
-  environment control. A Live-only organisation gets a "Live" Tag and no
-  alert; that case is not seeded but the shell handles it.
+  environment control: "Test" with the alert (`test-only`), or "Live" with no
+  alert (`live-only`).
 - **SH-01 · Switch environment.** On the home page: in place, focus stays on
-  the option, polite announcement. Inside an app: a fresh load of the app's
-  base page (so feature state resets), focus on the level 1 heading,
+  the option, polite announcement. Inside an app: a full load of the app's
+  base page (so feature state resets and focus starts at the top), with the
   announcement on arrival. App not available in the new environment: the home
   page, with the "{App} isn't available in {Env}." announcement. The
   unsaved-changes Modal when the page reports unsaved changes.
 - **SH-02 · Avatar menu.** Identity header (avatar, name, email), one divider,
   Logout. No Release notes, no second divider, no unread indicator.
 - **SH-03 · Open and breadcrumbs.** Open goes to the app's feature prototype
-  if the registry has one, otherwise to SH-03-01. Focus moves to the new
-  page's level 1 heading after Open, a breadcrumb link, the lockup or "Back to
-  applications".
+  if the registry has one, otherwise to SH-03-01.
+- **Focus on navigation.** Every navigation — Open, a breadcrumb link, the
+  lockup, "Back to applications", an environment switch inside an app — is a
+  full page load. The shell moves no focus: focus starts at the top of the
+  document, the next Tab reaches the skip link, and the screen reader
+  announces the new document title. No page in the shell changes without a
+  full load, so there is no page-load behaviour to reproduce. (The home page's
+  environment switch updates the page in place but is not a page change;
+  focus stays on the option, as SH-01 step 6 says.)
+- **Direct link to a hidden app** opens the home page with no message
+  (`location.replace`, so Back does not return to the dead URL). An unknown
+  app id does the same.
 - **Skip link** on every page; **sticky header**.
 
 ### Logout
@@ -46,7 +60,7 @@ The choice is kept for the rest of the browser tab; `?seed=northgate` goes back.
 Label **"Logout"**, icon **`fa-regular fa-arrow-right-from-bracket`**, both
 taken from Buckholt's Logout common action
 (`patterns/common-actions/rules.md`, and `foundations/iconography/catalogue.md`
-row "Logout"). Figma also shows "Logout", with a different icon.
+row "Logout").
 
 ### Inert areas
 
@@ -66,7 +80,7 @@ prototypes/CH-SHELL/
 ├── shell/
 │   ├── ch-registry.js        app registry + seed data (data only)
 │   ├── ch-shell.js           CHShell: renders and runs the chrome
-│   └── ch-shell.css          the gap work, and nothing else
+│   └── ch-shell.css          the gap work and the card grid, nothing else
 └── assets/                   lockup + six card illustrations, as supplied
 ```
 
@@ -123,18 +137,52 @@ its own landmarks, so the structure is still readable in the source.
 
 Then, in `shell/ch-registry.js`, set the app's `basePage` (relative to
 `prototypes/CH-SHELL/`) and add its id to the seed lists the feature spec
-asks for. That is the only edit a feature makes to the shell.
+names. That is the only edit a feature makes to the shell, and it is what the
+spec's contract now asks every feature spec to state.
 
-Add `data-ch-nav` to any in-app link that should move focus to the next
-page's heading. Feature state must not survive an environment switch: the
-shell reloads the base page, so anything held in memory resets by itself.
+Links need nothing from the shell: use ordinary links, and let every page
+change be a full load. A feature that changes views without a load (a
+single-page flow) must reproduce page-load behaviour itself — focus to the top
+of the document and the new title announced. Feature state must not survive
+an environment switch: the shell reloads the base page, so anything held in
+memory resets by itself.
 
 ## Page structure
 
 Header and Main only — Buckholt `layout-03` with no sidebar or footer, flush
 surface. Main holds the context band first (Test alert, breadcrumb band), then
-Page body → Frame → Pane → Panel. The cards are a Bootstrap `.row` with
-`row-cols-*` inside the Panel.
+Page body → Frame → Pane → Panel. The cards sit in the Panel in the
+production grid (Gap 9, and "Home page padding" below).
+
+## Home page padding (revision 5)
+
+The spec fixes cards per row at seven viewports and asks for whatever page
+padding produces them. Cards are 284px with a 32px gap, so *n* cards need
+*n* × 284 + (*n* − 1) × 32px: 284, 600, 916, 1232, 1548, 1864. With *P* the
+space either side of the grid:
+
+| Viewport | Cards per row | Condition | Bound on *P* |
+|---|---|---|---|
+| 1920 | 5 | 1920 − 2*P* < 1864 | *P* > 28 |
+| 1440 | 4 | 1440 − 2*P* ≥ 1232 | *P* ≤ 104 |
+| 1280 | 3 | 1280 − 2*P* < 1232 | *P* > 24 |
+| 1088 | 3 | 1088 − 2*P* ≥ 916 | *P* ≤ 86 |
+| 992 | 3 | 992 − 2*P* ≥ 916 | *P* ≤ 38 |
+| 768 | 2 | 768 − 2*P* ≥ 600 | *P* ≤ 84 |
+| 576 and below | 1 | 576 − 2*P* < 600 | any |
+
+So 28 < *P* ≤ 38. A classic 17px Windows scrollbar narrows the page by 17px,
+which tightens 992 to *P* ≤ 29.5. **Built: *P* = 29px**, which gives every
+capacity with and without a scrollbar. It is the Frame's horizontal padding
+set to 13px (`.ch-home-frame`, `--page-frame-padding-x: 0.8125rem`) plus the
+container's own 16px gutter, so the Page body → Frame → Pane → Panel
+structure stays. Below 576px the Frame padding drops to 0 (*P* = 16px), so a
+284px card still fits a 320px screen; one per row holds either way.
+
+Vertical spacing is unchanged — Buckholt's Frame (64px above the cards) and a
+32px row gap matching the horizontal gap. The spec gives production's
+horizontal values only. Only the home page uses `.ch-home-frame`; the
+placeholder page keeps Buckholt's Frame.
 
 ## Buckholt components used
 
@@ -143,125 +191,175 @@ Page body → Frame → Pane → Panel. The cards are a Bootstrap `.row` with
 | Page layout | Every page | `layout-03`, Page body / Frame / Pane / Panel |
 | Response button | Environment control | Native radios, `.btn-check` + `.btn.btn-response`; drawn as a compact pill (Gap 2) |
 | Tag | Single-environment indicator | Base `.tag > .tag-label` |
-| Alert | Test alert | `.alert-info` with its documented icon; full width (Gap 3) |
+| Alert | Test alert | `.alert-info` with its documented icon; full width, no role, paragraph message (Gap 3) |
 | Link | Mobius link, "Back to applications" | `.link-standalone`, with `.icon` for Mobius |
 | Avatar | Avatar button, identity header | `.avatar.avatar-sm > .avatar-initials` |
-| Menu button / Menu | Avatar menu | `.menu`, `.menu-toggle`, `.menu-panel.dropdown-menu`, `.menu-body`, `.menu-divider`, `.menu-item` with icon |
-| Breadcrumb | Breadcrumb band | Documented markup, divider set with the documented `--breadcrumb-divider-icon` override |
+| Menu button / Menu | Avatar menu | `.menu`, `.menu-toggle`, `.menu-panel.dropdown-menu`, `.menu-body`, `.menu-divider`, `.menu-item` with icon; Buckholt's own panel padding, radius and width |
+| Breadcrumb | Breadcrumb band | Documented markup and Buckholt's default divider |
 | Tooltip | Avatar, truncated organisation name and crumbs | Code & specs example 3 options |
 | Card | App cards | `.card`, direct-child `img.card-img`, `.card-body > .text-block` |
-| Button | Open | `.btn.btn-primary > .button-label` |
+| Button | Open | `.btn.btn-primary > .button-label`, on a link |
 | Modal | Unsaved-changes confirmation | Code & specs example 1 |
-| Typography | Throughout | `title-03`, `title-01`, `body-01`, `headline-02` |
+| Typography | Throughout | `title-03` (card titles, as Card documents), `title-01`, `body-01`, `headline-02` |
 | Common actions | Logout, External link | Labels and icons as documented |
 
 ## Buckholt gaps — all eight still gaps, all built here
 
 Each was checked against the repository on 20 Oct 2026: `components/`,
-`foundations/`, `patterns/` and the 40 saved Code & specs pages. None is now
+`foundations/`, `patterns/` and the 40 saved Code & specs pages. None is
 documented, so none was dropped. All are in `shell/ch-shell.css` /
 `shell/ch-shell.js`; none is in `components/`.
 
 | # | Gap | Built as |
 |---|---|---|
-| 1 | CH top bar | `.ch-bar`: flex row, 84px, 20px inset, 32px gaps; lockup link; reserved slot; `.ch-bar-end` with organisation, environment, Mobius, avatar. Sticky, z-index 1030. Avatar trigger is a bare button around a Buckholt Avatar, padded 16px either side as Figma's Profile frame is. |
+| 1 | CH top bar | `.ch-bar`: flex row, 84px, 20px inset, 32px gaps; lockup link; reserved slot; `.ch-bar-end` with organisation, environment, Mobius, avatar. Sticky, z-index 1030. Avatar trigger is a bare button around a Buckholt Avatar, with a 16px hit area either side (Figma's Profile frame). |
 | 2 | Two-option environment switch | Response button radios in a `role="radiogroup"` named "Environment", in a 1px pill; 34px options; unselected options' border transparent so the selected one is marked by its outline. |
-| 3 | Global environment alert | Buckholt info Alert, square corners, inset to line up with the band, rendered into `#ch-context` above the breadcrumb on every page while Test is current. No `role="alert"`. |
-| 4 | Menu identity header | `.ch-identity` inside `.menu-panel`, *before* `ul.menu-body` — outside the `role="menu"` list, so it is not an item and arrow keys never reach it. |
-| 5 | Breadcrumb truncation | `max-width: 32ch` with ellipsis on each crumb; when a crumb is actually cut, its full text goes in a Tooltip, and a cut current-page crumb gets a tab stop so the Tooltip is reachable by keyboard. |
-| 6 | App card illustrations | Supplied SVGs as the Card's `img.card-img`, `alt=""`, full card width at the asset's 250:160 proportions. |
+| 3 | Global environment alert | Buckholt info Alert, square corners, inset to line up with the band, rendered into `#ch-context` above the breadcrumb on every page while Test is current. No `role`; the message is a `<p>`, not the canonical `h6`, with the reboot's 4px `p` margin removed so the alert stays the documented 48px. |
+| 4 | Menu identity header | `.ch-identity` inside `.menu-panel`, *before* `ul.menu-body`, so it is not an item and has nothing focusable; Tab never stops on it. |
+| 5 | Truncating one long crumb label | `max-width: 32ch` with ellipsis on each crumb; when a crumb is actually cut, its full text goes in a Tooltip — on hover and focus for a linked crumb, hover only for the current-page crumb, which is never focusable. |
+| 6 | App card illustrations | Supplied SVGs as the Card's `img.card-img`, `alt=""`, full card width at the asset's 250:160 proportions, never cropped (282 × 180px inside a 284px card). |
 | 7 | Skip link | First element in `<body>`; Bootstrap's `.visually-hidden-focusable` from `buckholt.css`; focuses `<main>`. |
 | 8 | App-level header navigation slot | `#ch-app-nav`, empty, `display: none` while empty. |
+| 9 | Wrapping grid of fixed-width cards (revision 5) | `.ch-app-grid`: a wrapping flex row, `justify-content: center`, 32px gap; each card `flex: 0 0 17.75rem` (284px). Every card is the height of the tallest card on the page: flex only equalises within a row, so the home script measures the tallest card (with the height cleared) and sets `--ch-card-height`, again on resize, font load, image load and environment change. Page padding as above. |
+
+Gaps 1–8 were checked against the repository for revision 3. Gap 9 is new in
+revision 5: Buckholt documents no wrapping fixed-width grid (its Page layout
+uses Bootstrap's column grid), so it is built here, not in `components/`.
+
+## Avatar menu semantics
+
+Revision 4 makes the menu keyboard follow Buckholt's Menu guidance — Tab and
+Shift+Tab between items — and asks for semantics that match.
+
+**Choice: a disclosure, not an ARIA menu.** The avatar button keeps
+`aria-expanded` and gains `aria-controls="ch-account-panel"`; the panel is a
+plain list of native buttons. `role="menu"`, `role="menuitem"` and
+`role="none"` are not used, and nothing sets `aria-haspopup`.
+
+Why: `role="menu"` tells assistive technology to expect the ARIA menu pattern
+— one tab stop, arrow keys between items, typeahead, Tab leaving the menu.
+Pairing it with Tab-between-items would announce one model and behave as
+another. A disclosure (a button that shows and hides a region of ordinary
+buttons) is exactly the Tab model, needs no extra key handling, and every
+screen reader handles it. The revision 3 build used `role="menu"` with arrow
+keys; both are gone.
+
+What this means for the markup: Buckholt's documented `.menu-body` carries
+`role="menu"`. The prototype leaves it off, as an application decision; the
+canonical example is untouched. Keyboard as built:
+
+| Key | Effect |
+|---|---|
+| Enter / Space on the avatar | Opens; focus moves to Logout |
+| Tab / Shift+Tab | Move between the avatar and the items; Shift+Tab back to the avatar keeps the menu open |
+| Tab past the last item | Closes; focus continues into the page |
+| Escape | Closes; focus returns to the avatar (Bootstrap 5.1.3 leaves it on the hidden item, so the shell moves it) |
+| Logout | Closes; focus returns to the avatar |
+| Click outside | Closes |
+
+## Figma values replaced by Buckholt
+
+Revision 4: "Figma decides arrangement; Buckholt decides sizes, spacing,
+colours, icons, typography and component styling." Revision 5 adds one
+exception: the home card grid follows production CH (Gap 9). Each
+difference, once:
+
+| Element | Figma | Built (Buckholt) |
+|---|---|---|
+| Avatar | 44px, mint `#75f4de`, text `#2249b1` | `avatar-sm` 40px, default expressive colours |
+| Menu panel | 16px padding and radius, 247px wide | Buckholt Menu: 16px padding and radius, 160–288px wide (same padding and radius; width from content) |
+| Menu icons | Logout "Actions/ogi-logout" glyph | `fa-regular fa-arrow-right-from-bracket` |
+| Mobius link | "Launch" icon, body-text colour | `fa-regular fa-arrow-up-right-from-square`, link colour |
+| Environment control | "Select button group" (`#f1f5ff` fill, `#2249b1` outline when selected) | Response button checked state (`rgba(15,64,197,.1)`, `#3f66d1`) |
+| Breadcrumb divider | Chevron icon | Buckholt's default divider |
+| Card padding | 16px | 32px |
+| Card title | ~20px | `title-03`, 24px — Card's documented title |
+| Card illustration | Inset by the card padding | Full card width (Gap 6, "full card width") |
+| Card width and grid | 282px cards, six in one row, left edge 34px | Production, not Buckholt: fixed 284px, 32px gap, centred rows, capacities per the spec (Gap 9) |
+| Content spacing | Cards 32px below the band | Buckholt Frame: 64px below the band; horizontal padding set for the capacities (above) |
+| Header bar | `#dadada` border + a 0.5px / 1.5px drop shadow | `--ui-border-02` + `--shadow-xs` |
+| Breadcrumb band | Drawn inside the Header frame | Its own band inside Main, same position and size |
 
 ## Deviations and judgement calls
 
-1. **Open is a link styled as a Button**, `<a class="btn btn-primary">`.
-   Buckholt says Button for actions, Link for navigation; Open navigates. The
-   visual is the documented Primary Button.
-2. **The Test alert has no `role="alert"`**, although Alert's canonical markup
-   carries one. The spec says the alert must not be announced on page load and
-   that the switch has its own polite announcement; a live alert inserted on
-   every switch would announce twice, assertively. Gap 3 owns this.
-3. **The alert's message stays an `h6`**, as Alert's Code & specs has it. It
-   puts a heading before the page's `h1` in the outline; recorded in
-   SPEC-CHANGES C.
-4. **Menu items carry `role="menuitem"` and their `li` carry `role="none"`.**
-   Buckholt's Menu markup puts buttons straight into `role="menu"`, which is
-   invalid ARIA. Application addition; the canonical example is untouched.
-5. **Menu keyboard support is the shell's own.** Bootstrap 5.1.3 only moves
-   between `.dropdown-item`s, and Buckholt's `menu.js` is not in the
-   repository. The shell adds: focus to Logout on open, arrow keys between
-   items, focus back to the avatar after Escape or Logout, close on Tab out.
-   It listens on `window` in the capture phase because Bootstrap's handler is
-   delegated from `document` in the capture phase and stops propagation.
-6. **Arrow keys, not Tab, move between menu items**, as the spec says.
-   Buckholt's Menu guidance says Tab / Shift+Tab; with one item it makes no
-   difference, and Tab closes the menu.
-7. **The Tooltip sits on the `.menu` wrapper, not on the avatar button**,
+1. **Open is a link styled as a Primary Button**, as revision 4 specifies.
+2. **The Test alert has no role and its message is a paragraph**, as
+   revision 4 specifies; both depart from Alert's canonical markup.
+3. **Avatar menu semantics are a disclosure** — see above.
+4. **Escape focus return and Tab-out close are the shell's own.**
+   Bootstrap 5.1.3 leaves focus on the hidden item after Escape and closes on
+   Tab only on keyup. The Escape listener is on `window` in the capture phase
+   because Bootstrap's handler is delegated from `document` in the capture
+   phase and stops propagation.
+5. **The Tooltip sits on the `.menu` wrapper, not on the avatar button**,
    because the button already has `data-bs-toggle="dropdown"`. This is the
    split Buckholt's own Breadcrumb overflow example uses.
-8. **Truncation tooltips are created from script, without
+6. **Truncation tooltips are created from script, without
    `data-bs-toggle="tooltip"`**, and placed below. Buckholt restyles
    `a[data-bs-toggle=tooltip]` (inherited colour, dotted underline), which
    would change a truncated breadcrumb link's appearance.
-9. **The organisation name gets a tab stop only while it is truncated**, so
-   its Tooltip is reachable "on hover and focus" as the spec requires. The
-   spec's focus order does not list it; SPEC-CHANGES A.
-10. **The environment control has no visible label.** Response button's
-    canonical wrapper has a visible `.input-label`; the header has no room for
-    one and Figma has none, so the group is named with `aria-label`.
-11. **Response button sizing needed `min-height` set directly**:
-    `.btn-response` sets a literal `min-height: 2.75rem` rather than using
-    `--button-height`.
-12. **`.link-standalone` is re-centred** in the bar: it sets
-    `align-self: flex-start`.
-13. **The context band is inside `<main>`**, ahead of Page body. The spec
+7. **The environment control has no visible label.** Response button's
+   canonical wrapper has a visible `.input-label`; the header has no room for
+   one and Figma has none, so the group is named with `aria-label`.
+8. **Response button sizing needed `min-height` set directly**:
+   `.btn-response` sets a literal `min-height: 2.75rem` rather than using
+   `--button-height`.
+9. **`.link-standalone` is re-centred** in the bar: it sets
+   `align-self: flex-start`.
+10. **The context band is inside `<main>`**, ahead of Page body. The spec
     wants the breadcrumb outside the page content and the skip link to land in
     Main; inside Main but outside Page body satisfies both, keeps the banner
     landmark to the top bar, and keeps the focus order skip → header →
-    breadcrumb → content. Figma groups the band with the header.
-14. **Only the top bar is sticky**, not the alert or the breadcrumb band. The
-    spec makes the header sticky; the environment control in the bar stays
-    visible, and a sticky alert plus band would take 100px+ of every screen.
-15. **Spacing is Buckholt's, not Figma's.** Frame padding puts the cards 64px
-    below the band and 64px from the edge; Figma has 32px and 34px. Card
-    padding is Buckholt's 32px (Figma 16px) and card titles are `title-03`
-    (24px, from Card's Code & specs; Figma ~20px). At 1440px with six cards,
-    titles wrap to two lines.
-16. **`.container-fluid`, not `.container`**, inside the Frame, so the cards
-    start at the left edge at every width as in Figma rather than centring in
-    a 1320px column.
-17. **Card widths are equal per row, set by `row-cols-*`**: 1 / 2 (sm) / 3
-    (md) / 4 (lg) / 6 (xl) per row. "Fixed width" in the spec is read as
-    "equal width within the layout", because a literally fixed width cannot
-    also give six in a row at 1440 and Figma's 282px at 1920.
-18. **The card image is not cropped.** Buckholt's `.card-img` is a fixed
-    10rem box with `object-fit: cover` (correction 6), which cuts the sides
-    off the illustrations at 190px wide; Gap 6 sizes it by aspect ratio.
-19. **Avatar is `avatar-sm` (40px) in Buckholt's default colours.** Figma
-    has 44px, mint. Buckholt Avatar documents 48 / 40 / 32 and an expressive
-    palette; nothing documented matches Figma exactly, so the closest size and
-    the default colour are used.
-20. **Mobius link uses Buckholt's External link icon and link colour.** Figma
-    uses a "Launch" icon and body-text colour.
-21. **Breadcrumb landmark label is "Breadcrumb"** (spec) where Buckholt's
+    breadcrumb → content.
+11. **Only the top bar is sticky**, not the alert or the breadcrumb band. The
+    environment control in the bar stays visible, and a sticky alert plus band
+    would take 100px+ of every screen.
+12. **Card titles are back to Card's documented `title-03`** (revision 5:
+    card internals follow Buckholt Card). The revision 4 build had dropped
+    them to `title-02` to fit six per row at 1920; the fixed 284px card no
+    longer needs it. No title wraps: the room for a title is 218px (284 −
+    64px padding − 2px border) and the longest, "Third-Party Services", is
+    212px in Proxima Soft and 217px in the Arial fallback.
+13. **The card grid is a wrapping flex row, not Bootstrap's `.row` /
+    `.col`** (Gap 9). Bootstrap columns stretch with the viewport and cannot
+    centre a part-filled final row; production's cards are fixed and every row
+    is centred.
+14. **`.container-fluid`, not `.container`**, inside the Frame, so the grid's
+    width is the page less the padding above at every viewport, rather than
+    Bootstrap's stepped container widths, which would change the capacities.
+15. **The card image is not cropped.** Buckholt's `.card-img` is a fixed
+    10rem box with `object-fit: cover` (correction 6); Gap 6 sizes it by
+    aspect ratio instead.
+16. **The avatar keeps a 16px hit area either side** (Figma's Profile
+    frame). It is arrangement, not styling, and it is also what makes the Long
+    names organisation truncate at 1088px in Proxima Soft; without it the name
+    fits with 7px to spare and AC 8 fails.
+17. **Breadcrumb landmark label is "Breadcrumb"** (spec) where Buckholt's
     markup has "breadcrumb". Case only.
-22. **Modal heading is an `h2`** (Code & specs has `h3`), because it is the
+18. **Modal heading is an `h2`** (Code & specs has `h3`), because it is the
     dialog's top-level heading; `aria-labelledby` added.
-23. **Seed choice persists for the tab**, like the environment, so a variant
+19. **Seed choice persists for the tab**, like the environment, so a variant
     survives navigation into feature prototypes.
-24. **Environment and seed live in `sessionStorage`.** A new tab starts from
-    the seed rule (Live if it exists), as the spec asks. A page restored from
-    the back/forward cache with a stale environment reloads.
-25. **A direct URL to an app that is not visible in the current environment
-    goes to the home page**, silently. The spec defines this only for an
-    environment switch.
+20. **Environment and seed live in `sessionStorage`.** A new tab starts from
+    the seed rule (Live if it exists). A page restored from the back/forward
+    cache with a stale environment reloads.
+21. **Announcements after a page change** are carried across the load in
+    `sessionStorage` and written to a polite live region 100ms after the new
+    page starts, so they follow the browser's own title announcement rather
+    than racing it.
+22. **Every card is as tall as the tallest card on the page, set by
+    script.** CSS can make cards equal within a row (flex) or across rows (a
+    grid with `1fr` rows) but not both while also centring a part-filled final
+    row, which production requires. The script clears the height, measures,
+    and sets it again whenever the content or width can change.
 
 ## Tests
 
-`test/ch-shell.js` — **190 assertions**, every acceptance criterion in the
-spec (blocks `AC 1` to `AC 14`, in the spec's order), the accessibility
-requirements, the feature contract and Gap 5. It passes against the offline
+`test/ch-shell.js` — **301 assertions**, every acceptance criterion in
+revision 5 (blocks `AC 1` to `AC 17`, in the spec's order; AC 7 checks cards
+per row, fixed width, centring, gap, equal height and uncropped illustrations
+at 1920, 1440, 1280, 1088, 992, 768, 576 and 375px), the accessibility
+requirements, the feature contract and Gap 5. Passes against the offline
 mirror and against the real build with Proxima Soft and the Pro kit. See
 [`../../test/README.md`](../../test/README.md).
 
@@ -272,9 +370,16 @@ mirror and against the real build with Proxima Soft and the Pro kit. See
   `.assetsignore` blocks every `*.svg`, so this prototype's lockup and
   illustrations would not load there. If CH is ever deployed to Cloudflare,
   `prototypes/CH-SHELL/assets/` needs allowing.
-- **Text widths.** AC 8 (long names truncate at 1088px) depends on the
-  font. It holds in Proxima Soft only because the avatar keeps Figma's 16px
-  padding; with no padding the name fits with 7px to spare.
+- **Text widths.** AC 9 (Long names truncation) depends on the font; it
+  passes in the mirror's Arial and in Proxima Soft, with 25px to spare in
+  Proxima Soft. Card titles fit the fixed card with 6px to spare in Proxima
+  Soft and 1px in Arial.
+- **Scrollbars.** The capacities are derived for both overlay scrollbars
+  (the test browser) and a classic 17px Windows scrollbar; the second was
+  checked by arithmetic, not in a browser.
+- **Phone widths.** The card grid works down to 320px, but the header does
+  not (it is 499px wide at 375px); the spec does not design layouts below
+  1088px.
 - **Not built:** Release Notes, the "app failed to load" modal, loading
   feedback, sign-in, the Open GI staff view and tenant dropdown, and any
   app-level header navigation content — all out of scope in the spec.
