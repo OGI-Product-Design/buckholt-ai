@@ -696,7 +696,7 @@ banner) and nothing moves.
 - **The default** (Laurence, 12 October 2026): the prototype opens in the Mobius look; the
   Buckholt look is the alternative. Since 20 October 2026 every fresh visit opens in Mobius,
   whatever was chosen before.
-- **Switching:** a floating Switch at the bottom right, "Current Mobius look" (a review aid,
+- **Switching:** a floating Switch at the bottom centre (moved from the right, Laurence, 21 October 2026, so it is clear of the side panels), "Current Mobius look" (a review aid,
   not part of either design), or `?skin=mobius` / `?skin=buckholt` in the address. The browser
   does not remember the choice: flipping the Switch writes `?skin=buckholt` into the address
   (or removes it for Mobius), so a refresh keeps the look but a fresh visit is Mobius. Choices

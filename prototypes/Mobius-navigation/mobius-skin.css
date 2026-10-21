@@ -296,10 +296,13 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
    Not part of either design: a review control, bottom right, to switch
    between the Buckholt look and the Mobius one. */
 .mob-skin-toggle {
+  /* Bottom centre (Laurence, 21 October 2026), clear of the side panels,
+     which open from the right. */
   position: fixed;
-  right: 1rem;
+  left: 50%;
   bottom: 1rem;
-  z-index: 1060;
+  transform: translateX(-50%);
+  z-index: 1040;                                       /* under side panels, Modals and their backdrops: an open one covers it */
   display: flex;
   align-items: center;
   margin: 0;
@@ -312,7 +315,5 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
 .mob-skin-toggle .form-check-label { white-space: nowrap; }
 /* The page can scroll clear of it, so it never hides a page's last Button. */
 body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
-/* Toasts stack above the toggle rather than under it. */
-body:has(.mob-skin-toggle) .app-toasts { bottom: 4rem; }
-@media (max-width: 575.98px) { .mob-skin-toggle { right: 0.5rem; bottom: 0.5rem; padding: 0.25rem 0.625rem; } }
+@media (max-width: 575.98px) { .mob-skin-toggle { bottom: 0.5rem; padding: 0.25rem 0.625rem; } }
 @media print { .mob-skin-toggle { display: none; } }
