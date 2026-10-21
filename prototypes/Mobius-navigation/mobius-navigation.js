@@ -507,8 +507,6 @@
     renderSystems(R);
     /* No client menu at app level, so no Menu button for it either. */
     $('mob-menu-open').parentNode.hidden = R.scope === 'app';
-    /* Not while creating one. */
-    $('mob-create-client').hidden = R.scope === 'app' && R.page === 'newclient';
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
@@ -602,8 +600,8 @@
   }
 
   /* The body: recent searches until a search is run, then its results
-     (the Search results page's own content). No Create new client here
-     (Laurence, 7 October 2026): it is in the Dashboard's heading. */
+     (the Search results page's own content), which offer Create new
+     client (Laurence, 21 October 2026). */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
     if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
@@ -665,11 +663,6 @@
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
   modalInput.addEventListener('input', function () {
     if (!modalInput.value && S.modalQuery) { S.modalQuery = null; renderSearchBody(); }
-  });
-  /* Buckholt's clear button (form.js empties the field): back to recent
-     searches, focus in the field. */
-  modalForm.querySelector('.input-clear').addEventListener('click', function () {
-    setTimeout(function () { S.modalQuery = null; renderSearchBody(); modalInput.focus(); }, 0);
   });
   /* Recent searches: Down arrow from the field moves into them. */
   searchModalEl.addEventListener('keydown', function (e) {

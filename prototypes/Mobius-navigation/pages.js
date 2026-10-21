@@ -525,8 +525,8 @@
      results (not in a Card), then one Accordion item per client found
      (Accordion Code & specs). Opening a client shows their details, their
      5 most recent policies in a Table (each policy number the link to the
-     policy; "Show 2 more" loads the rest), and View client at the bottom
-     right. An Accordion header is a Button, so it cannot hold the link.
+     policy; "Show 2 more" loads the rest), with View client and Add new
+     quote at the top (Laurence, 21 October 2026). An Accordion header is a Button, so it cannot hold the link.
      Only the prototype's own client and policies open; the others are
      samples, and opening one says so. */
   var SAMPLE_TOAST = ' data-toast="A sample result: only James Barnard opens in this prototype"';
@@ -590,17 +590,28 @@
       pick(select('ss', 'Policy status', ['Select', 'Policy', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
         btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
-    var head = function (text) { return '<div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>'; };
+    var head = function (text, action) {
+      return '<div class="mob-search-head"><div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>' + (action || '') + '</div>';
+    };
+    /* Create new client is only offered once a search has been run
+       (Laurence, 21 October 2026, from broker feedback): brokers search
+       first, so fewer duplicate clients are made. */
+    var create = function (variant) { return btn('Create new client', { variant: variant, icon: ICON.newClient, href: '#newclient' }); };
     /* No results: the filters only show when they are what emptied the
-       list, so they can be cleared. */
+       list, so they can be cleared. With no filters, Create new client is
+       the next step, so it is the primary. */
     if (!found.length) {
       var filtered = !!(fl.brand || fl.lob || fl.status);
       return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + (filtered ? filters : '') +
-        empty(filtered ? 'No client matches these filters. Clear them, or search again.' : 'Check the name, reference or email and search again.') + '</div>';
+        (filtered ? empty('No client matches these filters. Clear them, or search again.')
+          : '<div class="mob-search-none">' + empty('Check the name, reference or email and search again. If this is a new client, create them.') +
+              set([create('primary')]) + '</div>') + '</div>';
     }
     var n = found.length;
+    /* With results it is still offered, as current Mobius does, but as a
+       secondary: the client is likely in the list. */
     return '<div class="mob-search-results">' +
-      head(n + ' client' + (n > 1 ? 's' : '') + ' found for “' + esc(q) + '”') +
+      head(n + ' client' + (n > 1 ? 's' : '') + ' found for “' + esc(q) + '”', set([create('secondary')])) +
       filters +
       '<div class="accordion" id="mob-search-acc">' +
         found.map(function (x) {
@@ -614,13 +625,20 @@
             '</h4>' +
             '<div id="' + id + '" class="accordion-collapse collapse' + (on ? ' show' : '') + '" data-search-key="c:' + x.id + '">' +
               '<div class="accordion-body">' +
-                fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
+                /* The client's actions at the top, before their details and
+                   policies (Laurence, 21 October 2026, from broker feedback):
+                   View client and Add new quote, both links styled as
+                   Buttons as they open pages. View client is secondary, not
+                   primary: several clients can be open at once, and a screen
+                   has one primary. */
+                '<div class="mob-sr-top">' +
+                  set([
+                    btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
+                    btn('Add new quote', { icon: M.ICON.add, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
+                  ], 'mob-sr-actions') +
+                  fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
+                '</div>' +
                 searchPolicies(x) +
-                /* View client: a secondary Button (it opens a page, so a link
-                   styled as one) at the bottom right, where Button places a
-                   contained layout's action. Not primary: several clients can
-                   be open at once, and a screen has one primary. */
-                set([btn('View client', { variant: 'secondary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST })], 'button-set-end') +
               '</div>' +
             '</div>' +
           '</div>';
