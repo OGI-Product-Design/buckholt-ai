@@ -6,7 +6,7 @@
 
    Every visit opens in the Mobius look (Laurence, 20 October 2026), unless
    the address says `?skin=buckholt`. The browser does not remember the
-   choice. A floating Switch, bottom right, flips the look and writes it
+   choice. A floating Switch, bottom centre, flips the look and writes it
    into the address, so a refresh keeps it but a fresh visit is Mobius. */
 (function () {
   'use strict';
