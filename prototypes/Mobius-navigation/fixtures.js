@@ -145,7 +145,13 @@
       /* Extra support in place (Client support's Switch). Off as standard
          (Laurence, 8 October 2026); switch it on in the panel and Client
          support shows its check. */
-      supportOn: false
+      supportOn: false,
+      /* Shown in the support needs Modal (Laurence, 21 October 2026). The
+         three named needs and the "+3 more" are from Mark's design; the
+         other three are not named in it, so "+3 more" opens Client support
+         rather than listing them. */
+      supportNeeds: ['Health', 'Hearing impairment', 'Addiction'],
+      supportMore: 3
     },
 
     policies: POLICIES,

@@ -267,8 +267,14 @@
        the Avatar shows; the name stays for assistive technology. */
     $('mob-rail-head').innerHTML = app ? '' :
       '<div class="user-meta mob-rail-client">' +
-        '<div class="avatar avatar-sm" aria-hidden="true"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
-        '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
+        /* Extra support in place (Mark, 21 October 2026): the Avatar takes
+           the teal (expressive quaternary) and carries the support icon. */
+        '<span class="mob-avatar-wrap" aria-hidden="true">' +
+          '<div class="avatar avatar-sm' + (c.supportOn ? ' expressive-quaternary' : '') + '"><div class="avatar-initials">' + esc(c.initials) + '</div></div>' +
+          (c.supportOn ? '<span class="mob-avatar-badge"><i class="' + M.ICON.supportOn + '"></i></span>' : '') +
+        '</span>' +
+        '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) +
+          (c.supportOn ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
       '</div>' +
       /* Mark's menu (19 October 2026): the head spans the menu, the client
          at the top of both columns, the collapse button at its right. */
@@ -510,9 +516,92 @@
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
+    renderActionbar(R);
     Shell.initTooltips($('sidebar'));
+    /* Into a client record from outside it (the Dashboard, the search, or
+       on first load): the support needs Modal, once a visit. */
+    var entering = R.scope !== 'app' && (!lastScope || lastScope === 'app');
+    lastScope = R.scope;
+    if (entering) maybeSupportModal();
     return true;
   }
+  var lastScope = null;
+
+  /* ====================================================== Actions toolbar
+     Mark's column of icon-only Buttons beside the menu (pages.js writes
+     it). Each has its name as aria-label and a Tooltip on the right. */
+  var actionbar = $('mob-actionbar');
+  function actionTips(on) {
+    Array.prototype.forEach.call(actionbar.querySelectorAll('[data-mob-tip]'), function (el) {
+      var tip = bootstrap.Tooltip.getInstance(el);
+      if (!on) { if (tip) tip.dispose(); return; }
+      if (!tip) new bootstrap.Tooltip(el, { title: el.getAttribute('data-mob-tip'), placement: 'right', trigger: 'hover focus', offset: [0, 8], delay: { show: 300, hide: 100 } });
+    });
+  }
+  function renderActionbar(r) {
+    actionTips(false);
+    var html = P.toolbar(r);
+    actionbar.innerHTML = html;
+    actionbar.hidden = !html;
+    actionTips(true);
+    /* The toolbar scrolls on a short window, so More's menu is positioned
+       fixed, or the toolbar would clip it. */
+    var more = $('mob-tool-more');
+    if (more) bootstrap.Dropdown.getOrCreateInstance(more, { offset: [0, 8], popperConfig: { strategy: 'fixed' } });
+  }
+  /* More's Tooltip gives way to its menu. */
+  actionbar.addEventListener('show.bs.dropdown', function (e) {
+    var tip = bootstrap.Tooltip.getInstance(e.target.closest('[data-mob-tip]'));
+    if (tip) { tip.hide(); tip.disable(); }
+  });
+  actionbar.addEventListener('hidden.bs.dropdown', function (e) {
+    var tip = bootstrap.Tooltip.getInstance(e.target.closest('[data-mob-tip]'));
+    if (tip) tip.enable();
+  });
+  /* A pointer press leaves no Tooltip showing on the Button pressed. */
+  actionbar.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-mob-tip]');
+    var tip = b && bootstrap.Tooltip.getInstance(b);
+    if (tip) tip.hide();
+  });
+
+  /* ================================================= Support needs Modal
+     Mark's design (Laurence, 21 October 2026): when a client has extra
+     support in place, the first time a broker opens their record in a
+     visit, a Modal says so, lists the needs, and offers Client support. */
+  var supportEl = $('mob-support-modal');
+  var supportModal = new bootstrap.Modal(supportEl);
+  var supportSeen = false, supportToPanel = false;
+  function maybeSupportModal() {
+    if (supportSeen || !F.client.supportOn) return;
+    supportSeen = true;
+    var c = F.client;
+    $('mob-support-needs').innerHTML = (c.supportNeeds || []).map(function (x) {
+      return '<li><span class="tag"><span class="tag-label">' + esc(x) + '</span></span></li>';
+    }).join('') +
+      (c.supportMore ? '<li><button type="button" class="tag mob-tag-more" data-support-more aria-label="' + c.supportMore + ' more support needs, open Client support">' +
+        '<span class="icon"><i class="fa-regular fa-plus" aria-hidden="true"></i></span><span class="tag-label">' + c.supportMore + ' more</span></button></li>' : '');
+    /* Opened from the search, wait for its Modal to close first. */
+    var search = $('mob-search-modal');
+    if (search.classList.contains('show') || document.querySelector('.modal-backdrop')) {
+      search.addEventListener('hidden.bs.modal', function once() { search.removeEventListener('hidden.bs.modal', once); supportModal.show(); });
+    } else supportModal.show();
+  }
+  function supportTrigger() {
+    var all = document.querySelectorAll('[data-panel="support"]');
+    for (var i = 0; i < all.length; i++) if (all[i].offsetParent) return all[i];
+    return null;
+  }
+  $('mob-support-open').addEventListener('click', function () { supportToPanel = true; supportModal.hide(); });
+  supportEl.addEventListener('click', function (e) {
+    if (e.target.closest('[data-support-more]')) { supportToPanel = true; supportModal.hide(); }
+  });
+  supportEl.addEventListener('shown.bs.modal', function () { $('mob-support-open').focus(); });
+  supportEl.addEventListener('hidden.bs.modal', function () {
+    if (supportToPanel) { supportToPanel = false; var tr = supportTrigger(); openPanel('support', null, tr); return; }
+    var title = $('mob-title');
+    if (title) title.focus({ preventScroll: true });
+  });
 
   /* ============================================================ Systems
      The system menu at the top right: an icon-only Menu button whose panel

@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261021-02">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261021-03">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261021-02">
-<script src="mobius-skin.js?v=20261021-02"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261021-03">
+<script src="mobius-skin.js?v=20261021-03"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -148,6 +148,15 @@
   </aside>
 
   <!-- ======================================================================
+       ACTIONS — Mark's toolbar (Laurence, 21 October 2026): the client's
+       and the record's actions as icon-only Buttons with Tooltips, in a
+       column beside the menu, so the page can stay as current Mobius.
+       Written by mobius-navigation.js. Wide screens only; below 1024px the
+       labelled actions stay in the page heading.
+       ====================================================================== -->
+  <aside id="mob-actionbar" class="mob-actionbar" aria-label="Actions" hidden></aside>
+
+  <!-- ======================================================================
        MAIN — Page body → Frame → Pane → Panels, per patterns/page-layout.
        Breadcrumbs at the top of the first Panel say where the page is.
        ====================================================================== -->
@@ -191,6 +200,36 @@
         <div class="button-set">
           <button type="button" class="btn btn-ghost" id="mob-confirm-cancel" data-bs-dismiss="modal"><span class="button-label">Cancel</span></button>
           <button type="button" class="btn btn-primary" id="mob-confirm-ok"><span class="button-label">Confirm</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     Support needs — Mark's design (Laurence, 21 October 2026): a Buckholt
+     Modal shown the first time a broker opens a client record in a visit
+     when the client has extra support in place. The icon in an expressive
+     (teal) tile, the title, the needs as Tags, then Close and Open client
+     support (the primary). The needs are written by mobius-navigation.js.
+     ========================================================================== -->
+<div class="modal fade" id="mob-support-modal" tabindex="-1" aria-labelledby="mob-support-title" aria-describedby="mob-support-text">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="mob-support-tile expressive-quaternary" aria-hidden="true"><i class="fa-solid fa-hand-holding-heart"></i></div>
+        <div class="text-block">
+          <h2 class="headline-02" id="mob-support-title">This client has support needs</h2>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p id="mob-support-text">This client has support needs that may affect how they communicate or arrange insurance. Review their support details before continuing, and check with them how you can best help. These include:</p>
+        <ul class="mob-support-needs" id="mob-support-needs" aria-label="Support needs"></ul>
+      </div>
+      <div class="modal-footer">
+        <div class="button-set button-set-end">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal"><span class="button-label">Close</span></button>
+          <button type="button" class="btn btn-primary" id="mob-support-open"><span class="button-label">Open client support</span></button>
         </div>
       </div>
     </div>
@@ -269,9 +308,9 @@
 <script src="../../components/form/form.js"></script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261021-02"></script>
-<script src="navigation-model.js?v=20261021-02"></script>
-<script src="pages.js?v=20261021-02"></script>
-<script src="mobius-navigation.js?v=20261021-02"></script>
+<script src="fixtures.js?v=20261021-03"></script>
+<script src="navigation-model.js?v=20261021-03"></script>
+<script src="pages.js?v=20261021-03"></script>
+<script src="mobius-navigation.js?v=20261021-03"></script>
 </body>
 </html>
