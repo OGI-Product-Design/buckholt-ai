@@ -350,8 +350,16 @@ sets. A rail link carries two lines and a Tag inside the link, which Page naviga
 specs does not show. The prototype draws the current page in black; Buckholt's
 `.active` (light blue) is used instead.
 
+**Groups open and close** (Laurence, 22 October 2026). Each group's label (Client, Policies,
+Policy, Transactions, Correspondence, More details) is a Button with a chevron at its end and
+`aria-expanded` / `aria-controls` on its list. Every group starts open; a click or Enter closes
+it (the chevron turns to point right) and its pages, and Show more for Policies, are hidden. A
+closed group stays closed for the visit, from page to page, unless you go to a page inside it,
+which opens it again so the current page is always in view. The client's groups and a policy's
+are remembered apart. In the collapsed strip there are no groups to close.
+
 > **Gap to raise with Buckholt:** a documented vertical / side navigation, including grouped
-> sections and a dark rail like the documentation site's.
+> sections that open and close, and a dark rail like the documentation site's.
 
 ### 2. Mark's actions toolbar (21 October 2026)
 
@@ -754,7 +762,7 @@ Awesome), and Typekit was absent.
   - the open rail: the client centred (Avatar, name, reference), no client pages in the rail, policies with Icon
     blocks, "Show 2 more"; the next page collapsing it again
   - the policy menu collapsing to a strip, and a group icon opening it at that group
-  - groups always open with no accordion, and a count on Documents
+  - groups open as standard, each label a Button that closes it, and a count on Documents
   - no quick links in the Policy overview heading
   - Pause and Cancel behind the "More actions" Overflow menu, the confirmation from it, and
     focus returning to that trigger
@@ -765,7 +773,7 @@ Awesome), and Typekit was absent.
   - panel pressed state, focus trap, Escape and focus return
   - the confirmation's danger variant, initial focus, trap, Escape, focus return and toast
   - switching policy from the rail, with focus on the heading
-  - the current page visible in its always-open group
+  - the current page visible in its group (a closed group opens when you go to a page in it)
   - Account summary card actions
   - the wording toggle
   - flow steps

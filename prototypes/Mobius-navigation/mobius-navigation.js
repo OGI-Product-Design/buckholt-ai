@@ -58,7 +58,7 @@
      19 October 2026); it stays so from page to page. sideView: on a
      policy page, which one menu shows beside the strip, 'client' or
      'policy' (null: the policy's); never both (Mark). */
-  var S = { polShown: { side: 5, table: 5 }, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
+  var S = { groupClosed: {}, openCurrent: false, polShown: { side: 5, table: 5 }, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
   P.init(S);
 
   var R = null;
@@ -153,9 +153,10 @@
     /* A group like the client's above it (Laurence, 8 October 2026): the
        Shield and "Policies" as its label, then the policies indented under
        a rule, then Show more. */
-    return '<ul class="nav flex-column mob-nav"><li class="nav-item mob-group">' +
-      '<span class="mob-group-label" id="mob-rail-policies">' + icon(M.ICON.policies) + 'Policies</span>' +
-      '<ul class="nav flex-column mob-subnav mob-rail-policies" aria-labelledby="mob-rail-policies">' + ui.shownPolicies('side').map(function (p) {
+    if (S.openCurrent && curId) delete S.groupClosed['c:Policies'];
+    return '<ul class="nav flex-column mob-nav"><li class="' + groupClass('c:Policies') + '">' +
+      groupLabel('c:Policies', 'mob-rail-policies', 'mob-rail-policies-list', M.ICON.policies, 'Policies') +
+      '<ul class="nav flex-column mob-subnav mob-rail-policies" id="mob-rail-policies-list" aria-labelledby="mob-rail-policies">' + ui.shownPolicies('side').map(function (p) {
         var on = p.id === curId;
         return '<li class="nav-item">' +
           '<a class="nav-link' + (on ? ' active' : '') + '" href="' + ui.policyHref(p) + '"' + (on ? ' aria-current="true"' : '') + '>' +
@@ -186,7 +187,20 @@
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
-  /* A navigation group, always open (Laurence, 7 October 2026): its label
+  /* A group's label is a Button that opens and closes it (Laurence, 22
+     October 2026): every group starts open; one closed stays closed for
+     the visit, unless you go to a page in it, which opens it again. */
+  function groupLabel(key, id, listId, iconCls, text) {
+    var open = !S.groupClosed[key];
+    return '<button type="button" class="mob-group-label mob-group-toggle" id="' + id + '" data-group="' + esc(key) + '"' +
+      ' aria-expanded="' + open + '" aria-controls="' + listId + '">' +
+      icon(iconCls) + '<span class="mob-group-name">' + t(text) + '</span>' +
+      icon('fa-regular fa-chevron-down', 'mob-group-chevron') +
+    '</button>';
+  }
+  function groupClass(key) { return 'nav-item mob-group' + (S.groupClosed[key] ? ' mob-group-closed' : ''); }
+
+  /* A navigation group, open as standard (Laurence, 7 October 2026): its label
      with the group's icon (not a link: a group is not a page), then its
      pages, indented past the icon with a rule down the left. */
   function navGroups(items, cur, r) {
@@ -195,9 +209,13 @@
     return '<ul class="nav flex-column mob-nav">' + items.map(function (n) {
       if (!n.children) return navLink(n.id, n.label, n.icon, cur, href(r, n.id));
       var gid = 'mob-group-' + n.group.toLowerCase().replace(/\W+/g, '-');
-      return '<li class="nav-item mob-group">' +
-        '<span class="mob-group-label" id="' + gid + '">' + icon(n.icon) + t(n.group) + '</span>' +
-        '<ul class="nav flex-column mob-subnav" aria-labelledby="' + gid + '">' +
+      /* Keyed by level and name: the client's Transactions and a policy's
+         are separate groups. */
+      var key = (r.scope === 'policy' && n.group !== 'Client' ? 'p:' : 'c:') + n.group;
+      if (S.openCurrent && n.children.some(function (c) { return c.id === cur; })) delete S.groupClosed[key];
+      return '<li class="' + groupClass(key) + '">' +
+        groupLabel(key, gid, gid + '-list', n.icon, n.group) +
+        '<ul class="nav flex-column mob-subnav" id="' + gid + '-list" aria-labelledby="' + gid + '">' +
           n.children.map(function (c) { return navLink(c.id, c.label, null, cur, href(r, c.id)); }).join('') +
         '</ul>' +
       '</li>';
@@ -841,8 +859,11 @@
     if (searchModalEl.classList.contains('show')) { S.searchTrigger = null; searchModal.hide(); }
     S.step = 0;
     S.sideView = null;                                /* a new page shows its own menu */
+    S.openCurrent = true;                             /* a closed group holding the new page opens */
     closeDrawer(false);
-    if (!render()) return;
+    var drawn = render();
+    S.openCurrent = false;
+    if (!drawn) return;
     window.scrollTo(0, 0);
     /* A route change moves focus to the new page's heading, so it is
        announced. Not on first load. */
@@ -1085,6 +1106,19 @@
 
     /* Links that act in place (role="button") never change the route. */
     if (el.closest('a[role="button"]')) e.preventDefault();
+
+    /* A group's label: open or close it in place. */
+    var grp = el.closest('[data-group]');
+    if (grp) {
+      var gkey = grp.getAttribute('data-group');
+      var shut = grp.getAttribute('aria-expanded') === 'true';
+      if (shut) S.groupClosed[gkey] = true; else delete S.groupClosed[gkey];
+      grp.setAttribute('aria-expanded', String(!shut));
+      grp.closest('.mob-group').classList.toggle('mob-group-closed', shut);
+      var gl = grp.closest('.mob-group').querySelector('.mob-rail-policies');
+      if (gl) scrollCues(gl);
+      return;
+    }
 
     var more = el.closest('[data-more]');
     if (more) {
