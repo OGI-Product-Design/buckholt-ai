@@ -1414,8 +1414,14 @@
      by a divider: the client's tools (Client support, the note), the
      record's actions, then More with Pause and Cancel. Below 1024px the
      menu is a drawer and the labelled heading row is used instead. */
+  /* Font Awesome icons in the toolbar are fixed width (fa-fw, next to the
+     style class; Laurence, 22 October 2026): Buckholt's Buttons let icons
+     take their natural widths, so a wider one (Hand-heart) sat further
+     left than the rest and jumped as the toolbar expanded. */
+  function fw(iconCls) { return iconCls.replace(/^(fa-(regular|solid|light|thin|duotone))\b/, '$1 fa-fw'); }
   function tool(label, iconCls, o) {
     o = o || {};
+    iconCls = fw(iconCls);
     var inner = '<div class="btn-icon"><i class="' + iconCls + '" aria-hidden="true"></i></div>' +
       '<span class="mob-tool-label" aria-hidden="true">' + t(label) + '</span>' + (o.after || '');
     var cls = 'btn btn-ghost mob-tool' + (o.cls ? ' ' + o.cls : '');
@@ -1468,23 +1474,21 @@
     groups.push(toolGroup('Change the policy', everyday.filter(function (k) { return CHANGE.indexOf(k) >= 0; }).map(toolFor)));
     groups.push(toolGroup('Policy actions', everyday.filter(function (k) { return CHANGE.indexOf(k) < 0; }).map(toolFor)));
     if (risky.length) {
-      /* More: Buckholt's Overflow menu (Menu button Code & specs example 3),
-         opening to the right; Pause, a divider, then Cancel, the danger
-         item. */
-      groups.push('<div class="menu dropend mob-overflow mob-tool-more">' +
-        '<button type="button" class="btn btn-ghost mob-tool menu-toggle" id="mob-tool-more" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
-          '<div class="btn-icon"><i class="' + ICON.more + '" aria-hidden="true"></i></div>' +
+      /* More opens in place, like the menu's groups (Laurence, 22 October
+         2026; it was a flyout menu): a disclosure Button, then Pause and
+         Cancel (red) under it, open for the visit once opened. */
+      var open = !!S.toolMoreOpen;
+      groups.push('<div class="mob-tool-group mob-tool-more' + (open ? ' mob-open' : '') + '" role="group" aria-label="More actions">' +
+        '<button type="button" class="btn btn-ghost mob-tool" id="mob-tool-more" data-tool-more aria-expanded="' + open + '" aria-controls="mob-tool-more-list" aria-label="More actions">' +
+          '<div class="btn-icon"><i class="' + fw(ICON.more) + '" aria-hidden="true"></i></div>' +
           '<span class="mob-tool-label" aria-hidden="true">More</span>' +
+          '<i class="fa-regular fa-chevron-down mob-tool-chevron" aria-hidden="true"></i>' +
         '</button>' +
-        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-tool-more">' +
-          '<ul class="menu-body" role="menu">' +
-            risky.map(function (k, i) {
-              var a = A[k];
-              return (i ? '<li role="none"><hr class="menu-divider"></li>' : '') +
-                '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
-                  '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) + '</button></li>';
-            }).join('') +
-          '</ul>' +
+        '<div class="mob-tool-more-list" id="mob-tool-more-list"' + (open ? '' : ' hidden') + '>' +
+          risky.map(function (k) {
+            var a = A[k];
+            return tool(a.label, a.icon, { cls: a.danger ? 'mob-tool-danger' : '', attrs: ' data-action="' + k + '" data-scope="policy" aria-haspopup="dialog"' });
+          }).join('') +
         '</div>' +
       '</div>');
     }

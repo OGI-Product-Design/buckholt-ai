@@ -556,34 +556,60 @@
      it). Each has its name as aria-label. Hovered for 0.4s it expands
      over the page to show each icon's label (Laurence, 22 October 2026),
      and closes when the pointer leaves; from the keyboard it expands as
-     soon as focus enters it. It stays open while More's menu is. */
+     soon as focus enters it. */
   var actionbar = $('mob-actionbar');
   var expandTimer = null, actionHover = false;
+  /* The open width: the widest Button's icon, label and badge, plus the
+     toolbar's own padding and border. */
+  function openWidth() {
+    var w = 0;
+    Array.prototype.forEach.call(actionbar.querySelectorAll('.mob-tool'), function (b) {
+      var l = b.querySelector('.mob-tool-label');
+      if (!l) return;
+      var badge = b.querySelector('.badge-floating');
+      var end = l.offsetLeft + l.offsetWidth + (badge ? badge.offsetWidth + 8 : 0) + 12;
+      w = Math.max(w, end);
+    });
+    var cs = getComputedStyle(actionbar);
+    return Math.ceil(w + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth));
+  }
   function setExpanded(on) {
     clearTimeout(expandTimer);
+    if (on) actionbar.style.setProperty('--mob-actionbar-open', openWidth() + 'px');
     actionbar.classList.toggle('mob-expanded', on);
   }
-  function moreOpen() { return !!actionbar.querySelector('.dropdown-menu.show'); }
   function maybeCollapse() {
-    if (!actionHover && !actionbar.contains(document.activeElement) && !moreOpen()) setExpanded(false);
+    if (!actionHover && !actionbar.contains(document.activeElement)) setExpanded(false);
   }
-  actionbar.addEventListener('mouseenter', function () {
+  /* Only hovering an icon opens it (Laurence, 22 October 2026), after a
+     beat (0.12s) so a pointer passing across does not flash it open. */
+  actionbar.addEventListener('mouseover', function (e) {
     actionHover = true;
-    clearTimeout(expandTimer);
-    expandTimer = setTimeout(function () { setExpanded(true); }, 400);
+    if (actionbar.classList.contains('mob-expanded')) return;
+    if (e.target.closest('.mob-tool')) {
+      if (!expandTimer) expandTimer = setTimeout(function () { expandTimer = null; setExpanded(true); }, 120);
+    } else { clearTimeout(expandTimer); expandTimer = null; }
   });
   actionbar.addEventListener('mouseleave', function () {
     actionHover = false;
-    clearTimeout(expandTimer);
-    if (!moreOpen()) setExpanded(false);
+    clearTimeout(expandTimer); expandTimer = null;
+    setExpanded(false);
   });
   actionbar.addEventListener('focusin', function (e) {
     if (e.target.matches(':focus-visible')) setExpanded(true);
   });
   actionbar.addEventListener('focusout', function () { setTimeout(maybeCollapse, 0); });
-  /* More expands it first, so its menu opens beside the labels. */
-  actionbar.addEventListener('show.bs.dropdown', function () { setExpanded(true); });
-  actionbar.addEventListener('hidden.bs.dropdown', function () { setTimeout(maybeCollapse, 0); });
+  /* More opens and closes in place, like a menu group. */
+  actionbar.addEventListener('click', function (e) {
+    var m = e.target.closest('[data-tool-more]');
+    if (!m) return;
+    S.toolMoreOpen = m.getAttribute('aria-expanded') !== 'true';
+    m.setAttribute('aria-expanded', String(S.toolMoreOpen));
+    m.parentNode.classList.toggle('mob-open', S.toolMoreOpen);
+    $('mob-tool-more-list').hidden = !S.toolMoreOpen;
+    if (actionbar.classList.contains('mob-expanded')) actionbar.style.setProperty('--mob-actionbar-open', openWidth() + 'px');
+    if (S.toolMoreOpen) $('mob-tool-more-list').lastElementChild.scrollIntoView({ block: 'nearest' });
+  });
   /* Opening a panel or a confirmation from it: the toolbar folds away. */
   actionbar.addEventListener('click', function (e) {
     if (e.target.closest('[data-action], [data-panel], a.mob-tool')) { actionHover = false; setExpanded(false); }
@@ -593,11 +619,7 @@
     var html = P.toolbar(r);
     actionbar.innerHTML = html;
     actionbar.hidden = !html;
-    if (!html) setExpanded(false); else actionbar.classList.toggle('mob-expanded', was && actionHover);
-    /* The toolbar scrolls on a short window, so More's menu is positioned
-       fixed, or the toolbar would clip it. */
-    var more = $('mob-tool-more');
-    if (more) bootstrap.Dropdown.getOrCreateInstance(more, { offset: [0, 8], popperConfig: { strategy: 'fixed' } });
+    if (!html) setExpanded(false); else setExpanded(was && actionHover);
   }
 
   /* ================================================= Support needs Modal
