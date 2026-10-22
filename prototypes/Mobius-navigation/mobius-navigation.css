@@ -305,7 +305,10 @@
     margin: var(--spacer-03);
     top: calc(var(--app-header-height) + var(--spacer-03));
     height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
-    background-color: var(--ui-background-03);
+    /* UI overlay 02 (Laurence, 22 October 2026), laid over the page's own
+       background so it stays solid where the toolbar expands over the page. */
+    background-color: var(--ui-background-02);
+    background-image: linear-gradient(var(--ui-overlay-02), var(--ui-overlay-02));
     border: 1px solid var(--ui-border-02);
     border-radius: var(--border-radius-xl);           /* 24px, as Mark draws it */
     overflow: hidden;
@@ -929,7 +932,7 @@ mark.mob-term {
 .mob-actionbar { display: none; }
 @media (min-width: 1024px) {
   .layout[data-layout=layout-03] {
-    grid-template-columns: auto auto 1fr;
+    grid-template-columns: auto calc(3.5rem + var(--spacer-03)) 1fr;   /* the toolbar's track stays 56px + its gap, so expanding it overlays the page */
     grid-template-areas: "header header header" "sidebar actions main" "footer footer footer";
   }
   .mob-actionbar {
@@ -944,7 +947,10 @@ mark.mob-term {
     height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
     margin: var(--spacer-03) var(--spacer-03) var(--spacer-03) 0;
     padding: var(--spacer-04) 0;
-    background-color: var(--ui-background-03);
+    /* UI overlay 02 (Laurence, 22 October 2026), laid over the page's own
+       background so it stays solid where the toolbar expands over the page. */
+    background-color: var(--ui-background-02);
+    background-image: linear-gradient(var(--ui-overlay-02), var(--ui-overlay-02));
     border: 1px solid var(--ui-border-02);
     border-radius: var(--border-radius-lg);           /* 16px (Laurence, 21 October 2026) */
     overflow-y: auto;                                  /* a short window: it scrolls rather than spill */
@@ -956,6 +962,28 @@ mark.mob-term {
   .mob-heading-actions { display: none; }
 }
 .mob-tool-group { display: flex; flex-direction: column; align-items: center; gap: var(--spacer-02); }
+/* Labels, shown when the toolbar expands (Laurence, 22 October 2026): on
+   hover after 0.4s, or as soon as keyboard focus enters it. It widens over
+   the page (its grid track stays 56px), each Button a row of icon and
+   label. */
+.mob-tool-label { display: none; white-space: nowrap; }
+@media (min-width: 1024px) {
+  .mob-actionbar.mob-expanded {
+    width: max-content;
+    min-width: 3.5rem;
+    align-items: stretch;
+    padding-inline: calc(var(--spacer-03) - 1px);   /* less the panel's 1px border, so the icons do not move */
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(26, 26, 26, 0.16));
+    z-index: 1031;                                   /* over the page, under side panels and Modals */
+  }
+  .mob-actionbar.mob-expanded .mob-tool-group { align-items: stretch; }
+  .mob-actionbar.mob-expanded .mob-tool { justify-content: flex-start; gap: var(--spacer-03); width: 100%; padding-inline: calc(0.75rem - 1px); }   /* icons stay where they were: 12px into the Button, less its 1px border */
+  .mob-actionbar.mob-expanded .mob-tool-label { display: inline; animation: mob-label-in 0.15s ease; }
+  .mob-actionbar.mob-expanded .mob-tool-divider { width: auto; align-self: stretch; }
+  .mob-actionbar.mob-expanded .mob-tool .badge-floating { position: static; transform: none; margin-left: auto; }
+}
+@keyframes mob-label-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .mob-actionbar.mob-expanded .mob-tool-label { animation: none; } }
 .mob-tool {
   position: relative;
   /* Mark's icons are the text colour, not the action blue. */
