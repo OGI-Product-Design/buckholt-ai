@@ -355,7 +355,8 @@ Policy, Transactions, Correspondence, More details) is a Button with a chevron a
 `aria-expanded` / `aria-controls` on its list. Every group starts open; a click or Enter closes
 it (the chevron turns to point right) and its pages, and Show more for Policies, are hidden. A
 closed group stays closed for the visit, from page to page, unless you go to a page inside it,
-which opens it again so the current page is always in view. The client's groups and a policy's
+which opens it again so the current page is always in view. The label has 4px under it, and in a policy's menu it is
+inset on the left to match the gap on its right, so its hover is balanced (22 October 2026). The client's groups and a policy's
 are remembered apart. In the collapsed strip there are no groups to close.
 
 > **Gap to raise with Buckholt:** a documented vertical / side navigation, including grouped
