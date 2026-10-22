@@ -1409,15 +1409,17 @@
      Mark's design (Laurence, 21 October 2026): on wide screens the actions
      leave the page heading for a column of icon-only Buttons beside the
      menu, so the page itself can stay as current Mobius. Each Button has
-     its name as aria-label and in a Tooltip to its right. Groups are split
+     its name as aria-label and a label beside its icon, shown when the
+     toolbar expands on hover (Laurence, 22 October 2026). Groups are split
      by a divider: the client's tools (Client support, the note), the
      record's actions, then More with Pause and Cancel. Below 1024px the
      menu is a drawer and the labelled heading row is used instead. */
   function tool(label, iconCls, o) {
     o = o || {};
-    var inner = '<div class="btn-icon"><i class="' + iconCls + '" aria-hidden="true"></i></div>' + (o.after || '');
+    var inner = '<div class="btn-icon"><i class="' + iconCls + '" aria-hidden="true"></i></div>' +
+      '<span class="mob-tool-label" aria-hidden="true">' + t(label) + '</span>' + (o.after || '');
     var cls = 'btn btn-ghost mob-tool' + (o.cls ? ' ' + o.cls : '');
-    var a = ' aria-label="' + esc(plain(o.name || label)) + '" data-mob-tip="' + esc(plain(label)) + '"' + (o.attrs || '');
+    var a = ' aria-label="' + esc(plain(o.name || label)) + '"' + (o.attrs || '');
     return o.href ? '<a class="' + cls + '" href="' + o.href + '"' + a + '>' + inner + '</a>'
       : '<button type="button" class="' + cls + '"' + a + '>' + inner + '</button>';
   }
@@ -1469,11 +1471,10 @@
       /* More: Buckholt's Overflow menu (Menu button Code & specs example 3),
          opening to the right; Pause, a divider, then Cancel, the danger
          item. */
-      /* Bootstrap allows one component per element, so More's Tooltip is
-         on its wrapper (it shows on the Button's focus too). */
-      groups.push('<div class="menu dropend mob-overflow mob-tool-more" data-mob-tip="More actions">' +
+      groups.push('<div class="menu dropend mob-overflow mob-tool-more">' +
         '<button type="button" class="btn btn-ghost mob-tool menu-toggle" id="mob-tool-more" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">' +
           '<div class="btn-icon"><i class="' + ICON.more + '" aria-hidden="true"></i></div>' +
+          '<span class="mob-tool-label" aria-hidden="true">More</span>' +
         '</button>' +
         '<div class="menu-panel dropdown-menu" aria-labelledby="mob-tool-more">' +
           '<ul class="menu-body" role="menu">' +

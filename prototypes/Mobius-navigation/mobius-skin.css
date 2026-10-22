@@ -156,6 +156,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
      is the navy flyout as a rounded card inside it. */
   html[data-skin="mobius"] #sidebar.mob-sidebar {
     background-color: var(--mobius-blue);
+    background-image: none;
     border: 0;
     border-radius: 1.5rem;
   }
@@ -174,12 +175,14 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
 @media (min-width: 1024px) {
   html[data-skin="mobius"] .mob-actionbar {
     background-color: var(--mobius-blue);
+    background-image: none;
     border: 0;
     border-radius: 1rem;                              /* 16px (Laurence, 21 October 2026) */
     --ui-border-02: rgba(255, 255, 255, 0.22);
     --focus-01: #ffffff;
   }
 }
+@media (min-width: 1024px) { html[data-skin="mobius"] .mob-actionbar.mob-expanded { padding-inline: var(--spacer-03); } }   /* no border on the blue */
 html[data-skin="mobius"] .mob-actionbar .mob-tool {
   --button-radius: 0.5rem;
   --button-label: #ffffff;

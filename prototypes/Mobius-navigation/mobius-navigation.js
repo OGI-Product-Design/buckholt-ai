@@ -553,41 +553,52 @@
 
   /* ====================================================== Actions toolbar
      Mark's column of icon-only Buttons beside the menu (pages.js writes
-     it). Each has its name as aria-label and a Tooltip on the right. */
+     it). Each has its name as aria-label. Hovered for 0.4s it expands
+     over the page to show each icon's label (Laurence, 22 October 2026),
+     and closes when the pointer leaves; from the keyboard it expands as
+     soon as focus enters it. It stays open while More's menu is. */
   var actionbar = $('mob-actionbar');
-  function actionTips(on) {
-    Array.prototype.forEach.call(actionbar.querySelectorAll('[data-mob-tip]'), function (el) {
-      var tip = bootstrap.Tooltip.getInstance(el);
-      if (!on) { if (tip) tip.dispose(); return; }
-      if (!tip) new bootstrap.Tooltip(el, { title: el.getAttribute('data-mob-tip'), placement: 'right', trigger: 'hover focus', offset: [0, 8], delay: { show: 300, hide: 100 } });
-    });
+  var expandTimer = null, actionHover = false;
+  function setExpanded(on) {
+    clearTimeout(expandTimer);
+    actionbar.classList.toggle('mob-expanded', on);
   }
+  function moreOpen() { return !!actionbar.querySelector('.dropdown-menu.show'); }
+  function maybeCollapse() {
+    if (!actionHover && !actionbar.contains(document.activeElement) && !moreOpen()) setExpanded(false);
+  }
+  actionbar.addEventListener('mouseenter', function () {
+    actionHover = true;
+    clearTimeout(expandTimer);
+    expandTimer = setTimeout(function () { setExpanded(true); }, 400);
+  });
+  actionbar.addEventListener('mouseleave', function () {
+    actionHover = false;
+    clearTimeout(expandTimer);
+    if (!moreOpen()) setExpanded(false);
+  });
+  actionbar.addEventListener('focusin', function (e) {
+    if (e.target.matches(':focus-visible')) setExpanded(true);
+  });
+  actionbar.addEventListener('focusout', function () { setTimeout(maybeCollapse, 0); });
+  /* More expands it first, so its menu opens beside the labels. */
+  actionbar.addEventListener('show.bs.dropdown', function () { setExpanded(true); });
+  actionbar.addEventListener('hidden.bs.dropdown', function () { setTimeout(maybeCollapse, 0); });
+  /* Opening a panel or a confirmation from it: the toolbar folds away. */
+  actionbar.addEventListener('click', function (e) {
+    if (e.target.closest('[data-action], [data-panel], a.mob-tool')) { actionHover = false; setExpanded(false); }
+  });
   function renderActionbar(r) {
-    actionTips(false);
+    var was = actionbar.classList.contains('mob-expanded');
     var html = P.toolbar(r);
     actionbar.innerHTML = html;
     actionbar.hidden = !html;
-    actionTips(true);
+    if (!html) setExpanded(false); else actionbar.classList.toggle('mob-expanded', was && actionHover);
     /* The toolbar scrolls on a short window, so More's menu is positioned
        fixed, or the toolbar would clip it. */
     var more = $('mob-tool-more');
     if (more) bootstrap.Dropdown.getOrCreateInstance(more, { offset: [0, 8], popperConfig: { strategy: 'fixed' } });
   }
-  /* More's Tooltip gives way to its menu. */
-  actionbar.addEventListener('show.bs.dropdown', function (e) {
-    var tip = bootstrap.Tooltip.getInstance(e.target.closest('[data-mob-tip]'));
-    if (tip) { tip.hide(); tip.disable(); }
-  });
-  actionbar.addEventListener('hidden.bs.dropdown', function (e) {
-    var tip = bootstrap.Tooltip.getInstance(e.target.closest('[data-mob-tip]'));
-    if (tip) tip.enable();
-  });
-  /* A pointer press leaves no Tooltip showing on the Button pressed. */
-  actionbar.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-mob-tip]');
-    var tip = b && bootstrap.Tooltip.getInstance(b);
-    if (tip) tip.hide();
-  });
 
   /* ================================================= Support needs Modal
      Mark's design (Laurence, 21 October 2026): when a client has extra
