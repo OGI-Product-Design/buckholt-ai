@@ -368,9 +368,11 @@ page heading (Mark's design, Laurence, 21 October 2026). The aim: the page itsel
 current Mobius, and the changes sit in the navigation on the left. The heading keeps only the
 breadcrumbs and the title.
 
+- **Height:** none set: the toolbar is as tall as its Buttons (Laurence, 22 October 2026),
+  capped at the window so it scrolls only on a short one.
 - **Shape:** a rounded panel (16px corners, Laurence, 21 October 2026; the menu's background,
   UI overlay 02 over the page background (22 October 2026), and its border;
-  blue in the Mobius look), 56px wide, 8px to the right of the menu, the full height under the top bar. Its
+  blue in the Mobius look), 56px wide, 8px to the right of the menu, level with its top under the top bar. Its
   own grid column (`sidebar actions main`), so it stays put while the page scrolls and when the
   menu collapses. Not drawn on Broking or the other modules.
 - **Icon-only ghost Buttons** in the text colour, each with its name as `aria-label`.
@@ -394,11 +396,9 @@ breadcrumbs and the title.
      Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-shield-plus`, the
      catalogue's Shield-plus, Laurence, 21 October 2026; also in the search results and the
      narrow heading row).
-  3. **More** (`fa-ellipsis`): opens **in place**, like the menu's groups (Laurence, 22 October
-     2026; it was a flyout menu): a disclosure Button (`aria-expanded`, a chevron with the
-     labels), then **Pause policy** (`fa-circle-pause`) and **Cancel policy** (`fa-circle-xmark`,
-     red) under it as toolbar Buttons. Closed as standard; once opened it stays open for the
-     visit. Only when the status has them.
+  3. **Pause policy** (`fa-circle-pause`) and **Cancel policy** (`fa-circle-xmark`, red), a
+     group of their own after a divider, like the others (Laurence, 22 October 2026; they were
+     behind More, first a flyout menu, then opening in place). Only when the status has them.
 - **"Pause policy", not "Stop policy"** (Mark, 21 October 2026): Stop read too much like Cancel.
   The confirmation says "Pause this policy?".
 - **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary;

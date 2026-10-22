@@ -398,14 +398,15 @@
    the client's pages and the Policies label stay put; the list scrolls
    under them, with Show more below it. */
 @media (min-width: 1024px) {
-  /* Until Show more is pressed the list does not scroll: the five show in
-     full and, on a short screen, the whole menu scrolls (Mark). After it,
-     the list scrolls, keeping room for two rows. */
+  /* Only the Policies section scrolls (Laurence, 22 October 2026): the
+     client's pages and the Policies label stay put, the list scrolls under
+     them with Show more below it. Only on a very short screen, with no
+     room left for the list, does the whole menu scroll. */
   .mob-client-menu.mob-all { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .mob-client-menu.mob-all .mob-rail-pages { flex: 0 0 auto; }
   .mob-client-menu.mob-all > .mob-nav:last-child { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .mob-client-menu.mob-all > .mob-nav:last-child > .mob-group { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
-  .mob-client-menu.mob-all .mob-rail-policies { flex: 0 1 auto; min-height: 12rem; flex-wrap: nowrap; overflow-y: auto; }
+  .mob-client-menu.mob-all .mob-rail-policies { flex: 0 1 auto; min-height: 8.5rem; flex-wrap: nowrap; overflow-y: auto; }   /* room for two rows at least */
   /* The edge with more beyond it fades (scrollCues). */
   .mob-rail-policies.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); }
   .mob-rail-policies.mob-more-above { -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); }
@@ -944,7 +945,7 @@ mark.mob-term {
     flex-direction: column;
     align-items: stretch;
     width: 3.5rem;                                     /* 56px: a 40px Button with 8px either side */
-    height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);
+    max-height: calc(100vh - var(--app-header-height) - var(--spacer-03) * 2);   /* no set height: as tall as its Buttons (Laurence, 22 October 2026); it scrolls only on a short window */
     margin: var(--spacer-03) var(--spacer-03) var(--spacer-03) 0;
     padding: var(--spacer-04) 0;
     /* UI overlay 02 (Laurence, 22 October 2026), laid over the page's own
@@ -977,16 +978,16 @@ mark.mob-term {
   gap: var(--spacer-03);
   width: 2.5rem;
   padding-inline: calc(0.625rem - 1px) 0;              /* the 20px fixed-width icon centred in the 40px Button: 10px in, less its 1px border */
-  overflow: hidden;
   transition: width 0.22s cubic-bezier(0.2, 0, 0, 1);
 }
+/* The Button does not clip (its badge sits over its corner); the closed
+   label is transparent and the toolbar's own edge hides it. */
+.mob-actionbar .mob-tool.btn > * { flex-shrink: 0; }
 .mob-tool-label { white-space: nowrap; opacity: 0; transition: opacity 0.1s ease; }
-.mob-actionbar .mob-tool .badge-floating {             /* anchored from the left, so it does not move as the Button widens */
-  right: auto;
-  left: 2.75rem;
-  transform: translateX(-100%);
-  transition: left 0.22s cubic-bezier(0.2, 0, 0, 1), top 0.22s cubic-bezier(0.2, 0, 0, 1), transform 0.22s cubic-bezier(0.2, 0, 0, 1);
-}
+/* Two badges (Laurence, 22 October 2026): Mark's at the icon's corner
+   while collapsed, and one at the end of the row when open; they cross-fade. */
+.mob-actionbar .mob-tool .mob-badge-corner { right: auto; left: 2.75rem; transform: translateX(-100%); transition: opacity 0.12s ease; }
+.mob-actionbar .mob-tool .mob-badge-end { position: static; transform: none; flex: 0 0 auto; margin-left: auto; margin-right: 0.75rem; opacity: 0; transition: opacity 0.12s ease; }
 .mob-actionbar .mob-tool-divider { transition: width 0.22s cubic-bezier(0.2, 0, 0, 1); }
 @media (min-width: 1024px) {
   .mob-actionbar.mob-expanded {
@@ -998,10 +999,11 @@ mark.mob-term {
   .mob-actionbar.mob-expanded .mob-tool.btn { width: 100%; }
   .mob-actionbar.mob-expanded .mob-tool-label { opacity: 1; transition: opacity 0.18s ease 0.06s; }
   .mob-actionbar.mob-expanded .mob-tool-divider { width: 100%; }
-  .mob-actionbar.mob-expanded .mob-tool .badge-floating { left: calc(100% - 0.75rem); top: 50%; transform: translate(-100%, -50%); }
+  .mob-actionbar.mob-expanded .mob-tool .mob-badge-corner { opacity: 0; }
+  .mob-actionbar.mob-expanded .mob-tool .mob-badge-end { opacity: 1; transition: opacity 0.18s ease 0.06s; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mob-actionbar, .mob-actionbar .mob-tool.btn, .mob-tool-label, .mob-actionbar .mob-tool .badge-floating, .mob-actionbar .mob-tool-divider { transition: none !important; }
+  .mob-actionbar, .mob-actionbar .mob-tool.btn, .mob-tool-label, .mob-actionbar .mob-tool .badge, .mob-actionbar .mob-tool-divider { transition: none !important; }
 }
 .mob-tool {
   position: relative;
@@ -1011,16 +1013,6 @@ mark.mob-term {
   --button-label-focus: var(--text-primary);
 }
 .mob-tool-divider { width: 2.5rem; flex: 0 0 auto; margin: var(--spacer-04) 0; border: 0; border-top: 1px solid var(--ui-border-02); opacity: 1; }
-/* More opens in place (Laurence, 22 October 2026): its chevron, at the
-   end of its row, shows with the labels and turns as it opens; Pause and
-   Cancel follow under it. */
-.mob-tool-more { gap: var(--spacer-02); }
-.mob-tool-more-list { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacer-02); }
-.mob-tool-more-list[hidden] { display: none; }
-.mob-actionbar.mob-expanded .mob-tool-more-list { align-items: stretch; }
-.mob-tool-chevron { margin-left: auto; margin-right: 0.75rem; font-size: 0.75rem; color: var(--text-secondary); opacity: 0; transition: opacity 0.1s ease, transform 0.15s ease; }
-.mob-actionbar.mob-expanded .mob-tool-chevron { opacity: 1; }
-.mob-tool[aria-expanded="true"] .mob-tool-chevron { transform: rotate(180deg); }
 /* Cancel policy reads red, icon and label (Mark). */
 .mob-tool.mob-tool-danger {
   --button-label: #d7050c;
