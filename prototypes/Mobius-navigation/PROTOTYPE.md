@@ -90,9 +90,10 @@ and with it the module links across the top bar:
 - **The top bar on narrow screens.** Between 768 and 1280px the search field is at most 20rem,
   leaving room for the longest system name; below 430px the field shows only its icon (a tap on
   it still opens the search) and the right-hand controls sit 4px apart, so the bar fits at 360px.
-- **Create new client is not in the top bar** (Laurence, 21 October 2026, from broker
-  feedback): brokers must search before they create a client, to cut duplicates, so it is
-  offered only in the search results (see section 10).
+- **Create new client, next to the search** (Laurence, 8 October 2026; back here 22 October
+  2026): a secondary Button (an anchor, as it opens a page) with the User-plus icon and its label;
+  below 1280px the bar has no room for the label, so an icon-only version with its name and
+  Tooltip shows instead. Not shown while creating a client. See section 10.
 - **No back arrow.** The breadcrumbs say where you are and go back up.
 
 **A column for each level (Laurence, 7 October 2026).** Before this, the second column held the
@@ -227,9 +228,9 @@ Laurence asked for the best experience for system-level navigation. The decision
 | Need | Built with | Why |
 | --- | --- | --- |
 | Systems: Broking, Activity, Renewals, Bordereau, Accounts | The **system menu** beside the avatar (Laurence, 8 October 2026): a labelled ghost Menu button showing the current system ("Broking ▾") whose panel is Menu's Link variant, one link per system with its icon, the current one `aria-current="page"` (see "The top bar" above). The same at every width | The prototype's "Dashboard" is the Broking system, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026). The top bar's horizontal module links were removed to give the search the room next to the wordmark |
-| Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar (cut to three filters in view, Laurence, 8 October 2026: the diary's Search for a policy number or client, Action type and Assigned to, with Brand, Agent and Due date range in a **More filters** side panel, as Forms recommends a side panel for more than five inputs; the sanctions matches' Status, Search for a reference or client, and Business source code), a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. no Create new client: it is offered in the search results | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
+| Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar (cut to three filters in view, Laurence, 8 October 2026: the diary's Search for a policy number or client, Action type and Assigned to, with Brand, Agent and Due date range in a **More filters** side panel, as Forms recommends a side panel for more than five inputs; the sanctions matches' Status, Search for a reference or client, and Business source code), a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is in the top bar | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | What can I search? (in the search Modal) | A ghost Button with the Info icon to the right of the Modal's search field, as current Mobius has it. It opens a floating help panel: the title with a close Button, a Buckholt List per group (list heading and items), the tip, and "Learn more" as a standalone Link with the External-link icon; current Mobius wording in sentence case. Escape closes the panel first, back to its Button. **Buckholt has no Popover** (no `.popover` styles in `buckholt.css`, and no Bootstrap stylesheet is loaded), so the panel is a Menu panel (`.menu-panel.dropdown-menu`) on Bootstrap Dropdown, on UI background 04 (Laurence, 8 October 2026; Menu's own `--menu-background`), with fixed positioning so it floats over the Modal's scrolling body | Gap to raise with Buckholt: a documented Popover |
-| Search results (Laurence, 8 October 2026, after current Mobius) | In the search Modal, not a page. "{n} clients found for “{query}”", then the **filters straight above the results, not in a Card** (Brand, Line of business, Policy status, Clear and Apply; Apply keeps the clients with a policy that matches), then **one Accordion item per client** (Accordion Code & specs; the strict pass, 8 October 2026, in place of undocumented expandable Table rows), headed with the name and reference. Opening one shows the client's reference, address, postcode, email and date of birth, **their 5 most recent policies in a Table** (each policy number the link to the policy; "Show 2 more" loads the rest in place), and **View client** (the primary) and **Add new quote**, at the top; one client is open at a time (Laurence, 21 October 2026; see section 10). Apply has no icon. The field carries helper text for the prototype: "For this prototype, search for “Barnard” and open James Barnard." Seven clients come back for "Barnard" (Laurence, 8 October 2026): James Barnard, the prototype's client, and six other Barnards with a mix of Open Market Household and motor policies; the Table's Product cell leads with a house or car icon. Only James and his policies open, and the samples say so in a toast. An open client stays open when the filters change. A no-results state, **without the filters** unless the filters are what emptied the list (then they stay, so they can be cleared), with **Create new client as the primary**; with results it is a secondary by the count. An old `#search/{query}` link opens the Modal with that search over the Dashboard | Accordion, Table, Key-value pairs, Link, Tag |
+| Search results (Laurence, 8 October 2026, after current Mobius) | In the search Modal, not a page. "{n} clients found for “{query}”", then the **filters straight above the results, not in a Card** (Brand, Line of business, Policy status, Clear and Apply; Apply keeps the clients with a policy that matches), then **one Accordion item per client** (Accordion Code & specs; the strict pass, 8 October 2026, in place of undocumented expandable Table rows), headed with the name and reference. Opening one shows the client's reference, address, postcode, email and date of birth, **their 5 most recent policies in a Table** (each policy number the link to the policy; "Show 2 more" loads the rest in place), and **Add new quote** then **View client** (the primary), at the top; one client is open at a time (Laurence, 21 October 2026; see section 10). Apply has no icon. The field carries helper text for the prototype: "For this prototype, search for “Barnard” and open James Barnard." Seven clients come back for "Barnard" (Laurence, 8 October 2026): James Barnard, the prototype's client, and six other Barnards with a mix of Open Market Household and motor policies; the Table's Product cell leads with a house or car icon. Only James and his policies open, and the samples say so in a toast. An open client stays open when the filters change. A no-results state, **without the filters** unless the filters are what emptied the list (then they stay, so they can be cleared), Create new client is in the top bar, not in the results (22 October 2026). An old `#search/{query}` link opens the Modal with that search over the Dashboard | Accordion, Table, Key-value pairs, Link, Tag |
 | Search (Jon's suggestion, 7 October 2026) | The **search field in the top bar** ("Type / to search") opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) (or "/" anywhere, unless you are typing in a field); opened from the keyboard, focus returns to the field when it closes. The page you are on stays behind it. The Modal has its own field with a visible **Search** Button joined to it (Laurence, 21 October 2026, from broker feedback: Input group's action button example, `.input-group` with `.btn.btn-response`, in place of the clear button); Enter still searches; emptying the field shows recent searches again; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Running a search shows the results in the Modal; opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). "/" opens it too | The search keeps you where you are, and the results are one Escape away from the page behind |
 | Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main, **in one row with the record's actions** (left and right), above the heading: Dashboard › client › policy › page (removed for a round, reinstated by Laurence, 7 October 2026). Client and policy pages have no eyebrow over the heading: the policy column names the policy. The search is a Modal, not a place, so it is not in the trail. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so when the row cannot hold the trail and the actions, the trail's middle folds into its overflow menu (Dashboard › … › page), measured on every page and whenever Main changes width; and a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2), and below 768px only the first and last stay out of it |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
@@ -533,30 +534,23 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 The Policy group uses the catalogue's **Shield** and the Client group the **User** icon (Laurence,
 8 October 2026); the overviews are their groups' first pages.
 
-### 10. "Create new client" is in the search results
+### 10. "Create new client" is in the top bar
 
 The reference prototype listed it as an app-level menu action. It opens a page, so it is an
 anchor styled as a Button. It was the Search results heading's primary (6 October 2026), then in
 the Broking bar (7 October), then the Dashboard's heading, then a secondary Button next to the
-search in the top bar (8 October).
+search in the top bar (8 October). On 21 October it moved into the search results (offered only
+after a search); on **22 October it went back to the top bar** (Laurence): duplicates are better
+caught by **matching when a client is created** (the new client checked against existing ones,
+possible duplicates shown before saving) than by hiding the Button. That matching is not built
+in the prototype; it is an open question for engineering.
 
-Since 21 October 2026 (Laurence, from broker feedback) it is **only offered once a search has
-been run**: good practice is to search before creating a client, so fewer duplicates are made.
-
-- **No results:** "No clients found for “{query}”", the message "Check the name, reference or
-  email and search again. If this is a new client, create them.", then **Create new client as
-  the primary**, the obvious next step. Not when the filters emptied the list: then the client
-  may exist, so the filters stay to be cleared.
-- **Results:** as current Mobius, it is still there, but a **secondary** Button to the right of
-  the count ("7 clients found for …"): the client is most likely in the list.
-- **Before a search** (recent searches) it is not shown.
-
-Each client in the results has **View client** (the primary) and **Add new quote** (ghost, with
-the Plus icon) **at the top**, to the right of their details (above them when narrow), not under
+Each client in the results has **Add new quote** (ghost, with Shield-plus) then **View client**
+(the primary, at the end of the set; order swapped 22 October 2026) **at the top**, to the right of their details (above them when narrow), not under
 the policies (Laurence, 21 October 2026, from broker feedback). Both are links styled as Buttons,
 as they open pages. **Only one client is open at a time** (opening another closes it), so
 there is only ever one View client on screen and it can be the primary (Laurence, 21 October
-2026); Create new client stays secondary while there are results.
+2026).
 
 **Client support and the notes** are on **every client and policy page**, in the toolbar (wide screens) or the page heading (narrow)
 (Laurence, 8 October 2026): two labelled **ghost** Buttons (Button guidance pairs like with
@@ -582,8 +576,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Dashboard | none (Create new client is in the search results) | Apply (filters) |
-| Search with no results | Create new client | none |
+| Dashboard | none (Create new client is secondary, in the top bar) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a primary, it is the page's one
@@ -780,8 +773,8 @@ Awesome), and Typekit was absent.
   - the top bar: no Broking bar or module links; the search field next to the wordmark; the
     icon-only system menu beside the avatar; the client in User meta at the head of the rail,
     its Avatar in line with the menu icons; the client menu built as the policy's
-  - the app level: no left menu, no Client support, no Create new client until a search
-    finds nothing (then the primary), opening the flow
+  - the app level: no left menu, no Client support, Create new client in the top bar,
+    opening the flow
 - **Broking, systems, search and breadcrumbs (36 assertions)**: opens on the Dashboard; the
   system menu (Menu's Link variant, Broking current, a link goes there); the two Tabs switch; the filter actions sit at the
   right edge and the fields are content width; clicking the top bar's field opens the search

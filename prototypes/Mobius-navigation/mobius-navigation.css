@@ -46,12 +46,23 @@
    label is visually hidden; the field takes what room the bar has, up to
    24rem. */
 .mob-app-search { flex: 0 1 24rem; min-width: 0; margin-right: var(--spacer-04); }
+/* Create new client, straight after the search. */
+.mob-app-create { flex: 0 0 auto; align-self: center; margin: 0 var(--spacer-05) 0 0; }
+/* Below 1280px the bar cannot hold its label: the icon-only Button shows
+   instead of the labelled one. */
+.mob-create-icon { display: none; }
+@media (max-width: 1279.98px) {
+  .mob-create-full { display: none; }
+  .mob-create-icon { display: inline-flex; }
+}
+.mob-app-create[hidden] { display: none; }
 .mob-app-search .input-label { display: none; }
 
 .mob-app-search .input, .mob-app-search .response, .mob-app-search .form-control { min-width: 0; }
 /* Below 768px the field gives way to the system menu and the avatar. */
 @media (max-width: 767.98px) {
   .mob-app-search { flex: 1 1 0; margin-right: var(--spacer-03); }
+  .mob-app-create { margin-right: var(--spacer-03); }
 }
 
 /* Up to 1680px the bar cannot hold everything at full size: the review
@@ -92,7 +103,7 @@
   .mob-app-search .form-control::placeholder { color: transparent; }
   .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
   .app-bar-logo { margin-right: var(--spacer-03); }
-  .mob-app-search { margin-right: var(--spacer-02); }
+  .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
 }
 @media (max-width: 575.98px) {
   .mob-systems .button-label {
@@ -509,14 +520,10 @@
 /* A product with its icon, in a policies table. */
 .mob-product { display: inline-flex; align-items: center; gap: var(--spacer-03); white-space: nowrap; }
 .mob-search-results > .support-01 { margin: 0; }
-/* The count with Create new client to its right (Laurence, 21 October
-   2026); the Button wraps under the count when there is no room. */
+/* The count, in a row of its own. */
 .mob-search-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacer-04); }
 .mob-search-head .text-block { flex: 1 1 auto; min-width: 0; }
 .mob-search-head .button-set { margin: 0; flex: 0 0 auto; }
-/* No results: the message, then Create new client, the primary. */
-.mob-search-none { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacer-04); }
-.mob-search-none .button-set { margin: 0; }
 /* A client's actions at the top (Laurence, 21 October 2026): to the
    right of their details on a wide Modal, above them when narrow. First in
    the markup, so they are reached first from the keyboard. */

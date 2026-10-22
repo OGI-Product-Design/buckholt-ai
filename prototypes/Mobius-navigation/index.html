@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261021-10">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261022-01">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261021-10">
-<script src="mobius-skin.js?v=20261021-10"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261022-01">
+<script src="mobius-skin.js?v=20261022-01"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -65,9 +65,23 @@
       </div>
     </form>
 
-    <!-- Create new client is not in the top bar (Laurence, 21 October
-         2026): brokers search first, so it is offered in the search
-         results, to cut duplicate clients. -->
+    <!-- Create new client, next to the search (Laurence, 8 October 2026;
+         back here 22 October 2026, after a spell in the search results):
+         Broking-wide, so it sits in the top bar, not on one page. It opens
+         a page, so it is a link styled as a secondary Button. Below 1280px
+         the bar has no room for its label, so the icon-only Button (its
+         name in aria-label and a Tooltip) shows instead; only one is ever
+         displayed. -->
+    <div class="mob-app-create button-set" id="mob-create-client">
+      <a class="btn btn-secondary mob-create-full" href="#newclient">
+        <div class="btn-icon"><i class="fa-regular fa-user-plus" aria-hidden="true"></i></div>
+        <span class="button-label">Create new client</span>
+      </a>
+      <a class="btn btn-secondary mob-create-icon" href="#newclient" aria-label="Create new client"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create new client">
+        <div class="btn-icon"><i class="fa-regular fa-user-plus" aria-hidden="true"></i></div>
+      </a>
+    </div>
 
     <div class="app-bar-right">
       <!-- Dev / review aid: highlights wording that differs from current
@@ -308,9 +322,9 @@
 <script src="../../components/form/form.js"></script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261021-10"></script>
-<script src="navigation-model.js?v=20261021-10"></script>
-<script src="pages.js?v=20261021-10"></script>
-<script src="mobius-navigation.js?v=20261021-10"></script>
+<script src="fixtures.js?v=20261022-01"></script>
+<script src="navigation-model.js?v=20261022-01"></script>
+<script src="pages.js?v=20261022-01"></script>
+<script src="mobius-navigation.js?v=20261022-01"></script>
 </body>
 </html>

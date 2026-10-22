@@ -514,6 +514,8 @@
     renderSystems(R);
     /* No client menu at app level, so no Menu button for it either. */
     $('mob-menu-open').parentNode.hidden = R.scope === 'app';
+    /* Not while creating one. */
+    $('mob-create-client').hidden = R.scope === 'app' && R.page === 'newclient';
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
@@ -692,8 +694,8 @@
   }
 
   /* The body: recent searches until a search is run, then its results
-     (the Search results page's own content), which offer Create new
-     client (Laurence, 21 October 2026). */
+     (the Search results page's own content). Create new client is in the
+     top bar (back there 22 October 2026). */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
     if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }

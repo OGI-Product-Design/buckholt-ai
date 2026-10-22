@@ -594,25 +594,17 @@
     var head = function (text, action) {
       return '<div class="mob-search-head"><div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>' + (action || '') + '</div>';
     };
-    /* Create new client is only offered once a search has been run
-       (Laurence, 21 October 2026, from broker feedback): brokers search
-       first, so fewer duplicate clients are made. */
-    var create = function (variant) { return btn('Create new client', { variant: variant, icon: ICON.newClient, href: '#newclient' }); };
-    /* No results: the filters only show when they are what emptied the
-       list, so they can be cleared. With no filters, Create new client is
-       the next step, so it is the primary. */
+    /* Create new client is in the top bar (back there 22 October 2026),
+       not here. No results: the filters only show when they are what
+       emptied the list, so they can be cleared. */
     if (!found.length) {
       var filtered = !!(fl.brand || fl.lob || fl.status);
       return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + (filtered ? filters : '') +
-        (filtered ? empty('No client matches these filters. Clear them, or search again.')
-          : '<div class="mob-search-none">' + empty('Check the name, reference or email and search again. If this is a new client, create them.') +
-              set([create('primary')]) + '</div>') + '</div>';
+        empty(filtered ? 'No client matches these filters. Clear them, or search again.' : 'Check the name, reference or email and search again.') + '</div>';
     }
     var n = found.length;
-    /* With results it is still offered, as current Mobius does, but as a
-       secondary: the client is likely in the list. */
     return '<div class="mob-search-results">' +
-      head(n + ' client' + (n > 1 ? 's' : '') + ' found for “' + esc(q) + '”', set([create('secondary')])) +
+      head(n + ' client' + (n > 1 ? 's' : '') + ' found for “' + esc(q) + '”') +
       filters +
       '<div class="accordion" id="mob-search-acc">' +
         found.map(function (x) {
@@ -635,9 +627,11 @@
                    (Laurence, 21 October 2026): only one client is open at a
                    time, so the screen still has one primary. */
                 '<div class="mob-sr-top">' +
+                  /* Add new quote, then View client (Laurence, 22 October
+                     2026): the primary at the end of the set. */
                   set([
-                    btn('View client', { variant: 'primary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
-                    btn('Add new quote', { icon: M.ICON.newQuote, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
+                    btn('Add new quote', { icon: M.ICON.newQuote, href: x.real ? '#c/newquote' : '#', attrs: x.real ? '' : SAMPLE_TOAST }),
+                    btn('View client', { variant: 'primary', href: x.real ? '#c/summary' : '#', attrs: x.real ? '' : SAMPLE_TOAST })
                   ], 'mob-sr-actions') +
                   fields([['[[Reference]]', x.ref], ['Address', x.address], ['Postcode', x.postcode], ['Email address', x.email], ['[[Date of birth]]', x.dob]]) +
                 '</div>' +
