@@ -189,11 +189,12 @@ page, so each is a link styled as a ghost Button (and a link inside More when th
 This relaxes the 8 October rule that row Buttons never open pages. Add new quote is in the row on
 client pages only; a policy page reaches it through the client overview.
 
-**Mark's menu (19 October 2026).** Wide screens: the menu is one rounded grey panel
-(`--ui-background-03`, 16px radius, inset 8px). The client heads it, Avatar, name and reference,
+**Mark's menu (19 October 2026).** Wide screens: the menu is one rounded panel (UI overlay 02
+since 22 October; 24px radius, inset 8px). The client heads it, Avatar, name and reference,
 with the collapse button at its right, above both columns. At client level the client's menu is a
-white card (18rem) in the panel; on a policy page it is a white strip of icons (4rem) with the
-policy's menu beside it on the grey (14rem), so the panel keeps its width. The current icon in
+white card (288px, 18rem; 16px narrower since 22 October 2026, as the client's reference and the
+longest policy reference still fit; the policy menu is unchanged) in the panel; on a policy page
+it is a white strip of icons (72px) with the policy's menu beside it (232px). The current icon in
 the strip is a solid blue square. Collapsed at client level: the button, the Avatar and the strip.
 The policy's head shows a status mark at the right of the reference (in place of the small Tag),
 with the status in text for assistive technology and a Tooltip. Status marks take the status's

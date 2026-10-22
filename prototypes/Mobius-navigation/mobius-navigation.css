@@ -327,7 +327,7 @@
   .mob-sidebar .mob-rail,
   .mob-sidebar:not(.mob-has-record) .mob-rail {
     margin: 0;
-    width: 19rem;                                     /* 304px: Mark's panel is about 322px */
+    width: 18rem;                                     /* 288px (Laurence, 22 October 2026: 16px saved; the client's reference and the longest policy reference still fit) */
     overflow: hidden;
     background-color: var(--ui-background-01);
     border: 1px solid var(--ui-border-03);
@@ -340,7 +340,7 @@
   /* The policy's menu: on the panel's grey, no card of its own; with the
      strip it fills the client card's width. */
   .mob-sidebar .mob-record {
-    width: 14.5rem;                                   /* with the 4.5rem strip, the client card's 19rem */
+    width: 14.5rem;                                   /* with the 4.5rem strip, 19rem (the client card alone is 18rem since 22 October 2026) */
     margin: 0;
     background-color: transparent;
     border: 0;
