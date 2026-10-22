@@ -194,7 +194,6 @@ html[data-skin="mobius"] .mob-actionbar .mob-tool {
   --button-label-focus: #ffffff;
   --button-background-focus: transparent;
 }
-html[data-skin="mobius"] .mob-actionbar .mob-tool-chevron { color: rgba(255, 255, 255, 0.82); }
 /* Cancel on the blue: a light red that reads on it. */
 html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-tool-danger { --button-label: #ffb3b5; --button-label-hover: #ffb3b5; --button-label-focus: #ffb3b5; }
 html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-support-on {

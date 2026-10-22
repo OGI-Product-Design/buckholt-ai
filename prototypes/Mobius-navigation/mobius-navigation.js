@@ -58,7 +58,7 @@
      19 October 2026); it stays so from page to page. sideView: on a
      policy page, which one menu shows beside the strip, 'client' or
      'policy' (null: the policy's); never both (Mark). */
-  var S = { groupClosed: {}, openCurrent: false, polShown: { side: 5, table: 5 }, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
+  var S = { groupClosed: {}, openCurrent: false, polShown: { side: 3, table: 5 }, step: 0, navCollapsed: false, sideView: null, panelKey: null, query: null, modalQuery: null, searchTrigger: null, searchOpen: {}, searchFilter: {}, searchMore: {} };
   P.init(S);
 
   var R = null;
@@ -230,9 +230,9 @@
   /* The client's menu: their pages, then their policies; only the
      policies scroll (Mark, 19 October 2026). */
   function clientMenu(r, curPolicy, cls) {
-    /* All the policies shown (after Show more): only then does the list
-       scroll on its own (Mark, 19 October 2026). */
-    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu' + (S.polShown.side > 5 ? ' mob-all' : '') + (cls ? ' ' + cls : '') + '">' +
+    /* Only the Policies section scrolls, never the client's pages above it
+       (Laurence, 22 October 2026). */
+    return '<nav aria-label="' + esc(F.client.name) + '" class="mob-client-menu mob-all' + (cls ? ' ' + cls : '') + '">' +
         '<div class="mob-rail-pages">' + navGroups(M.clientNav(), r.scope === 'client' ? r.page : null, { scope: 'client' }) + '</div>' +
         railPolicies(curPolicy) +
       '</nav>';
@@ -566,7 +566,7 @@
     Array.prototype.forEach.call(actionbar.querySelectorAll('.mob-tool'), function (b) {
       var l = b.querySelector('.mob-tool-label');
       if (!l) return;
-      var badge = b.querySelector('.badge-floating');
+      var badge = b.querySelector('.mob-badge-end');
       var end = l.offsetLeft + l.offsetWidth + (badge ? badge.offsetWidth + 8 : 0) + 12;
       w = Math.max(w, end);
     });
@@ -599,17 +599,6 @@
     if (e.target.matches(':focus-visible')) setExpanded(true);
   });
   actionbar.addEventListener('focusout', function () { setTimeout(maybeCollapse, 0); });
-  /* More opens and closes in place, like a menu group. */
-  actionbar.addEventListener('click', function (e) {
-    var m = e.target.closest('[data-tool-more]');
-    if (!m) return;
-    S.toolMoreOpen = m.getAttribute('aria-expanded') !== 'true';
-    m.setAttribute('aria-expanded', String(S.toolMoreOpen));
-    m.parentNode.classList.toggle('mob-open', S.toolMoreOpen);
-    $('mob-tool-more-list').hidden = !S.toolMoreOpen;
-    if (actionbar.classList.contains('mob-expanded')) actionbar.style.setProperty('--mob-actionbar-open', openWidth() + 'px');
-    if (S.toolMoreOpen) $('mob-tool-more-list').lastElementChild.scrollIntoView({ block: 'nearest' });
-  });
   /* Opening a panel or a confirmation from it: the toolbar folds away. */
   actionbar.addEventListener('click', function (e) {
     if (e.target.closest('[data-action], [data-panel], a.mob-tool')) { actionHover = false; setExpanded(false); }
@@ -1157,7 +1146,7 @@
     if (more) {
       var focusId = more.getAttribute('data-focus-id');
       var which = more.getAttribute('data-more-list') || 'side';
-      S.polShown[which] = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown[which] + 5) : 5;
+      S.polShown[which] = more.getAttribute('data-more') === '1' ? Math.min(F.policies.length, S.polShown[which] + 5) : ui.POL_FIRST[which];
       var scroller = document.querySelector('.mob-rail-scroll');
       var y = scroller ? scroller.scrollTop : 0;
       var inModal = !!more.closest('#mob-search-modal');
@@ -1166,8 +1155,10 @@
       if (scroller) scroller.scrollTop = y;
       /* Shown more in the menu: the list now scrolls, brought to the first
          policy it added. */
-      var list = focusId === 'more-side' && S.polShown.side > 5 && sidebar.querySelector('.mob-rail-policies');
-      if (list && list.children[5]) { list.scrollTop = list.children[5].offsetTop - list.offsetTop - 8; scrollCues(list); }
+      var list = focusId === 'more-side' && S.polShown.side > ui.POL_FIRST.side && sidebar.querySelector('.mob-rail-policies');
+      var first = list && list.children[ui.POL_FIRST.side];
+      if (first) { list.scrollTop = first.offsetTop - list.offsetTop - 8; }
+      if (list) scrollCues(list);
       /* From the search Modal: refresh its results and keep focus there. */
       if (inModal) {
         renderSearchBody();

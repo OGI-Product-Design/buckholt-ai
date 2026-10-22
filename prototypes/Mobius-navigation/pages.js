@@ -460,6 +460,8 @@
      Each list keeps its own count (Laurence, 21 October 2026): the menu's
      ('side') and the client overview's table ('table') open independently. */
   function shownPolicies(where) { return F.policies.slice(0, S.polShown[where || 'side']); }
+  /* The menu shows three (Laurence, 22 October 2026), the table five. */
+  var POL_FIRST = { side: 3, table: 5 };
 
   function loadMoreButton(where, size) {
     var total = F.policies.length;
@@ -472,7 +474,7 @@
       return moreLink('Show ' + Math.min(5, rest) + ' more',
         ' data-more="1" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? AI.add : AI.more);
     }
-    if (total > 5) {
+    if (total > POL_FIRST[where]) {
       return moreLink('Show fewer', ' data-more="0" data-more-list="' + where + '" data-focus-id="more-' + where + '"', side ? 'fa-regular fa-minus' : AI.fewer);
     }
     return '';
@@ -1412,7 +1414,7 @@
      its name as aria-label and a label beside its icon, shown when the
      toolbar expands on hover (Laurence, 22 October 2026). Groups are split
      by a divider: the client's tools (Client support, the note), the
-     record's actions, then More with Pause and Cancel. Below 1024px the
+     record's actions, then Pause and Cancel. Below 1024px the
      menu is a drawer and the labelled heading row is used instead. */
   /* Font Awesome icons in the toolbar are fixed width (fa-fw, next to the
      style class; Laurence, 22 October 2026): Buckholt's Buttons let icons
@@ -1438,7 +1440,13 @@
     var on = !!F.client.supportOn;
     var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
     var noteLabel = onPolicy ? 'Add policy note' : 'Add client note';
-    var badge = function (x) { return '<span class="badge badge-floating mob-count" aria-hidden="true">' + (x > 999 ? '999+' : x) + '</span>'; };
+    /* Two badges (Laurence, 22 October 2026): at the icon's corner while
+       the toolbar is collapsed, at the end of the row once it opens. */
+    var badge = function (x) {
+      var v = x > 999 ? '999+' : x;
+      return '<span class="badge badge-floating mob-count mob-badge-corner" aria-hidden="true">' + v + '</span>' +
+        '<span class="badge mob-count mob-badge-end" aria-hidden="true">' + v + '</span>';
+    };
     /* Client support in Mark's teal (expressive quaternary) once extra
        support is in place; the name says so too. */
     var groups = [toolGroup('Client', [
@@ -1473,25 +1481,12 @@
     };
     groups.push(toolGroup('Change the policy', everyday.filter(function (k) { return CHANGE.indexOf(k) >= 0; }).map(toolFor)));
     groups.push(toolGroup('Policy actions', everyday.filter(function (k) { return CHANGE.indexOf(k) < 0; }).map(toolFor)));
-    if (risky.length) {
-      /* More opens in place, like the menu's groups (Laurence, 22 October
-         2026; it was a flyout menu): a disclosure Button, then Pause and
-         Cancel (red) under it, open for the visit once opened. */
-      var open = !!S.toolMoreOpen;
-      groups.push('<div class="mob-tool-group mob-tool-more' + (open ? ' mob-open' : '') + '" role="group" aria-label="More actions">' +
-        '<button type="button" class="btn btn-ghost mob-tool" id="mob-tool-more" data-tool-more aria-expanded="' + open + '" aria-controls="mob-tool-more-list" aria-label="More actions">' +
-          '<div class="btn-icon"><i class="' + fw(ICON.more) + '" aria-hidden="true"></i></div>' +
-          '<span class="mob-tool-label" aria-hidden="true">More</span>' +
-          '<i class="fa-regular fa-chevron-down mob-tool-chevron" aria-hidden="true"></i>' +
-        '</button>' +
-        '<div class="mob-tool-more-list" id="mob-tool-more-list"' + (open ? '' : ' hidden') + '>' +
-          risky.map(function (k) {
-            var a = A[k];
-            return tool(a.label, a.icon, { cls: a.danger ? 'mob-tool-danger' : '', attrs: ' data-action="' + k + '" data-scope="policy" aria-haspopup="dialog"' });
-          }).join('') +
-        '</div>' +
-      '</div>');
-    }
+    /* Pause and Cancel (red) are a group of their own, last, after a
+       divider (Laurence, 22 October 2026: no More). */
+    groups.push(toolGroup('Pause or cancel', risky.map(function (k) {
+      var a = A[k];
+      return tool(a.label, a.icon, { cls: a.danger ? 'mob-tool-danger' : '', attrs: ' data-action="' + k + '" data-scope="policy" aria-haspopup="dialog"' });
+    })));
     return groups.filter(Boolean).join('<hr class="mob-tool-divider">');
   }
 
@@ -1520,7 +1515,7 @@
   global.MobiusPages = {
     init: function (state) { S = state; },
     ui: { esc: esc, t: t, plain: plain, btn: btn, set: set, statusTag: statusTag, statusText: statusText, statusDot: statusDot, statusMark: statusMark,
-      loadMoreButton: loadMoreButton, shownPolicies: shownPolicies, policyHref: policyHref },
+      loadMoreButton: loadMoreButton, shownPolicies: shownPolicies, policyHref: policyHref, POL_FIRST: POL_FIRST },
     app: app,
     client: client,
     policy: policy,
