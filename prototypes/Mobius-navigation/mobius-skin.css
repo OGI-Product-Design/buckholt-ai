@@ -183,6 +183,8 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   }
 }
 @media (min-width: 1024px) { html[data-skin="mobius"] .mob-actionbar { padding-inline: var(--spacer-03); } }   /* no border on the blue */
+/* Inside the navy policy card the label already sits 4px in: 4px more balances its 8px on the right. */
+html[data-skin="mobius"] #mob-record .mob-group-toggle { --mob-group-inset: var(--spacer-02); }
 html[data-skin="mobius"] .mob-actionbar .mob-tool {
   --button-radius: 0.5rem;
   --button-label: #ffffff;
