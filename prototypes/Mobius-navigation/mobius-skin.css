@@ -182,7 +182,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
     --focus-01: #ffffff;
   }
 }
-@media (min-width: 1024px) { html[data-skin="mobius"] .mob-actionbar.mob-expanded { padding-inline: var(--spacer-03); } }   /* no border on the blue */
+@media (min-width: 1024px) { html[data-skin="mobius"] .mob-actionbar { padding-inline: var(--spacer-03); } }   /* no border on the blue */
 html[data-skin="mobius"] .mob-actionbar .mob-tool {
   --button-radius: 0.5rem;
   --button-label: #ffffff;
@@ -194,7 +194,9 @@ html[data-skin="mobius"] .mob-actionbar .mob-tool {
   --button-label-focus: #ffffff;
   --button-background-focus: transparent;
 }
-html[data-skin="mobius"] .mob-actionbar .mob-tool.menu-toggle[aria-expanded="true"] { --button-background: var(--mobius-navy); }
+html[data-skin="mobius"] .mob-actionbar .mob-tool-chevron { color: rgba(255, 255, 255, 0.82); }
+/* Cancel on the blue: a light red that reads on it. */
+html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-tool-danger { --button-label: #ffb3b5; --button-label-hover: #ffb3b5; --button-label-focus: #ffb3b5; }
 html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-support-on {
   --button-label: var(--expressive-quaternary-soft);
   --button-label-hover: var(--expressive-quaternary-soft);

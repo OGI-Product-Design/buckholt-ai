@@ -374,10 +374,14 @@ breadcrumbs and the title.
   own grid column (`sidebar actions main`), so it stays put while the page scrolls and when the
   menu collapses. Not drawn on Broking or the other modules.
 - **Icon-only ghost Buttons** in the text colour, each with its name as `aria-label`.
-- **Labels on hover** (Laurence, 22 October 2026): with the pointer over the toolbar for 0.4s it
-  expands to show each icon's label (More reads "More"), over the page with a shadow, so nothing
-  on the page moves and the icons stay where they were (its grid track stays 56px). It closes
-  when the pointer leaves. Keyboard focus entering it expands it at once; focus leaving closes it.
+- **Labels on hover** (Laurence, 22 October 2026): hovering **an icon** (not the toolbar's empty
+  space) expands it after a 0.12s beat, so a pointer passing across does not flash it open. It
+  widens smoothly (0.22s, to a measured width) over the page with a shadow, the labels fading in
+  (More reads "More"); nothing on the page moves, and the icons stay put, left-aligned 10px into
+  their Buttons in both states, each **fixed width** (`fa-fw` beside its style class: Buckholt's
+  Buttons otherwise let icons take their natural widths, so a wider one such as Hand-heart sat
+  further left and jumped as the toolbar opened) (its grid track stays 56px). Badges glide from the icon's corner to
+  the row's end. It closes when the pointer leaves the toolbar. No motion with reduced motion. Keyboard focus entering it expands it at once; focus leaving closes it.
   Opening More expands it first, so the menu opens beside the labels; it stays open while that
   menu is. Choosing an action folds it away. The labels replace the Tooltips. Groups are split
   by a divider:
@@ -390,9 +394,11 @@ breadcrumbs and the title.
      Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-shield-plus`, the
      catalogue's Shield-plus, Laurence, 21 October 2026; also in the search results and the
      narrow heading row).
-  3. **More** (`fa-ellipsis`, Buckholt's Overflow menu, opening to the right): **Pause policy**
-     (`fa-circle-pause`), a divider, then **Cancel policy** (`fa-circle-xmark`), red at rest (Mark).
-     Only when the status has them.
+  3. **More** (`fa-ellipsis`): opens **in place**, like the menu's groups (Laurence, 22 October
+     2026; it was a flyout menu): a disclosure Button (`aria-expanded`, a chevron with the
+     labels), then **Pause policy** (`fa-circle-pause`) and **Cancel policy** (`fa-circle-xmark`,
+     red) under it as toolbar Buttons. Closed as standard; once opened it stays open for the
+     visit. Only when the status has them.
 - **"Pause policy", not "Stop policy"** (Mark, 21 October 2026): Stop read too much like Cancel.
   The confirmation says "Pause this policy?".
 - **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary;
@@ -746,8 +752,8 @@ Awesome), and Typekit was absent.
 - **Mark's actions toolbar (21 October 2026; labels on hover 22 October; 42 assertions):** 56px wide, 8px right of the menu,
   level with it and as tall, and it follows the menu when collapsed; the heading's labelled row
   hidden at 1024px and up and back below it; the groups and names on an in-force policy, a
-  Prospect and a client page; the icons as listed; Amend details a link; labels on hover (not by
-  0.2s, by 0.6s, every icon labelled, the page not moving, the icons not moving, no Tooltips),
+  Prospect and a client page; the icons as listed; Amend details a link; labels on hover (not from the toolbar's empty
+  space, open from an icon by 0.4s, every icon labelled, the page not moving, the icons not moving, no Tooltips),
   closing on leave, and expanding at once on keyboard focus; More opening to the right with Pause, a divider and Cancel (red);
   Pause's confirmation; Make an MTA pressed while its panel is open and focus back on close; no
   toolbar on the Dashboard; with support switched on, the teal Client support and the Avatar's
