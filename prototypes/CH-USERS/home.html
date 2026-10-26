@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications | Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the shared Configuration Hub shell, loaded from CH-SHELL. -->
+<link rel="stylesheet" href="../CH-SHELL/shell/ch-shell.css">
+</head>
+<body>
+
+<!-- Home entry page for this prototype (SH-00-01 with the "Shell overrides").
+     NOT a copy of the shell: the chrome comes from ../CH-SHELL/shell/ as on
+     every CH page. Only the card list below repeats CH-SHELL/index.html's
+     few lines, because that page renders the shell's own registry and this
+     prototype may not edit it. Its second card is "Account Management" and
+     opens CU-00-01. The lockup on every CH-USERS page comes back here.
+     See PROTOTYPE.md, "How the shell is reused". -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame ch-home-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <h1 class="visually-hidden">Applications</h1>
+              <div class="ch-app-grid" id="ch-app-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../CH-SHELL/shell/ch-registry.js"></script>
+<script src="ch-users-registry.js"></script>
+<script src="../CH-SHELL/shell/ch-shell.js"></script>
+<script src="ch-users-data.js"></script>
+<script src="ch-users.js"></script>
+<script>
+  (function () {
+    'use strict';
+    var esc = CHShell.esc;
+
+    /* As CH-SHELL/index.html: one Buckholt Card per visible app, in registry
+       order; illustration (decorative), level 2 title, description, Primary
+       Open link whose accessible name starts with its visible label. */
+    function renderCards() {
+      document.getElementById('ch-app-grid').innerHTML = CHShell.visibleApps().map(function (app) {
+        return '<div class="card ch-app-card" data-app="' + esc(app.id) + '">' +
+            '<img src="' + esc(CHShell.illustrationUrl(app)) + '" class="card-img" alt="">' +
+            '<div class="card-body">' +
+              '<div class="text-block">' +
+                '<h2 class="title-03">' + esc(app.name) + '</h2>' +
+                '<p>' + esc(app.description) + '</p>' +
+              '</div>' +
+              '<a class="btn btn-primary ch-open" href="' + esc(CHShell.appUrl(app)) + '" ' +
+                 'aria-label="Open ' + esc(app.name) + '">' +
+                '<span class="button-label">Open</span>' +
+              '</a>' +
+            '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    CU.init({
+      page: 'Applications',
+      breadcrumb: [{ label: 'Applications' }]
+    });
+
+    /* Gap 9 of the shell: every card is the height of the tallest. */
+    function equaliseCards() {
+      var grid = document.getElementById('ch-app-grid');
+      grid.style.removeProperty('--ch-card-height');
+      var tallest = 0;
+      grid.querySelectorAll('.ch-app-card').forEach(function (card) {
+        tallest = Math.max(tallest, card.getBoundingClientRect().height);
+      });
+      if (tallest) grid.style.setProperty('--ch-card-height', Math.ceil(tallest) + 'px');
+    }
+
+    function render() {
+      renderCards();
+      equaliseCards();
+      document.querySelectorAll('#ch-app-grid img').forEach(function (img) {
+        if (!img.complete) img.addEventListener('load', equaliseCards, { once: true });
+      });
+    }
+
+    render();
+    CHShell.onEnvironmentChange(render);
+    var frame = null;
+    window.addEventListener('resize', function () {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(equaliseCards);
+    });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equaliseCards);
+  })();
+</script>
+</body>
+</html>

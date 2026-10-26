@@ -14,8 +14,9 @@ open and look at are in [`../tools/`](../tools/), not here.
 | `responsive.js` | Fifteen widths from 1920 to 320. | 47 |
 | `regression.js` | Originators and BACS Import still work, and the shared layer has not broken them. | 20 |
 | `ch-shell.js` | Configuration Hub shell: every acceptance criterion in `prototypes/CH-SHELL/ch-shell-spec.md`, its accessibility requirements, the feature contract and breadcrumb truncation. | 301 |
+| `ch-users.js` | Configuration Hub accounts: every acceptance criterion in `prototypes/CH-USERS/ch-users-spec.md`, the variants, its accessibility requirements, and that the shell override stays local. | 373 |
 
-**601 assertions.** `source-parity.py` is the one to run after touching
+**974 assertions.** `source-parity.py` is the one to run after touching
 anything in `components/`; it needs nothing but Python.
 
 ## Running the browser suites
