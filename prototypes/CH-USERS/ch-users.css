@@ -1,0 +1,261 @@
+/* Configuration Hub accounts.                                 NOT BUCKHOLT.
+
+   Arrangement for the "Buckholt gaps" in `ch-users-spec.md`, and nothing
+   else. The components inside — Card, Key-value pair, Icon block, Text
+   input, Select, Button, Menu button, Table, Checkbox, Avatar, Tag, Modal,
+   Toast, Tooltip — keep Buckholt's own styling. Values are Buckholt tokens
+   wherever one exists. Loaded after the CH shell's stylesheet. */
+
+/* ---------------------------------------------------------- CU-00-01 cards
+   The shell's app-card width and grid (.ch-app-grid), aligned to the start
+   of the content area rather than centred. */
+.cu-type-grid {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* Both cards share the taller card's height, so the Open buttons line up,
+   as on the CH home. One row, so flex does it without the home's script. */
+.cu-type-grid > .ch-app-card {
+  height: auto;
+}
+
+/* ---------------------------------------------------------- Gap 4: chips
+   One row of chips, each an Icon block and a Key-value pair. The chip box
+   is the gap; the surface and border are Buckholt's card surface. */
+.cu-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-04);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cu-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  padding: var(--spacer-03) var(--spacer-04);
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: var(--border-radius-md);
+}
+
+/* ---------------------------------------------------------- Gap 3: filter bar
+   One row: Search, Role, Status, Clear all filters; Add account and More
+   actions at the right end. Bottom-aligned, so the label-less Search lines
+   up with the labelled Selects. */
+.cu-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacer-04);
+}
+
+.cu-filters {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-end;
+  gap: var(--spacer-04);
+  min-width: 0;
+}
+
+.cu-search {
+  flex: 0 1 18rem;
+  min-width: 12rem;
+}
+
+.cu-filter {
+  flex: 0 0 11rem;
+}
+
+/* Buckholt's Button sets `align-self: flex-start`; in this row it lines up
+   with the bottom of the fields like everything else. */
+.cu-filters > .btn {
+  align-self: flex-end;
+}
+
+.cu-filter-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--spacer-03);
+  margin-left: auto;
+}
+
+/* ---------------------------------------------------------- Table
+   Columns never wrap; the table scrolls inside Table's own `.table-content`
+   (overflow-x: auto) below the width it needs. Long text truncates with an
+   ellipsis and gets a hover Tooltip from the script. */
+.cu-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.cu-table {
+  min-width: 64rem;
+}
+
+.cu-table td {
+  white-space: nowrap;
+}
+
+/* Visually hidden text in the table (the "Actions" header, disabled-action
+   reasons) is absolutely positioned. Without a positioned ancestor inside
+   Table's scroll container it escapes it and widens the page whenever the
+   table scrolls. */
+.cu-results .table-content {
+  position: relative;
+}
+
+.cu-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  min-width: 0;
+}
+
+.cu-name .avatar {
+  flex: none;
+}
+
+.cu-trunc {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Sized so the whole table fits the 1440px reference width without
+   scrolling; seed row 8 is the one that truncates. */
+.cu-col-name .cu-trunc { max-width: 12rem; }
+.cu-col-username .cu-trunc { max-width: 10rem; }
+.cu-col-email .cu-trunc { max-width: 20rem; }
+
+/* Gap 5: Table documents the checkbox column, not a selected-row state. The
+   tint is the same pale overlay Response button uses for its selected
+   option; the checked checkbox carries the state, so colour is never the
+   only signal. */
+.cu-table tr.cu-selected > td {
+  background-color: var(--expressive-pale-overlay);
+}
+
+/* Gap 8: no results replaces the rows. */
+.cu-no-results {
+  padding: var(--spacer-07) 0;
+  text-align: center;
+}
+
+/* Text block caps its paragraph width; centre the capped box too. */
+.cu-no-results > * {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.cu-table .cu-no-results-row > td {
+  white-space: normal;
+}
+
+/* Gap 9: a disabled control keeps its Tooltip. Disabled controls take no
+   pointer events, so the wrapper receives the hover. */
+.cu-disabled {
+  display: inline-flex;
+}
+
+.cu-disabled > :disabled,
+.cu-disabled :disabled {
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------- Gap 2: pagination
+   Below the table: page buttons, "Results per page" (Select, top label, as
+   Buckholt Forms require), and the "Showing" count. */
+.cu-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacer-05);
+}
+
+.cu-pages {
+  display: flex;
+  gap: var(--spacer-02);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cu-per-page {
+  flex: none;
+  width: auto;
+}
+
+.cu-per-page .form-select {
+  width: 6.5rem;
+}
+
+.cu-showing {
+  margin: 0;
+  padding-bottom: var(--spacer-03);
+}
+
+/* ---------------------------------------------------------- Gap 1: blades
+   The shared prototype blade, placed under the CH top bar as the Mobius
+   frames draw it: the bar stays visible and usable (its environment control
+   is part of the shell contract), the rest of the page is dimmed and
+   inert. `--cu-header-height` is measured when a blade opens. */
+.cu-blade.offcanvas {
+  top: var(--cu-header-height, 0px);
+}
+
+.cu-accounts-page .offcanvas-backdrop {
+  top: var(--cu-header-height, 0px);
+  bottom: 0;
+  height: auto;
+}
+
+.cu-blade-actions {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.cu-resend {
+  margin-top: var(--spacer-06);
+}
+
+/* Buckholt hides every `.form-helper` in an `.input` whose control is
+   disabled or read-only. The spec needs exactly that text on the read-only
+   fields: "Username can't be changed.", "Email can't be changed.", and the
+   locked Role's reason. So the helpers this prototype marks are shown
+   again, in Buckholt's own helper style. A deviation, recorded in
+   PROTOTYPE.md (judgement call 22) and SPEC-CHANGES C15. */
+/* Buckholt's rule weighs up to (0,5,0) through its `:has()` list; this is
+   (0,6,0). */
+.cu-blade.offcanvas .input .response ~ .form-helper.cu-keep-helper {
+  display: block;
+}
+
+/* A Modal opened over a blade (Discard changes, or the shell's
+   unsaved-changes Modal) sits above it. Buckholt's Modal is 1055 and the
+   blade 1056. */
+.cu-blade-open .cu-modal {
+  z-index: 1060;
+}
+
+.cu-blade-open .modal-backdrop {
+  z-index: 1057;
+}
+
+/* ---------------------------------------------------------- Toasts
+   Bottom right, above everything, as the Mobius prototypes place them. */
+.cu-toasts {
+  position: fixed;
+  right: var(--spacer-05);
+  bottom: var(--spacer-05);
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+  max-width: min(28rem, calc(100vw - 3rem));
+}

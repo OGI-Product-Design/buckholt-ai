@@ -44,6 +44,7 @@ working perfectly locally.
 | `BACS-calendar/` | Accounts › BACS › Calendar | `calendar-spec.md` + `screenshots/` |
 | `Mobius-navigation/` | Mobius navigation shell | `README.md` in that folder |
 | `CH-SHELL/` | Configuration Hub shell: header, environment, avatar menu, breadcrumb band, app-card home | `ch-shell-spec.md` + `screenshots/` |
+| `CH-USERS/` | Configuration Hub › Account Management › Configuration Hub accounts (reuses `CH-SHELL/shell/` and `shared/blade`) | `ch-users-spec.md` + `screenshots/` |
 
 The first three are tabs of one application and link to each other. Process
 is still a placeholder inside `BACS-import/`.

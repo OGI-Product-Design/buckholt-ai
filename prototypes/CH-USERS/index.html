@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account Management | Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the CH shell, then this prototype's gap work. -->
+<link rel="stylesheet" href="../CH-SHELL/shell/ch-shell.css">
+<link rel="stylesheet" href="ch-users.css">
+</head>
+<body>
+
+<!-- CU-00-01 · Account Management, choose account type. The app's base page.
+     Variants: ?variant=only-me, and the shell's ?seed=long-names. -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <div class="text-block">
+                <h1 class="headline-02">Account Management</h1>
+                <p>Choose which accounts you want to view and manage.</p>
+              </div>
+
+              <!-- Separate accounts note: Text block, body text. Not an Alert:
+                   it explains, it doesn't warn. -->
+              <div class="text-block" id="cu-separate-note">
+                <p>Mobius and Configuration Hub use separate accounts. Someone who needs both will need an account for each.</p>
+              </div>
+
+              <!-- Account type cards: Buckholt Card, title, description and
+                   action, no media. The shell's app-card width and layout
+                   (.ch-app-grid / .ch-app-card), aligned to the start. -->
+              <div class="ch-app-grid cu-type-grid" id="cu-type-cards">
+                <div class="card ch-app-card" data-type="mobius">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <h2 class="title-03">Mobius accounts</h2>
+                      <p>Add and manage accounts for signing in to Mobius.</p>
+                    </div>
+                    <a class="btn btn-primary ch-open" href="mobius.html" aria-label="Open Mobius accounts">
+                      <span class="button-label">Open</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="card ch-app-card" data-type="configuration-hub">
+                  <div class="card-body">
+                    <div class="text-block">
+                      <h2 class="title-03">Configuration Hub accounts</h2>
+                      <p>Add and manage accounts for signing in to Configuration Hub.</p>
+                    </div>
+                    <a class="btn btn-primary ch-open" href="accounts.html" aria-label="Open Configuration Hub accounts">
+                      <span class="button-label">Open</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../CH-SHELL/shell/ch-registry.js"></script>
+<script src="ch-users-registry.js"></script>
+<script src="../CH-SHELL/shell/ch-shell.js"></script>
+<script src="ch-users-data.js"></script>
+<script src="ch-users.js"></script>
+<script>
+  /* Shell override: the base page has one crumb, "Account Management", and
+     no page name of its own, so the title is "Account Management |
+     Configuration Hub". */
+  CU.init({
+    app: 'user-management',
+    breadcrumb: [{ label: 'Account Management' }]
+  });
+</script>
+</body>
+</html>

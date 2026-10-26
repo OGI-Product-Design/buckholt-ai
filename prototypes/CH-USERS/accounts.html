@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration Hub accounts | Account Management | Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the CH shell, the shared blade, then this prototype's gap work. -->
+<link rel="stylesheet" href="../CH-SHELL/shell/ch-shell.css">
+<link rel="stylesheet" href="../shared/blade.css">
+<link rel="stylesheet" href="ch-users.css">
+</head>
+<body class="cu-accounts-page">
+
+<!-- CU-00-02 · Configuration Hub accounts, with the flows that start from it:
+     CU-01 Add, CU-02 and CU-03 Edit, CU-04 View, CU-05 Delete. Rows, chips,
+     pagination, blades and toasts are rendered by accounts.js; everything
+     that does not change is written here.
+     Variants: ?variant=only-me, and the shell's ?seed=long-names. -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <div class="text-block">
+                <h1 class="headline-02" id="cu-heading">Configuration Hub accounts</h1>
+                <p>View, add and manage who can sign in to Configuration Hub.</p>
+              </div>
+
+              <!-- Gap 4: summary chips. Key-value pair with Icon block, one row.
+                   Counts follow the data, not the filters. -->
+              <ul class="cu-chips" aria-label="Account summary">
+                <li class="cu-chip" data-chip="Active">
+                  <div class="icon-block icon-block-sm" aria-hidden="true">
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                  <div class="key-value">
+                    <span class="key">Active accounts</span>
+                    <span class="value" id="cu-count-active"></span>
+                  </div>
+                </li>
+                <li class="cu-chip" data-chip="Pending">
+                  <div class="icon-block icon-block-sm" aria-hidden="true">
+                    <i class="fa-regular fa-envelope"></i>
+                  </div>
+                  <div class="key-value">
+                    <span class="key">Pending invitations</span>
+                    <span class="value" id="cu-count-pending"></span>
+                  </div>
+                </li>
+                <li class="cu-chip" data-chip="Inactive">
+                  <div class="icon-block icon-block-sm" aria-hidden="true">
+                    <i class="fa-regular fa-user-slash"></i>
+                  </div>
+                  <div class="key-value">
+                    <span class="key">Inactive accounts</span>
+                    <span class="value" id="cu-count-inactive"></span>
+                  </div>
+                </li>
+              </ul>
+
+              <!-- Gap 3: filter bar. Search, Role, Status, Clear all filters,
+                   then Add account and More actions at the right end. -->
+              <div class="cu-filter-bar">
+                <div class="cu-filters">
+                  <div class="input cu-search">
+                    <div class="input-label visually-hidden">
+                      <label for="cu-search" class="form-label">Search accounts</label>
+                    </div>
+                    <div class="response text-input">
+                      <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                      <input type="text" class="form-control" id="cu-search" placeholder="Search" autocomplete="off" spellcheck="false">
+                    </div>
+                  </div>
+
+                  <div class="input cu-filter">
+                    <div class="input-label">
+                      <label for="cu-role-filter" class="form-label">Role</label>
+                    </div>
+                    <div class="response select-input">
+                      <select class="form-select" id="cu-role-filter">
+                        <option value="all" selected>All</option>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Editor">Editor</option>
+                        <option value="Viewer">Viewer</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="input cu-filter">
+                    <div class="input-label">
+                      <label for="cu-status-filter" class="form-label">Status</label>
+                    </div>
+                    <div class="response select-input">
+                      <select class="form-select" id="cu-status-filter">
+                        <option value="all" selected>All</option>
+                        <option value="Active">Active</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-ghost" id="cu-clear" hidden>
+                    <span class="button-label">Clear all filters</span>
+                  </button>
+                </div>
+
+                <div class="cu-filter-actions">
+                  <button type="button" class="btn btn-primary" id="cu-add">
+                    <div class="btn-icon">
+                      <i class="fa-regular fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <span class="button-label">Add account</span>
+                  </button>
+
+                  <!-- Menu button, Overflow variant (Code & specs example 3).
+                       The Tooltip sits on the .menu wrapper because the toggle
+                       carries data-bs-toggle="dropdown", as in the shell.
+                       Disclosure semantics, as the shell's avatar menu: no
+                       role="menu" on the list. -->
+                  <div class="menu cu-more" id="cu-more" data-cu-tooltip="More actions">
+                    <button type="button" class="btn btn-ghost menu-toggle" id="cu-more-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-controls="cu-more-panel" aria-label="More actions">
+                      <div class="btn-icon">
+                        <i class="fa-regular fa-ellipsis-vertical" aria-hidden="true"></i>
+                      </div>
+                    </button>
+                    <div class="menu-panel dropdown-menu dropdown-menu-end" id="cu-more-panel">
+                      <ul class="menu-body">
+                        <li>
+                          <button class="menu-item" type="button" id="cu-bulk-edit" disabled>
+                            <i class="fa-regular fa-pencil" aria-hidden="true"></i>Edit
+                          </button>
+                        </li>
+                        <li>
+                          <span class="cu-disabled" id="cu-bulk-delete-wrap" data-cu-hover-only data-cu-placement="left">
+                            <button class="menu-item menu-item-danger" type="button" id="cu-bulk-delete" disabled>
+                              <i class="fa-regular fa-trash-can" aria-hidden="true"></i>Delete
+                            </button>
+                          </span>
+                          <span class="visually-hidden" id="cu-bulk-delete-reason"></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Accounts table and Gap 2, its pagination. -->
+              <div class="cu-results">
+                <div class="table-container">
+                  <div class="table-content">
+                    <table class="table cu-table" aria-labelledby="cu-heading">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="table-checkbox-header col-fit">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="cu-select-all" aria-label="Select all accounts on this page">
+                            </div>
+                          </th>
+                          <th scope="col" class="table-sort-header" data-sort-key="name">
+                            <button class="table-sort" type="button" data-col="1" data-sort-type="text" aria-label="Sort by Full name">
+                              <div class="table-header-label">Full name</div>
+                              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                            </button>
+                          </th>
+                          <th scope="col" class="table-sort-header" data-sort-key="username">
+                            <button class="table-sort" type="button" data-col="2" data-sort-type="text" aria-label="Sort by Username">
+                              <div class="table-header-label">Username</div>
+                              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                            </button>
+                          </th>
+                          <th scope="col" class="table-sort-header" data-sort-key="email">
+                            <button class="table-sort" type="button" data-col="3" data-sort-type="text" aria-label="Sort by Email">
+                              <div class="table-header-label">Email</div>
+                              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                            </button>
+                          </th>
+                          <th scope="col" class="table-sort-header" data-sort-key="role">
+                            <button class="table-sort" type="button" data-col="4" data-sort-type="text" aria-label="Sort by Role">
+                              <div class="table-header-label">Role</div>
+                              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                            </button>
+                          </th>
+                          <th scope="col" class="table-sort-header" data-sort-key="status">
+                            <button class="table-sort" type="button" data-col="5" data-sort-type="text" aria-label="Sort by Status">
+                              <div class="table-header-label">Status</div>
+                              <div class="table-sort-icon"><i class="fa-solid fa-sort" aria-hidden="true"></i></div>
+                            </button>
+                          </th>
+                          <th scope="col" class="col-fit cell-data-right">
+                            <div class="table-header-label"><span class="visually-hidden">Actions</span></div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="cu-rows"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="cu-pagination" id="cu-pagination">
+                  <nav aria-label="Pagination">
+                    <ul class="cu-pages" id="cu-pages"></ul>
+                  </nav>
+                  <div class="input cu-per-page">
+                    <div class="input-label">
+                      <label for="cu-per-page" class="form-label">Results per page</label>
+                    </div>
+                    <div class="response select-input">
+                      <select class="form-select" id="cu-per-page">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                      </select>
+                    </div>
+                  </div>
+                  <p class="body-01 cu-showing" id="cu-showing"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- CU-05 · Delete confirmation. Buckholt Modal, Code & specs example 1;
+     h2 and aria-labelledby as the shell's Modal. Title, body and the danger
+     action's label are set per case. -->
+<div class="modal fade cu-modal" id="cu-delete-modal" tabindex="-1" aria-labelledby="cu-delete-title">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02" id="cu-delete-title"></h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-block">
+          <p id="cu-delete-body"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cu-delete-cancel">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary btn-danger" id="cu-delete-confirm">
+            <span class="button-label">Delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CU-02 · Discard changes. Buckholt Modal, two actions. Opened over the
+     Edit blade, so it is raised above it (ch-users.css). -->
+<div class="modal fade cu-modal" id="cu-discard-modal" tabindex="-1" aria-labelledby="cu-discard-title">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02" id="cu-discard-title">Discard your changes?</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-block">
+          <p>You've made changes that haven't been saved. If you leave now, they'll be lost.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cu-discard-keep">
+            <span class="button-label">Keep editing</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="cu-discard-confirm">
+            <span class="button-label">Discard changes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts: a polite live region, bottom right. -->
+<div class="toast-container cu-toasts" id="cu-toasts" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../CH-SHELL/shell/ch-registry.js"></script>
+<script src="ch-users-registry.js"></script>
+<script src="../CH-SHELL/shell/ch-shell.js"></script>
+<script src="../shared/blade.js"></script>
+<script src="ch-users-data.js"></script>
+<script src="ch-users.js"></script>
+<script src="accounts.js"></script>
+</body>
+</html>
