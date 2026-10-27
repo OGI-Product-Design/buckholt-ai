@@ -498,7 +498,7 @@
         '</div>' +
       '</div>' +
       panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('');
-    if (home) bindSearchOpener($('mob-home-search'), $('mob-home-search-input'));
+    if (home) bindHomeSearch();
 
     document.title = 'Mobius · ' + plain(tt.title).replace(/[“”]/g, '');
     fitBar();
@@ -658,40 +658,51 @@
      Button (Modal's own `.btn-close`), then a Buckholt List per group with
      its list heading, the tip, and "Learn more" as a standalone Link with
      the External-link icon. */
-  (function () {
+  /* Built for the Modal's help, and again for the homepage's (Laurence,
+     27 October 2026): `toggleId` / `panelId` / `titleId` name each. */
+  function bindSearchHelp(toggleId, panelId, titleId) {
     var h = F.searchHelp;
+    var toggle = $(toggleId), panel = $(panelId);
+    if (!toggle || !panel) return;
     var list = function (head, items) {
       return '<ul class="list"><li class="list-heading">' + esc(head) + '</li>' +
         items.map(function (x) { return '<li class="list-item">' + esc(x) + '</li>'; }).join('') + '</ul>';
     };
-    $('mob-search-help').innerHTML =
+    panel.innerHTML =
       '<div class="mob-search-help-body">' +
-        '<div class="text-block"><div class="heading"><div class="heading-content"><h3 class="title-01" id="mob-search-help-title">' + esc(h.title) + '</h3></div>' +
+        '<div class="text-block"><div class="heading"><div class="heading-content"><h3 class="title-01" id="' + titleId + '">' + esc(h.title) + '</h3></div>' +
           '<button type="button" class="btn-close" data-help-close aria-label="Close"></button></div></div>' +
         h.groups.map(function (g) { return list(g[0], g[1]); }).join('') +
         list('Tip:', [h.tip]) +
         '<a class="link-standalone" href="#" data-toast="Search help is not part of this prototype">' +
           '<span class="icon"><i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i></span>Learn more</a>' +
       '</div>';
-    /* Fixed positioning, so the panel floats over the Modal rather than
-       being clipped by its scrolling body. */
-    bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle'), { autoClose: 'outside', popperConfig: { strategy: 'fixed' } });
-    $('mob-search-help').addEventListener('click', function (e) {
-      if (e.target.closest('[data-help-close]')) bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle')).hide();
+    /* Fixed positioning, so the panel floats over what is under it rather
+       than being clipped by a scrolling body. */
+    var dd = bootstrap.Dropdown.getOrCreateInstance(toggle, { autoClose: 'outside', popperConfig: { strategy: 'fixed' } });
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('[data-help-close]')) dd.hide();
     });
     /* Escape closes the help first, not the whole search. */
-    $('mob-search-help').addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { e.stopPropagation(); bootstrap.Dropdown.getOrCreateInstance($('mob-search-help-toggle')).hide(); $('mob-search-help-toggle').focus(); }
+    panel.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.stopPropagation(); dd.hide(); toggle.focus(); }
     });
-  }());
+  }
+  bindSearchHelp('mob-search-help-toggle', 'mob-search-help', 'mob-search-help-title');
 
-  function recentMenu() {
-    if (!F.recentSearches.length) return '';
+  /* Recent searches; with `filter`, only those containing it (Laurence,
+     27 October 2026: they show as you type, in the Modal and on the
+     homepage). `id` names the list's header. */
+  function recentMenu(filter, id) {
+    var f = String(filter || '').trim().toLowerCase();
+    var list = F.recentSearches.filter(function (q) { return !f || q.toLowerCase().indexOf(f) >= 0; });
+    if (!list.length) return '';
+    id = id || 'mob-recent-label';
     return '<div class="menu mob-actions mob-recent">' +
-      '<div class="menu-panel show position-relative mob-menu-inline" role="group" aria-labelledby="mob-recent-label">' +
+      '<div class="menu-panel show position-relative mob-menu-inline" role="group" aria-labelledby="' + id + '">' +
         '<ul class="menu-body">' +
-          '<li><h6 class="menu-section-header" id="mob-recent-label">Recent searches</h6></li>' +
-          F.recentSearches.map(function (q) {
+          '<li><h6 class="menu-section-header" id="' + id + '">Recent searches</h6></li>' +
+          list.map(function (q) {
             return '<li><button class="menu-item" type="button" data-recent="' + esc(q) + '">' + icon(M.ICON.history) + esc(q) + '</button></li>';
           }).join('') +
         '</ul>' +
@@ -788,10 +799,62 @@
   }
   bindSearchOpener(searchForm, searchInput);
 
+  /* ====================================================== Homepage search
+     The homepage's field is the Modal's search, on the page (Laurence, 27
+     October 2026): a field with its Search Button. As you type, matching
+     recent searches show under it (Down arrow moves into them, Escape
+     closes them); Search, Enter or a recent search runs it, and the results
+     open in the search Modal (one match goes straight there). */
+  function bindHomeSearch() {
+    var form = $('mob-home-search'), input = $('mob-home-search-input'), pop = $('mob-home-recent');
+    if (!form) return;
+    bindSearchHelp('mob-home-help-toggle', 'mob-home-help', 'mob-home-help-title');
+    var items = function () { return Array.prototype.slice.call(pop.querySelectorAll('[data-recent]')); };
+    var showRecent = function () {
+      var html = input.value.trim() ? recentMenu(input.value, 'mob-home-recent-label') : '';
+      pop.innerHTML = html;
+      pop.hidden = !html;
+      input.setAttribute('aria-expanded', String(!!html));
+    };
+    var hide = function () { pop.hidden = true; input.setAttribute('aria-expanded', 'false'); };
+    var run = function (q) {
+      q = String(q || '').trim();
+      hide();
+      if (!q) { input.focus(); return; }
+      S.searchTrigger = input;
+      if (!runModalSearch(q)) openSearch(q);
+    };
+    input.addEventListener('input', showRecent);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' && !pop.hidden && items().length) { e.preventDefault(); items()[0].focus(); }
+      else if (e.key === 'Escape' && !pop.hidden) { e.preventDefault(); e.stopPropagation(); hide(); }
+    });
+    pop.addEventListener('keydown', function (e) {
+      var list = items(), i = list.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown') { e.preventDefault(); list[Math.min(i + 1, list.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); if (i <= 0) input.focus(); else list[i - 1].focus(); }
+      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); hide(); input.focus(); }
+    });
+    pop.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-recent]');
+      if (b) { e.stopPropagation(); input.value = b.getAttribute('data-recent'); run(input.value); }
+    });
+    form.addEventListener('submit', function (e) { e.preventDefault(); run(input.value); });
+    form.addEventListener('focusout', function () { setTimeout(function () { if (!form.contains(document.activeElement)) hide(); }, 0); });
+  }
+
 
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
+  /* As you type, the recent searches that match show (Laurence, 27 October
+     2026); with none matching, what was there stays. Emptied, the field
+     shows them all again. */
   modalInput.addEventListener('input', function () {
-    if (!modalInput.value && S.modalQuery) { S.modalQuery = null; renderSearchBody(); }
+    var v = modalInput.value;
+    if (!v.trim()) { S.modalQuery = null; renderSearchBody(); return; }
+    if (v.trim() === S.modalQuery) { renderSearchBody(); return; }
+    var m = recentMenu(v);
+    if (m) modalBody.innerHTML = m;
+    else if (!S.modalQuery) modalBody.innerHTML = '';
   });
   /* Recent searches: Down arrow from the field moves into them. */
   searchModalEl.addEventListener('keydown', function (e) {
@@ -813,6 +876,10 @@
     if (el) el.focus();
   }
   modalBody.addEventListener('click', function (e) {
+    /* A link to the page already open (View client from that client's own
+       page) changes no address, so it closes the Modal itself. */
+    var here = e.target.closest('a[href^="#"]');
+    if (here && here.getAttribute('href') === location.hash) { S.searchTrigger = null; searchModal.hide(); return; }
     var b = e.target.closest('[data-recent]');
     if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); return; }
     if (e.target.closest('[data-search-apply]')) {
@@ -845,6 +912,9 @@
     if (t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
     if (!R || dialogOpen() || drawerOpen()) return;
     e.preventDefault();
+    /* On the homepage the search is on the page: "/" goes to its field. */
+    var homeField = $('mob-home-search-input');
+    if (homeField && homeField.offsetParent) { homeField.focus(); return; }
     S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : searchInput;
     openSearch();
   });

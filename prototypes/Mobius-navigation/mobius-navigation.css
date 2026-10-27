@@ -45,7 +45,7 @@
    The Text input next to the wordmark: it opens the search Modal. Its
    label is visually hidden; the field takes what room the bar has, up to
    24rem. */
-.mob-app-search { flex: 0 1 24rem; min-width: 0; margin-right: var(--spacer-04); }
+.mob-app-search { flex: 0 1 20rem; min-width: 0; margin-right: var(--spacer-04); }   /* 320px: room for the longest reference (BAR/J/08121986/0046) and the placeholder; Buckholt sets no field width (Laurence, 27 October 2026) */
 /* Create new client, straight after the search. */
 .mob-app-create { flex: 0 0 auto; align-self: center; margin: 0 var(--spacer-05) 0 0; }
 /* Below 1280px the bar cannot hold its label: the icon-only Button shows
@@ -1026,12 +1026,26 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 body.mob-home .mob-app-search,
 body.mob-home #mob-create-client { display: none; }
 .mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
-.mob-home-search { flex: 1 1 20rem; max-width: 40rem; min-width: 0; }
+.mob-home-search { position: relative; flex: 0 1 32rem; min-width: 0; }   /* 512px with its Search Button */
+.mob-home-search .input-group { flex-wrap: nowrap; }
+/* Matching recent searches: a Menu panel under the field, over the page. */
+.mob-home-recent { position: absolute; top: calc(100% + var(--spacer-02)); left: 0; right: 0; z-index: 1020; }
+.mob-home-recent[hidden] { display: none; }
+.mob-home-recent .menu-panel { --menu-shadow: var(--shadow-md); --menu-background: var(--ui-background-01); --menu-padding-x: var(--spacer-03); --menu-padding-y: var(--spacer-03); width: 100%; }
 .mob-home-search .input-label { display: none; }
-.mob-home-create { margin: 0; }
+.mob-home-help { margin: 0; }
+.mob-home-create { margin: 0 0 0 auto; }   /* at the page's right */
 /* Home in the breadcrumbs: the House, sized with the text. */
 .mob-crumb-home .breadcrumb-link { display: inline-flex; align-items: center; }
 /* The homepage's title labels the search under it, so they sit close: 16px
    apart rather than a Panel's gap. */
 .page-pane > .mob-home-head { margin-bottom: calc(var(--spacer-04) - var(--page-pane-gap, var(--spacer-07))); }
 .mob-home-head .mob-heading { margin: 0; padding: 0; }
+
+/* Menu items with a description (the area switcher, Make changes): the
+   icon level with the title's line, not centred on the two lines; the
+   current area's tick as Buckholt's Dropdown draws a selected option,
+   centred, 12px from the item's right edge. */
+.menu-item.mob-menu-item-help > i:not(.mob-menu-current),
+.menu-item.mob-menu-item-help > .mob-icon { align-self: flex-start; margin-top: calc((1.5rem - 1em) / 2); }
+.mob-systems .menu-item .mob-menu-current { align-self: center; width: auto; margin: 0 0 0 auto; padding-left: var(--spacer-04); }
