@@ -109,7 +109,7 @@ stay one click away from any policy.
 | --- | --- | --- |
 | Rail (272px open), as in Laurence's Figma design | **No colour of its own beside the policy column**: like a mail client's folder pane (Laurence, 7 October 2026), it sits on the page background (`--ui-background-02`). **At client level, where it is the only column, it is the white panel** (inset 8px, 8px radius, Card's border; 272px inside the inset, so a long reference such as AADD000000000666 fits under the Policies rule), as the policy column is; once a policy opens, the panel passes to the policy column. Collapsed at client level it stays the white panel, 64px wide (Laurence, 8 October 2026). **A head with the client in User meta** (small Avatar, the name over the reference, in the policy head's type), **level with the policy column's head** beside it, and **ruled off under it, the rule level with the policy head's** (Laurence, 8 October 2026); collapsed, only the Avatar shows. Then **the client's menu: one "Client" group with the User icon** (Laurence, 8 October 2026: the overview is the group's first page, not an item of its own): Client overview, Add new quote, Business details, Transactions, Activity, Complaints and Client checks, indented under a rule. Then **Policies, a group built the same way** (Laurence, 8 October 2026): the **Shield** and "Policies" as its label, then the policies **indented under a rule**, and "Show 2 more" in line with them. One link per policy: **no icon of its own** (the group has the Shield and each row says "Open Market Motor"; indented, the reference needs the room), the **status as an eyebrow** above it (Buckholt's `.eyebrow`, no Tag: Laurence, 7 October 2026) **with a dot in its status colour** (the Tag's own border colour, `--feedback-border-*`) and the text in the primary colour, also on the open policy (local CSS, not Buckholt; the text carries the meaning, the dot only reinforces it), then **the reference (16px, medium) over the line of business** (14px, light, secondary): the reference is what tells a client's policies apart (Laurence, 7 October 2026); a reference too long for its line ends in "…" and shows in full in a Tooltip. The same as the policy column's head; and a **right chevron**, centred on the row, showing the policy opens the next column. On the open policy the reference and chevron take the active colour, as the icon does. "Show 2 more" / "Show fewer"; the rail's **collapse button at the foot's right** (as in Outlook or VS Code; Client support moved to the page heading, 8 October 2026). Beside a policy, the collapse button sits level with the policy's actions in the next column (Laurence, 8 October 2026). On a policy page the rail scrolls itself (not the page) to bring the open policy into view beside its menu | Page navigation, stacked (`ul.nav.flex-column > li.nav-item > a.nav-link`, Page navigation's own `.active`); Tag; Avatar, Title 01 (see deviation 4a). The open policy is `aria-current="true"`: it marks the record, not the page. Client support opens its side panel and is a ghost Button |
 | Policy column (policy pages only, no collapse button; 272px, the same as the rail: Laurence, 12 October 2026) | A **white panel inset 8px** from the top and bottom (and from Main), with Buckholt's 8px radius (`--border-radius-md`) and Card's border colour, no shadow (it is not elevated). A head in User meta's type: the reference with the **small status Tag at its right** (Laurence, 8 October 2026; there is only one policy here, so the Tag stands out without weighing a list down; the rail's list keeps the dots), over the line of business ("Open Market Motor"), a long reference truncated with its Tooltip, like the policy's row in the rail, ruled off under it, then the policy's pages in **always-open groups** (no accordion), the first the **"Policy" group with the Shield**, Policy overview its first page (Laurence, 8 October 2026), starting level with the client's menu in the rail, then the **policy's actions in a row at the column's foot**, always in view while the menu scrolls, labelled "Actions" as the menus' sections are and ruled off above (Laurence, 8 October 2026: so the client and policy columns line up). In the drawer the foot sticks to the drawer's bottom edge. Documents, Attachments, Notes and History carry their **count badge**. | Head: User meta type (no component: the record has no Avatar); Page navigation with `.active` + `aria-current="page"`; each group's label is text with its icon (a group is not a page), its pages indented under a rule |
-| Policy actions (the toolbar; the row with the breadcrumbs below 1024px) | **From 1024px, in Mark's actions toolbar beside the menu (21 October 2026; see deviation 2).** Below 1024px: on **every policy page**, in one row with the breadcrumbs above the title (Laurence, 8 October 2026; not sticky), after Client support and Policy notes and a rule: the most used as a **labelled ghost Button**, **Make an MTA** with the pen (Reinstate policy when Lapsed), then a rule and **More ▾** with everything else: Policy extension, Renewal invite, Copy policy, Customer portal settings, then below a divider Pause and Cancel (Cancel is the danger item). **When the renewal window is open** (`renewalOpen`, on PUCO0068) Renewal invite and More carry a red count badge, read out as "renewal due". When Main is narrower than 62rem, Make an MTA folds into the top of More | Ghost Buttons with `.btn-icon` and `.button-label`; Menu button Code & specs example 1 (label, then caret) as a ghost Button for More. See deviation 2 |
+| Policy actions (the row with the breadcrumbs) | On **every policy page**, on the right of the breadcrumb row (Laurence, 27 October 2026; Mark's design): Client support, Add policy note, **Make changes** (a secondary Menu button: Amend details, Make an MTA, Policy extension; one change shows as a plain secondary Button), then the **vertical ellipsis** (Copy policy, Renewal invite, Customer portal settings, a divider, Stop policy, Cancel policy). While the renewal is due the ellipsis and Renewal invite carry a badge | Menu button Code & specs examples 1 and 3. See deviation 2 |
 
 **How the columns open and collapse (Mark Feltwell and Laurence, 7 October 2026).** Which
 columns are open follows where you are:
@@ -363,54 +363,47 @@ are remembered apart. In the collapsed strip there are no groups to close.
 > **Gap to raise with Buckholt:** a documented vertical / side navigation, including grouped
 > sections that open and close, and a dark rail like the documentation site's.
 
-### 2. Mark's actions toolbar (21 October 2026)
+### 2. The actions, on the right of the breadcrumb row (27 October 2026)
 
-**On wide screens (1024px and up) the actions are a toolbar beside the menu**, not a row in the
-page heading (Mark's design, Laurence, 21 October 2026). The aim: the page itself can stay as
-current Mobius, and the changes sit in the navigation on the left. The heading keeps only the
-breadcrumbs and the title.
+**Back on the right** (Laurence, 27 October 2026, from broker feedback; Mark's design): many
+brokers preferred the actions on the right, so the toolbar beside the menu (21–22 October) is
+gone and the menu and the page are two grid columns again. The record's actions sit in the row
+with the breadcrumbs, above the title, at every width, with no rules between them:
 
-- **Height:** none set: the toolbar is as tall as its Buttons (Laurence, 22 October 2026),
-  capped at the window so it scrolls only on a short one.
-- **Shape:** a rounded panel (16px corners, Laurence, 21 October 2026; the menu's background,
-  UI overlay 02 over the page background (22 October 2026), and its border;
-  blue in the Mobius look), 56px wide, 8px to the right of the menu, level with its top under the top bar. Its
-  own grid column (`sidebar actions main`), so it stays put while the page scrolls and when the
-  menu collapses. Not drawn on Broking or the other modules.
-- **Icon-only ghost Buttons** in the text colour, each with its name as `aria-label`.
-- **Labels on hover** (Laurence, 22 October 2026): hovering **an icon** (not the toolbar's empty
-  space) expands it after a 0.12s beat, so a pointer passing across does not flash it open. It
-  widens smoothly (0.22s, to a measured width) over the page with a shadow, the labels fading in
-  (More reads "More"); nothing on the page moves, and the icons stay put, left-aligned 10px into
-  their Buttons in both states, each **fixed width** (`fa-fw` beside its style class: Buckholt's
-  Buttons otherwise let icons take their natural widths, so a wider one such as Hand-heart sat
-  further left and jumped as the toolbar opened) (its grid track stays 56px). Badges glide from the icon's corner to
-  the row's end. It closes when the pointer leaves the toolbar. No motion with reduced motion. Keyboard focus entering it expands it at once; focus leaving closes it.
-  Opening More expands it first, so the menu opens beside the labels; it stays open while that
-  menu is. Choosing an action folds it away. The labels replace the Tooltips. Groups are split
-  by a divider:
-  1. **The client's tools:** Client support (`fa-hand-heart`) and Add policy note / Add
-     client note (`fa-note-sticky`, with its count badge).
-  2. **The record's actions**, from the status rules, in two groups (Laurence, 21 October 2026):
-     the changes to the policy first, then the rest. On an in-force policy: Amend details
-     (`fa-pen`), Make an MTA (Mark's Shield-pen SVG, inlined in `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as Font Awesome has no Shield-pen; a wizard), a divider, Policy extension (`fa-calendar-plus`),
-     Renewal invite (`fa-envelope`, with the "renewal due" badge), Copy policy (`fa-copy`),
-     Customer portal settings (`fa-gear`). On a client page: Add new quote (`fa-shield-plus`, the
-     catalogue's Shield-plus, Laurence, 21 October 2026; also in the search results and the
-     narrow heading row).
-  3. **Pause policy** (`fa-circle-pause`) and **Cancel policy** (`fa-circle-xmark`, red), a
-     group of their own after a divider, like the others (Laurence, 22 October 2026; they were
-     behind More, first a flyout menu, then opening in place). Only when the status has them.
-- **"Pause policy", not "Stop policy"** (Mark, 21 October 2026): Stop read too much like Cancel.
-  The confirmation says "Pause this policy?".
-- **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary;
-  the pale teal on the Mobius blue), its icon solid; the client's Avatar takes the teal and
-  carries a small teal badge with the same icon (Buckholt's Avatar has no badge: a gap); and on
-  the client's record the rule under the top bar becomes 3px of the teal (expressive quaternary
-  deep), in both looks. The icon is Hand-heart (`fa-hand-heart`), not Hand-holding-heart
-  (Laurence, 21 October 2026).
-- **Below 1024px** the menu is a drawer, so the labelled heading row described below is used
-  instead.
+- **Client support** (ghost, `fa-hand-heart`) and **Add policy note** / **Add client note**
+  (ghost, `fa-note-sticky`). The note Button **adds** a note, so it carries **no count badge**
+  (Laurence, 27 October 2026); the count is on Notes in the menu.
+- **Make changes**: a **secondary Menu button** (Menu button Code & specs example 1, the label
+  then the caret) holding the changes to the policy, in this order: **Amend details** (`fa-pen`,
+  a link, as it opens a page), **Make an MTA** (Mark's Shield-pen SVG, inlined in
+  `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as
+  Font Awesome has no Shield-pen) and **Policy extension** (`fa-calendar-plus`). A status with
+  **one** change shows it as a **plain secondary Button** instead (Prospect and the declines:
+  Amend quote; Incomplete: Amend risk; Lapsed: Reinstate policy; Cancelled: Amend details): a
+  menu of one is a click for nothing. A panel opened from a Menu item returns focus to the
+  Menu's Button when it closes.
+- **The vertical ellipsis** (`fa-ellipsis-vertical`): an **icon-only ghost** Menu button
+  (Overflow, Menu button Code & specs example 3) with **no Tooltip** (Laurence, 27 October 2026,
+  to try); "More actions" is its name for assistive technology only. It holds **Copy policy**,
+  **Renewal invite** (`fa-envelope`) and **Customer portal settings**, then below a divider
+  **Stop policy** (`fa-circle-stop`) and **Cancel policy** (red at rest, the danger item).
+  **While the renewal is due** it and Renewal invite carry the badge, and its name adds
+  "renewal due".
+- **"Stop policy" again** (Laurence, 27 October 2026; "Pause policy" from 21 October): the
+  confirmation says "Stop this policy?".
+- **On a client page:** Client support, Add client note, then **Add new quote**, a secondary
+  Button with Shield-plus (a link).
+- **Too narrow for the row** (fitBar): the breadcrumbs shorten first; then Make changes folds into
+  the top of the ellipsis menu, above a divider.
+- **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary),
+  its icon solid; the client's Avatar takes the teal and carries a small teal badge with the same
+  icon (Buckholt's Avatar has no badge: a gap); and on the client's record the rule under the top
+  bar becomes 3px of the teal (expressive quaternary deep), in both looks. The icon is Hand-heart
+  (`fa-hand-heart`), not Hand-holding-heart (Laurence, 21 October 2026).
+
+> **History:** 8 October, labelled ghost Buttons in the breadcrumb row, More holding the rest;
+> 21 October, Mark's icon toolbar beside the menu; 22 October, labels on hover, fixed-width
+> icons, More removed; 27 October, back to the right as above.
 
 #### Support needs Modal
 
@@ -422,36 +415,6 @@ Tag, not clickable, Laurence, 21 October 2026), then **Close** (ghost) and **Ope
 (the primary), which opens the Client support panel. Moving between the client's pages does not
 show it again. Client support is off as standard, so to see it: turn it on in Client support,
 go to the Dashboard and open the client again.
-
-### 2b. The labelled actions row, on narrow screens (8 October 2026)
-
-Since 21 October 2026 this row is used **below 1024px only**; wider, the toolbar above replaces it.
-
-
-The actions were a Menu at the foot of the record column, then a vertical strip, then a row of
-icon-only Buttons under the policy's title, at the foot of the policy column, and briefly in the
-heading row. They are now **labelled ghost Buttons in one row with the breadcrumbs**, above the
-title, on every client and policy page (Laurence, 8 October 2026: icon-only and at the bottom,
-they were hidden and hard to understand). The heading is the title alone, as Heading attachment
-asks ("do not turn the heading row into a general toolbar"). The row is not sticky.
-
-- **The most used stays in view; the rest is in More** (Laurence, 8 October 2026): Make an MTA
-  (renamed from Add MTA, with the pen icon) on a Live policy, Reinstate policy on a Lapsed one.
-  **More ▾** (Menu button Code & specs example 1, label then caret, as a ghost Button; read out as
-  "More actions") holds Policy extension, Renewal invite, Copy policy and Customer portal
-  settings, then, below a Menu divider, **Pause and Cancel** (Mark, 7 October 2026: destructive, so
-  not one click away). Cancel is Menu's danger item. Each still asks for confirmation.
-- **Renewal due:** when the policy's renewal window is open, Renewal invite and More carry a red
-  count badge (Mark's badge design), and their names add "renewal due".
-- A panel action is `aria-pressed="true"` while its panel is open, drawn with the ghost Button's
-  own hover colours.
-- **Fitting the row:** the ghost Buttons sit 4px apart (they carry their own padding). When the
-  trail and the actions do not fit, the trail's middle folds into Breadcrumb's overflow menu;
-  when Main is narrower than 62rem Make an MTA folds into the top of More. On a phone the rules
-  are not drawn.
-
-> **Gap to raise with Buckholt:** a documented page-level action bar (or toolbar) that sits with
-> the breadcrumbs.
 
 ### 3. Heading actions that open pages are anchors styled as Buttons
 
@@ -544,7 +507,8 @@ Close. The **catalogue has no entry** for the following, so they are marked `GAP
 | --- | --- |
 | Business details | `fa-briefcase` |
 | Activity | `fa-wave-pulse` |
-| Pause policy | `fa-circle-pause` |
+| Stop policy | `fa-circle-stop` |
+| More actions (the ellipsis) | `fa-ellipsis-vertical` |
 | Client support | `fa-hand-heart` |
 | Make an MTA | Mark's Shield-pen SVG (`.mob-icon-shield-pen`, inlined) |
 | Policy extension | `fa-calendar-plus` |
@@ -575,7 +539,7 @@ as they open pages. **Only one client is open at a time** (opening another close
 there is only ever one View client on screen and it can be the primary (Laurence, 21 October
 2026).
 
-**Client support and the notes** are on **every client and policy page**, in the toolbar (wide screens) or the page heading (narrow)
+**Client support and the notes** are on **every client and policy page**, in the breadcrumb row
 (Laurence, 8 October 2026): two labelled **ghost** Buttons (Button guidance pairs like with
 like), opening their side panels on the page, Client support first:
 
@@ -751,17 +715,13 @@ Rendered headless in Chromium via Playwright. The sandbox blocks the CDNs, so th
 glyphs therefore rendered as boxes in those runs (`discrepancies/known-issues.md` → Font
 Awesome), and Typekit was absent.
 
-- **Mark's actions toolbar (21 October 2026; labels on hover 22 October; 42 assertions):** 56px wide, 8px right of the menu,
-  level with it and as tall, and it follows the menu when collapsed; the heading's labelled row
-  hidden at 1024px and up and back below it; the groups and names on an in-force policy, a
-  Prospect and a client page; the icons as listed; Amend details a link; labels on hover (not from the toolbar's empty
-  space, open from an icon by 0.4s, every icon labelled, the page not moving, the icons not moving, no Tooltips),
-  closing on leave, and expanding at once on keyboard focus; More opening to the right with Pause, a divider and Cancel (red);
-  Pause's confirmation; Make an MTA pressed while its panel is open and focus back on close; no
-  toolbar on the Dashboard; with support switched on, the teal Client support and the Avatar's
-  badge; the support needs Modal on re-entering the record (also after the search), its needs and
-  primary, Open client support opening the panel, and not shown again in the visit.
-
+- **The actions row (27 October 2026, 24 assertions):** no toolbar column, two grid columns;
+  the actions in the breadcrumb row; Make changes opening below with its menu items (not
+  toggles), the Shield-pen in a Menu icon's box; Cancel red at rest; "Stop this policy?"; no
+  badge when the renewal is not due; one change as a plain secondary Button (Prospect, Lapsed);
+  at 1100px Make changes folding into the ellipsis; the client row; no actions on the Dashboard;
+  with support on, the teal Client support, the Avatar's badge, the 3px teal rule, and the
+  support needs Modal once a visit with "+3 more" not clickable.
 - **119 behavioural assertions, all passing.** They cover:
   - per-status groups, actions and heading for all five statuses
   - redirects
@@ -780,7 +740,7 @@ Awesome), and Typekit was absent.
   - the policy menu collapsing to a strip, and a group icon opening it at that group
   - groups open as standard, each label a Button that closes it, and a count on Documents
   - no quick links in the Policy overview heading
-  - Pause and Cancel behind the "More actions" Overflow menu, the confirmation from it, and
+  - Stop and Cancel behind the "More actions" Overflow menu, the confirmation from it, and
     focus returning to that trigger
   - the record column's head, the rail marking the open client or policy, newest-first order,
     Load more / Show fewer and focus retention

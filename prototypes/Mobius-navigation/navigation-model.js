@@ -47,6 +47,7 @@
     time: 'fa-regular fa-clock',                       // Time
     renew: 'fa-regular fa-arrows-rotate',              // Renew
     pause: 'fa-regular fa-circle-pause',               // GAP
+    stop: 'fa-regular fa-circle-stop',                 // GAP: Stop policy (Laurence, 27 October 2026)
     reinstate: 'fa-regular fa-arrow-rotate-right',     // Redo
     add: 'fa-regular fa-plus',                         // Plus (common action: Add)
     copy: 'fa-regular fa-copy',                        // Copy (common action)
@@ -68,7 +69,7 @@
     mta: 'mob-icon mob-icon-shield-pen',               // GAP: Make an MTA (a wizard). Not in Font Awesome: Mark's SVG, inlined in the CSS
     extend: 'fa-regular fa-calendar-plus',             // GAP: Policy extension
     invite: 'fa-regular fa-envelope',                  // Email: Renewal invite
-    more: 'fa-regular fa-ellipsis',                    // Overflow
+    more: 'fa-regular fa-ellipsis-vertical',           // Overflow: the vertical ellipsis (Laurence, 27 October 2026)
     newQuote: 'fa-regular fa-shield-plus'              // Shield-plus: Add new quote (Laurence, 21 October 2026)
   };
 
@@ -150,8 +151,9 @@
     mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
     extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel' },
     renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm' },
-    /* "Pause", not "Stop" (Mark, 21 October 2026): Stop read too like Cancel. */
-    stop: { label: 'Pause policy', icon: ICON.pause, kind: 'confirm' },
+    /* Back to "Stop policy" with the Stop icon (Laurence, 27 October 2026;
+       it was "Pause policy" from 21 October). */
+    stop: { label: 'Stop policy', icon: ICON.stop, kind: 'confirm' },
     reinstate: { label: 'Reinstate policy', icon: ICON.reinstate, kind: 'confirm' },
     fee: { label: 'Admin fee', icon: ICON.money, kind: 'panel' },
     manual: { label: 'Manual credit / debit', icon: ICON.money, kind: 'panel' },
@@ -358,7 +360,7 @@
      [title, body, confirm label, toast, destructive] */
   var CONFIRMS = {
     renew: ['Invite for renewal?', 'Are you sure you would like to invite this policy for renewal?', 'OK', 'Renewal invite sent', false],
-    stop: ['Pause this policy?', 'The policy will be paused. This can be reversed later.', 'Pause policy', 'Policy paused', false],
+    stop: ['Stop this policy?', 'The policy will be stopped. This can be reversed later.', 'Stop policy', 'Policy stopped', false],
     copy: ['Copy this policy?', 'A new policy will be created with the same client, driver and vehicle details.', 'Copy policy', 'Policy copied', false],
     cancel: ['Cancel this policy?', 'Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.', 'Cancel policy', 'Policy cancelled', true],
     reinstate: ['Reinstate this policy?', 'The lapsed policy will be reinstated with its previous cover dates.', 'Reinstate', 'Policy reinstated', false],
