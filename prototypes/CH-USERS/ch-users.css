@@ -1,4 +1,4 @@
-/* Configuration Hub accounts.                                 NOT BUCKHOLT.
+/* Configuration Hub users.                                 NOT BUCKHOLT.
 
    Arrangement for the "Buckholt gaps" in `ch-users-spec.md`, and nothing
    else. The components inside — Card, Key-value pair, Icon block, Text
@@ -6,18 +6,31 @@
    Toast, Tooltip — keep Buckholt's own styling. Values are Buckholt tokens
    wherever one exists. Loaded after the CH shell's stylesheet. */
 
-/* ---------------------------------------------------------- CU-00-01 cards
-   The shell's app-card width and grid (.ch-app-grid), aligned to the start
-   of the content area rather than centred. */
+/* ---------------------------------------------------------- Gap 10: user type cards
+   Two Clickable Cards side by side, equal width, aligned to the start of
+   the content area. Andrej's frame draws them 528px wide, 32px apart. Flex
+   wraps on the basis, so the basis is the narrowest a card may be (352px)
+   and each grows to the frame's 528px: side by side at the 1088px reference
+   width, stacked below about 800px. Everything inside the card is Buckholt:
+   `.card-clickable` draws the arrow, the hover border and the 3px bottom
+   border; `.card-footer` the grey summary band. */
 .cu-type-grid {
+  display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
-  justify-content: flex-start;
+  gap: var(--spacer-06);
 }
 
-/* Both cards share the taller card's height, so the Open buttons line up,
-   as on the CH home. One row, so flex does it without the home's script. */
-.cu-type-grid > .ch-app-card {
+.cu-type-grid > .cu-type-card {
+  flex: 1 1 22rem;
+  max-width: 33rem;
   height: auto;
+}
+
+/* The footer's Tag set: Tag set's own gap, but without the flow offset it
+   has after other content, because here it is the footer's only item. */
+.cu-type-card .card-footer .tag-set {
+  margin: 0;
 }
 
 /* ---------------------------------------------------------- Gap 4: chips
@@ -209,7 +222,7 @@
   top: var(--cu-header-height, 0px);
 }
 
-.cu-accounts-page .offcanvas-backdrop {
+.cu-users-page .offcanvas-backdrop {
   top: var(--cu-header-height, 0px);
   bottom: 0;
   height: auto;

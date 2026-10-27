@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Account Management | Configuration Hub</title>
+<title>User Management | Configuration Hub</title>
 
 <!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
@@ -16,8 +16,9 @@
 </head>
 <body>
 
-<!-- CU-00-01 · Account Management, choose account type. The app's base page.
-     Variants: ?variant=only-me, and the shell's ?seed=long-names. -->
+<!-- CU-00-01 · User Management, choose user type. The app's base page, from
+     Andrej's frame (screenshots/CU-00-01.png). Variants: ?variant=only-me,
+     and the shell's ?seed=long-names. -->
 <div class="layout" data-layout="layout-03" data-layout-surface="flush">
   <header id="ch-header"></header>
 
@@ -30,42 +31,43 @@
           <div class="page-pane">
             <div class="page-panel">
               <div class="text-block">
-                <h1 class="headline-02">Account Management</h1>
-                <p>Choose which accounts you want to view and manage.</p>
+                <h1 class="headline-02">User Management</h1>
+                <p>Choose which users you want to view and manage. Mobius and Configuration Hub use separate accounts. Someone who needs both will need an account for each.</p>
               </div>
 
-              <!-- Separate accounts note: Text block, body text. Not an Alert:
-                   it explains, it doesn't warn. -->
-              <div class="text-block" id="cu-separate-note">
-                <p>Mobius and Configuration Hub use separate accounts. Someone who needs both will need an account for each.</p>
-              </div>
-
-              <!-- Account type cards: Buckholt Card, title, description and
-                   action, no media. The shell's app-card width and layout
-                   (.ch-app-grid / .ch-app-card), aligned to the start. -->
-              <div class="ch-app-grid cu-type-grid" id="cu-type-cards">
-                <div class="card ch-app-card" data-type="mobius">
+              <!-- Gap 10: user type cards. Buckholt's Clickable Card (the whole
+                   card is one link; its arrow is the runtime's own), with the
+                   runtime's .card-footer holding a Tag set. The link's name is
+                   the title; its description is the card description and the
+                   summary. The tags are hidden from assistive technology
+                   because the summary sentence says the same with commas. -->
+              <div class="cu-type-grid" id="cu-type-cards">
+                <a class="card card-clickable cu-type-card" href="mobius.html" data-type="mobius"
+                   aria-labelledby="cu-card-mobius-title" aria-describedby="cu-card-mobius-desc cu-card-mobius-summary">
                   <div class="card-body">
                     <div class="text-block">
-                      <h2 class="title-03">Mobius accounts</h2>
-                      <p>Add and manage accounts for signing in to Mobius.</p>
+                      <h2 class="title-03" id="cu-card-mobius-title">Mobius users</h2>
+                      <p id="cu-card-mobius-desc">Add and manage the people who sign in to Mobius.</p>
                     </div>
-                    <a class="btn btn-primary ch-open" href="mobius.html" aria-label="Open Mobius accounts">
-                      <span class="button-label">Open</span>
-                    </a>
                   </div>
-                </div>
-                <div class="card ch-app-card" data-type="configuration-hub">
+                  <div class="card-footer">
+                    <div class="tag-set" aria-hidden="true"></div>
+                    <span class="visually-hidden" id="cu-card-mobius-summary"></span>
+                  </div>
+                </a>
+                <a class="card card-clickable cu-type-card" href="users.html" data-type="configuration-hub"
+                   aria-labelledby="cu-card-ch-title" aria-describedby="cu-card-ch-desc cu-card-ch-summary">
                   <div class="card-body">
                     <div class="text-block">
-                      <h2 class="title-03">Configuration Hub accounts</h2>
-                      <p>Add and manage accounts for signing in to Configuration Hub.</p>
+                      <h2 class="title-03" id="cu-card-ch-title">Configuration Hub users</h2>
+                      <p id="cu-card-ch-desc">Add and manage the people who sign in to Configuration Hub.</p>
                     </div>
-                    <a class="btn btn-primary ch-open" href="accounts.html" aria-label="Open Configuration Hub accounts">
-                      <span class="button-label">Open</span>
-                    </a>
                   </div>
-                </div>
+                  <div class="card-footer">
+                    <div class="tag-set" aria-hidden="true"></div>
+                    <span class="visually-hidden" id="cu-card-ch-summary"></span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -82,13 +84,49 @@
 <script src="ch-users-data.js"></script>
 <script src="ch-users.js"></script>
 <script>
-  /* Shell override: the base page has one crumb, "Account Management", and
-     no page name of its own, so the title is "Account Management |
-     Configuration Hub". */
-  CU.init({
-    app: 'user-management',
-    breadcrumb: [{ label: 'Account Management' }]
-  });
+  (function () {
+    'use strict';
+
+    /* Shell override: the base page has one crumb, "User Management", and no
+       page name of its own, so the title is "User Management | Configuration
+       Hub". */
+    if (!CU.init({
+      app: 'user-management',
+      breadcrumb: [{ label: 'User Management' }]
+    })) return;
+
+    var D = CUData;
+
+    /* Status summary: total always ("1 user" when there is one), then
+       Active, Inactive and Pending only when more than 0. */
+    function summary(counts) {
+      var parts = [{ cls: D.tagClass.Total, text: counts.total + (counts.total === 1 ? ' user' : ' users') }];
+      ['Active', 'Inactive', 'Pending'].forEach(function (status) {
+        if (counts[status] > 0) parts.push({ cls: D.tagClass[status], text: counts[status] + ' ' + status.toLowerCase() });
+      });
+      return parts;
+    }
+
+    function renderCard(type, counts) {
+      var card = document.querySelector('.cu-type-card[data-type="' + type + '"]');
+      var parts = summary(counts);
+      card.querySelector('.tag-set').innerHTML = parts.map(function (p) {
+        return '<span class="' + p.cls + '"><span class="tag-label">' + CU.esc(p.text) + '</span></span>';
+      }).join('');
+      card.querySelector('.card-footer .visually-hidden').textContent =
+        parts.map(function (p) { return p.text; }).join(', ') + '.';
+    }
+
+    /* Mobius: static counts. Configuration Hub: the users as left on
+       CU-00-02 in this tab (ch-users.js). */
+    var users = CU.loadUsers();
+    var ch = { total: users.length };
+    D.statuses.forEach(function (status) {
+      ch[status] = users.filter(function (u) { return u.status === status; }).length;
+    });
+    renderCard('mobius', D.mobiusSummary);
+    renderCard('configuration-hub', ch);
+  })();
 </script>
 </body>
 </html>

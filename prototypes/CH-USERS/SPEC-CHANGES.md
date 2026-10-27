@@ -1,11 +1,22 @@
 # CH-USERS — findings for the spec, the designs and Buckholt
 
-From building `ch-users-spec.md` revision 3 on 26 Oct 2026. The spec copy in
-this folder is unedited; everything that should change in it is here.
+From building `ch-users-spec.md` revision 3 on 26 Oct 2026, and updating it
+to revision 5 on 27 Oct 2026. The spec copy in this folder is unedited;
+everything that should change in it is here.
+
+**Revision 5 status of the revision 3 findings:**
+
+- **Resolved by revision 4/5:** A1 (the name is "User Management" again,
+  which fits) and A9 (the CU-00-01 cards are new and wider).
+- **Still open:** A2–A8 and A10–A17. Where they cite acceptance criteria,
+  the numbers have been updated to revision 5's list.
+- **New from the revision 5 build:** A18–A22, B5–B7, C16 and C17, each under
+  its own heading. A20 is closed: Andrej confirmed the status colours.
 
 ## A. The spec
 
-1. **App name length check: "Account Management" fails the width rule.**
+1. **Resolved in revision 4.** *Revision 3 finding, kept for the record:*
+   **App name length check: "Account Management" fails the width rule.**
    The spec asked for this check (Shell overrides).
    - **Character count: passes.** 18 characters, within this spec's
      18-character limit and CH-SHELL revision 6's 20.
@@ -40,16 +51,15 @@ this folder is unedited; everything that should change in it is here.
    - The shell code is the same in both, so this build is unaffected.
    - Cite revision 6, or publish revision 7 first.
 3. **The shell's Test alert is now wrong on these pages.** The alert reads
-   "You're in your Test environment. Changes here won't affect Live." Accounts
-   belong to the organisation (Data model, Rules). An account added, changed
-   or deleted in Test is the same account in Live.
+   "You're in your Test environment. Changes here won't affect Live."
+   Configuration Hub users belong to the organisation (Data model, Rules). A
+   user added, changed or deleted in Test is the same user in Live.
    - This is the case CH-SHELL's Open question 4 anticipated.
    - Built with the shell's alert unchanged, as the shell decides it.
-   - The copy needs to change, at least inside Account Management. For
-     example, an app-specific line under the alert: "Accounts are shared
-     with Live."
-4. **AC 24 and Gap 1 pull in different directions.** Gap 1 says the page is
-   "dimmed and inert" while a blade is open. AC 24 needs the environment
+   - The copy needs to change, at least inside User Management. For example,
+     an app-specific line under the alert: "Users are shared with Live."
+4. **AC 27 and Gap 1 pull in different directions.** Gap 1 says the page is
+   "dimmed and inert" while a blade is open. AC 27 needs the environment
    control usable while the Add or Edit blade has changes.
    - Built: the blade opens under the CH top bar, as in the Mobius frames.
    - The top bar stays usable by pointer; the rest of the page is dimmed.
@@ -68,16 +78,21 @@ this folder is unedited; everything that should change in it is here.
    - **The row-level last-Administrator rule only ever applies to the
      signed-in user.** That user's Delete and role are already blocked by
      the own-account rule. Built so that the last-Administrator reason wins
-     when both apply, which AC 20 needs. Confirm that precedence, or say
+     when both apply, which AC 23 needs. Confirm that precedence, or say
      which reason shows.
 6. **The shell override needs a home.**
    - CH-SHELL's contract has a feature edit `shell/ch-registry.js` (base page,
      seed lists). The brief for this build said not to edit CH-SHELL.
    - So this prototype changes the registry in memory and ships its own home
      entry page (`home.html`). The lockup on CH-USERS pages points there.
-   - The shell's own home still shows "User Management".
-   - When CH-SHELL takes the new name and description, as this spec asks,
-     both workarounds can go (PROTOTYPE.md, "How the shell is reused").
+   - The shell's own home still shows the old description and opens the
+     placeholder page.
+   - Revision 5 note: CH-SHELL was never edited, in revision 3 or 5, so
+     there was nothing to revert there. The revision 3 override was only
+     ever in this prototype's `ch-users-registry.js`, which now changes the
+     description and base page and keeps the shell's own name.
+   - When CH-SHELL takes the new description, as this spec asks, both
+     workarounds can go (PROTOTYPE.md, "How the shell is reused").
 7. **Gap 9: a disabled control can't show a Tooltip on focus.** Disabled
    buttons and checkboxes leave the tab order.
    - Built: the Tooltip shows on hover, via a wrapper that never takes
@@ -89,8 +104,8 @@ this folder is unedited; everything that should change in it is here.
    set of labelled buttons is "all with icons, or none". "Close" has no
    common-action icon. Built as "Edit" without the icon. Say "Edit label"
    rather than "Edit common action", or give "Close" an icon too.
-9. **CU-00-01: "Configuration Hub accounts" wraps at the shell's card
-   width.** "Card width matches the CH-SHELL app cards" leaves 218px for
+9. **Resolved in revision 4.** *Revision 3 finding:* **CU-00-01: the
+   revision 3 card title wrapped at the shell's card width.** "Card width matches the CH-SHELL app cards" leaves 218px for
    the title; the title needs 296.4px in Proxima Soft. Built wrapping, with
    both cards the same height. If one line matters, the card titles would
    need to be shorter ("Configuration Hub" alone is 194.5px), or the cards
@@ -130,6 +145,47 @@ this folder is unedited; everything that should change in it is here.
       treatment says enough. For the locked Role at least, the reason is the
       only place the rule is explained in the blade. See C15.
 
+### New from the revision 5 build
+
+18. **AC 7 contradicts the State note.**
+    - AC 7: after a new invitation, "when the user returns to CU-00-01" the
+      card shows "13 users" and "3 pending". Returning is a page load.
+    - Prototype notes, State: "held in memory. A reload resets to the seed
+      data."
+    - Built: users are kept for the browser tab across page changes, and
+      reset on a reload, on a different seed or variant, and in a new tab.
+    - Say so in the State note, so it isn't read as "every page starts from
+      the seed".
+19. **Gap 10 is mostly documented already.** "Card (selectable state and hit
+    target not supplied)" points at the wrong Card variant. Card documents a
+    **Clickable Card** (`a.card.card-clickable`). Its runtime draws:
+    - the whole-card link;
+    - the arrow;
+    - the 3px bottom border;
+    - the hover border and the pointer.
+
+    Only the footer is undocumented (C16). Reword Gap 10 to "Clickable Card
+    with a footer", and drop the arrow from the Buckholt mapping as a
+    separate icon: the Clickable Card draws it.
+20. **Closed.** *The table's status colours changed with "same status
+    variants as the card tags".*
+    - Revision 3 built Pending as warning (orange) and Inactive as the plain
+      tag (grey).
+    - Following Andrej's frame and this line, revision 5 has Inactive orange
+      and Pending grey.
+    - **Confirmed by Andrej, 27 Oct 2026:** Inactive orange and Pending grey
+      are right, as in his frame. No change to the build.
+21. **Two "Known screenshot differences" rows don't match the frame.**
+    - **Breadcrumb:** the frame already shows "User Management" (the export
+      is `screenshots/CU-00-01.png`), not "Applications". Delete that row.
+    - **Descriptions:** the frame's Mobius description has no full stop,
+      and its Configuration Hub description does. That's fine, because the
+      spec's copy replaces both.
+22. **Card title style.** The frame sets the card titles in Headline 02
+    (28px). Buckholt's Card documents `title-03` (24px) for card titles.
+    Built `title-03`, per Sources of truth. If the larger title matters,
+    raise it with Buckholt (C17), not here.
+
 ## B. Figma (User Management file, `UH10tKpy1gSqjAZI4DQWRV`)
 
 1. **The Edit, View and Delete User pages are the older Mobius UI.**
@@ -162,6 +218,22 @@ this folder is unedited; everything that should change in it is here.
 4. **The Unsaved Changes pop-up frames** (Edit User page, section
    `3561:133658`) are the nearest reference for the Discard changes Modal.
    They are not in the Screen index, and were not exported.
+
+### New from the revision 5 build
+
+5. **Andrej's CU-00-01 frame** (node `8072:6199`, exported as
+   `screenshots/CU-00-01.png`) uses Figma's "Clickable card" with a card
+   footer, and a separate "Clickable icon" component for the arrow ("This
+   arrow is purposefully off centre"). Buckholt's runtime Clickable Card
+   draws its own arrow at the end of the card body. The two match closely,
+   but keep the Figma arrow and the coded one in step.
+6. **The frame's tag variants are the reference for status colour** (total
+   info, active success, inactive warning, pending plain). The Mobius Users
+   table frame (`7587:166787`) draws Pending orange and Inactive grey: the
+   opposite. Align the table frame with the card frame, whose colours are
+   confirmed (A20, closed).
+7. **The frame shows the shell's Figma placeholders** ("Open GI", avatar
+   "RD", a mint avatar). Built with the Northgate seed, as the spec says.
 
 ## C. Buckholt
 
@@ -234,3 +306,25 @@ this folder is unedited; everything that should change in it is here.
     - Measured in the local build only, so not yet classified.
     - Document the intent; if it is deliberate, give the reason a documented
       place.
+
+### New from the revision 5 build
+
+16. **Card footer: runtime only.**
+    - `buckholt.css` styles `.card-footer` (the grey band and padding
+      Andrej's frame draws), and `.card:has(.card-footer) .card-body`
+      adjusts the body padding for it.
+    - No Code & specs example shows a footer, on a plain Card or a Clickable
+      Card. So the composition used here (`a.card.card-clickable >
+      .card-body + .card-footer > .tag-set`) is evidenced by the runtime,
+      not by the documentation.
+    - Document the footer, and say whether a Clickable Card may carry one.
+17. **Clickable Card accessibility.**
+    - Card documents the markup but not the accessible name.
+    - A whole-card link with a heading, a paragraph and tags would read all
+      of it as its name. This build names it by the title
+      (`aria-labelledby`) and describes it by the rest (`aria-describedby`).
+    - The arrow is a CSS `::after` glyph (`content: "\f061"`). Some
+      screen readers read generated content as part of a name computed from
+      content, which is another reason to name the link explicitly.
+    - Document the naming, and whether the card title style may vary
+      (Figma uses Headline 02 here, A22).

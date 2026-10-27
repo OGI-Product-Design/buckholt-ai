@@ -1,4 +1,4 @@
-/* CU-00-02 · Configuration Hub accounts, and the flows that start from it:
+/* CU-00-02 · Configuration Hub users, and the flows that start from it:
    CU-01 Add, CU-02 / CU-03 Edit, CU-04 View, CU-05 Delete.  NOT BUCKHOLT.
 
    State is held in memory; a reload resets to the seed (spec, Prototype
@@ -23,10 +23,10 @@
 
   var ok = CU.init({
     app: 'user-management',
-    page: 'Configuration Hub accounts',
+    page: 'Configuration Hub users',
     breadcrumb: [
-      { label: 'Account Management', href: 'index.html' },
-      { label: 'Configuration Hub accounts' }
+      { label: 'User Management', href: 'index.html' },
+      { label: 'Configuration Hub users' }
     ],
     /* Shell contract: an open Add or Edit blade with changed values counts
        as unsaved changes, so an environment switch asks first (SH-01). */
@@ -35,8 +35,10 @@
   if (!ok) return;
 
   /* ------------------------------------------------------------ data */
-  var accounts = D.build(CU.variant, CHShell.seed().user);
-  var nextId = accounts.length + 1;
+  /* Kept for the tab across page changes, so CU-00-01 counts what was
+     done here; a reload goes back to the seed (ch-users.js). */
+  var users = CU.loadUsers();
+  var nextId = users.reduce(function (n, u) { return Math.max(n, Number(u.id.split('-')[1]) || 0); }, 0) + 1;
 
   var state = {
     query: '',
@@ -50,12 +52,12 @@
   };
 
   function byId(id) {
-    for (var i = 0; i < accounts.length; i++) if (accounts[i].id === id) return accounts[i];
+    for (var i = 0; i < users.length; i++) if (users[i].id === id) return users[i];
     return null;
   }
   function isPending(a) { return a.status === 'Pending'; }
   function fullName(a) { return a.firstName ? a.firstName + ' ' + a.lastName : ''; }
-  /* Pending accounts have no name, so their accessible names use the email. */
+  /* Pending users have no name, so their accessible names use the email. */
   function label(a) { return fullName(a) || a.email; }
   function initials(a) { return (a.firstName[0] + a.lastName[0]).toUpperCase(); }
   function roleInfo(name) {
@@ -64,7 +66,7 @@
   }
 
   function activeAdmins() {
-    return accounts.filter(function (a) { return a.role === 'Administrator' && a.status === 'Active'; });
+    return users.filter(function (a) { return a.role === 'Administrator' && a.status === 'Active'; });
   }
   function isLastActiveAdmin(a) {
     var admins = activeAdmins();
@@ -123,7 +125,7 @@
     });
   }
 
-  function visible() { return sorted(accounts.filter(matches)); }
+  function visible() { return sorted(users.filter(matches)); }
 
   function pageCount(total) { return Math.max(1, Math.ceil(total / state.perPage)); }
 
@@ -174,8 +176,8 @@
   }
 
   function statusTag(status) {
-    var cls = { Active: 'tag tag-status tag-status-success', Pending: 'tag tag-status tag-status-warning', Inactive: 'tag' }[status];
-    return '<span class="' + cls + '"><span class="tag-label">' + status + '</span></span>';
+    /* The same variants as the CU-00-01 card tags (spec, Buckholt mapping). */
+    return '<span class="' + D.tagClass[status] + '"><span class="tag-label">' + status + '</span></span>';
   }
 
   function actionButton(a, action, icon, danger, reason) {
@@ -243,7 +245,7 @@
   }
 
   function renderChips() {
-    function count(status) { return accounts.filter(function (a) { return a.status === status; }).length; }
+    function count(status) { return users.filter(function (a) { return a.status === status; }).length; }
     document.getElementById('cu-count-active').textContent = count('Active');
     document.getElementById('cu-count-pending').textContent = count('Pending');
     document.getElementById('cu-count-inactive').textContent = count('Inactive');
@@ -272,6 +274,7 @@
   }
 
   function render() {
+    CU.saveUsers(users);
     CU.disposeTooltips(rowsEl);
     var view = pageRows();
     var gap = '<tr class="table-gap"><td colspan="100%"></td></tr>';
@@ -724,9 +727,9 @@
     if (!value) return 'Enter an email address.';
     if (value.length > 254) return 'Email address must be 254 characters or fewer.';
     if (!EMAIL_PATTERN.test(value)) return 'Enter an email address in the correct format, like name@example.com.';
-    var existing = accounts.filter(function (a) { return a.email === value; })[0];
-    if (existing && isPending(existing)) return 'This person has already been invited. You can resend their invitation from their account details.';
-    if (existing) return "There's already a Configuration Hub account with this email address.";
+    var existing = users.filter(function (a) { return a.email === value; })[0];
+    if (existing && isPending(existing)) return 'This person has already been invited. You can resend their invitation from their user details.';
+    if (existing) return "There's already a Configuration Hub user with this email address.";
     return null;
   }
 
@@ -744,7 +747,7 @@
 
     var ctx = createBlade({
       id: 'cu-add-blade',
-      title: 'Add Configuration Hub account',
+      title: 'Add Configuration Hub user',
       body: body,
       footer: footer(
         button('cu-add-cancel', 'btn-secondary', 'Cancel') +
@@ -797,7 +800,7 @@
         return;
       }
       var value = email.value.trim().toLowerCase();
-      accounts.push({
+      users.push({
         id: 'cu-' + (nextId++),
         self: false,
         email: value,
@@ -855,7 +858,7 @@
 
     var ctx = createBlade({
       id: 'cu-edit-blade',
-      title: 'Edit account',
+      title: 'Edit user',
       body: body,
       footer: footer(
         button('cu-edit-cancel', 'btn-secondary', 'Cancel') +
@@ -899,6 +902,7 @@
       el.querySelector('#cu-edit-resend').addEventListener('click', function () {
         /* Works straight away, without saving other changes [Assumption]. */
         a.invitedOn = CU.isoToday();
+        CU.saveUsers(users);
         el.querySelector('#cu-edit-invited').textContent = invitedText(a);
         CU.toast('Invitation sent again to ' + a.email + '.');
       });
@@ -984,16 +988,16 @@
   function openDelete(list, returnTo) {
     var title, body, action;
     if (list.length > 1) {
-      title = 'Delete ' + list.length + ' accounts?';
-      body = 'They won\'t be able to sign in to Configuration Hub, and any pending invitations will be cancelled. Mobius accounts aren\'t affected. You can\'t undo this.';
+      title = 'Delete ' + list.length + ' users?';
+      body = 'They won\'t be able to sign in to Configuration Hub, and any pending invitations will be cancelled. Mobius users aren\'t affected. You can\'t undo this.';
       action = 'Delete';
     } else if (isPending(list[0])) {
       title = 'Cancel the invitation for ' + list[0].email + '?';
       body = 'The link in their invitation will stop working. You can\'t undo this.';
       action = 'Cancel invitation';
     } else {
-      title = 'Delete ' + fullName(list[0]) + '\'s account?';
-      body = 'They won\'t be able to sign in to Configuration Hub. Their Mobius account, if they have one, isn\'t affected. You can\'t undo this.';
+      title = 'Delete ' + fullName(list[0]) + '?';
+      body = 'They won\'t be able to sign in to Configuration Hub. Their Mobius user, if they have one, isn\'t affected. You can\'t undo this.';
       action = 'Delete';
     }
     document.getElementById('cu-delete-title').textContent = title;
@@ -1007,12 +1011,12 @@
     if (!deleting) return;
     var list = deleting.list;
     var ids = list.map(function (a) { return a.id; });
-    accounts = accounts.filter(function (a) { return ids.indexOf(a.id) === -1; });
+    users = users.filter(function (a) { return ids.indexOf(a.id) === -1; });
     state.selected = [];
     deleting.confirmed = true;
     deleting.message = list.length > 1
-      ? list.length + ' accounts deleted.'
-      : (isPending(list[0]) ? 'Invitation for ' + list[0].email + ' cancelled.' : fullName(list[0]) + '\'s account deleted.');
+      ? list.length + ' users deleted.'
+      : (isPending(list[0]) ? 'Invitation for ' + list[0].email + ' cancelled.' : fullName(list[0]) + ' deleted.');
     /* If the current page is now empty, render() shows the previous one. */
     render();
     deleteModal.hide();
@@ -1073,9 +1077,9 @@
 
   /* For the test suite and for anyone exploring the prototype from the
      console. Not used by the page. */
-  window.CUAccounts = {
+  window.CUUsers = {
     state: state,
-    accounts: function () { return accounts; },
+    users: function () { return users; },
     render: render
   };
 })();
