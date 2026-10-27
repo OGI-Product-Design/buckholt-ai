@@ -581,6 +581,17 @@
       (rest > 0 ? '<div class="mob-table-foot"><p class="support-01" aria-live="polite">Showing 1 to ' + shown.length + ' of ' + x.policies.length + ', most recent first</p>' + more + '</div>' : '');
   }
 
+  /* Where one match goes (no filters): a policy whose reference is the
+     search, else the one client found. Samples do not open, so a single
+     sample stays in the results. */
+  function searchDirect(q) {
+    var n = String(q || '').trim().toLowerCase();
+    var pol = F.policies.filter(function (p) { return p.ref.toLowerCase() === n; })[0];
+    if (pol) return policyHref(pol);
+    var found = searchFound(q);
+    return found.length === 1 && found[0].real ? '#c/summary' : null;
+  }
+
   function searchResults() {
     var q = S.query;
     var found = searchFound(q);
@@ -1374,11 +1385,15 @@
       var a = A[k];
       var li = '<li role="none"' + (cls ? ' class="' + cls + '"' : '') + '>';
       /* A journey opens a page: a link, not a button. */
-      if (a.kind === 'flow') return li + '<a class="menu-item" role="menuitem" href="' + policyHref(p, a.to) + '">' +
-        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(label(k)) + '</a></li>';
+      /* Make changes' items carry a one-line helper (Laurence, 27 October
+         2026), so the choice is clear before it is made. */
+      var help = a.help && cls !== 'plain' ? '<span class="mob-menu-help">' + t(a.help) + '</span>' : '';
+      var text = help ? '<span class="mob-menu-text"><span>' + t(label(k)) + '</span>' + help + '</span>' : t(label(k));
+      if (a.kind === 'flow') return li + '<a class="menu-item' + (help ? ' mob-menu-item-help' : '') + '" role="menuitem" href="' + policyHref(p, a.to) + '">' +
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + text + '</a></li>';
       /* A Menu item is not a toggle: no aria-pressed. */
-      return li + '<button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
-        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) +
+      return li + '<button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + (help ? ' mob-menu-item-help' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + text +
         (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
       '</button></li>';
     };
@@ -1400,9 +1415,13 @@
       '</div>';
     }
     var more = (rare.length || risky.length || change.length) ? '<div class="menu mob-overflow">' +
-      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false"' +
-        ' aria-label="More actions' + (due ? ', renewal due' : '') + '">' +
-        '<div class="btn-icon"><i class="' + ICON.more + '" aria-hidden="true"></i></div>' +
+      /* Labelled "Policy actions" (Laurence, 27 October 2026, from review:
+         the bare ellipsis was hard to find): Menu button Code & specs
+         example 1, the label then the caret, a ghost Button beside Make
+         changes. */
+      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<span class="button-label">Policy actions' + (due ? '<span class="visually-hidden">, renewal due</span>' : '') + '</span>' +
+        '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
         (due ? '<span class="badge badge-floating mob-count" aria-hidden="true">1</span>' : '') +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
@@ -1442,6 +1461,7 @@
     client: client,
     policy: policy,
     panels: panels,
-    heading: heading
+    heading: heading,
+    searchDirect: function (q) { var f = S.searchFilter; S.searchFilter = {}; var r = searchDirect(q); S.searchFilter = f; return r; }
   };
 }(window));

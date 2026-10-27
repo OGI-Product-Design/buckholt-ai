@@ -270,7 +270,11 @@
    one icon button that opens the rail there. The record column does not
    collapse. */
 @media (min-width: 1024px) {
-  .mob-rail { transition: width 0.15s ease-in-out; }
+  /* No slide when the rail changes width (Laurence, 27 October 2026, from
+     review): switching between the client's and the policy's menu moved
+     items under the pointer mid-animation, so the next click missed. It
+     now settles at once. */
+  .mob-rail { transition: none; }
   /* Not on first load: the rail starts in its state, it does not slide
      into it (removed once the first page has been drawn). */
   .mob-no-anim .mob-rail { transition: none; }
@@ -1000,3 +1004,14 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 /* Cancel policy reads red at rest, not only on hover (Mark's design);
    Buckholt's danger item colours on hover only. */
 .mob-overflow .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
+
+/* Make changes' items carry a one-line helper under the label (Laurence,
+   27 October 2026), so the choice is clear before it is made. */
+.menu-item.mob-menu-item-help { display: flex; align-items: flex-start; height: auto; min-height: var(--menu-item-height); padding-block: var(--spacer-03); white-space: normal; }
+.menu-item.mob-menu-item-help > i,
+.menu-item.mob-menu-item-help > .mob-icon { margin-top: 0.125rem; }
+.mob-menu-text { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.mob-menu-help { font-size: 0.8125rem; line-height: 1.125rem; color: var(--text-secondary); white-space: nowrap; }
+.mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 22rem; }
+/* "3 new": the count says what it counts. */
+.mob-count-inline { white-space: nowrap; }
