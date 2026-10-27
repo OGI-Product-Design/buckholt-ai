@@ -46,8 +46,9 @@ This is the order `AGENTS.md` specifies, with the shared prototype layer and thi
 ...
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../components/form/form.js"></script>   <!-- after jQuery -->
-<script>/* keeps dropdown.js's DOMContentLoaded binding (see "Selects") */</script>
+<script>/* keeps each component script's DOMContentLoaded binding (see "Selects") */</script>
 <script src="../../components/dropdown/dropdown.js"></script>
+<script src="../../components/tabs/tabs.js"></script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
 <script src="fixtures.js"></script>
@@ -113,9 +114,9 @@ and with it the module links across the top bar:
   with a tick at its end, so it is not marked by colour alone (client and policy pages are Broking's). Below 576px the label is kept
   for assistive technology but not drawn, and the caret alone opens it. Buckholt documents no
   system or app switcher, so the switcher itself is a gap to raise; the parts are documented.
-- **The top bar on narrow screens.** Between 768 and 1280px the search field is at most 20rem,
-  leaving room for the longest system name; below 430px the field shows only its icon (a tap on
-  it still opens the search) and the right-hand controls sit 4px apart, so the bar fits at 360px.
+- **The top bar on narrow screens.** Between 768 and 1280px the search field is at most 20rem
+  and gives way before the area switcher (whose name stays on one line) or the avatar. On a
+  phone, see "Phone" below.
 - **Create new client, next to the search** (Laurence, 8 October 2026; back here 22 October
   2026): a secondary Button (an anchor, as it opens a page) with the User-plus icon and its label;
   below 1280px the bar has no room for the label, so an icon-only version with its name and
@@ -295,11 +296,42 @@ Select and Dropdown guidance disagree in practice.
 on `DOMContentLoaded`, and this prototype draws its pages afterwards. So `index.html` keeps the
 binding the script registers (a short wrapper around its `<script>` tag), and
 `mobius-navigation.js` runs it on each Dropdown as it is drawn (a MutationObserver), showing it
-only the Dropdowns not yet bound. The script sets every option's `aria-selected` to false as it
+only the Dropdowns not yet bound. `components/tabs/tabs.js` (the Tabs scroll Buttons) is kept and
+run the same way, and every Tabs uses Code & specs example 2, with its scroll Buttons. The script sets every option's `aria-selected` to false as it
 binds, so the chosen one is marked selected again afterwards.
 
 Some fields have no options in the reference (Activity type, Note type, Fee account and others
 that only say "Select"). They are not invented, so their Dropdowns open empty.
+
+## Phone (28 October 2026)
+
+Below 576px (Laurence, 28 October 2026: "really broken on mobile"). Buckholt's own phone
+behaviour is kept as it is: the page's padding (64px down, 32px across), Card padding, Tables
+that scroll inside their container, Button sets that wrap, Dropdown and Menu panels kept inside
+the screen. These are the application's choices where Buckholt is silent:
+
+- **Top bar.** The Menu button and the wordmark on the left; on the right, icon-only Buttons
+  (Button Code & specs, icon-only, each with its name and a Tooltip): **Search** (opens the same
+  Modal; the squeezed 44px field was hard to read and tap, and it overlapped Create new client),
+  **Create new client**, the **area switcher showing the current area's icon** in place of its
+  name (the name stays for assistive technology; before, it was a caret alone), and the avatar.
+  Nothing overlaps from 360px.
+- **The record's actions** fold into **one "Actions" Menu button** (ghost, the label then the
+  caret) at the right of the breadcrumbs, where they sit on a wider screen. Client pages: Client
+  support, Add client note, Add new quote. Policy pages: Client support and Add policy note, then
+  the policy's changes and actions in the same groups as on a wide screen, Cancel policy in red.
+  Before, three labelled Buttons wrapped onto two indented rows under the breadcrumbs.
+- **Menu helpers wrap** inside their panel rather than being cut off.
+- **Search Modal** is full screen (Buckholt's documented `.modal-fullscreen-sm-down`); the field
+  and its Search Button take the width, What can I search? under them.
+- **Homepage:** the field and its Search Button across the page, What can I search?, then
+  **Create new client at full width** (Button set's documented `.button-set-stacked`; on a
+  wider screen the set is as wide as its Button, so nothing changes there).
+- **Tabs** that overflow (Outstanding diary, Sanctions check matches at 360px) get Buckholt's
+  scroll Buttons from `tabs.js`.
+
+> Open question: Buckholt keeps 64px above the page and 32px inside Cards on a phone. That is
+> kept; tighter phone spacing would need Buckholt guidance.
 
 ## The homepage (27 October 2026)
 

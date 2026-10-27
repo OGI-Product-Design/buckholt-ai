@@ -309,8 +309,14 @@
      Buckholt Tabs: Bootstrap pill behaviour, one `.tab-pane` per tab. */
   function tabs(labels, panes) {
     var base = id('tabs');
+    /* Tabs Code & specs example 2: the scroll Buttons either side, which
+       components/tabs/tabs.js shows when the tabs overflow (a phone). */
     return '<div class="tabs">' +
-      '<div class="tab-items"><div class="tab-items-scroll">' +
+      '<div class="tab-items">' +
+      '<button type="button" class="btn btn-ghost tab-scroll tab-scroll-left" aria-label="Scroll tabs left" disabled>' +
+        '<div class="btn-icon"><i class="fa-regular fa-chevron-left" aria-hidden="true"></i></div>' +
+      '</button>' +
+      '<div class="tab-items-scroll">' +
         '<ul class="nav nav-underline" role="tablist">' + labels.map(function (l, i) {
           return '<li class="nav-item" role="presentation">' +
             '<button class="nav-link' + (i ? '' : ' active') + '" id="' + base + '-' + i + '-tab" data-bs-toggle="pill"' +
@@ -318,7 +324,11 @@
               ' aria-selected="' + (i ? 'false' : 'true') + '">' + t(l) + '</button>' +
           '</li>';
         }).join('') + '</ul>' +
-      '</div></div>' +
+      '</div>' +
+      '<button type="button" class="btn btn-ghost tab-scroll tab-scroll-right" aria-label="Scroll tabs right">' +
+        '<div class="btn-icon"><i class="fa-regular fa-chevron-right" aria-hidden="true"></i></div>' +
+      '</button>' +
+      '</div>' +
       '<div class="tab-content">' + panes.map(function (p, i) {
         return '<div class="tab-pane fade' + (i ? '' : ' active show') + '" id="' + base + '-' + i + '" role="tabpanel"' +
           ' aria-labelledby="' + base + '-' + i + '-tab" tabindex="0">' + p + '</div>';
@@ -720,7 +730,7 @@
         '</div>' +
         /* Create new client at the page's right, the homepage's primary
            (Laurence, 27 October 2026). */
-        set([btn('Create new client', { variant: 'primary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create') +
+        set([btn('Create new client', { variant: 'primary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create button-set-stacked') +   /* stacked: full width on a phone, its own width elsewhere */
       '</div>';
       var d = F.outstandingDiary;
       var sc = F.sanctionMatches;
@@ -1459,6 +1469,10 @@
         '</div>' +
       '</div>';
     }
+    /* On a phone every action is in one Actions menu (phoneActions): the
+       changes, the rare actions and the risky ones, grouped as here. */
+    var groups = [change, rare, risky].filter(function (g) { return g.length; });
+    phonePolicyItems = groups.map(function (g) { return g.map(function (k) { return item(k); }).join(''); }).join('<li role="none"><hr class="menu-divider"></li>');
     var more = (rare.length || risky.length || change.length) ? '<div class="menu mob-overflow">' +
       /* Labelled "Policy actions" (Laurence, 27 October 2026, from review:
          the bare ellipsis was hard to find): Menu button Code & specs
@@ -1484,6 +1498,37 @@
     return changes + more;
   }
 
+  /* On a phone (below 576px) the row has no room for labelled Buttons:
+     every action folds into one ghost Menu button, "Actions" (Menu button
+     Code & specs example 1, the label then the caret), at the right of the
+     breadcrumbs, where the actions sit on a wider screen. CSS shows it, and
+     hides the Buttons, only on a phone. */
+  var phonePolicyItems = '';
+  function phoneActions(R) {
+    var on = !!F.client.supportOn;
+    var mi = function (icon, label, attrs, href) {
+      var inner = '<i class="' + icon + '" aria-hidden="true"></i>' + label;
+      return '<li role="none">' + (href
+        ? '<a class="menu-item" role="menuitem" href="' + href + '">' + inner + '</a>'
+        : '<button class="menu-item" type="button" role="menuitem"' + attrs + '>' + inner + '</button>') + '</li>';
+    };
+    var items = mi(on ? ICON.supportOn : ICON.support, 'Client support' + (on ? '<span class="visually-hidden">, extra support in place</span>' : ''), ' data-panel="support" aria-haspopup="dialog"') +
+      (R.scope === 'policy'
+        ? mi(ICON.note, 'Add policy note', ' data-panel="pnotes" aria-haspopup="dialog"') +
+          (phonePolicyItems ? '<li role="none"><hr class="menu-divider"></li>' + phonePolicyItems : '')
+        : mi(ICON.note, 'Add client note', ' data-panel="cnotes" aria-haspopup="dialog"') +
+          mi(M.ICON.newQuote, 'Add new quote', '', '#c/newquote'));
+    return '<div class="menu mob-phone-actions">' +
+      '<button type="button" class="btn btn-ghost menu-toggle" id="mob-phone-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<span class="button-label">Actions</span>' +
+        '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
+      '</button>' +
+      '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-phone-actions">' +
+        '<ul class="menu-body" role="menu">' + items + '</ul>' +
+      '</div>' +
+    '</div>';
+  }
+
   function heading(R) {
     /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
        a new page; a Button on a page opens a side panel there or changes
@@ -1493,8 +1538,8 @@
        quote: a secondary Button with Shield-plus (a link, as it opens a
        page). */
     if (R.scope === 'client') return clientTools(R) +
-      set([btn('Add new quote', { variant: 'ghost', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
-    if (R.scope === 'policy') return clientTools(R) + policyTools(R.p);
+      set([btn('Add new quote', { variant: 'ghost', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions') + phoneActions(R);
+    if (R.scope === 'policy') { var tools = clientTools(R) + policyTools(R.p); return tools + phoneActions(R); }
     return '';
   }
 

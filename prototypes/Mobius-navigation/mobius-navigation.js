@@ -606,7 +606,9 @@
   function supportTrigger() {
     var all = document.querySelectorAll('[data-panel="support"]');
     for (var i = 0; i < all.length; i++) if (all[i].offsetParent) return all[i];
-    return null;
+    /* On a phone it is an item in the closed Actions menu: its Button. */
+    var phone = $('mob-phone-actions');
+    return phone && phone.offsetParent ? phone : null;
   }
   $('mob-support-open').addEventListener('click', function () { supportToPanel = true; supportModal.hide(); });
   supportEl.addEventListener('shown.bs.modal', function () { $('mob-support-open').focus(); });
@@ -629,7 +631,9 @@
   function renderSystems(r) {
     var cur = currentSystem(r);
     /* The trigger's label is the current system. */
-    $('mob-system-current').innerHTML = t(M.MODULES.filter(function (m) { return m.id === cur; })[0].label);
+    var mod = M.MODULES.filter(function (m) { return m.id === cur; })[0];
+    $('mob-system-current').innerHTML = t(mod.label);
+    $('mob-system-icon').className = mod.icon;   /* shown in place of the name on a phone */
     $('mob-systems-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
@@ -798,6 +802,8 @@
     form.addEventListener('submit', function (e) { e.preventDefault(); });
   }
   bindSearchOpener(searchForm, searchInput);
+  /* The phone's search Button opens the same Modal; focus comes back to it. */
+  $('mob-search-btn').addEventListener('click', function () { S.searchTrigger = this; openSearch(); });
 
   /* ====================================================== Homepage search
      The homepage's field is the Modal's search, on the page (Laurence, 27
@@ -1010,7 +1016,8 @@
           if (pendingRender) {
             pendingRender = false;
             render();
-            var again = document.querySelector('[data-panel="' + key + '"], [data-action="' + key + '"]');
+            var again = Array.prototype.filter.call(document.querySelectorAll('[data-panel="' + key + '"], [data-action="' + key + '"]'), function (x) { return x.offsetParent; })[0] ||
+              ($('mob-phone-actions') && $('mob-phone-actions').offsetParent ? $('mob-phone-actions') : null);
             if (again) again.focus();
           }
         }
@@ -1301,35 +1308,48 @@
     if (e.key === ' ' && e.target.matches && e.target.matches('a[role="button"]')) { e.preventDefault(); e.target.click(); }
   });
 
-  /* ============================================================ Dropdowns
-     Every single-select is a Buckholt Dropdown, bound by the unchanged
-     code of components/dropdown/dropdown.js (kept by index.html) as soon
-     as it is drawn. That code looks up every `.dropdown` in the document,
-     so for each run it is shown only the Dropdowns not yet bound. It sets
-     every option's aria-selected to false as it binds, so the chosen one
-     is marked selected again afterwards. */
-  function bindDropdowns() {
-    var fresh = Array.prototype.filter.call(document.querySelectorAll('.dropdown'), function (d) { return !d.hasAttribute('data-mob-bound'); });
-    if (!fresh.length || !window.MobDropdownBind) return;
-    fresh.forEach(function (d) { d.setAttribute('data-mob-bound', ''); });
-    var items = fresh.reduce(function (a, d) { return a.concat(Array.prototype.slice.call(d.querySelectorAll('.dropdown-menu .dropdown-item'))); }, []);
+  /* ============================================== Buckholt component scripts
+     Dropdown (every single-select) and Tabs (scroll Buttons on overflow)
+     are bound by the unchanged code of components/dropdown/dropdown.js and
+     components/tabs/tabs.js, kept by index.html, as soon as each one is
+     drawn. That code looks up every component in the document, so each
+     run is shown only the ones not yet bound. */
+  function bindLate(name, sel, also) {
+    var fns = window.MobLateBind && window.MobLateBind[name];
+    if (!fns) return [];
+    var mark = 'data-mob-' + name;
+    var fresh = Array.prototype.filter.call(document.querySelectorAll(sel), function (d) { return !d.hasAttribute(mark); });
+    if (!fresh.length) return [];
+    fresh.forEach(function (d) { d.setAttribute(mark, ''); });
+    var inner = {};
+    Object.keys(also || {}).forEach(function (q) {
+      inner[q] = fresh.reduce(function (a, d) { return a.concat(Array.prototype.slice.call(d.querySelectorAll(also[q]))); }, []);
+    });
     var all = document.querySelectorAll;
-    document.querySelectorAll = function (sel) {
-      if (sel === '.dropdown') return fresh;
-      if (sel === '.dropdown-menu .dropdown-item') return items;
-      return all.call(document, sel);
+    document.querySelectorAll = function (q) {
+      if (q === sel) return fresh;
+      if (inner[q]) return inner[q];
+      return all.call(document, q);
     };
-    try { window.MobDropdownBind.forEach(function (fn) { fn(); }); }
+    try { fns.forEach(function (fn) { fn(); }); }
     finally { delete document.querySelectorAll; }
-    items.forEach(function (i) { if (i.classList.contains('active')) i.setAttribute('aria-selected', 'true'); });
+    return fresh;
   }
-  var dropdownsQueued = false;
+  function bindComponents() {
+    /* dropdown.js sets every option's aria-selected to false as it binds,
+       so the chosen one is marked selected again afterwards. */
+    bindLate('dropdown', '.dropdown', { '.dropdown-menu .dropdown-item': '.dropdown-menu .dropdown-item' }).forEach(function (d) {
+      d.querySelectorAll('.dropdown-item.active').forEach(function (i) { i.setAttribute('aria-selected', 'true'); });
+    });
+    bindLate('tabs', '.tab-items');
+  }
+  var componentsQueued = false;
   new MutationObserver(function () {
-    if (dropdownsQueued) return;
-    dropdownsQueued = true;
-    Promise.resolve().then(function () { dropdownsQueued = false; bindDropdowns(); });
+    if (componentsQueued) return;
+    componentsQueued = true;
+    Promise.resolve().then(function () { componentsQueued = false; bindComponents(); });
   }).observe(document.body, { childList: true, subtree: true });
-  bindDropdowns();
+  bindComponents();
 
   document.addEventListener('change', function (e) {
     var s = e.target.closest && e.target.closest('[data-switch-toast]');

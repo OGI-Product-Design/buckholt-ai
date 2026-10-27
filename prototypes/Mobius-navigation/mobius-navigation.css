@@ -81,6 +81,8 @@
    bar's own menus. */
 .mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
+.mob-systems .button-label { white-space: nowrap; }   /* "Clients & policies" on one line */
+.app-bar-right { flex-shrink: 0; }   /* the search field gives way, not the area switcher or the avatar */
 .mob-systems .menu-panel { z-index: 1035; --menu-min-width: 19rem; --menu-max-width: 24rem; }
 /* The current area, drawn as Buckholt's Dropdown draws a selected option
    (`.dropdown-item.active`): the active label and tint (Menu's own tokens,
@@ -101,21 +103,30 @@
    not drawn, and the caret alone opens the menu. */
 @media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
 @media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
-/* On the narrowest phones the search field shows only its icon (it is
-   still the field: a tap opens the search), and the right-hand controls sit
-   4px apart, so the bar fits at 360px. */
-@media (max-width: 429.98px) {
-  .mob-app-search { flex: 0 0 2.75rem; }
-  .mob-app-search .form-control::placeholder { color: transparent; }
-  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
-  .app-bar-logo { margin-right: var(--spacer-03); }
-  .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
-}
+/* On a phone (Laurence, 27 October 2026: "really broken on mobile") the
+   bar is the Menu button and the wordmark on the left, then icon-only
+   Buttons on the right: Search (it opens the same Modal; a squeezed field
+   was neither readable nor easy to tap), Create new client, the area
+   switcher showing the current area's icon in place of its name, and the
+   avatar. */
+.mob-search-btn-set { display: none; }
+.mob-system-icon { display: none; }
 @media (max-width: 575.98px) {
+  .mob-app-search { display: none; }
+  .mob-search-btn-set { display: flex; margin: 0 0 0 auto; }
+  .mob-app-create { margin: 0 0 0 var(--spacer-02); }
+  .app-bar-right { margin-left: 0; }
+  body.mob-home .app-bar-right { margin-left: auto; }   /* no search or Create in the bar on the homepage */
+  body.mob-home .mob-search-btn-set { display: none; }
+  .mob-systems .mob-system-icon { display: flex; }
   .mob-systems .button-label {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
   }
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
+}
+@media (max-width: 429.98px) {
+  .app-bar-logo { margin-right: var(--spacer-03); }
 }
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button
@@ -616,7 +627,7 @@
 .mob-page-bar .mob-heading-actions .button-set { gap: var(--spacer-02); }
 .mob-page-bar .mob-heading-rule { margin: 0 var(--spacer-03); }
 /* The renewal badge inside More: at the item's end, its own size. */
-.mob-overflow .menu-item { display: flex; align-items: center; }
+.mob-overflow .menu-item, .mob-phone-actions .menu-item { display: flex; align-items: center; }
 .mob-overflow .menu-item .mob-count-inline { flex: 0 0 auto; width: auto; margin-left: auto; padding-inline: var(--padding-02); }
 .mob-heading-actions {
   display: flex;
@@ -855,10 +866,6 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 
 @media (max-width: 575.98px) {
-  /* The top bar holds the Menu button, the wordmark, the search, Create new
-     client, the system menu and the avatar at 360px: the right-hand ones
-     sit 8px apart. */
-  .mob-user-menu { margin-left: var(--spacer-03); }
   /* Progress keeps a 22rem minimum, wider than a phone's content column.
      Relaxed for the flow progress only, as responsive/component-guidance.md
      recommends (application layer, not Buckholt). */
@@ -1011,7 +1018,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 .menu-item .mob-icon-shield-pen { width: 1.25em; margin: 0 var(--menu-item-icon-spacing) 0 0; -webkit-mask-size: 1.125em; mask-size: 1.125em; }
 /* Cancel policy reads red at rest, not only on hover (Mark's design);
    Buckholt's danger item colours on hover only. */
-.mob-overflow .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
+.mob-overflow .menu-item-danger, .mob-phone-actions .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
 
 /* Make changes' items carry a one-line helper under the label (Laurence,
    27 October 2026), so the choice is clear before it is made. */
@@ -1046,3 +1053,34 @@ body.mob-home #mob-create-client { display: none; }
    icon level with the title's line, not centred on the two lines. */
 .menu-item.mob-menu-item-help > i:not(.mob-menu-current),
 .menu-item.mob-menu-item-help > .mob-icon { flex-shrink: 0; align-self: flex-start; margin-top: calc((1.5rem - 1em) / 2); }
+
+
+/* ------------------------------------------------------------------ Phone
+   Below 576px (Laurence, 27 October 2026). Buckholt's own phone behaviour
+   is kept: its page padding and Card padding, Tables that scroll, Button
+   sets that wrap, Dropdown and Menu panels inside the viewport. These are
+   the application's layout choices where Buckholt is silent. */
+.mob-phone-actions { display: none; }
+@media (max-width: 575.98px) {
+  /* The record's actions: one Actions Menu button at the right of the
+     breadcrumbs, in place of the labelled Buttons. */
+  .mob-heading-actions > :not(.mob-phone-actions) { display: none; }
+  .mob-heading-actions > .mob-phone-actions { display: flex; }
+  .mob-page-bar { flex-wrap: nowrap; }
+  .mob-page-bar .mob-crumbs { flex: 1 1 auto; }
+  .mob-page-bar .mob-heading-actions { flex: 0 0 auto; }
+
+  /* Menu helper lines wrap rather than run out of the panel. */
+  .mob-menu-help { white-space: normal; }
+  .mob-systems .menu-panel { --menu-max-width: calc(100vw - 2rem); }   /* its 24rem is wider than a small phone */
+
+  /* The search Modal is full screen (Buckholt's .modal-fullscreen-sm-down);
+     the field takes the whole width, "What can I search?" under it. */
+  .mob-search-modal-bar { flex-wrap: wrap; row-gap: var(--spacer-03); }
+  .mob-search-modal-form { flex: 1 1 100%; }
+
+  /* The homepage: the field and its Search Button across the page, then
+     What can I search?, then Create new client at full width. */
+  .mob-home-search { flex: 1 1 100%; }
+  .mob-home-create { flex: 1 1 100%; margin: 0; }
+}
