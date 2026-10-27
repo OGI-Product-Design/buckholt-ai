@@ -113,7 +113,9 @@
   function countFor(id) { return (F.quickLinkCounts || {})[id] || 0; }
   function countBadge(n) {
     if (!n) return '';
-    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' +
+    /* It says what it counts (Laurence, 27 October 2026): "3 new", not a
+       bare "3" beside a list of 15. */
+    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + ' new</span>' +
       '<span class="visually-hidden">, ' + n + ' new</span>';
   }
 
@@ -685,7 +687,10 @@
     Shell.initTooltips(modalBody);
   }
 
+  var searchOpening = false, typedOpen = false;
   function openSearch(seed) {
+    searchOpening = true;
+    typedOpen = !!seed;
     modalInput.value = seed || S.modalQuery || '';
     if (!modalInput.value) S.modalQuery = null;
     renderSearchBody();
@@ -701,15 +706,27 @@
     S.query = q;
     modalInput.value = q;
     F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
+    /* One match: straight there (Laurence, 27 October 2026), the policy when
+       the search is its reference, else the client. */
+    var direct = P.searchDirect(q);
+    if (direct) { location.hash = direct; return true; }
     renderSearchBody();
   }
 
-  searchModalEl.addEventListener('shown.bs.modal', function () { modalInput.focus(); modalInput.select(); });
+  /* Opened by typing, the caret goes to the end so typing carries on
+     (Laurence, 27 October 2026: selecting it let the next key replace the
+     first); opened otherwise, the last search is selected to retype. */
+  searchModalEl.addEventListener('shown.bs.modal', function () {
+    modalInput.focus();
+    if (typedOpen) { var n = modalInput.value.length; modalInput.setSelectionRange(n, n); } else modalInput.select();
+    typedOpen = false;
+  });
   /* Back to the field that opened it, without reopening the search. */
   searchModalEl.addEventListener('hidden.bs.modal', function () {
     if (S.searchTrigger && document.contains(S.searchTrigger)) S.searchTrigger.focus();
     S.searchTrigger = null;
     searchInput.value = '';
+    searchOpening = false;
   });
 
   /* The top bar's field opens the Modal on a click, Enter, Down arrow or
@@ -727,6 +744,14 @@
   searchInput.addEventListener('keydown', function (e) {
     if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
     e.preventDefault();
+    /* Keys typed while the Modal is still opening go on the end of what is
+       already there, not in place of it. */
+    if (searchOpening) {
+      if (e.key.length === 1) modalInput.value += e.key;
+      else if (e.key === 'Backspace') modalInput.value = modalInput.value.slice(0, -1);
+      else if (e.key === 'Enter') runModalSearch(modalInput.value);
+      return;
+    }
     S.searchTrigger = searchInput;
     openSearch(e.key.length === 1 ? e.key : '');
   });
@@ -834,7 +859,7 @@
        shut. */
     if (firstRender) requestAnimationFrame(function () { requestAnimationFrame(function () { sidebar.classList.remove('mob-no-anim'); }); });
     firstRender = false;
-    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; runModalSearch(q); openSearch(q); }
+    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; if (!runModalSearch(q)) openSearch(q); }
   }
 
   /* ============================================================== Toasts */
@@ -949,6 +974,9 @@
     var ok = $('mob-confirm-ok');
     ok.className = 'btn btn-primary' + (c[4] ? ' btn-danger' : '');
     ok.innerHTML = '<span class="button-label">' + esc(c[2]) + '</span>';
+    /* The way out names what it keeps ("Keep policy") where the action's
+       own name would make "Cancel" ambiguous. */
+    $('mob-confirm-cancel-label').textContent = c[5] || 'Cancel';
     confirmModal.show();
   }
 

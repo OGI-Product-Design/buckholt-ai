@@ -144,12 +144,12 @@
      'confirm' asks for confirmation in place. */
   var POLICY_ACTIONS = {
     /* Live Mobius's labels, one per status (Laurence, 19 October 2026). */
-    amend: { label: 'Amend details', icon: ICON.pen, kind: 'flow', to: 'amend' },
+    amend: { label: 'Amend details', icon: ICON.pen, kind: 'flow', to: 'amend', help: 'Contact details, consent and marketing' },
     amendQuote: { label: 'Amend quote', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
     amendRisk: { label: 'Amend risk', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
-    mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
-    extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel' },
+    mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel', help: 'Change car, driver or address mid-term' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
+    extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel', help: 'Extend cover by 1, 3 or 6 months' },
     renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm' },
     /* Back to "Stop policy" with the Stop icon (Laurence, 27 October 2026;
        it was "Pause policy" from 21 October). */
@@ -360,9 +360,11 @@
      [title, body, confirm label, toast, destructive] */
   var CONFIRMS = {
     renew: ['Invite for renewal?', 'Are you sure you would like to invite this policy for renewal?', 'OK', 'Renewal invite sent', false],
-    stop: ['Stop this policy?', 'The policy will be stopped. This can be reversed later.', 'Stop policy', 'Policy stopped', false],
+    /* Stop and Cancel: the way out is "Keep policy", not "Cancel" beside
+       "Cancel policy" (Laurence, 27 October 2026). [6] = the way-out label. */
+    stop: ['Stop this policy?', 'The policy will be stopped. This can be reversed later.', 'Stop policy', 'Policy stopped', false, 'Keep policy'],
     copy: ['Copy this policy?', 'A new policy will be created with the same client, driver and vehicle details.', 'Copy policy', 'Policy copied', false],
-    cancel: ['Cancel this policy?', 'Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.', 'Cancel policy', 'Policy cancelled', true],
+    cancel: ['Cancel this policy?', 'Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.', 'Cancel policy', 'Policy cancelled', true, 'Keep policy'],
     reinstate: ['Reinstate this policy?', 'The lapsed policy will be reinstated with its previous cover dates.', 'Reinstate', 'Policy reinstated', false],
     sanctions: ['Run a new sanctions check?', 'A sanctions check will be run against this client now.', 'Run check', 'Sanctions check performed successfully. No match found', false],
     convert: ['Convert to policy?', 'The selected quote will be converted to a live policy. You will confirm cover, complete the checklist and take payment next.', 'Convert', 'Converting to policy', false]
