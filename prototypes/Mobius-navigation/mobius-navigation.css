@@ -75,29 +75,31 @@
   .mob-terms .form-check-input { margin: 0; }
 }
 
-/* ----------------------------------------------------------- System menu
-   An icon-only Menu button beside the avatar; its panel is Menu's Link
-   variant. The panel opens over the page, under the top bar's own menus. */
-.mob-systems { position: relative; display: flex; align-items: center; margin: 0 var(--spacer-04) 0 0; }
-/* The area switcher sits beside the wordmark (Laurence, 27 October 2026):
-   its panel opens under it, each area with a one-line description. */
-.mob-systems .menu-panel { --menu-min-width: 19rem; --menu-max-width: 22rem; }
-.mob-systems .mob-area-name { font-weight: 500; }
+/* ----------------------------------------------------------- Area switcher
+   A Menu button at the top bar's right, before the user menu (back there,
+   Laurence, 27 October 2026). The panel opens over the page, under the top
+   bar's own menus. */
+.mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
-.mob-systems .menu-panel { z-index: 1035; }
-/* The current system: Menu's own active colours (its pressed state's label
-   and tint), and a tick at the item's end. */
+.mob-systems .menu-panel { z-index: 1035; --menu-min-width: 19rem; --menu-max-width: 24rem; }
+/* The current area, drawn as Buckholt's Dropdown draws a selected option
+   (`.dropdown-item.active`): the active label and tint (Menu's own tokens,
+   the same values), and the tick 0.75rem from the item's right edge, 1rem
+   high, centred, with the item padded 2.25rem on the right to clear it. */
 .mob-systems .menu-item[aria-current="page"] {
-  display: flex;
-  align-items: center;
+  position: relative;
+  padding-right: 2.25rem;
   color: var(--menu-item-label-active);
   background-color: var(--menu-item-background-active);
 }
-.mob-systems .mob-menu-current { margin-left: auto; padding-left: var(--spacer-04); }
+.mob-systems .menu-item .mob-menu-current {
+  position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%);
+  width: auto; margin: 0; font-size: 1rem; line-height: 1;
+}
 /* The trigger carries the current system's name. Below 1280px it sits 8px
    from the clock; on a phone the name is kept for assistive technology but
    not drawn, and the caret alone opens the menu. */
-@media (max-width: 1279.98px) { .mob-systems { margin-right: var(--spacer-03); } }
+@media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
 @media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
 /* On the narrowest phones the search field shows only its icon (it is
    still the field: a tap opens the search), and the right-hand controls sit
@@ -105,8 +107,7 @@
 @media (max-width: 429.98px) {
   .mob-app-search { flex: 0 0 2.75rem; }
   .mob-app-search .form-control::placeholder { color: transparent; }
-  .mob-user-menu { margin-left: var(--spacer-02); }
-  .mob-systems { margin-right: var(--spacer-02); }
+  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
   .app-bar-logo { margin-right: var(--spacer-03); }
   .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
 }
@@ -654,11 +655,15 @@
 .mob-table-foot [class$=-set][class|=button][class*=-set][class|=button]:has(~ *) { margin-bottom: 0; }
 
 
-/* Count badge, to Mark's badge design (not yet in Buckholt's documentation):
-   a red circle with a white count, centred on the top-right corner of the
-   Button it counts for, widening to a pill for "999+". Built on Buckholt's
-   runtime `.badge.badge-floating` by binding its own custom properties to
-   Buckholt tokens; nothing is restyled with values of its own. */
+/* Count badge: a prototype component on Buckholt's runtime `.badge` (not
+   yet in Buckholt's documentation). Its type is Buckholt's support text,
+   the `.support-01` set the element carries (12px, Regular 400, 16px line
+   height, 0.25px letter spacing), trimmed to the cap height and the
+   baseline (`text-box`) so the number sits optically centred in the badge
+   (Laurence, 27 October 2026). Colours bind the badge's own custom
+   properties to Buckholt tokens; nothing else is restyled.
+   On a Button: red, centred on its top-right corner, widening to a pill
+   for "999+". */
 .mob-badged { position: relative; }
 
 .mob-count {
@@ -672,18 +677,17 @@
   justify-content: center;
   min-width: 1.5rem;
   min-height: 1.5rem;
-  font-size: var(--typescale-02);
-  font-weight: 500;
+  text-box: trim-both cap alphabetic;
   box-shadow: var(--shadow-xs);
 }
 
-/* In a menu the count is grey, not red (Laurence, 9 October 2026):
-   Buckholt's neutral surface, border and primary text. The red stays on
-   Buttons. */
+/* In a menu the count is grey, not red (Laurence, 9 October 2026), in
+   secondary text (27 October 2026): Buckholt's neutral surface and border.
+   The red stays on Buttons. */
 .mob-count.mob-count-inline {
   --badge-background: var(--ui-background-04);
   --badge-border: var(--ui-border-02);
-  --badge-label: var(--text-primary);
+  --badge-label: var(--text-secondary);
 }
 
 /* Cards: Text block on the left, the card's action on the right. */
@@ -1012,11 +1016,11 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 /* Make changes' items carry a one-line helper under the label (Laurence,
    27 October 2026), so the choice is clear before it is made. */
 .menu-item.mob-menu-item-help { display: flex; align-items: flex-start; height: auto; min-height: var(--menu-item-height); padding-block: var(--spacer-03); white-space: normal; }
-.menu-item.mob-menu-item-help > i,
-.menu-item.mob-menu-item-help > .mob-icon { margin-top: 0.125rem; }
-.mob-menu-text { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
-.mob-menu-help { font-size: 0.8125rem; line-height: 1.125rem; color: var(--text-secondary); white-space: nowrap; }
-.mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 22rem; }
+/* The helper is Buckholt's `.body-01` type set (on the element), in the
+   secondary text colour. */
+.mob-menu-text { display: flex; flex-direction: column; gap: var(--spacer-01); min-width: 0; }
+.mob-menu-help { color: var(--text-secondary); white-space: nowrap; }
+.mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }
 /* "3 new": the count says what it counts. */
 .mob-count-inline { white-space: nowrap; }
 
@@ -1025,7 +1029,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
    carry them there. */
 body.mob-home .mob-app-search,
 body.mob-home #mob-create-client { display: none; }
-.mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+.mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); }
 .mob-home-search { position: relative; flex: 0 1 32rem; min-width: 0; }   /* 512px with its Search Button */
 .mob-home-search .input-group { flex-wrap: nowrap; }
 /* Matching recent searches: a Menu panel under the field, over the page. */
@@ -1037,15 +1041,8 @@ body.mob-home #mob-create-client { display: none; }
 .mob-home-create { margin: 0 0 0 auto; }   /* at the page's right */
 /* Home in the breadcrumbs: the House, sized with the text. */
 .mob-crumb-home .breadcrumb-link { display: inline-flex; align-items: center; }
-/* The homepage's title labels the search under it, so they sit close: 16px
-   apart rather than a Panel's gap. */
-.page-pane > .mob-home-head { margin-bottom: calc(var(--spacer-04) - var(--page-pane-gap, var(--spacer-07))); }
-.mob-home-head .mob-heading { margin: 0; padding: 0; }
 
 /* Menu items with a description (the area switcher, Make changes): the
-   icon level with the title's line, not centred on the two lines; the
-   current area's tick as Buckholt's Dropdown draws a selected option,
-   centred, 12px from the item's right edge. */
+   icon level with the title's line, not centred on the two lines. */
 .menu-item.mob-menu-item-help > i:not(.mob-menu-current),
-.menu-item.mob-menu-item-help > .mob-icon { align-self: flex-start; margin-top: calc((1.5rem - 1em) / 2); }
-.mob-systems .menu-item .mob-menu-current { align-self: center; width: auto; margin: 0 0 0 auto; padding-left: var(--spacer-04); }
+.menu-item.mob-menu-item-help > .mob-icon { flex-shrink: 0; align-self: flex-start; margin-top: calc((1.5rem - 1em) / 2); }

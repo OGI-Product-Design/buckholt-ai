@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261027-07">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261027-08">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261027-07">
-<script src="mobius-skin.js?v=20261027-07"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261027-08">
+<script src="mobius-skin.js?v=20261027-08"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -45,23 +45,6 @@
     </div>
 
     <a class="app-bar-logo" href="#dashboard">Mobius</a>
-
-    <!-- The area switcher (Laurence, 27 October 2026; option B of the review):
-         beside the wordmark, where "which part of Mobius am I in" is looked
-         for. A Buckholt Menu button (Code & specs example 1, the label then
-         the caret) whose label is the current area, read out as "Area:
-         Clients & policies". Its panel lists each area with its icon, a
-         one-line description and, on the current one, a tick. Written by
-         mobius-navigation.js. -->
-    <div class="menu mob-systems">
-      <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-systems-panel">
-        <span class="button-label"><span class="visually-hidden">Area: </span><span id="mob-system-current">Clients &amp; policies</span></span>
-        <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
-      </button>
-      <div class="menu-panel dropdown-menu" id="mob-systems-panel" aria-labelledby="mob-systems-toggle">
-        <ul class="menu-body" role="menu" id="mob-systems-items"></ul>
-      </div>
-    </div>
 
     <!-- Search: Buckholt Text input with its search icon, next to the
          wordmark. It does not search by itself: a click, Enter, Down arrow
@@ -116,6 +99,23 @@
       <div class="app-bar-clock">
         <time class="app-bar-time" id="app-clock-time" datetime="15:26">15:26</time>
         <time class="app-bar-date" id="app-clock-date" datetime="2026-10-01">01 October 2026</time>
+      </div>
+
+      <!-- Area switcher: back at the right, before the user menu (Laurence,
+           27 October 2026). A Buckholt Menu button (Code & specs example 1,
+           the label then the caret) whose label is the current area, read
+           out as "Area: Clients & policies". Its panel lists each area with
+           its icon and a one-line description; the current one is drawn as
+           Buckholt's Dropdown draws a selected option. Written by
+           mobius-navigation.js. -->
+      <div class="menu mob-systems">
+        <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-systems-panel">
+          <span class="button-label"><span class="visually-hidden">Area: </span><span id="mob-system-current">Clients &amp; policies</span></span>
+          <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
+        </button>
+        <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel" aria-labelledby="mob-systems-toggle">
+          <ul class="menu-body" role="menu" id="mob-systems-items"></ul>
+        </div>
       </div>
 
       <!-- User menu: Buckholt Menu button (Code & specs example 1) whose
@@ -312,11 +312,27 @@
      needs jQuery, loaded first, as AGENTS.md sets out. -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="../../components/form/form.js"></script>
+<!-- Buckholt Dropdown (every single-select, as in the BACS work).
+     components/dropdown/dropdown.js binds each Dropdown once, on
+     DOMContentLoaded; this prototype draws its pages after that. So the
+     binding the script registers is kept, unchanged, and mobius-navigation.js
+     runs it on each Dropdown as it is drawn. -->
+<script>
+  window.MobDropdownBind = [];
+  document.addEventListener = (function (add) {
+    return function (type, fn, opts) {
+      if (type === 'DOMContentLoaded') { window.MobDropdownBind.push(fn); return; }
+      return add.call(this, type, fn, opts);
+    };
+  }(document.addEventListener));
+</script>
+<script src="../../components/dropdown/dropdown.js"></script>
+<script>delete document.addEventListener;</script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261027-07"></script>
-<script src="navigation-model.js?v=20261027-07"></script>
-<script src="pages.js?v=20261027-07"></script>
-<script src="mobius-navigation.js?v=20261027-07"></script>
+<script src="fixtures.js?v=20261027-08"></script>
+<script src="navigation-model.js?v=20261027-08"></script>
+<script src="pages.js?v=20261027-08"></script>
+<script src="mobius-navigation.js?v=20261027-08"></script>
 </body>
 </html>

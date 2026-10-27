@@ -239,7 +239,8 @@ html[data-skin="mobius"] .table thead th { background-color: var(--mobius-table-
 
 /* ------------------------------------------------------------- Fields */
 html[data-skin="mobius"] .form-control,
-html[data-skin="mobius"] .form-select { border-color: var(--mobius-border); border-radius: 3px; }
+html[data-skin="mobius"] .form-select,
+html[data-skin="mobius"] .dropdown-input .dropdown-toggle { border-color: var(--mobius-border); border-radius: 3px; }
 
 /* Field labels: Mobius's are smaller and medium weight. */
 html[data-skin="mobius"] #main .form-label,
