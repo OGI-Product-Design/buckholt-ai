@@ -306,8 +306,7 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 ## Phone (28 October 2026)
 
 Below 576px (Laurence, 28 October 2026: "really broken on mobile"). Buckholt's own phone
-behaviour is kept as it is: the page's padding (64px down, 32px across), Card padding, Tables
-that scroll inside their container, Button sets that wrap, Dropdown and Menu panels kept inside
+behaviour is kept: Tables that scroll inside their container, Button sets that wrap, Dropdown and Menu panels kept inside
 the screen. These are the application's choices where Buckholt is silent:
 
 - **Top bar.** The Menu button and the wordmark on the left; on the right, icon-only Buttons
@@ -330,8 +329,12 @@ the screen. These are the application's choices where Buckholt is silent:
 - **Tabs** that overflow (Outstanding diary, Sanctions check matches at 360px) get Buckholt's
   scroll Buttons from `tabs.js`.
 
-> Open question: Buckholt keeps 64px above the page and 32px inside Cards on a phone. That is
-> kept; tighter phone spacing would need Buckholt guidance.
+- **Spacing** (Laurence, 28 October 2026: "do what you think is best"). Buckholt keeps its
+  desktop rhythm on a phone, which left little room for content. In the Buckholt look, Buckholt's
+  own layout and Card custom properties are bound to smaller Buckholt tokens: 24px above and below
+  the page (`--spacer-05`), a 16px gutter, 32px between sections (`--spacer-06`), and 24px inside
+  Cards (the runtime `.card-sm` value). The Mobius look keeps its own denser values.
+  **Gap to raise with Buckholt:** no documented phone spacing.
 
 ## The homepage (27 October 2026)
 

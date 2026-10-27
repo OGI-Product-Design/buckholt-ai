@@ -1062,6 +1062,25 @@ body.mob-home #mob-create-client { display: none; }
    the application's layout choices where Buckholt is silent. */
 .mob-phone-actions { display: none; }
 @media (max-width: 575.98px) {
+  /* Phone spacing (Laurence, 28 October 2026: "do what you think is
+     best"). Buckholt keeps its desktop rhythm on a phone (64px above the
+     page, 32px gutters, 64px between sections, 32px inside Cards), which
+     leaves little room for the content. Its own layout and Card custom
+     properties are bound to smaller Buckholt tokens here: 24px above and
+     below the page, a 16px gutter, 32px between sections, and 24px inside
+     Cards (the value of the runtime's `.card-sm`). The Mobius look sets
+     its own, denser values and keeps them. */
+  :root {
+    --page-body-spacing-y: var(--spacer-05);
+    --page-body-spacing-x: var(--spacer-04);
+    --page-pane-gap: var(--spacer-06);
+  }
+  html:not([data-skin="mobius"]) #main .card {
+    --card-padding-x: var(--spacer-05);
+    --card-padding-y: var(--spacer-05);
+    --card-cap-padding-x: var(--spacer-05);
+  }
+
   /* The record's actions: one Actions Menu button at the right of the
      breadcrumbs, in place of the labelled Buttons. */
   .mob-heading-actions > :not(.mob-phone-actions) { display: none; }
