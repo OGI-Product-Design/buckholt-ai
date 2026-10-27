@@ -1316,199 +1316,121 @@
      note" on a client page, "Add policy note" on a policy page) with the Note
      icon and its count badge on the Button's corner. */
   function clientTools(R) {
-    /* Client support: the Circle-heart; once extra support is in place, the
-       solid status check, in the Button's own colour (Laurence, 8 October
-       2026: the shape says it, no green). The name says it too. */
+    /* Client support: the Hand-heart; once extra support is in place, solid
+       and in the teal (Mark), and the name says so. The note Button adds a
+       note, so it carries no count (Laurence, 27 October 2026): the count
+       is on Notes in the menu. */
     var on = !!F.client.supportOn;
     var onPolicy = R.scope === 'policy';
-    var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
     var what = onPolicy ? 'Add policy note' : 'Add client note';
     return set([
-      '<button type="button" class="btn btn-ghost" data-panel="support" aria-haspopup="dialog">' +
+      '<button type="button" class="btn btn-ghost' + (on ? ' mob-support-on' : '') + '" data-panel="support" aria-haspopup="dialog">' +
         '<div class="btn-icon"><i class="' + (on ? ICON.supportOn : ICON.support) + '" aria-hidden="true"></i></div>' +
         '<span class="button-label">Client support' + (on ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span>' +
       '</button>',
-      '<button type="button" class="btn btn-ghost mob-badged" data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog">' +
+      '<button type="button" class="btn btn-ghost" data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog">' +
         '<div class="btn-icon"><i class="' + ICON.note + '" aria-hidden="true"></i></div>' +
-        '<span class="button-label">' + what + '<span class="visually-hidden">, ' + (n ? n + ' note' + (n > 1 ? 's' : '') : 'none') + '</span></span>' +
-        (n ? '<span class="badge badge-floating mob-count" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' : '') +
+        '<span class="button-label">' + what + '</span>' +
       '</button>'
-    ]);
+    ], 'mob-client-tools');
   }
 
-  /* The policy's actions, labelled, in the heading of every policy page
-     (Laurence, 8 October 2026: at the foot of the policy column, icon-only,
-     they were easy to miss and hard to read). Each is a ghost Button that
-     acts in place, a side panel or a confirmation; a panel's stays pressed
-     while it is open. The everyday ones show; the rest are behind
-     Buckholt's Overflow menu (Menu button Code & specs example 3): Copy
-     policy and Customer portal settings (rarely used, set once), then,
-     below a divider, Stop and Cancel (destructive; Cancel is the danger
-     item). */
-  /* In More: everything but the most used (Laurence, 8 October 2026), in
-     this order; Stop and Cancel after a divider. */
-  var OVERFLOW = ['extend', 'renew', 'copy', 'portal'];
+  /* The policy's actions, back on the right of the row with the
+     breadcrumbs (Laurence, 27 October 2026, from broker feedback; Mark's
+     design): after Client support and the note,
+       - Make changes: a secondary Menu button (Menu button Code & specs
+         example 1, the label then the caret) holding the changes to the
+         policy, Amend details, Make an MTA and Policy extension. A status
+         with one change (Amend quote, Amend risk, Reinstate policy) shows
+         it as a plain secondary Button instead: a menu of one is a click
+         for nothing.
+       - the vertical ellipsis: an icon-only ghost Menu button (Overflow,
+         Menu button Code & specs example 3) holding Copy policy, Renewal
+         invite and Customer portal settings, then below a divider Stop
+         policy and Cancel policy (the danger item). No Tooltip (Laurence,
+         27 October 2026); its name is "More actions" for assistive
+         technology. While the renewal is due it and Renewal invite carry
+         the badge.
+     Too narrow for the row, Make changes folds into the top of the
+     ellipsis menu (fitBar). */
+  var CHANGE = ['amend', 'amendQuote', 'amendRisk', 'amendRenewal', 'reinstate', 'mta', 'extend'];
+  var OVERFLOW = ['copy', 'renew', 'portal'];
   var DESTRUCTIVE = ['stop', 'cancel'];
   function policyTools(p) {
     var A = M.POLICY_ACTIONS;
     var ids = [];
     M.policyActions(p).forEach(function (g) { ids = ids.concat(g.ids); });
-    var shown = ids.filter(function (k) { return OVERFLOW.indexOf(k) < 0 && DESTRUCTIVE.indexOf(k) < 0; });
+    var change = CHANGE.filter(function (k) { return ids.indexOf(k) >= 0; });
     var rare = OVERFLOW.filter(function (k) { return ids.indexOf(k) >= 0; });
-    /* The renewal window is open: Renewal invite is due, so it and More
-       carry a count badge (Mark's design), read out as "renewal due". */
+    var risky = DESTRUCTIVE.filter(function (k) { return ids.indexOf(k) >= 0; });
     var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
-    var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
+    var label = function (k) { var a = A[k]; return a.kind === 'flow' ? (M.amendLabel(p, a.to) || a.label) : a.label; };
     var attrs = function (k) {
       var a = A[k];
       return ' data-action="' + k + '" data-scope="policy"' +
         (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === k) + '"' : '') + ' aria-haspopup="dialog"';
     };
-    var item = function (k) {
+    var item = function (k, cls) {
       var a = A[k];
+      var li = '<li role="none"' + (cls ? ' class="' + cls + '"' : '') + '>';
       /* A journey opens a page: a link, not a button. */
-      if (a.kind === 'flow') return '<li role="none"><a class="menu-item" role="menuitem" href="' + policyHref(p, a.to) + '">' +
-        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(M.amendLabel(p, a.to) || a.label) + '</a></li>';
-      return '<li role="none"><button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem"' + attrs(k) + '>' +
+      if (a.kind === 'flow') return li + '<a class="menu-item" role="menuitem" href="' + policyHref(p, a.to) + '">' +
+        '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(label(k)) + '</a></li>';
+      /* A Menu item is not a toggle: no aria-pressed. */
+      return li + '<button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + t(a.label) +
         (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
       '</button></li>';
     };
-    /* "More", labelled (Laurence, 8 October 2026): Menu button Code & specs
-       example 1 (the label, then the caret), as a ghost Button to match
-       the actions beside it. Labelled, it needs no Tooltip. */
-    var more = '<div class="menu mob-overflow">' +
-      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
-        '<span class="button-label">More<span class="visually-hidden"> actions' + (due ? ', renewal due' : '') + '</span></span>' +
-        '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
+    var changes = '';
+    if (change.length === 1) {
+      var k1 = change[0], a1 = A[k1];
+      changes = set([a1.kind === 'flow'
+        ? btn(label(k1), { variant: 'secondary', icon: a1.icon, href: policyHref(p, a1.to) })
+        : btn(a1.label, { variant: 'secondary', icon: a1.icon, attrs: attrs(k1) })], 'mob-policy-actions');
+    } else if (change.length) {
+      changes = '<div class="menu mob-changes mob-policy-actions">' +
+        '<button type="button" class="btn btn-secondary menu-toggle" id="mob-changes" data-bs-toggle="dropdown" aria-expanded="false">' +
+          '<span class="button-label">Make changes</span>' +
+          '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
+        '</button>' +
+        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-changes">' +
+          '<ul class="menu-body" role="menu">' + change.map(function (k) { return item(k); }).join('') + '</ul>' +
+        '</div>' +
+      '</div>';
+    }
+    var more = (rare.length || risky.length || change.length) ? '<div class="menu mob-overflow">' +
+      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false"' +
+        ' aria-label="More actions' + (due ? ', renewal due' : '') + '">' +
+        '<div class="btn-icon"><i class="' + ICON.more + '" aria-hidden="true"></i></div>' +
         (due ? '<span class="badge badge-floating mob-count" aria-hidden="true">1</span>' : '') +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
         '<ul class="menu-body" role="menu">' +
-          /* When the page is too narrow for the labelled actions, they fold
-             in here (CSS shows these and hides the Buttons). */
-          shown.map(function (k) { return item(k).replace('<li role="none">', '<li role="none" class="mob-fold">'); }).join('') +
-          (shown.length ? '<li role="none" class="mob-fold"><hr class="menu-divider"></li>' : '') +
-          rare.map(item).join('') +
+          /* Folded in when the row is too narrow (CSS shows these and hides
+             Make changes). */
+          change.map(function (k) { return item(k, 'mob-fold'); }).join('') +
+          (change.length && (rare.length || risky.length) ? '<li role="none" class="mob-fold"><hr class="menu-divider"></li>' : '') +
+          rare.map(function (k) { return item(k); }).join('') +
           (rare.length && risky.length ? '<li role="none"><hr class="menu-divider"></li>' : '') +
-          risky.map(item).join('') +
+          risky.map(function (k) { return item(k); }).join('') +
         '</ul>' +
       '</div>' +
-    '</div>';
-    /* A rule between the actions and More, as between the client's tools
-       and the actions. */
-    return (shown.length ? set(shown.map(function (k) {
-        /* The amend journey sits here next to Make an MTA (Laurence, 19
-           October 2026); it opens a page, so it is a link styled as a
-           Button. */
-        return A[k].kind === 'flow' ? btn(M.amendLabel(p, A[k].to) || A[k].label, { icon: A[k].icon, href: policyHref(p, A[k].to) })
-          : btn(A[k].label, { icon: A[k].icon, attrs: attrs(k) });
-      }), 'mob-policy-actions') +
-      '<div class="mob-heading-rule mob-more-rule" aria-hidden="true"></div>' : '') + more;
-  }
-
-  /* ====================================================== Actions toolbar
-     Mark's design (Laurence, 21 October 2026): on wide screens the actions
-     leave the page heading for a column of icon-only Buttons beside the
-     menu, so the page itself can stay as current Mobius. Each Button has
-     its name as aria-label and a label beside its icon, shown when the
-     toolbar expands on hover (Laurence, 22 October 2026). Groups are split
-     by a divider: the client's tools (Client support, the note), the
-     record's actions, then Pause and Cancel. Below 1024px the
-     menu is a drawer and the labelled heading row is used instead. */
-  /* Font Awesome icons in the toolbar are fixed width (fa-fw, next to the
-     style class; Laurence, 22 October 2026): Buckholt's Buttons let icons
-     take their natural widths, so a wider one (Hand-heart) sat further
-     left than the rest and jumped as the toolbar expanded. */
-  function fw(iconCls) { return iconCls.replace(/^(fa-(regular|solid|light|thin|duotone))\b/, '$1 fa-fw'); }
-  function tool(label, iconCls, o) {
-    o = o || {};
-    iconCls = fw(iconCls);
-    var inner = '<div class="btn-icon"><i class="' + iconCls + '" aria-hidden="true"></i></div>' +
-      '<span class="mob-tool-label" aria-hidden="true">' + t(label) + '</span>' + (o.after || '');
-    var cls = 'btn btn-ghost mob-tool' + (o.cls ? ' ' + o.cls : '');
-    var a = ' aria-label="' + esc(plain(o.name || label)) + '"' + (o.attrs || '');
-    return o.href ? '<a class="' + cls + '" href="' + o.href + '"' + a + '>' + inner + '</a>'
-      : '<button type="button" class="' + cls + '"' + a + '>' + inner + '</button>';
-  }
-  function toolGroup(label, items) {
-    return items.length ? '<div class="mob-tool-group" role="group" aria-label="' + label + '">' + items.join('') + '</div>' : '';
-  }
-  function toolbar(R) {
-    if (R.scope !== 'client' && R.scope !== 'policy') return '';
-    var onPolicy = R.scope === 'policy';
-    var on = !!F.client.supportOn;
-    var n = onPolicy ? (F.quickLinkCounts || {}).notes || 0 : F.clientNotes.length;
-    var noteLabel = onPolicy ? 'Add policy note' : 'Add client note';
-    /* Two badges (Laurence, 22 October 2026): at the icon's corner while
-       the toolbar is collapsed, at the end of the row once it opens. */
-    var badge = function (x) {
-      var v = x > 999 ? '999+' : x;
-      return '<span class="badge badge-floating mob-count mob-badge-corner" aria-hidden="true">' + v + '</span>' +
-        '<span class="badge mob-count mob-badge-end" aria-hidden="true">' + v + '</span>';
-    };
-    /* Client support in Mark's teal (expressive quaternary) once extra
-       support is in place; the name says so too. */
-    var groups = [toolGroup('Client', [
-      tool('Client support', on ? ICON.supportOn : ICON.support, { cls: on ? 'mob-support-on' : '',
-        name: 'Client support' + (on ? ', extra support in place' : ''), attrs: ' data-panel="support" aria-haspopup="dialog"' }),
-      tool(noteLabel, ICON.note, { cls: n ? 'mob-badged' : '', name: noteLabel + ', ' + (n ? n + ' note' + (n > 1 ? 's' : '') : 'none'),
-        attrs: ' data-panel="' + (onPolicy ? 'pnotes' : 'cnotes') + '" aria-haspopup="dialog"', after: n ? badge(n) : '' })
-    ])];
-    if (!onPolicy) {
-      /* A client's one action: Add new quote, which opens a page. */
-      groups.push(toolGroup('Client actions', [tool('Add new quote', M.ICON.newQuote, { href: '#c/newquote' })]));
-      return groups.join('<hr class="mob-tool-divider">');
-    }
-    var p = R.p, A = M.POLICY_ACTIONS;
-    var ids = [];
-    M.policyActions(p).forEach(function (g) { ids = ids.concat(g.ids); });
-    var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
-    var everyday = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) < 0; });
-    var risky = ids.filter(function (k) { return DESTRUCTIVE.indexOf(k) >= 0; });
-    /* The changes to the policy (the amend journey and Make an MTA) are a
-       group of their own, above the rest (Laurence, 21 October 2026). */
-    var CHANGE = ['amend', 'amendQuote', 'amendRisk', 'amendRenewal', 'mta'];
-    var toolFor = function (k) {
-      var a = A[k];
-      if (a.kind === 'flow') return tool(M.amendLabel(p, a.to) || a.label, a.icon, { href: policyHref(p, a.to) });
-      return tool(a.label, a.icon, {
-        cls: k === 'renew' && due ? 'mob-badged' : '',
-        name: a.label + (k === 'renew' && due ? ', renewal due' : ''),
-        after: k === 'renew' && due ? badge(1) : '',
-        attrs: ' data-action="' + k + '" data-scope="policy"' + (a.kind === 'panel' ? ' aria-pressed="' + (S.panelKey === k) + '"' : '') + ' aria-haspopup="dialog"'
-      });
-    };
-    groups.push(toolGroup('Change the policy', everyday.filter(function (k) { return CHANGE.indexOf(k) >= 0; }).map(toolFor)));
-    groups.push(toolGroup('Policy actions', everyday.filter(function (k) { return CHANGE.indexOf(k) < 0; }).map(toolFor)));
-    /* Pause and Cancel (red) are a group of their own, last, after a
-       divider (Laurence, 22 October 2026: no More). */
-    groups.push(toolGroup('Pause or cancel', risky.map(function (k) {
-      var a = A[k];
-      return tool(a.label, a.icon, { cls: a.danger ? 'mob-tool-danger' : '', attrs: ' data-action="' + k + '" data-scope="policy" aria-haspopup="dialog"' });
-    })));
-    return groups.filter(Boolean).join('<hr class="mob-tool-divider">');
+    '</div>' : '';
+    return changes + more;
   }
 
   function heading(R) {
     /* The rule (Laurence and Jon, 8 October 2026): a menu item takes you to
        a new page; a Button on a page opens a side panel there or changes
-       something on it. So the page headings no longer repeat menu items:
-       Amend policy and Add new quote are in the menus, not here. */
-
-    /* Create new client is in the top bar, next to the search (Laurence,
-       8 October 2026). */
-
-    /* The client's tools, Buttons opening side panels on the page: Client
-       notes (with its count) and Client support, on every client and policy
-       page (Laurence, 8 October 2026). */
-    /* On a client page, Add new quote follows, after a rule (Laurence,
-       19 October 2026): it opens a page, so it is a link styled as a
-       Button. */
-    if (R.scope === 'client') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' +
-      set([btn('Add new quote', { icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
-    /* On a policy page the policy's actions follow, after a rule. */
-    if (R.scope === 'policy') return clientTools(R) + '<div class="mob-heading-rule" aria-hidden="true"></div>' + policyTools(R.p);
+       something on it. The client's tools first, then the record's
+       actions, in one row with the breadcrumbs (Mark's design, Laurence,
+       27 October 2026: no rules between them). On a client page, Add new
+       quote: a secondary Button with Shield-plus (a link, as it opens a
+       page). */
+    if (R.scope === 'client') return clientTools(R) +
+      set([btn('Add new quote', { variant: 'secondary', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
+    if (R.scope === 'policy') return clientTools(R) + policyTools(R.p);
     return '';
   }
 
@@ -1520,7 +1442,6 @@
     client: client,
     policy: policy,
     panels: panels,
-    heading: heading,
-    toolbar: toolbar
+    heading: heading
   };
 }(window));

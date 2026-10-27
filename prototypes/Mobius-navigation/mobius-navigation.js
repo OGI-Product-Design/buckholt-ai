@@ -537,7 +537,6 @@
     renderSide(R);
     arrangeDrawer(R);
     renderPage(R);
-    renderActionbar(R);
     /* A client with extra support in place: the rule under the top bar
        turns teal on their record (Mark, 21 October 2026). */
     document.body.classList.toggle('mob-support-record', R.scope !== 'app' && !!F.client.supportOn);
@@ -550,66 +549,6 @@
     return true;
   }
   var lastScope = null;
-
-  /* ====================================================== Actions toolbar
-     Mark's column of icon-only Buttons beside the menu (pages.js writes
-     it). Each has its name as aria-label. Hovered for 0.4s it expands
-     over the page to show each icon's label (Laurence, 22 October 2026),
-     and closes when the pointer leaves; from the keyboard it expands as
-     soon as focus enters it. */
-  var actionbar = $('mob-actionbar');
-  var expandTimer = null, actionHover = false;
-  /* The open width: the widest Button's icon, label and badge, plus the
-     toolbar's own padding and border. */
-  function openWidth() {
-    var w = 0;
-    Array.prototype.forEach.call(actionbar.querySelectorAll('.mob-tool'), function (b) {
-      var l = b.querySelector('.mob-tool-label');
-      if (!l) return;
-      var badge = b.querySelector('.mob-badge-end');
-      var end = l.offsetLeft + l.offsetWidth + (badge ? badge.offsetWidth + 8 : 0) + 12;
-      w = Math.max(w, end);
-    });
-    var cs = getComputedStyle(actionbar);
-    return Math.ceil(w + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth));
-  }
-  function setExpanded(on) {
-    clearTimeout(expandTimer);
-    if (on) actionbar.style.setProperty('--mob-actionbar-open', openWidth() + 'px');
-    actionbar.classList.toggle('mob-expanded', on);
-  }
-  function maybeCollapse() {
-    if (!actionHover && !actionbar.contains(document.activeElement)) setExpanded(false);
-  }
-  /* Only hovering an icon opens it (Laurence, 22 October 2026), after a
-     beat (0.12s) so a pointer passing across does not flash it open. */
-  actionbar.addEventListener('mouseover', function (e) {
-    actionHover = true;
-    if (actionbar.classList.contains('mob-expanded')) return;
-    if (e.target.closest('.mob-tool')) {
-      if (!expandTimer) expandTimer = setTimeout(function () { expandTimer = null; setExpanded(true); }, 120);
-    } else { clearTimeout(expandTimer); expandTimer = null; }
-  });
-  actionbar.addEventListener('mouseleave', function () {
-    actionHover = false;
-    clearTimeout(expandTimer); expandTimer = null;
-    setExpanded(false);
-  });
-  actionbar.addEventListener('focusin', function (e) {
-    if (e.target.matches(':focus-visible')) setExpanded(true);
-  });
-  actionbar.addEventListener('focusout', function () { setTimeout(maybeCollapse, 0); });
-  /* Opening a panel or a confirmation from it: the toolbar folds away. */
-  actionbar.addEventListener('click', function (e) {
-    if (e.target.closest('[data-action], [data-panel], a.mob-tool')) { actionHover = false; setExpanded(false); }
-  });
-  function renderActionbar(r) {
-    var was = actionbar.classList.contains('mob-expanded');
-    var html = P.toolbar(r);
-    actionbar.innerHTML = html;
-    actionbar.hidden = !html;
-    if (!html) setExpanded(false); else setExpanded(was && actionHover);
-  }
 
   /* ================================================= Support needs Modal
      Mark's design (Laurence, 21 October 2026): when a client has extra
@@ -927,6 +866,10 @@
   function openPanel(key, arg, trigger) {
     var f = P.panels[key];
     if (!f) return;
+    /* From a Menu's item (Make changes): the item goes with its closed
+       Menu, so focus returns to the Menu's button. */
+    var inMenu = trigger && trigger.closest && trigger.closest('.dropdown-menu');
+    if (inMenu) trigger = inMenu.parentNode.querySelector('.menu-toggle');
     var b = f(R && R.p, arg);
     var blade = blades[key];
     if (!blade) {

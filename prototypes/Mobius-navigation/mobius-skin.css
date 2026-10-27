@@ -169,41 +169,9 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-strip .btn,
   html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
-/* Mark's actions toolbar (21 October 2026): a blue rounded panel like the
-   menu, white icons. Extra support in place shows in the pale teal, which
-   reads on the blue. */
-@media (min-width: 1024px) {
-  html[data-skin="mobius"] .mob-actionbar {
-    background-color: var(--mobius-blue);
-    background-image: none;
-    border: 0;
-    border-radius: 1rem;                              /* 16px (Laurence, 21 October 2026) */
-    --ui-border-02: rgba(255, 255, 255, 0.22);
-    --focus-01: #ffffff;
-  }
-}
-@media (min-width: 1024px) { html[data-skin="mobius"] .mob-actionbar { padding-inline: var(--spacer-03); } }   /* no border on the blue */
 /* Inside the navy policy card the label already sits 4px in: 4px more balances its 8px on the right. */
 html[data-skin="mobius"] #mob-record .mob-group-toggle { --mob-group-inset: var(--spacer-02); }
-html[data-skin="mobius"] .mob-actionbar .mob-tool {
-  --button-radius: 0.5rem;
-  --button-label: #ffffff;
-  --button-label-hover: #ffffff;
-  --button-background-hover: rgba(255, 255, 255, 0.12);
-  --button-label-active: #ffffff;
-  --button-background-active: var(--mobius-navy);
-  --button-border-active: transparent;
-  --button-label-focus: #ffffff;
-  --button-background-focus: transparent;
-}
-/* Cancel on the blue: a light red that reads on it. */
-html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-tool-danger { --button-label: #ffb3b5; --button-label-hover: #ffb3b5; --button-label-focus: #ffb3b5; }
-html[data-skin="mobius"] .mob-actionbar .mob-tool.mob-support-on {
-  --button-label: var(--expressive-quaternary-soft);
-  --button-label-hover: var(--expressive-quaternary-soft);
-  --button-label-active: var(--expressive-quaternary-soft);
-  --button-label-focus: var(--expressive-quaternary-soft);
-}
+/* Extra support in place: the client's Avatar in the teal, its badge ringed on the blue. */
 html[data-skin="mobius"] .mob-rail-head .avatar.expressive-quaternary {
   background-color: var(--expressive-quaternary-soft);
   color: var(--expressive-quaternary-rich);
