@@ -1015,3 +1015,15 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 .mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 22rem; }
 /* "3 new": the count says what it counts. */
 .mob-count-inline { white-space: nowrap; }
+
+/* The homepage (the Dashboard, Laurence, 27 October 2026): the search and
+   Create new client sit on the page above the Tabs, so the top bar does not
+   carry them there. */
+body.mob-home .mob-app-search,
+body.mob-home #mob-create-client { display: none; }
+.mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); margin-bottom: var(--spacer-05); }
+.mob-home-search { flex: 1 1 20rem; max-width: 40rem; min-width: 0; }
+.mob-home-search .input-label { display: none; }
+.mob-home-create { margin: 0; }
+/* Home in the breadcrumbs: the House, sized with the text. */
+.mob-crumb-home .breadcrumb-link { display: inline-flex; align-items: center; }

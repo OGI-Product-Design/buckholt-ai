@@ -148,8 +148,8 @@
     amendQuote: { label: 'Amend quote', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
     amendRisk: { label: 'Amend risk', icon: ICON.pen, kind: 'flow', to: 'amendquote' },
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
-    mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel', help: 'Change car, driver or address mid-term' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
-    extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel', help: 'Extend cover by 1, 3 or 6 months' },
+    mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel', help: 'Change the vehicle, drivers, cover and more' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
+    extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel', help: 'Extend the current period' },
     renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm' },
     /* Back to "Stop policy" with the Stop icon (Laurence, 27 October 2026;
        it was "Pause policy" from 21 October). */
@@ -375,7 +375,7 @@
      policy reference. */
   var TITLES = {
     app: {
-      dashboard: ['Dashboard', 'Broking'], search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
+      dashboard: ['Dashboard', ''], search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {
