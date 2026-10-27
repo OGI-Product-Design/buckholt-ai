@@ -1,4 +1,4 @@
-/* Configuration Hub accounts — roles, seed data and variants.  NOT BUCKHOLT.
+/* Configuration Hub users — roles, seed data and variants.  NOT BUCKHOLT.
 
    Data only; every value comes from `ch-users-spec.md` ("Data model",
    "Placeholder roles", "Seed data"). Pages read it through `CUData.build()`.
@@ -6,18 +6,31 @@
    The signed-in row is built from the shell's seed user, so the shell's
    "Long names" seed (`?seed=long-names`) replaces Sophie Marchetti with
    Alexandra Montgomery-Fairweather and keeps the other eleven rows, as the
-   spec's variant table asks. Accounts belong to the organisation, not to an
+   spec's variant table asks. Users belong to the organisation, not to an
    environment, so Live and Test get the same rows. */
 (function () {
   'use strict';
 
   var ROLES = [
-    { name: 'Administrator', description: 'Can use every Configuration Hub app and manage Configuration Hub accounts.' },
-    { name: 'Editor', description: "Can use every Configuration Hub app, but can't manage Configuration Hub accounts." },
+    { name: 'Administrator', description: 'Can use every Configuration Hub app and manage Configuration Hub users.' },
+    { name: 'Editor', description: "Can use every Configuration Hub app, but can't manage Configuration Hub users." },
     { name: 'Viewer', description: "Can see every Configuration Hub app, but can't make changes." }
   ];
 
   var STATUSES = ['Active', 'Pending', 'Inactive'];
+
+  /* Tag variant per status, as Andrej's CU-00-01 frame assigns them, used by
+     the card summary and the table alike. "Total" is the card's first tag. */
+  var TAG_CLASS = {
+    Total: 'tag tag-status tag-status-info',
+    Active: 'tag tag-status tag-status-success',
+    Inactive: 'tag tag-status tag-status-warning',
+    Pending: 'tag'
+  };
+
+  /* Mobius users summary: static, for the CU-00-01 card only. There is no
+     Mobius users data beyond these counts. */
+  var MOBIUS_SUMMARY = { total: 34, Active: 32, Inactive: 2, Pending: 0 };
 
   /* Rows 2 to 12 of the seed table. Row 1, the signed-in user, is added by
      build(). Dates are ISO strings; pages format them as "d MMM yyyy". */
@@ -50,7 +63,7 @@
   }
 
   function build(variant, user) {
-    var accounts = [{
+    var users = [{
       id: 'cu-1',
       self: true,
       email: user.email.toLowerCase(),
@@ -61,11 +74,11 @@
       status: 'Active',
       invitedOn: null
     }];
-    if (variant === 'only-me') return accounts;
+    if (variant === 'only-me') return users;
 
     OTHERS.forEach(function (row, i) {
       var name = username(row[0], row[1]);
-      accounts.push({
+      users.push({
         id: 'cu-' + (i + 2),
         self: false,
         email: name + '@northgate-insurance.co.uk',
@@ -78,7 +91,7 @@
       });
     });
     PENDING.forEach(function (row, i) {
-      accounts.push({
+      users.push({
         id: 'cu-' + (OTHERS.length + i + 2),
         self: false,
         email: row.email,
@@ -90,12 +103,14 @@
         invitedOn: row.invitedOn
       });
     });
-    return accounts;
+    return users;
   }
 
   window.CUData = {
     roles: ROLES,
     statuses: STATUSES,
+    tagClass: TAG_CLASS,
+    mobiusSummary: MOBIUS_SUMMARY,
     variants: VARIANTS,
     defaultVariant: 'default',
     build: build

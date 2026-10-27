@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Configuration Hub accounts | Account Management | Configuration Hub</title>
+<title>Configuration Hub users | User Management | Configuration Hub</title>
 
 <!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <link rel="stylesheet" href="ch-users.css">
 </head>
-<body class="cu-accounts-page">
+<body class="cu-users-page">
 
-<!-- CU-00-02 · Configuration Hub accounts, with the flows that start from it:
+<!-- CU-00-02 · Configuration Hub users, with the flows that start from it:
      CU-01 Add, CU-02 and CU-03 Edit, CU-04 View, CU-05 Delete. Rows, chips,
-     pagination, blades and toasts are rendered by accounts.js; everything
+     pagination, blades and toasts are rendered by users.js; everything
      that does not change is written here.
      Variants: ?variant=only-me, and the shell's ?seed=long-names. -->
 <div class="layout" data-layout="layout-03" data-layout-surface="flush">
@@ -34,19 +34,19 @@
           <div class="page-pane">
             <div class="page-panel">
               <div class="text-block">
-                <h1 class="headline-02" id="cu-heading">Configuration Hub accounts</h1>
+                <h1 class="headline-02" id="cu-heading">Configuration Hub users</h1>
                 <p>View, add and manage who can sign in to Configuration Hub.</p>
               </div>
 
               <!-- Gap 4: summary chips. Key-value pair with Icon block, one row.
                    Counts follow the data, not the filters. -->
-              <ul class="cu-chips" aria-label="Account summary">
+              <ul class="cu-chips" aria-label="User summary">
                 <li class="cu-chip" data-chip="Active">
                   <div class="icon-block icon-block-sm" aria-hidden="true">
                     <i class="fa-regular fa-user"></i>
                   </div>
                   <div class="key-value">
-                    <span class="key">Active accounts</span>
+                    <span class="key">Active users</span>
                     <span class="value" id="cu-count-active"></span>
                   </div>
                 </li>
@@ -55,7 +55,7 @@
                     <i class="fa-regular fa-envelope"></i>
                   </div>
                   <div class="key-value">
-                    <span class="key">Pending invitations</span>
+                    <span class="key">Pending users</span>
                     <span class="value" id="cu-count-pending"></span>
                   </div>
                 </li>
@@ -64,7 +64,7 @@
                     <i class="fa-regular fa-user-slash"></i>
                   </div>
                   <div class="key-value">
-                    <span class="key">Inactive accounts</span>
+                    <span class="key">Inactive users</span>
                     <span class="value" id="cu-count-inactive"></span>
                   </div>
                 </li>
@@ -76,7 +76,7 @@
                 <div class="cu-filters">
                   <div class="input cu-search">
                     <div class="input-label visually-hidden">
-                      <label for="cu-search" class="form-label">Search accounts</label>
+                      <label for="cu-search" class="form-label">Search users</label>
                     </div>
                     <div class="response text-input">
                       <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
@@ -122,7 +122,7 @@
                     <div class="btn-icon">
                       <i class="fa-regular fa-plus" aria-hidden="true"></i>
                     </div>
-                    <span class="button-label">Add account</span>
+                    <span class="button-label">Add user</span>
                   </button>
 
                   <!-- Menu button, Overflow variant (Code & specs example 3).
@@ -167,7 +167,7 @@
                         <tr>
                           <th scope="col" class="table-checkbox-header col-fit">
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="cu-select-all" aria-label="Select all accounts on this page">
+                              <input class="form-check-input" type="checkbox" id="cu-select-all" aria-label="Select all users on this page">
                             </div>
                           </th>
                           <th scope="col" class="table-sort-header" data-sort-key="name">
@@ -316,6 +316,6 @@
 <script src="../shared/blade.js"></script>
 <script src="ch-users-data.js"></script>
 <script src="ch-users.js"></script>
-<script src="accounts.js"></script>
+<script src="users.js"></script>
 </body>
 </html>

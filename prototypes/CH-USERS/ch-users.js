@@ -1,4 +1,4 @@
-/* Configuration Hub accounts — `CU`, the page helper.          NOT BUCKHOLT.
+/* Configuration Hub users — `CU`, the page helper.          NOT BUCKHOLT.
 
    Every CH-USERS page loads, in order:
 
@@ -12,12 +12,14 @@
    (PROTOTYPE.md, "How the shell is reused"):
 
    1. Points the lockup at this prototype's own home entry page (`home.html`),
-      which shows the renamed app card. The shell's lockup goes to
-      `CH-SHELL/index.html`, which still has "User Management".
+      whose User Management card has the spec's new description and opens
+      CU-00-01. The shell's lockup goes to `CH-SHELL/index.html`, which
+      still has the old description and the placeholder page.
    2. Resolves the CH-USERS variant (`?variant=only-me`), kept for the tab like
       the shell's seed.
-   3. Supplies the small shared pieces the account pages need: Toast,
-      Tooltips, the date format and the polite announcement. */
+   3. Keeps the Configuration Hub users for the tab (loadUsers / saveUsers),
+      and supplies the small shared pieces the pages need: Toast, Tooltips,
+      the date format and the polite announcement. */
 (function () {
   'use strict';
 
@@ -48,6 +50,37 @@
     }
     var saved = storeGet(KEY_VARIANT);
     return saved && variants[saved] ? saved : 'default';
+  }
+
+  /* ------------------------------------------------------------ users
+     The spec wants two things that pull apart: state "held in memory; a
+     reload resets to the seed data", and the CU-00-01 card to show a new
+     invitation "when the user comes back" (AC 7), which is a page load.
+     So users are kept for the browser tab across page changes, and thrown
+     away on a reload, on a different shell seed or variant, and in a new
+     tab. */
+  var KEY_USERS = 'chusers.users';
+  var variant = resolveVariant();
+
+  function isReload() {
+    var nav = window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    return !!nav && nav.type === 'reload';
+  }
+
+  function loadUsers() {
+    var scope = CHShell.seedId + '|' + variant;
+    if (isReload()) {
+      try { window.sessionStorage.removeItem(KEY_USERS); } catch (e) { /* nothing kept */ }
+    } else {
+      var saved = null;
+      try { saved = JSON.parse(storeGet(KEY_USERS)); } catch (e) { saved = null; }
+      if (saved && saved.scope === scope && Array.isArray(saved.users)) return saved.users;
+    }
+    return window.CUData.build(variant, CHShell.seed().user);
+  }
+
+  function saveUsers(users) {
+    storeSet(KEY_USERS, JSON.stringify({ scope: CHShell.seedId + '|' + variant, users: users }));
   }
 
   function init(options) {
@@ -136,7 +169,9 @@
 
   window.CU = {
     init: init,
-    variant: resolveVariant(),
+    variant: variant,
+    loadUsers: loadUsers,
+    saveUsers: saveUsers,
     homeUrl: HOME_URL,
     isoToday: isoToday,
     formatDate: formatDate,
