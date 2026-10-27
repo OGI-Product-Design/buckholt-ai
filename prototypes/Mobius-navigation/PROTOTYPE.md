@@ -9,6 +9,28 @@ Barnard** (BAR/J/08121986/0046, Norwich), not the reference's "Reverend Motor AP
 test account, and the diary, sanctions matches and search results use real-sounding names too.
 `reference/mobius-live-policy.html` keeps the original data, as captured.
 
+## Build rules for this prototype (do not regress)
+
+Laurence, 27 October 2026, after changes that drifted from Buckholt. Every change here follows
+these, before any local CSS:
+
+1. **Buckholt first.** Read `AGENTS.md`, the component's `rules.md` and `examples.html`, the
+   foundations and `patterns/page-layout/rules.md` before building. Use the documented component;
+   do not invent one, a variant, a size or a spacing value. If Buckholt has no answer, say so
+   and record the gap here.
+2. **Spacing comes from the page structure.** Directly related things share one `.page-panel`
+   and sit its gap apart (2rem); Panels sit the Pane's gap apart (4rem). No negative margins or
+   one-off gaps to pull things closer. (The Mobius look sets these gaps to its own density.)
+3. **Type comes from Buckholt's type sets** (`.body-01`, `.support-01`, …) carried on the
+   element, never a font size, weight or line height of our own.
+4. **Single selects are Buckholt's Dropdown**, as in the BACS work (see "Selects" below), not
+   the native Select.
+5. **Count badges are the prototype's Count badge component** (section 4): Buckholt's `.badge`
+   in support text, trimmed to the cap height and baseline, secondary text in menus.
+6. **Search always opens the Modal** with the results, one match included; it never jumps
+   straight to a record.
+7. **Do not invent data.** A list the reference does not supply stays empty.
+
 ## Runtime contract
 
 This is the order `AGENTS.md` specifies, with the shared prototype layer and this feature last:
@@ -23,6 +45,9 @@ This is the order `AGENTS.md` specifies, with the shared prototype layer and thi
 <link rel="stylesheet" href="mobius-navigation.css">
 ...
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../components/form/form.js"></script>   <!-- after jQuery -->
+<script>/* keeps dropdown.js's DOMContentLoaded binding (see "Selects") */</script>
+<script src="../../components/dropdown/dropdown.js"></script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
 <script src="fixtures.js"></script>
@@ -31,8 +56,8 @@ This is the order `AGENTS.md` specifies, with the shared prototype layer and thi
 <script src="mobius-navigation.js"></script>
 ```
 
-There is no separate Bootstrap stylesheet. jQuery and `form.js` are not loaded because no
-Form-script behaviour is used. The prototype's IBM Plex fonts, its colour variables and all of
+There is no separate Bootstrap stylesheet. jQuery and `form.js` are loaded for the search
+field's clear button, and `dropdown.js` for the Dropdowns. The prototype's IBM Plex fonts, its colour variables and all of
 its CSS are dropped.
 
 `css/`, `components/`, `foundations/`, `patterns/`, `code-specs-html/`, `prototypes/shared/`,
@@ -74,11 +99,12 @@ and with it the module links across the top bar:
 
 - **Search, next to the wordmark.** A Buckholt Text input with the search icon. It does not
   search itself: a click, Enter, Down arrow or the first character typed opens the **search
-  Modal** (below), carrying that character over. Its placeholder is **"Type / to search"**, as
+  Modal** (below), carrying that character over. Its placeholder is **"Type / to search"** (the homepage's field uses the Modal's), as
   GitHub does (suggested to Laurence, 8 October 2026), in Text input's own placeholder style;
   "/" opens the search from anywhere unless you are typing in a field, and
   `aria-keyshortcuts="/"` gives the key to assistive technology.
-- **The system menu, beside the avatar.** A **labelled ghost Menu button** (Menu button Code &
+- **The area switcher, beside the avatar** (moved beside the wordmark on 27 October 2026, then
+  back here the same day; see "The area switcher" below). Originally the system menu: A **labelled ghost Menu button** (Menu button Code &
   specs example 1: the label, then the caret) whose **label is the current system**, so the top
   bar says where you are ("Broking ▾"; read out as "System: Broking") (Laurence, 8 October 2026).
   Its panel is **Menu's documented Link variant**: one `a.menu-item` per system (Broking,
@@ -224,9 +250,9 @@ state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
 ## The area switcher (27 October 2026)
 
-The system menu is now an **area switcher beside the wordmark** (Laurence, 27 October 2026;
-option B of the review), where "which part of Mobius am I in" is looked for, rather than among
-the account controls on the right. A Menu button (the label then the caret) whose label is the
+The system menu is now an **area switcher at the top bar's right, before the user menu**, where
+it was (Laurence, 27 October 2026: it moved beside the wordmark, option B of the review, and
+came back the same day). A Menu button (the label then the caret) whose label is the
 current area, read out as "Area: …". Its panel lists each area with its icon, a one-line
 description and a tick on the current one:
 
@@ -238,24 +264,62 @@ description and a tick on the current one:
 | Bordereau | Insurer reporting and submissions |
 | Accounts | Transactions, cash and reconciliation |
 
-Icons sit level with each area's title (not centred on the two lines), and the current area's tick is drawn as Buckholt's Dropdown draws a selected option: centred, 12px from the item's right edge. The design's small "Area" label over the name is left out (it is read out instead). "Clients &
+Icons sit level with each area's title (not centred on the two lines). Buckholt's Menu has no
+selected state, so **the current area is drawn as Buckholt's Dropdown draws a selected option**
+(`.dropdown-item.active`, the look the BACS Dropdowns show): the active label and tint (Menu's
+own tokens, the same values), and the solid tick 1rem high, centred, 0.75rem from the item's
+right edge, with the item padded 2.25rem on the right to clear it. The descriptions are
+Buckholt's `.body-01` type set in secondary text (they had an invented 13px size), as are Make
+changes' helpers; both menus are at most 24rem wide so the helpers never run under the tick. The design's small "Area" label over the name is left out (it is read out instead). "Clients &
 policies" in place of "Broking" is a wording change to check with brokers. The "Test"
 environment label is gone from the top bar.
+
+## Selects (27 October 2026)
+
+**Every single-select is Buckholt's Dropdown** (Laurence, 27 October 2026: "we used the correct
+one on the BACS work"): the search filters, the dashboard's filters, and the selects in side
+panels and flows. Markup is the Dropdown's base single select from
+`components/dropdown/examples.html`: `.input > .input-label > label.form-label` +
+`.response.dropdown-input > .dropdown > button.dropdown-toggle > span.dropdown-label` +
+`ul.dropdown-menu.dropdown-menu-panel > li.dropdown-item[role=option][aria-selected][tabindex=0]`,
+with `data-value` as BACS has it. The chosen option is `.active`, which Buckholt draws
+highlighted with its tick. A first option "Select" / "Please select" is the label shown before
+a choice, not an option. Read-only is the documented `.readonly` + `disabled` on the toggle.
+
+Buckholt's own Select rules say to use the native `<select>`; BACS chose the Dropdown because
+the native one shows the operating system's menu (on a Mac, in the middle of the page), next to
+controls that draw Buckholt's panel. This prototype follows BACS. **Deviation to raise:** the
+Select and Dropdown guidance disagree in practice.
+
+**Behaviour is `components/dropdown/dropdown.js`, unchanged.** It binds each `.dropdown` once,
+on `DOMContentLoaded`, and this prototype draws its pages afterwards. So `index.html` keeps the
+binding the script registers (a short wrapper around its `<script>` tag), and
+`mobius-navigation.js` runs it on each Dropdown as it is drawn (a MutationObserver), showing it
+only the Dropdowns not yet bound. The script sets every option's `aria-selected` to false as it
+binds, so the chosen one is marked selected again afterwards.
+
+Some fields have no options in the reference (Activity type, Note type, Fee account and others
+that only say "Select"). They are not invented, so their Dropdowns open empty.
 
 ## The homepage (27 October 2026)
 
 The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
 
 - No "Broking" eyebrow. Its title names its main task: **"Find a client or policy"**
-  (Laurence, 27 October 2026), 16px above the search field, which it labels.
+  (Laurence, 27 October 2026), which labels the search field. **The title and the search bar
+  share one Panel**, so they sit Buckholt's Panel gap apart (2rem; 32px in the Buckholt look);
+  the Tabs are the next Panel, the Pane's gap below (4rem). An earlier build pulled the field to
+  16px with a negative margin; that broke the page-layout rule and is gone.
 - **On this page only**, the search field and **Create new client** come down from the top bar
   onto the page, above the Outstanding diary and Sanctions check matches Tabs. Here the field is
   **the Modal's search on the page** (Laurence, 27 October 2026): Input group with its **Search**
-  Button, "Type / to search", at most 512px. As you type, **matching recent searches** show under
+  Button, the Modal's placeholder **"Search by name, reference or email"** (Laurence, 27 October
+  2026), at most 512px. As you type, **matching recent searches** show under
   it (Down arrow moves into them, Escape closes them); Search, Enter or a recent search runs it
-  and the results open in the search Modal (one match goes straight there). "/" goes to this
-  field. **What can I search?** sits to its right, as in the Modal, and **Create new client** at
-  the right of the page.
+  and the results open in the search Modal, **one match included** (Laurence, 27 October 2026:
+  searching "James" opens the Modal, not the client). "/" goes to this field. **What can I
+  search?** sits to its right, as in the Modal, and **Create new client** at the right of the
+  page, as the homepage's **primary** (Laurence, 27 October 2026).
 - In the Modal too, matching recent searches show as you type (all of them when it is empty).
 - The top bar's field is 320px (from 384): Buckholt sets no field width, so it is sized to the
   longest reference (BAR/J/08121986/0046) and the placeholder. The top bar
@@ -272,8 +336,8 @@ Laurence asked for the best experience for system-level navigation. The decision
 | Systems: Broking, Activity, Renewals, Bordereau, Accounts | The **system menu** beside the avatar (Laurence, 8 October 2026): a labelled ghost Menu button showing the current system ("Broking ▾") whose panel is Menu's Link variant, one link per system with its icon, the current one `aria-current="page"` (see "The top bar" above). The same at every width | The prototype's "Dashboard" is the Broking system, so it is named Broking, with the catalogue's Shield icon (Laurence, 7 October 2026). The top bar's horizontal module links were removed to give the search the room next to the wordmark |
 | Broking landing page | **Dashboard** (`#dashboard`, also the default route and the wordmark's link), as current Mobius has it: two Tabs, Outstanding diary and Sanctions check matches, each a Card with a filter bar (cut to three filters in view, Laurence, 8 October 2026: the diary's Search for a policy number or client, Action type and Assigned to, with Brand, Agent and Due date range in a **More filters** side panel, as Forms recommends a side panel for more than five inputs; the sanctions matches' Status, Search for a reference or client, and Business source code), a Table of sample rows and "Load more". Sanctions status is a status Tag; "Assigned to" is an extra-small Avatar and the name. Create new client is in the top bar | No search results until a search has been run (Laurence, 7 October 2026). Tabs, because the two views switch in place on one page. Current Mobius paginates; Buckholt has no Pagination component, so the tables use the same "Load more" standalone Link as every other list here. The Days overdue From/To pair is left out of the diary filters: it needs a range input Buckholt does not document |
 | What can I search? (in the search Modal) | A ghost Button with the Info icon to the right of the Modal's search field, as current Mobius has it. It opens a floating help panel: the title with a close Button, a Buckholt List per group (list heading and items), the tip, and "Learn more" as a standalone Link with the External-link icon; current Mobius wording in sentence case. Escape closes the panel first, back to its Button. **Buckholt has no Popover** (no `.popover` styles in `buckholt.css`, and no Bootstrap stylesheet is loaded), so the panel is a Menu panel (`.menu-panel.dropdown-menu`) on Bootstrap Dropdown, on UI background 04 (Laurence, 8 October 2026; Menu's own `--menu-background`), with fixed positioning so it floats over the Modal's scrolling body | Gap to raise with Buckholt: a documented Popover |
-| Search results (Laurence, 8 October 2026, after current Mobius) | In the search Modal, not a page. "{n} clients found for “{query}”", then the **filters straight above the results, not in a Card** (Brand, Line of business, Policy status, Clear and Apply; Apply keeps the clients with a policy that matches), then **one Accordion item per client** (Accordion Code & specs; the strict pass, 8 October 2026, in place of undocumented expandable Table rows), headed with the name and reference. Opening one shows the client's reference, address, postcode, email and date of birth, **their 5 most recent policies in a Table** (each policy number the link to the policy; "Show 2 more" loads the rest in place), and **Add new quote** then **View client** (the primary), at the top; one client is open at a time (Laurence, 21 October 2026; see section 10). Apply has no icon. The field carries helper text for the prototype: "For this prototype, search for “Barnard” and open James Barnard." Seven clients come back for "Barnard" (Laurence, 8 October 2026): James Barnard, the prototype's client, and six other Barnards with a mix of Open Market Household and motor policies; the Table's Product cell leads with a house or car icon. Only James and his policies open, and the samples say so in a toast. An open client stays open when the filters change. A no-results state, **without the filters** unless the filters are what emptied the list (then they stay, so they can be cleared), Create new client is in the top bar, not in the results (22 October 2026). An old `#search/{query}` link opens the Modal with that search over the Dashboard | Accordion, Table, Key-value pairs, Link, Tag |
-| Search (Jon's suggestion, 7 October 2026) | The **search field in the top bar** ("Type / to search") opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) (or "/" anywhere, unless you are typing in a field); opened from the keyboard, focus returns to the field when it closes. The page you are on stays behind it. The Modal has its own field with a visible **Search** Button joined to it (Laurence, 21 October 2026, from broker feedback: Input group's action button example, `.input-group` with `.btn.btn-response`, in place of the clear button); Enter still searches; emptying the field shows recent searches again; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Typing in the top bar's field carries every key into the Modal's, and typing carries on after it opens (Laurence, 27 October 2026: keys typed while it opened were lost, and the first was selected and replaced). Running a search shows the results in the Modal, or, **with one match, goes straight there** (27 October 2026): the policy when the search is its reference, else the client; opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). "/" opens it too | The search keeps you where you are, and the results are one Escape away from the page behind |
+| Search results (Laurence, 8 October 2026, after current Mobius) | In the search Modal, not a page. "{n} clients found for “{query}”", then the **filters straight above the results, not in a Card** (Brand, Line of business, Policy status, Clear and Apply; Apply keeps the clients with a policy that matches), then **one Accordion item per client** (Accordion Code & specs; the strict pass, 8 October 2026, in place of undocumented expandable Table rows), headed with the name and reference. Opening one shows the client's reference, address, postcode, email and date of birth, **their 5 most recent policies in a Table** (each policy number the link to the policy; "Show 2 more" loads the rest in place), and **Add new quote** then **View client** (the primary), at the top; one client is open at a time (Laurence, 21 October 2026; see section 10). Apply has no icon. The field carries helper text for the prototype: "For this prototype, search for “Barnard” and open James Barnard." Seven clients come back for "Barnard" (Laurence, 8 October 2026): James Barnard, the prototype's client, and six other Barnards with a mix of Open Market Household and motor policies; the Table's Product cell leads with a house or car icon. Only James and his policies open, and the samples say so in a toast. An open client stays open when the filters change. A no-results state, **without the filters** unless the filters are what emptied the list (then they stay, so they can be cleared), and, with no filters, **Create new client as the primary** under "Check the name, reference or email and search again. If this is a new client, create them." (Laurence, 21 October 2026; taken out on 22 October when the Button went back to the top bar, and restored on 27 October: no results is where a new client is made). An old `#search/{query}` link opens the Modal with that search over the Dashboard | Accordion, Table, Key-value pairs, Link, Tag |
+| Search (Jon's suggestion, 7 October 2026) | The **search field in the top bar** ("Type / to search") opens a **search Modal** (Buckholt Modal, Code & specs example 1, `.modal-xl` and `.modal-dialog-scrollable`) (or "/" anywhere, unless you are typing in a field); opened from the keyboard, focus returns to the field when it closes. The page you are on stays behind it. The Modal has its own field with a visible **Search** Button joined to it (Laurence, 21 October 2026, from broker feedback: Input group's action button example, `.input-group` with `.btn.btn-response`, in place of the clear button); Enter still searches; emptying the field shows recent searches again; until a search is run it shows **recent searches** (a Buckholt Menu shown in place, a section header and items with the Recent icon; Down arrow moves into it, Up / Down through it, picking one runs it; the last five, newest first). Typing in the top bar's field carries every key into the Modal's, and typing carries on after it opens (Laurence, 27 October 2026: keys typed while it opened were lost, and the first was selected and replaced). Running a search **always shows the results in the Modal**, one match included (Laurence, 27 October 2026; a build that went straight to a single match was taken out the same day); opening a client or policy from them closes it, and Escape closes it with focus back on the field (which does not reopen it). "/" opens it too | The search keeps you where you are, and the results are one Escape away from the page behind |
 | Breadcrumbs (replace the blue record strip) | Breadcrumb, location-based, at the top of Main, **in one row with the record's actions** (left and right), above the heading: Dashboard › client › policy › page (removed for a round, reinstated by Laurence, 7 October 2026). Client and policy pages have no eyebrow over the heading: the policy column names the policy. The search is a Modal, not a place, so it is not in the trail. The last item is the current page (`.active`, `aria-current="page"`). None on Dashboard or the other modules, which are top level | Breadcrumbs must not wrap, so when the row cannot hold the trail and the actions, the trail's middle folds into its overflow menu (Dashboard › … › page), measured on every page and whenever Main changes width; and a trail of more than four items puts its middle into Breadcrumb's documented overflow menu (Code & specs example 2), and below 768px only the first and last stay out of it |
 | User settings | Menu button whose trigger is the Avatar (`LA`), `dropdown-menu-end`: the user's name as a section header, then Unlock records, Clear cache, Change password, Release notes, Cookie policy, a divider and Logout, as in Mobius today (sentence case). Each shows a "not part of this prototype" toast | Menu button is Buckholt's documented trigger + Menu. The trigger has an accessible name ("User menu, Laurence Abbott") |
 | A full top bar | Between 1280 and 1680px the "Show wording changes" label (the switch is **off by default**, Laurence, 7 October 2026) is visually hidden (still named). Below 768px the search field gives way to the system menu and the avatar. | |
@@ -470,7 +534,15 @@ Button says "use Button for actions, Link for navigation". A heading action that
 is an `<a class="btn">`, so it keeps link semantics. Since 8 October 2026 none is in a page heading: Create
 new client is in the top bar; Add new quote and Amend policy are menu items only.
 
-### 4. Count badges follow Mark's badge design
+### 4. Count badges: a prototype component on Buckholt's `.badge`
+
+**Type is Buckholt's support text** (Laurence, 27 October 2026): the element carries
+`.support-01` (12px, Regular 400, 16px line height, 0.25px letter spacing), which is also what
+the runtime `.badge` sets, and the text is **trimmed to the cap height and the baseline**
+(`text-box: trim-both cap alphabetic`) so the number sits optically centred. In a menu the count
+is **`--text-secondary`** on the neutral surface. An earlier build overrode the badge with 14px
+Medium in primary text; that is gone. The Mobius look keeps white on its dark column.
+
 
 **Menu counts are the number alone and match their pages** (Laurence, 27 October 2026):
 Documents shows the 18 its page lists and Notes the policy's one note (they had been fixed
@@ -620,7 +692,7 @@ are secondary here:
 
 | Screen | Primary | Changed to secondary |
 | --- | --- | --- |
-| Dashboard | none (Create new client is secondary, in the top bar) | Apply (filters) |
+| Dashboard (the homepage) | Create new client, on the page (27 October 2026) | Apply (filters) |
 | Checklist (every status) | Continue (Sale status) | Save (Checklist details), Add item (Outstanding items) |
 
 Where a page has a primary, it is the page's one

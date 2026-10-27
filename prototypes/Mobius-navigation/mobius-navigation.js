@@ -123,7 +123,7 @@
     var noun = COUNT_NOUN[id] || ['item', 'items'];
     /* The number alone, as Mark's badge design draws it (Laurence, 27
        October 2026); what it counts is read out. */
-    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' +
+    return '<span class="badge mob-count mob-count-inline support-01" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' +
       '<span class="visually-hidden">, ' + n + ' ' + noun[n === 1 ? 0 : 1] + '</span>';
   }
 
@@ -481,11 +481,13 @@
     main.innerHTML = home
       /* The homepage: its title names its main task, "Find a client or
          policy" (Laurence, 27 October 2026), and labels the search field
-         under it; no eyebrow. */
-      ? '<div class="page-panel mob-home-head"><div class="mob-heading"><div class="text-block">' +
+         under it; no eyebrow. Title and search are directly related, so
+         they share one Panel and sit its 2rem gap apart (Buckholt page
+         layout); the Tabs are the next Panel. */
+      ? '<div class="page-panel"><div class="mob-heading"><div class="text-block">' +
           '<h1 class="display-01" id="mob-title" tabindex="-1">Find a client or policy</h1>' +
-        '</div></div></div>' +
-        panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('')
+        '</div></div>' + panels[0] + '</div>' +
+        panels.slice(1).map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('')
       :
       '<div class="page-panel">' +
         (trail || actions ? '<div class="mob-page-bar">' + trail +
@@ -632,10 +634,10 @@
       M.MODULES.map(function (m) {
         var on = m.id === cur;
         return '<li role="none"><a class="menu-item mob-menu-item-help" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
-          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help">' + t(m.desc) + '</span></span>' +
+          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help body-01">' + t(m.desc) + '</span></span>' +
           /* The current system: a tick at the item's end, and Menu's own
              active colours (below), so it is not marked by colour alone. */
-          (on ? icon('fa-regular fa-check', 'mob-menu-current') + '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
+          (on ? icon('fa-solid fa-check', 'mob-menu-current') + '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
       }).join('');
   }
 
@@ -742,10 +744,8 @@
     S.query = q;
     modalInput.value = q;
     F.recentSearches = [q].concat(F.recentSearches.filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); })).slice(0, 5);
-    /* One match: straight there (Laurence, 27 October 2026), the policy when
-       the search is its reference, else the client. */
-    var direct = P.searchDirect(q);
-    if (direct) { location.hash = direct; return true; }
+    /* Every search shows its results in the Modal, one match included
+       (Laurence, 27 October 2026): it never jumps straight to a record. */
     renderSearchBody();
   }
 
@@ -822,7 +822,7 @@
       hide();
       if (!q) { input.focus(); return; }
       S.searchTrigger = input;
-      if (!runModalSearch(q)) openSearch(q);
+      runModalSearch(q); openSearch(q);
     };
     input.addEventListener('input', showRecent);
     input.addEventListener('keydown', function (e) {
@@ -883,7 +883,8 @@
     var b = e.target.closest('[data-recent]');
     if (b) { runModalSearch(b.getAttribute('data-recent')); modalInput.focus(); return; }
     if (e.target.closest('[data-search-apply]')) {
-      var v = function (id) { var x = $(id); return x && x.selectedIndex > 0 ? x.value : ''; };
+      /* Each filter is a Buckholt Dropdown: its value is the chosen option's. */
+      var v = function (id) { var x = $(id), on = x && x.closest('.dropdown').querySelector('.dropdown-item.active'); return on ? on.getAttribute('data-value') : ''; };
       S.searchFilter = { brand: v('sb'), lob: v('sl'), status: v('ss') };
       redrawResults('sf-apply');
       return;
@@ -960,7 +961,7 @@
        shut. */
     if (firstRender) requestAnimationFrame(function () { requestAnimationFrame(function () { sidebar.classList.remove('mob-no-anim'); }); });
     firstRender = false;
-    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; if (!runModalSearch(q)) openSearch(q); }
+    if (S.pendingSearch) { var q = S.pendingSearch; S.pendingSearch = null; S.searchTrigger = searchInput; runModalSearch(q); openSearch(q); }
   }
 
   /* ============================================================== Toasts */
@@ -1299,6 +1300,36 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === ' ' && e.target.matches && e.target.matches('a[role="button"]')) { e.preventDefault(); e.target.click(); }
   });
+
+  /* ============================================================ Dropdowns
+     Every single-select is a Buckholt Dropdown, bound by the unchanged
+     code of components/dropdown/dropdown.js (kept by index.html) as soon
+     as it is drawn. That code looks up every `.dropdown` in the document,
+     so for each run it is shown only the Dropdowns not yet bound. It sets
+     every option's aria-selected to false as it binds, so the chosen one
+     is marked selected again afterwards. */
+  function bindDropdowns() {
+    var fresh = Array.prototype.filter.call(document.querySelectorAll('.dropdown'), function (d) { return !d.hasAttribute('data-mob-bound'); });
+    if (!fresh.length || !window.MobDropdownBind) return;
+    fresh.forEach(function (d) { d.setAttribute('data-mob-bound', ''); });
+    var items = fresh.reduce(function (a, d) { return a.concat(Array.prototype.slice.call(d.querySelectorAll('.dropdown-menu .dropdown-item'))); }, []);
+    var all = document.querySelectorAll;
+    document.querySelectorAll = function (sel) {
+      if (sel === '.dropdown') return fresh;
+      if (sel === '.dropdown-menu .dropdown-item') return items;
+      return all.call(document, sel);
+    };
+    try { window.MobDropdownBind.forEach(function (fn) { fn(); }); }
+    finally { delete document.querySelectorAll; }
+    items.forEach(function (i) { if (i.classList.contains('active')) i.setAttribute('aria-selected', 'true'); });
+  }
+  var dropdownsQueued = false;
+  new MutationObserver(function () {
+    if (dropdownsQueued) return;
+    dropdownsQueued = true;
+    Promise.resolve().then(function () { dropdownsQueued = false; bindDropdowns(); });
+  }).observe(document.body, { childList: true, subtree: true });
+  bindDropdowns();
 
   document.addEventListener('change', function (e) {
     var s = e.target.closest && e.target.closest('[data-switch-toast]');

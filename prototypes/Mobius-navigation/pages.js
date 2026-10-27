@@ -339,14 +339,33 @@
     '</div>';
   }
 
-  /* A disabled Select is drawn read-only, Buckholt's `.readonly` + `disabled`. */
-  function select(fid, label, options, readonly) {
+  /* Buckholt Dropdown, the base single select (components/dropdown/
+     examples.html), as the BACS work uses for every single-select
+     (Laurence, 27 October 2026): Buckholt's own panel, the chosen option
+     highlighted with its tick, instead of the operating system's menu.
+     A first option "Select" / "Please select" is the label shown before a
+     choice, not an option. `selected` names the chosen option; otherwise
+     the first is chosen. Read-only is the documented `.readonly` +
+     `disabled` on the toggle. Behaviour: components/dropdown/dropdown.js,
+     bound as each one is drawn (mobius-navigation.js). */
+  function select(fid, label, options, readonly, selected) {
+    var ph = /^(please )?select$/i.test(options[0]) ? options[0] : null;
+    var opts = ph ? options.slice(1) : options;
+    var cur = selected && opts.indexOf(selected) >= 0 ? selected : (ph ? null : opts[0]);
     return '<div class="input">' +
       '<div class="input-label"><label for="' + fid + '" class="form-label">' + t(label) + '</label></div>' +
-      '<div class="response select-input">' +
-        '<select class="form-select' + (readonly ? ' readonly' : '') + '" id="' + fid + '"' + (readonly ? ' disabled' : '') + '>' +
-          options.map(function (x) { return '<option>' + t(x) + '</option>'; }).join('') +
-        '</select>' +
+      '<div class="response dropdown-input">' +
+        '<div class="dropdown">' +
+          '<button id="' + fid + '" class="dropdown-toggle' + (readonly ? ' readonly' : '') + '" type="button" data-bs-toggle="dropdown" aria-expanded="false"' + (readonly ? ' disabled' : '') + '>' +
+            '<span class="dropdown-label">' + t(cur || ph) + '</span>' +
+          '</button>' +
+          '<ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="' + fid + '">' +
+            opts.map(function (x, i) {
+              var on = x === cur;
+              return '<li id="' + fid + '-option-' + (i + 1) + '" class="dropdown-item' + (on ? ' active' : '') + '" role="option" aria-label="' + esc(x) + '" aria-selected="' + on + '" tabindex="0" data-value="' + esc(x) + '">' + t(x) + '</li>';
+            }).join('') +
+          '</ul>' +
+        '</div>' +
       '</div>' +
     '</div>';
   }
@@ -581,39 +600,30 @@
       (rest > 0 ? '<div class="mob-table-foot"><p class="support-01" aria-live="polite">Showing 1 to ' + shown.length + ' of ' + x.policies.length + ', most recent first</p>' + more + '</div>' : '');
   }
 
-  /* Where one match goes (no filters): a policy whose reference is the
-     search, else the one client found. Samples do not open, so a single
-     sample stays in the results. */
-  function searchDirect(q) {
-    var n = String(q || '').trim().toLowerCase();
-    var pol = F.policies.filter(function (p) { return p.ref.toLowerCase() === n; })[0];
-    if (pol) return policyHref(pol);
-    var found = searchFound(q);
-    return found.length === 1 && found[0].real ? '#c/summary' : null;
-  }
-
   function searchResults() {
     var q = S.query;
     var found = searchFound(q);
     var fl = S.searchFilter || {};
     var open = S.searchOpen || {};
-    var pick = function (html, v) { return v ? html.replace('<option>' + v + '</option>', '<option selected>' + v + '</option>') : html; };
     var filters = filterBar([
-      pick(select('sb', 'Brand', ['Select', 'Krypton', 'Tungsten']), fl.brand),
-      pick(select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle']), fl.lob),
-      pick(select('ss', 'Policy status', ['Select', 'Policy', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline']), fl.status)
+      select('sb', 'Brand', ['Select', 'Krypton', 'Tungsten'], false, fl.brand),
+      select('sl', 'Line of business', ['Select', 'Open Market Motor', 'Open Market Motorcycle'], false, fl.lob),
+      select('ss', 'Policy status', ['Select', 'Policy', 'Prospect', 'Incomplete', 'Lapsed', 'Automatic Decline'], false, fl.status)
     ], [btn('Clear', { icon: AI.clear, attrs: ' data-search-clear data-focus-id="sf-clear"' }),
         btn('Apply', { variant: 'secondary', attrs: ' data-search-apply data-focus-id="sf-apply"' })], 'Filter search results');
     var head = function (text, action) {
       return '<div class="mob-search-head"><div class="text-block"><h3 class="title-02" id="mob-search-count">' + text + '</h3></div>' + (action || '') + '</div>';
     };
-    /* Create new client is in the top bar (back there 22 October 2026),
-       not here. No results: the filters only show when they are what
-       emptied the list, so they can be cleared. */
+    /* No results: the filters only show when they are what emptied the
+       list, so they can be cleared. With no filters, Create new client is
+       the next step, so it is the primary (Laurence, 21 and 27 October
+       2026); it is in the top bar too. */
     if (!found.length) {
       var filtered = !!(fl.brand || fl.lob || fl.status);
       return '<div class="mob-search-results">' + head('No clients found for “' + esc(q) + '”') + (filtered ? filters : '') +
-        empty(filtered ? 'No client matches these filters. Clear them, or search again.' : 'Check the name, reference or email and search again.') + '</div>';
+        (filtered ? empty('No client matches these filters. Clear them, or search again.')
+          : empty('Check the name, reference or email and search again. If this is a new client, create them.') +
+            set([btn('Create new client', { variant: 'primary', icon: ICON.newClient, href: '#newclient' })], 'mob-search-create')) + '</div>';
     }
     var n = found.length;
     return '<div class="mob-search-results">' +
@@ -682,15 +692,16 @@
          client come down from the top bar onto the page, above the Tabs.
          The field is the Modal's search on the page (Laurence, 27 October
          2026): Input group with its Search Button; matching recent searches
-         show as you type; Search opens the results in the Modal. "Type / to
-         search", labelled by the page title. */
+         show as you type; Search opens the results in the Modal. Its
+         placeholder is the Modal's own (Laurence, 27 October 2026); it is
+         labelled by the page title, and "/" still focuses it. */
       var homeBar = '<div class="mob-home-bar">' +
         '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
           '<div class="input">' +
             '<div class="input-group">' +
               '<div class="response text-input">' +
                 '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
-                '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Type / to search" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-controls="mob-home-recent" aria-expanded="false" autocomplete="off">' +
+                '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-controls="mob-home-recent" aria-expanded="false" autocomplete="off">' +
               '</div>' +
               '<button type="submit" class="btn btn-response" id="mob-home-search-go"><span class="button-label">Search</span></button>' +
             '</div>' +
@@ -707,8 +718,9 @@
           '</button>' +
           '<div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-home-help" role="dialog" aria-labelledby="mob-home-help-title"></div>' +
         '</div>' +
-        /* Create new client at the page's right (Laurence, 27 October 2026). */
-        set([btn('Create new client', { variant: 'secondary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create') +
+        /* Create new client at the page's right, the homepage's primary
+           (Laurence, 27 October 2026). */
+        set([btn('Create new client', { variant: 'primary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create') +
       '</div>';
       var d = F.outstandingDiary;
       var sc = F.sanctionMatches;
@@ -743,7 +755,7 @@
               cell('<a href="#c/summary">' + esc(r[6]) + '</a>'), r[7]];
           }), { caption: 'Sanctions check matches' }) +
         tableFoot(sc.rows.length, sc.total, '6 matches'));
-      return [homeBar + tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
+      return [homeBar, tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
     },
 
     /* The results of a search, shown in the search Modal. Matching is
@@ -1420,14 +1432,14 @@
       /* A journey opens a page: a link, not a button. */
       /* Make changes' items carry a one-line helper (Laurence, 27 October
          2026), so the choice is clear before it is made. */
-      var help = a.help && cls !== 'plain' ? '<span class="mob-menu-help">' + t(a.help) + '</span>' : '';
+      var help = a.help && cls !== 'plain' ? '<span class="mob-menu-help body-01">' + t(a.help) + '</span>' : '';
       var text = help ? '<span class="mob-menu-text"><span>' + t(label(k)) + '</span>' + help + '</span>' : t(label(k));
       if (a.kind === 'flow') return li + '<a class="menu-item' + (help ? ' mob-menu-item-help' : '') + '" role="menuitem" href="' + policyHref(p, a.to) + '">' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + text + '</a></li>';
       /* A Menu item is not a toggle: no aria-pressed. */
       return li + '<button class="menu-item' + (a.danger ? ' menu-item-danger' : '') + (help ? ' mob-menu-item-help' : '') + '" type="button" role="menuitem" data-action="' + k + '" data-scope="policy" aria-haspopup="dialog">' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + text +
-        (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
+        (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline support-01" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
       '</button></li>';
     };
     var changes = '';
@@ -1455,7 +1467,7 @@
       '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
         '<span class="button-label">Policy actions' + (due ? '<span class="visually-hidden">, renewal due</span>' : '') + '</span>' +
         '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
-        (due ? '<span class="badge badge-floating mob-count" aria-hidden="true">1</span>' : '') +
+        (due ? '<span class="badge badge-floating mob-count support-01" aria-hidden="true">1</span>' : '') +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
         '<ul class="menu-body" role="menu">' +
@@ -1494,7 +1506,6 @@
     client: client,
     policy: policy,
     panels: panels,
-    heading: heading,
-    searchDirect: function (q) { var f = S.searchFilter; S.searchFilter = {}; var r = searchDirect(q); S.searchFilter = f; return r; }
+    heading: heading
   };
 }(window));
