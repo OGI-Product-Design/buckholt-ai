@@ -680,18 +680,34 @@
     dashboard: function () {
       /* The homepage (Laurence, 27 October 2026): the search and Create new
          client come down from the top bar onto the page, above the Tabs.
-         The field is the top bar's (it opens the search Modal), so it reads
-         the same: "Type / to search", labelled by the page title. */
+         The field is the Modal's search on the page (Laurence, 27 October
+         2026): Input group with its Search Button; matching recent searches
+         show as you type; Search opens the results in the Modal. "Type / to
+         search", labelled by the page title. */
       var homeBar = '<div class="mob-home-bar">' +
         '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
           '<div class="input">' +
-
-            '<div class="response text-input">' +
-              '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
-              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Type / to search" enterkeyhint="search" aria-labelledby="mob-title" aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">' +
+            '<div class="input-group">' +
+              '<div class="response text-input">' +
+                '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
+                '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Type / to search" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-controls="mob-home-recent" aria-expanded="false" autocomplete="off">' +
+              '</div>' +
+              '<button type="submit" class="btn btn-response" id="mob-home-search-go"><span class="button-label">Search</span></button>' +
             '</div>' +
           '</div>' +
+          /* Matching recent searches, under the field as you type. */
+          '<div class="mob-home-recent" id="mob-home-recent" hidden></div>' +
         '</form>' +
+        /* "What can I search?", to the field's right as in the search Modal
+           (Laurence, 27 October 2026). */
+        '<div class="menu mob-search-help mob-home-help">' +
+          '<button type="button" class="btn btn-ghost menu-toggle" id="mob-home-help-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-controls="mob-home-help">' +
+            '<div class="btn-icon"><i class="fa-regular fa-circle-info" aria-hidden="true"></i></div>' +
+            '<span class="button-label">What can I search?</span>' +
+          '</button>' +
+          '<div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-home-help" role="dialog" aria-labelledby="mob-home-help-title"></div>' +
+        '</div>' +
+        /* Create new client at the page's right (Laurence, 27 October 2026). */
         set([btn('Create new client', { variant: 'secondary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create') +
       '</div>';
       var d = F.outstandingDiary;
