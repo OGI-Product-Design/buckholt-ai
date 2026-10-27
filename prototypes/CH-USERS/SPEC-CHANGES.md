@@ -7,11 +7,11 @@ everything that should change in it is here.
 **Revision 5 status of the revision 3 findings:**
 
 - **Resolved by revision 4/5:** A1 (the name is "User Management" again,
+  which fits) and A9 (the CU-00-01 cards are new and wider).
 - **Still open:** A2–A8 and A10–A17. Where they cite acceptance criteria,
-- **Still open:** A2–A8 and A10–A17. A20 (new) is closed: the status colours are confirmed. Where they cite acceptance criteria,
   the numbers have been updated to revision 5's list.
 - **New from the revision 5 build:** A18–A22, B5–B7, C16 and C17, each under
-  its own heading.
+  its own heading. A20 is closed: Andrej confirmed the status colours.
 
 ## A. The spec
 
