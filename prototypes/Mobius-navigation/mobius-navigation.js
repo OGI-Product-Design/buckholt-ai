@@ -479,9 +479,12 @@
     var trail = crumbs(r, tt.title);
     var home = r.scope === 'app' && r.page === 'dashboard';
     main.innerHTML = home
-      /* The homepage: no title block taking room, only its heading for
-         assistive technology, then the page. */
-      ? '<h1 class="visually-hidden" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
+      /* The homepage: its title names its main task, "Find a client or
+         policy" (Laurence, 27 October 2026), and labels the search field
+         under it; no eyebrow. */
+      ? '<div class="page-panel mob-home-head"><div class="mob-heading"><div class="text-block">' +
+          '<h1 class="display-01" id="mob-title" tabindex="-1">Find a client or policy</h1>' +
+        '</div></div></div>' +
         panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('')
       :
       '<div class="page-panel">' +

@@ -680,14 +680,15 @@
     dashboard: function () {
       /* The homepage (Laurence, 27 October 2026): the search and Create new
          client come down from the top bar onto the page, above the Tabs.
-         The field opens the search Modal as the top bar's does. */
+         The field is the top bar's (it opens the search Modal), so it reads
+         the same: "Type / to search", labelled by the page title. */
       var homeBar = '<div class="mob-home-bar">' +
         '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
           '<div class="input">' +
-            '<div class="input-label"><label for="mob-home-search-input" class="form-label visually-hidden">Search clients and policies</label></div>' +
+
             '<div class="response text-input">' +
               '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
-              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-haspopup="dialog" aria-controls="mob-search-modal">' +
+              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Type / to search" enterkeyhint="search" aria-labelledby="mob-title" aria-haspopup="dialog" aria-controls="mob-search-modal" aria-keyshortcuts="/">' +
             '</div>' +
           '</div>' +
         '</form>' +

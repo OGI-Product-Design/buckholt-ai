@@ -226,11 +226,12 @@ state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
 The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
 
-- No visible "Broking" eyebrow or "Dashboard" title; the heading stays for assistive
-  technology.
+- No "Broking" eyebrow. Its title names its main task: **"Find a client or policy"**
+  (Laurence, 27 October 2026), 16px above the search field, which it labels.
 - **On this page only**, the search field and **Create new client** come down from the top bar
-  onto the page, above the Outstanding diary and Sanctions check matches Tabs. The field opens
-  the search Modal exactly as the top bar's does (every key typed carries over). The top bar
+  onto the page, above the Outstanding diary and Sanctions check matches Tabs. The field is the
+  top bar's (it opens the search Modal; every key typed carries over), so it reads the same:
+  **"Type / to search"**. The top bar
   does not repeat them here; on every other page they are in the top bar as before.
 - In the breadcrumbs of client and policy pages, **Home is the House** (`fa-house`), named
   "Home" for assistive technology, in place of the word "Dashboard".

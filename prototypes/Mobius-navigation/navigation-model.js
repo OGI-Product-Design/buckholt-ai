@@ -375,7 +375,7 @@
      policy reference. */
   var TITLES = {
     app: {
-      dashboard: ['Dashboard', ''], search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
+      dashboard: ['Find a client or policy', ''],   /* the homepage (Laurence, 27 October 2026) */ search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {

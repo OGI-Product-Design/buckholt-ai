@@ -1027,3 +1027,7 @@ body.mob-home #mob-create-client { display: none; }
 .mob-home-create { margin: 0; }
 /* Home in the breadcrumbs: the House, sized with the text. */
 .mob-crumb-home .breadcrumb-link { display: inline-flex; align-items: center; }
+/* The homepage's title labels the search under it, so they sit close: 16px
+   apart rather than a Panel's gap. */
+.page-pane > .mob-home-head { margin-bottom: calc(var(--spacer-04) - var(--page-pane-gap, var(--spacer-07))); }
+.mob-home-head .mob-heading { margin: 0; padding: 0; }
