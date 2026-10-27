@@ -222,6 +222,19 @@ shortened, the labelled actions fold into More, as on a narrow page.
 named as the policy menu names its page. The sample data has no claims, so it shows the empty
 state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
+## The homepage (27 October 2026)
+
+The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
+
+- No visible "Broking" eyebrow or "Dashboard" title; the heading stays for assistive
+  technology.
+- **On this page only**, the search field and **Create new client** come down from the top bar
+  onto the page, above the Outstanding diary and Sanctions check matches Tabs. The field opens
+  the search Modal exactly as the top bar's does (every key typed carries over). The top bar
+  does not repeat them here; on every other page they are in the top bar as before.
+- In the breadcrumbs of client and policy pages, **Home is the House** (`fa-house`), named
+  "Home" for assistive technology, in place of the word "Dashboard".
+
 ## System navigation (7 October 2026)
 
 Laurence asked for the best experience for system-level navigation. The decisions:
@@ -373,12 +386,12 @@ with the breadcrumbs, above the title, at every width, with no rules between the
 - **Client support** (ghost, `fa-hand-heart`) and **Add policy note** / **Add client note**
   (ghost, `fa-note-sticky`). The note Button **adds** a note, so it carries **no count badge**
   (Laurence, 27 October 2026); the count is on Notes in the menu.
-- **Make changes**: a **secondary Menu button** (Menu button Code & specs example 1, the label
+- **Make changes**: a **ghost Menu button** (secondary until 27 October 2026; ghost, like its neighbours, from then) (Menu button Code & specs example 1, the label
   then the caret) holding the changes to the policy, in this order: **Amend details** (`fa-pen`,
   a link, as it opens a page), **Make an MTA** (Mark's Shield-pen SVG, inlined in
   `mobius-navigation.css` as `.mob-icon-shield-pen` and drawn as a mask in the text colour, as
   Font Awesome has no Shield-pen) and **Policy extension** (`fa-calendar-plus`). A status with
-  **one** change shows it as a **plain secondary Button** instead (Prospect and the declines:
+  **one** change shows it as a **plain ghost Button** instead (Prospect and the declines:
   Amend quote; Incomplete: Amend risk; Lapsed: Reinstate policy; Cancelled: Amend details): a
   menu of one is a click for nothing. A panel opened from a Menu item returns focus to the
   Menu's Button when it closes.
@@ -388,8 +401,7 @@ with the breadcrumbs, above the title, at every width, with no rules between the
   (Laurence, 27 October 2026). It holds **Copy policy**,
   **Renewal invite** (`fa-envelope`) and **Customer portal settings**, then below a divider
   **Stop policy** (`fa-circle-stop`) and **Cancel policy** (red at rest, the danger item).
-  **While the renewal is due** it and Renewal invite carry the badge, and its name adds
-  "renewal due".
+  **No renewal-due badges** on it or on Renewal invite (Laurence, 27 October 2026).
 - **"Stop policy" again** (Laurence, 27 October 2026; "Pause policy" from 21 October): the
   confirmation says "Stop this policy?".
 - **Confirmations name the way out:** Stop and Cancel offer **Keep policy** / Stop policy and
@@ -397,10 +409,10 @@ with the breadcrumbs, above the title, at every width, with no rules between the
   "Cancel policy" was ambiguous. Other confirmations keep Cancel.
 - **Helper lines in Make changes** (Laurence, 27 October 2026, from review): Amend details,
   "Contact details, consent and marketing" (what its journey covers); Make an MTA, "Change car,
-  driver or address mid-term"; Policy extension, "Extend cover by 1, 3 or 6 months" (its panel's
-  options).
+  driver or address mid-term", now "Change the vehicle, drivers, cover and more"; Policy
+  extension, "Extend the current period" (Laurence's wording, 27 October 2026).
 - **On a client page:** Client support, Add client note, then **Add new quote**, a secondary
-  Button with Shield-plus (a link).
+  Button with Shield-plus (a link); ghost since 27 October 2026.
 - **Too narrow for the row** (fitBar): the breadcrumbs shorten first; then Make changes folds into
   the top of the Policy actions menu, above a divider.
 - **Extra support in place:** Client support turns the teal (Buckholt's expressive quaternary),
@@ -432,8 +444,10 @@ new client is in the top bar; Add new quote and Amend policy are menu items only
 
 ### 4. Count badges follow Mark's badge design
 
-**Menu counts say what they count** (Laurence, 27 October 2026, from review): Documents,
-Attachments, Notes and History read "3 new", not a bare "3" beside a list of 15.
+**Menu counts are the number alone and match their pages** (Laurence, 27 October 2026):
+Documents shows the 18 its page lists and Notes the policy's one note (they had been fixed
+figures, 3 and 1); what each counts is read out ("18 documents"). Attachments and History have
+none.
 
 **The rail does not slide** when it changes width (27 October 2026, from review): switching
 between the client's and the policy's menu moved items under the pointer mid-animation, so the

@@ -161,8 +161,10 @@
        in the panel are put at the top of this list for the session. */
     clientNotes: [],
 
-    /* Counts shown as badges on the Policy overview quick links. */
-    quickLinkCounts: { docs: 3, attachments: 0, notes: 1, history: 0 },
+    /* Counts on the menu's Attachments and History links. Documents and
+       Notes count what their pages list (documents.total, the policy's
+       notes), so the badge and the page agree (Laurence, 27 October 2026). */
+    quickLinkCounts: { attachments: 0, history: 0 },
 
     clientStats: {
       livePolicies: '3',

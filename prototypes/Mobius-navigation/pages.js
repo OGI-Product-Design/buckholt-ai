@@ -678,6 +678,21 @@
        current Mobius. Two Tabs, because they are two views of one page that
        switch in place. Searching is in the menu, on every page. */
     dashboard: function () {
+      /* The homepage (Laurence, 27 October 2026): the search and Create new
+         client come down from the top bar onto the page, above the Tabs.
+         The field opens the search Modal as the top bar's does. */
+      var homeBar = '<div class="mob-home-bar">' +
+        '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
+          '<div class="input">' +
+            '<div class="input-label"><label for="mob-home-search-input" class="form-label visually-hidden">Search clients and policies</label></div>' +
+            '<div class="response text-input">' +
+              '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
+              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-haspopup="dialog" aria-controls="mob-search-modal">' +
+            '</div>' +
+          '</div>' +
+        '</form>' +
+        set([btn('Create new client', { variant: 'secondary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create') +
+      '</div>';
       var d = F.outstandingDiary;
       var sc = F.sanctionMatches;
       /* Seven filters were too many in one row (Laurence, 8 October 2026).
@@ -711,7 +726,7 @@
               cell('<a href="#c/summary">' + esc(r[6]) + '</a>'), r[7]];
           }), { caption: 'Sanctions check matches' }) +
         tableFoot(sc.rows.length, sc.total, '6 matches'));
-      return [tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
+      return [homeBar + tabs(['Outstanding diary', 'Sanctions check matches'], [diary, sanctions])];
     },
 
     /* The results of a search, shown in the search Modal. Matching is
@@ -1374,7 +1389,8 @@
     var change = CHANGE.filter(function (k) { return ids.indexOf(k) >= 0; });
     var rare = OVERFLOW.filter(function (k) { return ids.indexOf(k) >= 0; });
     var risky = DESTRUCTIVE.filter(function (k) { return ids.indexOf(k) >= 0; });
-    var due = !!p.renewalOpen && ids.indexOf('renew') >= 0;
+    /* No renewal-due badges (Laurence, 27 October 2026). */
+    var due = false;
     var label = function (k) { var a = A[k]; return a.kind === 'flow' ? (M.amendLabel(p, a.to) || a.label) : a.label; };
     var attrs = function (k) {
       var a = A[k];
@@ -1401,11 +1417,11 @@
     if (change.length === 1) {
       var k1 = change[0], a1 = A[k1];
       changes = set([a1.kind === 'flow'
-        ? btn(label(k1), { variant: 'secondary', icon: a1.icon, href: policyHref(p, a1.to) })
-        : btn(a1.label, { variant: 'secondary', icon: a1.icon, attrs: attrs(k1) })], 'mob-policy-actions');
+        ? btn(label(k1), { variant: 'ghost', icon: a1.icon, href: policyHref(p, a1.to) })
+        : btn(a1.label, { variant: 'ghost', icon: a1.icon, attrs: attrs(k1) })], 'mob-policy-actions');
     } else if (change.length) {
       changes = '<div class="menu mob-changes mob-policy-actions">' +
-        '<button type="button" class="btn btn-secondary menu-toggle" id="mob-changes" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<button type="button" class="btn btn-ghost menu-toggle" id="mob-changes" data-bs-toggle="dropdown" aria-expanded="false">' +
           '<span class="button-label">Make changes</span>' +
           '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
         '</button>' +
@@ -1448,7 +1464,7 @@
        quote: a secondary Button with Shield-plus (a link, as it opens a
        page). */
     if (R.scope === 'client') return clientTools(R) +
-      set([btn('Add new quote', { variant: 'secondary', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
+      set([btn('Add new quote', { variant: 'ghost', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions');
     if (R.scope === 'policy') return clientTools(R) + policyTools(R.p);
     return '';
   }

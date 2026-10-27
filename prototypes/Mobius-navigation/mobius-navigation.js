@@ -101,7 +101,7 @@
     var on = id === cur;
     return '<li class="nav-item">' +
       '<a class="nav-link' + (on ? ' active' : '') + '" href="' + url + '"' + (on ? ' aria-current="page"' : '') + '>' +
-        (iconCls ? icon(iconCls) : '') + t(label) + countBadge(countFor(id)) +
+        (iconCls ? icon(iconCls) : '') + t(label) + countBadge(countFor(id), id) +
       '</a>' +
     '</li>';
   }
@@ -110,13 +110,21 @@
      badge at the end of its link, to Mark's badge design, in place of the
      quick links that used to sit in the Policy overview heading. The count
      is read out as ", 3 new". */
-  function countFor(id) { return (F.quickLinkCounts || {})[id] || 0; }
-  function countBadge(n) {
+  /* The count is what the page lists (Laurence, 27 October 2026): the
+     policy's documents (the Documents page's total) and its notes. */
+  function countFor(id) {
+    if (id === 'docs') return (F.documents || {}).total || 0;
+    if (id === 'notes') return F.policyNote ? 1 : 0;
+    return (F.quickLinkCounts || {})[id] || 0;
+  }
+  var COUNT_NOUN = { docs: ['document', 'documents'], notes: ['note', 'notes'], attachments: ['attachment', 'attachments'], history: ['entry', 'entries'] };
+  function countBadge(n, id) {
     if (!n) return '';
-    /* It says what it counts (Laurence, 27 October 2026): "3 new", not a
-       bare "3" beside a list of 15. */
-    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + ' new</span>' +
-      '<span class="visually-hidden">, ' + n + ' new</span>';
+    var noun = COUNT_NOUN[id] || ['item', 'items'];
+    /* The number alone, as Mark's badge design draws it (Laurence, 27
+       October 2026); what it counts is read out. */
+    return '<span class="badge mob-count mob-count-inline" aria-hidden="true">' + (n > 999 ? '999+' : n) + '</span>' +
+      '<span class="visually-hidden">, ' + n + ' ' + noun[n === 1 ? 0 : 1] + '</span>';
   }
 
   /* Which columns are open follows where you are:
@@ -403,7 +411,9 @@
     var c = F.client;
     var trail = [];
     if (r.scope === 'app' && (r.page === 'dashboard' || ['activity', 'renewals', 'bordereau', 'accounts'].indexOf(r.page) >= 0)) return '';
-    trail.push(['Dashboard', '#dashboard']);
+    /* Home, as the House (Laurence, 27 October 2026): the Dashboard is the
+       homepage. Named "Home" for assistive technology. */
+    trail.push(['Home', '#dashboard', M.ICON.home]);
     if (r.scope === 'client') {
       if (r.page === 'summary') trail.push([c.name, null]);
       else trail.push([c.name, '#c/summary'], [title, null]);
@@ -416,6 +426,7 @@
     }
 
     var item = function (x) {
+      if (x[2]) return '<li class="breadcrumb-item mob-crumb-home"><a class="breadcrumb-link" href="' + x[1] + '" aria-label="' + esc(x[0]) + '"><i class="' + x[2] + '" aria-hidden="true"></i></a></li>';
       return x[1]
         ? '<li class="breadcrumb-item"><a class="breadcrumb-link" href="' + x[1] + '">' + t(x[0]) + '</a></li>'
         : '<li class="breadcrumb-item active" aria-current="page">' + t(x[0]) + '</li>';
@@ -466,7 +477,13 @@
        as Heading attachment asks, and the actions sit with the record's
        location. Not sticky. */
     var trail = crumbs(r, tt.title);
-    main.innerHTML =
+    var home = r.scope === 'app' && r.page === 'dashboard';
+    main.innerHTML = home
+      /* The homepage: no title block taking room, only its heading for
+         assistive technology, then the page. */
+      ? '<h1 class="visually-hidden" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
+        panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('')
+      :
       '<div class="page-panel">' +
         (trail || actions ? '<div class="mob-page-bar">' + trail +
           (actions ? '<div class="mob-heading-actions">' + actions + '</div>' : '') + '</div>' : '') +
@@ -478,6 +495,7 @@
         '</div>' +
       '</div>' +
       panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('');
+    if (home) bindSearchOpener($('mob-home-search'), $('mob-home-search-input'));
 
     document.title = 'Mobius · ' + plain(tt.title).replace(/[“”]/g, '');
     fitBar();
@@ -532,6 +550,10 @@
     if (R.scope === 'app' && R.page === 'search') { S.pendingSearch = S.query; location.replace('#dashboard'); return false; }
     Shell.disposeTooltips($('sidebar'));
     renderSystems(R);
+    /* The homepage (the Dashboard): its search and Create new client are on
+       the page, so the top bar does not repeat them (Laurence, 27 October
+       2026). */
+    document.body.classList.toggle('mob-home', R.scope === 'app' && R.page === 'dashboard');
     /* No client menu at app level, so no Menu button for it either. */
     $('mob-menu-open').parentNode.hidden = R.scope === 'app';
     /* Not while creating one. */
@@ -736,26 +758,32 @@
      on it afterwards. Opened from the keyboard, focus returns to the field
      when the Modal closes. */
   /* On the field or its icon (on a narrow phone the icon covers it). */
-  searchForm.addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    S.searchTrigger = null;
-    openSearch();
-  });
-  searchInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
-    e.preventDefault();
-    /* Keys typed while the Modal is still opening go on the end of what is
-       already there, not in place of it. */
-    if (searchOpening) {
-      if (e.key.length === 1) modalInput.value += e.key;
-      else if (e.key === 'Backspace') modalInput.value = modalInput.value.slice(0, -1);
-      else if (e.key === 'Enter') runModalSearch(modalInput.value);
-      return;
-    }
-    S.searchTrigger = searchInput;
-    openSearch(e.key.length === 1 ? e.key : '');
-  });
-  searchForm.addEventListener('submit', function (e) { e.preventDefault(); });
+  /* The same behaviour for the top bar's field and the homepage's. */
+  function bindSearchOpener(form, input) {
+    if (!form || !input) return;
+    form.addEventListener('mousedown', function (e) {
+      if (e.target.closest('a, button')) return;
+      e.preventDefault();
+      S.searchTrigger = null;
+      openSearch();
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
+      e.preventDefault();
+      /* Keys typed while the Modal is still opening go on the end of what is
+         already there, not in place of it. */
+      if (searchOpening) {
+        if (e.key.length === 1) modalInput.value += e.key;
+        else if (e.key === 'Backspace') modalInput.value = modalInput.value.slice(0, -1);
+        else if (e.key === 'Enter') runModalSearch(modalInput.value);
+        return;
+      }
+      S.searchTrigger = input;
+      openSearch(e.key.length === 1 ? e.key : '');
+    });
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+  }
+  bindSearchOpener(searchForm, searchInput);
 
 
   modalForm.addEventListener('submit', function (e) { e.preventDefault(); runModalSearch(modalInput.value); });
