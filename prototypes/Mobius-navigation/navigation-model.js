@@ -341,12 +341,14 @@
      Broking opens on its dashboard (outstanding diary and sanctions check
      matches); a search from the menu opens its results. Client and policy
      pages belong to Broking. */
+  /* The areas, as the area switcher names and describes them (Laurence, 27
+     October 2026; option B): "Broking" is "Clients & policies". */
   var MODULES = [
-    { id: 'dashboard', label: 'Broking', icon: 'fa-regular fa-shield' },      // Shield
-    { id: 'activity', label: 'Activity', icon: ICON.activity },               // GAP
-    { id: 'renewals', label: 'Renewals', icon: ICON.renew },                  // Renew
-    { id: 'bordereau', label: 'Bordereau', icon: 'fa-regular fa-list' },      // List
-    { id: 'accounts', label: 'Accounts', icon: ICON.money }                   // Pound
+    { id: 'dashboard', label: 'Clients & policies', desc: 'New business, MTAs and policy lifecycle', icon: 'fa-regular fa-shield' },   // Shield
+    { id: 'activity', label: 'Activity', desc: 'Tasks, diary and recent changes', icon: ICON.activity },                                 // GAP
+    { id: 'renewals', label: 'Renewals', desc: 'Upcoming and overdue renewals', icon: ICON.renew },                                       // Renew
+    { id: 'bordereau', label: 'Bordereau', desc: 'Insurer reporting and submissions', icon: 'fa-regular fa-list' },                       // List
+    { id: 'accounts', label: 'Accounts', desc: 'Transactions, cash and reconciliation', icon: ICON.money }                                // Pound
   ];
 
   /* Opens a page, so it sits in the Broking page headings (Dashboard and
@@ -375,7 +377,7 @@
      policy reference. */
   var TITLES = {
     app: {
-      dashboard: ['Dashboard', ''], search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
+      dashboard: ['Find a client or policy', ''],   /* the homepage (Laurence, 27 October 2026) */ search: ['Search results for “@query”', 'Broking'], newclient: ['Create new client', 'New business'],
       activity: ['Activity', ''], renewals: ['Renewals', ''], bordereau: ['Bordereau', ''], accounts: ['Accounts', '']
     },
     client: {

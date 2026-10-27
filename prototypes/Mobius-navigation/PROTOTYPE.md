@@ -222,15 +222,36 @@ shortened, the labelled actions fold into More, as on a narrow page.
 named as the policy menu names its page. The sample data has no claims, so it shows the empty
 state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
+## The area switcher (27 October 2026)
+
+The system menu is now an **area switcher beside the wordmark** (Laurence, 27 October 2026;
+option B of the review), where "which part of Mobius am I in" is looked for, rather than among
+the account controls on the right. A Menu button (the label then the caret) whose label is the
+current area, read out as "Area: …". Its panel lists each area with its icon, a one-line
+description and a tick on the current one:
+
+| Area | Description |
+| --- | --- |
+| Clients & policies (was "Broking") | New business, MTAs and policy lifecycle |
+| Activity | Tasks, diary and recent changes |
+| Renewals | Upcoming and overdue renewals |
+| Bordereau | Insurer reporting and submissions |
+| Accounts | Transactions, cash and reconciliation |
+
+The design's small "Area" label over the name is left out (it is read out instead). "Clients &
+policies" in place of "Broking" is a wording change to check with brokers. The "Test"
+environment label is gone from the top bar.
+
 ## The homepage (27 October 2026)
 
 The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
 
-- No visible "Broking" eyebrow or "Dashboard" title; the heading stays for assistive
-  technology.
+- No "Broking" eyebrow. Its title names its main task: **"Find a client or policy"**
+  (Laurence, 27 October 2026), 16px above the search field, which it labels.
 - **On this page only**, the search field and **Create new client** come down from the top bar
-  onto the page, above the Outstanding diary and Sanctions check matches Tabs. The field opens
-  the search Modal exactly as the top bar's does (every key typed carries over). The top bar
+  onto the page, above the Outstanding diary and Sanctions check matches Tabs. The field is the
+  top bar's (it opens the search Modal; every key typed carries over), so it reads the same:
+  **"Type / to search"**. The top bar
   does not repeat them here; on every other page they are in the top bar as before.
 - In the breadcrumbs of client and policy pages, **Home is the House** (`fa-house`), named
   "Home" for assistive technology, in place of the word "Dashboard".

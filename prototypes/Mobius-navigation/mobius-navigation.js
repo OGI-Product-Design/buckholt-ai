@@ -479,9 +479,12 @@
     var trail = crumbs(r, tt.title);
     var home = r.scope === 'app' && r.page === 'dashboard';
     main.innerHTML = home
-      /* The homepage: no title block taking room, only its heading for
-         assistive technology, then the page. */
-      ? '<h1 class="visually-hidden" id="mob-title" tabindex="-1">' + t(tt.title) + '</h1>' +
+      /* The homepage: its title names its main task, "Find a client or
+         policy" (Laurence, 27 October 2026), and labels the search field
+         under it; no eyebrow. */
+      ? '<div class="page-panel mob-home-head"><div class="mob-heading"><div class="text-block">' +
+          '<h1 class="display-01" id="mob-title" tabindex="-1">Find a client or policy</h1>' +
+        '</div></div></div>' +
         panels.map(function (x) { return '<div class="page-panel">' + x + '</div>'; }).join('')
       :
       '<div class="page-panel">' +
@@ -628,8 +631,8 @@
     $('mob-systems-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
-        return '<li role="none"><a class="menu-item" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
-          icon(m.icon) + t(m.label) +
+        return '<li role="none"><a class="menu-item mob-menu-item-help" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
+          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help">' + t(m.desc) + '</span></span>' +
           /* The current system: a tick at the item's end, and Menu's own
              active colours (below), so it is not marked by colour alone. */
           (on ? icon('fa-regular fa-check', 'mob-menu-current') + '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
