@@ -7,8 +7,8 @@ everything that should change in it is here.
 **Revision 5 status of the revision 3 findings:**
 
 - **Resolved by revision 4/5:** A1 (the name is "User Management" again,
-  which fits) and A9 (the CU-00-01 cards are new and wider).
 - **Still open:** A2–A8 and A10–A17. Where they cite acceptance criteria,
+- **Still open:** A2–A8 and A10–A17. A20 (new) is closed: the status colours are confirmed. Where they cite acceptance criteria,
   the numbers have been updated to revision 5's list.
 - **New from the revision 5 build:** A18–A22, B5–B7, C16 and C17, each under
   its own heading.
@@ -167,14 +167,14 @@ everything that should change in it is here.
     Only the footer is undocumented (C16). Reword Gap 10 to "Clickable Card
     with a footer", and drop the arrow from the Buckholt mapping as a
     separate icon: the Clickable Card draws it.
-20. **The table's status colours changed with "same status variants as the
-    card tags".**
+20. **Closed.** *The table's status colours changed with "same status
+    variants as the card tags".*
     - Revision 3 built Pending as warning (orange) and Inactive as the plain
       tag (grey).
     - Following Andrej's frame and this line, revision 5 has Inactive orange
       and Pending grey.
-    - Confirm that is intended. Orange reads as "needs attention", which
-      fits a pending invitation at least as well as an inactive user.
+    - **Confirmed by Andrej, 27 Oct 2026:** Inactive orange and Pending grey
+      are right, as in his frame. No change to the build.
 21. **Two "Known screenshot differences" rows don't match the frame.**
     - **Breadcrumb:** the frame already shows "User Management" (the export
       is `screenshots/CU-00-01.png`), not "Applications". Delete that row.
@@ -230,7 +230,8 @@ everything that should change in it is here.
 6. **The frame's tag variants are the reference for status colour** (total
    info, active success, inactive warning, pending plain). The Mobius Users
    table frame (`7587:166787`) draws Pending orange and Inactive grey: the
-   opposite. Align the table frame with the card frame (see A20).
+   opposite. Align the table frame with the card frame, whose colours are
+   confirmed (A20, closed).
 7. **The frame shows the shell's Figma placeholders** ("Open GI", avatar
    "RD", a mint avatar). Built with the Northgate seed, as the spec says.
 
