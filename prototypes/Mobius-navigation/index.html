@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261027-08">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261028-02">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261027-08">
-<script src="mobius-skin.js?v=20261027-08"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261028-02">
+<script src="mobius-skin.js?v=20261028-02"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -64,6 +64,16 @@
         </div>
       </div>
     </form>
+
+    <!-- On a phone the field gives way to an icon-only search Button (Button
+         Code & specs, icon-only: its name in aria-label and a Tooltip). It
+         opens the same search Modal. -->
+    <div class="button-set mob-search-btn-set">
+      <button type="button" class="btn btn-ghost" id="mob-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="mob-search-modal"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Search">
+        <div class="btn-icon"><i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i></div>
+      </button>
+    </div>
 
     <!-- Create new client, next to the search (Laurence, 8 October 2026;
          back here 22 October 2026, after a spell in the search results):
@@ -110,6 +120,8 @@
            mobius-navigation.js. -->
       <div class="menu mob-systems">
         <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-systems-panel">
+          <!-- On a phone the name is not drawn: the current area's icon shows instead. -->
+          <div class="btn-icon mob-system-icon"><i id="mob-system-icon" class="fa-regular fa-shield" aria-hidden="true"></i></div>
           <span class="button-label"><span class="visually-hidden">Area: </span><span id="mob-system-current">Clients &amp; policies</span></span>
           <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
         </button>
@@ -249,7 +261,7 @@
      mobius-navigation.js.
      ========================================================================== -->
 <div class="modal fade" id="mob-search-modal" tabindex="-1" aria-labelledby="mob-search-title">
-  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
     <div class="modal-content">
       <div class="modal-header">
         <div class="text-block">
@@ -312,27 +324,32 @@
      needs jQuery, loaded first, as AGENTS.md sets out. -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="../../components/form/form.js"></script>
-<!-- Buckholt Dropdown (every single-select, as in the BACS work).
-     components/dropdown/dropdown.js binds each Dropdown once, on
-     DOMContentLoaded; this prototype draws its pages after that. So the
-     binding the script registers is kept, unchanged, and mobius-navigation.js
-     runs it on each Dropdown as it is drawn. -->
+<!-- Buckholt's component scripts (Dropdown: every single-select, as in the
+     BACS work; Tabs: the scroll Buttons when the tabs overflow) bind once,
+     on DOMContentLoaded, and this prototype draws its pages after that. So
+     the binding each script registers is kept, unchanged, and
+     mobius-navigation.js runs it on each new component as it is drawn. -->
 <script>
-  window.MobDropdownBind = [];
-  document.addEventListener = (function (add) {
-    return function (type, fn, opts) {
-      if (type === 'DOMContentLoaded') { window.MobDropdownBind.push(fn); return; }
+  window.MobLateBind = {};
+  window.MobKeep = function (name) {
+    var add = EventTarget.prototype.addEventListener;
+    document.addEventListener = function (type, fn, opts) {
+      if (type === 'DOMContentLoaded') { (window.MobLateBind[name] = window.MobLateBind[name] || []).push(fn); return; }
       return add.call(this, type, fn, opts);
     };
-  }(document.addEventListener));
+  };
+  window.MobKept = function () { delete document.addEventListener; };
 </script>
+<script>MobKeep('dropdown');</script>
 <script src="../../components/dropdown/dropdown.js"></script>
-<script>delete document.addEventListener;</script>
+<script>MobKept(); MobKeep('tabs');</script>
+<script src="../../components/tabs/tabs.js"></script>
+<script>MobKept();</script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261027-08"></script>
-<script src="navigation-model.js?v=20261027-08"></script>
-<script src="pages.js?v=20261027-08"></script>
-<script src="mobius-navigation.js?v=20261027-08"></script>
+<script src="fixtures.js?v=20261028-02"></script>
+<script src="navigation-model.js?v=20261028-02"></script>
+<script src="pages.js?v=20261028-02"></script>
+<script src="mobius-navigation.js?v=20261028-02"></script>
 </body>
 </html>
