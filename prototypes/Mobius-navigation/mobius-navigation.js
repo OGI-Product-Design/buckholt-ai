@@ -631,8 +631,8 @@
     $('mob-systems-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
-        return '<li role="none"><a class="menu-item" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
-          icon(m.icon) + t(m.label) +
+        return '<li role="none"><a class="menu-item mob-menu-item-help" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
+          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help">' + t(m.desc) + '</span></span>' +
           /* The current system: a tick at the item's end, and Menu's own
              active colours (below), so it is not marked by colour alone. */
           (on ? icon('fa-regular fa-check', 'mob-menu-current') + '<span class="visually-hidden">, current</span>' : '') + '</a></li>';

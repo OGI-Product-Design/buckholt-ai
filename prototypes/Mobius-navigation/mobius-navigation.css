@@ -78,7 +78,11 @@
 /* ----------------------------------------------------------- System menu
    An icon-only Menu button beside the avatar; its panel is Menu's Link
    variant. The panel opens over the page, under the top bar's own menus. */
-.mob-systems { position: relative; display: flex; align-items: center; margin-left: var(--spacer-04); }
+.mob-systems { position: relative; display: flex; align-items: center; margin: 0 var(--spacer-04) 0 0; }
+/* The area switcher sits beside the wordmark (Laurence, 27 October 2026):
+   its panel opens under it, each area with a one-line description. */
+.mob-systems .menu-panel { --menu-min-width: 19rem; --menu-max-width: 22rem; }
+.mob-systems .mob-area-name { font-weight: 500; }
 .mob-systems > .btn { align-self: center; }          /* a Button sets its own top alignment */
 .mob-systems .menu-panel { z-index: 1035; }
 /* The current system: Menu's own active colours (its pressed state's label
@@ -93,7 +97,7 @@
 /* The trigger carries the current system's name. Below 1280px it sits 8px
    from the clock; on a phone the name is kept for assistive technology but
    not drawn, and the caret alone opens the menu. */
-@media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
+@media (max-width: 1279.98px) { .mob-systems { margin-right: var(--spacer-03); } }
 @media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
 /* On the narrowest phones the search field shows only its icon (it is
    still the field: a tap opens the search), and the right-hand controls sit
@@ -101,7 +105,8 @@
 @media (max-width: 429.98px) {
   .mob-app-search { flex: 0 0 2.75rem; }
   .mob-app-search .form-control::placeholder { color: transparent; }
-  .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
+  .mob-user-menu { margin-left: var(--spacer-02); }
+  .mob-systems { margin-right: var(--spacer-02); }
   .app-bar-logo { margin-right: var(--spacer-03); }
   .mob-app-search, .mob-app-create { margin-right: var(--spacer-02); }
 }
@@ -849,12 +854,11 @@ fieldset.input { min-width: 0; margin: 0; padding: 0; border: 0; }
   /* The top bar holds the Menu button, the wordmark, the search, Create new
      client, the system menu and the avatar at 360px: the right-hand ones
      sit 8px apart. */
-  .mob-systems, .mob-user-menu { margin-left: var(--spacer-03); }
+  .mob-user-menu { margin-left: var(--spacer-03); }
   /* Progress keeps a 22rem minimum, wider than a phone's content column.
      Relaxed for the flow progress only, as responsive/component-guidance.md
      recommends (application layer, not Buckholt). */
   #mob-page .progress { min-width: 0; }
-  .app-bar-status { display: none; }
   .mob-filter-fields > .input { width: 100%; }
 }
 
