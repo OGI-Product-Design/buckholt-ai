@@ -363,6 +363,8 @@ The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
   search?** sits to its right, as in the Modal, and **Create new client** at the right of the
   page, as the homepage's **primary** (Laurence, 27 October 2026).
 - In the Modal too, matching recent searches show as you type (all of them when it is empty).
+- The search Modal's title is **"Find a client or policy"**, the homepage's (Laurence, 28 October
+  2026; it was "Search"): the same task wherever it starts.
 - The top bar's field is 320px (from 384): Buckholt sets no field width, so it is sized to the
   longest reference (BAR/J/08121986/0046) and the placeholder. The top bar
   does not repeat them here; on every other page they are in the top bar as before.
