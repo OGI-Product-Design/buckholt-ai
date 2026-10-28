@@ -260,15 +260,28 @@ The system menu is now an **area switcher at the top bar's right, before the use
 it was (Laurence, 27 October 2026: it moved beside the wordmark, option B of the review, and
 came back the same day). A Menu button (the label then the caret).
 
-**One label, task-driven, and no selection shown** (Laurence, 28 October 2026). In Buckholt a
-Menu button names its menu and lists places to go; it never takes the chosen item as its label
-or marks one as selected (that is Dropdown, a form field). So the button always reads **"Switch
-work area"** (verb-led: what a broker does with it), and the panel is a plain Menu with no tick
-or tint. The current area is `aria-current="page"` and read out after the label (", current:
-Clients & policies"); on screen, the page itself says where you are. Below 768px the label is
-not drawn and Buckholt's Change icon (`fa-regular fa-swap-arrows`, "Swap, replace, or exchange")
-stands in, with the label as its name and in a Tooltip (on only then). It was the current
-area's name, with the Dropdown's tick, until this change. Its panel lists each area with its
+**An icon Button that opens Page navigation** (Laurence, 28 October 2026). The trigger is an
+icon-only ghost Button with Buckholt's Menu icon (`fa-regular fa-bars`, "Open or show navigation
+menu"), named "Switch work area", with that name in its Tooltip; the same on every page and at
+every width. Its panel holds **Page navigation**, stacked: one link per area with its icon
+straight inside the link (Page navigation's Code & specs) and a one-line description, the
+current area `.active` and `aria-current="page"`. Tab moves through the links; Escape closes the
+panel with focus back on the Button. Tried and dropped the same day: the current area's name as
+the label with a Dropdown tick (a Menu button shows no selection), then "Switch work area" as a
+plain Menu (no way to show where you are).
+
+**Deviation to raise with Buckholt:** Page navigation's guidance says it is not for global
+navigation, and Buckholt documents no global or app navigation; switching work areas is global.
+The panel is Menu's floating surface (`.menu-panel`) holding a `nav`, not a Menu.
+
+**Below 1024px the work areas are in the drawer** (Laurence, 28 October 2026): the drawer's
+Menu button (top left) carries the same `fa-bars` icon, so the top bar's Button is hidden there
+and the drawer ends with a **"Work areas"** section (a Label 01 heading, ruled off) holding the
+same Page navigation, the current area active. The Menu button now shows on every page below
+1024px; on the Dashboard and the other work areas, where there is no client menu, the drawer
+holds the work areas alone.
+
+Its panel lists each area with its
 icon and a one-line description:
 
 | Area | Description |
