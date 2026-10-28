@@ -258,9 +258,18 @@ state. Its icon (`fa-car-burst`) is not in the icon catalogue: a gap.
 
 The system menu is now an **area switcher at the top bar's right, before the user menu**, where
 it was (Laurence, 27 October 2026: it moved beside the wordmark, option B of the review, and
-came back the same day). A Menu button (the label then the caret) whose label is the
-current area, read out as "Area: …". Its panel lists each area with its icon, a one-line
-description and a tick on the current one:
+came back the same day). A Menu button (the label then the caret).
+
+**One label, task-driven, and no selection shown** (Laurence, 28 October 2026). In Buckholt a
+Menu button names its menu and lists places to go; it never takes the chosen item as its label
+or marks one as selected (that is Dropdown, a form field). So the button always reads **"Switch
+work area"** (verb-led: what a broker does with it), and the panel is a plain Menu with no tick
+or tint. The current area is `aria-current="page"` and read out after the label (", current:
+Clients & policies"); on screen, the page itself says where you are. Below 768px the label is
+not drawn and Buckholt's Change icon (`fa-regular fa-swap-arrows`, "Swap, replace, or exchange")
+stands in, with the label as its name and in a Tooltip (on only then). It was the current
+area's name, with the Dropdown's tick, until this change. Its panel lists each area with its
+icon and a one-line description:
 
 | Area | Description |
 | --- | --- |
@@ -271,14 +280,10 @@ description and a tick on the current one:
 | Accounts | Transactions, cash and reconciliation |
 
 Icons sit level with each area's title (not centred on the two lines). Buckholt's Menu has no
-selected state, so **the current area is drawn as Buckholt's Dropdown draws a selected option**
-(`.dropdown-item.active`, the look the BACS Dropdowns show): the active label and tint (Menu's
-own tokens, the same values), and **the Dropdown's own tick**: its declarations copied from
-`css/buckholt.css` as they are, the SVG image included, 1rem high, centred, 0.75rem from the
-item's right edge, the item padded 2.25rem on the right (Laurence, 28 October 2026: a Font
-Awesome icon from the kit drew a thinner, different tick). The descriptions are
-Buckholt's `.body-01` type set in secondary text (they had an invented 13px size), as are Make
-changes' helpers; both menus are at most 24rem wide so the helpers never run under the tick. The design's small "Area" label over the name is left out (it is read out instead). "Clients &
+selected state, so none is drawn (a borrowed Dropdown tick and tint were tried on 27 and 28
+October 2026 and removed). The descriptions are Buckholt's `.body-01` type set in secondary text
+(they had an invented 13px size), as are Make changes' helpers; both menus are at most 24rem wide.
+The design's small "Area" label over the name is left out (it is read out instead). "Clients &
 policies" in place of "Broking" is a wording change to check with brokers. The "Test"
 environment label is gone from the top bar.
 
