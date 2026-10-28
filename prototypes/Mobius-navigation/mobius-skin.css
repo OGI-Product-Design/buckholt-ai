@@ -74,7 +74,6 @@ html[data-skin="mobius"] body { background-color: var(--mobius-page); color: var
 
 /* ------------------------------------------------------------- Top bar */
 html[data-skin="mobius"] .app-bar { border-bottom-color: #efefef; }
-html[data-skin="mobius"] .app-bar-logo { color: var(--mobius-blue); font-weight: 600; letter-spacing: -0.02em; text-transform: lowercase; }
 html[data-skin="mobius"] .mob-app-search .form-control { border-color: var(--mobius-border); }
 /* The system menu: Mobius's outlined "Dashboard" box. */
 html[data-skin="mobius"] .mob-systems > .btn {
