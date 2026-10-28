@@ -334,7 +334,7 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 | Exact match should open the record | **Not done**: every search opens the Modal (Laurence, 27 and 28 October 2026), as Mobius opens a results page. |
 | Results announcement reads the filters too | **Fixed.** Only the count is announced ("7 clients found for “Barnard”"), from a status region; the results area is no longer live. |
 | MTA panel focus skips Required MTA type | **Fixed.** Focus lands on the first field, a Dropdown included. |
-| Mark required fields | **Open: which fields are required** is for Laurence to decide (Buckholt's Forms pattern: label the optional ones when most are required). |
+| Mark required fields | **Done** (Laurence, 28 October 2026): the MTA type, start date and time and the adjustment types are required; the description is labelled **"(optional)"**, the only label, as Buckholt's Forms pattern sets out when most fields are required. The date and time take native `required`; the two Dropdowns are Buttons, where it is not allowed, so they are described as "Required" (`aria-describedby`). |
 | "/" everywhere; shortcuts to Documents, Notes | "/" already opens the search from every page and the homepage field there. **Open:** further shortcuts. |
 | Add "Change of vehicle" | **Already done**: the 42 adjustment types include Change of Car/Bike, Change of Cover and Proposer - Add. |
 | Make Add new quote stand out | **Not done**: it stays a ghost Button, like the actions beside it (Laurence, 28 October 2026). |

@@ -1260,16 +1260,27 @@
 
   var panels = {
     mta: function () {
-      return ['Select MTA', form([
-        select('m1', 'Required MTA type', ['Please select', 'Permanent MTA', 'Temporary MTA']),
+      /* Required: the MTA type, start date and time, and the adjustment
+         types; the description is optional (Laurence, 28 October 2026).
+         Most fields are required, so only the optional one is labelled,
+         "(optional)", as Buckholt's Forms pattern sets out. The date and
+         time take native `required`; the Dropdowns are Buttons, where it is
+         not allowed, so they are described as required instead. */
+      var need = function (html, fid) {
+        return html.indexOf('<input type=') >= 0 && html.indexOf('id="' + fid + '"') >= 0
+          ? html.replace('id="' + fid + '"', 'id="' + fid + '" required')
+          : html.replace('id="' + fid + '" class="dropdown-toggle"', 'id="' + fid + '" class="dropdown-toggle" aria-describedby="m-required"');
+      };
+      return ['Select MTA', '<span class="visually-hidden" id="m-required">Required</span>' + form([
+        need(select('m1', 'Required MTA type', ['Please select', 'Permanent MTA', 'Temporary MTA']), 'm1'),
         '<div class="text-block"><h3 class="title-01">MTA effective date</h3></div>',
-        input('m2', 'Start date', '', 'date'),
-        input('m3', 'Start time', '', 'time'),
+        need(input('m2', 'Start date', '', 'date'), 'm2'),
+        need(input('m3', 'Start time', '', 'time'), 'm3'),
         /* The adjustment types for a live policy, in Mobius's order
            (Laurence, 28 October 2026): 42 of them, so a Multiselect
            Dropdown rather than 42 Checkboxes down the panel. */
-        multiselect('m-adj', 'MTA adjustment type', M.MTA_ADJUSTMENTS, 3),
-        textarea('m4', 'MTA description')
+        need(multiselect('m-adj', 'MTA adjustment type', M.MTA_ADJUSTMENTS, 3), 'm-adj'),
+        textarea('m4', 'MTA description (optional)')
       ]), 'MTA started'];
     },
     extend: function (p) {
