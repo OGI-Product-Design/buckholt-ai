@@ -381,8 +381,8 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
   **a click opens the client's full card to the left of the policy menu** (both 288px), the open
   policy marked in it and focused. **The page does not move**: the menu lies over it (a negative
   right margin equal to what it grew, 216px, keeps its grid column as it was), lifted by Buckholt's
-  large shadow. It shuts on any choice in either menu, on choosing the open policy again (no new
-  page), on a click or focus outside the menu, or on Escape (focus back on the icon). Show more and
+  large shadow. It shuts on any choice in either menu, on choosing the page you are on again (the open policy in
+  the client's card, or the current page in the policy menu; no new page), on a click or focus outside the menu, or on Escape (focus back on the icon). Show more and
   group toggles work inside it. Collapsed, and in the drawer below 1024px, B is the same as A, so
   that Switch shows from 1024px only.
 
@@ -390,7 +390,7 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 
 | Finding | Outcome |
 | --- | --- |
-| Collapse button reads as "back" | **Fixed.** The Sidebar icon (`fa-regular fa-sidebar`, Laurence) in both states, and the client's Avatar and name are one link to Client overview. |
+| Collapse button reads as "back" | **Fixed.** The Sidebar icon (`fa-regular fa-sidebar`, Laurence) in both states, and the client's Avatar and name were one link to Client overview (later taken out, Laurence, 28 October 2026: the name is not a link; Client overview is the first page in the menu). |
 | Client icon on the rail strip leaves you on the policy page | **Fixed, then changed** (see Late changes: Mark's overlay on hover). Before that it went to Client overview from a policy page (Laurence, 28 October 2026; a highlight on Client overview was tried and dropped). A link, as it opens a page. On a client page it still opens the client's menu. **What went:** looking through the client's menu while staying on the policy (the client card beside an open policy). Nothing in that menu could be opened without leaving the policy anyway, so a client page from a policy is still two clicks (the client icon, then the page), and so is another policy. |
 | Top-bar search loses the query | **Fixed.** Keys typed while the Modal opens (after a click, nothing had focus) go into its field; the first replaces the last search. "/" as the first key is the shortcut, not text. |
 | Make the action area easier to spot | **Not done, on purpose**: the study says re-test after the helper text first. |
@@ -1052,7 +1052,7 @@ Awesome), and Typekit was absent.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
 - **Client menu beside (B), 40 assertions over both looks**: shut at first with no hover link;
   hovering opens nothing; a click opens the card left of the policy menu, both 288px, over the page
-  with the page's left edge unmoved; focus on the open policy; choosing it again, a client page,
+  with the page's left edge unmoved; focus on the open policy; choosing it again, or the current page in the policy menu, a client page,
   another policy or a policy page shuts it; Show more keeps it open; a click on the page, and
   Escape (focus back on the icon), shut it; collapsed and below 1024px it is as before; the
   Switch flips A and B live and writes `?menu=beside`.

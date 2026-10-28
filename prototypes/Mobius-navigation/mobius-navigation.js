@@ -305,10 +305,9 @@
        head in the next column (Laurence, 8 October 2026). Collapsed, only
        the Avatar shows; the name stays for assistive technology. */
     $('mob-rail-head').innerHTML = app ? '' :
-      /* The client (Avatar and name) is a link to Client overview: it is
-         what people reached for to go back to the client (user study, 28
-         October 2026). */
-      '<a class="user-meta mob-rail-client" href="#c/summary"' + (r.scope === 'client' && r.page === 'summary' ? ' aria-current="page"' : '') + '>' +
+      /* The client (Avatar and name) is not a link (Laurence, 28 October
+         2026): Client overview is the first page in the client's menu. */
+      '<div class="user-meta mob-rail-client">' +
         /* Extra support in place (Mark, 21 October 2026): the Avatar takes
            the teal (expressive quaternary) and carries the support icon. */
         '<span class="mob-avatar-wrap" aria-hidden="true">' +
@@ -317,7 +316,7 @@
         '</span>' +
         '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) +
           (c.supportOn ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
-      '</a>' +
+      '</div>' +
       /* Mark's menu (19 October 2026): the head spans the menu, the client
          at the top of both columns, the collapse button at its right. */
       columnToggle('data-rail-toggle aria-controls="sidebar"', collapsed, 'menu');
@@ -1398,8 +1397,11 @@
       setBeside(true, '#mob-rail .mob-rail-policies a[aria-current], #mob-rail a');
       return;
     }
-    /* B open: the open policy, chosen again, just shuts the client's menu. */
-    if (S.besideOpen && el.closest('#mob-rail a[href]') && el.closest('#mob-rail a[href]').getAttribute('href') === location.hash) {
+    /* B open: the page you are on, chosen again in either menu (the open
+       policy in the client's, the current page in the policy's), just
+       shuts the client's menu (Laurence, 28 October 2026). */
+    var here = S.besideOpen && el.closest('#mob-rail a[href], #mob-record a[href]');
+    if (here && here.getAttribute('href') === location.hash) {
       e.preventDefault();
       setBeside(false, '.mob-record-nav a[aria-current], .mob-record-nav a');
       return;
