@@ -345,6 +345,11 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 
 ## Late changes (28 October 2026)
 
+- **Helper lines only where needed** (Laurence): Amend details and Make an MTA (told apart by
+  them), Copy policy (the study's second-vehicle mix-up), Stop and Cancel policy (reversible or
+  not). Policy extension, Renewal invite and Customer portal settings read clearly without.
+- **Group label hover, even** (Laurence): in the client's menu a group label's hover sat 4px from
+  the left edge and 8px from the right; it is inset to 8px each side, nothing in it moving.
 - **Helper text in menus** (Laurence): the line under an item (Policy actions, work areas, the
   phone's Actions) is Buckholt's helper text, Form helper's size and colour: the `.support-01`
   type set in `--text-muted` (it was `.body-01` in secondary text).
@@ -356,12 +361,13 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
   ("Stop" or "Cancel" where a status has only one). Client support and the note stay
   ghost. On a client page **Add new quote is secondary** too (Laurence). There is no fold any more:
   the same menu at every width.
-- **The client menu laid over the policy's** (Mark): on a policy page the strip's client icon
-  no longer goes to Client overview. Hovering it lays the client's menu (pages and policies) over
+- **The client menu laid over the policy's** (Mark): on a policy page the strip's client icon is
+  a link to Client overview: **a click goes there** (Laurence), and **hovering it** lays the client's menu (pages and policies) over
   the policy's menu, exactly over that column, with Buckholt's large shadow; it stays while the
-  pointer is on the icon or the menu and goes a moment after it leaves both. A click or tap opens
-  it too (keyboards, touch), with focus on the client's first page; Escape or Tab out closes it,
-  focus back on the icon. Its links go to the client's pages and policies; Show more works inside
+  pointer is on the icon or the menu and goes a moment after it leaves both. From the keyboard,
+  Enter goes to Client overview and Down arrow opens the menu with focus on the client's first page;
+  Escape or Tab out closes it, focus back on the icon. With the whole menu collapsed there is no
+  overlay (no policy menu to lay it over): the icon opens the menu at the client's. Its links go to the client's pages and policies; Show more works inside
   it. Beside the page only (in the drawer both menus are open anyway). It is spaced exactly as the
   client card (the card's own padding), and **the policy menu is now the client card's width,
   288px** (it was 232px; Laurence, 28 October 2026), so the overlay matches the card and nothing

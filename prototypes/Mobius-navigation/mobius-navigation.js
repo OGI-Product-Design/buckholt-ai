@@ -331,8 +331,12 @@
         /* With the whole menu collapsed there is no policy menu to lay it
            over: the icon opens the menu at the client's, as before. */
         (onPolicy && !collapsed
-          ? '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" id="mob-peek-toggle" aria-expanded="' + !!S.peekOpen + '" aria-controls="mob-peek"' + tipAttrs('Client menu') + '>' +
-              '<div class="btn-icon">' + icon(M.ICON.client) + '</div></button></li>'
+          /* A link to Client overview: a click goes there (Laurence, 28
+             October 2026); hovering lays the client's menu over the
+             policy's. From the keyboard, Down arrow opens that menu. */
+          ? '<li class="mob-strip-item"><a class="btn btn-ghost" id="mob-peek-toggle" href="#c/summary" aria-expanded="' + !!S.peekOpen + '" aria-controls="mob-peek" aria-describedby="mob-peek-hint"' + tipAttrs('Client overview') + '>' +
+              '<div class="btn-icon">' + icon(M.ICON.client) + '</div></a>' +
+              '<span class="visually-hidden" id="mob-peek-hint">Down arrow opens the client\'s menu</span></li>'
           : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
               '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client')) +
         expander(onPolicy ? 'policy' : 'client', onPolicy ? '.mob-record-nav a[aria-current], .mob-record-nav a' : '.mob-rail-policies a[aria-current], .mob-rail-policies a',
@@ -441,14 +445,10 @@
     var from = e.target.closest('#mob-peek-toggle, #mob-peek'), to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('#mob-peek-toggle, #mob-peek');
     if (from && !to) peekLater();
   });
-  sidebar.addEventListener('click', function (e) {
-    if (!e.target.closest('#mob-peek-toggle')) return;
-    /* A pointer has already opened it by hovering: a click keeps it open.
-       From the keyboard (no pointer) it toggles, with focus into it. */
-    if (e.detail === 0) setPeek(!S.peekOpen, true);
-    else if (!S.peekOpen) setPeek(true);
-  });
+  /* A click on the icon is the link: Client overview. Down arrow on it
+     opens the client's menu with focus on its first page. */
   sidebar.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' && e.target.closest('#mob-peek-toggle')) { e.preventDefault(); setPeek(true, true); return; }
     if (e.key === 'Escape' && S.peekOpen && (e.target.closest('#mob-peek') || e.target.closest('#mob-peek-toggle'))) {
       e.stopPropagation(); setPeek(false); $('mob-peek-toggle').focus();
     }
