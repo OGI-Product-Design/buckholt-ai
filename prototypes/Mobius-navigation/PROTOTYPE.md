@@ -351,7 +351,9 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 - **Make changes is in Policy actions** (the UX design team): one Menu button, **Policy
   actions**, the row's **secondary** Button, holds the changes first (Amend details, Make an MTA,
   Policy extension, or the status's one change), then Copy policy, Renewal invite, Customer portal
-  settings, then Stop and Cancel policy, each group ruled off. Client support and the note stay
+  settings, then Stop and Cancel policy, each group ruled off and **under a Menu section header**
+  (Menu's Code & specs `h6.menu-section-header`): "Make changes", "Manage policy", "Stop or cancel"
+  ("Stop" or "Cancel" where a status has only one). Client support and the note stay
   ghost. On a client page **Add new quote is secondary** too (Laurence). There is no fold any more:
   the same menu at every width.
 - **The client menu laid over the policy's** (Mark): on a policy page the strip's client icon

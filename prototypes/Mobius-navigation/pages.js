@@ -1495,8 +1495,13 @@
        secondary Button (Menu button Code & specs example 1, the label then
        the caret); Client support and the note stay ghost. The phone's
        Actions menu holds the same groups after the client's tools. */
-    var groups = [change, rare, risky].filter(function (g) { return g.length; });
-    phonePolicyItems = groups.map(function (g) { return g.map(function (k) { return item(k); }).join(''); }).join('<li role="none"><hr class="menu-divider"></li>');
+    /* Each group under a Menu section header (Laurence, 28 October 2026;
+       Menu's Code & specs `h6.menu-section-header` in its `li`), the
+       groups still ruled off. */
+    var head = function (text) { return '<li role="none"><h6 class="menu-section-header">' + text + '</h6></li>'; };
+    var riskyHead = risky.length > 1 ? 'Stop or cancel' : risky[0] === 'stop' ? 'Stop' : 'Cancel';
+    var groups = [[change, 'Make changes'], [rare, 'Manage policy'], [risky, riskyHead]].filter(function (g) { return g[0].length; });
+    phonePolicyItems = groups.map(function (g) { return head(g[1]) + g[0].map(function (k) { return item(k); }).join(''); }).join('<li role="none"><hr class="menu-divider"></li>');
     return groups.length ? '<div class="menu mob-overflow">' +
       '<button type="button" class="btn btn-secondary menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
         '<span class="button-label">Policy actions</span>' +
