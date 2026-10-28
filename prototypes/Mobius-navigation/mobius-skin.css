@@ -108,6 +108,7 @@ html[data-skin="mobius"] .mob-drawer-areas,
 html[data-skin="mobius"] .mob-drawer-areas .nav {
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.82);
+  --text-muted: rgba(255, 255, 255, 0.72);   /* helper text on the blue */
   --ui-border-02: rgba(255, 255, 255, 0.22);
   --nav-link: #ffffff;
   --nav-link-hover: #ffffff;
@@ -292,3 +293,6 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
 body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
 @media (max-width: 575.98px) { .mob-skin-toggle { bottom: 0.5rem; padding: 0.25rem 0.625rem; } }
 @media print { .mob-skin-toggle { display: none; } }
+
+/* The client menu laid over the policy's: the client card's blue. */
+html[data-skin="mobius"] .mob-sidebar .mob-columns > .mob-peek.mob-rail { background-color: var(--mobius-blue); border-color: rgba(255, 255, 255, 0.22); }
