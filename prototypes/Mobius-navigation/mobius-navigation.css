@@ -517,7 +517,8 @@
 /* In a policy's menu the label sits flush against the client strip; it is
    inset on the left to match the gap on its right, so its hover is
    balanced (Laurence, 22 October 2026). */
-#mob-record .mob-group-toggle { --mob-group-inset: var(--spacer-03); width: calc(100% - var(--mob-group-inset)); margin-left: var(--mob-group-inset); }
+#mob-record { --mob-group-inset: var(--spacer-03); }
+#mob-record .mob-group-toggle { width: calc(100% - var(--mob-group-inset)); margin-left: var(--mob-group-inset); }
 .mob-group-toggle:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: -0.125rem; }
 .mob-group-name { flex: 1 1 auto; min-width: 0; }
 /* The chevron points down while open and turns to point right when the
@@ -530,8 +531,11 @@
 
 /* A count at the end of a link (Mark's badge design, inline). */
 .mob-count-inline { --badge-translate-y: 0; position: static; top: auto; right: auto; transform: none; flex: 0 0 auto; margin-left: auto; box-shadow: none; }
+/* The rule runs down the centre of the group's icon (Laurence, 28 October
+   2026): the label's inset (policy menu), its padding, half the 20px icon
+   box, less half the 1px rule. */
 .mob-subnav {
-  margin-left: calc(var(--nav-link-padding-x) + 0.625rem);
+  margin-left: calc(var(--mob-group-inset, 0px) + var(--nav-link-padding-x) + 0.625rem - 0.5px);
   padding-left: var(--spacer-03);
   border-left: 1px solid var(--ui-border-02);
 }

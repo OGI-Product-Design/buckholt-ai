@@ -169,7 +169,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
 /* Inside the navy policy card the label already sits 4px in: 4px more balances its 8px on the right. */
-html[data-skin="mobius"] #mob-record .mob-group-toggle { --mob-group-inset: var(--spacer-02); }
+html[data-skin="mobius"] #mob-record { --mob-group-inset: var(--spacer-02); }
 /* Extra support in place: the client's Avatar in the teal, its badge ringed on the blue. */
 html[data-skin="mobius"] .mob-rail-head .avatar.expressive-quaternary {
   background-color: var(--expressive-quaternary-soft);
