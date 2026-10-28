@@ -271,14 +271,23 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
 /* ------------------------------------------------------------- Floating toggle
    Not part of either design: a review control, bottom right, to switch
    between the Buckholt look and the Mobius one. */
-.mob-skin-toggle {
+/* The two review Switches sit side by side in one row: the look, and
+   (from 1024px) the A/B test of the client menu (Laurence, 28 October 2026). */
+.mob-review-bar {
   /* Bottom centre (Laurence, 21 October 2026), clear of the side panels,
      which open from the right. */
   position: fixed;
   left: 50%;
   bottom: 1rem;
   transform: translateX(-50%);
-  z-index: 1040;                                       /* under side panels, Modals and their backdrops: an open one covers it */
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;                               /* only the pills take clicks */
+}
+.mob-skin-toggle {
+  pointer-events: auto;
   display: flex;
   align-items: center;
   margin: 0;
@@ -288,11 +297,13 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
   border-radius: var(--border-radius-full);
   box-shadow: var(--shadow-sm, 0 2px 8px rgba(26, 26, 26, 0.16));
 }
+.mob-review-bar .mob-skin-toggle { margin: 0; }   /* not Buckholt's space between stacked Checkboxes */
 .mob-skin-toggle .form-check-label { white-space: nowrap; }
+@media (max-width: 1023.98px) { .mob-menu-toggle { display: none; } }
 /* The page can scroll clear of it, so it never hides a page's last Button. */
 body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
-@media (max-width: 575.98px) { .mob-skin-toggle { bottom: 0.5rem; padding: 0.25rem 0.625rem; } }
-@media print { .mob-skin-toggle { display: none; } }
+@media (max-width: 575.98px) { .mob-review-bar { bottom: 0.5rem; } .mob-skin-toggle { padding: 0.25rem 0.625rem; } }
+@media print { .mob-review-bar { display: none; } }
 
 /* The client menu laid over the policy's: the client card's blue. */
 html[data-skin="mobius"] .mob-sidebar .mob-columns > .mob-peek.mob-rail { background-color: var(--mobius-blue); border: 0; }   /* no border, as the client card has none here */

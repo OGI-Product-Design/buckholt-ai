@@ -286,7 +286,15 @@
     /* The rail is the strip when collapsed, and beside a policy's menu;
        with the client's menu chosen on a policy page it is the client's
        full card, as at client level (Mark: no menu shown twice). */
-    var tight = !app && !narrow.matches && (collapsed || (onPolicy && view === 'policy'));
+    /* B of the A/B test (Laurence, 28 October 2026): on a policy page a
+       click on the client icon opens the client's full card to the left of
+       the policy's menu, a tree read left to right into the page; both lie
+       over the page, which does not move, until a choice is made or not. */
+    var beside = besideMode() && onPolicy && !collapsed && !narrow.matches;
+    if (!beside) S.besideOpen = false;
+    var besideOpen = beside && !!S.besideOpen;
+    if (beside) view = 'policy';
+    var tight = !app && !narrow.matches && !besideOpen && (collapsed || (onPolicy && view === 'policy'));
     /* The menu is the selected client's: at app level there is none. */
     sidebar.classList.toggle('mob-side-empty', app);
     sidebar.classList.toggle('mob-rail-collapsed', tight);
@@ -330,7 +338,11 @@
            page it opens the client's menu, as before. */
         /* With the whole menu collapsed there is no policy menu to lay it
            over: the icon opens the menu at the client's, as before. */
-        (onPolicy && !collapsed
+        (beside
+          /* B: a Button that opens the client's menu beside the policy's. */
+          ? '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" id="mob-beside-toggle" data-beside-open aria-expanded="false" aria-controls="mob-rail"' + tipAttrs('Client menu') + '>' +
+              '<div class="btn-icon">' + icon(M.ICON.client) + '</div></button></li>'
+          : onPolicy && !collapsed
           /* A link to Client overview: a click goes there (Laurence, 28
              October 2026); hovering lays the client's menu over the
              policy's. From the keyboard, Down arrow opens that menu. */
@@ -355,7 +367,7 @@
     railBody.innerHTML = body;
     /* The client's menu, ready to lay over the policy's (see peek). */
     var peek = $('mob-peek');
-    var canPeek = tight && onPolicy && !collapsed;
+    var canPeek = tight && onPolicy && !collapsed && !beside;
     peek.innerHTML = canPeek ? '<div class="mob-peek-scroll">' + clientMenu(r, curPolicy) + '</div>' : '';
     peekRedraw = false;
     if (!canPeek) S.peekOpen = false;
@@ -374,6 +386,7 @@
     /* The policy column: only once a policy is open. */
     var rec = $('mob-record');
     var showRec = onPolicy && !collapsed && (view === 'policy' || narrow.matches);
+    sidebar.classList.toggle('mob-beside-open', besideOpen);
     rec.hidden = !showRec;
     sidebar.classList.toggle('mob-has-record', showRec);
     if (!showRec) { rec.innerHTML = ''; return; }
@@ -412,6 +425,7 @@
      touch cannot hover), Escape or focus leaving it closes it. Its links
      go to the client's pages and policies as anywhere else. */
   var peekTimer = null, peekHash = null, peekRedraw = false;
+  function besideMode() { return document.documentElement.getAttribute('data-menu') === 'beside'; }
   function placePeek() {
     var peek = $('mob-peek'), cols = sidebar.querySelector('.mob-columns');
     var rail = $('mob-rail'), rec = $('mob-record');
@@ -460,6 +474,30 @@
     if (e.target.closest('#mob-peek') || e.target.closest('#mob-peek-toggle')) setPeek(false);
   });
   window.addEventListener('resize', function () { if (S.peekOpen) placePeek(); });
+
+  /* ================================================ Client menu beside (B)
+     Opened by the client icon's click; shut by a choice in either menu (a
+     new page), a click or focus outside the menu, or Escape (focus back on
+     the icon). The A/B Switch redraws the menu in the other way. */
+  function setBeside(open, focusSel) {
+    if (!!S.besideOpen === open) return;
+    S.besideOpen = open;
+    rerenderSide(focusSel);
+  }
+  document.addEventListener('pointerdown', function (e) {
+    if (S.besideOpen && !sidebar.contains(e.target)) setBeside(false);
+  }, true);
+  sidebar.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && S.besideOpen) { e.stopPropagation(); setBeside(false, '#mob-beside-toggle'); }
+  });
+  sidebar.addEventListener('focusout', function (e) {
+    var to = e.relatedTarget;
+    if (S.besideOpen && to && !sidebar.contains(to)) setBeside(false);
+  });
+  document.addEventListener('mob-menu-mode', function () {
+    S.peekOpen = false; S.besideOpen = false; S.sideView = null;
+    if (R) rerenderSide();
+  });
 
   /* In the drawer (below 1024px) on a policy page, the policy's menu comes
      first, then the client's pages and policies: what you are most likely
@@ -652,7 +690,7 @@
     $('mob-create-client').hidden = R.scope === 'app' && R.page === 'newclient';
     /* A new page shuts the client menu peek; a redraw of the same page
        (Show more inside it) keeps it. */
-    if (location.hash !== peekHash) { S.peekOpen = false; peekHash = location.hash; }
+    if (location.hash !== peekHash) { S.peekOpen = false; S.besideOpen = false; peekHash = location.hash; }
     renderSide(R);
     if (S.peekOpen) placePeek();
     arrangeDrawer(R);
@@ -1354,6 +1392,16 @@
       e.preventDefault();
       S.sideView = 'policy';
       rerenderSide('.mob-record-nav a[aria-current], .mob-record-nav a');
+      return;
+    }
+    if (el.closest('[data-beside-open]')) {
+      setBeside(true, '#mob-rail .mob-rail-policies a[aria-current], #mob-rail a');
+      return;
+    }
+    /* B open: the open policy, chosen again, just shuts the client's menu. */
+    if (S.besideOpen && el.closest('#mob-rail a[href]') && el.closest('#mob-rail a[href]').getAttribute('href') === location.hash) {
+      e.preventDefault();
+      setBeside(false, '.mob-record-nav a[aria-current], .mob-record-nav a');
       return;
     }
     var ex = el.closest('[data-view]');

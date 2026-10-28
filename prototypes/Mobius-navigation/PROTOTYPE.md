@@ -372,6 +372,19 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
   client card (the card's own padding), and **the policy menu is now the client card's width,
   288px** (it was 232px; Laurence, 28 October 2026), so the overlay matches the card and nothing
   in it is cut short. Beside a policy the page is 56px narrower.
+- **A/B: the client menu beside the policy's** (Laurence, 28 October 2026). The hover overlay
+  above (A) may cause friction and hide what is under it, so B tries the tree: a clear left-to-right
+  flow into the page. A second review Switch at the bottom, beside "Current Mobius look", reads
+  **Client menu beside policy menu**; on, the address carries `?menu=beside` (a refresh keeps it, a
+  fresh visit is A), and the menu redraws at once. In B, on a policy page, the strip's client icon is
+  a Button, "Client menu" (`aria-expanded`, `aria-controls="mob-rail"`); hovering does nothing and
+  **a click opens the client's full card to the left of the policy menu** (both 288px), the open
+  policy marked in it and focused. **The page does not move**: the menu lies over it (a negative
+  right margin equal to what it grew, 216px, keeps its grid column as it was), lifted by Buckholt's
+  large shadow. It shuts on any choice in either menu, on choosing the open policy again (no new
+  page), on a click or focus outside the menu, or on Escape (focus back on the icon). Show more and
+  group toggles work inside it. Collapsed, and in the drawer below 1024px, B is the same as A, so
+  that Switch shows from 1024px only.
 
 ## User study, round 2 (28 October 2026)
 
@@ -1037,6 +1050,12 @@ Awesome), and Typekit was absent.
   in the Modal, and opening a result closes it; widened, it is still there; the client menu is
   Client overview, then the Client group.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
+- **Client menu beside (B), 40 assertions over both looks**: shut at first with no hover link;
+  hovering opens nothing; a click opens the card left of the policy menu, both 288px, over the page
+  with the page's left edge unmoved; focus on the open policy; choosing it again, a client page,
+  another policy or a policy page shuts it; Show more keeps it open; a click on the page, and
+  Escape (focus back on the icon), shut it; collapsed and below 1024px it is as before; the
+  Switch flips A and B live and writes `?menu=beside`.
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and
   navigating closes it.
