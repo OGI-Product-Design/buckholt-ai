@@ -1337,6 +1337,15 @@
     return fresh;
   }
   function bindComponents() {
+    /* Every Dropdown opens below its field. dropdown.js moves the open
+       panel down by the field's height (its own placement, which grows with
+       Multiselect's Tags), but Bootstrap's Popper flips the panel above the
+       field when there is little room below, at the foot of a side panel
+       or a Modal, and the two together laid the panel over the field. With
+       `data-bs-display="static"` Popper is not used, so only dropdown.js
+       places it (CSS clears the static offset it would otherwise add to).
+       The side panel or page scrolls to show the rest. */
+    Array.prototype.forEach.call(document.querySelectorAll('.dropdown:not([data-mob-dropdown]) > .dropdown-toggle'), function (t) { t.setAttribute('data-bs-display', 'static'); });
     /* dropdown.js sets every option's aria-selected to false as it binds,
        so the chosen one is marked selected again afterwards. */
     bindLate('dropdown', '.dropdown', { '.dropdown-menu .dropdown-item': '.dropdown-menu .dropdown-item' }).forEach(function (d) {

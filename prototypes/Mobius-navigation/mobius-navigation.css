@@ -1125,3 +1125,10 @@ body.mob-home #mob-create-client { display: none; }
   .mob-home-search { flex: 1 1 100%; }
   .mob-home-create { flex: 1 1 100%; margin: 0; }
 }
+
+/* Dropdowns open below their field (see bindComponents in
+   mobius-navigation.js): without Popper, Buckholt's static placement
+   (`top: 100%` plus its 2px spacer) would add to dropdown.js's own offset
+   of the field's height plus 2px, so the static offset is cleared and
+   dropdown.js's alone places the panel, where Popper would have. */
+.dropdown > .dropdown-menu-panel[data-bs-popper="static"] { top: 0; margin-top: 0; }

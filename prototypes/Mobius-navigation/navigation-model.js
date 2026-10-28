@@ -343,6 +343,53 @@
      pages belong to Broking. */
   /* The areas, as the area switcher names and describes them (Laurence, 27
      October 2026; option B): "Broking" is "Clients & policies". */
+  /* MTA adjustment types for a live policy, as Mobius lists them
+     (Laurence, 28 October 2026), wording and order unchanged. */
+  var MTA_ADJUSTMENTS = [
+    'Change of Security Device',
+    'Correction (NB)',
+    'Correction (MTA)',
+    'Change of Occupation',
+    'Correction (Renewal)',
+    'Correct Spelling of Name',
+    'Correct Date of Birth',
+    'Correct Date Passed Driving/Riding Test',
+    'Re-Instated No Claims Bonus',
+    'Change of Conviction Date',
+    'Change of Conviction Details, Points or Fine',
+    'Change of Licence Type',
+    'Change of Claim Date, Cost or Circumstances',
+    'Late Disclosure Claim',
+    'Proposer - Add',
+    'Proposer - Remove',
+    'Change Sums Insured',
+    'CUE Check',
+    'Updating Contact Details',
+    'Claim - Add',
+    'Conviction - Add',
+    'Correction MTA (Non-Advisable)',
+    'Correction NB (Non-Advisable)',
+    'Correction NB (Endorsements)',
+    'Change of Risk Address',
+    'Change of Cover',
+    'Change of Car/Bike (Please check the modification section carefully)',
+    'Change of Engine',
+    'Change of Reg No.',
+    'Change of Use',
+    'Change of No Claims Bonus',
+    'Change of L/Mileage',
+    'Change of modification(s)',
+    'Change of Name',
+    'Add-on(s) - Add',
+    'Add-on(s) - Remove',
+    'Late Disclosure - Convictions',
+    'Agreed Value - Add',
+    'Agreed Value - Remove',
+    'Late Disclosure - Accident',
+    'Add-on(s) - DVLA',
+    'Change of Home Address'
+  ];
+
   var MODULES = [
     { id: 'dashboard', label: 'Clients & policies', desc: 'New business, MTAs and policy lifecycle', icon: 'fa-regular fa-shield' },   // Shield
     { id: 'activity', label: 'Activity', desc: 'Tasks, diary and recent changes', icon: ICON.activity },                                 // GAP
@@ -413,6 +460,7 @@
     clientNav: clientNav,
     CLIENT_ACTIONS: CLIENT_ACTIONS,
     MODULES: MODULES,
+    MTA_ADJUSTMENTS: MTA_ADJUSTMENTS,
     APP_ACTIONS: APP_ACTIONS,
     GLOBAL_ACTIONS: GLOBAL_ACTIONS,
     CONFIRMS: CONFIRMS,

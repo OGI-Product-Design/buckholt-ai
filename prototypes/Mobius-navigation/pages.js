@@ -380,6 +380,33 @@
     '</div>';
   }
 
+  /* Buckholt Dropdown, Multiselect (components/dropdown/examples.html): a
+     native Checkbox and its label in each option, the choices shown as
+     Tags by dropdown.js, and the documented collapsible Tags past
+     `collapse` choices ("4 selected"). Option ids never end in "-0":
+     dropdown.js reads that as Select all. */
+  function multiselect(fid, label, options, collapse) {
+    return '<div class="input">' +
+      '<div class="input-label"><label for="' + fid + '" class="form-label">' + t(label) + '</label></div>' +
+      '<div class="response dropdown-input">' +
+        '<div class="dropdown"' + (collapse ? ' data-collapse-threshold="' + collapse + '" data-summary-label="selected"' : '') + '>' +
+          '<button id="' + fid + '" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">' +
+            '<span class="dropdown-label">Select</span>' +
+          '</button>' +
+          '<ul class="dropdown-menu dropdown-menu-panel" role="menu" aria-labelledby="' + fid + '">' +
+            options.map(function (x, i) {
+              var oid = fid + '-option-' + (i + 1), cid = fid + '-check-' + (i + 1);
+              return '<li id="' + oid + '" class="dropdown-item" role="option" aria-label="' + esc(x) + '" aria-selected="false" tabindex="0">' +
+                '<input class="form-check-input" type="checkbox" id="' + cid + '">' +
+                '<label class="form-check-label" for="' + cid + '">' + esc(x) + '</label>' +
+              '</li>';
+            }).join('') +
+          '</ul>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
   function textarea(fid, label, rows) {
     return '<div class="input">' +
       '<div class="input-label"><label for="' + fid + '" class="form-label">' + t(label) + '</label></div>' +
@@ -1238,12 +1265,10 @@
         '<div class="text-block"><h3 class="title-01">MTA effective date</h3></div>',
         input('m2', 'Start date', '', 'date'),
         input('m3', 'Start time', '', 'time'),
-        '<fieldset class="input"><div class="input-label"><legend class="form-label">MTA adjustment type</legend></div>' +
-          '<div class="response check-input">' +
-            ['Change of Security Device', 'Correction (NB)', 'Correction (MTA)', 'Change of Occupation', 'Correction (Renewal)'].map(function (x, i) {
-              return checkbox('m-adj-' + i, x);
-            }).join('') +
-          '</div></fieldset>',
+        /* The adjustment types for a live policy, in Mobius's order
+           (Laurence, 28 October 2026): 42 of them, so a Multiselect
+           Dropdown rather than 42 Checkboxes down the panel. */
+        multiselect('m-adj', 'MTA adjustment type', M.MTA_ADJUSTMENTS, 3),
         textarea('m4', 'MTA description')
       ]), 'MTA started'];
     },

@@ -307,6 +307,21 @@ only the Dropdowns not yet bound. `components/tabs/tabs.js` (the Tabs scroll But
 run the same way, and every Tabs uses Code & specs example 2, with its scroll Buttons. The script sets every option's `aria-selected` to false as it
 binds, so the chosen one is marked selected again afterwards.
 
+**MTA adjustment type** (the Select MTA side panel) lists the **42 adjustment types for a live
+policy** as Mobius has them (Laurence, 28 October 2026), wording and order unchanged
+(`MTA_ADJUSTMENTS` in `navigation-model.js`). The reference had five as Checkboxes; 42 would run
+down the panel, so it is **Buckholt's Multiselect Dropdown** (native Checkbox and label in each
+option; the choices as Tags; the documented collapsible Tags, "4 selected", past three).
+
+**Dropdowns always open below their field.** Near the foot of a side panel or Modal, Bootstrap's
+Popper flipped the panel above the field, and `dropdown.js` then moved it down by the field's
+height (its own placement, which follows Multiselect's Tags), so the panel lay over the field.
+Each toggle now carries `data-bs-display="static"` (set when it is bound), so only `dropdown.js`
+places the panel, and Buckholt's static offset (`top: 100%` + 2px) is cleared so the two do not
+add up. The panel sits 2px under the field, as before; the side panel scrolls to show the rest.
+**To raise with Buckholt:** `dropdown.js` assumes the panel opens below, which Popper does not
+guarantee.
+
 Some fields have no options in the reference (Activity type, Note type, Fee account and others
 that only say "Select"). They are not invented, so their Dropdowns open empty.
 
