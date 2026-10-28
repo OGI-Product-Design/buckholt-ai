@@ -193,7 +193,9 @@
      the documentation site. */
   function columnToggle(attr, collapsed, what) {
     var name = (collapsed ? 'Open ' : 'Collapse ') + what;
-    return ui.set([ui.btn('', { icon: collapsed ? 'fa-regular fa-arrow-right-from-line' : 'fa-regular fa-arrow-left-from-line',
+    /* The Sidebar icon (Laurence, 28 October 2026, from the user study: the
+       ←| arrow beside the client's name read as "back"). */
+    return ui.set([ui.btn('', { icon: 'fa-regular fa-sidebar',
       attrs: ' ' + attr + ' aria-expanded="' + !collapsed + '"' + tipAttrs(name) })], 'mob-column-toggle');
   }
 
@@ -295,7 +297,10 @@
        head in the next column (Laurence, 8 October 2026). Collapsed, only
        the Avatar shows; the name stays for assistive technology. */
     $('mob-rail-head').innerHTML = app ? '' :
-      '<div class="user-meta mob-rail-client">' +
+      /* The client (Avatar and name) is a link to Client overview: it is
+         what people reached for to go back to the client (user study, 28
+         October 2026). */
+      '<a class="user-meta mob-rail-client" href="#c/summary"' + (r.scope === 'client' && r.page === 'summary' ? ' aria-current="page"' : '') + '>' +
         /* Extra support in place (Mark, 21 October 2026): the Avatar takes
            the teal (expressive quaternary) and carries the support icon. */
         '<span class="mob-avatar-wrap" aria-hidden="true">' +
@@ -304,7 +309,7 @@
         '</span>' +
         '<div class="user-meta-body"><span class="user-meta-first mob-rail-name">' + esc(c.name) +
           (c.supportOn ? '<span class="visually-hidden">, extra support in place</span>' : '') + '</span><span class="mob-rail-ref">' + esc(c.ref) + '</span></div>' +
-      '</div>' +
+      '</a>' +
       /* Mark's menu (19 October 2026): the head spans the menu, the client
          at the top of both columns, the collapse button at its right. */
       columnToggle('data-rail-toggle aria-controls="sidebar"', collapsed, 'menu');
@@ -740,10 +745,11 @@
     if (text) announceTimer = setTimeout(function () { statusEl.textContent = text; }, 100);
   }
 
-  var searchOpening = false, typedOpen = false;
+  var searchOpening = false, typedOpen = false, keptPrevious = false;
   function openSearch(seed) {
     searchOpening = true;
     typedOpen = !!seed;
+    keptPrevious = !seed;   /* opened with the last search, which typing replaces */
     modalInput.value = seed || S.modalQuery || '';
     if (!modalInput.value) S.modalQuery = null;
     renderSearchBody();
@@ -771,6 +777,8 @@
     modalInput.focus();
     if (typedOpen) { var n = modalInput.value.length; modalInput.setSelectionRange(n, n); } else modalInput.select();
     typedOpen = false;
+    keptPrevious = false;
+    searchOpening = false;   /* open: the field has the keys now */
   });
   /* Back to the field that opened it, without reopening the search. */
   searchModalEl.addEventListener('hidden.bs.modal', function () {
@@ -799,20 +807,36 @@
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Tab' || e.key === 'Shift' || e.key === 'Escape' || e.metaKey || e.ctrlKey || e.altKey) return;
       e.preventDefault();
-      /* Keys typed while the Modal is still opening go on the end of what is
-         already there, not in place of it. */
-      if (searchOpening) {
-        if (e.key.length === 1) modalInput.value += e.key;
-        else if (e.key === 'Backspace') modalInput.value = modalInput.value.slice(0, -1);
-        else if (e.key === 'Enter') runModalSearch(modalInput.value);
-        return;
-      }
+      if (searchOpening) return;   /* typedWhileOpening has it */
       S.searchTrigger = input;
-      openSearch(e.key.length === 1 ? e.key : '');
+      openSearch(e.key.length === 1 && e.key !== '/' ? e.key : '');   /* "/" is the shortcut, not text */
     });
     form.addEventListener('submit', function (e) { e.preventDefault(); });
   }
   bindSearchOpener(searchForm, searchInput);
+  /* Keys typed while the Modal is still opening (its fade, about 0.3s) go
+     into its field, wherever focus is: after a click on the top bar's field
+     nothing has focus yet, and the keys were lost, so Enter ran nothing and
+     the Modal opened empty (user study, 28 October 2026). The first key
+     replaces the last search the Modal opened with, as it would once that
+     is selected; later keys go on the end. */
+  document.addEventListener('keydown', function (e) {
+    if (!searchOpening || e.target === modalInput || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key.length === 1) {
+      e.preventDefault();
+      if (keptPrevious) { modalInput.value = ''; keptPrevious = false; }
+      modalInput.value += e.key;
+      typedOpen = true;   /* the caret goes to the end once it opens */
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      if (keptPrevious) { modalInput.value = ''; keptPrevious = false; }
+      else modalInput.value = modalInput.value.slice(0, -1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      keptPrevious = false;
+      runModalSearch(modalInput.value);
+    }
+  }, true);
   /* The phone's search Button opens the same Modal; focus comes back to it. */
   $('mob-search-btn').addEventListener('click', function () { S.searchTrigger = this; openSearch(); });
 
@@ -1257,6 +1281,14 @@
       S.navCollapsed = false;
       if (R.scope === 'policy') S.sideView = ex.getAttribute('data-view');
       rerenderSide(ex.getAttribute('data-focus'));
+      /* From a policy page the client's menu opens with Client overview
+         marked, so the next step is plain (user study, 28 October 2026:
+         the menu changed, the page did not, and people stalled). Focus is
+         there too, but a pointer user does not see focus. */
+      if (R.scope === 'policy' && ex.getAttribute('data-view') === 'client') {
+        var ov = sidebar.querySelector('.mob-rail-pages a[href="#c/summary"]');
+        if (ov) ov.classList.add('mob-suggest');
+      }
       return;
     }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }

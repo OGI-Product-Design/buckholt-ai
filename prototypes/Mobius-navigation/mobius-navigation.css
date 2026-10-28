@@ -215,6 +215,11 @@
 /* User meta has 8px padding of its own, so the head gives 8px less. */
 .mob-has-record .mob-rail-head { padding-top: calc(var(--spacer-04) + 1px); padding-left: calc(var(--spacer-04) + 1px); }
 .mob-rail-client { min-width: 0; align-items: flex-start; }   /* the name's top level with the reference's */
+/* The client is a link to Client overview: no underline at rest, the name
+   underlined on hover, Buckholt's focus ring. */
+a.mob-rail-client { color: inherit; text-decoration: none; border-radius: var(--border-radius-md); }
+a.mob-rail-client:hover .mob-rail-name { text-decoration: underline; }
+a.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
 /* Ruled off from the menu under it, as the policy's head is from its menu
    (Laurence, 8 October 2026). The rule runs the width of the rows under it. */
 .mob-rail-head { position: relative; padding-bottom: var(--spacer-03); }   /* with User meta's own 8px, the rule is level with the policy head's */
@@ -511,6 +516,11 @@
   cursor: pointer;
 }
 .mob-group-toggle:hover { background-color: var(--nav-link-background-hover); }
+/* Client overview, marked when the client's menu is opened from the strip on
+   a policy page: Page navigation's own hover tint, until the menu is drawn
+   again. */
+.mob-rail-pages .nav-link.mob-suggest,
+.mob-rail-pages .nav-link.mob-suggest.mob-quiet-focus:focus:not(:hover):not(.active) { background-color: var(--nav-link-background-hover); }   /* also while quietly focused */
 /* 4px under the label, so its hover does not touch the first page
    (Laurence, 22 October 2026). */
 .mob-group-toggle { margin-bottom: var(--spacer-02); }
@@ -1049,7 +1059,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
    secondary text colour. */
 .mob-menu-text { display: flex; flex-direction: column; gap: var(--spacer-01); min-width: 0; }
 .mob-menu-help { color: var(--text-secondary); white-space: nowrap; }
-.mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }
+.mob-changes .menu-panel, .mob-overflow .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }   /* room for the helpers */
 /* "3 new": the count says what it counts. */
 .mob-count-inline { white-space: nowrap; }
 
