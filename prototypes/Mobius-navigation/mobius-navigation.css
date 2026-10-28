@@ -155,8 +155,19 @@
   background-color: var(--ui-background-02);
   z-index: 2;                                          /* its floating Menus open over Main */
 }
-/* The menu is the selected client's: at app level it is not drawn. */
-.mob-sidebar.mob-side-empty { display: none; }
+/* The menu is the selected client's: at app level it is not drawn (but
+   below 1024px the drawer still opens, with the work areas). */
+@media (min-width: 1024px) { .mob-sidebar.mob-side-empty { display: none; } }
+/* Work areas sit in the drawer only below 1024px; the top bar's Button
+   (which opens the same links) only from 1024px. */
+.mob-drawer-areas { display: none; }
+@media (max-width: 1023.98px) {
+  .mob-systems { display: none; }
+  .mob-drawer-areas { display: block; margin: var(--spacer-05) var(--spacer-03) var(--spacer-04); padding-top: var(--spacer-04); border-top: 1px solid var(--ui-border-02); }
+  .mob-side-empty .mob-drawer-areas { margin-top: var(--spacer-04); padding-top: 0; border-top: 0; }   /* alone in the drawer: no rule above it */
+  .mob-drawer-areas .mob-side-label { padding: 0 calc(var(--spacer-04) + 1px); }   /* level with the links' icons: their 16px padding and 1px border */
+  .mob-drawer-areas .nav-link, .mob-drawer-areas .mob-menu-help { white-space: normal; }   /* the descriptions wrap in the drawer's width */
+}
 .mob-record[hidden], .mob-rail-foot[hidden], .mob-rail-head[hidden], .mob-menu-button-set[hidden] { display: none; }
 
 .mob-drawer-head { display: none; }

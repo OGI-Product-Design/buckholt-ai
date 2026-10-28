@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261028-17">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261028-19">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261028-17">
-<script src="mobius-skin.js?v=20261028-17"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261028-19">
+<script src="mobius-skin.js?v=20261028-19"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -181,6 +181,14 @@
       </div>
       <div class="mob-record" id="mob-record"></div>
     </div>
+    <!-- Work areas in the drawer (below 1024px, Laurence, 28 October 2026):
+         the top bar's work-areas Button is hidden there, as the drawer's
+         Menu button carries the same icon. The same Page navigation, the
+         current area active. Written by mobius-navigation.js. -->
+    <nav class="mob-drawer-areas" aria-labelledby="mob-drawer-areas-title">
+      <h2 class="label-01 mob-side-label" id="mob-drawer-areas-title">Work areas</h2>
+      <ul class="nav flex-column mob-area-nav" id="mob-drawer-areas-items"></ul>
+    </nav>
   </aside>
 
   <!-- ======================================================================
@@ -360,9 +368,9 @@
 <script>MobKept();</script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261028-17"></script>
-<script src="navigation-model.js?v=20261028-17"></script>
-<script src="pages.js?v=20261028-17"></script>
-<script src="mobius-navigation.js?v=20261028-17"></script>
+<script src="fixtures.js?v=20261028-19"></script>
+<script src="navigation-model.js?v=20261028-19"></script>
+<script src="pages.js?v=20261028-19"></script>
+<script src="mobius-navigation.js?v=20261028-19"></script>
 </body>
 </html>

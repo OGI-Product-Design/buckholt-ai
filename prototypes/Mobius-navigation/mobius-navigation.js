@@ -572,8 +572,9 @@
        the page, so the top bar does not repeat them (Laurence, 27 October
        2026). */
     document.body.classList.toggle('mob-home', R.scope === 'app' && R.page === 'dashboard');
-    /* No client menu at app level, so no Menu button for it either. */
-    $('mob-menu-open').parentNode.hidden = R.scope === 'app';
+    /* The Menu button opens the drawer on every page below 1024px: at app
+       level it holds the work areas alone (Laurence, 28 October 2026). */
+    $('mob-menu-open').parentNode.hidden = false;
     /* Not while creating one. */
     $('mob-create-client').hidden = R.scope === 'app' && R.page === 'newclient';
     renderSide(R);
@@ -645,7 +646,7 @@
     var cur = currentSystem(r);
     /* Page navigation (Code & specs): the icon straight inside the link,
        the current area `.active` and `aria-current="page"`. */
-    $('mob-systems-items').innerHTML =
+    $('mob-systems-items').innerHTML = $('mob-drawer-areas-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
         return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +

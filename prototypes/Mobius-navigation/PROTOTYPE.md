@@ -274,8 +274,12 @@ plain Menu (no way to show where you are).
 navigation, and Buckholt documents no global or app navigation; switching work areas is global.
 The panel is Menu's floating surface (`.menu-panel`) holding a `nav`, not a Menu.
 
-**Open question:** below 1024px the drawer's Menu button (top left, "Open menu") carries the same
-`fa-bars` icon, so the bar shows two identical icons doing different things.
+**Below 1024px the work areas are in the drawer** (Laurence, 28 October 2026): the drawer's
+Menu button (top left) carries the same `fa-bars` icon, so the top bar's Button is hidden there
+and the drawer ends with a **"Work areas"** section (a Label 01 heading, ruled off) holding the
+same Page navigation, the current area active. The Menu button now shows on every page below
+1024px; on the Dashboard and the other work areas, where there is no client menu, the drawer
+holds the work areas alone.
 
 Its panel lists each area with its
 icon and a one-line description:
