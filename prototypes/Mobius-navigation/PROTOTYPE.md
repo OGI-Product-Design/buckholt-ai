@@ -325,6 +325,20 @@ guarantee.
 Some fields have no options in the reference (Activity type, Note type, Fee account and others
 that only say "Select"). They are not invented, so their Dropdowns open empty.
 
+## User study, round 2 (28 October 2026)
+
+| Finding | Outcome |
+| --- | --- |
+| Collapse button reads as "back" | **Fixed.** The Sidebar icon (`fa-regular fa-sidebar`, Laurence) in both states, and the client's Avatar and name are one link to Client overview. |
+| Client icon on the rail strip leaves you on the policy page | **Open.** The strip still switches the menu. Option: highlight Client overview when it opens, or go there. |
+| Top-bar search loses the query | **Fixed.** Keys typed while the Modal opens (after a click, nothing had focus) go into its field; the first replaces the last search. "/" as the first key is the shortcut, not text. |
+| Make the action area easier to spot | **Not done, on purpose**: the study says re-test after the helper text first. |
+| Helper text for Copy policy and the other Policy actions | **Open.** |
+| Calm the menu animation; test at 960px; hide empty headers | Animation **done** (the rail does not slide). **At 960px the menu is a drawer** (it is one below 1024px): a decision for the next round. Empty headers still show. |
+| Create client on no results; View client first | **Done**: Create new client is the primary when nothing is found; View client and Add new quote are at the top of a result, above the policies. |
+| Duplicate policy list | **Open: a decision.** Both are kept: the menu to jump, Client overview for detail. |
+| Audit items (discard, menu keys, announcement, focus, required) | **Done**; see below. Exact-match jump **not done** by decision. |
+
 ## Audit, 28 October 2026
 
 | Finding | Outcome |
