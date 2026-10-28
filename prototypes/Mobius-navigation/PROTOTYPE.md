@@ -82,6 +82,11 @@ its CSS are dropped.
 The top bar carries the prototype's own contents: the Menu button, the "Mobius" wordmark, the
 search field, "Show wording changes", the environment ("Test"), the clock, the system menu and
 the avatar. The
+**logo is the OGI logo** (Laurence, 28 October 2026): the "ogi" mark from the Configuration Hub
+lockup (`prototypes/CH-SHELL/assets/`, as supplied), then "Mobius" as that lockup sets its product
+name: the brand blue, regular weight, 5px after the mark, on the mark's baseline. It is inline
+SVG because the Cloudflare deployment serves no `.svg` files. Below 430px the mark shows alone
+("Mobius" stays as the link's name). Both looks use it; the "open gi" wordmark is gone. The
 clock is live, as in Originators and BACS Import (Laurence's request, 30 September 2026). The
 module navigation of the other features (AutoRek, BACS) is not shown, because in this
 prototype the left column *is* the redesigned menu.
@@ -268,8 +273,10 @@ description and a tick on the current one:
 Icons sit level with each area's title (not centred on the two lines). Buckholt's Menu has no
 selected state, so **the current area is drawn as Buckholt's Dropdown draws a selected option**
 (`.dropdown-item.active`, the look the BACS Dropdowns show): the active label and tint (Menu's
-own tokens, the same values), and the solid tick 1rem high, centred, 0.75rem from the item's
-right edge, with the item padded 2.25rem on the right to clear it. The descriptions are
+own tokens, the same values), and **the Dropdown's own tick**: its declarations copied from
+`css/buckholt.css` as they are, the SVG image included, 1rem high, centred, 0.75rem from the
+item's right edge, the item padded 2.25rem on the right (Laurence, 28 October 2026: a Font
+Awesome icon from the kit drew a thinner, different tick). The descriptions are
 Buckholt's `.body-01` type set in secondary text (they had an invented 13px size), as are Make
 changes' helpers; both menus are at most 24rem wide so the helpers never run under the tick. The design's small "Area" label over the name is left out (it is read out instead). "Clients &
 policies" in place of "Broking" is a wording change to check with brokers. The "Test"
@@ -858,7 +865,7 @@ banner) and nothing moves.
   the current page in blue; both run full height, flush. Cards have Mobius's light grey header
   strip and 3px corners; key values are bold; table headers are light grey; Buttons are flat
   with 1px borders; links are not underlined; the page title is Mobius's small uppercase label
-  ("POLICY OVERVIEW"); the wordmark reads "open gi"; the system menu is Mobius's outlined box;
+  ("POLICY OVERVIEW"); the system menu is Mobius's outlined box;
   side panels keep the blue header Mobius already has. The search Modal takes Buckholt's 16px
   corners (Laurence, 20 October 2026), matching the rounded menu; other Modals keep 3px. Pages are denser: 20px padding and gaps
   in place of Buckholt's 32–64px.

@@ -26,15 +26,11 @@
     } catch (e) { /* file:// or old browser: the look still changes */ }
   }
 
-  /* Mobius's wordmark is "open gi"; the Buckholt look keeps "Mobius". */
+  /* Both looks carry the OGI logo (Laurence, 28 October 2026); the
+     "open gi" wordmark is gone. */
   function apply(v) {
     skin = v;
     if (v === 'mobius') root.setAttribute('data-skin', 'mobius'); else root.removeAttribute('data-skin');
-    var logo = document.querySelector('.app-bar-logo');
-    if (logo) {
-      if (!logo.hasAttribute('data-name')) logo.setAttribute('data-name', logo.textContent);
-      logo.textContent = v === 'mobius' ? 'open gi' : logo.getAttribute('data-name');
-    }
     var sw = document.getElementById('mob-skin-switch');
     if (sw) sw.checked = v === 'mobius';
   }
