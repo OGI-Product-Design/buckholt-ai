@@ -643,17 +643,13 @@
   }
   function renderSystems(r) {
     var cur = currentSystem(r);
-    /* The trigger's label is the current system. */
-    var mod = M.MODULES.filter(function (m) { return m.id === cur; })[0];
-    $('mob-system-current').innerHTML = t(mod.label);
+    /* Page navigation (Code & specs): the icon straight inside the link,
+       the current area `.active` and `aria-current="page"`. */
     $('mob-systems-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
-        return '<li role="none"><a class="menu-item mob-menu-item-help" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
-          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help body-01">' + t(m.desc) + '</span></span>' +
-          /* The current area: marked for assistive technology only; a
-             Menu shows no selection (Laurence, 28 October 2026). */
-          (on ? '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
+        return '<li class="nav-item"><a class="nav-link' + (on ? ' active' : '') + '" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
+          icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help body-01">' + t(m.desc) + '</span></span></a></li>';
       }).join('');
   }
 
@@ -1439,6 +1435,18 @@
       if (list0.length) list0[k === 'ArrowUp' ? list0.length - 1 : 0].focus();
       return;
     }
+    /* A panel of links rather than a Menu (Work areas): Escape closes it
+       and gives focus back to its button. Tab moves through the links. */
+    if (k === 'Escape' && t.closest) {
+      var navPanel = t.closest('.menu > .menu-panel.dropdown-menu');   /* Bootstrap may already have closed it: its handler runs first */
+      var navToggle = navPanel && !navPanel.querySelector('[role="menu"]') && navPanel.parentNode.querySelector(':scope > .menu-toggle');
+      if (navToggle) {
+        e.preventDefault(); e.stopPropagation();
+        bootstrap.Dropdown.getOrCreateInstance(navToggle).hide();
+        navToggle.focus();
+        return;
+      }
+    }
     var m = menuOf(t);
     if (!m) return;
     if (k === 'Escape') {
@@ -1538,18 +1546,6 @@
     var tip = host && bootstrap.Tooltip.getInstance(host);
     if (tip) tip.enable();
   });
-
-  /* The area switcher's Tooltip repeats its label, so it is on only where
-     the label is not drawn (below 768px, the icon alone). */
-  var sysWrap = document.querySelector('.mob-systems');
-  var sysNarrow = window.matchMedia('(max-width: 767.98px)');
-  function sysTip() {
-    var tip = bootstrap.Tooltip.getOrCreateInstance(sysWrap);
-    if (sysNarrow.matches && !sysWrap.querySelector('[aria-expanded="true"]')) tip.enable(); else { tip.hide(); tip.disable(); }
-  }
-  sysNarrow.addEventListener('change', sysTip);
-  sysWrap.addEventListener('hidden.bs.dropdown', function () { setTimeout(sysTip, 0); });
-  sysTip();
 
   /* A toggle re-renders the menu; focus goes to `focusSel`. */
   function rerenderSide(focusSel) {

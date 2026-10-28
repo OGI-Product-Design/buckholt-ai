@@ -75,14 +75,12 @@ html[data-skin="mobius"] body { background-color: var(--mobius-page); color: var
 /* ------------------------------------------------------------- Top bar */
 html[data-skin="mobius"] .app-bar { border-bottom-color: #efefef; }
 html[data-skin="mobius"] .mob-app-search .form-control { border-color: var(--mobius-border); }
-/* The system menu: Mobius's outlined "Dashboard" box. */
+/* Work areas: Mobius's outlined box, as an icon Button. */
 html[data-skin="mobius"] .mob-systems > .btn {
   --button-border: var(--mobius-blue);
   --button-border-hover: var(--mobius-blue);
   --button-background-hover: var(--mobius-tint);
-  justify-content: space-between;
 }
-@media (min-width: 576px) { html[data-skin="mobius"] .mob-systems > .btn { min-width: 6.5rem; } }
 html[data-skin="mobius"] .app-bar-time { color: var(--mobius-blue); font-weight: 500; }
 html[data-skin="mobius"] .mob-avatar-toggle .avatar { --avatar-background: var(--mobius-avatar); --avatar-label: var(--mobius-navy); background-color: var(--mobius-avatar); color: var(--mobius-navy); }
 
