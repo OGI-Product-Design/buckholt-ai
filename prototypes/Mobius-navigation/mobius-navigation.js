@@ -1281,6 +1281,14 @@
       S.navCollapsed = false;
       if (R.scope === 'policy') S.sideView = ex.getAttribute('data-view');
       rerenderSide(ex.getAttribute('data-focus'));
+      /* From a policy page the client's menu opens with Client overview
+         marked, so the next step is plain (user study, 28 October 2026:
+         the menu changed, the page did not, and people stalled). Focus is
+         there too, but a pointer user does not see focus. */
+      if (R.scope === 'policy' && ex.getAttribute('data-view') === 'client') {
+        var ov = sidebar.querySelector('.mob-rail-pages a[href="#c/summary"]');
+        if (ov) ov.classList.add('mob-suggest');
+      }
       return;
     }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }

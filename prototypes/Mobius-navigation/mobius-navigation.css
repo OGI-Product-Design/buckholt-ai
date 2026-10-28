@@ -516,6 +516,11 @@ a.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outli
   cursor: pointer;
 }
 .mob-group-toggle:hover { background-color: var(--nav-link-background-hover); }
+/* Client overview, marked when the client's menu is opened from the strip on
+   a policy page: Page navigation's own hover tint, until the menu is drawn
+   again. */
+.mob-rail-pages .nav-link.mob-suggest,
+.mob-rail-pages .nav-link.mob-suggest.mob-quiet-focus:focus:not(:hover):not(.active) { background-color: var(--nav-link-background-hover); }   /* also while quietly focused */
 /* 4px under the label, so its hover does not touch the first page
    (Laurence, 22 October 2026). */
 .mob-group-toggle { margin-bottom: var(--spacer-02); }
@@ -1054,7 +1059,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
    secondary text colour. */
 .mob-menu-text { display: flex; flex-direction: column; gap: var(--spacer-01); min-width: 0; }
 .mob-menu-help { color: var(--text-secondary); white-space: nowrap; }
-.mob-changes .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }
+.mob-changes .menu-panel, .mob-overflow .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }   /* room for the helpers */
 /* "3 new": the count says what it counts. */
 .mob-count-inline { white-space: nowrap; }
 

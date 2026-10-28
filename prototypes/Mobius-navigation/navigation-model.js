@@ -150,17 +150,20 @@
     retrieve: { label: 'Retrieve quote', icon: ICON.reinstate, kind: 'flow', to: 'quote' },
     mta: { label: '[[Make an MTA]]', icon: ICON.mta, kind: 'panel', help: 'Change the vehicle, drivers, cover and more' },    // the Shield-pen, a wizard (Laurence, 21 October 2026)
     extend: { label: 'Policy extension', icon: ICON.extend, kind: 'panel', help: 'Extend the current period' },
-    renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm' },
+    /* Policy actions carry a one-line helper too, worded from each one's
+       own confirmation or panel (user study, 28 October 2026: "Copy policy"
+       drew people looking for a second vehicle, which is Add new quote). */
+    renew: { label: 'Renewal invite', icon: ICON.invite, kind: 'confirm', help: 'Invite the client to renew this policy' },
     /* Back to "Stop policy" with the Stop icon (Laurence, 27 October 2026;
        it was "Pause policy" from 21 October). */
-    stop: { label: 'Stop policy', icon: ICON.stop, kind: 'confirm' },
+    stop: { label: 'Stop policy', icon: ICON.stop, kind: 'confirm', help: 'Stop the policy; this can be reversed later' },
     reinstate: { label: 'Reinstate policy', icon: ICON.reinstate, kind: 'confirm' },
     fee: { label: 'Admin fee', icon: ICON.money, kind: 'panel' },
     manual: { label: 'Manual credit / debit', icon: ICON.money, kind: 'panel' },
     newquote: { label: 'Add new quote', icon: ICON.newQuote, kind: 'flow', to: 'newquote' },
-    copy: { label: '[[Copy policy]]', icon: ICON.copy, kind: 'confirm' },
-    portal: { label: '[[Customer portal settings]]', icon: ICON.settings, kind: 'panel' },
-    cancel: { label: 'Cancel policy', icon: ICON.cancel, kind: 'confirm', danger: true },
+    copy: { label: '[[Copy policy]]', icon: ICON.copy, kind: 'confirm', help: 'Start a new policy with the same details' },
+    portal: { label: '[[Customer portal settings]]', icon: ICON.settings, kind: 'panel', help: 'Let the client make changes or renew online' },
+    cancel: { label: 'Cancel policy', icon: ICON.cancel, kind: 'confirm', danger: true, help: 'End cover; this cannot be undone' },
     /* In the live audit for Renewal invited, with no page or panel in the
        prototype yet (and no Renewal invited record to show them): listed
        for the rule, not drawn. */
