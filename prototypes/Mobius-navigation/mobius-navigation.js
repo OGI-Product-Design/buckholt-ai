@@ -328,7 +328,9 @@
            October 2026), so a client page is chosen from the menu itself;
            a click or tap opens it too, for keyboards and touch. On a client
            page it opens the client's menu, as before. */
-        (onPolicy
+        /* With the whole menu collapsed there is no policy menu to lay it
+           over: the icon opens the menu at the client's, as before. */
+        (onPolicy && !collapsed
           ? '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" id="mob-peek-toggle" aria-expanded="' + !!S.peekOpen + '" aria-controls="mob-peek"' + tipAttrs('Client menu') + '>' +
               '<div class="btn-icon">' + icon(M.ICON.client) + '</div></button></li>'
           : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
@@ -349,7 +351,7 @@
     railBody.innerHTML = body;
     /* The client's menu, ready to lay over the policy's (see peek). */
     var peek = $('mob-peek');
-    var canPeek = tight && onPolicy;
+    var canPeek = tight && onPolicy && !collapsed;
     peek.innerHTML = canPeek ? '<div class="mob-peek-scroll">' + clientMenu(r, curPolicy) + '</div>' : '';
     peekRedraw = false;
     if (!canPeek) S.peekOpen = false;
