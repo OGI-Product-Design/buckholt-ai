@@ -646,15 +646,13 @@
     /* The trigger's label is the current system. */
     var mod = M.MODULES.filter(function (m) { return m.id === cur; })[0];
     $('mob-system-current').innerHTML = t(mod.label);
-    $('mob-system-icon').className = mod.icon;   /* shown in place of the name on a phone */
     $('mob-systems-items').innerHTML =
       M.MODULES.map(function (m) {
         var on = m.id === cur;
         return '<li role="none"><a class="menu-item mob-menu-item-help" role="menuitem" href="#' + m.id + '"' + (on ? ' aria-current="page"' : '') + '>' +
           icon(m.icon) + '<span class="mob-menu-text"><span class="mob-area-name">' + t(m.label) + '</span><span class="mob-menu-help body-01">' + t(m.desc) + '</span></span>' +
-          /* The current system: Buckholt Dropdown's selected tick and
-             Menu's own active colours (CSS), so it is not marked by colour
-             alone; "current" is read out. */
+          /* The current area: marked for assistive technology only; a
+             Menu shows no selection (Laurence, 28 October 2026). */
           (on ? '<span class="visually-hidden">, current</span>' : '') + '</a></li>';
       }).join('');
   }
@@ -1540,6 +1538,18 @@
     var tip = host && bootstrap.Tooltip.getInstance(host);
     if (tip) tip.enable();
   });
+
+  /* The area switcher's Tooltip repeats its label, so it is on only where
+     the label is not drawn (below 768px, the icon alone). */
+  var sysWrap = document.querySelector('.mob-systems');
+  var sysNarrow = window.matchMedia('(max-width: 767.98px)');
+  function sysTip() {
+    var tip = bootstrap.Tooltip.getOrCreateInstance(sysWrap);
+    if (sysNarrow.matches && !sysWrap.querySelector('[aria-expanded="true"]')) tip.enable(); else { tip.hide(); tip.disable(); }
+  }
+  sysNarrow.addEventListener('change', sysTip);
+  sysWrap.addEventListener('hidden.bs.dropdown', function () { setTimeout(sysTip, 0); });
+  sysTip();
 
   /* A toggle re-renders the menu; focus goes to `focusSel`. */
   function rerenderSide(focusSel) {

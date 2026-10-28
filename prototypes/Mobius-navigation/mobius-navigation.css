@@ -100,35 +100,19 @@
 .mob-systems .button-label { white-space: nowrap; }   /* "Clients & policies" on one line */
 .app-bar-right { flex-shrink: 0; }   /* the search field gives way, not the area switcher or the avatar */
 .mob-systems .menu-panel { z-index: 1035; --menu-min-width: 19rem; --menu-max-width: 24rem; }
-/* The current area, drawn exactly as Buckholt's Dropdown draws a selected
-   option (`.dropdown-item.active` in css/buckholt.css, its declarations
-   copied as they are, image included): the active label and tint (Menu's
-   own tokens, the same values), and the tick as that rule's image, 1rem
-   high, 0.75rem from the item's right edge, the item padded 2.25rem on the
-   right to clear it. An icon from the kit drew a different, thinner tick
-   (Laurence, 28 October 2026). */
-.mob-systems .menu-item[aria-current="page"] {
-  padding-right: 2.25rem;
-  color: var(--menu-item-label-active);
-  background-color: var(--menu-item-background-active);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512' fill='%230f40c5'%3e%3c!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--%3e%3cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: auto 1rem;
-}
-/* The trigger carries the current system's name. Below 1280px it sits 8px
-   from the clock; on a phone the name is kept for assistive technology but
-   not drawn, and the caret alone opens the menu. */
+/* The menu is a plain Buckholt Menu (Laurence, 28 October 2026): a Menu
+   button lists places to go and shows no selection, so the current area has
+   no tick or tint. It is `aria-current="page"` and read out as "current";
+   the page itself shows where you are. */
+/* Below 1280px the switcher sits 8px from the clock. */
 @media (max-width: 1279.98px) { .mob-systems { margin-left: var(--spacer-03); } }
-@media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the longest system name (Bordereau) */
+@media (min-width: 768px) and (max-width: 1279.98px) { .mob-app-search { max-width: 20rem; } }   /* room for the area switcher and the clock */
 /* On a phone (Laurence, 27 October 2026: "really broken on mobile") the
    bar is the Menu button and the wordmark on the left, then icon-only
    Buttons on the right: Search (it opens the same Modal; a squeezed field
-   was neither readable nor easy to tap), Create new client, the area
-   switcher showing the current area's icon in place of its name, and the
-   avatar. */
+   was neither readable nor easy to tap) and Create new client; then the
+   area switcher, labelled "Areas" as everywhere, and the avatar. */
 .mob-search-btn-set { display: none; }
-.mob-system-icon { display: none; }
 @media (max-width: 575.98px) {
   .mob-app-search { display: none; }
   .mob-search-btn-set { display: flex; margin: 0 0 0 auto; }
@@ -136,15 +120,21 @@
   .app-bar-right { margin-left: 0; }
   body.mob-home .app-bar-right { margin-left: auto; }   /* no search or Create in the bar on the homepage */
   body.mob-home .mob-search-btn-set { display: none; }
-  .mob-systems .mob-system-icon { display: flex; }
-  .mob-systems .button-label {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-  }
   .mob-systems, .mob-user-menu { margin-left: var(--spacer-02); }
 }
 @media (max-width: 429.98px) {
   .app-bar-logo { margin-right: var(--spacer-03); }
+}
+/* The area switcher's one label, "Switch work area", fits from 768px. Below
+   that the Change icon stands in for it (the label stays as the name; the
+   wrapper's Tooltip, on only then, shows it), so the search keeps its room. */
+.mob-systems-icon { display: none; }
+@media (max-width: 767.98px) {
+  .mob-systems .mob-systems-icon { display: flex; }
+  .mob-systems .button-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
 }
 
 /* The user menu's trigger is the Avatar itself, so the toggle has no Button

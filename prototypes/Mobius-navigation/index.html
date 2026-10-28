@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../shared/blade.css">
 <!-- ?v= is bumped with every change, so browsers fetch this prototype's
      own files afresh rather than an old cached copy. -->
-<link rel="stylesheet" href="mobius-navigation.css?v=20261028-13">
+<link rel="stylesheet" href="mobius-navigation.css?v=20261028-16">
 <!-- The default look: current Mobius. The floating toggle (bottom right)
      or ?skin=buckholt switches to Buckholt, where this does nothing. -->
-<link rel="stylesheet" href="mobius-skin.css?v=20261028-13">
-<script src="mobius-skin.js?v=20261028-13"></script>
+<link rel="stylesheet" href="mobius-skin.css?v=20261028-16">
+<script src="mobius-skin.js?v=20261028-16"></script>
 </head>
 <body class="mob-hide-terms">
 
@@ -119,18 +119,23 @@
         <time class="app-bar-date" id="app-clock-date" datetime="2026-10-01">01 October 2026</time>
       </div>
 
-      <!-- Area switcher: back at the right, before the user menu (Laurence,
-           27 October 2026). A Buckholt Menu button (Code & specs example 1,
-           the label then the caret) whose label is the current area, read
-           out as "Area: Clients & policies". Its panel lists each area with
-           its icon and a one-line description; the current one is drawn as
-           Buckholt's Dropdown draws a selected option. Written by
+      <!-- Area switcher, at the right before the user menu. A Buckholt Menu
+           button (Code & specs example 1, the label then the caret) with ONE
+           label, "Switch work area", whichever area is open (Laurence, 28
+           October 2026, task-driven:
+           a Menu button names its menu; showing the choice is Dropdown's
+           behaviour, which Buckholt does not give a Menu button). Its panel is a
+           plain Menu with no selection; the current area is read out after the
+           label (", current: Clients & policies") and is the page's own. Its panel lists each area
+           with its icon and a one-line description. Written by
            mobius-navigation.js. -->
-      <div class="menu mob-systems">
+      <div class="menu mob-systems" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Switch work area">
         <button type="button" class="btn btn-ghost menu-toggle" id="mob-systems-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="mob-systems-panel">
-          <!-- On a phone the name is not drawn: the current area's icon shows instead. -->
-          <div class="btn-icon mob-system-icon"><i id="mob-system-icon" class="fa-regular fa-shield" aria-hidden="true"></i></div>
-          <span class="button-label"><span class="visually-hidden">Area: </span><span id="mob-system-current">Clients &amp; policies</span></span>
+          <!-- Where the label does not fit, the Change icon (Buckholt's
+               catalogue: "Swap, replace, or exchange") stands in for it; the
+               label stays as the name, and the wrapper's Tooltip shows it. -->
+          <div class="btn-icon mob-systems-icon"><i class="fa-regular fa-swap-arrows" aria-hidden="true"></i></div>
+          <span class="button-label">Switch work area<span class="visually-hidden">, current: <span id="mob-system-current">Clients &amp; policies</span></span></span>
           <div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>
         </button>
         <div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-systems-panel" aria-labelledby="mob-systems-toggle">
@@ -359,9 +364,9 @@
 <script>MobKept();</script>
 <script src="../shared/app-shell.js"></script>
 <script src="../shared/blade.js"></script>
-<script src="fixtures.js?v=20261028-13"></script>
-<script src="navigation-model.js?v=20261028-13"></script>
-<script src="pages.js?v=20261028-13"></script>
-<script src="mobius-navigation.js?v=20261028-13"></script>
+<script src="fixtures.js?v=20261028-16"></script>
+<script src="navigation-model.js?v=20261028-16"></script>
+<script src="pages.js?v=20261028-16"></script>
+<script src="mobius-navigation.js?v=20261028-16"></script>
 </body>
 </html>
