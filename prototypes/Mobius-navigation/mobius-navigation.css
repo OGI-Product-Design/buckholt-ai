@@ -369,6 +369,16 @@ a.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outli
     border: 1px solid var(--ui-border-03);
     border-radius: var(--border-radius-lg);           /* 16px */
   }
+  /* B of the A/B test (Laurence, 28 October 2026): the client's full card
+     opens to the left of the policy's menu. The menu grows by the card
+     less the strip (288 - 72px); the same negative margin keeps its grid
+     column as it was, so the page does not move and the menu lies over it,
+     lifted by Buckholt's large shadow. */
+  #sidebar.mob-sidebar.mob-beside-open {
+    margin-right: calc(var(--spacer-03) - 13.5rem);
+    z-index: 1020;                                    /* over the page's own floating Menus and badges; under the top bar, Modals and Tooltips */
+    box-shadow: var(--shadow-lg);
+  }
   /* Collapsed, or beside a policy: the card is a strip of icons. */
   .mob-sidebar.mob-rail-collapsed .mob-rail,
   .mob-sidebar.mob-rail-collapsed:not(.mob-has-record) .mob-rail { width: 4.5rem; }   /* 72px */
