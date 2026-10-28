@@ -3,14 +3,33 @@
 > **Not Buckholt.** Application work built *with* Buckholt. Nothing here is
 > design-system guidance; see [`../README.md`](../README.md).
 
-Built from [`ch-users-spec.md`](ch-users-spec.md) **revision 5** (27 Oct
-2026) and the five Figma reference frames in [`screenshots/`](screenshots/).
-First built on 26 Oct 2026 against revision 3. Updated to revision 5 on 27
-Oct 2026 (see "Revision 5" below).
+Built from [`ch-users-spec.md`](ch-users-spec.md) **revision 6** (28 Oct
+2026) and the reference images in [`screenshots/`](screenshots/): Figma
+frames for CU-00-01, CU-00-02, CU-04 and CU-05, and Andrej's blade
+screenshots for CU-01 and CU-02. First built on 26 Oct 2026 against
+revision 3; updated to revision 5 on 27 Oct and to revision 6 on 28 Oct 2026
+(see "Revision 6" and "Revision 5" below).
 
 Built against the CH-SHELL prototype on `main`. The spec cites CH-SHELL
 revision 7, which does not exist yet: `main` has revision 5, and revision 6
 changed only wording (SPEC-CHANGES A2).
+
+## Revision 6
+
+The blades were reworked after the PM, APM and TL review. Everything else is
+as built for revision 5.
+
+| Spec change | Built as |
+|---|---|
+| **Blade layout** (all four blades) | Header bar with the blade title and an icon-only Close, now named "Close" (Tooltip "Close"). Body in sections, each a level 2 heading: "Account details", and "Account management" where present. Only the body scrolls. Footer spans the blade: the secondary action at the start edge, the primary at the end edge |
+| **Add blade (CU-01)** | Title "Add user". The intro text sits directly under "Account details", before Email. Email has no placeholder. Email and Role carry required asterisks |
+| **Edit blade (CU-02)** | Title "Edit user". Fields in the Mobius order: First name, Last name, Email, Username, Role. Asterisks on First name, Last name and Role. New "Account management" section with a Status Switch and Reset MFA. No Reset password |
+| **Status** | Buckholt Switch, on = Active, with the state text "Active"/"Inactive" beside it. Applied on "Save changes", like every other field, so Cancel / Discard undoes it. It counts towards "Save changes" being enabled and towards unsaved changes. Disabled for the signed-in user ("You can't deactivate your own account.") and the last active Administrator ("There must be at least one active administrator."). The Toast says "{Full name} can no longer sign in to Configuration Hub." / "… can sign in to Configuration Hub again." and replaces "Changes saved" when the status changed. Row, chips and the CU-00-01 summary follow |
+| **Reset MFA** | Label "Reset multi-factor authentication (MFA)", then a Secondary "Reset MFA" button below it. It acts straight away through its own Modal ("Reset MFA for {Full name}?", Cancel / Reset MFA), and unsaved blade changes are kept. Confirming closes the Modal, returns focus to "Reset MFA", shows "MFA reset for {Full name}." and leaves the blade open. Disabled for the signed-in user ("You can't reset your own MFA here.") and while the saved status is Inactive ("Activate this user before resetting their MFA."), with the reason as helper text |
+| **Pending Edit blade (CU-03)** | "Account details": Email (read-only) and Role. "Account management": the invitation text, now "… Their name and username will show here …", and "Resend invitation". No Status, no Reset MFA |
+| **View blade (CU-04)** | Title "View user" (it was the person's name). The same sections as the Edit blade, read-only, as Key-value pairs |
+| **Sentence case everywhere** | AC 36 checks every heading, label, button, column header, tag, Modal and blade title on every screen for Title Case, allowing only product, app and people names |
+| **Screenshots** | Andrej's blade screenshots saved as `screenshots/CU-01.png` (Add) and `screenshots/CU-02.png` (Edit). The latter replaces the older Mobius "Edit User" Figma export of revision 3. The spec's copy is built where it differs from them (sentence case, no placeholders, intro position, full stops) |
 
 ## Revision 5
 
@@ -88,9 +107,13 @@ across page changes, and dropped on a reload or a change of seed or variant.
       row 8 truncates.
     - No results replaces the rows; the chips and filter bar stay.
     - The count and the no-results message are announced politely.
+- **Every blade (Blade layout).** Header bar: title and Close. Body: level 2
+  section headings ("Account details", "Account management"); only the
+  body scrolls. Footer: spans the blade, secondary at the start, primary at
+  the end. Required fields carry an asterisk; locked fields carry none.
 - **CU-01 · Add.**
-  - A blade titled "Add Configuration Hub user", with Email and Role. The
-    Role helper text follows the role chosen.
+  - A blade titled "Add user". Under "Account details": the intro text, then
+    Email and Role. The Role helper text follows the role chosen.
   - Email is checked on blur and on "Send invitation"; Role on "Send invitation".
   - Email is trimmed and lower-cased before checking.
   - All five email messages and the role message are built.
@@ -100,21 +123,25 @@ across page changes, and dropped on a reload or a change of seed or variant.
     chip goes up.
 - **CU-02 · Edit an active or inactive user.**
   - Blade titled "Edit user".
-  - Fields: Username and Email read-only (focusable, announced read-only),
-    First name, Last name, Role.
-  - No password or MFA field.
-  - "Save changes" stays disabled until a value differs from the saved one.
+  - "Account details": First name, Last name, Email and Username read-only
+    (focusable, announced read-only), Role.
+  - "Account management": Status (Switch, applied on Save) and Reset MFA
+    (immediate, through its Modal). See "Revision 6".
+  - No password field and no Reset password.
+  - "Save changes" stays disabled until a value differs from the saved one,
+    Status included.
   - Role is a read-only Select for the signed-in user, and for the last active
     Administrator. Each case has its own helper text.
   - With unsaved changes, Cancel, Close or Escape opens the Discard changes Modal.
 - **CU-03 · Edit a pending user.**
-  - The invitation text, read-only Email, Role, and "Resend invitation"
-    (Secondary).
+  - "Account details": read-only Email and Role. "Account management": the
+    invitation text and "Resend invitation" (Secondary).
   - Resend works straight away and updates the date and the text.
   - Save uses the email in its Toast.
 - **CU-04 · View.**
-  - Title is the full name (the email for a pending user). Focus moves to it.
-  - Key-value pairs in the spec's order.
+  - Title "View user". Focus moves to it.
+  - The Edit blade's sections as read-only Key-value pairs, in the spec's
+    order.
   - Actions "Close" and "Edit". "Edit" replaces the View blade with the Edit blade.
 - **CU-05 · Delete.**
   - One Modal with the three cases of title, body and action:
@@ -128,9 +155,10 @@ across page changes, and dropped on a reload or a change of seed or variant.
   - Bulk Delete is disabled when the selection holds every active Administrator.
 - **Rules.**
   - Own user: the row checkbox and Delete action are disabled with their
-    reasons, and the role can't be changed.
-  - Last active Administrator: Delete is disabled and the role is locked with
-    the last-Administrator reason. When both rules apply, the
+    reasons; the role, Status and Reset MFA can't be used.
+  - Last active Administrator: Delete is disabled, and the role and Status
+    are locked with the last-Administrator reason. Deactivating an
+    Administrator counts towards the rule. When both rules apply, the
     last-Administrator reason is shown (judgement call 6).
 - **Shell contract.**
   - An open Add or Edit blade with changed values reports unsaved changes.
@@ -192,13 +220,14 @@ here.
 | Icon block | Chips | `icon-block-sm` |
 | Text input | Search (with `.input-icon`), Email, names, read-only Username and Email | Read-only is Text input's documented `readonly` |
 | Select | Role and Status filters, Results per page, Role in the blades | Read-only Role is Select's documented `.readonly` + `disabled` |
-| Form | Blade forms | `form.form > .text-block + .form-body`, helper text and `.invalid-feedback` |
+| Switch | Status in the Edit blade | Default Switch, Code & specs example 1 (`.form-check.form-switch`, `role="switch"`), with example 4's `.form-helper` for the locked reason and example 7's `disabled`. The runtime's own state text slot carries "Active"/"Inactive" (judgement call 27) |
+| Form | Blade forms | `form.form` with one `.form-body` per section, each opening with a Text block (`h2.headline-03`, and the intro where there is one), as Form documents; helper text and `.invalid-feedback` |
 | Menu button / Menu | More actions | Overflow variant (`fa-ellipsis-vertical`); `menu-item` with Edit icon; `menu-item-danger` with Delete icon |
 | Table | Users | `.table-container > .table-content > table.table`, `.table-gap`, `.table-sort-header` / `.table-sort`, `.table-checkbox-header.col-fit`, `.col-fit.cell-data-right`, `.data-secondary` |
 | Checkbox | Row and header selection | Native; indeterminate set from script |
 | Avatar | Name cell | `avatar-xs`, `.avatar-initials` or `.avatar-icon` (`fa-user`) for pending |
 | Tooltip | Icon-only controls, truncated text, disabled-action reasons | Code & specs example 3 options |
-| Modal | Delete, Discard changes; the shell's unsaved-changes Modal | Code & specs example 1 |
+| Modal | Delete, Discard changes, Reset MFA; the shell's unsaved-changes Modal | Code & specs example 1 |
 | Toast | Every success message | `toast-success` with icon |
 | Link | "Back to User Management" | `.link-standalone` |
 | Common actions | Add, Edit, Delete, Search | Labels and icons as documented |
@@ -239,8 +268,10 @@ styling (spec, Prototype notes). Each difference is listed once:
 | Sort icons | Double caret on every column, one caret on the active column | `fa-sort` from Table's WIP markup; `fa-sort-up` or `fa-sort-down` on the active column |
 | Results per page | Inline label left of the Select | Top-aligned label (Buckholt Forms: left-aligned labels are not supported) |
 | Pagination buttons | Small boxed group | Buckholt `btn-sm` Ghost buttons; Secondary for the current page |
-| Blade | Mobius blue header, 470px wide, Cancel bottom left, Save bottom right | The shared blade's header (the same Mobius blue). 480px wide (`30rem`). Actions right-aligned with Primary last (Forms, side-panel context) |
-| Required markers | Red asterisks | None: every field is required, so per Buckholt Forms nothing is marked |
+| Blade | Mobius blue header, 470px wide, Cancel bottom left, Save bottom right | The shared blade's header (the same Mobius blue). 480px wide (`30rem`). Footer as the screenshots and the spec: Cancel at the start, the primary at the end |
+| Blade section headings | "Account Details" in a large heading | `h2.headline-03`, Form's documented section heading, in sentence case |
+| Required markers | Red asterisks | Red asterisks, as the spec now asks (Buckholt's error colour), against Buckholt's "(required)" rule; logged as SPEC-CHANGES C18 |
+| Status Switch | "Active" beside a green switch | Buckholt's default Switch (green on-track is Buckholt's own), with "Active"/"Inactive" in its state text slot |
 | Delete dialog | "Warning" title, warning icon, "Confirm" | Spec copy; Modal Code & specs; Primary danger action |
 
 The CU-00-01 differences the spec lists as decisions are built as the spec
@@ -256,7 +287,7 @@ says, not as the frame shows:
 1. **Option B shell reuse**, as above. `home.html` repeats about 25 lines of
    `CH-SHELL/index.html`'s card rendering. That is the only repeated code.
 2. **The blade sits under the CH top bar, and the top bar stays usable.**
-   - AC 27 asks for the shell's unsaved-changes Modal when the environment is
+   - AC 34 asks for the shell's unsaved-changes Modal when the environment is
      switched while a blade has changes. That is only possible if the
      environment control is reachable while a blade is open.
    - The Mobius frames also draw the blade below the top bar, with the bar
@@ -277,8 +308,8 @@ says, not as the frame shows:
    readers read in browse mode. The alternative, `aria-disabled` on a
    focusable control, would add tab stops that do nothing (SPEC-CHANGES A7).
 6. **The last-Administrator reason wins when both rules apply** to the
-   signed-in user. AC 23 expects it once James is an Editor. In the default
-   seed the own-account reasons show (AC 22).
+   signed-in user. AC 30 expects it once James is an Editor. In the default
+   seed the own-account reasons show (AC 29).
 7. **View blade "Edit" has no icon.** Buckholt's rule for a set of labelled
    buttons is "all with icons, or none", and "Close" has none
    (SPEC-CHANGES A8).
@@ -361,17 +392,52 @@ says, not as the frame shows:
     fit. They narrow to 352px first, so they stay side by side at the 1088px
     reference width (two 464px cards) and stack below about 800px.
 
+27. **The Switch's state text says "Active"/"Inactive", not "On"/"Off".**
+    - Buckholt's default Switch writes "On"/"Off" beside the switch from
+      CSS (`::before`); no documented attribute sets other words.
+    - The spec's state text is "Active"/"Inactive". So `ch-users.css`
+      overrides only the `content` of that slot, scoped to
+      `.cu-status-switch`. Position, size and colour stay Buckholt's.
+    - Screen readers hear the Switch's own state ("Status, switch, on")
+      from the native control. The visible words match it (SPEC-CHANGES C19).
+28. **The Status row is reversed visually.** The documented Switch DOM is
+    the input, then its label. The spec and the screenshot put the label at
+    the start of the row and the switch at the end. `flex-direction:
+    row-reverse` does that without changing the DOM. There is one tab stop,
+    so focus order is unaffected.
+29. **"Reset MFA" is named by its own text.** Its label, "Reset
+    multi-factor authentication (MFA)", is a real `<label for>`. But a
+    label would replace the button's name, and "Reset MFA" would no longer
+    be in it (WCAG 2.5.3, label in name). So the button is named by its text
+    (`aria-labelledby`) and described by the label and any reason.
+30. **A locked Role carries no asterisk.** The signed-in user's and the last
+    Administrator's Role can't be edited, so there's nothing to fill in.
+    Every other required field has one.
+31. **Section headings are `headline-03`.** The spec asks for level 2; Form
+    documents `h3.headline-03` for its intro heading. The size is Form's,
+    and the level is the spec's, alongside the blade title, which is also a
+    level 2 heading in the shared blade.
+32. **Reset MFA follows the saved status.** Switching an Inactive user on
+    doesn't enable Reset MFA until the change is saved, because the spec's
+    rule is about "a user whose saved status is Inactive".
+33. **The disabled Switch's handle renders black locally.** This is the
+    known local-build defect of `var()` inside SVG `data:` URIs
+    (`discrepancies/build-provenance.md`). The live build draws it grey. Not
+    corrected here.
+
 ## Tests
 
-`test/ch-users.js` has **408 assertions**: every acceptance criterion in
-revision 5, in blocks `AC 1` to `AC 29` in the spec's order. On top of those
+`test/ch-users.js` has **497 assertions**: every acceptance criterion in
+revision 6, in blocks `AC 1` to `AC 36` in the spec's order. On top of those
 it covers:
 
 - both variants, including the Only me card ("1 user", "1 active");
 - the Long names seed at 1088px;
 - CU-00-01 at 1088px (side by side) and 768px (stacked);
 - the accessibility requirements: names, descriptions, Tooltips,
-  `aria-sort`, focus return, the focus trap and the More actions keyboard;
+  `aria-sort`, focus return, the focus trap and the More actions keyboard,
+  the Status Switch's name and state, and required fields;
+- Title Case on every screen, blade and Modal;
 - that a reload resets the users;
 - that CH-SHELL's own home is unchanged.
 
@@ -396,9 +462,8 @@ Proxima Soft loaded. See [`../../test/README.md`](../../test/README.md).
   - the design team's split "Open" button on the home app card (Figma only,
     Open questions 17);
   - the invitation email and Microsoft account creation;
-  - password or MFA reset;
-  - deactivate and reactivate;
-  - bulk invitations;
+  - password reset (users do it themselves from the sign-in page);
+  - bulk invitations and bulk status changes;
   - the Open GI staff view;
   - Audit Centre entries;
   - the real Mobius users page.

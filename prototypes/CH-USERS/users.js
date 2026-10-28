@@ -14,6 +14,9 @@
   var OWN_DELETE = "You can't delete your own account.";
   var OWN_ROLE = "You can't change your own role.";
   var LAST_ADMIN = 'There must be at least one active administrator.';
+  var OWN_STATUS = "You can't deactivate your own account.";
+  var OWN_MFA = "You can't reset your own MFA here.";
+  var MFA_INACTIVE = 'Activate this user before resetting their MFA.';
   var NOT_SET = 'Not set yet';
   var NO_RESULTS_HEADING = 'No results found';
   var NO_RESULTS_TEXT = 'Try adjusting your search or filter criteria for a match.';
@@ -84,6 +87,21 @@
   function roleLock(a) {
     if (isLastActiveAdmin(a)) return LAST_ADMIN;
     if (a.self) return OWN_ROLE;
+    return null;
+  }
+  /* Status: the last active Administrator can't be deactivated, and nor
+     can the signed-in user. Deactivating an Administrator counts towards
+     the last-Administrator rule because activeAdmins() reads saved status. */
+  function statusLock(a) {
+    if (isLastActiveAdmin(a)) return LAST_ADMIN;
+    if (a.self) return OWN_STATUS;
+    return null;
+  }
+  /* Reset MFA: not for the signed-in user, and not while the saved status
+     is Inactive. */
+  function mfaBlock(a) {
+    if (a.self) return OWN_MFA;
+    if (a.status === 'Inactive') return MFA_INACTIVE;
     return null;
   }
   function selectBlock(a) { return a.self ? OWN_SELECT : null; }
@@ -597,8 +615,9 @@
     ctx.blade = b;
     b.el.classList.add('cu-blade');
 
-    /* The blade's name is its title; the shared Close button is named
-       "Close {title}". Tooltip "Close", as every icon-only control has. */
+    /* The blade's name is its title. The shared Close button is named
+       "Close {title}"; the spec names it "Close", with the Tooltip "Close". */
+    b.closeEl.setAttribute('aria-label', 'Close');
     b.closeEl.setAttribute('data-cu-tooltip', 'Close');
     b.closeEl.setAttribute('data-cu-placement', 'left');
     CU.initTooltips(b.el);
@@ -664,16 +683,25 @@
   function helperId(id) { return id + '-helper'; }
   function errorId(id) { return id + '-error'; }
 
+  /* Required fields carry an asterisk after the label (spec, Blade layout:
+     the Mobius pattern, not Buckholt's "(required)" text; SPEC-CHANGES C18).
+     The asterisk is hidden from assistive technology; the control itself
+     is `required`. */
+  function labelMarkup(text, required) {
+    return text + (required ? ' <span class="cu-required" aria-hidden="true">*</span>' : '');
+  }
+
   function textField(id, labelText, value, opts) {
     opts = opts || {};
     var describedby = [opts.helper ? helperId(id) : null, errorId(id)].filter(Boolean).join(' ');
     return '<div class="input">' +
         '<div class="input-label">' +
-          '<label for="' + id + '" class="form-label">' + labelText + '</label>' +
+          '<label for="' + id + '" class="form-label">' + labelMarkup(labelText, opts.required) + '</label>' +
         '</div>' +
         '<div class="response text-input">' +
           '<input type="' + (opts.type || 'text') + '" class="form-control" id="' + id + '" value="' + esc(value || '') + '"' +
-            (opts.readonly ? ' readonly' : '') + ' autocomplete="off" spellcheck="false" aria-describedby="' + describedby + '">' +
+            (opts.readonly ? ' readonly' : '') + (opts.required ? ' required' : '') +
+            ' autocomplete="off" spellcheck="false" aria-describedby="' + describedby + '">' +
         '</div>' +
         (opts.helper ? '<small class="form-helper' + (opts.readonly ? ' cu-keep-helper' : '') + '" id="' + helperId(id) + '">' + esc(opts.helper) + '</small>' : '') +
         '<div class="invalid-feedback" id="' + errorId(id) + '"></div>' +
@@ -686,14 +714,18 @@
       D.roles.map(function (r) {
         return '<option value="' + r.name + '"' + (r.name === value ? ' selected' : '') + '>' + r.name + '</option>';
       }).join('');
-    /* Read-only is Buckholt Select's documented `.readonly` plus `disabled`. */
+    /* Read-only is Buckholt Select's documented `.readonly` plus `disabled`.
+       Role is always required, but a locked Role is not editable, so it
+       carries no asterisk. */
+    var required = !opts.locked;
     return '<div class="input">' +
         '<div class="input-label">' +
-          '<label for="' + id + '" class="form-label">Role</label>' +
+          '<label for="' + id + '" class="form-label">' + labelMarkup('Role', required) + '</label>' +
         '</div>' +
         '<div class="response select-input">' +
           '<select class="form-select' + (opts.locked ? ' readonly' : '') + '" id="' + id + '"' +
-            (opts.locked ? ' disabled' : '') + ' aria-describedby="' + helperId(id) + ' ' + errorId(id) + '">' + options + '</select>' +
+            (opts.locked ? ' disabled' : '') + (required ? ' required' : '') +
+            ' aria-describedby="' + helperId(id) + ' ' + errorId(id) + '">' + options + '</select>' +
         '</div>' +
         '<small class="form-helper' + (opts.locked ? ' cu-keep-helper' : '') + '" id="' + helperId(id) + '">' + esc(helper) + '</small>' +
         '<div class="invalid-feedback" id="' + errorId(id) + '"></div>' +
@@ -708,19 +740,37 @@
     if (feedback) feedback.textContent = message || '';
   }
 
-  /* Blade footer: actions right-aligned, Primary last (Forms, side-panel
-     context). */
+  /* Blade layout: each section starts with a level 2 heading in a Text
+     block, as Form documents a section intro; the Edit and Add sections are
+     Form's `.form-body`, the View sections plain containers. */
+  function section(title, content, opts) {
+    opts = opts || {};
+    return '<div class="' + (opts.form ? 'form-body ' : '') + 'cu-blade-section">' +
+        '<div class="text-block">' +
+          '<h2 class="headline-03">' + title + '</h2>' +
+          (opts.intro ? '<p' + (opts.introId ? ' id="' + opts.introId + '"' : '') + '>' + opts.intro + '</p>' : '') +
+        '</div>' +
+        content +
+      '</div>';
+  }
+
+  /* Blade footer: spans the blade, the secondary action at the start edge
+     and the primary at the end edge (spec, Blade layout; Mobius). */
   function footer(buttons) {
     return '<div class="button-set cu-blade-actions">' + buttons + '</div>';
   }
   function button(id, cls, text, attrs) {
-    return '<button type="' + ((attrs && attrs.type) || 'button') + '" class="btn ' + cls + '" id="' + id + '"' +
-      (attrs && attrs.form ? ' form="' + attrs.form + '"' : '') + (attrs && attrs.disabled ? ' disabled' : '') + '>' +
-      '<span class="button-label">' + text + '</span></button>';
+    attrs = attrs || {};
+    return '<button type="' + (attrs.type || 'button') + '" class="btn ' + cls + '" id="' + id + '"' +
+      (attrs.form ? ' form="' + attrs.form + '"' : '') + (attrs.disabled ? ' disabled' : '') +
+      (attrs.describedby ? ' aria-describedby="' + attrs.describedby + '"' : '') +
+      (attrs.labelledby ? ' aria-labelledby="' + attrs.labelledby + '"' : '') + '>' +
+      '<span class="button-label"' + (attrs.labelId ? ' id="' + attrs.labelId + '"' : '') + '>' + text + '</span></button>';
   }
 
   /* ------------------------------------------------------------ CU-01 · Add */
   var EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var ADD_INTRO = "We'll email them a link to create their account. They'll choose a username and password, and set up multi-factor authentication.";
 
   function emailError(raw) {
     var value = raw.trim().toLowerCase();
@@ -736,18 +786,15 @@
   function openAdd(trigger) {
     var body =
       '<form class="form" id="cu-add-form" novalidate>' +
-        '<div class="text-block">' +
-          '<p>We\'ll email them a link to create their account. They\'ll choose a username and password, and set up multi-factor authentication.</p>' +
-        '</div>' +
-        '<div class="form-body">' +
-          textField('cu-add-email', 'Email', '', { type: 'email', helper: "We'll only use this to send the invitation. They'll sign in with their username." }) +
-          roleField('cu-add-role', '', 'You can change their role later.', { placeholder: true }) +
-        '</div>' +
+        section('Account details',
+          textField('cu-add-email', 'Email', '', { type: 'email', required: true, helper: "We'll only use this to send the invitation. They'll sign in with their username." }) +
+          roleField('cu-add-role', '', 'You can change their role later.', { placeholder: true }),
+          { form: true, intro: ADD_INTRO }) +
       '</form>';
 
     var ctx = createBlade({
       id: 'cu-add-blade',
-      title: 'Add Configuration Hub user',
+      title: 'Add user',
       body: body,
       footer: footer(
         button('cu-add-cancel', 'btn-secondary', 'Cancel') +
@@ -828,33 +875,65 @@
     return null;
   }
 
+  /* Status: a Buckholt Switch (on = Active). Its label sits at the start of
+     the row and the switch at the end, with the state text beside it. */
+  function statusField(a, lock) {
+    return '<div class="form-check form-switch cu-status-switch">' +
+        '<input class="form-check-input" type="checkbox" role="switch" id="cu-edit-status"' +
+          (a.status === 'Active' ? ' checked' : '') + (lock ? ' disabled aria-describedby="cu-edit-status-helper"' : '') + '>' +
+        '<div class="input-label">' +
+          '<label class="form-check-label" for="cu-edit-status">Status</label>' +
+          (lock ? '<small class="form-helper" id="cu-edit-status-helper">' + esc(lock) + '</small>' : '') +
+        '</div>' +
+      '</div>';
+  }
+
+  /* Reset MFA: a label, then a Secondary Button below it. The button's name
+     is its own text ("Reset MFA"); the label and any reason describe it. */
+  function mfaField(block) {
+    return '<div class="input cu-mfa">' +
+        '<div class="input-label">' +
+          '<label class="form-label" for="cu-edit-reset-mfa" id="cu-edit-mfa-label">Reset multi-factor authentication (MFA)</label>' +
+        '</div>' +
+        button('cu-edit-reset-mfa', 'btn-secondary', 'Reset MFA', {
+          disabled: !!block,
+          labelId: 'cu-edit-reset-mfa-text',
+          labelledby: 'cu-edit-reset-mfa-text',
+          describedby: 'cu-edit-mfa-label' + (block ? ' cu-edit-mfa-helper' : '')
+        }) +
+        (block ? '<small class="form-helper" id="cu-edit-mfa-helper">' + esc(block) + '</small>' : '') +
+      '</div>';
+  }
+
   function openEdit(a, returnTo) {
     var pending = isPending(a);
     var lock = roleLock(a);
     var body = '<form class="form" id="cu-edit-form" novalidate>';
     if (pending) {
       body +=
-        '<div class="text-block">' +
-          '<p id="cu-edit-invited">' + invitedText(a) + '</p>' +
-        '</div>' +
-        '<div class="form-body">' +
+        section('Account details',
           textField('cu-edit-email', 'Email', a.email, { readonly: true, helper: "Email can't be changed." }) +
-          roleField('cu-edit-role', a.role, roleInfo(a.role).description) +
-        '</div>';
+          roleField('cu-edit-role', a.role, roleInfo(a.role).description),
+          { form: true }) +
+        /* No account yet, so no Status and no Reset MFA. */
+        section('Account management',
+          '<div class="cu-resend">' + button('cu-edit-resend', 'btn-secondary', 'Resend invitation') + '</div>',
+          { form: true, intro: invitedText(a), introId: 'cu-edit-invited' });
     } else {
+      /* Field order as Mobius: First name, Last name, Email, Username, Role. */
       body +=
-        '<div class="form-body">' +
-          textField('cu-edit-username', 'Username', a.username, { readonly: true, helper: "Username can't be changed." }) +
+        section('Account details',
+          textField('cu-edit-first', 'First name', a.firstName, { required: true }) +
+          textField('cu-edit-last', 'Last name', a.lastName, { required: true }) +
           textField('cu-edit-email', 'Email', a.email, { readonly: true, helper: "Email can't be changed." }) +
-          textField('cu-edit-first', 'First name', a.firstName) +
-          textField('cu-edit-last', 'Last name', a.lastName) +
-          roleField('cu-edit-role', a.role, lock || roleInfo(a.role).description, { locked: !!lock }) +
-        '</div>';
+          textField('cu-edit-username', 'Username', a.username, { readonly: true, helper: "Username can't be changed." }) +
+          roleField('cu-edit-role', a.role, lock || roleInfo(a.role).description, { locked: !!lock }),
+          { form: true }) +
+        section('Account management',
+          statusField(a, statusLock(a)) + mfaField(mfaBlock(a)),
+          { form: true });
     }
     body += '</form>';
-    if (pending) {
-      body += '<div class="cu-resend">' + button('cu-edit-resend', 'btn-secondary', 'Resend invitation') + '</div>';
-    }
 
     var ctx = createBlade({
       id: 'cu-edit-blade',
@@ -876,13 +955,18 @@
     var first = el.querySelector('#cu-edit-first');
     var last = el.querySelector('#cu-edit-last');
     var role = el.querySelector('#cu-edit-role');
+    var status = el.querySelector('#cu-edit-status');
     var save = el.querySelector('#cu-edit-save');
 
+    function statusChanged() {
+      return !!status && status.checked !== (a.status === 'Active');
+    }
     function changed() {
       if (!pending && (first.value !== a.firstName || last.value !== a.lastName)) return true;
-      return role.value !== a.role;
+      return role.value !== a.role || statusChanged();
     }
-    /* "Save changes" is disabled until a value differs from the saved one. */
+    /* "Save changes" is disabled until a value differs from the saved one,
+       Status included. */
     function sync() { save.disabled = !changed(); }
 
     form.addEventListener('input', function (event) {
@@ -896,6 +980,8 @@
       if (!lock) el.querySelector('#' + helperId('cu-edit-role')).textContent = roleInfo(role.value).description;
       sync();
     });
+    /* Status applies on "Save changes", like every other field. */
+    if (status) status.addEventListener('change', sync);
     el.querySelector('#cu-edit-cancel').addEventListener('click', function () { ctx.blade.close(); });
 
     if (pending) {
@@ -906,11 +992,18 @@
         el.querySelector('#cu-edit-invited').textContent = invitedText(a);
         CU.toast('Invitation sent again to ' + a.email + '.');
       });
+    } else {
+      /* Reset MFA acts straight away, through its Modal; unsaved changes in
+         the blade are kept. */
+      el.querySelector('#cu-edit-reset-mfa').addEventListener('click', function (event) {
+        openMfa(a, event.currentTarget);
+      });
     }
 
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       if (!changed()) return;
+      var statusMessage = null;
       if (!pending) {
         var firstMessage = nameError(first.value, 'First name');
         var lastMessage = nameError(last.value, 'Last name');
@@ -922,10 +1015,18 @@
         }
         a.firstName = first.value.trim();
         a.lastName = last.value.trim();
+        if (statusChanged()) {
+          a.status = status.checked ? 'Active' : 'Inactive';
+          /* When Status and other fields change together, only the status
+             message shows. */
+          statusMessage = a.status === 'Active'
+            ? fullName(a) + ' can sign in to Configuration Hub again.'
+            : fullName(a) + ' can no longer sign in to Configuration Hub.';
+        }
       }
       if (!lock) a.role = role.value;
       render();
-      var message = 'Changes saved for ' + label(a) + '.';
+      var message = statusMessage || 'Changes saved for ' + label(a) + '.';
       ctx.close({ onClosed: function () { CU.toast(message); } });
     });
     return ctx;
@@ -933,8 +1034,37 @@
 
   function invitedText(a) {
     return 'Invitation sent on ' + CU.formatDate(a.invitedOn) +
-      '. Their username and name will show here once they\'ve created their account.';
+      '. Their name and username will show here once they\'ve created their account.';
   }
+
+  /* ------------------------------------------------------------ Reset MFA (Modal) */
+  var mfaModalEl = document.getElementById('cu-mfa-modal');
+  var mfaModal = bootstrap.Modal.getOrCreateInstance(mfaModalEl);
+  var mfaReset = null;
+
+  function openMfa(a, opener) {
+    mfaReset = { user: a, opener: opener, confirmed: false };
+    document.getElementById('cu-mfa-title').textContent = 'Reset MFA for ' + fullName(a) + '?';
+    CU.hideTooltips();
+    pauseBladeTrap();
+    mfaModal.show();
+  }
+
+  document.getElementById('cu-mfa-confirm').addEventListener('click', function () {
+    if (mfaReset) mfaReset.confirmed = true;
+    mfaModal.hide();
+  });
+
+  mfaModalEl.addEventListener('hidden.bs.modal', function () {
+    if (!mfaReset) return;
+    var done = mfaReset;
+    mfaReset = null;
+    resumeBladeTrap();
+    /* Confirming, "Cancel", Escape and the close control all return focus to
+       "Reset MFA"; the blade stays open either way. */
+    if (done.opener && document.contains(done.opener)) done.opener.focus();
+    if (done.confirmed) CU.toast('MFA reset for ' + fullName(done.user) + '.');
+  });
 
   /* ------------------------------------------------------------ CU-04 · View */
   function kv(key, value) {
@@ -943,20 +1073,26 @@
         '<span class="value">' + esc(value) + '</span>' +
       '</div>';
   }
+  function kvList(pairs) {
+    return '<div class="key-value-list key-value-list-stacked cu-view-pairs">' + pairs + '</div>';
+  }
 
   function openView(a, returnTo) {
-    var pairs = isPending(a)
-      ? kv('Email', a.email) + kv('Role', a.role) + kv('Status', a.status) + kv('Invited on', CU.formatDate(a.invitedOn))
-      : kv('Username', a.username) + kv('Email', a.email) + kv('First name', a.firstName) +
-        kv('Last name', a.lastName) + kv('Role', a.role) + kv('Status', a.status);
+    /* The same sections as the Edit blade, read-only. */
+    var body = isPending(a)
+      ? section('Account details', kvList(kv('Email', a.email) + kv('Role', a.role))) +
+        section('Account management', kvList(kv('Status', a.status) + kv('Invited on', CU.formatDate(a.invitedOn))))
+      : section('Account details', kvList(kv('First name', a.firstName) + kv('Last name', a.lastName) +
+          kv('Email', a.email) + kv('Username', a.username) + kv('Role', a.role))) +
+        section('Account management', kvList(kv('Status', a.status)));
 
     /* "Edit" is the Edit common action's label. Its icon is left off:
        Buckholt's button-set rule is all labelled actions with icons, or
        none, and "Close" has no common-action icon here. */
     var ctx = createBlade({
       id: 'cu-view-blade',
-      title: label(a),
-      body: '<div class="key-value-list key-value-list-stacked cu-view-pairs">' + pairs + '</div>',
+      title: 'View user',
+      body: body,
       footer: footer(
         button('cu-view-close', 'btn-secondary', 'Close') +
         button('cu-view-edit', 'btn-primary', 'Edit')
@@ -964,7 +1100,7 @@
       initialFocus: '.blade-title',
       returnTo: returnTo
     });
-    /* Focus moves to the title in the View blade. */
+    /* Focus moves to the blade title in the View blade. */
     var title = ctx.blade.el.querySelector('.blade-title');
     title.setAttribute('tabindex', '-1');
     title.focus();

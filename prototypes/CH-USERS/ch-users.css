@@ -228,13 +228,65 @@
   height: auto;
 }
 
+/* Footer spans the blade: secondary action at the start edge, primary at
+   the end edge (spec, Blade layout; Mobius). */
 .cu-blade-actions {
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 0;
 }
 
-.cu-resend {
-  margin-top: var(--spacer-06);
+/* Sections: "Account details" and "Account management", each a heading
+   then its fields, with Buckholt's Frame rhythm between them. Inside a
+   section the items keep Form's own spacing. */
+.cu-blade .blade-body,
+.cu-blade .blade-body > .form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-07);
+}
+
+.cu-blade-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-05);
+}
+
+/* Required asterisk (Mobius pattern; SPEC-CHANGES C18). Buckholt's error
+   colour; decorative, hidden from assistive technology. */
+.cu-required {
+  color: var(--error-01);
+}
+
+/* Status: Buckholt Switch, its label at the start of the row and the
+   switch at the end, as in Andrej's screenshot. DOM order stays the
+   documented input-then-label. */
+.cu-status-switch {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacer-04);
+  margin: 0;
+  padding: 0;
+}
+
+/* The default Switch writes its own state text, "On"/"Off", beside the
+   switch. The spec's state text is "Active"/"Inactive", so only the words
+   change; position, size and colour stay Buckholt's (SPEC-CHANGES C19). */
+.form-switch.cu-status-switch:not(.form-switch-sm) .form-check-input::before {
+  content: "Inactive";
+}
+
+.form-switch.cu-status-switch:not(.form-switch-sm) .form-check-input:checked::before {
+  content: "Active";
+}
+
+.cu-mfa .btn {
+  align-self: flex-start;
+}
+
+.cu-resend .btn {
+  align-self: flex-start;
 }
 
 /* Buckholt hides every `.form-helper` in an `.input` whose control is

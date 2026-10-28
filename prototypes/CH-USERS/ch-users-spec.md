@@ -7,11 +7,17 @@
 - **Screen IDs:** `CU-FF-SS`. CU is Configuration Hub users, FF the flow (00 = base pages), SS the step. Screenshots in `screenshots/` are named by screen ID.
 - **Shell:** `CH-SHELL` spec, revision 7. Header, environment control, Test alert, Mobius link, avatar menu, breadcrumb band, skip link, document title pattern and focus-on-navigation behaviour come from it unchanged, except the overrides under "Shell overrides". Static (inert) parts are as in the shell: Mobius link and Logout.
 - **Source tags:** **[Figma]** User Management file: "Mobius Users" frame (node `7587:166787`) is the layout reference for the users table; Andrej's CU-00-01 frame (link supplied with the handoff) is the reference for the choose-user-type page. **[Context]** CH product context and initial login access context (baseline 17 Oct 2026). **[Decision]** agreed, with who and when. **[Assumption]** to be validated.
-- **Revision:** 5, 27 Oct 2026. Revision 4 wording and assumptions confirmed; CU-00-01 card descriptions reworded.
+- **Revision:** 6, 28 Oct 2026. Blades reworked after the PM, APM and TL review: header title, sections, full-width footer, Status and Reset MFA.
 
 ## What changed in this revision
 | Area | Change |
 |---|---|
+| Revision 6: blade layout | New "Blade layout" section: header bar with the blade title, "Account details" and "Account management" sections, footer spanning the blade with the secondary action at the start and the primary at the end. Matches Mobius User Management. **[Decision]** PM, APM, TL and Andrej, Oct 2026 |
+| Revision 6: Add blade (CU-01) | Title "Add user"; intro text moved under the "Account details" heading; Email has no placeholder; required asterisks. |
+| Revision 6: Edit blade (CU-02) | Title "Edit user"; field order First name, Last name, Email, Username, Role (as Mobius); new "Account management" section with a Status Switch (Active/Inactive, applied on Save) and "Reset MFA" (immediate, with a confirmation Modal). No Reset password. |
+| Revision 6: Pending and View blades (CU-03, CU-04) | Same layout. Pending: "Resend invitation" moves to "Account management"; no Status or Reset MFA. View: title "View user", same sections, read-only. |
+| Revision 6: conventions | Sentence case everywhere (Buckholt). Required asterisks (Mobius pattern; Buckholt discrepancy for Mark). |
+| Revision 6: scope | Deactivating and reactivating, and resetting MFA, are now in scope. Open questions 8 closed. New section "Follow-ups outside this prototype". |
 | Revision 5: CU-00-01 card descriptions | "Add and manage users for signing in to …" becomes "Add and manage the people who sign in to Mobius." and "… to Configuration Hub." Plainer and more human (Tone of Voice: human, clear, concise), avoids repeating "users" straight after the card title, and gives both a full stop. **[Decision]** wording delegated by Andrej, 27 Oct 2026 |
 | Revision 5: confirmed | App card description, hidden zero counts, and the CU-00-01 differences from Andrej's frame (breadcrumb, seed counts, shell user) are now decisions, not assumptions. Andrej, 27 Oct 2026 |
 | Revision 4: name | "Account Management" reverted to "User Management", and "Mobius accounts" and "Configuration Hub accounts" to "Mobius users" and "Configuration Hub users". On these pages "user" is again the thing being added and managed; "account" is only used for what a person signs in with. **[Decision]** design team drop-in and Andrej, 27 Oct 2026: "Accounts" clashes with Accounts (BACS) in Mobius. |
@@ -33,7 +39,8 @@
   - The design team's alternative entry point: a split "Open" button on the home app card with a menu of "Mobius" and "Configuration Hub". Shown in Figma only, not built (Open questions 17).
   - Managing roles and permissions, and anything that depends on what a role allows.
   - The invitation email and the Microsoft account-creation pages (username, password and MFA set-up).
-  - Resetting passwords or MFA, changing a user's status (deactivate or reactivate), and bulk invitations.
+  - Resetting passwords: Configuration Hub users do this themselves from the sign-in page. **[Decision]** Andrej, 28 Oct 2026.
+  - Bulk invitations, and bulk status changes.
   - Open GI staff view, and Open GI staff appearing in the Configuration Hub users list.
   - Audit Centre entries for these actions.
 
@@ -55,7 +62,7 @@ The `CH-SHELL` spec should take the new description in its next revision, so oth
 | Invitation | Email sent to the person with a link to create their account. The email address is used for this, not for signing in. |
 | Pending | Invited, but hasn't created their account yet. |
 | Active | Has created their account and can sign in. |
-| Inactive | Has an account but can't sign in. Seed data only in this prototype. |
+| Inactive | Has an account but can't sign in. Set with the Status Switch in the Edit blade. |
 | Role | Placeholder for the level of access a Configuration Hub user has. One per user. |
 | Blade | Mobius term for the side panel that holds the add, view and edit forms. Not a Buckholt component. |
 
@@ -70,7 +77,7 @@ The `CH-SHELL` spec should take the new description in its next revision, so oth
 | Full name | "{First name} {Last name}" | Derived | Table, View blade title | |
 | Initials | As the `CH-SHELL` initials rule | Derived | Table avatar | Pending users have no name, so they show a generic user avatar. |
 | Role | One of the placeholder roles below | Inviting user | Table, all blades | Required. |
-| Status | Pending, Active or Inactive | System | Table, View blade, CU-00-01 card tags | Not editable in this prototype. |
+| Status | Pending, Active or Inactive | System (Pending to Active on account creation); inviting user (Active or Inactive, Edit blade) | Table, View and Edit blades, CU-00-01 card tags | Pending can't be set or changed by hand. |
 | Invited on | Date, "d MMM yyyy" (for example "20 Oct 2026") | System | View and Edit blades for pending users | Updated when an invitation is resent. |
 
 **Placeholder roles [Decision]** Andrej, 26 Oct 2026 (made up for the prototype; replace when roles and permissions discovery concludes)
@@ -84,8 +91,8 @@ The `CH-SHELL` spec should take the new description in its next revision, so oth
 - Configuration Hub users belong to the organisation (tenant), not to an environment. The same users show in Live and Test. **[Decision]** Andrej, 26 Oct 2026.
 - Each email belongs to at most one Configuration Hub user, including pending users.
 - Pending users have an email, role and invited date only. Username and name appear once they create their account.
-- There must always be at least one active Administrator. The last active Administrator's role can't be changed, and they can't be deleted. **[Assumption]**
-- The signed-in user can't change their own role or delete themselves. **[Assumption]**
+- There must always be at least one active Administrator. The last active Administrator's role can't be changed, and they can't be deactivated or deleted. **[Assumption]**
+- The signed-in user can't change their own role, deactivate themselves, reset their own MFA here, or delete themselves. **[Decision]** Andrej, 28 Oct 2026 (status and MFA); role and delete **[Assumption]**
 - Deleting a pending user cancels their invitation. The link in the email stops working. **[Assumption]**
 - Deleting a Configuration Hub user never affects that person's Mobius user. **[Decision]** BDR (separate accounts).
 - Totals count every user, including pending ones (CU-00-01 card tags). The table page chips count each status separately. **[Figma]** Andrej's CU-00-01 frame.
@@ -149,8 +156,12 @@ Counts: 12 users; 9 active, 2 pending, 1 inactive. The default 10 rows per page 
 | Name avatar | Avatar | Initials; generic user icon for pending users | |
 | Status | Tag | Active, Pending, Inactive | Text label always shown. Same status variants as the card tags. |
 | Row actions | Button, icon-only | View, Edit (Edit common action), Delete (Delete common action, danger); disabled state | Each needs an accessible name and Tooltip. |
+| Blade section headings | Heading level 2 | | "Account details", "Account management". |
+| Status (Edit blade) | Switch | On (Active), off (Inactive), disabled | State text "Active" or "Inactive" beside it. |
+| Reset MFA | Button | Secondary; disabled | Opens the Reset MFA Modal. |
+| Reset MFA confirmation | Modal | Two actions | |
 | Blades (add, view, edit) | None | | Gap 1. **[Decision]** Andrej, 26 Oct 2026: recurring Mobius pattern; more than five fields once the account exists. |
-| Form fields | Form; Text input; Select | Required by default; read-only Text input | Read-only Text input may be Gap 7. |
+| Form fields | Form; Text input; Select | Required fields marked with an asterisk; read-only Text input | Asterisks follow Mobius, not the Buckholt rule (Blade layout). Read-only Text input may be Gap 7. |
 | Role helper text | Form helper text | Changes with the selected role | |
 | View blade fields | Key-value pair | | |
 | Resend invitation | Button | Secondary | |
@@ -163,7 +174,7 @@ Checked against `buckholt-reference.md` (commit `211e365`, 19 Oct 2026). Claude 
 
 | # | Need | Why | Closest Buckholt option | Precedent (if any) | Expected behaviour |
 |---|---|---|---|---|---|
-| 1 | Blade (side panel) | Add, view and edit happen in a side panel, as in Mobius User Management | Side-panel form context in Forms; no drawer component | `prototypes/shared/blade` | Opens from the right over the page, which is dimmed and inert. Header: title and an icon-only Close button. Body scrolls. Footer: actions right-aligned, Primary last. Focus moves to the first editable field (or the title in the View blade). Escape and Close behave as Cancel. Focus returns to the control that opened it. |
+| 1 | Blade (side panel) | Add, view and edit happen in a side panel, as in Mobius User Management | Side-panel form context in Forms; no drawer component | `prototypes/shared/blade`; Andrej's blade screenshots | Opens from the right over the page, which is dimmed and inert. Layout as "Blade layout": header bar with title and icon-only Close; body with section headings, which scrolls; footer spanning the blade, secondary action at the start edge and primary at the end edge. Focus moves to the first editable field (or the blade title in the View blade). Escape and Close behave as Cancel. Focus returns to the control that opened it. |
 | 2 | Table pagination, rows per page and count | 12 rows exceed one page | None | Mobius Users frame **[Figma]** | Below the table: first, previous, page numbers, next, last; "Results per page" Select with 10, 25 and 50 (default 10); text "Showing {first}–{last} of {total}". Changing filters, search or rows per page returns to page 1. |
 | 3 | Filter bar | Search and filters above the table | Text input; Select | Mobius Users frame **[Figma]**; CH shared component **[Context]** | One row: Search, Role, Status, then Add user and More actions at the right end. "Clear all filters" appears after the filters when any is active. |
 | 4 | Summary chips container | Three counts above the filter bar | Key-value pair | Mobius Users frame **[Figma]** | One row of chips, each with an icon, label and count. Counts follow the data, not the filters. |
@@ -274,27 +285,36 @@ Stands in for the existing Mobius users page, which this prototype doesn't rebui
 
 In production this is today's Users page (Figma `7587:166787`). Its title becomes "Mobius users" and its breadcrumb "User Management > Mobius users" (Open questions 18).
 
+## Blade layout (CU-01 to CU-04)
+All blades share this structure (Gap 1), matching Mobius User Management. **[Decision]** PM, APM, TL and Andrej, Oct 2026; Andrej's blade screenshots supplied with the handoff.
+- **Header bar:** the blade title (for example "Add user") and an icon-only Close button (Tooltip and accessible name "Close").
+- **Body:** one or two sections, each starting with a section heading (Heading level 2): "Account details" and, where present, "Account management". The body scrolls; header and footer stay fixed.
+- **Footer:** spans the full width of the blade. The secondary action sits at the start edge and the primary action at the end edge, with the space between them.
+- **Required fields:** marked with an asterisk after the label, as in Mobius User Management. **[Decision]** Andrej, 28 Oct 2026. This differs from the Buckholt Forms rule (mark only optional fields when most are required): log it in `SPEC-CHANGES.md` section C for Mark. The asterisk is decorative; the field itself is marked as required for assistive technology.
+- **Case:** all titles, headings and labels are in sentence case, per Buckholt. **[Decision]** Andrej, 28 Oct 2026.
+
 ## CU-01 · Add a Configuration Hub user
 **Starts from:** CU-00-02.
 
 ### Steps
-1. User selects "Add user". The Add blade opens (Gap 1). Focus moves to Email.
+1. User selects "Add user". The Add blade opens. Focus moves to Email.
 2. User enters an email and chooses a role.
 3. User selects "Send invitation".
 4. If valid: the blade closes, focus returns to "Add user", a success Toast shows, the new user appears as Pending with today's date as Invited on, and the Pending users chip goes up by one. The row follows the current sort, search and filters (it may be on another page or hidden by filters).
 5. If invalid: errors show (see below) and focus moves to the first field with an error.
 
 ### Add blade
-- Title: "Add Configuration Hub user"
-- Intro text: "We'll email them a link to create their account. They'll choose a username and password, and set up multi-factor authentication."
-- Fields in order (both required; no required markers, because every field is required, per Buckholt Forms):
+- Blade title: "Add user"
+- Section "Account details":
+  - Intro text, directly under the section heading and before the fields: "We'll email them a link to create their account. They'll choose a username and password, and set up multi-factor authentication." **[Decision]** Andrej, 28 Oct 2026 (text under the heading, not an Alert and not at the bottom).
+  - Fields in order:
 
-| Label | Type | Helper text | Default | Validation (exact copy) |
+| Label | Type | Placeholder | Helper text | Validation (exact copy) |
 |---|---|---|---|---|
-| "Email" | Text input, email | "We'll only use this to send the invitation. They'll sign in with their username." | Empty | Empty: "Enter an email address." Wrong format: "Enter an email address in the correct format, like name@example.com." Already an Active or Inactive user: "There's already a Configuration Hub user with this email address." Already Pending: "This person has already been invited. You can resend their invitation from their user details." Over 254 characters: "Email address must be 254 characters or fewer." |
-| "Role" | Select | Before a choice: "You can change their role later." After a choice: the role's description | First option "Select a role" (not selectable as a value) | Empty: "Select a role." |
+| "Email" * | Text input, email | None | "We'll only use this to send the invitation. They'll sign in with their username." | Empty: "Enter an email address." Wrong format: "Enter an email address in the correct format, like name@example.com." Already an Active or Inactive user: "There's already a Configuration Hub user with this email address." Already Pending: "This person has already been invited. You can resend their invitation from their user details." Over 254 characters: "Email address must be 254 characters or fewer." |
+| "Role" * | Select | "Select a role" (not selectable as a value) | Before a choice: "You can change their role later." After a choice: the role's description | Empty: "Select a role." |
 
-- Actions (right-aligned, Primary last): "Cancel" (Secondary), "Send invitation" (Primary).
+- Footer: "Cancel" (Secondary, start), "Send invitation" (Primary, end).
 
 ### Rules
 - Email is checked when the field loses focus and again on "Send invitation". Role is checked on "Send invitation". Each field validates on its own.
@@ -313,51 +333,74 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 ### Steps
 1. User selects Edit on a row, or selects one row and chooses More actions > Edit, or selects "Edit" in the View blade (CU-04).
 2. The Edit blade opens with the user's current values. Focus moves to First name.
-3. User changes one or more editable fields and selects "Save changes".
-4. If valid: the blade closes, focus returns to the control that opened it (or to the row's Edit action if it was opened from the View blade), a success Toast shows, and the row updates.
+3. User changes one or more fields, including Status, and selects "Save changes".
+4. If valid: the blade closes, focus returns to the control that opened it (or to the row's Edit action if it was opened from the View blade), a success Toast shows, and the row, chips and CU-00-01 card summary update.
 
 ### Edit blade
-- Title: "Edit user"
-- Fields in order (the account-creation order **[Decision]** Andrej, 26 Oct 2026):
+- Blade title: "Edit user"
+- Section "Account details". Field order matches Mobius User Management **[Decision]** Andrej, 28 Oct 2026 (read-only and editable fields are not grouped, for now):
 
 | Label | Type | Helper text | Validation (exact copy) |
 |---|---|---|---|
-| "Username" | Read-only Text input (Gap 7) | "Username can't be changed." | None |
+| "First name" * | Text input | None | Empty: "Enter a first name." Over 50: "First name must be 50 characters or fewer." |
+| "Last name" * | Text input | None | Empty: "Enter a last name." Over 50: "Last name must be 50 characters or fewer." |
 | "Email" | Read-only Text input (Gap 7) | "Email can't be changed." | None |
-| "First name" | Text input | None | Empty: "Enter a first name." Over 50: "First name must be 50 characters or fewer." |
-| "Last name" | Text input | None | Empty: "Enter a last name." Over 50: "Last name must be 50 characters or fewer." |
-| "Role" | Select | The selected role's description | None (always has a value) |
+| "Username" | Read-only Text input (Gap 7) | "Username can't be changed." | None |
+| "Role" * | Select | The selected role's description | None (always has a value) |
 
-- Password and MFA are never shown. Resetting them is out of scope.
-- Actions (right-aligned, Primary last): "Cancel" (Secondary), "Save changes" (Primary).
+- Section "Account management":
+  - **Status:** label "Status"; a Switch at the end of the row, with the state text "Active" or "Inactive" next to it, changing as the Switch changes. On means Active.
+  - **Reset MFA:** label "Reset multi-factor authentication (MFA)", then a "Reset MFA" button (Secondary) below it.
+- Footer: "Cancel" (Secondary, start), "Save changes" (Primary, end).
+- There is no "Reset password". Configuration Hub users reset their own password from the sign-in page. **[Decision]** Andrej, 28 Oct 2026.
 
 ### Rules
-- "Save changes" is disabled until a value differs from the saved value. **[Assumption]**
-- Own user: Role is read-only, with helper text "You can't change your own role."
-- Last active Administrator: Role is read-only, with helper text "There must be at least one active administrator."
+- "Save changes" is disabled until a value differs from the saved value, including Status. **[Assumption]**
+- Status changes take effect on "Save changes", like every other field, so "Cancel" undoes them. No confirmation Modal. **[Decision]** Andrej, 28 Oct 2026.
+- An Inactive user can't sign in to Configuration Hub. Their row shows Inactive, and the chips and CU-00-01 summary update.
+- Own user: Role is read-only, with helper text "You can't change your own role." The Status Switch is disabled, with helper text "You can't deactivate your own account."
+- Last active Administrator: Role is read-only and the Status Switch is disabled, each with helper text "There must be at least one active administrator." Deactivating an Administrator counts towards this rule.
 - Changing First or Last name updates Full name and initials in the table.
 - Cancel, Close or Escape with unsaved changes opens the Discard changes Modal. Without changes, the blade just closes.
+
+### Reset MFA
+- "Reset MFA" acts straight away, separately from "Save changes". It opens the Reset MFA Modal; unsaved changes in the blade are kept.
+- Disabled, with the reason as helper text under the button:
+  - for the signed-in user: "You can't reset your own MFA here."
+  - for a user whose saved status is Inactive: "Activate this user before resetting their MFA."
+- Reset MFA Modal:
+  - Title: "Reset MFA for {Full name}?"
+  - Body: "They'll need to set up multi-factor authentication again the next time they sign in."
+  - Actions as the Buckholt Modal pattern (not the blade footer): "Cancel" (Secondary), "Reset MFA" (Primary).
+  - Confirming closes the Modal, returns focus to "Reset MFA" and shows a success Toast. "Cancel", Escape and the close control return focus to "Reset MFA" with no change.
 
 ### Discard changes (Modal)
 - Title: "Discard your changes?"
 - Body: "You've made changes that haven't been saved. If you leave now, they'll be lost."
-- Actions (right-aligned, Primary last): "Keep editing" (Secondary), "Discard changes" (Primary).
+- Actions: "Keep editing" (Secondary), "Discard changes" (Primary).
 - "Keep editing", Escape and the close control return to the blade with the changes intact and focus on the control that opened the Modal.
 
 ### Toasts and feedback
 | Event | Message | Type |
 |---|---|---|
-| Changes saved | "Changes saved for {Full name}." | Success |
+| Saved, status changed to Inactive | "{Full name} can no longer sign in to Configuration Hub." | Success |
+| Saved, status changed to Active | "{Full name} can sign in to Configuration Hub again." | Success |
+| Saved, status unchanged | "Changes saved for {Full name}." | Success |
+| MFA reset | "MFA reset for {Full name}." | Success |
+
+When Status and other fields change together, only the status message shows.
 
 ## CU-03 · Edit a pending user
 **Starts from:** CU-00-02, on a Pending row.
 
 ### Edit blade (pending)
-- Title: "Edit user"
-- Text: "Invitation sent on {Invited on}. Their username and name will show here once they've created their account."
-- Fields in order: "Email" (read-only, helper "Email can't be changed."), "Role" (Select, helper is the selected role's description).
-- "Resend invitation" (Secondary Button), below the fields.
-- Actions (right-aligned, Primary last): "Cancel" (Secondary), "Save changes" (Primary). Same rules as CU-02.
+- Blade title: "Edit user"
+- Section "Account details": "Email" (read-only, helper "Email can't be changed."), "Role" * (Select, helper is the selected role's description).
+- Section "Account management":
+  - Text: "Invitation sent on {Invited on}. Their name and username will show here once they've created their account."
+  - "Resend invitation" (Secondary Button).
+  - No Status Switch and no Reset MFA: there is no account yet. **[Decision]** Andrej, 28 Oct 2026.
+- Footer: "Cancel" (Secondary, start), "Save changes" (Primary, end). Same rules as CU-02.
 
 ### Rules
 - "Resend invitation" works straight away, without saving other changes. Invited on becomes today's date and the text updates. A success Toast shows. **[Assumption]**, Open questions 7.
@@ -373,9 +416,11 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 **Starts from:** CU-00-02.
 
 ### View blade
-- Title: the Full name (pending users: the email).
-- Key-value pairs in order: "Username", "Email", "First name", "Last name", "Role", "Status". For pending users: "Email", "Role", "Status", "Invited on".
-- Actions (right-aligned, Primary last): "Close" (Secondary), "Edit" (Primary, Edit common action). "Edit" replaces the View blade with the Edit blade (CU-02 or CU-03).
+- Blade title: "View user"
+- Same sections as the Edit blade, read-only, as Key-value pairs. **[Decision]** Andrej, 28 Oct 2026.
+  - Active or Inactive user. "Account details": "First name", "Last name", "Email", "Username", "Role". "Account management": "Status".
+  - Pending user. "Account details": "Email", "Role". "Account management": "Status", "Invited on".
+- Footer: "Close" (Secondary, start), "Edit" (Primary, end, Edit common action). "Edit" replaces the View blade with the Edit blade (CU-02 or CU-03).
 
 ## CU-05 · Delete users
 **Starts from:** CU-00-02, from a row's Delete action or More actions > Delete.
@@ -406,6 +451,8 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 - **CU-00-01 cards:** as Gap 10. One tab stop per card; Enter activates.
 - **Icon-only controls:** More actions, row actions and the blade Close button each have an accessible name and the documented Tooltip.
 - **Table:** column headers are real headers; sortable headers expose the current sort direction; the row checkbox accessible name is "Select {Full name}" (or the email for pending users); the header checkbox is "Select all users on this page".
+- **Status Switch:** accessible name "Status"; its on or off state is announced, and the visible state text matches it.
+- **Required fields:** marked as required for assistive technology; the asterisk itself isn't announced.
 - **Blade:** behaves as a dialog with the blade title as its name; focus stays inside while open; Escape closes (with the Discard changes Modal when there are unsaved changes); focus returns to the opener.
 - **Forms:** errors are linked to their fields and announced; focus moves to the first field with an error; helper text is linked to its field. Read-only fields are announced as read-only.
 - **Live updates:** the "Showing …" count and the no-results message are announced politely when search or filters change. Toasts are announced politely.
@@ -430,10 +477,17 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 - Given the Add blade, when the user enters "hannah.clarke@northgate-insurance.co.uk", then the "already a Configuration Hub user" error shows.
 - Given the Add blade, when the user enters "Daniel.Reyes@northgate-insurance.co.uk ", then the "already been invited" error shows.
 - Given a valid email and role, when the user sends the invitation, then the blade closes, the Toast shows, a Pending row exists with today's date, and the Pending users chip shows 3.
-- Given the Edit blade for Hannah Clarke, then Username and Email are read-only and focusable, no password or MFA field shows, and "Save changes" is disabled.
+- Given the Add blade, then its title is "Add user", the intro text sits under "Account details" before Email, Email and Role carry asterisks, Email has no placeholder, and the footer has "Cancel" at the start and "Send invitation" at the end.
+- Given the Edit blade for Hannah Clarke, then its title is "Edit user", the fields read First name, Last name, Email, Username, Role in that order, Email and Username are read-only and focusable, no password field shows, and "Save changes" is disabled.
+- Given the Edit blade for Hannah Clarke, when the user switches Status off and saves, then her row shows Inactive, the chips show 8 active and 2 inactive, and the Toast reads "Hannah Clarke can no longer sign in to Configuration Hub."
+- Given the Edit blade, when the user switches Status off and then selects "Cancel" and "Discard changes", then the user stays Active.
+- Given the Edit blade for Chloe Davies (Inactive), then "Reset MFA" is disabled with "Activate this user before resetting their MFA."
+- Given the Edit blade for Hannah Clarke, when the user selects "Reset MFA" and confirms, then the Modal closes, focus is on "Reset MFA", the Toast reads "MFA reset for Hannah Clarke." and the blade stays open.
 - Given the Edit blade, when the user changes Last name and saves, then the table row and initials update and the Toast shows.
 - Given unsaved changes in the Edit blade, when the user presses Escape, then the Discard changes Modal opens; "Keep editing" keeps the changes.
-- Given the Edit blade for Sophie Marchetti, then Role is read-only with "You can't change your own role."
+- Given the Edit blade for Sophie Marchetti, then Role is read-only with "You can't change your own role.", the Status Switch is disabled with "You can't deactivate your own account.", and "Reset MFA" is disabled with "You can't reset your own MFA here."
+- Given the Edit blade for a pending user, then "Resend invitation" is under "Account management" and there is no Status Switch or "Reset MFA".
+- Given the View blade, then its title is "View user", it shows "Account details" and "Account management" as read-only Key-value pairs, and the footer has "Close" at the start and "Edit" at the end.
 - Given CU-00-02, then Sophie Marchetti's Delete action and checkbox are disabled with their reasons.
 - Given James Okonkwo's role is changed to Editor, then Sophie Marchetti is the last active Administrator and the last-Administrator rule applies.
 - Given a pending row, when the user opens Edit and selects "Resend invitation", then Invited on becomes today and the "Invitation sent again" Toast shows.
@@ -441,13 +495,12 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 - Given three selected rows, when the user chooses More actions > Delete and confirms, then "3 users deleted." shows, the selection clears and focus is on Search.
 - Given the Add or Edit blade has changed values, when the user switches environment, then the `CH-SHELL` unsaved changes Modal shows; confirming lands on CU-00-01.
 - Given any blade closes, then focus returns to the control that opened it.
-- Given the prototype, then the words "Account Management", "Mobius accounts" and "Configuration Hub accounts" appear nowhere.
+- Given the prototype, then the words "Account Management" (as an app or page name), "Mobius accounts" and "Configuration Hub accounts" appear nowhere, and no title, heading or label uses Title Case.
 
 ## Open questions
 | # | Question | Owner | Blocks build? |
 |---|---|---|---|
 | 7 | Do invitation links expire, after how long, and is resending in scope for the first release? | Technical lead / PM | No. Assumption: resend included, expiry not shown. |
-| 8 | Can admins deactivate and reactivate Configuration Hub users, as in Mobius? | PM | No. Out of scope here. |
 | 9 | Until roles and permissions exist, who can manage Configuration Hub users? | PM / roles discovery | No |
 | 10 | Should Open GI staff with access to a client's Configuration Hub appear in this list, as they do for Mobius? | PM | No. Out of scope here. |
 | 12 | Is there a limit or licence on Configuration Hub users? | PM | No. Assumption: no limit. |
@@ -455,7 +508,7 @@ In production this is today's Users page (Figma `7587:166787`). Its title become
 | 17 | Choose-user-type page (CU-00-01) or the design team's split "Open" button on the home app card? To be discussed with the PM, APM and technical lead using the prototype and the Figma alternative. | Andrej / PM | No |
 | 18 | Clickable card with a tag footer is new to Buckholt (Gap 10). Review with Mark, who wasn't at the design drop-in. | Andrej / Mark | No |
 
-Closed: 1, 2, 4, 5, 6, 11, 16 (revisions 2 and 3). 14 and 15 superseded in revision 4: the name is User Management again, so there is no "Accounts" clash and no production rename beyond the Mobius page title.
+Closed: 1, 2, 4, 5, 6, 11, 16 (revisions 2 and 3); 8 (revision 6: deactivating is in scope). 14 and 15 superseded in revision 4: the name is User Management again, so there is no "Accounts" clash and no production rename beyond the Mobius page title.
 
 ## Known screenshot differences
 | Screens | Screenshot shows | Build this instead |
@@ -470,7 +523,10 @@ Closed: 1, 2, 4, 5, 6, 11, 16 (revisions 2 and 3). 14 and 15 superseded in revis
 | CU-00-02 vs Figma | Columns: Access level, Access to, Account type | Column: Role |
 | CU-00-02 vs Figma | Open GI staff with the Open GI avatar | No Open GI staff |
 | Home (shell) | App card description "Add and manage your Mobius users and what they can access." | "Add and manage your Mobius and Configuration Hub users." (Shell overrides) |
-| Blades | No Figma frames | Build from this spec |
+| CU-01, CU-02 vs Andrej's blade screenshots | Title Case: "Add User", "Edit User", "Account Details", "Account Management", "Reset Multi-Factor Authentication (MFA)" | Sentence case: "Add user", "Edit user", "Account details", "Account management", "Reset multi-factor authentication (MFA)" |
+| CU-01 vs screenshot | Email placeholder "Email"; Role placeholder "Select"; intro paragraph at the bottom of the body | No Email placeholder; "Select a role"; intro text under "Account details", before Email |
+| CU-02 vs screenshot | First and Last name placeholders read "Email"; helper text without full stops | No placeholders; "Email can't be changed." and "Username can't be changed." |
+| CU-03, CU-04 | No screenshot | Build from this spec, using the CU-02 layout |
 
 ## Changes from legacy
 | Area | Legacy | New |
@@ -479,16 +535,25 @@ Closed: 1, 2, 4, 5, 6, 11, 16 (revisions 2 and 3). 14 and 15 superseded in revis
 | Seeing who has access | Clients can't see a list of Configuration Hub users | Clients see every Configuration Hub user, with role and status, and a summary on the User Management page |
 | Access level | Every Configuration Hub user can reach every app | Each user has a role (placeholder until roles and permissions are designed) |
 
+## Follow-ups outside this prototype
+Not for Claude Code. Kept here so they aren't lost before story mapping.
+| Follow-up | Where | Owner |
+|---|---|---|
+| Change Title Case copy in the blades ("Add User", "Account Details" and similar) to sentence case, per Buckholt | Mobius User Management | Andrej |
+| Change the Status toggle from On/Off to Active/Inactive | Mobius User Management | Andrej, at story mapping |
+| Required asterisks vs the Buckholt "mark optional fields" rule | Buckholt / Mark | Andrej |
+| Clickable card with a tag footer (Gap 10) | Buckholt / Mark | Andrej |
+
 ## Screen index
 | Screen ID | Figma frame / file |
 |---|---|
 | CU-00-01 | Andrej's frame in the User Management file (link supplied with the handoff) |
 | CU-00-02 | Layout reference: User Management file, "Mobius Users" `7587:166787` |
 | CU-00-03 | No frame (shell placeholder pattern) |
-| CU-01 | No frame |
-| CU-02 | No frame. Field reference: Mobius Edit user (User Management file, page "Edit User") |
-| CU-03 | No frame |
-| CU-04 | No frame. Reference: Mobius View user (page "View User") |
+| CU-01 | Andrej's Add blade screenshot (supplied with the handoff) |
+| CU-02 | Andrej's Edit blade screenshot (supplied with the handoff). Field reference: Mobius Edit user (User Management file, page "Edit User") |
+| CU-03 | No frame (CU-02 layout) |
+| CU-04 | No frame (CU-02 layout). Reference: Mobius View user (page "View User") |
 | CU-05 | No frame. Reference: Mobius Delete user (page "Delete User") |
 
 ---
@@ -505,4 +570,4 @@ Closed: 1, 2, 4, 5, 6, 11, 16 (revisions 2 and 3). 14 and 15 superseded in revis
 - [x] Checked against the current `buckholt-reference.md` (commit `211e365`, 19 Oct 2026). Claude Code confirms the Buckholt gaps against the live repo.
 
 ## Handoff prompt for Claude Code
-> Update the CH-USERS prototype to revision 5 of `prototypes/CH-USERS/ch-users-spec.md`. Read "What changed in this revision" first. Rename everything back to User Management, and rebuild CU-00-01 from Andrej's Figma frame and the spec (Gap 10). Export the CU-00-01 frame into `screenshots/`. Keep every other behaviour as built. Follow `AGENTS.md`; build gaps as prototype-local, never in `components/`. Update `PROTOTYPE.md` and `SPEC-CHANGES.md`, update the test assertions, run the suites, and push to the existing branch and PR. Don't commit to main.
+> Update the CH-USERS prototype to revision 6 of `prototypes/CH-USERS/ch-users-spec.md`. Read "What changed in this revision" first. Rename everything back to User Management, and rebuild CU-00-01 from Andrej's Figma frame and the spec (Gap 10). Export the CU-00-01 frame into `screenshots/`. Keep every other behaviour as built. Follow `AGENTS.md`; build gaps as prototype-local, never in `components/`. Update `PROTOTYPE.md` and `SPEC-CHANGES.md`, update the test assertions, run the suites, and push to the existing branch and PR. Don't commit to main.

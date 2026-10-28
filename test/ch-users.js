@@ -3,7 +3,7 @@
    the shell overrides and the Buckholt gaps the prototype builds.
 
    Each block is headed `AC n` with the criterion it checks, in the order the
-   spec lists them (1 to 29). Run against the mirror like the other suites:
+   spec lists them (1 to 36). Run against the mirror like the other suites:
 
      node test/ch-users.js
 */
@@ -25,6 +25,9 @@ const TODAY = now.getDate() + ' ' + MONTHS[now.getMonth()] + ' ' + now.getFullYe
 
 const OWN_SELECT = "You can't select your own account.";
 const OWN_DELETE = "You can't delete your own account.";
+const OWN_STATUS = "You can't deactivate your own account.";
+const OWN_MFA = "You can't reset your own MFA here.";
+const MFA_INACTIVE = 'Activate this user before resetting their MFA.';
 const OWN_ROLE = "You can't change your own role.";
 const LAST_ADMIN = 'There must be at least one active administrator.';
 const DEFAULT_PAGE_1 = ['Aisha Rahman', 'Bartholomew Featherstonehaugh-Whitmore', 'Chloe Davies', 'Hannah Clarke', 'James Okonkwo',
@@ -61,6 +64,13 @@ const active = page => page.evaluate(() => {
 });
 const names = page => page.$$eval('#cu-rows tr[data-id]', trs => trs.map(tr => tr.children[1].querySelector('.cu-trunc, .cu-not-set').textContent.trim()));
 const cardTags = (page, type) => page.$$eval('.cu-type-card[data-type=' + type + '] .tag-set .tag-label', ls => ls.map(l => l.textContent.trim()).join('|'));
+/* Blade labels without the decorative asterisk, and which carry one. */
+const labels = page => page.$$eval('.cu-blade .form-label, .cu-blade .form-check-label', ls => ls.map(l => {
+  const c = l.cloneNode(true); c.querySelectorAll('.cu-required').forEach(x => x.remove()); return c.textContent.trim();
+}));
+const starred = page => page.$$eval('.cu-blade .form-label', ls => ls.filter(l => l.querySelector('.cu-required')).map(l => l.firstChild.textContent.trim()));
+const sections = page => page.$$eval('.cu-blade .cu-blade-section > .text-block > h2', hs => hs.map(h => h.textContent.trim()));
+const kvPairs = (page, sectionIndex) => page.$$eval('.cu-blade .cu-blade-section', (ss, i) => [...ss[i].querySelectorAll('.key-value')].map(k => k.querySelector('.key').textContent + '=' + k.querySelector('.value').textContent).join(';'), sectionIndex);
 const crumbs = page => page.$$eval('#ch-context .breadcrumb-item', is => is.map(i => i.textContent.trim()).join(' > '));
 const usernames = page => page.$$eval('#cu-rows tr[data-id]', trs => trs.map(tr => tr.children[2].textContent.trim()));
 const emails = page => page.$$eval('#cu-rows tr[data-id]', trs => trs.map(tr => tr.children[3].textContent.trim()));
@@ -503,28 +513,22 @@ async function select(page, email) {
     await p.click('#cu-add');
     await wait(p);
     is('AC14 blade open', await bladeOpen(p), true);
-    is('AC14 blade title', await text(p, '.cu-blade .blade-title'), 'Add Configuration Hub user');
+    is('AC14 blade title', await text(p, '.cu-blade .blade-title'), 'Add user');
     is('AC14 blade is a dialog named by its title', await p.evaluate(() => {
       const b = document.querySelector('.cu-blade');
       return b.getAttribute('role') + '|' + b.getAttribute('aria-modal') + '|' + document.getElementById(b.getAttribute('aria-labelledby')).textContent;
-    }), 'dialog|true|Add Configuration Hub user');
+    }), 'dialog|true|Add user');
     is('AC14 focus on Email at open', await active(p), 'cu-add-email');
     is('AC14 intro', await text(p, '.cu-blade .text-block p'),
        "We'll email them a link to create their account. They'll choose a username and password, and set up multi-factor authentication.");
-    is('AC14 labels', (await p.$$eval('.cu-blade .form-label', ls => ls.map(l => l.textContent.trim()))).join(','), 'Email,Role');
-    is('AC14 no required markers', await p.locator('.cu-blade .form-label small').count(), 0);
+    is('AC14 labels', (await labels(p)).join(','), 'Email,Role');
     is('AC14 email helper', await text(p, '#cu-add-email-helper'), "We'll only use this to send the invitation. They'll sign in with their username.");
     is('AC14 role helper before a choice', await text(p, '#cu-add-role-helper'), 'You can change their role later.');
     is('AC14 role placeholder', await p.evaluate(() => { const o = document.querySelector('#cu-add-role option'); return o.textContent + '|' + o.disabled + '|' + o.value; }), 'Select a role|true|');
     is('AC14 actions', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
        'Cancel:btn btn-secondary / Send invitation:btn btn-primary');
-    ok('AC14 actions right-aligned', await p.evaluate(() => {
-      const f = document.querySelector('.cu-blade .blade-footer').getBoundingClientRect();
-      const s = document.getElementById('cu-add-send').getBoundingClientRect();
-      return Math.abs(f.right - s.right) < 32;
-    }));
     is('AC14 Send invitation enabled', await p.evaluate(() => document.getElementById('cu-add-send').disabled), false);
-    is('AC14 Close named', await p.getAttribute('.cu-blade .blade-close', 'aria-label'), 'Close Add Configuration Hub user');
+    is('AC14 Close named', await p.getAttribute('.cu-blade .blade-close', 'aria-label'), 'Close');
     is('AC14 Close tooltip', await p.getAttribute('.cu-blade .blade-close', 'data-cu-tooltip'), 'Close');
     ok('AC14 blade sits under the top bar', await p.evaluate(() =>
       Math.abs(document.querySelector('.cu-blade').getBoundingClientRect().top - document.getElementById('ch-header').getBoundingClientRect().bottom) < 2));
@@ -619,68 +623,223 @@ async function select(page, email) {
     await p.context().close();
   }
 
-  /* ===== AC 18 · Edit Hannah Clarke ===================================== */
+  /* ===== AC 18 · Add blade layout ======================================= */
   {
     const p = await open(browser, USERS);
-    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
-    is('AC18 title', await text(p, '.cu-blade .blade-title'), 'Edit user');
-    is('AC18 fields in order', (await p.$$eval('.cu-blade .form-label', ls => ls.map(l => l.textContent.trim()))).join(','), 'Username,Email,First name,Last name,Role');
-    is('AC18 values', (await p.$$eval('.cu-blade .form-control, .cu-blade .form-select', fs => fs.map(f => f.value))).join(','),
-       'hannah.clarke,hannah.clarke@northgate-insurance.co.uk,Hannah,Clarke,Editor');
-    is('AC18 Username and Email read-only', await p.evaluate(() => ['cu-edit-username', 'cu-edit-email'].map(id => document.getElementById(id).readOnly && !document.getElementById(id).disabled).join(',')), 'true,true');
-    is('AC18 read-only helpers', (await p.$$eval('#cu-edit-username-helper, #cu-edit-email-helper', hs => hs.map(h => h.textContent))).join(' | '), "Username can't be changed. | Email can't be changed.");
-    is('AC18 read-only helpers visible', await p.evaluate(() => ['cu-edit-username-helper', 'cu-edit-email-helper'].every(id => document.getElementById(id).getBoundingClientRect().height > 0)), true);
-    is('AC18 read-only helpers linked', await describedBy(p, '#cu-edit-username'), "Username can't be changed.");
-    is('AC18 focus on First name', await active(p), 'cu-edit-first');
-    await p.focus('#cu-edit-username');
-    is('AC18 Username focusable', await active(p), 'cu-edit-username');
-    await p.focus('#cu-edit-email');
-    is('AC18 Email focusable', await active(p), 'cu-edit-email');
-    is('AC18 no password or MFA field', await p.evaluate(() => document.querySelectorAll('.cu-blade input[type=password]').length + [...document.querySelectorAll('.cu-blade .form-label')].filter(l => /password|mfa|multi-factor/i.test(l.textContent)).length), 0);
-    is('AC18 Save changes disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
-    is('AC18 role helper is description', await text(p, '#cu-edit-role-helper'), "Can use every Configuration Hub app, but can't manage Configuration Hub users.");
-    is('AC18 actions', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim()))).join(','), 'Cancel,Save changes');
-    await p.fill('#cu-edit-first', 'Hannah');
-    is('AC18 same value keeps Save disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
-    await p.selectOption('#cu-edit-role', 'Viewer');
-    is('AC18 change enables Save', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), false);
-    is('AC18 role helper follows', await text(p, '#cu-edit-role-helper'), "Can see every Configuration Hub app, but can't make changes.");
+    await p.click('#cu-add');
+    await wait(p);
+    is('AC18 title', await text(p, '.cu-blade .blade-title'), 'Add user');
+    is('AC18 one section, "Account details"', (await sections(p)).join(','), 'Account details');
+    is('AC18 section heading is level 2', await p.locator('.cu-blade .cu-blade-section > .text-block > h2').count(), 1);
+    is('AC18 intro under the heading, before Email', await p.evaluate(() => {
+      const sec = document.querySelector('.cu-blade .cu-blade-section');
+      const h = sec.querySelector('h2'), intro = sec.querySelector('.text-block p'), email = document.getElementById('cu-add-email');
+      return intro.textContent + '|' + !!(h.compareDocumentPosition(intro) & 4) + '|' + !!(intro.compareDocumentPosition(email) & 4);
+    }), "We'll email them a link to create their account. They'll choose a username and password, and set up multi-factor authentication.|true|true");
+    is('AC18 intro is not an Alert', await p.locator('.cu-blade .alert').count(), 0);
+    is('AC18 asterisks on Email and Role', (await starred(p)).join(','), 'Email,Role');
+    is('AC18 asterisk hidden from assistive technology', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .cu-required')].every(x => x.getAttribute('aria-hidden') === 'true')), true);
+    is('AC18 fields marked required', await p.evaluate(() => ['cu-add-email', 'cu-add-role'].every(id => document.getElementById(id).required)), true);
+    is('AC18 Email has no placeholder', await p.evaluate(() => document.getElementById('cu-add-email').hasAttribute('placeholder')), false);
+    is('AC18 Role placeholder "Select a role"', await p.evaluate(() => document.querySelector('#cu-add-role option').textContent), 'Select a role');
+    const foot = await p.evaluate(() => {
+      const f = document.querySelector('.cu-blade .blade-footer').getBoundingClientRect();
+      const blade = document.querySelector('.cu-blade').getBoundingClientRect();
+      const c = document.getElementById('cu-add-cancel').getBoundingClientRect();
+      const s = document.getElementById('cu-add-send').getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(document.querySelector('.cu-blade .blade-footer')).paddingLeft);
+      return { full: Math.abs(f.width - blade.width) < 1, start: Math.abs(c.left - f.left - pad) < 2, end: Math.abs(f.right - pad - s.right) < 2 };
+    });
+    ok('AC18 footer spans the blade', foot.full);
+    ok('AC18 Cancel at the start edge', foot.start);
+    ok('AC18 Send invitation at the end edge', foot.end);
+    ok('AC18 header and footer stay fixed; the body scrolls', await p.evaluate(() => getComputedStyle(document.querySelector('.cu-blade .blade-body')).overflowY === 'auto'));
     await p.context().close();
   }
 
-  /* ===== AC 19 · change Last name and save ============================== */
+  /* ===== AC 19 · Edit Hannah Clarke ===================================== */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
+    is('AC19 title', await text(p, '.cu-blade .blade-title'), 'Edit user');
+    is('AC19 sections', (await sections(p)).join(','), 'Account details,Account management');
+    is('AC19 fields in order', (await labels(p)).slice(0, 5).join(','), 'First name,Last name,Email,Username,Role');
+    is('AC19 values', (await p.$$eval('.cu-blade .form-control, .cu-blade .form-select', fs => fs.map(f => f.value))).join(','),
+       'Hannah,Clarke,hannah.clarke@northgate-insurance.co.uk,hannah.clarke,Editor');
+    is('AC19 asterisks on the editable required fields', (await starred(p)).join(','), 'First name,Last name,Role');
+    is('AC19 Username and Email read-only', await p.evaluate(() => ['cu-edit-username', 'cu-edit-email'].map(id => document.getElementById(id).readOnly && !document.getElementById(id).disabled).join(',')), 'true,true');
+    is('AC19 read-only helpers', (await p.$$eval('#cu-edit-username-helper, #cu-edit-email-helper', hs => hs.map(h => h.textContent))).join(' | '), "Email can't be changed. | Username can't be changed.");
+    is('AC19 read-only helpers visible', await p.evaluate(() => ['cu-edit-username-helper', 'cu-edit-email-helper'].every(id => document.getElementById(id).getBoundingClientRect().height > 0)), true);
+    is('AC19 read-only helpers linked', await describedBy(p, '#cu-edit-username'), "Username can't be changed.");
+    is('AC19 focus on First name', await active(p), 'cu-edit-first');
+    await p.focus('#cu-edit-username');
+    is('AC19 Username focusable', await active(p), 'cu-edit-username');
+    await p.focus('#cu-edit-email');
+    is('AC19 Email focusable', await active(p), 'cu-edit-email');
+    is('AC19 no password field and no Reset password', await p.evaluate(() => document.querySelectorAll('.cu-blade input[type=password]').length + [...document.querySelectorAll('.cu-blade label, .cu-blade button')].filter(l => /password/i.test(l.textContent)).length), 0);
+    is('AC19 Save changes disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
+    is('AC19 role helper is description', await text(p, '#cu-edit-role-helper'), "Can use every Configuration Hub app, but can't manage Configuration Hub users.");
+    is('AC19 actions', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim()))).join(','), 'Cancel,Save changes');
+    is('AC19 Account management: Status, then Reset MFA', (await labels(p)).slice(5).join(','), 'Status,Reset multi-factor authentication (MFA)');
+    is('AC19 Status is a Buckholt Switch, on (Active)', await p.evaluate(() => { const s = document.getElementById('cu-edit-status'); return s.getAttribute('role') + '|' + s.type + '|' + s.checked + '|' + s.closest('.form-check').classList.contains('form-switch'); }), 'switch|checkbox|true|true');
+    is('AC19 Status accessible name', await p.evaluate(() => document.getElementById('cu-edit-status').labels[0].textContent.trim()), 'Status');
+    is('AC19 state text Active', await p.evaluate(() => getComputedStyle(document.getElementById('cu-edit-status'), '::before').content), '"Active"');
+    ok('AC19 Switch at the end of the row, label at the start', await p.evaluate(() => {
+      const row = document.querySelector('.cu-status-switch').getBoundingClientRect();
+      const sw = document.getElementById('cu-edit-status').getBoundingClientRect();
+      const lb = document.querySelector('label[for=cu-edit-status]').getBoundingClientRect();
+      return Math.abs(row.right - sw.right) < 2 && Math.abs(row.left - lb.left) < 2;
+    }));
+    is('AC19 Reset MFA: Secondary, named by its text, below its label', await p.evaluate(() => {
+      const b = document.getElementById('cu-edit-reset-mfa');
+      const name = b.getAttribute('aria-labelledby').split(' ').map(id => document.getElementById(id).textContent).join(' ');
+      return b.className + '|' + name + '|' + b.disabled + '|' + (b.getBoundingClientRect().top > document.getElementById('cu-edit-mfa-label').getBoundingClientRect().bottom);
+    }), 'btn btn-secondary|Reset MFA|false|true');
+    await p.fill('#cu-edit-first', 'Hannah');
+    is('AC19 same value keeps Save disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
+    await p.selectOption('#cu-edit-role', 'Viewer');
+    is('AC19 change enables Save', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), false);
+    is('AC19 role helper follows', await text(p, '#cu-edit-role-helper'), "Can see every Configuration Hub app, but can't make changes.");
+    await p.context().close();
+  }
+
+  /* ===== AC 20 · deactivate Hannah Clarke =============================== */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
+    await p.click('label[for=cu-edit-status]');
+    is('AC20 state text follows the Switch', await p.evaluate(() => getComputedStyle(document.getElementById('cu-edit-status'), '::before').content), '"Inactive"');
+    is('AC20 Switch off', await p.evaluate(() => document.getElementById('cu-edit-status').checked), false);
+    is('AC20 Status change enables Save', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), false);
+    is('AC20 nothing applied before Save', await chips(p), '9,2,1');
+    await p.click('#cu-edit-save');
+    await wait(p, 400);
+    is('AC20 blade closed', await bladeOpen(p), false);
+    const id = await rowId(p, 'hannah.clarke@northgate-insurance.co.uk');
+    is('AC20 row shows Inactive', await text(p, '#cu-rows tr[data-id="' + id + '"] .tag'), 'Inactive');
+    is('AC20 chips 8 active, 2 inactive', await chips(p), '8,2,2');
+    is('AC20 toast', await toastText(p), 'Hannah Clarke can no longer sign in to Configuration Hub.');
+    /* Status together with another field: only the status message. */
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
+    is('AC20 Inactive user opens with the Switch off', await p.evaluate(() => document.getElementById('cu-edit-status').checked), false);
+    await p.fill('#cu-edit-last', 'Clark');
+    await p.click('label[for=cu-edit-status]');
+    await p.click('#cu-edit-save');
+    await wait(p, 400);
+    is('AC20 reactivated, status message only', await toastText(p), 'Hannah Clark can sign in to Configuration Hub again.');
+    is('AC20 chips back', await chips(p), '9,2,1');
+    /* CU-00-01 follows. */
+    await action(p, 'oliver.bennett@northgate-insurance.co.uk', 'edit');
+    await p.click('label[for=cu-edit-status]');
+    await p.click('#cu-edit-save');
+    await wait(p, 400);
+    await go(p, '#ch-context .breadcrumb-link');
+    is('AC20 CU-00-01 summary updates', await cardTags(p, 'configuration-hub'), '12 users|8 active|2 inactive|2 pending');
+    await p.context().close();
+  }
+
+  /* ===== AC 21 · Status off, then Cancel and Discard ===================== */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
+    await p.click('label[for=cu-edit-status]');
+    await p.click('#cu-edit-cancel');
+    await wait(p);
+    await modalShown(p, 'cu-discard-modal');
+    is('AC21 Status change counts as unsaved', await modalOpen(p, 'cu-discard-modal'), true);
+    await p.click('#cu-discard-confirm');
+    await wait(p, 400);
+    await modalHidden(p, 'cu-discard-modal');
+    const id = await rowId(p, 'hannah.clarke@northgate-insurance.co.uk');
+    is('AC21 stays Active', await text(p, '#cu-rows tr[data-id="' + id + '"] .tag'), 'Active');
+    is('AC21 chips unchanged', await chips(p), '9,2,1');
+    is('AC21 no confirmation for a status change itself', await p.locator('.toast').count(), 0);
+    await p.context().close();
+  }
+
+  /* ===== AC 22 · Chloe Davies (Inactive): Reset MFA disabled ============= */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'chloe.davies@northgate-insurance.co.uk', 'edit');
+    is('AC22 Reset MFA disabled', await p.evaluate(() => document.getElementById('cu-edit-reset-mfa').disabled), true);
+    is('AC22 reason as helper text', await text(p, '#cu-edit-mfa-helper'), MFA_INACTIVE);
+    is('AC22 reason is the description', await describedBy(p, '#cu-edit-reset-mfa'), 'Reset multi-factor authentication (MFA) | ' + MFA_INACTIVE);
+    is('AC22 Status enabled for an Inactive user', await p.evaluate(() => { const s = document.getElementById('cu-edit-status'); return s.disabled + '|' + s.checked; }), 'false|false');
+    /* Switching her on doesn't enable Reset MFA: it follows the saved status. */
+    await p.click('label[for=cu-edit-status]');
+    is('AC22 still disabled before Save', await p.evaluate(() => document.getElementById('cu-edit-reset-mfa').disabled), true);
+    await p.context().close();
+  }
+
+  /* ===== AC 23 · Reset MFA for Hannah Clarke ============================= */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
+    await p.fill('#cu-edit-first', 'Hannah-Jane');
+    await p.click('#cu-edit-reset-mfa');
+    await modalShown(p, 'cu-mfa-modal');
+    is('AC23 Modal title', await text(p, '#cu-mfa-title'), 'Reset MFA for Hannah Clarke?');
+    is('AC23 Modal body', await text(p, '#cu-mfa-modal .modal-body p'), "They'll need to set up multi-factor authentication again the next time they sign in.");
+    is('AC23 Modal actions', (await p.$$eval('#cu-mfa-modal .modal-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
+       'Cancel:btn btn-secondary / Reset MFA:btn btn-primary');
+    ok('AC23 Modal above the blade', await p.evaluate(() => Number(getComputedStyle(document.getElementById('cu-mfa-modal')).zIndex) > Number(getComputedStyle(document.querySelector('.cu-blade')).zIndex)));
+    /* Cancel first. */
+    await p.click('#cu-mfa-cancel');
+    await modalHidden(p, 'cu-mfa-modal');
+    is('AC23 Cancel returns focus to Reset MFA', await active(p), 'cu-edit-reset-mfa');
+    is('AC23 Cancel: no Toast', await p.locator('.toast').count(), 0);
+    await p.click('#cu-edit-reset-mfa');
+    await modalShown(p, 'cu-mfa-modal');
+    await p.keyboard.press('Escape');
+    await modalHidden(p, 'cu-mfa-modal');
+    is('AC23 Escape returns focus to Reset MFA', await active(p), 'cu-edit-reset-mfa');
+    /* Confirm. */
+    await p.click('#cu-edit-reset-mfa');
+    await modalShown(p, 'cu-mfa-modal');
+    await p.click('#cu-mfa-confirm');
+    await modalHidden(p, 'cu-mfa-modal');
+    await wait(p);
+    is('AC23 Modal closed, blade stays open', await modalOpen(p, 'cu-mfa-modal') + '/' + await bladeOpen(p), 'false/true');
+    is('AC23 focus on Reset MFA', await active(p), 'cu-edit-reset-mfa');
+    is('AC23 toast', await toastText(p), 'MFA reset for Hannah Clarke.');
+    is('AC23 unsaved changes kept', await p.inputValue('#cu-edit-first'), 'Hannah-Jane');
+    is('AC23 focus stays in the blade afterwards', await p.evaluate(() => { document.getElementById('cu-edit-first').focus(); return document.querySelector('.cu-blade').contains(document.activeElement); }), true);
+    await p.context().close();
+  }
+
+  /* ===== AC 24 · change Last name and save ============================== */
   {
     const p = await open(browser, USERS);
     await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'edit');
     await p.fill('#cu-edit-last', '');
     await p.click('#cu-edit-save');
     await wait(p);
-    is('AC19 empty last name error', await text(p, '#cu-edit-last-error'), 'Enter a last name.');
-    is('AC19 focus on the error', await active(p), 'cu-edit-last');
+    is('AC24 empty last name error', await text(p, '#cu-edit-last-error'), 'Enter a last name.');
+    is('AC24 focus on the error', await active(p), 'cu-edit-last');
     await p.fill('#cu-edit-last', 'x'.repeat(51));
     await p.click('#cu-edit-save');
     await wait(p);
-    is('AC19 long last name error', await text(p, '#cu-edit-last-error'), 'Last name must be 50 characters or fewer.');
+    is('AC24 long last name error', await text(p, '#cu-edit-last-error'), 'Last name must be 50 characters or fewer.');
     await p.fill('#cu-edit-first', '');
     await p.click('#cu-edit-save');
     await wait(p);
-    is('AC19 empty first name error', await text(p, '#cu-edit-first-error'), 'Enter a first name.');
-    is('AC19 focus on the first error', await active(p), 'cu-edit-first');
+    is('AC24 empty first name error', await text(p, '#cu-edit-first-error'), 'Enter a first name.');
+    is('AC24 focus on the first error', await active(p), 'cu-edit-first');
     await p.fill('#cu-edit-first', 'Hannah');
     await p.fill('#cu-edit-last', 'Whitfield');
     await p.click('#cu-edit-save');
     await wait(p, 400);
-    is('AC19 blade closed', await bladeOpen(p), false);
-    is('AC19 toast', await toastText(p), 'Changes saved for Hannah Whitfield.');
+    is('AC24 blade closed', await bladeOpen(p), false);
+    is('AC24 toast', await toastText(p), 'Changes saved for Hannah Whitfield.');
     const id = await rowId(p, 'hannah.clarke@northgate-insurance.co.uk');
-    is('AC19 row updates', await text(p, '#cu-rows tr[data-id="' + id + '"] td:nth-child(2) .cu-trunc'), 'Hannah Whitfield');
-    is('AC19 initials update', await text(p, '#cu-rows tr[data-id="' + id + '"] .avatar-initials'), 'HW');
-    is('AC19 focus back on the row Edit', await active(p), 'Edit Hannah Whitfield');
-    is('AC19 username unchanged', await text(p, '#cu-rows tr[data-id="' + id + '"] td:nth-child(3)'), 'hannah.clarke');
+    is('AC24 row updates', await text(p, '#cu-rows tr[data-id="' + id + '"] td:nth-child(2) .cu-trunc'), 'Hannah Whitfield');
+    is('AC24 initials update', await text(p, '#cu-rows tr[data-id="' + id + '"] .avatar-initials'), 'HW');
+    is('AC24 focus back on the row Edit', await active(p), 'Edit Hannah Whitfield');
+    is('AC24 username unchanged', await text(p, '#cu-rows tr[data-id="' + id + '"] td:nth-child(3)'), 'hannah.clarke');
     await p.context().close();
   }
 
-  /* ===== AC 20 · Escape with unsaved changes ============================ */
+  /* ===== AC 25 · Escape with unsaved changes ============================ */
   {
     const p = await open(browser, USERS);
     await action(p, 'tomasz.nowak@northgate-insurance.co.uk', 'edit');
@@ -688,212 +847,270 @@ async function select(page, email) {
     await p.keyboard.press('Escape');
     await wait(p);
     await modalShown(p, 'cu-discard-modal');
-    is('AC20 Discard Modal opens', await modalOpen(p, 'cu-discard-modal'), true);
-    is('AC20 blade still open', await bladeOpen(p), true);
-    is('AC20 Modal title', await text(p, '#cu-discard-title'), 'Discard your changes?');
-    is('AC20 Modal body', await text(p, '#cu-discard-modal .modal-body p'), "You've made changes that haven't been saved. If you leave now, they'll be lost.");
-    is('AC20 Modal actions', (await p.$$eval('#cu-discard-modal .modal-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
+    is('AC25 Discard Modal opens', await modalOpen(p, 'cu-discard-modal'), true);
+    is('AC25 blade still open', await bladeOpen(p), true);
+    is('AC25 Modal title', await text(p, '#cu-discard-title'), 'Discard your changes?');
+    is('AC25 Modal body', await text(p, '#cu-discard-modal .modal-body p'), "You've made changes that haven't been saved. If you leave now, they'll be lost.");
+    is('AC25 Modal actions', (await p.$$eval('#cu-discard-modal .modal-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
        'Keep editing:btn btn-secondary / Discard changes:btn btn-primary');
-    ok('AC20 Modal above the blade', await p.evaluate(() => Number(getComputedStyle(document.getElementById('cu-discard-modal')).zIndex) > Number(getComputedStyle(document.querySelector('.cu-blade')).zIndex)));
+    ok('AC25 Modal above the blade', await p.evaluate(() => Number(getComputedStyle(document.getElementById('cu-discard-modal')).zIndex) > Number(getComputedStyle(document.querySelector('.cu-blade')).zIndex)));
     await p.click('#cu-discard-keep');
     await wait(p);
     await modalHidden(p, 'cu-discard-modal');
-    is('AC20 Keep editing keeps the changes', await p.inputValue('#cu-edit-first'), 'Tom');
-    is('AC20 Keep editing returns to the blade', await bladeOpen(p) + '/' + await modalOpen(p, 'cu-discard-modal'), 'true/false');
-    is('AC20 focus back on the opener (the field)', await active(p), 'cu-edit-first');
+    is('AC25 Keep editing keeps the changes', await p.inputValue('#cu-edit-first'), 'Tom');
+    is('AC25 Keep editing returns to the blade', await bladeOpen(p) + '/' + await modalOpen(p, 'cu-discard-modal'), 'true/false');
+    is('AC25 focus back on the opener (the field)', await active(p), 'cu-edit-first');
     /* Close button: Modal again, Escape on the Modal keeps editing. */
     await p.click('.cu-blade .blade-close');
     await wait(p);
     await modalShown(p, 'cu-discard-modal');
-    is('AC20 Close asks too', await modalOpen(p, 'cu-discard-modal'), true);
+    is('AC25 Close asks too', await modalOpen(p, 'cu-discard-modal'), true);
     await p.keyboard.press('Escape');
     await wait(p);
     await modalHidden(p, 'cu-discard-modal');
-    is('AC20 Escape on the Modal keeps editing', await bladeOpen(p) + '/' + await p.inputValue('#cu-edit-first'), 'true/Tom');
-    is('AC20 focus back on Close', await active(p), 'Close Edit user');
+    is('AC25 Escape on the Modal keeps editing', await bladeOpen(p) + '/' + await p.inputValue('#cu-edit-first'), 'true/Tom');
+    is('AC25 focus back on Close', await active(p), 'Close');
     await p.click('#cu-edit-cancel');
     await wait(p);
     await modalShown(p, 'cu-discard-modal');
-    is('AC20 Cancel asks too', await modalOpen(p, 'cu-discard-modal'), true);
+    is('AC25 Cancel asks too', await modalOpen(p, 'cu-discard-modal'), true);
     await p.click('#cu-discard-confirm');
     await wait(p, 400);
     await modalHidden(p, 'cu-discard-modal');
-    is('AC20 Discard closes the blade', await bladeOpen(p), false);
-    is('AC20 nothing saved', (await names(p)).includes('Tomasz Nowak'), true);
-    is('AC20 focus back on the row Edit', await active(p), 'Edit Tomasz Nowak');
+    is('AC25 Discard closes the blade', await bladeOpen(p), false);
+    is('AC25 nothing saved', (await names(p)).includes('Tomasz Nowak'), true);
+    is('AC25 focus back on the row Edit', await active(p), 'Edit Tomasz Nowak');
     /* Without changes the blade just closes. */
     await action(p, 'tomasz.nowak@northgate-insurance.co.uk', 'edit');
     await p.keyboard.press('Escape');
     await wait(p);
-    is('AC20 no changes: Escape just closes', await bladeOpen(p) + '/' + await modalOpen(p, 'cu-discard-modal'), 'false/false');
+    is('AC25 no changes: Escape just closes', await bladeOpen(p) + '/' + await modalOpen(p, 'cu-discard-modal'), 'false/false');
     await p.context().close();
   }
 
-  /* ===== AC 21 · Edit Sophie Marchetti ================================== */
+  /* ===== AC 26 · Edit Sophie Marchetti ================================== */
   {
     const p = await open(browser, USERS);
     await action(p, 'sophie.marchetti@northgate-insurance.co.uk', 'edit');
-    is('AC21 role read-only (Buckholt Select)', await p.evaluate(() => { const s = document.getElementById('cu-edit-role'); return s.disabled && s.classList.contains('readonly'); }), true);
-    is('AC21 own role helper', await text(p, '#cu-edit-role-helper'), OWN_ROLE);
-    is('AC21 helper linked', await describedBy(p, '#cu-edit-role'), OWN_ROLE);
-    is('AC21 helper visible', await p.evaluate(() => document.getElementById('cu-edit-role-helper').getBoundingClientRect().height > 0), true);
+    is('AC26 role read-only (Buckholt Select)', await p.evaluate(() => { const s = document.getElementById('cu-edit-role'); return s.disabled && s.classList.contains('readonly'); }), true);
+    is('AC26 own role helper', await text(p, '#cu-edit-role-helper'), OWN_ROLE);
+    is('AC26 helper linked', await describedBy(p, '#cu-edit-role'), OWN_ROLE);
+    is('AC26 helper visible', await p.evaluate(() => document.getElementById('cu-edit-role-helper').getBoundingClientRect().height > 0), true);
+    is('AC26 Status Switch disabled', await p.evaluate(() => { const s = document.getElementById('cu-edit-status'); return s.disabled + '|' + s.checked; }), 'true|true');
+    is('AC26 Status reason', await text(p, '#cu-edit-status-helper'), OWN_STATUS);
+    is('AC26 Status reason linked', await describedBy(p, '#cu-edit-status'), OWN_STATUS);
+    is('AC26 Reset MFA disabled', await p.evaluate(() => document.getElementById('cu-edit-reset-mfa').disabled), true);
+    is('AC26 Reset MFA reason', await text(p, '#cu-edit-mfa-helper'), OWN_MFA);
+    is('AC26 Role has no asterisk while locked', (await starred(p)).join(','), 'First name,Last name');
     await p.context().close();
   }
 
-  /* ===== AC 22 · Sophie's Delete and checkbox disabled =================== */
-  {
-    const p = await open(browser, USERS);
-    const id = await rowId(p, 'sophie.marchetti@northgate-insurance.co.uk');
-    is('AC22 Delete disabled', await p.evaluate(i => document.querySelector('button[data-action=delete][data-id="' + i + '"]').disabled, id), true);
-    is('AC22 Delete reason', await describedBy(p, 'button[data-action=delete][data-id="' + id + '"]'), OWN_DELETE);
-    is('AC22 Delete Tooltip gives the reason', await p.evaluate(i => document.querySelector('button[data-action=delete][data-id="' + i + '"]').closest('.cu-disabled').getAttribute('data-cu-tooltip'), id), OWN_DELETE);
-    is('AC22 checkbox disabled', await p.evaluate(i => document.getElementById('cu-select-' + i).disabled, id), true);
-    is('AC22 checkbox name', await p.getAttribute('#cu-select-' + id, 'aria-label'), 'Select Sophie Marchetti');
-    is('AC22 checkbox reason', await describedBy(p, '#cu-select-' + id), OWN_SELECT);
-    /* The Tooltip shows on hover over the disabled control. */
-    await p.hover('button[data-action=delete][data-id="' + id + '"]', { force: true });
-    await wait(p, 1100);
-    is('AC22 Tooltip shows on hover', await text(p, '.tooltip .tooltip-inner'), OWN_DELETE);
-    /* View and Edit stay available on her row. */
-    is('AC22 View and Edit enabled', await p.evaluate(i => ['view', 'edit'].every(a => !document.querySelector('button[data-action=' + a + '][data-id="' + i + '"]').disabled), id), true);
-    /* Header checkbox skips her row. */
-    await p.click('#cu-select-all');
-    await wait(p);
-    is('AC22 select all skips own row', await p.evaluate(() => CUUsers.state.selected.length), 9);
-    is('AC22 header checked', await p.evaluate(() => document.getElementById('cu-select-all').checked), true);
-    await p.context().close();
-  }
-
-  /* ===== AC 23 · James becomes an Editor =============================== */
-  {
-    const p = await open(browser, USERS);
-    const sophie = await rowId(p, 'sophie.marchetti@northgate-insurance.co.uk');
-    await action(p, 'james.okonkwo@northgate-insurance.co.uk', 'edit');
-    is('AC23 James role editable', await p.evaluate(() => document.getElementById('cu-edit-role').disabled), false);
-    await p.selectOption('#cu-edit-role', 'Editor');
-    await p.click('#cu-edit-save');
-    await wait(p, 400);
-    is('AC23 toast', await toastText(p), 'Changes saved for James Okonkwo.');
-    is('AC23 Sophie Delete: last-Administrator reason', await describedBy(p, 'button[data-action=delete][data-id="' + sophie + '"]'), LAST_ADMIN);
-    await action(p, 'sophie.marchetti@northgate-insurance.co.uk', 'edit');
-    is('AC23 Sophie role locked with the last-Administrator reason', await text(p, '#cu-edit-role-helper'), LAST_ADMIN);
-    await p.keyboard.press('Escape');
-    await wait(p);
-    await p.context().close();
-  }
-
-  /* ===== AC 24 · resend a pending invitation ============================ */
+  /* ===== AC 27 · Edit a pending user ==================================== */
   {
     const p = await open(browser, USERS);
     await p.click('#cu-pages button[aria-label="Page 2"]');
     await wait(p);
     await action(p, 'daniel.reyes@northgate-insurance.co.uk', 'edit');
-    is('AC24 title', await text(p, '.cu-blade .blade-title'), 'Edit user');
-    is('AC24 invited text', await text(p, '#cu-edit-invited'),
-       "Invitation sent on 20 Oct 2026. Their username and name will show here once they've created their account.");
-    is('AC24 fields', (await p.$$eval('.cu-blade .form-label', ls => ls.map(l => l.textContent.trim()))).join(','), 'Email,Role');
-    is('AC24 email read-only', await p.evaluate(() => document.getElementById('cu-edit-email').readOnly), true);
-    is('AC24 email helper visible', await p.evaluate(() => { const h = document.getElementById('cu-edit-email-helper'); return h.textContent + '|' + (h.getBoundingClientRect().height > 0); }), "Email can't be changed.|true");
-    is('AC24 focus on Role', await active(p), 'cu-edit-role');
-    is('AC24 Resend is Secondary', await p.evaluate(() => document.getElementById('cu-edit-resend').className), 'btn btn-secondary');
-    ok('AC24 Resend below the fields', await p.evaluate(() => document.getElementById('cu-edit-resend').getBoundingClientRect().top > document.getElementById('cu-edit-role').getBoundingClientRect().bottom));
-    await p.click('#cu-edit-resend');
-    await wait(p);
-    is('AC24 invited today', await text(p, '#cu-edit-invited'),
-       'Invitation sent on ' + TODAY + ". Their username and name will show here once they've created their account.");
-    is('AC24 toast', await toastText(p), 'Invitation sent again to daniel.reyes@northgate-insurance.co.uk.');
-    is('AC24 blade stays open', await bladeOpen(p), true);
-    is('AC24 Save still disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
-    await p.selectOption('#cu-edit-role', 'Administrator');
-    await p.click('#cu-edit-save');
-    await wait(p, 400);
-    is('AC24 save toast uses email', await toastText(p), 'Changes saved for daniel.reyes@northgate-insurance.co.uk.');
-    is('AC24 role saved', await p.evaluate(() => CUUsers.users().find(a => a.email.startsWith('daniel')).role), 'Administrator');
+    is('AC27 title', await text(p, '.cu-blade .blade-title'), 'Edit user');
+    is('AC27 sections', (await sections(p)).join(','), 'Account details,Account management');
+    is('AC27 Account details fields', (await labels(p)).join(','), 'Email,Role');
+    is('AC27 Resend under Account management', await p.evaluate(() => {
+      const ss = document.querySelectorAll('.cu-blade .cu-blade-section');
+      return ss[1].contains(document.getElementById('cu-edit-resend')) && ss[1].contains(document.getElementById('cu-edit-invited'));
+    }), true);
+    is('AC27 no Status Switch', await p.locator('#cu-edit-status, .cu-blade [role=switch]').count(), 0);
+    is('AC27 no Reset MFA', await p.locator('#cu-edit-reset-mfa').count(), 0);
+    is('AC27 invitation text', await text(p, '#cu-edit-invited'),
+       "Invitation sent on 20 Oct 2026. Their name and username will show here once they've created their account.");
     await p.context().close();
   }
 
-  /* ===== AC 25 · delete one pending account ============================ */
+  /* ===== AC 28 · View blade ============================================= */
+  {
+    const p = await open(browser, USERS);
+    await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'view');
+    is('AC28 title', await text(p, '.cu-blade .blade-title'), 'View user');
+    is('AC28 sections', (await sections(p)).join(','), 'Account details,Account management');
+    is('AC28 Account details', await kvPairs(p, 0), 'First name=Hannah;Last name=Clarke;Email=hannah.clarke@northgate-insurance.co.uk;Username=hannah.clarke;Role=Editor');
+    is('AC28 Account management', await kvPairs(p, 1), 'Status=Active');
+    is('AC28 read-only: no fields', await p.locator('.cu-blade input, .cu-blade select, .cu-blade textarea').count(), 0);
+    is('AC28 Key-value pairs', await p.locator('.cu-blade .key-value-list .key-value').count(), 6);
+    is('AC28 footer', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
+       'Close:btn btn-secondary / Edit:btn btn-primary');
+    const foot = await p.evaluate(() => {
+      const f = document.querySelector('.cu-blade .blade-footer').getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(document.querySelector('.cu-blade .blade-footer')).paddingLeft);
+      const c = document.getElementById('cu-view-close').getBoundingClientRect();
+      const e = document.getElementById('cu-view-edit').getBoundingClientRect();
+      return Math.abs(c.left - f.left - pad) < 2 && Math.abs(f.right - pad - e.right) < 2;
+    });
+    ok('AC28 Close at the start, Edit at the end', foot);
+    is('AC28 focus on the blade title', await active(p), 'cu-view-blade-title');
+    await p.click('#cu-view-close');
+    await wait(p);
+    await p.click('#cu-pages button[aria-label="Page 2"]');
+    await wait(p);
+    await action(p, 'daniel.reyes@northgate-insurance.co.uk', 'view');
+    is('AC28 pending title', await text(p, '.cu-blade .blade-title'), 'View user');
+    is('AC28 pending Account details', await kvPairs(p, 0), 'Email=daniel.reyes@northgate-insurance.co.uk;Role=Editor');
+    is('AC28 pending Account management', await kvPairs(p, 1), 'Status=Pending;Invited on=20 Oct 2026');
+    await p.context().close();
+  }
+
+  /* ===== AC 29 · Sophie's Delete and checkbox disabled =================== */
+  {
+    const p = await open(browser, USERS);
+    const id = await rowId(p, 'sophie.marchetti@northgate-insurance.co.uk');
+    is('AC29 Delete disabled', await p.evaluate(i => document.querySelector('button[data-action=delete][data-id="' + i + '"]').disabled, id), true);
+    is('AC29 Delete reason', await describedBy(p, 'button[data-action=delete][data-id="' + id + '"]'), OWN_DELETE);
+    is('AC29 Delete Tooltip gives the reason', await p.evaluate(i => document.querySelector('button[data-action=delete][data-id="' + i + '"]').closest('.cu-disabled').getAttribute('data-cu-tooltip'), id), OWN_DELETE);
+    is('AC29 checkbox disabled', await p.evaluate(i => document.getElementById('cu-select-' + i).disabled, id), true);
+    is('AC29 checkbox name', await p.getAttribute('#cu-select-' + id, 'aria-label'), 'Select Sophie Marchetti');
+    is('AC29 checkbox reason', await describedBy(p, '#cu-select-' + id), OWN_SELECT);
+    /* The Tooltip shows on hover over the disabled control. */
+    await p.hover('button[data-action=delete][data-id="' + id + '"]', { force: true });
+    await wait(p, 1100);
+    is('AC29 Tooltip shows on hover', await text(p, '.tooltip .tooltip-inner'), OWN_DELETE);
+    /* View and Edit stay available on her row. */
+    is('AC29 View and Edit enabled', await p.evaluate(i => ['view', 'edit'].every(a => !document.querySelector('button[data-action=' + a + '][data-id="' + i + '"]').disabled), id), true);
+    /* Header checkbox skips her row. */
+    await p.click('#cu-select-all');
+    await wait(p);
+    is('AC29 select all skips own row', await p.evaluate(() => CUUsers.state.selected.length), 9);
+    is('AC29 header checked', await p.evaluate(() => document.getElementById('cu-select-all').checked), true);
+    await p.context().close();
+  }
+
+  /* ===== AC 30 · James becomes an Editor =============================== */
+  {
+    const p = await open(browser, USERS);
+    const sophie = await rowId(p, 'sophie.marchetti@northgate-insurance.co.uk');
+    await action(p, 'james.okonkwo@northgate-insurance.co.uk', 'edit');
+    is('AC30 James role editable', await p.evaluate(() => document.getElementById('cu-edit-role').disabled), false);
+    await p.selectOption('#cu-edit-role', 'Editor');
+    await p.click('#cu-edit-save');
+    await wait(p, 400);
+    is('AC30 toast', await toastText(p), 'Changes saved for James Okonkwo.');
+    is('AC30 Sophie Delete: last-Administrator reason', await describedBy(p, 'button[data-action=delete][data-id="' + sophie + '"]'), LAST_ADMIN);
+    await action(p, 'sophie.marchetti@northgate-insurance.co.uk', 'edit');
+    is('AC30 Sophie role locked with the last-Administrator reason', await text(p, '#cu-edit-role-helper'), LAST_ADMIN);
+    await p.keyboard.press('Escape');
+    await wait(p);
+    await p.context().close();
+  }
+
+  /* ===== AC 31 · resend a pending invitation ============================ */
+  {
+    const p = await open(browser, USERS);
+    await p.click('#cu-pages button[aria-label="Page 2"]');
+    await wait(p);
+    await action(p, 'daniel.reyes@northgate-insurance.co.uk', 'edit');
+    is('AC31 title', await text(p, '.cu-blade .blade-title'), 'Edit user');
+    is('AC31 invited text', await text(p, '#cu-edit-invited'),
+       "Invitation sent on 20 Oct 2026. Their name and username will show here once they've created their account.");
+    is('AC31 fields', (await labels(p)).join(','), 'Email,Role');
+    is('AC31 email read-only', await p.evaluate(() => document.getElementById('cu-edit-email').readOnly), true);
+    is('AC31 email helper visible', await p.evaluate(() => { const h = document.getElementById('cu-edit-email-helper'); return h.textContent + '|' + (h.getBoundingClientRect().height > 0); }), "Email can't be changed.|true");
+    is('AC31 focus on Role', await active(p), 'cu-edit-role');
+    is('AC31 Resend is Secondary', await p.evaluate(() => document.getElementById('cu-edit-resend').className), 'btn btn-secondary');
+    ok('AC31 Resend below the fields', await p.evaluate(() => document.getElementById('cu-edit-resend').getBoundingClientRect().top > document.getElementById('cu-edit-role').getBoundingClientRect().bottom));
+    await p.click('#cu-edit-resend');
+    await wait(p);
+    is('AC31 invited today', await text(p, '#cu-edit-invited'),
+       'Invitation sent on ' + TODAY + ". Their name and username will show here once they've created their account.");
+    is('AC31 toast', await toastText(p), 'Invitation sent again to daniel.reyes@northgate-insurance.co.uk.');
+    is('AC31 blade stays open', await bladeOpen(p), true);
+    is('AC31 Save still disabled', await p.evaluate(() => document.getElementById('cu-edit-save').disabled), true);
+    await p.selectOption('#cu-edit-role', 'Administrator');
+    await p.click('#cu-edit-save');
+    await wait(p, 400);
+    is('AC31 save toast uses email', await toastText(p), 'Changes saved for daniel.reyes@northgate-insurance.co.uk.');
+    is('AC31 role saved', await p.evaluate(() => CUUsers.users().find(a => a.email.startsWith('daniel')).role), 'Administrator');
+    await p.context().close();
+  }
+
+  /* ===== AC 32 · delete one pending account ============================ */
   {
     const p = await open(browser, USERS);
     await p.click('#cu-pages button[aria-label="Page 2"]');
     await wait(p);
     await action(p, 'l.fischer@northgate-insurance.co.uk', 'delete');
-    is('AC25 Modal open', await modalOpen(p, 'cu-delete-modal'), true);
-    is('AC25 title', await text(p, '#cu-delete-title'), 'Cancel the invitation for l.fischer@northgate-insurance.co.uk?');
-    is('AC25 body', await text(p, '#cu-delete-body'), "The link in their invitation will stop working. You can't undo this.");
-    is('AC25 actions', (await p.$$eval('#cu-delete-modal .modal-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
+    is('AC32 Modal open', await modalOpen(p, 'cu-delete-modal'), true);
+    is('AC32 title', await text(p, '#cu-delete-title'), 'Cancel the invitation for l.fischer@northgate-insurance.co.uk?');
+    is('AC32 body', await text(p, '#cu-delete-body'), "The link in their invitation will stop working. You can't undo this.");
+    is('AC32 actions', (await p.$$eval('#cu-delete-modal .modal-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
        'Cancel:btn btn-secondary / Cancel invitation:btn btn-primary btn-danger');
     /* Cancel first: no change, focus back on the row's Delete. */
     await p.click('#cu-delete-cancel');
     await wait(p);
     await modalHidden(p, 'cu-delete-modal');
-    is('AC25 Cancel keeps the row', (await emails(p)).includes('l.fischer@northgate-insurance.co.uk'), true);
-    is('AC25 Cancel returns focus', await active(p), 'Delete l.fischer@northgate-insurance.co.uk');
+    is('AC32 Cancel keeps the row', (await emails(p)).includes('l.fischer@northgate-insurance.co.uk'), true);
+    is('AC32 Cancel returns focus', await active(p), 'Delete l.fischer@northgate-insurance.co.uk');
     await action(p, 'l.fischer@northgate-insurance.co.uk', 'delete');
     await p.click('#cu-delete-confirm');
     await wait(p, 400);
     await modalHidden(p, 'cu-delete-modal');
-    is('AC25 row gone', await p.evaluate(() => CUUsers.users().some(a => a.email.startsWith('l.fischer'))), false);
-    is('AC25 Pending chip down by one', await chips(p), '9,1,1');
-    is('AC25 toast', await toastText(p), 'Invitation for l.fischer@northgate-insurance.co.uk cancelled.');
-    is('AC25 focus on Search', await active(p), 'cu-search');
+    is('AC32 row gone', await p.evaluate(() => CUUsers.users().some(a => a.email.startsWith('l.fischer'))), false);
+    is('AC32 Pending chip down by one', await chips(p), '9,1,1');
+    is('AC32 toast', await toastText(p), 'Invitation for l.fischer@northgate-insurance.co.uk cancelled.');
+    is('AC32 focus on Search', await active(p), 'cu-search');
     /* One active account. */
     await action(p, 'daniel.reyes@northgate-insurance.co.uk', 'delete');
     await p.click('#cu-delete-confirm');
     await wait(p, 400);
     await modalHidden(p, 'cu-delete-modal');
-    is('AC25 empty page shows the previous one', await text(p, '#cu-showing'), 'Showing 1–10 of 10');
+    is('AC32 empty page shows the previous one', await text(p, '#cu-showing'), 'Showing 1–10 of 10');
     await action(p, 'ravi.patel@northgate-insurance.co.uk', 'delete');
-    is('AC25 single active title', await text(p, '#cu-delete-title'), "Delete Ravi Patel?");
-    is('AC25 single active body', await text(p, '#cu-delete-body'),
+    is('AC32 single active title', await text(p, '#cu-delete-title'), "Delete Ravi Patel?");
+    is('AC32 single active body', await text(p, '#cu-delete-body'),
        "They won't be able to sign in to Configuration Hub. Their Mobius user, if they have one, isn't affected. You can't undo this.");
-    is('AC25 single active action', await text(p, '#cu-delete-confirm'), 'Delete');
+    is('AC32 single active action', await text(p, '#cu-delete-confirm'), 'Delete');
     await p.click('#cu-delete-confirm');
     await wait(p, 400);
     await modalHidden(p, 'cu-delete-modal');
-    is('AC25 single delete toast', await toastText(p), "Ravi Patel deleted.");
-    is('AC25 Active chip down', await chips(p), '8,0,1');
+    is('AC32 single delete toast', await toastText(p), "Ravi Patel deleted.");
+    is('AC32 Active chip down', await chips(p), '8,0,1');
     await p.context().close();
   }
 
-  /* ===== AC 26 · bulk delete three rows ================================ */
+  /* ===== AC 33 · bulk delete three rows ================================ */
   {
     const p = await open(browser, USERS);
     await select(p, 'aisha.rahman@northgate-insurance.co.uk');
-    is('AC26 header indeterminate', await p.evaluate(() => document.getElementById('cu-select-all').indeterminate), true);
-    is('AC26 Edit enabled with one', await p.evaluate(() => document.getElementById('cu-bulk-edit').disabled), false);
+    is('AC33 header indeterminate', await p.evaluate(() => document.getElementById('cu-select-all').indeterminate), true);
+    is('AC33 Edit enabled with one', await p.evaluate(() => document.getElementById('cu-bulk-edit').disabled), false);
     await select(p, 'chloe.davies@northgate-insurance.co.uk');
     await select(p, 'megan.lewis@northgate-insurance.co.uk');
-    is('AC26 Edit disabled with three', await p.evaluate(() => document.getElementById('cu-bulk-edit').disabled), true);
-    is('AC26 Delete enabled', await p.evaluate(() => document.getElementById('cu-bulk-delete').disabled), false);
+    is('AC33 Edit disabled with three', await p.evaluate(() => document.getElementById('cu-bulk-edit').disabled), true);
+    is('AC33 Delete enabled', await p.evaluate(() => document.getElementById('cu-bulk-delete').disabled), false);
     await p.click('#cu-more-toggle');
     await wait(p);
-    is('AC26 menu open', await p.evaluate(() => document.getElementById('cu-more-panel').classList.contains('show')), true);
-    is('AC26 menu items', (await p.$$eval('#cu-more-panel .menu-item', ms => ms.map(m => m.textContent.trim()))).join(','), 'Edit,Delete');
-    is('AC26 Delete is danger', await p.evaluate(() => document.getElementById('cu-bulk-delete').classList.contains('menu-item-danger')), true);
-    is('AC26 focus on the first enabled item', await active(p), 'cu-bulk-delete');
+    is('AC33 menu open', await p.evaluate(() => document.getElementById('cu-more-panel').classList.contains('show')), true);
+    is('AC33 menu items', (await p.$$eval('#cu-more-panel .menu-item', ms => ms.map(m => m.textContent.trim()))).join(','), 'Edit,Delete');
+    is('AC33 Delete is danger', await p.evaluate(() => document.getElementById('cu-bulk-delete').classList.contains('menu-item-danger')), true);
+    is('AC33 focus on the first enabled item', await active(p), 'cu-bulk-delete');
     await p.click('#cu-bulk-delete');
     await wait(p);
     await modalShown(p, 'cu-delete-modal');
-    is('AC26 title', await text(p, '#cu-delete-title'), 'Delete 3 users?');
-    is('AC26 body', await text(p, '#cu-delete-body'),
+    is('AC33 title', await text(p, '#cu-delete-title'), 'Delete 3 users?');
+    is('AC33 body', await text(p, '#cu-delete-body'),
        "They won't be able to sign in to Configuration Hub, and any pending invitations will be cancelled. Mobius users aren't affected. You can't undo this.");
     await p.click('#cu-delete-confirm');
     await wait(p, 400);
     await modalHidden(p, 'cu-delete-modal');
-    is('AC26 toast', await toastText(p), '3 users deleted.');
-    is('AC26 selection cleared', await p.evaluate(() => CUUsers.state.selected.length + document.querySelectorAll('#cu-rows input[type=checkbox]:checked').length), 0);
-    is('AC26 focus on Search', await active(p), 'cu-search');
-    is('AC26 chips update', await chips(p), '7,2,0');
+    is('AC33 toast', await toastText(p), '3 users deleted.');
+    is('AC33 selection cleared', await p.evaluate(() => CUUsers.state.selected.length + document.querySelectorAll('#cu-rows input[type=checkbox]:checked').length), 0);
+    is('AC33 focus on Search', await active(p), 'cu-search');
+    is('AC33 chips update', await chips(p), '7,2,0');
     /* Selection clears when the page, sort or filters change. */
     await select(p, 'james.okonkwo@northgate-insurance.co.uk');
     await p.click('th[data-sort-key="email"] button');
     await wait(p);
-    is('AC26 sort clears selection', await p.evaluate(() => CUUsers.state.selected.length), 0);
+    is('AC33 sort clears selection', await p.evaluate(() => CUUsers.state.selected.length), 0);
     await select(p, 'james.okonkwo@northgate-insurance.co.uk');
     await p.fill('#cu-search', 'o');
     await wait(p);
-    is('AC26 search clears selection', await p.evaluate(() => CUUsers.state.selected.length), 0);
+    is('AC33 search clears selection', await p.evaluate(() => CUUsers.state.selected.length), 0);
     await p.fill('#cu-search', '');
     /* More actions > Edit with one row; focus returns to More actions. */
     await select(p, 'james.okonkwo@northgate-insurance.co.uk');
@@ -901,15 +1118,15 @@ async function select(page, email) {
     await wait(p);
     await p.click('#cu-bulk-edit');
     await wait(p);
-    is('AC26 More actions Edit opens the blade', await text(p, '.cu-blade .blade-title'), 'Edit user');
-    is('AC26 for the selected account', await p.inputValue('#cu-edit-email'), 'james.okonkwo@northgate-insurance.co.uk');
+    is('AC33 More actions Edit opens the blade', await text(p, '.cu-blade .blade-title'), 'Edit user');
+    is('AC33 for the selected account', await p.inputValue('#cu-edit-email'), 'james.okonkwo@northgate-insurance.co.uk');
     await p.click('#cu-edit-cancel');
     await wait(p);
-    is('AC26 focus back on More actions', await active(p), 'cu-more-toggle');
+    is('AC33 focus back on More actions', await active(p), 'cu-more-toggle');
     await p.context().close();
   }
 
-  /* ===== AC 27 · environment switch with unsaved changes ================= */
+  /* ===== AC 34 · environment switch with unsaved changes ================= */
   for (const which of ['add', 'edit']) {
     const p = await open(browser, USERS);
     if (which === 'add') {
@@ -920,33 +1137,33 @@ async function select(page, email) {
       await action(p, 'oliver.bennett@northgate-insurance.co.uk', 'edit');
       await p.fill('#cu-edit-first', 'Olly');
     }
-    is('AC27 ' + which + ': top bar usable above the blade', await p.evaluate(() => {
+    is('AC34 ' + which + ': top bar usable above the blade', await p.evaluate(() => {
       const r = document.querySelector('label[for=ch-env-test]').getBoundingClientRect();
       const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
       return !!hit.closest('#ch-header');
     }), true);
     await p.click('label[for=ch-env-test]');
     await modalShown(p, 'ch-env-modal');
-    is('AC27 ' + which + ': shell Modal shows', await modalOpen(p, 'ch-env-modal'), true);
-    is('AC27 ' + which + ': shell Modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
-    is('AC27 ' + which + ': still Live', await p.evaluate(() => CHShell.environment), 'live');
-    ok('AC27 ' + which + ': shell Modal above the blade', await p.evaluate(() => Number(getComputedStyle(document.getElementById('ch-env-modal')).zIndex) > Number(getComputedStyle(document.querySelector('.cu-blade')).zIndex)));
+    is('AC34 ' + which + ': shell Modal shows', await modalOpen(p, 'ch-env-modal'), true);
+    is('AC34 ' + which + ': shell Modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
+    is('AC34 ' + which + ': still Live', await p.evaluate(() => CHShell.environment), 'live');
+    ok('AC34 ' + which + ': shell Modal above the blade', await p.evaluate(() => Number(getComputedStyle(document.getElementById('ch-env-modal')).zIndex) > Number(getComputedStyle(document.querySelector('.cu-blade')).zIndex)));
     if (which === 'edit') {
       /* Stay first: the changes stay, back in the blade. */
       await p.click('#ch-env-modal-stay');
       await wait(p);
       await modalHidden(p, 'ch-env-modal');
-      is('AC27 edit: Stay keeps the blade and changes', await bladeOpen(p) + '/' + await p.inputValue('#cu-edit-first'), 'true/Olly');
-      is('AC27 edit: Stay keeps Live', await p.evaluate(() => CHShell.environment), 'live');
-      ok('AC27 edit: focus back in the blade', await p.evaluate(() => document.querySelector('.cu-blade').contains(document.activeElement)));
+      is('AC34 edit: Stay keeps the blade and changes', await bladeOpen(p) + '/' + await p.inputValue('#cu-edit-first'), 'true/Olly');
+      is('AC34 edit: Stay keeps Live', await p.evaluate(() => CHShell.environment), 'live');
+      ok('AC34 edit: focus back in the blade', await p.evaluate(() => document.querySelector('.cu-blade').contains(document.activeElement)));
       await p.click('label[for=ch-env-test]');
       await modalShown(p, 'ch-env-modal');
     }
     await p.click('#ch-env-modal-switch');
     await settle(p);
-    is('AC27 ' + which + ': lands on CU-00-01', new URL(p.url()).pathname.endsWith('/CH-USERS/index.html'), true);
-    is('AC27 ' + which + ': in Test', await p.evaluate(() => CHShell.environment), 'test');
-    is('AC27 ' + which + ': announced', await text(p, '#ch-announcer'), 'Test environment selected.');
+    is('AC34 ' + which + ': lands on CU-00-01', new URL(p.url()).pathname.endsWith('/CH-USERS/index.html'), true);
+    is('AC34 ' + which + ': in Test', await p.evaluate(() => CHShell.environment), 'test');
+    is('AC34 ' + which + ': announced', await text(p, '#ch-announcer'), 'Test environment selected.');
     await p.context().close();
   }
   {
@@ -954,45 +1171,45 @@ async function select(page, email) {
     const p = await open(browser, USERS);
     await p.click('label[for=ch-env-test]');
     await settle(p);
-    is('AC27 no changes: straight to CU-00-01', new URL(p.url()).pathname.endsWith('/CH-USERS/index.html'), true);
+    is('AC34 no changes: straight to CU-00-01', new URL(p.url()).pathname.endsWith('/CH-USERS/index.html'), true);
     await p.context().close();
   }
 
-  /* ===== AC 28 · focus returns to the opener ============================ */
+  /* ===== AC 35 · focus returns to the opener ============================ */
   {
     const p = await open(browser, USERS);
     await action(p, 'aisha.rahman@northgate-insurance.co.uk', 'view');
-    is('AC28 View title is the full name', await text(p, '.cu-blade .blade-title'), 'Aisha Rahman');
-    is('AC28 View focus on the title', await active(p), await p.evaluate(() => document.querySelector('.cu-blade .blade-title').id));
-    is('AC28 View pairs', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value .key')].map(k => k.textContent).join(',')), 'Username,Email,First name,Last name,Role,Status');
-    is('AC28 View values', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value .value')].map(k => k.textContent).join(',')), 'aisha.rahman,aisha.rahman@northgate-insurance.co.uk,Aisha,Rahman,Viewer,Active');
-    is('AC28 View actions', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
+    is('AC35 View title', await text(p, '.cu-blade .blade-title'), 'View user');
+    is('AC35 View focus on the title', await active(p), await p.evaluate(() => document.querySelector('.cu-blade .blade-title').id));
+    is('AC35 View pairs', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value .key')].map(k => k.textContent).join(',')), 'First name,Last name,Email,Username,Role,Status');
+    is('AC35 View values', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value .value')].map(k => k.textContent).join(',')), 'Aisha,Rahman,aisha.rahman@northgate-insurance.co.uk,aisha.rahman,Viewer,Active');
+    is('AC35 View actions', (await p.$$eval('.cu-blade .blade-footer .btn', bs => bs.map(b => b.textContent.trim() + ':' + b.className))).join(' / '),
        'Close:btn btn-secondary / Edit:btn btn-primary');
     await p.click('#cu-view-close');
     await wait(p);
-    is('AC28 View Close returns focus', await active(p), 'View Aisha Rahman');
+    is('AC35 View Close returns focus', await active(p), 'View Aisha Rahman');
     await action(p, 'aisha.rahman@northgate-insurance.co.uk', 'view');
     await p.keyboard.press('Escape');
     await wait(p);
-    is('AC28 View Escape returns focus', await active(p), 'View Aisha Rahman');
+    is('AC35 View Escape returns focus', await active(p), 'View Aisha Rahman');
     /* View > Edit replaces the blade; closing returns to the row's Edit. */
     await action(p, 'aisha.rahman@northgate-insurance.co.uk', 'view');
     await p.click('#cu-view-edit');
     await wait(p, 400);
-    is('AC28 Edit replaces View', await text(p, '.cu-blade .blade-title') + '/' + await p.locator('.cu-blade').count(), 'Edit user/1');
+    is('AC35 Edit replaces View', await text(p, '.cu-blade .blade-title') + '/' + await p.locator('.cu-blade').count(), 'Edit user/1');
     await p.click('.cu-blade .blade-close');
     await wait(p);
-    is('AC28 Edit from View returns to row Edit', await active(p), 'Edit Aisha Rahman');
+    is('AC35 Edit from View returns to row Edit', await active(p), 'Edit Aisha Rahman');
     /* Pending View. */
     await p.click('#cu-pages button[aria-label="Page 2"]');
     await wait(p);
     await action(p, 'daniel.reyes@northgate-insurance.co.uk', 'view');
-    is('AC28 pending View title is the email', await text(p, '.cu-blade .blade-title'), 'daniel.reyes@northgate-insurance.co.uk');
-    is('AC28 pending View pairs', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value')].map(k => k.querySelector('.key').textContent + '=' + k.querySelector('.value').textContent).join(';')),
+    is('AC35 pending View title', await text(p, '.cu-blade .blade-title'), 'View user');
+    is('AC35 pending View pairs', await p.evaluate(() => [...document.querySelectorAll('.cu-blade .key-value')].map(k => k.querySelector('.key').textContent + '=' + k.querySelector('.value').textContent).join(';')),
        'Email=daniel.reyes@northgate-insurance.co.uk;Role=Editor;Status=Pending;Invited on=20 Oct 2026');
     await p.click('.cu-blade .blade-close');
     await wait(p);
-    is('AC28 pending View returns focus', await active(p), 'View daniel.reyes@northgate-insurance.co.uk');
+    is('AC35 pending View returns focus', await active(p), 'View daniel.reyes@northgate-insurance.co.uk');
     /* Focus stays inside an open blade. */
     await p.click('#cu-pages button[aria-label="Page 1"]');
     await wait(p);
@@ -1002,28 +1219,28 @@ async function select(page, email) {
       await p.keyboard.press('Tab');
       inside = inside && await p.evaluate(() => document.querySelector('.cu-blade').contains(document.activeElement));
     }
-    ok('AC28 focus stays in the blade (Tab)', inside);
+    ok('AC35 focus stays in the blade (Tab)', inside);
     for (let i = 0; i < 12; i++) {
       await p.keyboard.press('Shift+Tab');
       inside = inside && await p.evaluate(() => document.querySelector('.cu-blade').contains(document.activeElement));
     }
-    ok('AC28 focus stays in the blade (Shift+Tab)', inside);
+    ok('AC35 focus stays in the blade (Shift+Tab)', inside);
     await p.keyboard.press('Escape');
     await wait(p);
-    is('AC28 Edit Escape returns focus', await active(p), 'Edit Aisha Rahman');
-    is('AC28 no page errors', p.errors.join('|'), '');
+    is('AC35 Edit Escape returns focus', await active(p), 'Edit Aisha Rahman');
+    is('AC35 no page errors', p.errors.join('|'), '');
     await p.context().close();
   }
 
-  /* ===== AC 29 · the revision 3 names appear nowhere ==================== */
+  /* ===== AC 36 · the revision 3 names appear nowhere ==================== */
   {
-    const OLD = /Account Management|Mobius accounts|Configuration Hub accounts/i;
+    const OLD = /Account Management|[Mm]obius accounts|[Cc]onfiguration Hub accounts/;
     /* In the pages as rendered (text, titles, every attribute), through
        every screen and the blades and Modals. */
     const p = await open(browser, HOME);
     const scan = async label => {
       const found = await p.evaluate(src => {
-        const re = new RegExp(src, 'i');
+        const re = new RegExp(src);
         const hits = [];
         if (re.test(document.title)) hits.push('title');
         if (re.test(document.body.innerText)) hits.push('text');
@@ -1031,7 +1248,26 @@ async function select(page, email) {
         document.querySelectorAll('.visually-hidden, [hidden]').forEach(e => { if (re.test(e.textContent)) hits.push('hidden text'); });
         return hits.join(',');
       }, OLD.source);
-      is('AC29 none on ' + label, found, '');
+      /* No Title Case: every heading, label, button, column header, Modal
+         and blade title, after removing proper nouns (product and app
+         names, people, the organisation) and acronyms. */
+      const titleCase = await p.evaluate(() => {
+        const PROPER = ['Configuration Hub', 'User Management', 'Onboarding Form', 'Third-Party Services', 'AutoMATE', 'Policy Extensions', 'Audit Centre', 'Northgate Insurance Services', 'Mobius', 'MFA', 'Open GI', 'Live', 'Test'];
+        const people = [...document.querySelectorAll('#cu-rows .cu-trunc')].map(e => e.textContent).concat(['Sophie Marchetti', 'Hannah Clarke', 'Ravi Patel']);
+        const els = document.querySelectorAll('h1, h2, h3, h4, h5, h6, label, th, .btn, .menu-item, .tag-label, .key, .modal-title, .blade-title, .breadcrumb-item');
+        const bad = [];
+        els.forEach(e => {
+          if (!e.offsetParent && !e.closest('.modal.show, .cu-blade')) return;
+          let t = e.textContent.replace(/\s+/g, ' ').trim();
+          PROPER.concat(people).forEach(n => { t = t.split(n).join('x'); });
+          const words = t.split(' ').slice(1).filter(w => /^[A-Z][a-z]/.test(w));
+          if (words.length) bad.push(e.tagName + ':' + e.textContent.trim());
+        });
+        if (/\b(?!Configuration|Hub|User|Management|Mobius|MFA|Test)[A-Z][a-z]+ [A-Z][a-z]+/.test(document.title.split('|')[0].replace(/^\[Test\] /, '').slice(1))) bad.push('title:' + document.title);
+        return bad.join(' ; ');
+      });
+      is('AC36 no Title Case on ' + label, titleCase, '');
+      is('AC36 none on ' + label, found, '');
     };
     await scan('the home page');
     await p.goto(BASE_PAGE, { waitUntil: 'networkidle' });
@@ -1047,9 +1283,15 @@ async function select(page, email) {
     await p.keyboard.press('Escape');
     await wait(p);
     await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'view');
+    await scan('the View blade');
     await p.click('#cu-view-edit');
     await wait(p, 400);
     await scan('the Edit blade');
+    await p.click('#cu-edit-reset-mfa');
+    await modalShown(p, 'cu-mfa-modal');
+    await scan('the Reset MFA Modal');
+    await p.click('#cu-mfa-cancel');
+    await modalHidden(p, 'cu-mfa-modal');
     await p.click('#cu-edit-cancel');
     await wait(p);
     await action(p, 'hannah.clarke@northgate-insurance.co.uk', 'delete');
@@ -1063,7 +1305,7 @@ async function select(page, email) {
     const dir = path.join(__dirname, '..', 'prototypes', 'CH-USERS');
     const files = fs.readdirSync(dir).filter(f => /\.(html|js|css)$/.test(f));
     const inSource = files.filter(f => OLD.test(fs.readFileSync(path.join(dir, f), 'utf8')));
-    is('AC29 none in the source (' + files.length + ' files)', inSource.join(','), '');
+    is('AC36 none in the source (' + files.length + ' files)', inSource.join(','), '');
   }
 
   /* ===== Variants ====================================================== */

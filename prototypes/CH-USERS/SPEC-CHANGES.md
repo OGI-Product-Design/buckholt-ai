@@ -1,7 +1,7 @@
 # CH-USERS — findings for the spec, the designs and Buckholt
 
 From building `ch-users-spec.md` revision 3 on 26 Oct 2026, and updating it
-to revision 5 on 27 Oct 2026. The spec copy in this folder is unedited;
+to revision 5 on 27 Oct 2026 and revision 6 on 28 Oct 2026. The spec copy in this folder is unedited;
 everything that should change in it is here.
 
 **Revision 5 status of the revision 3 findings:**
@@ -12,6 +12,10 @@ everything that should change in it is here.
   the numbers have been updated to revision 5's list.
 - **New from the revision 5 build:** A18–A22, B5–B7, C16 and C17, each under
   its own heading. A20 is closed: Andrej confirmed the status colours.
+- **Revision 6:** A16 is superseded (required fields now carry asterisks;
+  C18). New: A23–A26, B8 and C18–C20, under "New from the revision 6
+  build". The spec's "Follow-ups outside this prototype" section was not
+  for this build and is not repeated here.
 
 ## A. The spec
 
@@ -58,8 +62,8 @@ everything that should change in it is here.
    - Built with the shell's alert unchanged, as the shell decides it.
    - The copy needs to change, at least inside User Management. For example,
      an app-specific line under the alert: "Users are shared with Live."
-4. **AC 27 and Gap 1 pull in different directions.** Gap 1 says the page is
-   "dimmed and inert" while a blade is open. AC 27 needs the environment
+4. **AC 34 and Gap 1 pull in different directions.** Gap 1 says the page is
+   "dimmed and inert" while a blade is open. AC 34 needs the environment
    control usable while the Add or Edit blade has changes.
    - Built: the blade opens under the CH top bar, as in the Mobius frames.
    - The top bar stays usable by pointer; the rest of the page is dimmed.
@@ -67,7 +71,7 @@ everything that should change in it is here.
      ask.
    - So keyboard users can only switch environment after closing the blade.
    - Say which is intended: either the top bar is outside the blade's
-     inert area (and focus may leave the blade to reach it), or AC 24 only
+     inert area (and focus may leave the blade to reach it), or AC 34 only
      applies to pointer users.
 5. **Two rules can never trigger with the stated rules.**
    - **"Bulk Delete is disabled if the selection would remove the last
@@ -78,7 +82,7 @@ everything that should change in it is here.
    - **The row-level last-Administrator rule only ever applies to the
      signed-in user.** That user's Delete and role are already blocked by
      the own-account rule. Built so that the last-Administrator reason wins
-     when both apply, which AC 23 needs. Confirm that precedence, or say
+     when both apply, which AC 30 needs. Confirm that precedence, or say
      which reason shows.
 6. **The shell override needs a home.**
    - CH-SHELL's contract has a feature edit `shell/ch-registry.js` (base page,
@@ -131,7 +135,8 @@ everything that should change in it is here.
       column and `.data-secondary`.
     - The spec was checked against `buckholt-reference.md` (commit
       `211e365`). Update that reference too.
-16. **"Every field is required, so no required markers."** Correct per
+16. **Superseded in revision 6** (asterisks, C18). *Revision 3 finding:*
+    **"Every field is required, so no required markers."** Correct per
     Buckholt Forms. Worth one line in the Edit blade section too, because
     the Mobius Edit User frame shows asterisks.
 17. **The spec puts helper text on read-only fields, and Buckholt hides it
@@ -186,6 +191,26 @@ everything that should change in it is here.
     Built `title-03`, per Sources of truth. If the larger title matters,
     raise it with Buckholt (C17), not here.
 
+### New from the revision 6 build
+
+23. **The "Account management" heading and AC 36.** The section heading is
+    "Account management", which differs from the retired app name "Account
+    Management" only by case. AC 36 says "(as an app or page name)", so the
+    test checks the old name case-sensitively. A later rename of the
+    section, for example "Access", would remove the near-clash for readers
+    too.
+24. **Reset MFA and an unsaved Status change.** The rule is "a user whose
+    saved status is Inactive". So switching an Inactive user on doesn't
+    enable Reset MFA until Save. Built that way. Say so in the spec if that
+    is the intent, because a user may expect the button to wake up with the
+    Switch.
+25. **Gap 7 is still listed** ("Read-only Text input may be Gap 7"). It is
+    documented (A15); remove it from the Buckholt mapping and the gaps.
+26. **"Account details" and "Account management" headings sit at the same
+    level as the blade title.** The spec says level 2 for the sections; the
+    shared blade's title is also level 2. Consider level 3 for the
+    sections, so the outline reads title > sections.
+
 ## B. Figma (User Management file, `UH10tKpy1gSqjAZI4DQWRV`)
 
 1. **The Edit, View and Delete User pages are the older Mobius UI.**
@@ -234,6 +259,14 @@ everything that should change in it is here.
    confirmed (A20, closed).
 7. **The frame shows the shell's Figma placeholders** ("Open GI", avatar
    "RD", a mint avatar). Built with the Northgate seed, as the spec says.
+
+### New from the revision 6 build
+
+8. **Andrej's blade screenshots** (`screenshots/CU-01.png`,
+   `screenshots/CU-02.png`) use Title Case, placeholders and helper text
+   without full stops. The spec's "Known screenshot differences" lists all
+   three, and the spec's copy is built. Note that `CU-02.png` replaces the
+   older Mobius "Edit User" Figma export used for revision 3.
 
 ## C. Buckholt
 
@@ -328,3 +361,50 @@ everything that should change in it is here.
       content, which is another reason to name the link explicitly.
     - Document the naming, and whether the card title style may vary
       (Figma uses Headline 02 here, A22).
+
+### New from the revision 6 build
+
+18. **Required fields marked with an asterisk, against the Buckholt Forms
+    rule.** For Mark (the spec's Blade layout, and its follow-up "Required
+    asterisks vs the Buckholt 'mark optional fields' rule").
+    - **Buckholt says:** Forms (`patterns/forms/rules.md`, "Required and
+      optional fields"): in forms that are mostly required, label only the
+      optional fields; in mostly-optional forms, label the required ones as
+      "(required)". Text input documents that marker as `<small>(required)</small>`
+      inside the label (Code & specs example 4). There is no asterisk
+      anywhere in Buckholt.
+    - **The spec says:** an asterisk after the label of every required
+      field, as Mobius User Management does. Decision: Andrej, 28 Oct 2026.
+    - **Built:**
+      - a red `*` after the label (`.cu-required`, Buckholt's
+        `--error-01`), hidden from assistive technology;
+      - the control carries native `required`, so screen readers hear
+        "required";
+      - Add blade: Email and Role. Edit blade: First name, Last name and
+        Role.
+      - Read-only fields, and a locked Role, carry none.
+    - **Why it matters:** both blades are forms where every editable field
+      is required. That is the exact case where Buckholt says to mark
+      nothing. So the Mobius convention and Buckholt disagree head-on, not
+      at the margins.
+    - **Ask:** either document the asterisk as an accepted alternative
+      (with its colour, position and accessible treatment), or confirm the
+      Buckholt rule so Mobius can move to it.
+19. **Switch state text is fixed to "On"/"Off".**
+    - The default Switch (and `.form-switch-status`) writes its state text
+      from CSS: `::before { content: "Off" }` and `:checked::before {
+      content: "On" }`. No documented attribute or variable sets other
+      words.
+    - The spec needs "Active"/"Inactive", and the spec's follow-up asks
+      Mobius for the same change.
+    - Built by overriding only `content`, scoped to this prototype.
+    - Generated content on a form control is also not reliably read by
+      screen readers. The state is announced from the native switch
+      instead, as on/off, so the words only help sighted users.
+    - **Ask:** a documented way to set the state labels, ideally as real
+      text.
+20. **The Switch's documented layout is switch-then-label.** The status
+    rows in Mobius, and the spec, put the label at the start and the switch
+    at the end of a full-width row (a settings-row pattern). Built with
+    `flex-direction: row-reverse` on the documented DOM. Buckholt could
+    document a settings-row layout for Switch.

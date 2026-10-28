@@ -306,6 +306,40 @@
   </div>
 </div>
 
+<!-- CU-02 · Reset MFA. Buckholt Modal, two actions as the Modal pattern
+     (not the blade footer). Opened over the Edit blade, so raised above it. -->
+<div class="modal fade cu-modal" id="cu-mfa-modal" tabindex="-1" aria-labelledby="cu-mfa-title">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="text-block">
+          <div class="heading">
+            <div class="heading-content">
+              <h2 class="headline-02" id="cu-mfa-title"></h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="text-block">
+          <p>They'll need to set up multi-factor authentication again the next time they sign in.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="button-set">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cu-mfa-cancel">
+            <span class="button-label">Cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="cu-mfa-confirm">
+            <span class="button-label">Reset MFA</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Toasts: a polite live region, bottom right. -->
 <div class="toast-container cu-toasts" id="cu-toasts" role="status" aria-live="polite"></div>
 
