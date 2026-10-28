@@ -722,12 +722,22 @@
      top bar (back there 22 October 2026). */
   function renderSearchBody() {
     Shell.disposeTooltips(modalBody);
-    if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); return; }
+    if (!S.modalQuery) { modalBody.innerHTML = recentMenu(); announce(''); return; }
     var prev = S.query;
     S.query = S.modalQuery;
     modalBody.innerHTML = P.app.search().join('');
     S.query = prev;
     Shell.initTooltips(modalBody);
+    var count = $('mob-search-count');
+    announce(count ? count.textContent : '');
+  }
+  /* The count, into the status region; cleared first so the same count
+     after a new search is read again. */
+  var statusEl = $('mob-search-status'), announceTimer = null;
+  function announce(text) {
+    clearTimeout(announceTimer);
+    statusEl.textContent = '';
+    if (text) announceTimer = setTimeout(function () { statusEl.textContent = text; }, 100);
   }
 
   var searchOpening = false, typedOpen = false;
@@ -1011,6 +1021,10 @@
         id: 'mob-panel-' + key,
         title: plain(b[0]),
         footer: panelFooter(b),
+        /* Focus on the first field, a Dropdown included: the shared Blade
+           looks only for input, select and textarea, so it skipped
+           "Required MTA type" (audit, 28 October 2026). */
+        initialFocus: '.blade-body input:not([type="hidden"]), .blade-body textarea, .blade-body select, .blade-body .dropdown-toggle',
         onClose: function () {
           S.panelKey = null;
           setPressed();
@@ -1024,6 +1038,8 @@
         }
       });
     }
+    if (!blade.mobGuard) guardDiscard(blade);
+    blade.dirty = false;
     blade.el.querySelector('.blade-title').innerHTML = t(b[0]);
     blade.toastMessage = b[2];
     blade.setBody(b[1]);
@@ -1031,6 +1047,32 @@
     S.panelKey = key;
     setPressed();
     blade.open(trigger);
+  }
+
+  /* Closing a side panel with something entered and not saved (Escape,
+     the X, the scrim, Cancel) asks "Discard this change?" first (audit,
+     28 October 2026). Typing, a Dropdown choice or a ticked box marks the
+     panel changed; Save clears it. While the question is open the panel's
+     own focus trap is paused, so the two dialogs do not pull focus from
+     each other (Bootstrap 5.1.3's Offcanvas keeps it as `_focustrap`). */
+  var discardBlade = null, discardChosen = false;
+  function guardDiscard(blade) {
+    blade.mobGuard = true;
+    var mark = function (e) { if (blade.bodyEl.contains(e.target)) blade.dirty = true; };
+    blade.el.addEventListener('input', mark);
+    blade.el.addEventListener('change', mark);
+    blade.el.addEventListener('click', function (e) { if (e.target.closest('.dropdown-item') && blade.bodyEl.contains(e.target)) blade.dirty = true; });
+    blade.el.addEventListener('hide.bs.offcanvas', function (e) {
+      if (!blade.dirty) return;
+      e.preventDefault();
+      var oc = bootstrap.Offcanvas.getInstance(blade.el);
+      if (oc && oc._focustrap) oc._focustrap.deactivate();
+      discardBlade = blade;
+      discardChosen = false;
+      var here = document.activeElement && blade.el.contains(document.activeElement) ? document.activeElement : blade.closeEl;
+      confirmEl.classList.add('mob-over-panel');   /* above the panel, not under it */
+      openConfirm('discard', here);
+    });
   }
 
   function openBlade() {
@@ -1059,6 +1101,7 @@
       } else blade.toastMessage = null;
     }
     var msg = blade.toastMessage;
+    blade.dirty = false;   /* saved: nothing to discard */
     blade.close();
     if (msg) toast(msg);
   }
@@ -1100,6 +1143,19 @@
     var key = confirmKey;
     confirmTrigger = null;
     confirmKey = null;
+    /* "Discard this change?": Discard closes the panel (it gives focus back
+       to what opened it); Keep editing goes back to the field. */
+    if (key === 'discard') {
+      confirmEl.classList.remove('mob-over-panel');
+      var bl = discardBlade;
+      discardBlade = null;
+      if (!bl) return;
+      if (discardChosen) { bl.dirty = false; bl.close(); return; }
+      var oc = bootstrap.Offcanvas.getInstance(bl.el);
+      if (oc && oc._focustrap) oc._focustrap.activate();
+      if (trigger && document.contains(trigger)) trigger.focus();
+      return;
+    }
     /* An item of a closed Menu cannot take focus: its Menu's trigger does. */
     var menu = trigger && trigger.closest('.dropdown-menu');
     if (menu) trigger = menu.parentNode.querySelector('.menu-toggle');
@@ -1112,6 +1168,7 @@
   });
 
   $('mob-confirm-ok').addEventListener('click', function () {
+    if (confirmKey === 'discard') discardChosen = true;
     confirmToast = M.CONFIRMS[confirmKey][3];
     confirmModal.hide();
   });
@@ -1303,6 +1360,71 @@
     var row = el.closest('tr[data-href]');
     if (row) location.hash = row.getAttribute('data-href').replace(/^#/, '');
   });
+
+  /* ======================================================= Menu keyboard
+     The Menu buttons (the area switcher, Make changes, Policy actions,
+     Actions, the user menu) carry Buckholt Menu's role="menu", which tells
+     screen-reader users to use the arrow keys; Bootstrap's own arrow keys
+     only reach `.dropdown-item`, so they did nothing (audit, 28 October
+     2026). Down / Up on the trigger opens the Menu on its first / last
+     item; in the Menu, Down / Up move (and wrap), Home / End jump; Escape
+     closes it and gives focus back to its trigger (it fell to the page).
+     Tab still moves between the items, as Buckholt's Menu documents. The
+     Menus shown in place (recent searches) keep their own keys. */
+  function menuOf(el) {
+    var panel = el.closest && el.closest('.menu > .menu-panel.dropdown-menu');
+    if (!panel || !panel.querySelector('[role="menu"]')) return null;
+    var toggle = panel.parentNode.querySelector(':scope > .menu-toggle');
+    return toggle ? { panel: panel, toggle: toggle } : null;
+  }
+  function menuItems(panel) {
+    return Array.prototype.filter.call(panel.querySelectorAll('[role^="menuitem"]'), function (i) {
+      return i.offsetParent !== null && !i.disabled && !i.classList.contains('disabled');
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End', 'Escape'].indexOf(k) < 0 || e.altKey || e.ctrlKey || e.metaKey) return;
+    var t = e.target;
+    /* Escape in an open Dropdown (a field) closes the Dropdown, not the
+       side panel or Modal around it, which hears Escape first. */
+    if (k === 'Escape' && t.closest) {
+      var dd = t.closest('.dropdown');
+      var ddMenu = dd && dd.querySelector(':scope > .dropdown-menu.show');
+      if (ddMenu) {
+        e.preventDefault(); e.stopPropagation();
+        var ddToggle = dd.querySelector(':scope > .dropdown-toggle');
+        bootstrap.Dropdown.getOrCreateInstance(ddToggle).hide();
+        ddToggle.focus();
+        return;
+      }
+    }
+    /* On a Menu button. */
+    if (t.matches && t.matches('.menu > .menu-toggle') && (k === 'ArrowDown' || k === 'ArrowUp')) {
+      var panel0 = t.parentNode.querySelector(':scope > .menu-panel.dropdown-menu');
+      if (!panel0 || !panel0.querySelector('[role="menu"]')) return;
+      e.preventDefault(); e.stopPropagation();
+      bootstrap.Dropdown.getOrCreateInstance(t).show();
+      var list0 = menuItems(panel0);
+      if (list0.length) list0[k === 'ArrowUp' ? list0.length - 1 : 0].focus();
+      return;
+    }
+    var m = menuOf(t);
+    if (!m) return;
+    if (k === 'Escape') {
+      e.preventDefault(); e.stopPropagation();
+      bootstrap.Dropdown.getOrCreateInstance(m.toggle).hide();
+      m.toggle.focus();
+      return;
+    }
+    var list = menuItems(m.panel);
+    if (!list.length) return;
+    e.preventDefault(); e.stopPropagation();
+    var i = list.indexOf(t.closest('[role^="menuitem"]'));
+    var next = k === 'Home' ? 0 : k === 'End' ? list.length - 1
+      : k === 'ArrowDown' ? (i + 1) % list.length : (i <= 0 ? list.length - 1 : i - 1);
+    list[next].focus();
+  }, true);
 
   /* Links that act in place are role="button": Space activates them too. */
   document.addEventListener('keydown', function (e) {

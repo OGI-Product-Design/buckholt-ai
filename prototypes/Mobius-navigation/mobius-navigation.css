@@ -1132,3 +1132,9 @@ body.mob-home #mob-create-client { display: none; }
    of the field's height plus 2px, so the static offset is cleared and
    dropdown.js's alone places the panel, where Popper would have. */
 .dropdown > .dropdown-menu-panel[data-bs-popper="static"] { top: 0; margin-top: 0; }
+
+/* "Discard this change?" opens over a side panel, which sits above
+   Buckholt's Modals (the Blade's 1056 against the Modal's 1055): that one
+   confirmation, and its backdrop, go above the panel. */
+#mob-confirm.mob-over-panel { z-index: 1058; }
+body:has(#mob-confirm.mob-over-panel) .modal-backdrop { z-index: 1057; }

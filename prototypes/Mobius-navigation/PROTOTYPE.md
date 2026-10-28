@@ -325,6 +325,20 @@ guarantee.
 Some fields have no options in the reference (Activity type, Note type, Fee account and others
 that only say "Select"). They are not invented, so their Dropdowns open empty.
 
+## Audit, 28 October 2026
+
+| Finding | Outcome |
+| --- | --- |
+| Unfinished MTA thrown away on Escape or X | **Fixed, for every side panel with a form.** Closing one with something entered (Escape, the X, the scrim, Cancel) asks **"Discard this change?"** (the confirmation Modal; Keep editing / Discard, Discard in red). Save does not ask. While it is open the panel's focus trap is paused, and it sits above the panel. Escape in an open Dropdown now closes only the Dropdown. |
+| Menus use role="menu" but only Tab works; Escape loses focus | **Fixed.** The role stays (it is Buckholt Menu's markup). Down / Up on a Menu button opens it on the first / last item; in the Menu, Down / Up move and wrap, Home / End jump, Escape closes it and focus goes back to its button. Tab still works, as Buckholt's Menu documents. |
+| Exact match should open the record | **Not done**: every search opens the Modal (Laurence, 27 and 28 October 2026), as Mobius opens a results page. |
+| Results announcement reads the filters too | **Fixed.** Only the count is announced ("7 clients found for “Barnard”"), from a status region; the results area is no longer live. |
+| MTA panel focus skips Required MTA type | **Fixed.** Focus lands on the first field, a Dropdown included. |
+| Mark required fields | **Open: which fields are required** is for Laurence to decide (Buckholt's Forms pattern: label the optional ones when most are required). |
+| "/" everywhere; shortcuts to Documents, Notes | "/" already opens the search from every page and the homepage field there. **Open:** further shortcuts. |
+| Add "Change of vehicle" | **Already done**: the 42 adjustment types include Change of Car/Bike, Change of Cover and Proposer - Add. |
+| Make Add new quote stand out | **Not done**: it stays a ghost Button, like the actions beside it (Laurence, 28 October 2026). |
+
 ## Phone (28 October 2026)
 
 Below 576px (Laurence, 28 October 2026: "really broken on mobile"). Buckholt's own phone

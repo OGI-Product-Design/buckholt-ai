@@ -416,6 +416,9 @@
     cancel: ['Cancel this policy?', 'Cancelling ends cover for this policy and may raise a refund or charge. This cannot be undone.', 'Cancel policy', 'Policy cancelled', true, 'Keep policy'],
     reinstate: ['Reinstate this policy?', 'The lapsed policy will be reinstated with its previous cover dates.', 'Reinstate', 'Policy reinstated', false],
     sanctions: ['Run a new sanctions check?', 'A sanctions check will be run against this client now.', 'Run check', 'Sanctions check performed successfully. No match found', false],
+    /* A side panel with something entered, closed without saving (audit,
+       28 October 2026). */
+    discard: ['Discard this change?', 'What you have entered will not be saved.', 'Discard', null, true, 'Keep editing'],
     convert: ['Convert to policy?', 'The selected quote will be converted to a live policy. You will confirm cover, complete the checklist and take payment next.', 'Convert', 'Converting to policy', false]
   };
 
