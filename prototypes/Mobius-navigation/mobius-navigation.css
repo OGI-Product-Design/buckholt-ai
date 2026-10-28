@@ -207,11 +207,6 @@
 /* User meta has 8px padding of its own, so the head gives 8px less. */
 .mob-has-record .mob-rail-head { padding-top: calc(var(--spacer-04) + 1px); padding-left: calc(var(--spacer-04) + 1px); }
 .mob-rail-client { min-width: 0; align-items: flex-start; }   /* the name's top level with the reference's */
-/* The client is a link to Client overview: no underline at rest, the name
-   underlined on hover, Buckholt's focus ring. */
-a.mob-rail-client { color: inherit; text-decoration: none; border-radius: var(--border-radius-md); }
-a.mob-rail-client:hover .mob-rail-name { text-decoration: underline; }
-a.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: 0.125rem; }
 /* Ruled off from the menu under it, as the policy's head is from its menu
    (Laurence, 8 October 2026). The rule runs the width of the rows under it. */
 .mob-rail-head { position: relative; padding-bottom: var(--spacer-03); }   /* with User meta's own 8px, the rule is level with the policy head's */
