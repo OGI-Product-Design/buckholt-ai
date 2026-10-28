@@ -362,7 +362,10 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
   pointer is on the icon or the menu and goes a moment after it leaves both. A click or tap opens
   it too (keyboards, touch), with focus on the client's first page; Escape or Tab out closes it,
   focus back on the icon. Its links go to the client's pages and policies; Show more works inside
-  it. Beside the page only (in the drawer both menus are open anyway).
+  it. Beside the page only (in the drawer both menus are open anyway). It is spaced exactly as the
+  client card (the card's own padding), and **the policy menu is now the client card's width,
+  288px** (it was 232px; Laurence, 28 October 2026), so the overlay matches the card and nothing
+  in it is cut short. Beside a policy the page is 56px narrower.
 
 ## User study, round 2 (28 October 2026)
 
