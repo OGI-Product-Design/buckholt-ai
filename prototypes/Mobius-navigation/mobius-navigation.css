@@ -1154,4 +1154,7 @@ body:has(#mob-confirm.mob-over-panel) .modal-backdrop { z-index: 1057; }
   box-shadow: var(--shadow-lg);
 }
 .mob-peek[hidden] { display: none !important; }
-.mob-peek-scroll { height: 100%; overflow-y: auto; padding: 0 var(--spacer-02) var(--spacer-04); }
+/* Spaced exactly as the client card's own menu (its `.mob-rail-scroll`
+   padding beside the page: 8px top and right, 24px bottom, 4px left), so
+   the menu sits where it does on a client page (Laurence, 28 October 2026). */
+.mob-peek-scroll { height: 100%; overflow-y: auto; padding: var(--spacer-03) var(--spacer-03) var(--spacer-05) var(--spacer-02); }

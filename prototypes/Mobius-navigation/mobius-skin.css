@@ -295,4 +295,4 @@ body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
 @media print { .mob-skin-toggle { display: none; } }
 
 /* The client menu laid over the policy's: the client card's blue. */
-html[data-skin="mobius"] .mob-sidebar .mob-columns > .mob-peek.mob-rail { background-color: var(--mobius-blue); border-color: rgba(255, 255, 255, 0.22); }
+html[data-skin="mobius"] .mob-sidebar .mob-columns > .mob-peek.mob-rail { background-color: var(--mobius-blue); border: 0; }   /* no border, as the client card has none here */
