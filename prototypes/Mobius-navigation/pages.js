@@ -1478,7 +1478,7 @@
       /* A journey opens a page: a link, not a button. */
       /* Make changes' items carry a one-line helper (Laurence, 27 October
          2026), so the choice is clear before it is made. */
-      var help = a.help && cls !== 'plain' ? '<span class="mob-menu-help body-01">' + t(a.help) + '</span>' : '';
+      var help = a.help && cls !== 'plain' ? '<span class="mob-menu-help support-01">' + t(a.help) + '</span>' : '';
       var text = help ? '<span class="mob-menu-text"><span>' + t(label(k)) + '</span>' + help + '</span>' : t(label(k));
       if (a.kind === 'flow') return li + '<a class="menu-item' + (help ? ' mob-menu-item-help' : '') + '" role="menuitem" href="' + policyHref(p, a.to) + '">' +
         '<i class="' + a.icon + '" aria-hidden="true"></i>' + text + '</a></li>';
@@ -1488,50 +1488,29 @@
         (k === 'renew' && due ? '<span class="badge mob-count mob-count-inline support-01" aria-hidden="true">1</span><span class="visually-hidden">, renewal due</span>' : '') +
       '</button></li>';
     };
-    var changes = '';
-    if (change.length === 1) {
-      var k1 = change[0], a1 = A[k1];
-      changes = set([a1.kind === 'flow'
-        ? btn(label(k1), { variant: 'ghost', icon: a1.icon, href: policyHref(p, a1.to) })
-        : btn(a1.label, { variant: 'ghost', icon: a1.icon, attrs: attrs(k1) })], 'mob-policy-actions');
-    } else if (change.length) {
-      changes = '<div class="menu mob-changes mob-policy-actions">' +
-        '<button type="button" class="btn btn-ghost menu-toggle" id="mob-changes" data-bs-toggle="dropdown" aria-expanded="false">' +
-          '<span class="button-label">Make changes</span>' +
-          '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
-        '</button>' +
-        '<div class="menu-panel dropdown-menu" aria-labelledby="mob-changes">' +
-          '<ul class="menu-body" role="menu">' + change.map(function (k) { return item(k); }).join('') + '</ul>' +
-        '</div>' +
-      '</div>';
-    }
-    /* On a phone every action is in one Actions menu (phoneActions): the
-       changes, the rare actions and the risky ones, grouped as here. */
-    var groups = [change, rare, risky].filter(function (g) { return g.length; });
-    phonePolicyItems = groups.map(function (g) { return g.map(function (k) { return item(k); }).join(''); }).join('<li role="none"><hr class="menu-divider"></li>');
-    var more = (rare.length || risky.length || change.length) ? '<div class="menu mob-overflow">' +
-      /* Labelled "Policy actions" (Laurence, 27 October 2026, from review:
-         the bare ellipsis was hard to find): Menu button Code & specs
-         example 1, the label then the caret, a ghost Button beside Make
-         changes. */
-      '<button type="button" class="btn btn-ghost menu-toggle' + (due ? ' mob-badged' : '') + '" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
-        '<span class="button-label">Policy actions' + (due ? '<span class="visually-hidden">, renewal due</span>' : '') + '</span>' +
+    /* One menu, "Policy actions" (Laurence, 28 October 2026, from the UX
+       design team): the changes to the policy first (Amend details, Make
+       an MTA, Policy extension, or the status's one change), then the rare
+       actions, then the risky ones, each group ruled off. It is the row's
+       secondary Button (Menu button Code & specs example 1, the label then
+       the caret); Client support and the note stay ghost. The phone's
+       Actions menu holds the same groups after the client's tools. */
+    /* Each group under a Menu section header (Laurence, 28 October 2026;
+       Menu's Code & specs `h6.menu-section-header` in its `li`), the
+       groups still ruled off. */
+    var head = function (text) { return '<li role="none"><h6 class="menu-section-header">' + text + '</h6></li>'; };
+    var riskyHead = risky.length > 1 ? 'Stop or cancel' : risky[0] === 'stop' ? 'Stop' : 'Cancel';
+    var groups = [[change, 'Make changes'], [rare, 'Manage policy'], [risky, riskyHead]].filter(function (g) { return g[0].length; });
+    phonePolicyItems = groups.map(function (g) { return head(g[1]) + g[0].map(function (k) { return item(k); }).join(''); }).join('<li role="none"><hr class="menu-divider"></li>');
+    return groups.length ? '<div class="menu mob-overflow">' +
+      '<button type="button" class="btn btn-secondary menu-toggle" id="mob-more-actions" data-bs-toggle="dropdown" aria-expanded="false">' +
+        '<span class="button-label">Policy actions</span>' +
         '<div class="btn-icon"><i class="fa-solid fa-caret-down" aria-hidden="true"></i></div>' +
-        (due ? '<span class="badge badge-floating mob-count support-01" aria-hidden="true">1</span>' : '') +
       '</button>' +
       '<div class="menu-panel dropdown-menu dropdown-menu-end" aria-labelledby="mob-more-actions">' +
-        '<ul class="menu-body" role="menu">' +
-          /* Folded in when the row is too narrow (CSS shows these and hides
-             Make changes). */
-          change.map(function (k) { return item(k, 'mob-fold'); }).join('') +
-          (change.length && (rare.length || risky.length) ? '<li role="none" class="mob-fold"><hr class="menu-divider"></li>' : '') +
-          rare.map(function (k) { return item(k); }).join('') +
-          (rare.length && risky.length ? '<li role="none"><hr class="menu-divider"></li>' : '') +
-          risky.map(function (k) { return item(k); }).join('') +
-        '</ul>' +
+        '<ul class="menu-body" role="menu">' + phonePolicyItems + '</ul>' +
       '</div>' +
     '</div>' : '';
-    return changes + more;
   }
 
   /* On a phone (below 576px) the row has no room for labelled Buttons:
@@ -1574,7 +1553,9 @@
        quote: a secondary Button with Shield-plus (a link, as it opens a
        page). */
     if (R.scope === 'client') return clientTools(R) +
-      set([btn('Add new quote', { variant: 'ghost', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions') + phoneActions(R);
+      /* Add new quote is the row's secondary Button (Laurence, 28 October
+         2026), as Policy actions is on a policy page. */
+      set([btn('Add new quote', { variant: 'secondary', icon: M.ICON.newQuote, href: '#c/newquote' })], 'mob-client-actions') + phoneActions(R);
     if (R.scope === 'policy') { var tools = clientTools(R) + policyTools(R.p); return tools + phoneActions(R); }
     return '';
   }

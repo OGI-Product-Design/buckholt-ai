@@ -343,12 +343,33 @@ guarantee.
 Some fields have no options in the reference (Activity type, Note type, Fee account and others
 that only say "Select"). They are not invented, so their Dropdowns open empty.
 
+## Late changes (28 October 2026)
+
+- **Helper text in menus** (Laurence): the line under an item (Policy actions, work areas, the
+  phone's Actions) is Buckholt's helper text, Form helper's size and colour: the `.support-01`
+  type set in `--text-muted` (it was `.body-01` in secondary text).
+- **Make changes is in Policy actions** (the UX design team): one Menu button, **Policy
+  actions**, the row's **secondary** Button, holds the changes first (Amend details, Make an MTA,
+  Policy extension, or the status's one change), then Copy policy, Renewal invite, Customer portal
+  settings, then Stop and Cancel policy, each group ruled off and **under a Menu section header**
+  (Menu's Code & specs `h6.menu-section-header`): "Make changes", "Manage policy", "Stop or cancel"
+  ("Stop" or "Cancel" where a status has only one). Client support and the note stay
+  ghost. On a client page **Add new quote is secondary** too (Laurence). There is no fold any more:
+  the same menu at every width.
+- **The client menu laid over the policy's** (Mark): on a policy page the strip's client icon
+  no longer goes to Client overview. Hovering it lays the client's menu (pages and policies) over
+  the policy's menu, exactly over that column, with Buckholt's large shadow; it stays while the
+  pointer is on the icon or the menu and goes a moment after it leaves both. A click or tap opens
+  it too (keyboards, touch), with focus on the client's first page; Escape or Tab out closes it,
+  focus back on the icon. Its links go to the client's pages and policies; Show more works inside
+  it. Beside the page only (in the drawer both menus are open anyway).
+
 ## User study, round 2 (28 October 2026)
 
 | Finding | Outcome |
 | --- | --- |
 | Collapse button reads as "back" | **Fixed.** The Sidebar icon (`fa-regular fa-sidebar`, Laurence) in both states, and the client's Avatar and name are one link to Client overview. |
-| Client icon on the rail strip leaves you on the policy page | **Fixed: it goes to Client overview** from a policy page (Laurence, 28 October 2026; a highlight on Client overview was tried and dropped). A link, as it opens a page. On a client page it still opens the client's menu. **What went:** looking through the client's menu while staying on the policy (the client card beside an open policy). Nothing in that menu could be opened without leaving the policy anyway, so a client page from a policy is still two clicks (the client icon, then the page), and so is another policy. |
+| Client icon on the rail strip leaves you on the policy page | **Fixed, then changed** (see Late changes: Mark's overlay on hover). Before that it went to Client overview from a policy page (Laurence, 28 October 2026; a highlight on Client overview was tried and dropped). A link, as it opens a page. On a client page it still opens the client's menu. **What went:** looking through the client's menu while staying on the policy (the client card beside an open policy). Nothing in that menu could be opened without leaving the policy anyway, so a client page from a policy is still two clicks (the client icon, then the page), and so is another policy. |
 | Top-bar search loses the query | **Fixed.** Keys typed while the Modal opens (after a click, nothing had focus) go into its field; the first replaces the last search. "/" as the first key is the shortcut, not text. |
 | Make the action area easier to spot | **Not done, on purpose**: the study says re-test after the helper text first. |
 | Helper text for Copy policy and the other Policy actions | **Fixed.** Each has one line, worded from its own confirmation or panel: Copy policy "Start a new policy with the same details", Renewal invite "Invite the client to renew this policy", Customer portal settings "Let the client make changes or renew online", Stop policy "Stop the policy; this can be reversed later", Cancel policy "End cover; this cannot be undone". The menu is up to 24rem wide, as Make changes is. |

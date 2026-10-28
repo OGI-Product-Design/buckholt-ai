@@ -1042,10 +1042,11 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 /* Make changes' items carry a one-line helper under the label (Laurence,
    27 October 2026), so the choice is clear before it is made. */
 .menu-item.mob-menu-item-help { display: flex; align-items: flex-start; height: auto; min-height: var(--menu-item-height); padding-block: var(--spacer-03); white-space: normal; }
-/* The helper is Buckholt's `.body-01` type set (on the element), in the
-   secondary text colour. */
+/* The helper takes Buckholt's helper text (Laurence, 28 October 2026): Form
+   helper's size and colour, which is the `.support-01` type set (12px,
+   Regular, 16px line height, 0.25px; on the element) in `--text-muted`. */
 .mob-menu-text { display: flex; flex-direction: column; gap: var(--spacer-01); min-width: 0; }
-.mob-menu-help { color: var(--text-secondary); white-space: nowrap; }
+.mob-menu-help { color: var(--text-muted); white-space: nowrap; }
 .mob-changes .menu-panel, .mob-overflow .menu-panel { --menu-min-width: 17rem; --menu-max-width: 24rem; }   /* room for the helpers */
 /* "3 new": the count says what it counts. */
 .mob-count-inline { white-space: nowrap; }
@@ -1135,3 +1136,22 @@ body.mob-home #mob-create-client { display: none; }
    confirmation, and its backdrop, go above the panel. */
 #mob-confirm.mob-over-panel { z-index: 1058; }
 body:has(#mob-confirm.mob-over-panel) .modal-backdrop { z-index: 1057; }
+
+/* The client's menu laid over the policy's (Mark, 28 October 2026): the
+   client card (it takes the rail's own look, `.mob-rail`), placed by
+   mobius-navigation.js exactly over the policy column, above it, with
+   Buckholt's large shadow as it floats. Beside the page only. */
+.mob-columns { position: relative; }
+.mob-sidebar .mob-columns > .mob-peek.mob-rail {
+  position: absolute;
+  z-index: 1000;                                      /* above the policy menu's count badges (Buckholt's `.badge` is 999) */
+  width: 14.5rem;                                     /* the policy column's width */
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-03);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.mob-peek[hidden] { display: none !important; }
+.mob-peek-scroll { height: 100%; overflow-y: auto; padding: 0 var(--spacer-02) var(--spacer-04); }
