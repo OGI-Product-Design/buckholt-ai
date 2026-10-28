@@ -323,8 +323,16 @@
          October 2026). With no policy open, the Shield opens the client's
          menu at their policies. */
       body = '<ul class="nav flex-column mob-nav mob-strip">' +
-        expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
-          '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client') +
+        /* From a policy page the client's icon goes to Client overview
+           (Laurence, 28 October 2026, from the user study: people clicked
+           it to get back to the client, and stalled when only the menu
+           changed). A link, as it opens a page. On a client page it opens
+           the client's menu, as before. */
+        (onPolicy
+          ? '<li class="mob-strip-item"><a class="btn btn-ghost" href="#c/summary"' + tipAttrs('Client overview') + '>' +
+              '<div class="btn-icon">' + icon(M.ICON.client) + '</div></a></li>'
+          : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
+              '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client')) +
         expander(onPolicy ? 'policy' : 'client', onPolicy ? '.mob-record-nav a[aria-current], .mob-record-nav a' : '.mob-rail-policies a[aria-current], .mob-rail-policies a',
           onPolicy ? 'Policy menu' : 'Policies (' + F.policies.length + ')',
           '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy && view === 'policy') +
@@ -1281,14 +1289,6 @@
       S.navCollapsed = false;
       if (R.scope === 'policy') S.sideView = ex.getAttribute('data-view');
       rerenderSide(ex.getAttribute('data-focus'));
-      /* From a policy page the client's menu opens with Client overview
-         marked, so the next step is plain (user study, 28 October 2026:
-         the menu changed, the page did not, and people stalled). Focus is
-         there too, but a pointer user does not see focus. */
-      if (R.scope === 'policy' && ex.getAttribute('data-view') === 'client') {
-        var ov = sidebar.querySelector('.mob-rail-pages a[href="#c/summary"]');
-        if (ov) ov.classList.add('mob-suggest');
-      }
       return;
     }
     if (el.closest('[data-noop]')) { e.preventDefault(); return; }
