@@ -516,6 +516,12 @@ a.mob-rail-client:focus-visible { outline: 0.125rem solid var(--focus-01); outli
    balanced (Laurence, 22 October 2026). */
 #mob-record { --mob-group-inset: var(--spacer-03); }
 #mob-record .mob-group-toggle { width: calc(100% - var(--mob-group-inset)); margin-left: var(--mob-group-inset); }
+/* In the client's menu (the card, and the same menu laid over a policy's),
+   the card's scroll area is 4px narrower on the left than on the right, so
+   a group label's hover sat 4px from the left edge and 8px from the right
+   (Laurence, 28 October 2026). It is inset 4px more on the left and its
+   padding takes 4px less, so the hover is even and nothing in it moves. */
+.mob-client-menu .mob-group-toggle { width: calc(100% - var(--spacer-02)); margin-left: var(--spacer-02); padding-left: calc(var(--nav-link-padding-x) - var(--spacer-02)); }
 .mob-group-toggle:focus-visible { outline: 0.125rem solid var(--focus-01); outline-offset: -0.125rem; }
 .mob-group-name { flex: 1 1 auto; min-width: 0; }
 /* The chevron points down while open and turns to point right when the
