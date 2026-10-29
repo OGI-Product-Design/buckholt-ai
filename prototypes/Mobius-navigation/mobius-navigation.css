@@ -381,7 +381,7 @@
   /* The policy's menu: on the panel's grey, no card of its own; with the
      strip it fills the client card's width. */
   .mob-sidebar .mob-record {
-    width: 18rem;                                     /* 288px, the client card's width (Laurence, 28 October 2026: the client and policy menus the same width, so the client menu laid over this one is the same as on a client page) */
+    width: 18rem;                                     /* 288px, the client card's width (Laurence, 28 October 2026: the client and policy menus the same width, side by side when the client menu opens beside it) */
     margin: 0;
     background-color: transparent;
     border: 0;
@@ -459,11 +459,13 @@
   .mob-client-menu.mob-all .mob-more { flex: 0 0 auto; }
 }
 
-/* The current category in the strip: Mark's solid square. */
+/* The current menu in the strip: Page navigation's active state, as the
+   icons are navigation without a visible label (Laurence, 29 October
+   2026; it was Mark's solid square, the ghost Button's pressed colour). */
 .mob-strip .btn.active {
-  --button-label-active: var(--action-text-02);
-  --button-background-active: var(--action-01);
-  --button-border-active: var(--action-01);
+  --button-label-active: var(--nav-link-active);
+  --button-background-active: var(--nav-link-background-active);
+  --button-border-active: transparent;
 }
 /* The status marks: a dot, a triangle, a no-entry sign. */
 .mob-status-icon { flex: 0 0 auto; font-size: 0.75rem; color: var(--mob-status-colour); }
@@ -1144,24 +1146,3 @@ body.mob-home #mob-create-client { display: none; }
 #mob-confirm.mob-over-panel { z-index: 1058; }
 body:has(#mob-confirm.mob-over-panel) .modal-backdrop { z-index: 1057; }
 
-/* The client's menu laid over the policy's (Mark, 28 October 2026): the
-   client card (it takes the rail's own look, `.mob-rail`), placed by
-   mobius-navigation.js exactly over the policy column, above it, with
-   Buckholt's large shadow as it floats. Beside the page only. */
-.mob-columns { position: relative; }
-.mob-sidebar .mob-columns > .mob-peek.mob-rail {
-  position: absolute;
-  z-index: 1000;                                      /* above the policy menu's count badges (Buckholt's `.badge` is 999) */
-  width: 18rem;                                       /* the policy column's width, which is the client card's */
-  margin: 0;
-  overflow: hidden;
-  background-color: var(--ui-background-01);
-  border: 1px solid var(--ui-border-03);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-.mob-peek[hidden] { display: none !important; }
-/* Spaced exactly as the client card's own menu (its `.mob-rail-scroll`
-   padding beside the page: 8px top and right, 24px bottom, 4px left), so
-   the menu sits where it does on a client page (Laurence, 28 October 2026). */
-.mob-peek-scroll { height: 100%; overflow-y: auto; padding: var(--spacer-03) var(--spacer-03) var(--spacer-05) var(--spacer-02); }

@@ -271,8 +271,6 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
 /* ------------------------------------------------------------- Floating toggle
    Not part of either design: a review control, bottom right, to switch
    between the Buckholt look and the Mobius one. */
-/* The two review Switches sit side by side in one row: the look, and
-   (from 1024px) the A/B test of the client menu (Laurence, 28 October 2026). */
 .mob-review-bar {
   /* Bottom centre (Laurence, 21 October 2026), clear of the side panels,
      which open from the right. */
@@ -299,11 +297,8 @@ html[data-skin="mobius"] .mob-drawer-head .btn {
 }
 .mob-review-bar .mob-skin-toggle { margin: 0; }   /* not Buckholt's space between stacked Checkboxes */
 .mob-skin-toggle .form-check-label { white-space: nowrap; }
-@media (max-width: 1023.98px) { .mob-menu-toggle { display: none; } }
 /* The page can scroll clear of it, so it never hides a page's last Button. */
 body:has(.mob-skin-toggle) #main { padding-bottom: 4rem; }
 @media (max-width: 575.98px) { .mob-review-bar { bottom: 0.5rem; } .mob-skin-toggle { padding: 0.25rem 0.625rem; } }
 @media print { .mob-review-bar { display: none; } }
 
-/* The client menu laid over the policy's: the client card's blue. */
-html[data-skin="mobius"] .mob-sidebar .mob-columns > .mob-peek.mob-rail { background-color: var(--mobius-blue); border: 0; }   /* no border, as the client card has none here */
