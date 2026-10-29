@@ -163,7 +163,7 @@ columns are open follows where you are:
   moves over rather than being covered.
 - *"When sidebar is collapsed: items under a category collapse into a single icon button."*
   Collapsed rail: **Client pages (one User icon button)** (the current category is marked in Page navigation's light active tint, not the ghost Button's solid pressed colour) and
-  **Policies (one Shield icon button)**,
+  **Policies (one Shield icon button)** (on client pages since dropped, Laurence, 29 October 2026: the client icon alone; on policy pages the second button is the policy's menu, with the Car),
   spaced evenly. **Pressing a
   category opens the rail at that category** (Laurence, 7 October 2026: the Shield opens the
   rail rather than a floating menu): focus moves to the current client page or the open policy. Every collapsed control has its accessible name and a
@@ -361,44 +361,39 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
   ("Stop" or "Cancel" where a status has only one). Client support and the note stay
   ghost. On a client page **Add new quote is secondary** too (Laurence). There is no fold any more:
   the same menu at every width.
-- **The client menu laid over the policy's** (Mark): on a policy page the strip's client icon is
-  a link to Client overview: **a click goes there** (Laurence), and **hovering it** lays the client's menu (pages and policies) over
-  the policy's menu, exactly over that column, with Buckholt's large shadow; it stays while the
-  pointer is on the icon or the menu and goes a moment after it leaves both. From the keyboard,
-  Enter goes to Client overview and Down arrow opens the menu with focus on the client's first page;
-  Escape or Tab out closes it, focus back on the icon. With the whole menu collapsed there is no
-  overlay (no policy menu to lay it over): the icon opens the menu at the client's. Its links go to the client's pages and policies; Show more works inside
-  it. Beside the page only (in the drawer both menus are open anyway). It is spaced exactly as the
-  client card (the card's own padding), and **the policy menu is now the client card's width,
-  288px** (it was 232px; Laurence, 28 October 2026), so the overlay matches the card and nothing
-  in it is cut short. Beside a policy the page is 56px narrower.
-- **A/B: the client menu beside the policy's** (Laurence, 28 October 2026). The hover overlay
-  above (A) may cause friction and hide what is under it, so B tries the tree: a clear left-to-right
-  flow into the page. A second review Switch at the bottom, beside "Current Mobius look", reads
-  **Client menu beside policy menu**; on, the address carries `?menu=beside` (a refresh keeps it, a
-  fresh visit is A), and the menu redraws at once. In B, on a policy page, the strip's client icon is
-  a Button, "Client menu" (`aria-expanded`, `aria-controls="mob-rail"`); hovering does nothing and
-  **a click opens the client's full card to the left of the policy menu** (both 288px), the open
-  policy marked in it and focused. **The page does not move**: the menu lies over it (a negative
-  right margin equal to what it grew, 216px, keeps its grid column as it was), lifted by Buckholt's
-  large shadow. It shuts on any choice in either menu, on choosing the page you are on again (the open policy in
-  the client's card, or the current page in the policy menu; no new page), on a click or focus outside the menu, or on Escape (focus back on the icon). Show more and
-  group toggles work inside it. Collapsed, and in the drawer below 1024px, B is the same as A, so
-  that Switch shows from 1024px only.
-  **B, collapsed** (Laurence, 29 October 2026): on a policy page the client icon opens the menu
-  with the client's card beside the policy's, as the open strip's client icon does.
+- **The client menu opens beside the policy's** (Laurence, 28–29 October 2026). On a policy page
+  the strip's client icon is a Button, "Client menu" (`aria-expanded`, `aria-controls="mob-rail"`):
+  **a click opens the client's full card to the left of the policy menu** (both 288px; the policy
+  menu was widened from 232px to the card's width on 28 October), the open policy marked in it and
+  focused: a tree read left to right into the page. **The page does not move**: the menu lies over
+  it (a negative right margin equal to what it grew, 216px, keeps its grid column as it was),
+  lifted by Buckholt's large shadow. It shuts on any choice in either menu, on choosing the page you
+  are on again (the open policy in the client's card, or the current page in the policy menu; no
+  new page), on a click or focus outside the menu, or on Escape (focus back on the icon). Show more
+  and group toggles work inside it. Collapsed, the client icon opens the menu with the client's
+  card beside the policy's in the same way. Below 1024px the drawer has both menus open, as before.
+  **What it replaced:** Mark's overlay (28 October), where the icon was a link to Client overview
+  and hovering it laid the client's menu over the policy's. It was A/B tested against this (a review
+  Switch, `?menu=beside`) and dropped on 29 October (Laurence): hovering hid the policy menu by
+  accident, could not be found on touch or from the keyboard, and gave one icon two actions.
 - **On a policy page the strip's policy-menu button is the Car** (Laurence, 29 October 2026), the
-  policy's own icon, as its Policy group has; in A and B, collapsed or beside the policy menu. On a
-  client page the strip keeps the Shield: there it is the client's Policies.
+  policy's own icon, as its Policy group has; collapsed or beside the policy menu.
+- **Collapsed on a client page, the strip has the client icon only** (Laurence, 29 October 2026):
+  the Shield ("Policies (7)") opened the same
+  menu as the client icon, only at the policies, so it served no purpose and confused.
 - **The collapse toggle reads "Collapse sidebar" / "Open sidebar"** (Laurence, 29 October 2026;
   it said "menu"), as its Sidebar icon shows; "Open menu" stays the phone's Menu button.
+- **The strip's icons are navigation** (Laurence, 29 October 2026): Page navigation without a
+  visible label, so the menu you are in is marked in Page navigation's active state (its light
+  tint and active colour; in the Mobius look, the rail's navy) rather than the ghost Button's
+  solid pressed square.
 
 ## User study, round 2 (28 October 2026)
 
 | Finding | Outcome |
 | --- | --- |
 | Collapse button reads as "back" | **Fixed.** The Sidebar icon (`fa-regular fa-sidebar`, Laurence) in both states, and the client's Avatar and name were one link to Client overview (later taken out, Laurence, 28 October 2026: the name is not a link; Client overview is the first page in the menu). |
-| Client icon on the rail strip leaves you on the policy page | **Fixed, then changed** (see Late changes: Mark's overlay on hover). Before that it went to Client overview from a policy page (Laurence, 28 October 2026; a highlight on Client overview was tried and dropped). A link, as it opens a page. On a client page it still opens the client's menu. **What went:** looking through the client's menu while staying on the policy (the client card beside an open policy). Nothing in that menu could be opened without leaving the policy anyway, so a client page from a policy is still two clicks (the client icon, then the page), and so is another policy. |
+| Client icon on the rail strip leaves you on the policy page | **Fixed, then changed twice** (see Late changes: Mark's overlay on hover, then the client menu beside the policy's, which replaced it). Before that it went to Client overview from a policy page (Laurence, 28 October 2026; a highlight on Client overview was tried and dropped). A link, as it opens a page. On a client page it still opens the client's menu. **What went:** looking through the client's menu while staying on the policy (the client card beside an open policy). Nothing in that menu could be opened without leaving the policy anyway, so a client page from a policy is still two clicks (the client icon, then the page), and so is another policy. |
 | Top-bar search loses the query | **Fixed.** Keys typed while the Modal opens (after a click, nothing had focus) go into its field; the first replaces the last search. "/" as the first key is the shortcut, not text. |
 | Make the action area easier to spot | **Not done, on purpose**: the study says re-test after the helper text first. |
 | Helper text for Copy policy and the other Policy actions | **Fixed.** Each has one line, worded from its own confirmation or panel: Copy policy "Start a new policy with the same details", Renewal invite "Invite the client to renew this policy", Customer portal settings "Let the client make changes or renew online", Stop policy "Stop the policy; this can be reversed later", Cancel policy "End cover; this cannot be undone". The menu is up to 24rem wide, as Make changes is. |
@@ -1061,15 +1056,15 @@ Awesome), and Typekit was absent.
   in the Modal, and opening a result closes it; widened, it is still there; the client menu is
   Client overview, then the Client group.
 - **Top bar**: nothing overflows or overlaps at every width from 360 to 1920px (8px steps).
-- **Client menu beside (B), 40 assertions over both looks**: shut at first with no hover link;
-  hovering opens nothing; a click opens the card left of the policy menu, both 288px, over the page
+- **Client menu beside, 50 assertions over both looks**: shut at first; hovering opens nothing; a click opens the card left of the policy menu, both 288px, over the page
   with the page's left edge unmoved; focus on the open policy; choosing it again, or the current page in the policy menu, a client page,
   another policy or a policy page shuts it; Show more keeps it open; a click on the page, and
-  Escape (focus back on the icon), shut it; collapsed and below 1024px it is as before; the
-  Switch flips A and B live and writes `?menu=beside`.
+  Escape (focus back on the icon), shut it; collapsed, the client icon opens it the same way, the
+  policy-menu icon is the Car, and on a client page the client icon is alone; below 1024px the
+  drawer is as before.
 - **Focus rings, 0 cut off** (Laurence, 29 October 2026): every focusable control on the
   homepage, a client page, a policy page, a flow and a panel, in both looks at 1440, 1024, 800
-  and 390px, with the menu collapsed, the client menu laid over, Policy actions, the work areas,
+  and 390px, with the menu collapsed, the client menu beside, Policy actions, the work areas,
   the drawer and the search Modal open: its ring (outline and offset, or shadow) must sit inside
   every ancestor that clips. Before the fix, 192 were cut off, all on the right edge of the
   policy menu's links and of the client's scrolling policy list: each scroller now has 4px of
