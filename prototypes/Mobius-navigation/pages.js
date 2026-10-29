@@ -731,28 +731,21 @@
          the team found a field that searched in place, with its own Search
          Button and recent searches, strange beside the top bar's): a click,
          Enter, Down arrow or the first character typed opens the search
-         Modal, the character carried over. Its placeholder is the Modal's
-         own; it is labelled by the page title, and "/" opens the Modal. */
+         Modal, the character carried over. It looks as the top bar's does
+         (Laurence, 29 October 2026): its placeholder, its 320px, Create new
+         client beside it. It is labelled by the page title. */
       var homeBar = '<div class="mob-home-bar">' +
         '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
           '<div class="input">' +
             '<div class="response text-input">' +
               '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
-              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-haspopup="dialog" aria-controls="mob-search-modal" autocomplete="off">' +
+              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Type / to search" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-haspopup="dialog" aria-controls="mob-search-modal" autocomplete="off">' +
             '</div>' +
           '</div>' +
         '</form>' +
-        /* "What can I search?", to the field's right as in the search Modal
-           (Laurence, 27 October 2026). */
-        '<div class="menu mob-search-help mob-home-help">' +
-          '<button type="button" class="btn btn-ghost menu-toggle" id="mob-home-help-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-controls="mob-home-help">' +
-            '<div class="btn-icon"><i class="fa-regular fa-circle-info" aria-hidden="true"></i></div>' +
-            '<span class="button-label">What can I search?</span>' +
-          '</button>' +
-          '<div class="menu-panel dropdown-menu dropdown-menu-end" id="mob-home-help" role="dialog" aria-labelledby="mob-home-help-title"></div>' +
-        '</div>' +
-        /* Create new client at the page's right, the homepage's primary
-           (Laurence, 27 October 2026). */
+        /* Create new client beside the field, as in the top bar, the
+           homepage's primary (Laurence, 29 October 2026; it was at the
+           page's right, with What can I search? between them). */
         set([btn('Create new client', { variant: 'primary', icon: ICON.newClient, href: '#newclient' })], 'mob-home-create button-set-stacked') +   /* stacked: full width on a phone, its own width elsewhere */
       '</div>';
       var d = F.outstandingDiary;
