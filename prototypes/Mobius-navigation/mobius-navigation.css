@@ -413,7 +413,7 @@
   .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head .avatar { --avatar-size: 2.5rem; }
   .mob-rail-collapsed:not(.mob-has-record) .mob-rail-head { padding: var(--spacer-04) 0 var(--spacer-03); gap: var(--spacer-03); }   /* with User meta's own 8px: 16px either side of the Avatar */
   .mob-sidebar .mob-record-head::after { content: none; }
-  .mob-sidebar .mob-record-nav { padding: 0 0 var(--spacer-05) 0; }
+  .mob-sidebar .mob-record-nav { padding: 0 var(--spacer-01) var(--spacer-05) 0; }   /* 4px at the right: room for the links' 2px focus ring inside the scroller */
   /* Collapsed head: the button above the Avatar, centred. */
   .mob-rail-collapsed .mob-rail-head { flex-direction: column-reverse; gap: var(--spacer-05); padding-inline: 0; }
   .mob-rail-collapsed .mob-rail-head .mob-column-toggle { margin-left: 0; }
@@ -448,6 +448,9 @@
   .mob-client-menu.mob-all > .mob-nav:last-child { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .mob-client-menu.mob-all > .mob-nav:last-child > .mob-group { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .mob-client-menu.mob-all .mob-rail-policies { flex: 0 1 auto; min-height: 8.5rem; flex-wrap: nowrap; overflow-y: auto; }   /* room for two rows at least */
+  /* Scrolling, it would cut off the links' 2px focus ring: 4px of room
+     inside it, taken back by the same negative margin, so nothing moves. */
+  .mob-sidebar .mob-client-menu.mob-all .mob-rail-policies { padding-block: var(--spacer-01); padding-right: var(--spacer-01); margin-block: calc(-1 * var(--spacer-01)); margin-right: calc(-1 * var(--spacer-01)); }
   /* The edge with more beyond it fades (scrollCues). */
   .mob-rail-policies.mob-more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent); }
   .mob-rail-policies.mob-more-above { -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent); }
@@ -1068,10 +1071,9 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 body.mob-home .mob-app-search,
 body.mob-home #mob-create-client { display: none; }
 .mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); }
-.mob-home-search { flex: 0 1 32rem; min-width: 0; }   /* 512px */
+.mob-home-search { flex: 0 1 20rem; min-width: 0; }   /* 320px, the top bar's */
 .mob-home-search .input-label { display: none; }
-.mob-home-help { margin: 0; }
-.mob-home-create { margin: 0 0 0 auto; }   /* at the page's right */
+.mob-home-create { margin: 0; }   /* beside the field, as in the top bar */
 /* Home in the breadcrumbs: the House, sized with the text. */
 .mob-crumb-home .breadcrumb-link { display: inline-flex; align-items: center; }
 
@@ -1124,10 +1126,9 @@ body.mob-home #mob-create-client { display: none; }
   .mob-search-modal-bar { flex-wrap: wrap; row-gap: var(--spacer-03); }
   .mob-search-modal-form { flex: 1 1 100%; }
 
-  /* The homepage: the field across the page, then
-     What can I search?, then Create new client at full width. */
+  /* The homepage: the field across the page, then Create new client at full width. */
   .mob-home-search { flex: 1 1 100%; }
-  .mob-home-create { flex: 1 1 100%; margin: 0; }
+  .mob-home-create { flex: 1 1 100%; }
 }
 
 /* Dropdowns open below their field (see bindComponents in

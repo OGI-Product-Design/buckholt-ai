@@ -434,7 +434,7 @@ the screen. These are the application's choices where Buckholt is silent:
 - **Menu helpers wrap** inside their panel rather than being cut off.
 - **Search Modal** is full screen (Buckholt's documented `.modal-fullscreen-sm-down`); the field
   and its Search Button take the width, What can I search? under them.
-- **Homepage:** the field across the page, What can I search?, then
+- **Homepage:** the field across the page, then
   **Create new client at full width** (Button set's documented `.button-set-stacked`; on a
   wider screen the set is as wide as its Button, so nothing changes there).
 - **Tabs** that overflow (Outstanding diary, Sanctions check matches at 360px) get Buckholt's
@@ -463,11 +463,11 @@ The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
   Modal): a click, Enter, Down arrow or the first character typed opens the search Modal, every
   key typed carried over; "/" opens it too, and focus comes back to the field when it closes.
   The Modal has the recent searches and runs the search, the results there, **one match
-  included** (Laurence, 27 October 2026: searching "James" opens the Modal, not the client). It
-  keeps the Modal's placeholder **"Search by name, reference or email"**, at most 512px; the
-  Search Button and the field's own recent-searches list are gone. **What can I
-  search?** sits to its right, as in the Modal, and **Create new client** at the right of the
-  page, as the homepage's **primary** (Laurence, 27 October 2026).
+  included** (Laurence, 27 October 2026: searching "James" opens the Modal, not the client). The
+  Search Button and the field's own recent-searches list are gone. **It looks as the top bar's
+  does** (Laurence, 29 October 2026, from a design): the placeholder **"Type / to search"**,
+  320px, and **Create new client** 16px to its right, the homepage's **primary** (in the top bar
+  it is secondary). What can I search? is no longer on the page; it stays in the Modal.
 - In the Modal too, matching recent searches show as you type (all of them when it is empty).
 - The search Modal's title is **"Find a client or policy"**, the homepage's (Laurence, 28 October
   2026; it was "Search"): the same task wherever it starts.
@@ -1058,6 +1058,13 @@ Awesome), and Typekit was absent.
   another policy or a policy page shuts it; Show more keeps it open; a click on the page, and
   Escape (focus back on the icon), shut it; collapsed and below 1024px it is as before; the
   Switch flips A and B live and writes `?menu=beside`.
+- **Focus rings, 0 cut off** (Laurence, 29 October 2026): every focusable control on the
+  homepage, a client page, a policy page, a flow and a panel, in both looks at 1440, 1024, 800
+  and 390px, with the menu collapsed, the client menu laid over, Policy actions, the work areas,
+  the drawer and the search Modal open: its ring (outline and offset, or shadow) must sit inside
+  every ancestor that clips. Before the fix, 192 were cut off, all on the right edge of the
+  policy menu's links and of the client's scrolling policy list: each scroller now has 4px of
+  room for the 2px ring (the policy list takes it back with a negative margin, so it does not move).
 - **Drawer at 375px**: hidden at rest, focus to Close menu, Main inert, Tab trapped, Escape
   closes with focus back on Menu, a panel opened over it closes back to the open drawer, and
   navigating closes it.

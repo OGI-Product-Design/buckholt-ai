@@ -959,11 +959,10 @@
 
   /* ====================================================== Homepage search
      The homepage's field opens the search Modal as the top bar's does
-     (Laurence, 29 October 2026), with "What can I search?" beside it. */
+     (Laurence, 29 October 2026). */
   function bindHomeSearch() {
     var form = $('mob-home-search');
     if (!form) return;
-    bindSearchHelp('mob-home-help-toggle', 'mob-home-help', 'mob-home-help-title');
     bindSearchOpener(form, $('mob-home-search-input'));
   }
 
