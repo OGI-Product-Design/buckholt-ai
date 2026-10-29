@@ -1068,12 +1068,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 body.mob-home .mob-app-search,
 body.mob-home #mob-create-client { display: none; }
 .mob-home-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacer-04); }
-.mob-home-search { position: relative; flex: 0 1 32rem; min-width: 0; }   /* 512px with its Search Button */
-.mob-home-search .input-group { flex-wrap: nowrap; }
-/* Matching recent searches: a Menu panel under the field, over the page. */
-.mob-home-recent { position: absolute; top: calc(100% + var(--spacer-02)); left: 0; right: 0; z-index: 1020; }
-.mob-home-recent[hidden] { display: none; }
-.mob-home-recent .menu-panel { --menu-shadow: var(--shadow-md); --menu-background: var(--ui-background-01); --menu-padding-x: var(--spacer-03); --menu-padding-y: var(--spacer-03); width: 100%; }
+.mob-home-search { flex: 0 1 32rem; min-width: 0; }   /* 512px */
 .mob-home-search .input-label { display: none; }
 .mob-home-help { margin: 0; }
 .mob-home-create { margin: 0 0 0 auto; }   /* at the page's right */
@@ -1129,7 +1124,7 @@ body.mob-home #mob-create-client { display: none; }
   .mob-search-modal-bar { flex-wrap: wrap; row-gap: var(--spacer-03); }
   .mob-search-modal-form { flex: 1 1 100%; }
 
-  /* The homepage: the field and its Search Button across the page, then
+  /* The homepage: the field across the page, then
      What can I search?, then Create new client at full width. */
   .mob-home-search { flex: 1 1 100%; }
   .mob-home-create { flex: 1 1 100%; margin: 0; }
