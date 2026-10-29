@@ -459,14 +459,6 @@
   .mob-client-menu.mob-all .mob-more { flex: 0 0 auto; }
 }
 
-/* The current menu in the strip: Page navigation's active state, as the
-   icons are navigation without a visible label (Laurence, 29 October
-   2026; it was Mark's solid square, the ghost Button's pressed colour). */
-.mob-strip .btn.active {
-  --button-label-active: var(--nav-link-active);
-  --button-background-active: var(--nav-link-background-active);
-  --button-border-active: transparent;
-}
 /* The status marks: a dot, a triangle, a no-entry sign. */
 .mob-status-icon { flex: 0 0 auto; font-size: 0.75rem; color: var(--mob-status-colour); }
 .mob-status-error .mob-status-icon { font-size: 0.875rem; }
@@ -478,7 +470,11 @@
 /* A strip of icons: one per category, evenly spaced and centred. */
 .mob-nav.mob-strip { --nav-gap: var(--spacer-04); align-items: center; }
 .mob-strip-item { list-style: none; }
-.mob-strip .nav-link { justify-content: center; padding-inline: 0; width: 2.5rem; }
+/* Its items are Page navigation links with only an icon (Laurence, 29
+   October 2026; they were ghost Buttons, Mark's solid square when current):
+   a 40px square, the icon centred; colours and states are the links' own. */
+.mob-nav.mob-strip .nav-link { justify-content: center; width: 2.5rem; height: 2.5rem; min-height: 2.5rem; padding: 0; }
+.mob-nav.mob-strip .nav-link > i { width: auto; }
 /* The client's Avatar (extra small) is centred in a button the size of the others. */
 .mob-strip .btn:has(> .avatar) { justify-content: center; padding: 0; width: 2.5rem; height: 2.5rem; }
 
