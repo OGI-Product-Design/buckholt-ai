@@ -78,7 +78,7 @@
   var GROUPS = {
     policy: function (p) {
       /* Policy overview is the group's first page, not an item of its own
-         (Laurence, 8 October 2026); the group takes the Shield. */
+         (Laurence, 8 October 2026). */
       var r = rulesFor(p);
       var ch = [{ id: 'summary', label: '[[Policy overview]]' }];
       if (r.pages.details) ch.push({ id: 'details', label: '[[Policy details]]' });
@@ -90,7 +90,11 @@
       entryPoints(p).forEach(function (k) {
         ch.push({ id: POLICY_ACTIONS[k].to, label: POLICY_ACTIONS[k].label });
       });
-      return { group: 'Policy', icon: ICON.policies, children: ch };
+      /* The policy's own product icon, not the Shield (Laurence, 29
+         October 2026): the Shield is the client's list of policies, so
+         here it read as that list. The Car for motor, the House for
+         household, as the search results' Product column has them. */
+      return { group: 'Policy', icon: productIcon(p), children: ch };
     },
     transactions: function (p) {
       return !rulesFor(p).pages.transactions ? null : { group: 'Transactions', icon: ICON.money, children: [
@@ -453,8 +457,13 @@
     }
   };
 
+  /* A policy's own icon: the Car for motor, the House for household, as
+     the search results' Product column has them. */
+  function productIcon(p) { return /household/i.test((p && p.product) || '') ? ICON.home : ICON.motor; }
+
   global.MobiusModel = {
     ICON: ICON,
+    productIcon: productIcon,
     policyNav: policyNav,
     policyActions: policyActions,
     policyFlows: policyFlows,
