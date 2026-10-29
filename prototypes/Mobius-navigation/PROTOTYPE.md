@@ -384,9 +384,11 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 - **The collapse toggle reads "Collapse sidebar" / "Open sidebar"** (Laurence, 29 October 2026;
   it said "menu"), as its Sidebar icon shows; "Open menu" stays the phone's Menu button.
 - **The strip's icons are navigation** (Laurence, 29 October 2026): Page navigation without a
-  visible label, so the menu you are in is marked in Page navigation's active state (its light
-  tint and active colour; in the Mobius look, the rail's navy) rather than the ghost Button's
-  solid pressed square.
+  visible label, built as it is (`li.nav-item > button.nav-link`, a 40px square, the icon centred;
+  a button, as it opens a column rather than a page), so every state is the menu links' own: at
+  rest the links' colour, on hover their hover, the menu you are in their active state (the light
+  tint; in the Mobius look, the rail's navy), and their focus ring. They were ghost Buttons: blue
+  at rest, the Button's grey hover box, Mark's solid square when current.
 
 ## User study, round 2 (28 October 2026)
 

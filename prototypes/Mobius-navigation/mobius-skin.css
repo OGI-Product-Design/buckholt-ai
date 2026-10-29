@@ -146,7 +146,6 @@ html[data-skin="mobius"] .mob-record .btn {
   --button-label-focus: #ffffff;
   --button-background-focus: transparent;
 }
-html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: var(--mobius-navy); --button-border-active: var(--mobius-navy); }
 @media (min-width: 1024px) {
   html[data-skin="mobius"] .mob-sidebar:not(.mob-has-record) .mob-rail,
   html[data-skin="mobius"] .mob-record { margin: 0; border: 0; }
@@ -166,8 +165,7 @@ html[data-skin="mobius"] .mob-strip .btn.active { --button-background-active: va
   html[data-skin="mobius"] .mob-sidebar .mob-record { background-color: var(--mobius-navy); border-radius: 1rem; }
   html[data-skin="mobius"] .mob-sidebar .mob-record-head { padding-right: var(--spacer-04); }
   html[data-skin="mobius"] .mob-sidebar .mob-record-nav { padding-right: var(--spacer-03); padding-left: var(--spacer-02); }
-  /* The strip's Buttons and the pills take Buckholt's 8px corners. */
-  html[data-skin="mobius"] .mob-strip .btn,
+  /* The head's Buttons and the pills take Buckholt's 8px corners. */
   html[data-skin="mobius"] .mob-rail-head .btn { --button-radius: 0.5rem; }
 }
 /* Inside the navy policy card the label already sits 4px in: 4px more balances its 8px on the right. */

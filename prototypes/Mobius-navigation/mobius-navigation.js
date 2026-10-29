@@ -148,11 +148,17 @@
     return ' aria-label="' + esc(name) + '" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + esc(name) + '"';
   }
 
-  /* A collapsed category: an icon-only ghost Button that opens its column
-     (`data-view`) and moves focus there (`data-focus`). */
-  function expander(view, focusSel, name, inner, on) {
-    return '<li class="mob-strip-item"><button type="button" class="btn btn-ghost' + (on ? ' active' : '') + '" data-view="' + view + '" data-focus="' + esc(focusSel) + '"' +
-      tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + inner + '</button></li>';
+  /* A strip item: Page navigation without a visible label (Laurence, 29
+     October 2026), `li.nav-item > .nav-link`, so it has every state the
+     menu's links have (rest, hover, active, focus). It is a button, as it
+     opens a column (`data-view`) and moves focus there (`data-focus`);
+     its name is in aria-label and a Tooltip. */
+  function stripItem(attrs, name, iconCls, on) {
+    return '<li class="nav-item mob-strip-item"><button type="button" class="nav-link' + (on ? ' active' : '') + '"' + attrs +
+      tipAttrs(name) + (on ? ' aria-current="true"' : '') + '>' + icon(iconCls) + '</button></li>';
+  }
+  function expander(view, focusSel, name, iconCls, on) {
+    return stripItem(' data-view="' + view + '" data-focus="' + esc(focusSel) + '"', name, iconCls, on);
   }
 
 
@@ -336,17 +342,14 @@
         /* Beside the policy's menu the client icon opens the client's menu
            to its left; collapsed, it opens the menu at the client's. */
         (beside
-          ? '<li class="mob-strip-item"><button type="button" class="btn btn-ghost" id="mob-beside-toggle" data-beside-open aria-expanded="false" aria-controls="mob-rail"' + tipAttrs('Client menu') + '>' +
-              '<div class="btn-icon">' + icon(M.ICON.client) + '</div></button></li>'
-          : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
-              '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client')) +
+          ? stripItem(' id="mob-beside-toggle" data-beside-open aria-expanded="false" aria-controls="mob-rail"', 'Client menu', M.ICON.client, false)
+          : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu', M.ICON.client, view === 'client')) +
         /* On a policy page the policy's menu, with the policy's own icon,
            the Car, as its Policy group has (Laurence, 29 October 2026). On
            a client page, collapsed, the client icon only (Laurence, 29
            October 2026): the Shield opened the same menu as the client
            icon, at its policies, so it served no purpose and confused. */
-        (onPolicy ? expander('policy', '.mob-record-nav a[aria-current], .mob-record-nav a', 'Policy menu',
-          '<div class="btn-icon">' + icon(M.productIcon(r.p)) + '</div>', view === 'policy') : '') +
+        (onPolicy ? expander('policy', '.mob-record-nav a[aria-current], .mob-record-nav a', 'Policy menu', M.productIcon(r.p), view === 'policy') : '') +
       '</ul>';
     } else if (!app) {
       /* The client's menu, built as the policy's is (the overview, then
