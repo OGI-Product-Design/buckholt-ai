@@ -958,47 +958,13 @@
   $('mob-search-btn').addEventListener('click', function () { S.searchTrigger = this; openSearch(); });
 
   /* ====================================================== Homepage search
-     The homepage's field is the Modal's search, on the page (Laurence, 27
-     October 2026): a field with its Search Button. As you type, matching
-     recent searches show under it (Down arrow moves into them, Escape
-     closes them); Search, Enter or a recent search runs it, and the results
-     open in the search Modal (one match goes straight there). */
+     The homepage's field opens the search Modal as the top bar's does
+     (Laurence, 29 October 2026), with "What can I search?" beside it. */
   function bindHomeSearch() {
-    var form = $('mob-home-search'), input = $('mob-home-search-input'), pop = $('mob-home-recent');
+    var form = $('mob-home-search');
     if (!form) return;
     bindSearchHelp('mob-home-help-toggle', 'mob-home-help', 'mob-home-help-title');
-    var items = function () { return Array.prototype.slice.call(pop.querySelectorAll('[data-recent]')); };
-    var showRecent = function () {
-      var html = input.value.trim() ? recentMenu(input.value, 'mob-home-recent-label') : '';
-      pop.innerHTML = html;
-      pop.hidden = !html;
-      input.setAttribute('aria-expanded', String(!!html));
-    };
-    var hide = function () { pop.hidden = true; input.setAttribute('aria-expanded', 'false'); };
-    var run = function (q) {
-      q = String(q || '').trim();
-      hide();
-      if (!q) { input.focus(); return; }
-      S.searchTrigger = input;
-      runModalSearch(q); openSearch(q);
-    };
-    input.addEventListener('input', showRecent);
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowDown' && !pop.hidden && items().length) { e.preventDefault(); items()[0].focus(); }
-      else if (e.key === 'Escape' && !pop.hidden) { e.preventDefault(); e.stopPropagation(); hide(); }
-    });
-    pop.addEventListener('keydown', function (e) {
-      var list = items(), i = list.indexOf(document.activeElement);
-      if (e.key === 'ArrowDown') { e.preventDefault(); list[Math.min(i + 1, list.length - 1)].focus(); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); if (i <= 0) input.focus(); else list[i - 1].focus(); }
-      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); hide(); input.focus(); }
-    });
-    pop.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-recent]');
-      if (b) { e.stopPropagation(); input.value = b.getAttribute('data-recent'); run(input.value); }
-    });
-    form.addEventListener('submit', function (e) { e.preventDefault(); run(input.value); });
-    form.addEventListener('focusout', function () { setTimeout(function () { if (!form.contains(document.activeElement)) hide(); }, 0); });
+    bindSearchOpener(form, $('mob-home-search-input'));
   }
 
 
@@ -1071,10 +1037,10 @@
     if (t.closest && t.closest('input, textarea, select, [contenteditable="true"]')) return;
     if (!R || dialogOpen() || drawerOpen()) return;
     e.preventDefault();
-    /* On the homepage the search is on the page: "/" goes to its field. */
+    /* On the homepage the field is on the page: focus comes back to it. */
     var homeField = $('mob-home-search-input');
-    if (homeField && homeField.offsetParent) { homeField.focus(); return; }
-    S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : searchInput;
+    var field = homeField && homeField.offsetParent ? homeField : searchInput;
+    S.searchTrigger = document.activeElement && document.activeElement !== document.body ? document.activeElement : field;
     openSearch();
   });
 

@@ -727,24 +727,20 @@
     dashboard: function () {
       /* The homepage (Laurence, 27 October 2026): the search and Create new
          client come down from the top bar onto the page, above the Tabs.
-         The field is the Modal's search on the page (Laurence, 27 October
-         2026): Input group with its Search Button; matching recent searches
-         show as you type; Search opens the results in the Modal. Its
-         placeholder is the Modal's own (Laurence, 27 October 2026); it is
-         labelled by the page title, and "/" still focuses it. */
+         The field works as the top bar's does (Laurence, 29 October 2026:
+         the team found a field that searched in place, with its own Search
+         Button and recent searches, strange beside the top bar's): a click,
+         Enter, Down arrow or the first character typed opens the search
+         Modal, the character carried over. Its placeholder is the Modal's
+         own; it is labelled by the page title, and "/" opens the Modal. */
       var homeBar = '<div class="mob-home-bar">' +
         '<form class="mob-home-search" role="search" id="mob-home-search" autocomplete="off">' +
           '<div class="input">' +
-            '<div class="input-group">' +
-              '<div class="response text-input">' +
-                '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
-                '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-controls="mob-home-recent" aria-expanded="false" autocomplete="off">' +
-              '</div>' +
-              '<button type="submit" class="btn btn-response" id="mob-home-search-go"><span class="button-label">Search</span></button>' +
+            '<div class="response text-input">' +
+              '<i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>' +
+              '<input type="text" class="form-control" id="mob-home-search-input" placeholder="Search by name, reference or email" enterkeyhint="search" aria-labelledby="mob-title" aria-keyshortcuts="/" aria-haspopup="dialog" aria-controls="mob-search-modal" autocomplete="off">' +
             '</div>' +
           '</div>' +
-          /* Matching recent searches, under the field as you type. */
-          '<div class="mob-home-recent" id="mob-home-recent" hidden></div>' +
         '</form>' +
         /* "What can I search?", to the field's right as in the search Modal
            (Laurence, 27 October 2026). */

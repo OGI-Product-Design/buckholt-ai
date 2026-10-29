@@ -410,7 +410,7 @@ that only say "Select"). They are not invented, so their Dropdowns open empty.
 | Results announcement reads the filters too | **Fixed.** Only the count is announced ("7 clients found for “Barnard”"), from a status region; the results area is no longer live. |
 | MTA panel focus skips Required MTA type | **Fixed.** Focus lands on the first field, a Dropdown included. |
 | Mark required fields | **Done** (Laurence, 28 October 2026): the MTA type, start date and time and the adjustment types are required; the description is labelled **"(optional)"**, the only label, as Buckholt's Forms pattern sets out when most fields are required. The date and time take native `required`; the two Dropdowns are Buttons, where it is not allowed, so they are described as "Required" (`aria-describedby`). |
-| "/" everywhere; shortcuts to Documents, Notes | "/" already opens the search from every page and the homepage field there. **Open:** further shortcuts. |
+| "/" everywhere; shortcuts to Documents, Notes | "/" already opens the search from every page, the homepage included. **Open:** further shortcuts. |
 | Add "Change of vehicle" | **Already done**: the 42 adjustment types include Change of Car/Bike, Change of Cover and Proposer - Add. |
 | Make Add new quote stand out | **Not done**: it stays a ghost Button, like the actions beside it (Laurence, 28 October 2026). |
 
@@ -434,7 +434,7 @@ the screen. These are the application's choices where Buckholt is silent:
 - **Menu helpers wrap** inside their panel rather than being cut off.
 - **Search Modal** is full screen (Buckholt's documented `.modal-fullscreen-sm-down`); the field
   and its Search Button take the width, What can I search? under them.
-- **Homepage:** the field and its Search Button across the page, What can I search?, then
+- **Homepage:** the field across the page, What can I search?, then
   **Create new client at full width** (Button set's documented `.button-set-stacked`; on a
   wider screen the set is as wide as its Button, so nothing changes there).
 - **Tabs** that overflow (Outstanding diary, Sanctions check matches at 360px) get Buckholt's
@@ -457,13 +457,15 @@ The Dashboard is treated as the **homepage** (Laurence, 27 October 2026):
   the Tabs are the next Panel, the Pane's gap below (4rem). An earlier build pulled the field to
   16px with a negative margin; that broke the page-layout rule and is gone.
 - **On this page only**, the search field and **Create new client** come down from the top bar
-  onto the page, above the Outstanding diary and Sanctions check matches Tabs. Here the field is
-  **the Modal's search on the page** (Laurence, 27 October 2026): Input group with its **Search**
-  Button, the Modal's placeholder **"Search by name, reference or email"** (Laurence, 27 October
-  2026), at most 512px. As you type, **matching recent searches** show under
-  it (Down arrow moves into them, Escape closes them); Search, Enter or a recent search runs it
-  and the results open in the search Modal, **one match included** (Laurence, 27 October 2026:
-  searching "James" opens the Modal, not the client). "/" goes to this field. **What can I
+  onto the page, above the Outstanding diary and Sanctions check matches Tabs. **The field works
+  as the top bar's does** (Laurence, 29 October 2026; the team found it strange that it searched
+  in place, with its own Search Button and list of recent searches, when the top bar's opens the
+  Modal): a click, Enter, Down arrow or the first character typed opens the search Modal, every
+  key typed carried over; "/" opens it too, and focus comes back to the field when it closes.
+  The Modal has the recent searches and runs the search, the results there, **one match
+  included** (Laurence, 27 October 2026: searching "James" opens the Modal, not the client). It
+  keeps the Modal's placeholder **"Search by name, reference or email"**, at most 512px; the
+  Search Button and the field's own recent-searches list are gone. **What can I
   search?** sits to its right, as in the Modal, and **Create new client** at the right of the
   page, as the homepage's **primary** (Laurence, 27 October 2026).
 - In the Modal too, matching recent searches show as you type (all of them when it is empty).
