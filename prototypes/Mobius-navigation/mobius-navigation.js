@@ -319,7 +319,10 @@
       '</div>' +
       /* Mark's menu (19 October 2026): the head spans the menu, the client
          at the top of both columns, the collapse button at its right. */
-      columnToggle('data-rail-toggle aria-controls="sidebar"', collapsed, 'menu');
+      /* "Open sidebar" / "Collapse sidebar", as its Sidebar icon says
+         (Laurence, 29 October 2026; it said "menu", which the phone's
+         Menu button also says). */
+      columnToggle('data-rail-toggle aria-controls="sidebar"', collapsed, 'sidebar');
     $('mob-rail-head').hidden = app;
 
     var curPolicy = onPolicy ? r.p.id : null;
@@ -350,9 +353,12 @@
               '<span class="visually-hidden" id="mob-peek-hint">Down arrow opens the client\'s menu</span></li>'
           : expander('client', '.mob-rail-pages a[aria-current], .mob-rail-pages a', 'Client menu',
               '<div class="btn-icon">' + icon(M.ICON.client) + '</div>', view === 'client')) +
+        /* On a policy page the policy's menu takes the policy's own icon,
+           the Car, as its Policy group does (Laurence, 29 October 2026);
+           on a client page the Shield is the client's Policies. */
         expander(onPolicy ? 'policy' : 'client', onPolicy ? '.mob-record-nav a[aria-current], .mob-record-nav a' : '.mob-rail-policies a[aria-current], .mob-rail-policies a',
           onPolicy ? 'Policy menu' : 'Policies (' + F.policies.length + ')',
-          '<div class="btn-icon">' + icon(M.ICON.policies) + '</div>', onPolicy && view === 'policy') +
+          '<div class="btn-icon">' + icon(onPolicy ? M.productIcon(r.p) : M.ICON.policies) + '</div>', onPolicy && view === 'policy') +
       '</ul>';
     } else if (!app) {
       /* The client's menu, built as the policy's is (the overview, then
@@ -1372,6 +1378,14 @@
       return;
     }
     var ex = el.closest('[data-view]');
+    /* B, collapsed on a policy page: the client icon opens the menu with
+       the client's menu beside the policy's, as its click does open. */
+    if (ex && besideMode() && R.scope === 'policy' && !narrow.matches && ex.getAttribute('data-view') === 'client') {
+      S.navCollapsed = false;
+      S.besideOpen = true;
+      rerenderSide('#mob-rail .mob-rail-policies a[aria-current], #mob-rail a');
+      return;
+    }
     if (ex) {
       S.navCollapsed = false;
       if (R.scope === 'policy') S.sideView = ex.getAttribute('data-view');
