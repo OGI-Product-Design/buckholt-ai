@@ -1,0 +1,10 @@
+{
+  // A separate Worker for reviewing the colour themes, so the live `mobius-nav`
+  // site is untouched. Deploy with: npx wrangler deploy --config wrangler.themes.jsonc
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mobius-nav-themes",
+  "compatibility_date": "2026-10-06",
+  "assets": {
+    "directory": "."
+  }
+}
