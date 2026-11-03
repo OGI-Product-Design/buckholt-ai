@@ -129,7 +129,18 @@ html[data-theme]:not([data-skin="mobius"]) .app-bar-avatar { background-color: v
 
 /* ------------------------------------------------------------- Theme select
    A review control beside the skin switch. Not part of either design. */
+/* The same size as the skin switch's pill: its padding, label text, and a
+   24px-tall select inside it. */
 .mob-theme-toggle { gap: 0.5rem; }
-.mob-theme-toggle .mob-theme-label { white-space: nowrap; margin: 0; }
-.mob-theme-toggle .form-select { min-width: 12rem; }
+.mob-theme-toggle .mob-theme-label { white-space: nowrap; margin: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 500; }
+.mob-theme-toggle .select-input { margin: 0; }
+.mob-theme-toggle .form-select {
+  min-width: 11rem;
+  height: 1.5rem;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+}
 .mob-theme-toggle[aria-disabled="true"] { opacity: 0.6; }
