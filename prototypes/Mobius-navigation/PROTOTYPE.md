@@ -1077,3 +1077,15 @@ Awesome), and Typekit was absent.
 - **Sweep**: all routes (every page of every status, a no-results search and every module), at 1440 / 1024 / 768 / 375. No
   console or page errors, and no page-level horizontal overflow. Wide tables scroll inside
   Buckholt's `.table-content`.
+
+---
+
+## Colour themes (review control)
+
+Five colour themes can be tried in the Buckholt look: **Ink and ember**, **Forest and saffron**, **Midnight violet**, **Terracotta editorial** and **Wayfinding spectrum**. Choose one from the **Colour theme** select in the review bar, or with `?theme=ember|forest|violet|terracotta|spectrum`. With no theme the prototype is plain Buckholt. In the Mobius look the select is disabled.
+
+- `mobius-themes.css`: each theme as semantic tokens only (`--accent`, `--nav-bg`, `--text` ...). No component styles.
+- `mobius-theme-map.css`: re-points Buckholt's own tokens (`--action-01`, `--ui-background-*`, `--link-colour` ...) onto those tokens, and themes the nav columns, top bar and blade. Applies only under `html[data-theme]:not([data-skin="mobius"])`.
+- `mobius-theme.js`: reads `?theme=`, sets `data-theme` on `<html>`, builds the select. In Spectrum it sets `data-zone` from the current area; the area to hue mapping is a placeholder in `zone()`.
+
+Colour only: nothing in layout, spacing or type changes. `shared/app-shell.css` and `blade.css` serve other prototypes, so they are themed from the mapping layer, not edited. Gaps: the `hero-*` and `status-*` tokens are defined but unused (no hero or lifecycle chips exist on the pages yet). Contrast was measured against 12 rendered pairs per theme, all AA.
