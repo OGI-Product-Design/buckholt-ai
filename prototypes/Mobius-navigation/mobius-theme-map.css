@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Colour themes: the mapping layer.
+
+   mobius-themes.css defines each theme's semantic tokens (--accent,
+   --nav-bg, ...). This file re-points Buckholt's own tokens onto them, so
+   every Buckholt component follows. Colour only.
+
+   It applies in the Buckholt look when a theme is chosen (?theme=<name>).
+   With no theme, or in the Mobius look, none of it applies and Buckholt
+   renders unchanged. Load after mobius-themes.css.
+   ========================================================================== */
+
+html[data-theme]:not([data-skin="mobius"]) {
+  /* Surfaces and text */
+  --body-background: var(--canvas);
+  --ui-background-01: var(--surface);
+  --ui-background-02: var(--canvas);
+  --ui-background-03: var(--surface-sunken);
+  --ui-background-04: var(--surface-sunken);
+  --ui-border-01: var(--border-strong);
+  --ui-border-02: var(--border);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --text-tertiary: var(--text-subtle);
+  /* --text-muted needs no line: the theme and Buckholt use the same name,
+     so the theme's value already is Buckholt's. Re-pointing it here would
+     overwrite the theme's own and make --text-secondary read as --text-subtle. */
+
+  /* Action: Buttons, selected states, focus */
+  --action-01: var(--accent);
+  --action-02: var(--accent-hover);
+  --action-03: var(--accent-pressed);
+  --action-04: var(--accent-soft);
+  --action-text-01: var(--link);
+  --action-text-02: var(--on-accent);
+  --text-active: var(--link);
+  --focus-01: var(--focus);
+
+  /* Links */
+  --link-colour: var(--link);
+  --link-hover: var(--link);
+  --link-visited: var(--link);
+  --link-icon: var(--link);
+  --link-icon-hover: var(--link);
+  --link-icon-visited: var(--link);
+
+  /* Secondary support colour */
+  --expressive-secondary-deep: var(--on-secondary-soft);
+  --expressive-secondary-soft: var(--secondary-soft);
+  --expressive-secondary-rich: var(--on-secondary-soft);
+  --expressive-secondary-pale: var(--secondary-soft);
+}
+
+/* The menu columns take the theme's nav colours, as the Mobius skin does
+   with its own blue and navy. */
+html[data-theme]:not([data-skin="mobius"]) #sidebar.mob-sidebar {
+  background-color: var(--nav-bg);
+  background-image: none;
+  border-color: var(--nav-border);
+}
+html[data-theme]:not([data-skin="mobius"]) .mob-rail-head,
+html[data-theme]:not([data-skin="mobius"]) .mob-rail,
+html[data-theme]:not([data-skin="mobius"]) .mob-rail .nav,
+html[data-theme]:not([data-skin="mobius"]) .mob-record,
+html[data-theme]:not([data-skin="mobius"]) .mob-record .nav,
+html[data-theme]:not([data-skin="mobius"]) .mob-drawer-areas,
+html[data-theme]:not([data-skin="mobius"]) .mob-drawer-areas .nav {
+  --text-primary: var(--nav-fg);
+  --text-secondary: var(--nav-fg-muted);
+  --text-muted: var(--nav-fg-muted);
+  --ui-border-02: var(--nav-hover);
+  --nav-link: var(--nav-fg);
+  --nav-link-hover: var(--nav-fg);
+  --nav-link-background-hover: var(--nav-hover);
+  --nav-link-active: var(--nav-active-fg);
+  --nav-link-background-active: var(--nav-active-bg);
+  --nav-link-border-focus: var(--nav-fg);
+  --link-colour: var(--nav-fg);
+  --link-hover: var(--nav-fg);
+  --link-icon: var(--nav-fg);
+  --link-icon-hover: var(--nav-fg);
+  --action-text-01: var(--nav-fg);
+  --action-04: var(--nav-hover);
+  --focus-01: var(--nav-fg);
+  color: var(--nav-fg);
+}
+html[data-theme]:not([data-skin="mobius"]) .mob-rail-head,
+html[data-theme]:not([data-skin="mobius"]) .mob-rail,
+html[data-theme]:not([data-skin="mobius"]) .mob-record,
+html[data-theme]:not([data-skin="mobius"]) .mob-drawer-areas { background-color: transparent; }
+
+/* Ghost Buttons in the columns. */
+html[data-theme]:not([data-skin="mobius"]) .mob-rail-head .btn,
+html[data-theme]:not([data-skin="mobius"]) .mob-rail .btn,
+html[data-theme]:not([data-skin="mobius"]) .mob-record .btn {
+  --button-label: var(--nav-fg);
+  --button-label-hover: var(--nav-fg);
+  --button-background-hover: var(--nav-hover);
+  --button-label-active: var(--nav-active-fg);
+  --button-background-active: var(--nav-active-bg);
+  --button-label-focus: var(--nav-fg);
+  --button-background-focus: transparent;
+}
+
+/* The current page's marker: an inset edge, so nothing moves. */
+html[data-theme]:not([data-skin="mobius"]) .mob-sidebar .nav-link.active {
+  box-shadow: inset 3px 0 0 var(--nav-indicator, var(--accent));
+}
+
+/* Shared app chrome (top bar, blade). shared/app-shell.css and blade.css
+   hard-code their colours and serve other prototypes, so they are themed
+   from here rather than edited. */
+html[data-theme]:not([data-skin="mobius"]) {
+  --app-chrome-border: var(--border);
+  --blade-header-background: var(--nav-bg);
+  --blade-header-text: var(--nav-fg);
+}
+html[data-theme]:not([data-skin="mobius"]) .app-bar { background-color: var(--surface); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-search i,
+html[data-theme]:not([data-skin="mobius"]) .app-bar-search input::placeholder { color: var(--text-subtle); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-search input { background-color: var(--surface); color: var(--text); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-search input:focus { outline-color: var(--focus); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-status,
+html[data-theme]:not([data-skin="mobius"]) .app-bar-time { color: var(--text); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-date { color: var(--text-muted); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-help,
+html[data-theme]:not([data-skin="mobius"]) .app-bar-account { color: var(--link); }
+html[data-theme]:not([data-skin="mobius"]) .app-bar-avatar { background-color: var(--accent); color: var(--on-accent); }
+
+/* ------------------------------------------------------------- Theme select
+   A review control beside the skin switch. Not part of either design. */
+.mob-theme-toggle { gap: 0.5rem; }
+.mob-theme-toggle .mob-theme-label { white-space: nowrap; margin: 0; }
+.mob-theme-toggle .form-select { min-width: 12rem; }
+.mob-theme-toggle[aria-disabled="true"] { opacity: 0.6; }

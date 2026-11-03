@@ -1,0 +1,153 @@
+/* Mobius navigation: colour theme overrides
+   Load after the base skin. Each theme only redefines tokens; components
+   read the tokens and never hard-code colour. Switch with
+   <html data-theme="ember|forest|violet|terracotta|spectrum">.
+   The spectrum theme also reads data-zone on <html> (home, clients,
+   policies, claims, documents, reports) so each area owns a hue. */
+
+/* @theme ember */
+[data-theme="ember"] {
+  --canvas: #F7F5F0; --surface: #FFFFFF; --surface-sunken: #EFECE5;
+  --border: #E2DDD3; --border-strong: #C9C2B4;
+  --text: #14213D; --text-muted: #4A5571; --text-subtle: #6B7590;
+  --nav-bg: #14213D; --nav-fg: #F7F5F0; --nav-fg-muted: #A9B3C9;
+  --nav-hover: rgba(255,255,255,0.07); --nav-active-bg: rgba(255,107,74,0.18);
+  --nav-active-fg: #FFFFFF; --nav-indicator: #FF6B4A; --nav-border: transparent;
+  --accent: #FF6B4A; --accent-hover: #F2552F; --accent-pressed: #D9431F; --on-accent: #2A0E06;
+  --accent-soft: #FFE6DF; --on-accent-soft: #9A2E14;
+  --secondary: #FCA311; --secondary-soft: #FFF0D1; --on-secondary-soft: #7A4B00;
+  --link: #B83A1B; --focus: #FF6B4A;
+  --hero-bg: #14213D; --hero-fg: #FFFFFF; --hero-fg-muted: #B4BDD1;
+  --hero-border: rgba(255,255,255,0.22); --hero-track: rgba(255,255,255,0.16);
+  --hero-fill: #FCA311; --hero-stripe: transparent;
+  --status-live-bg: #DDF3E4; --status-live-fg: #1B6B3A;
+  --status-quote-bg: #E3E9F7; --status-quote-fg: #2A4687;
+  --status-renewal-bg: #FFF0D1; --status-renewal-fg: #7A4B00;
+  --status-lapsed-bg: #FFE6DF; --status-lapsed-fg: #9A2E14;
+  --status-cancelled-bg: #ECE9E2; --status-cancelled-fg: #4A5571;
+}
+/* @end */
+
+/* @theme forest */
+[data-theme="forest"] {
+  --canvas: #F6F4EC; --surface: #FFFFFF; --surface-sunken: #EDEADF;
+  --border: #DFDBCB; --border-strong: #C4BFAA;
+  --text: #12372A; --text-muted: #3F5A4C; --text-subtle: #5F7568;
+  --nav-bg: #12372A; --nav-fg: #F6F4EC; --nav-fg-muted: #A9C4B5;
+  --nav-hover: rgba(255,255,255,0.07); --nav-active-bg: rgba(242,183,5,0.16);
+  --nav-active-fg: #FFFFFF; --nav-indicator: #F2B705; --nav-border: transparent;
+  --accent: #F2B705; --accent-hover: #E0A800; --accent-pressed: #C99600; --on-accent: #2B2000;
+  --accent-soft: #FDF1C7; --on-accent-soft: #6B5000;
+  --secondary: #436850; --secondary-soft: #DCE9DF; --on-secondary-soft: #1E4A30;
+  --link: #2F6B45; --focus: #2F6B45;
+  --hero-bg: #E3ECE2; --hero-fg: #12372A; --hero-fg-muted: #3F5A4C;
+  --hero-border: #B9CDBC; --hero-track: #C9D9CB;
+  --hero-fill: #436850; --hero-stripe: transparent;
+  --status-live-bg: #DCE9DF; --status-live-fg: #1E4A30;
+  --status-quote-bg: #E4E8F2; --status-quote-fg: #2E3F6B;
+  --status-renewal-bg: #FDF1C7; --status-renewal-fg: #6B5000;
+  --status-lapsed-bg: #F8E1D9; --status-lapsed-fg: #8A2F17;
+  --status-cancelled-bg: #EAE7DC; --status-cancelled-fg: #4D5A52;
+}
+/* @end */
+
+/* @theme violet */
+[data-theme="violet"] {
+  --canvas: #F5F4FF; --surface: #FFFFFF; --surface-sunken: #ECEAFB;
+  --border: #E0DDF5; --border-strong: #C6C1EA;
+  --text: #1E1B4B; --text-muted: #4B4880; --text-subtle: #67649A;
+  --nav-bg: #1E1B4B; --nav-fg: #F5F4FF; --nav-fg-muted: #B5B0EA;
+  --nav-hover: rgba(255,255,255,0.07); --nav-active-bg: rgba(61,220,151,0.16);
+  --nav-active-fg: #FFFFFF; --nav-indicator: #3DDC97; --nav-border: transparent;
+  --accent: #6D5DF6; --accent-hover: #5B4AE8; --accent-pressed: #4A3AD0; --on-accent: #FFFFFF;
+  --accent-soft: #E9E6FF; --on-accent-soft: #3F32B5;
+  --secondary: #3DDC97; --secondary-soft: #D4F7E7; --on-secondary-soft: #0B5E3B;
+  --link: #5141E0; --focus: #6D5DF6;
+  --hero-bg: #2B2770; --hero-fg: #FFFFFF; --hero-fg-muted: #C2BEF0;
+  --hero-border: rgba(255,255,255,0.24); --hero-track: rgba(255,255,255,0.16);
+  --hero-fill: #3DDC97; --hero-stripe: transparent;
+  --status-live-bg: #D4F7E7; --status-live-fg: #0B5E3B;
+  --status-quote-bg: #E9E6FF; --status-quote-fg: #3F32B5;
+  --status-renewal-bg: #FFF1CC; --status-renewal-fg: #7A5200;
+  --status-lapsed-bg: #FFE3E6; --status-lapsed-fg: #A3203A;
+  --status-cancelled-bg: #EDECF5; --status-cancelled-fg: #4B4880;
+}
+/* @end */
+
+/* @theme terracotta */
+[data-theme="terracotta"] {
+  --canvas: #FAF8F4; --surface: #FFFFFF; --surface-sunken: #F2ECE3;
+  --border: #E6DDD0; --border-strong: #D0C3B1;
+  --text: #2B2522; --text-muted: #5E524A; --text-subtle: #776A60;
+  --nav-bg: #EDE3D6; --nav-fg: #2B2522; --nav-fg-muted: #66564A;
+  --nav-hover: rgba(43,37,34,0.06); --nav-active-bg: #FAF8F4;
+  --nav-active-fg: #2B2522; --nav-indicator: #B5472A; --nav-border: #DDD0BF;
+  --accent: #B5472A; --accent-hover: #9F3D23; --accent-pressed: #88331C; --on-accent: #FFFFFF;
+  --accent-soft: #F6E2D8; --on-accent-soft: #8A3518;
+  --secondary: #7A8B6F; --secondary-soft: #E3E8DC; --on-secondary-soft: #3F5233;
+  --link: #A0401F; --focus: #B5472A;
+  --hero-bg: #F2ECE3; --hero-fg: #2B2522; --hero-fg-muted: #5E524A;
+  --hero-border: #D9CCBA; --hero-track: #E2D8CA;
+  --hero-fill: #B5472A; --hero-stripe: transparent;
+  --status-live-bg: #E3E8DC; --status-live-fg: #3F5233;
+  --status-quote-bg: #E2E6EE; --status-quote-fg: #3A4A66;
+  --status-renewal-bg: #F7EBC9; --status-renewal-fg: #6E5212;
+  --status-lapsed-bg: #F6E2D8; --status-lapsed-fg: #8A3518;
+  --status-cancelled-bg: #EFEAE3; --status-cancelled-fg: #5E524A;
+}
+/* @end */
+
+/* @theme spectrum */
+[data-theme="spectrum"] {
+  --canvas: #F5F7F9; --surface: #FFFFFF; --surface-sunken: #EDF0F3;
+  --border: #DFE4EA; --border-strong: #C5CDD6;
+  --text: #1F2933; --text-muted: #4B5866; --text-subtle: #66727F;
+  --nav-bg: #1F2933; --nav-fg: #F5F7F9; --nav-fg-muted: #AAB4BF;
+  --nav-hover: rgba(255,255,255,0.06); --nav-active-bg: rgba(255,255,255,0.10);
+  --nav-active-fg: #FFFFFF; --nav-border: transparent;
+  --zone-home: #9AA6B4; --zone-clients: #19A391; --zone-policies: #5B97F2;
+  --zone-claims: #F26A6F; --zone-documents: #F0B13A; --zone-reports: #9A85F2;
+  --secondary: #4B5866; --secondary-soft: #EDF0F3; --on-secondary-soft: #2E3842;
+  --hero-bg: #FFFFFF; --hero-fg: #1F2933; --hero-fg-muted: #4B5866;
+  --hero-border: #DFE4EA; --hero-track: #E6EAEE;
+  --status-live-bg: #DDF4E4; --status-live-fg: #1A6B37;
+  --status-quote-bg: #E1ECFC; --status-quote-fg: #164A9E;
+  --status-renewal-bg: #FFF2D6; --status-renewal-fg: #7A4E00;
+  --status-lapsed-bg: #FDE4E4; --status-lapsed-fg: #A3262A;
+  --status-cancelled-bg: #EDF0F3; --status-cancelled-fg: #4B5866;
+}
+[data-theme="spectrum"][data-zone="home"] {
+  --zone-active: var(--zone-home);
+  --accent: #4B5866; --accent-hover: #3E4955; --accent-pressed: #313A44; --on-accent: #FFFFFF;
+  --accent-soft: #E6EAEE; --on-accent-soft: #2E3842;
+}
+[data-theme="spectrum"][data-zone="clients"] {
+  --zone-active: var(--zone-clients);
+  --accent: #0E7C70; --accent-hover: #0B6A60; --accent-pressed: #095950; --on-accent: #FFFFFF;
+  --accent-soft: #D7F0EC; --on-accent-soft: #0A5A51;
+}
+[data-theme="spectrum"][data-zone="policies"] {
+  --zone-active: var(--zone-policies);
+  --accent: #2468D6; --accent-hover: #1D59BA; --accent-pressed: #174B9E; --on-accent: #FFFFFF;
+  --accent-soft: #E1ECFC; --on-accent-soft: #164A9E;
+}
+[data-theme="spectrum"][data-zone="claims"] {
+  --zone-active: var(--zone-claims);
+  --accent: #C9353A; --accent-hover: #B12C31; --accent-pressed: #982529; --on-accent: #FFFFFF;
+  --accent-soft: #FBE3E3; --on-accent-soft: #8E2226;
+}
+[data-theme="spectrum"][data-zone="documents"] {
+  --zone-active: var(--zone-documents);
+  --accent: #E8A21A; --accent-hover: #D69212; --accent-pressed: #BD800D; --on-accent: #2B1D00;
+  --accent-soft: #FFF1D6; --on-accent-soft: #7A4E00; --zone-fill: #A86F00;
+}
+[data-theme="spectrum"][data-zone="reports"] {
+  --zone-active: var(--zone-reports);
+  --accent: #6B4FD8; --accent-hover: #5C41C4; --accent-pressed: #4E36AC; --on-accent: #FFFFFF;
+  --accent-soft: #ECE8FC; --on-accent-soft: #46309E;
+}
+[data-theme="spectrum"][data-zone] {
+  --nav-indicator: var(--zone-active); --link: var(--on-accent-soft); --focus: var(--accent);
+  --hero-fill: var(--zone-fill, var(--accent)); --hero-stripe: var(--accent);
+}
+/* @end */

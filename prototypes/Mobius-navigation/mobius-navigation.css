@@ -998,7 +998,7 @@ mark.mob-term {
   height: 1.125rem;
   border-radius: 50%;
   background-color: var(--expressive-quaternary-deep);
-  color: #ffffff;
+  color: var(--text-light);
   font-size: 0.5625rem;
 }
 
@@ -1049,7 +1049,7 @@ html body.mob-support-record .app-bar { border-bottom: 3px solid var(--expressiv
 .menu-item .mob-icon-shield-pen { width: 1.25em; margin: 0 var(--menu-item-icon-spacing) 0 0; -webkit-mask-size: 1.125em; mask-size: 1.125em; }
 /* Cancel policy reads red at rest, not only on hover (Mark's design);
    Buckholt's danger item colours on hover only. */
-.mob-overflow .menu-item-danger, .mob-phone-actions .menu-item-danger { --menu-item-label: #d7050c; --menu-item-label-active: #d7050c; color: #d7050c; }
+.mob-overflow .menu-item-danger, .mob-phone-actions .menu-item-danger { --menu-item-label: var(--danger-60); --menu-item-label-active: var(--danger-60); color: var(--danger-60); }
 
 /* Make changes' items carry a one-line helper under the label (Laurence,
    27 October 2026), so the choice is clear before it is made. */
