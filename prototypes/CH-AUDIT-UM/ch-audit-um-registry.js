@@ -1,4 +1,4 @@
-/* Audit Centre: User Management — the CH-SHELL contract items.   NOT BUCKHOLT.
+/* Audit Centre (CH-AUDIT-UM) — the CH-SHELL contract items.   NOT BUCKHOLT.
 
    Loaded on CH-AUDIT-UM pages only, after `../CH-SHELL/shell/ch-registry.js`
    and before `../CH-SHELL/shell/ch-shell.js`. CH-SHELL's contract says a

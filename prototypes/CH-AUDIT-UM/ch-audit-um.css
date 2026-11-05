@@ -1,15 +1,16 @@
-/* Audit Centre: User Management.                            NOT BUCKHOLT.
+/* Audit Centre (CH-AUDIT-UM).                            NOT BUCKHOLT.
 
    Arrangement for the "Buckholt gaps" in `ch-audit-um-spec.md`, and
-   nothing else. The components inside — Tabs, Response button, Text input,
+   nothing else. The components inside — Tabs, Text input,
    Select, Dropdown, Menu button, Table, Avatar, Tooltip, Button, Key-value
    pair, Tag, Card — keep Buckholt's own styling. Values are Buckholt tokens
    wherever one exists. Loaded after the CH shell's and the blade's
    stylesheets. */
 
 /* ---------------------------------------------------------- Tab content
-   Inside the one tab, the switcher, the filter bar and the results are
-   directly related items, so they take Panel's 32px item gap. */
+   Inside the Mobius users and Config Hub users tabs, the filter bar and
+   the results are directly related items, so they take Panel's 32px item
+   gap. The placeholder tabs (AU-00-04) start at the same offset. */
 .au-view {
   display: flex;
   flex-direction: column;
@@ -17,35 +18,11 @@
   padding-top: var(--spacer-05);
 }
 
-/* ---------------------------------------------------------- Gap 1: content switcher
-   Buckholt Response button (native radios) as one segmented control: the
-   options sit in a 1px outlined box, left-aligned, and the selected option
-   is Response button's own checked state (outline and pale fill), so it is
-   never shown by colour alone. Hover is Response button's own hover. The
-   unselected option drops only its border. Same construction as the
-   CH-SHELL environment control (its Gap 2), at Response button's full
-   height. */
-.au-switcher {
-  flex: none;
-  flex-wrap: nowrap;
-  align-self: flex-start;
-  gap: var(--spacer-01);
-  padding: var(--spacer-01);
-  background-color: var(--ui-background-01);
-  border: 1px solid var(--ui-border-02);
-  border-radius: var(--border-radius-md);
+.au-placeholder {
+  padding-top: var(--spacer-05);
 }
 
-.au-switcher .btn-response {
-  white-space: nowrap;
-}
-
-.au-switcher .btn-check:not(:checked) + .btn-response {
-  --button-border: transparent;
-  --button-background: transparent;
-}
-
-/* ---------------------------------------------------------- Gap 3: filter bar
+/* ---------------------------------------------------------- Gap 2: filter bar
    One row, bottom-aligned so the label-less Search lines up with the
    labelled fields; Record type at the right end. */
 .au-filter-bar {
@@ -172,7 +149,7 @@
 .au-col-summary .au-trunc { max-width: 16rem; }
 .au-col-by .au-trunc { max-width: 10rem; }
 
-/* Gap 4: selected row while its drawer is open. The same pale overlay
+/* Gap 3: selected row while its drawer is open. The same pale overlay
    Response button uses for its selected option; the open dialog carries
    the state, so colour is never the only signal. */
 .au-table tr.au-selected > td {
@@ -185,7 +162,7 @@
   cursor: pointer;
 }
 
-/* Gap 6: empty and no-results states replace the rows. */
+/* Gap 5: empty and no-results states replace the rows. */
 .au-state {
   padding: var(--spacer-07) 0;
   text-align: center;
@@ -200,7 +177,7 @@
   white-space: normal;
 }
 
-/* ---------------------------------------------------------- Gap 5: Open GI avatar
+/* ---------------------------------------------------------- Gap 4: Open GI avatar
    Buckholt Avatar with its image form, holding the Open GI mark, inside a
    ring. The ring is Buckholt's primary 60 (the focus and link blue). The wrapper is the
    focusable Tooltip trigger. */
@@ -224,7 +201,7 @@
   padding: 22%;
 }
 
-/* ---------------------------------------------------------- Gap 4: pagination
+/* ---------------------------------------------------------- Gap 3: pagination
    Below the table: page buttons, "Results per page", "Showing". */
 .au-pagination {
   display: flex;
@@ -259,7 +236,7 @@
   padding-bottom: var(--spacer-03);
 }
 
-/* ---------------------------------------------------------- Gap 2: Audit details drawer
+/* ---------------------------------------------------------- Gap 1: Audit details drawer
    The shared prototype blade, as it is: header bar, scrolling body, fixed
    footer. Sections are a heading then their content, with Panel's 32px
    rhythm between them. */

@@ -1,4 +1,4 @@
-/* Audit Centre: User Management — seed data.                  NOT BUCKHOLT.
+/* Audit Centre (CH-AUDIT-UM) — seed data.                  NOT BUCKHOLT.
 
    Every value comes from `ch-audit-um-spec.md` ("Seed data", "Data model",
    "AU-04 · Patterns"). Dates are offsets from the prototype's current date

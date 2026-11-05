@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>User Management | Audit Centre | Configuration Hub</title>
+<title>Mobius users | Audit Centre | Configuration Hub</title>
 
 <!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
 <link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
@@ -17,12 +17,14 @@
 </head>
 <body>
 
-<!-- AU-00 · Audit Centre > User Management, the base page, with the flows
-     that start from it: AU-01 switch views, AU-02 search and filter, AU-03
-     record type, AU-04 Audit details. Rows, filter options, pagination and
-     the drawer are rendered by ch-audit-um.js; everything that does not
-     change is written here. The view is in the URL fragment:
-     #mobius-users (default) or #configuration-hub-users. -->
+<!-- AU-00 · Audit Centre, the base page, with the flows that start from it:
+     AU-01 switch tabs, AU-02 search and filter, AU-03 record type, AU-04
+     Audit details. Four Buckholt Tabs; the Mobius users and Config Hub users
+     tabs share one audit view (filters, table, pagination), which
+     ch-audit-um.js moves into the selected tab's panel and renders for that
+     tab. AutoMATE and Third-Party Services show a placeholder (AU-00-04).
+     The selected tab is in the URL fragment: #mobius-users (default),
+     #config-hub-users, #automate, #third-party-services. -->
 <div class="layout" data-layout="layout-03" data-layout-surface="flush">
   <header id="ch-header"></header>
 
@@ -39,16 +41,30 @@
                 <p>View changes made across Configuration Hub applications.</p>
               </div>
 
-              <!-- Buckholt Tabs, Code & specs example 1, with the one tab the
-                   spec keeps (AutoMATE and Third-Party Services are out of
-                   scope). -->
+              <!-- Buckholt Tabs, Code & specs example 1, with the spec's
+                   four tabs. -->
               <div class="tabs element_block align wp-block-acf-tabs">
                 <div class="tab-items">
                   <div class="tab-items-scroll">
                     <ul class="nav nav-underline" role="tablist">
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="au-tab-um-tab" data-bs-toggle="pill" data-bs-target="#au-tab-um" type="button" role="tab" aria-controls="au-tab-um" aria-selected="true">
-                          User Management
+                        <button class="nav-link active" id="au-tab-mobius-tab" data-bs-toggle="pill" data-bs-target="#au-tab-mobius" type="button" role="tab" aria-controls="au-tab-mobius" aria-selected="true">
+                          Mobius users
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-ch-tab" data-bs-toggle="pill" data-bs-target="#au-tab-ch" type="button" role="tab" aria-controls="au-tab-ch" aria-selected="false">
+                          Config Hub users
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-automate-tab" data-bs-toggle="pill" data-bs-target="#au-tab-automate" type="button" role="tab" aria-controls="au-tab-automate" aria-selected="false">
+                          AutoMATE
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-tps-tab" data-bs-toggle="pill" data-bs-target="#au-tab-tps" type="button" role="tab" aria-controls="au-tab-tps" aria-selected="false">
+                          Third-Party Services
                         </button>
                       </li>
                     </ul>
@@ -56,22 +72,9 @@
                 </div>
 
                 <div class="tab-content">
-                  <div class="tab-pane fade active show" id="au-tab-um" role="tabpanel" aria-labelledby="au-tab-um-tab" tabindex="0">
-                    <div class="au-view">
-
-                      <!-- Gap 1: content switcher. Buckholt Response button,
-                           single-select (native radios: Tab reaches the
-                           selected option, arrow keys move and select), drawn
-                           as one segmented control. -->
-                      <div class="response response-btn-input au-switcher" role="radiogroup" aria-label="User type">
-                        <input type="radio" class="btn-check" name="au-user-type" id="au-view-mobius" value="mobius" checked>
-                        <label class="btn btn-response" for="au-view-mobius">Mobius users</label>
-
-                        <input type="radio" class="btn-check" name="au-user-type" id="au-view-ch" value="ch">
-                        <label class="btn btn-response" for="au-view-ch">Configuration Hub users</label>
-                      </div>
-
-                      <!-- Gap 3: filter bar. Search, Date, Action type,
+                  <div class="tab-pane fade active show" id="au-tab-mobius" role="tabpanel" aria-labelledby="au-tab-mobius-tab" tabindex="0">
+                    <div class="au-view" id="au-view">
+                      <!-- Gap 2: filter bar. Search, Date, Action type,
                            Account type (Mobius users only), Changed by;
                            Record type at the right end. -->
                       <div class="au-filter-bar">
@@ -96,7 +99,7 @@
                           </div>
 
                           <!-- Buckholt Dropdown, Multiselect structure; the
-                               trigger shows a summary instead of Tags (Gap 3). -->
+                               trigger shows a summary instead of Tags (Gap 2). -->
                           <div class="input au-filter au-filter-wide" id="au-action-filter">
                             <div class="input-label">
                               <label for="au-action-toggle" class="form-label" id="au-action-label">Action type</label>
@@ -161,7 +164,7 @@
                         </div>
                       </div>
 
-                      <!-- The audit table and Gap 4, its pagination. -->
+                      <!-- The audit table and Gap 3, its pagination. -->
                       <div class="au-results">
                         <div class="table-container">
                           <div class="table-content">
@@ -191,6 +194,18 @@
                           <p class="body-01 au-showing" id="au-showing"></p>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="au-tab-ch" role="tabpanel" aria-labelledby="au-tab-ch-tab" tabindex="0"></div>
+                  <!-- AU-00-04 · placeholder tabs. Prototype-only copy. -->
+                  <div class="tab-pane fade" id="au-tab-automate" role="tabpanel" aria-labelledby="au-tab-automate-tab" tabindex="0">
+                    <div class="text-block au-placeholder">
+                      <p>This tab is not part of this prototype.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="au-tab-tps" role="tabpanel" aria-labelledby="au-tab-tps-tab" tabindex="0">
+                    <div class="text-block au-placeholder">
+                      <p>This tab is not part of this prototype.</p>
                     </div>
                   </div>
                 </div>

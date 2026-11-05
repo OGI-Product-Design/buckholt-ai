@@ -1,21 +1,37 @@
-/* Audit Centre: User Management — the base page.              NOT BUCKHOLT.
+/* Audit Centre — the base page.                                NOT BUCKHOLT.
 
-   AU-00 to AU-04 from `ch-audit-um-spec.md`: two views (Mobius users,
-   Configuration Hub users) behind a content switcher, each with its own
-   search, filters, sort, page and record type for as long as the page is
-   open; the audit table with pagination; and the Audit details drawer for
-   Configuration Hub users rows. State is held in memory: a reload, or an
-   environment change (the shell loads the base page again), starts over. */
+   AU-00 to AU-04 from `ch-audit-um-spec.md` revision 3: four tabs. The
+   Mobius users and Config Hub users tabs share one audit view (filters,
+   table, pagination), moved into the selected tab's panel; each keeps its
+   own search, filters, sort, page and record type for as long as the page
+   is open. AutoMATE and Third-Party Services are placeholders (AU-00-04).
+   The breadcrumb's current crumb and the document title follow the tab.
+   The Audit details drawer is for Configuration Hub users rows only. State
+   is held in memory: a reload, or an environment change (the shell loads
+   the base page again), starts over. */
 (function () {
   'use strict';
 
   var D = window.AUData;
   var esc = CHShell.esc;
 
-  var VIEWS = {
-    mobius: { hash: 'mobius-users', name: 'Mobius users' },
-    ch: { hash: 'configuration-hub-users', name: 'Configuration Hub users' }
+  /* `label` is the tab label, also used by the breadcrumb and the document
+     title ("Config Hub users", revision 3). `name` is the account type's
+     full name, used everywhere else. */
+  var TABS = {
+    mobius: { hash: 'mobius-users', label: 'Mobius users', name: 'Mobius users', pane: 'au-tab-mobius', audit: true },
+    ch: { hash: 'config-hub-users', label: 'Config Hub users', name: 'Configuration Hub users', pane: 'au-tab-ch', audit: true },
+    automate: { hash: 'automate', label: 'AutoMATE', pane: 'au-tab-automate', audit: false },
+    tps: { hash: 'third-party-services', label: 'Third-Party Services', pane: 'au-tab-tps', audit: false }
   };
+  var VIEWS = TABS;
+
+  /* An unknown fragment opens "Mobius users" (AU-01). */
+  function tabFromHash() {
+    var h = window.location.hash.replace('#', '');
+    var found = Object.keys(TABS).filter(function (id) { return TABS[id].hash === h; })[0];
+    return found || 'mobius';
+  }
 
   var TOOLTIP_OPTIONS = { offset: [0, 4], delay: { show: 800, hide: 100 } };
   var EMPTY_TEXT = 'No changes in this period.';
@@ -27,10 +43,11 @@
   var HOME_URL = new URL('home.html', ROOT).href;
   var BASE_URL = new URL('index.html', ROOT).href;
 
+  var tab = tabFromHash();
   if (!CHShell.init({
     app: 'audit-centre',
-    page: 'User Management',
-    breadcrumb: [{ label: 'Audit Centre', href: BASE_URL }, { label: 'User Management' }]
+    page: TABS[tab].label,
+    breadcrumb: [{ label: 'Audit Centre', href: BASE_URL }, { label: TABS[tab].label }]
   })) return;
 
   /* The shell's lockup goes to CH-SHELL's own home, whose registry has no
@@ -190,7 +207,10 @@
       var icon = current ? (s.sortDir === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort';
       return '<th scope="col" class="table-sort-header au-col-' + c.key + '" data-sort-key="' + c.key + '"' +
           (current ? ' aria-sort="' + (s.sortDir === 'asc' ? 'ascending' : 'descending') + '"' : '') + '>' +
-          '<button class="table-sort" type="button" data-sort-type="' + (c.key === 'when' ? 'date' : 'text') + '" aria-label="Sort by ' + c.label + '">' +
+          /* `.table-sort-asc` / `.table-sort-desc` are the runtime's own
+             state classes: they keep the current column's arrow visible
+             (otherwise it shows on hover only). BACS-import precedent. */
+          '<button class="table-sort' + (current ? ' table-sort-' + s.sortDir : '') + '" type="button" data-sort-type="' + (c.key === 'when' ? 'date' : 'text') + '" aria-label="Sort by ' + c.label + '">' +
             '<div class="table-header-label">' + c.label + '</div>' +
             '<div class="table-sort-icon"><i class="fa-solid ' + icon + '" aria-hidden="true"></i></div>' +
           '</button>' +
@@ -204,7 +224,7 @@
   /* ------------------------------------------------------------ avatars
      Buckholt Avatar, extra small, for named people (initials) and for the
      icon forms Buckholt documents: a generic person (invitees, a grouped
-     bulk deletion) and System. The Open GI avatar is Gap 5: the Open GI
+     bulk deletion) and System. The Open GI avatar is Gap 4: the Open GI
      mark in a ring, with the Tooltip and accessible text "Open GI user". */
   function initialsAvatar(name) {
     return '<div class="avatar avatar-xs" aria-hidden="true"><div class="avatar-initials">' + esc(initials(name)) + '</div></div>';
@@ -260,7 +280,7 @@
     '</tr>';
   }
 
-  /* Gap 6: empty and no-results states replace the rows; the pagination
+  /* Gap 5: empty and no-results states replace the rows; the pagination
      row is hidden and the filters stay usable. */
   function stateRow(text, kind) {
     return '<tr class="au-state-row"><td colspan="' + (columns(view).length + 1) + '">' +
@@ -268,7 +288,7 @@
       '</td></tr>';
   }
 
-  /* ------------------------------------------------------------ pagination (Gap 4) */
+  /* ------------------------------------------------------------ pagination (Gap 3) */
   function pageCount(total) { return Math.max(1, Math.ceil(total / S().perPage)); }
 
   function pageButton(target, labelText, content, disabled, current) {
@@ -402,7 +422,7 @@
     return '<option value="' + esc(a) + '">' + esc(a) + '</option>';
   }).join('');
 
-  /* Gap 3: multi-select checklist. Buckholt Dropdown's Multiselect items
+  /* Gap 2: multi-select checklist. Buckholt Dropdown's Multiselect items
      (native Checkbox inside each `.dropdown-item`), without Buckholt's
      dropdown.js: that script turns selections into Tags and reorders the
      list on open, where the spec wants a summary in the trigger and a fixed
@@ -573,35 +593,54 @@
     changed();
   });
 
-  /* ------------------------------------------------------------ views (AU-01) */
-  function setView(next, opts) {
+  /* ------------------------------------------------------------ tabs (AU-01) */
+  var auditView = document.getElementById('au-view');
+
+  /* The shell renders the trail once; the current crumb and the title then
+     follow the tab, with the shell's own title pattern. */
+  function syncTabChrome() {
+    var label = TABS[tab].label;
+    var crumb = document.querySelector('#ch-context .breadcrumb-item.active .ch-crumb-text');
+    if (crumb) crumb.textContent = label;
+    document.title = (CHShell.environment === 'test' ? '[Test] ' : '') + label + ' | Audit Centre | Configuration Hub';
+  }
+
+  /* Called as a tab starts to show: the audit tabs get the shared view,
+     rendered with their own state, before their panel appears. */
+  function applyTab(next, opts) {
     opts = opts || {};
-    if (!VIEWS[next]) next = 'mobius';
-    var same = next === view;
-    view = next;
-    document.getElementById(next === 'ch' ? 'au-view-ch' : 'au-view-mobius').checked = true;
-    var hash = '#' + VIEWS[next].hash;
+    tab = next;
+    var hash = '#' + TABS[next].hash;
     if (window.location.hash !== hash && !opts.keepUrl) {
       history.replaceState(null, '', window.location.pathname + window.location.search + hash);
     }
-    if (same && !opts.force) return;
+    syncTabChrome();
+    if (!TABS[next].audit) return;
+    var pane = document.getElementById(TABS[next].pane);
+    if (auditView.parentNode !== pane) pane.appendChild(auditView);
+    if (next === view && !opts.force) return;
+    view = next;
     hideTooltips();
     syncControls();
     render();
-    if (opts.announce) announceResults();
   }
 
-  document.querySelector('.au-switcher').addEventListener('change', function (event) {
-    if (event.target.name === 'au-user-type') setView(event.target.value, { announce: true });
+  function tabButton(id) { return document.getElementById(TABS[id].pane + '-tab'); }
+
+  Object.keys(TABS).forEach(function (id) {
+    var button = tabButton(id);
+    button.addEventListener('show.bs.tab', function () { applyTab(id); });
+    /* The panel is visible now, so truncation can be measured. */
+    button.addEventListener('shown.bs.tab', function () { if (TABS[id].audit) syncTruncation(); });
   });
 
-  function viewFromHash() {
-    var h = window.location.hash.replace('#', '');
-    return h === VIEWS.ch.hash ? 'ch' : 'mobius';
+  function showTab(id) {
+    if (id === tab) return;
+    bootstrap.Tab.getOrCreateInstance(tabButton(id)).show();
   }
-  window.addEventListener('hashchange', function () { setView(viewFromHash(), { announce: true }); });
+  window.addEventListener('hashchange', function () { showTab(tabFromHash()); });
 
-  /* ------------------------------------------------------------ Audit details (AU-04, Gap 2) */
+  /* ------------------------------------------------------------ Audit details (AU-04, Gap 1) */
   var openKey = null;
   var drawer = null;
 
@@ -740,10 +779,16 @@
   });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncTruncation);
 
-  setView(viewFromHash(), { force: true, keepUrl: window.location.hash === '' });
+  /* Start on Mobius users (rendered into its panel), then move to the tab
+     the fragment names, if another. */
+  var first = tab;
+  tab = 'mobius';
+  applyTab('mobius', { force: true, keepUrl: window.location.hash === '' || first !== 'mobius' });
+  if (first !== 'mobius') showTab(first);
 
   /* For the test suite and for inspection. */
   window.AUPage = {
+    get tab() { return tab; },
     get view() { return view; },
     state: function (v) { return states[v || view]; },
     visible: function (v) { return visible(v || view); },
