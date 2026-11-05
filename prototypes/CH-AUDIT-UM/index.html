@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobius users | Audit Centre | Configuration Hub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: the CH shell, the shared blade, then this prototype's gap work. -->
+<link rel="stylesheet" href="../CH-SHELL/shell/ch-shell.css">
+<link rel="stylesheet" href="../shared/blade.css">
+<link rel="stylesheet" href="ch-audit-um.css">
+</head>
+<body>
+
+<!-- AU-00 · Audit Centre, the base page, with the flows that start from it:
+     AU-01 switch tabs, AU-02 search and filter, AU-03 record type, AU-04
+     Audit details. Four Buckholt Tabs; the Mobius users and Config Hub users
+     tabs share one audit view (filters, table, pagination), which
+     ch-audit-um.js moves into the selected tab's panel and renders for that
+     tab. AutoMATE and Third-Party Services show a placeholder (AU-00-04).
+     The selected tab is in the URL fragment: #mobius-users (default),
+     #config-hub-users, #automate, #third-party-services. -->
+<div class="layout" data-layout="layout-03" data-layout-surface="flush">
+  <header id="ch-header"></header>
+
+  <main id="main">
+    <div id="ch-context"></div>
+
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container-fluid">
+          <div class="page-pane">
+            <div class="page-panel">
+              <div class="text-block">
+                <h1 class="headline-02" id="au-heading">Audit Centre</h1>
+                <p>View changes made across Configuration Hub applications.</p>
+              </div>
+
+              <!-- Buckholt Tabs, Code & specs example 1, with the spec's
+                   four tabs. -->
+              <div class="tabs element_block align wp-block-acf-tabs">
+                <div class="tab-items">
+                  <div class="tab-items-scroll">
+                    <ul class="nav nav-underline" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="au-tab-mobius-tab" data-bs-toggle="pill" data-bs-target="#au-tab-mobius" type="button" role="tab" aria-controls="au-tab-mobius" aria-selected="true">
+                          Mobius users
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-ch-tab" data-bs-toggle="pill" data-bs-target="#au-tab-ch" type="button" role="tab" aria-controls="au-tab-ch" aria-selected="false">
+                          Config Hub users
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-automate-tab" data-bs-toggle="pill" data-bs-target="#au-tab-automate" type="button" role="tab" aria-controls="au-tab-automate" aria-selected="false">
+                          AutoMATE
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="au-tab-tps-tab" data-bs-toggle="pill" data-bs-target="#au-tab-tps" type="button" role="tab" aria-controls="au-tab-tps" aria-selected="false">
+                          Third-Party Services
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="tab-content">
+                  <div class="tab-pane fade active show" id="au-tab-mobius" role="tabpanel" aria-labelledby="au-tab-mobius-tab" tabindex="0">
+                    <div class="au-view" id="au-view">
+                      <!-- Gap 2: filter bar. Search, Date, Action type,
+                           Account type (Mobius users only), Changed by;
+                           Record type at the right end. -->
+                      <div class="au-filter-bar">
+                        <div class="au-filters">
+                          <div class="input au-search">
+                            <div class="input-label visually-hidden">
+                              <label for="au-search" class="form-label">Search</label>
+                            </div>
+                            <div class="response text-input">
+                              <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                              <input type="text" class="form-control" id="au-search" placeholder="Search" autocomplete="off" spellcheck="false">
+                            </div>
+                          </div>
+
+                          <div class="input au-filter">
+                            <div class="input-label">
+                              <label for="au-date" class="form-label">Date</label>
+                            </div>
+                            <div class="response select-input">
+                              <select class="form-select" id="au-date"></select>
+                            </div>
+                          </div>
+
+                          <!-- Buckholt Dropdown, Multiselect structure; the
+                               trigger shows a summary instead of Tags (Gap 2). -->
+                          <div class="input au-filter au-filter-wide" id="au-action-filter">
+                            <div class="input-label">
+                              <label for="au-action-toggle" class="form-label" id="au-action-label">Action type</label>
+                            </div>
+                            <div class="response dropdown-input">
+                              <div class="dropdown au-multi" data-empty="Select">
+                                <button id="au-action-toggle" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                        aria-expanded="false" aria-controls="au-action-menu" aria-labelledby="au-action-label au-action-value">
+                                  <span class="dropdown-label" id="au-action-value">Select</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-panel" id="au-action-menu" aria-label="Action type"></ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="input au-filter" id="au-account-filter">
+                            <div class="input-label">
+                              <label for="au-account" class="form-label">Account type</label>
+                            </div>
+                            <div class="response select-input">
+                              <select class="form-select" id="au-account"></select>
+                            </div>
+                          </div>
+
+                          <div class="input au-filter" id="au-by-filter">
+                            <div class="input-label">
+                              <label for="au-by-toggle" class="form-label" id="au-by-label">Changed by</label>
+                            </div>
+                            <div class="response dropdown-input">
+                              <div class="dropdown au-multi" data-empty="Anyone">
+                                <button id="au-by-toggle" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                        aria-expanded="false" aria-controls="au-by-menu" aria-labelledby="au-by-label au-by-value">
+                                  <span class="dropdown-label" id="au-by-value">Anyone</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-panel" id="au-by-menu" aria-label="Changed by"></ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Buckholt Menu button, example 1, Ghost. Disclosure
+                             semantics as CH-USERS' More actions: no
+                             role="menu" on the list. -->
+                        <div class="menu au-record-type">
+                          <button type="button" class="btn btn-ghost menu-toggle" id="au-record-toggle"
+                                  data-bs-toggle="dropdown" aria-expanded="false" aria-controls="au-record-panel">
+                            <span class="button-label" id="au-record-label">Record type: Grouped</span>
+                            <div class="btn-icon">
+                              <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+                            </div>
+                          </button>
+                          <div class="menu-panel dropdown-menu dropdown-menu-end" id="au-record-panel">
+                            <ul class="menu-body">
+                              <li>
+                                <button class="menu-item" type="button" data-record="grouped">Grouped</button>
+                              </li>
+                              <li>
+                                <button class="menu-item" type="button" data-record="individual">Individual</button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- The audit table and Gap 3, its pagination. -->
+                      <div class="au-results">
+                        <div class="table-container">
+                          <div class="table-content">
+                            <table class="table no-italics au-table" id="au-table">
+                              <thead id="au-head"></thead>
+                              <tbody id="au-rows"></tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div class="au-pagination" id="au-pagination">
+                          <nav aria-label="Pagination">
+                            <ul class="au-pages" id="au-pages"></ul>
+                          </nav>
+                          <div class="input au-per-page">
+                            <div class="input-label">
+                              <label for="au-per-page" class="form-label">Results per page</label>
+                            </div>
+                            <div class="response select-input">
+                              <select class="form-select" id="au-per-page">
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                              </select>
+                            </div>
+                          </div>
+                          <p class="body-01 au-showing" id="au-showing"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="au-tab-ch" role="tabpanel" aria-labelledby="au-tab-ch-tab" tabindex="0"></div>
+                  <!-- AU-00-04 · placeholder tabs. Prototype-only copy. -->
+                  <div class="tab-pane fade" id="au-tab-automate" role="tabpanel" aria-labelledby="au-tab-automate-tab" tabindex="0">
+                    <div class="text-block au-placeholder">
+                      <p>This tab is not part of this prototype.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="au-tab-tps" role="tabpanel" aria-labelledby="au-tab-tps-tab" tabindex="0">
+                    <div class="text-block au-placeholder">
+                      <p>This tab is not part of this prototype.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../CH-SHELL/shell/ch-registry.js"></script>
+<script src="ch-audit-um-registry.js"></script>
+<script src="../CH-SHELL/shell/ch-shell.js"></script>
+<script src="../shared/blade.js"></script>
+<script src="ch-audit-um-data.js"></script>
+<script src="ch-audit-um.js"></script>
+</body>
+</html>
