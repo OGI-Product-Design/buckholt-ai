@@ -21,9 +21,12 @@ Process is still a placeholder inside BACS Import.
 | --- | --- |
 | **CH shell** | https://ogi-product-design.github.io/buckholt-ai/prototypes/CH-SHELL/ |
 | **CH users** (User Management) | https://ogi-product-design.github.io/buckholt-ai/prototypes/CH-USERS/home.html |
+| **CH Audit Centre** (Mobius users and Config Hub users tabs) | https://ogi-product-design.github.io/buckholt-ai/prototypes/CH-AUDIT-UM/home.html |
 
 Seed variants: add `?seed=long-names`, `all-apps`, `test-only`,
 `staged-rollout` or `live-only`. CH users also takes `?variant=only-me`.
+CH Audit Centre opens a tab directly from `CH-AUDIT-UM/index.html#config-hub-users`,
+`#automate` or `#third-party-services`; Test shows the empty Config Hub users tab.
 
 ## Mobius navigation — Cloudflare
 

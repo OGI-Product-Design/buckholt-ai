@@ -45,6 +45,7 @@ working perfectly locally.
 | `Mobius-navigation/` | Mobius navigation shell | `README.md` in that folder |
 | `CH-SHELL/` | Configuration Hub shell: header, environment, avatar menu, breadcrumb band, app-card home | `ch-shell-spec.md` + `screenshots/` |
 | `CH-USERS/` | Configuration Hub › User Management › Configuration Hub users (reuses `CH-SHELL/shell/` and `shared/blade`) | `ch-users-spec.md` + `screenshots/` |
+| `CH-AUDIT-UM/` | Configuration Hub › Audit Centre, Mobius users and Config Hub users tabs (reuses `CH-SHELL/shell/` and `shared/blade`) | `ch-audit-um-spec.md` + `screenshots/` |
 
 The first three are tabs of one application and link to each other. Process
 is still a placeholder inside `BACS-import/`.
