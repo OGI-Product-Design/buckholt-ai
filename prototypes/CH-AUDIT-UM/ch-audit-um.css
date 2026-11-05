@@ -1,0 +1,308 @@
+/* Audit Centre: User Management.                            NOT BUCKHOLT.
+
+   Arrangement for the "Buckholt gaps" in `ch-audit-um-spec.md`, and
+   nothing else. The components inside — Tabs, Response button, Text input,
+   Select, Dropdown, Menu button, Table, Avatar, Tooltip, Button, Key-value
+   pair, Tag, Card — keep Buckholt's own styling. Values are Buckholt tokens
+   wherever one exists. Loaded after the CH shell's and the blade's
+   stylesheets. */
+
+/* ---------------------------------------------------------- Tab content
+   Inside the one tab, the switcher, the filter bar and the results are
+   directly related items, so they take Panel's 32px item gap. */
+.au-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-06);
+  padding-top: var(--spacer-05);
+}
+
+/* ---------------------------------------------------------- Gap 1: content switcher
+   Buckholt Response button (native radios) as one segmented control: the
+   options sit in a 1px outlined box, left-aligned, and the selected option
+   is Response button's own checked state (outline and pale fill), so it is
+   never shown by colour alone. Hover is Response button's own hover. The
+   unselected option drops only its border. Same construction as the
+   CH-SHELL environment control (its Gap 2), at Response button's full
+   height. */
+.au-switcher {
+  flex: none;
+  flex-wrap: nowrap;
+  align-self: flex-start;
+  gap: var(--spacer-01);
+  padding: var(--spacer-01);
+  background-color: var(--ui-background-01);
+  border: 1px solid var(--ui-border-02);
+  border-radius: var(--border-radius-md);
+}
+
+.au-switcher .btn-response {
+  white-space: nowrap;
+}
+
+.au-switcher .btn-check:not(:checked) + .btn-response {
+  --button-border: transparent;
+  --button-background: transparent;
+}
+
+/* ---------------------------------------------------------- Gap 3: filter bar
+   One row, bottom-aligned so the label-less Search lines up with the
+   labelled fields; Record type at the right end. */
+.au-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacer-04);
+}
+
+.au-filters {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacer-04);
+  min-width: 0;
+}
+
+/* Flex wraps on the basis, so Search's basis is its narrowest (12rem) and it
+   grows to 18rem: one row at 1440px, two below about 1300px. */
+.au-search {
+  flex: 1 1 12rem;
+  max-width: 18rem;
+}
+
+.au-filter {
+  flex: 0 0 11rem;
+}
+
+.au-filter-wide {
+  flex-basis: 14rem;
+}
+
+.au-filter[hidden] {
+  display: none;
+}
+
+.au-record-type {
+  flex: none;
+  margin-left: auto;
+}
+
+/* Multi-select checklist: Buckholt Dropdown's own trigger and panel. The
+   panel is at least as wide as Menu's maximum so the longest option and
+   the Open GI group fit on one line. */
+.au-multi .dropdown-menu-panel {
+  min-width: 15rem;
+  max-height: 22rem;
+}
+
+.au-multi .dropdown-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.au-multi .dropdown-item .form-check-label {
+  flex: 1 1 auto;
+  cursor: pointer;
+}
+
+/* The "Open GI" group: Menu's section header, then its options. The list
+   is a plain container with the panel's own item gap. */
+.au-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-01);
+}
+
+.au-option-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-01);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------- Table
+   Columns never wrap; long text truncates with an ellipsis and gets a hover
+   Tooltip from the script. Below the width it needs, the table scrolls in
+   Table's own `.table-content`. */
+.au-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.au-results .table-content {
+  position: relative;
+}
+
+.au-table {
+  min-width: 60rem;
+}
+
+.au-table td {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.au-person {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  min-width: 0;
+}
+
+.au-person > .avatar,
+.au-person > .au-ogi-trigger {
+  flex: none;
+}
+
+.au-trunc {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Sized so the table fits the 1440px reference width without scrolling;
+   the long name and email (records 16 and 20) are the ones that truncate. */
+.au-col-action .au-trunc { max-width: 14rem; }
+.au-col-affected .au-trunc { max-width: 15rem; }
+.au-col-summary .au-trunc { max-width: 16rem; }
+.au-col-by .au-trunc { max-width: 10rem; }
+
+/* Gap 4: selected row while its drawer is open. The same pale overlay
+   Response button uses for its selected option; the open dialog carries
+   the state, so colour is never the only signal. */
+.au-table tr.au-selected > td {
+  background-color: var(--expressive-pale-overlay);
+}
+
+/* Configuration Hub users rows open their drawer on a click anywhere on
+   the row. Mobius users rows do nothing (inert, out of scope). */
+.au-table tbody:not(.au-rows-inert) tr[data-key] {
+  cursor: pointer;
+}
+
+/* Gap 6: empty and no-results states replace the rows. */
+.au-state {
+  padding: var(--spacer-07) 0;
+  text-align: center;
+}
+
+.au-state > * {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.au-table .au-state-row > td {
+  white-space: normal;
+}
+
+/* ---------------------------------------------------------- Gap 5: Open GI avatar
+   Buckholt Avatar with its image form, holding the Open GI mark, inside a
+   ring. The ring is Buckholt's primary 60 (the focus and link blue). The wrapper is the
+   focusable Tooltip trigger. */
+.au-ogi-trigger {
+  display: inline-flex;
+  border-radius: var(--border-radius-full);
+}
+
+.au-ogi-trigger:focus-visible {
+  outline: 2px solid var(--focus-01);
+  outline-offset: 2px;
+}
+
+.au-avatar-ogi {
+  background-color: var(--ui-background-01);
+  box-shadow: inset 0 0 0 1px var(--primary-60);
+}
+
+.au-avatar-ogi .avatar-img {
+  object-fit: contain;
+  padding: 22%;
+}
+
+/* ---------------------------------------------------------- Gap 4: pagination
+   Below the table: page buttons, "Results per page", "Showing". */
+.au-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacer-05);
+}
+
+.au-pagination[hidden] {
+  display: none;
+}
+
+.au-pages {
+  display: flex;
+  gap: var(--spacer-02);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-per-page {
+  flex: none;
+  width: auto;
+}
+
+.au-per-page .form-select {
+  width: 6.5rem;
+}
+
+.au-showing {
+  margin: 0;
+  padding-bottom: var(--spacer-03);
+}
+
+/* ---------------------------------------------------------- Gap 2: Audit details drawer
+   The shared prototype blade, as it is: header bar, scrolling body, fixed
+   footer. Sections are a heading then their content, with Panel's 32px
+   rhythm between them. */
+.au-drawer .blade-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-06);
+}
+
+.au-detail-title:focus {
+  outline: none;
+}
+
+.au-detail-title:focus-visible {
+  outline: 2px solid var(--focus-01);
+  outline-offset: 2px;
+}
+
+.au-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.au-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+
+.au-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+  margin-bottom: var(--spacer-04);
+}
+
+.au-ogi-tag {
+  margin-left: var(--spacer-02);
+  vertical-align: middle;
+}
+
+.au-drawer-actions {
+  justify-content: flex-end;
+  margin-top: 0;
+}
