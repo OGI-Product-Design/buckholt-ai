@@ -1,97 +1,30 @@
 # CH-SHELL — findings for the spec, the designs and Buckholt
 
-From building `ch-shell-spec.md` revision 4 on 20 Oct 2026. The spec copy in
-this folder is unedited; everything that should change in it is here.
+Against `ch-shell-spec.md` revision 7 (22 Oct 2026), checked on 26 Oct 2026.
+The spec copy in this folder is unedited; everything that should change in it
+is here.
 
-Revision 4 resolved every revision 3 finding in sections A and B except A16,
-B9 and B11, which are kept below with their original numbers. Section C is
-unchanged from revision 3; C15 and C16 are new.
-
-Revision 5 (same day) added A24–A29, B12 and C17, each under "New from the
-revision 5 build"; nothing earlier was edited.
+Revision 6 resolved A17 to A29 and revision 7 resolves A30 to A33; all are
+removed. A16 is not resolved and is kept. Sections B and C are unchanged
+(C18 was added in the revision 6 check). A34 and A35 are new.
 
 ## A. The spec
 
 16. **Minor:** the breadcrumb landmark name is "Breadcrumb" in the spec and
     "breadcrumb" in Buckholt's markup. Built with the spec's.
-17. **The card rule cannot hold with Buckholt's documented Card title.** In
-    Card's Code & specs title style (`title-03`, 24px) "Third-Party Services"
-    is 210px; with Card's 32px padding and border the card must be 276px. Six
-    per row at 1920px leaves 272px (269px with a classic scrollbar), so AC 7
-    fails. Built with `title-02` (20px, 177px, card minimum 243px), which is
-    Buckholt's own next title step and matches Figma's ~20px. Either name
-    `title-02` for card titles in the spec, or relax AC 7.
-18. **App names need a length limit.** The card rule leaves a narrow window:
-    the minimum card width must be over 237px (so five never fit at 1440) and
-    at most 272px (so six fit at 1920). Built at 256px, which fits a
-    `title-02` title of about 190px — roughly 22 characters. A longer future
-    app name ("Policy Extension Configuration", for example) would wrap. Add a
-    maximum app-name length to the App registry rules.
-19. **The avatar's hit area is arrangement, and AC 8 depends on it.** With
-    Buckholt deciding spacing, the 16px either side of the avatar in Figma's
-    Profile frame could be read as a Figma value to drop. Without it the Long
-    names organisation fits at 1088px in Proxima Soft with 7px to spare and
-    AC 8 fails. Built with it. State the avatar's hit area in Gap 1.
-20. **Two revision 3 leftovers contradict revision 4:**
-    - "Changes from legacy", Keyboard row: "focus moves to the heading after
-      navigation". Should read "focus starts at the top after navigation".
-    - Gap 4, expected behaviour: "arrow keys move only between items". Under
-      the Tab model it should read "Tab never stops on the identity header".
-21. **SH-01 step 6 needs a scope.** "Focus stays on the selected option"
-    holds on the home page, which updates in place. Inside an app the switch
-    is a page load, so focus starts at the top ("Focus on navigation"). Built
-    that way; say "on the home page" in step 6.
-22. **Name the menu semantics, not just the keyboard.** SH-02 step 4 says the
-    semantics must match the Tab model and points at the Buckholt ticket on
-    Menu semantics — but that ticket (C9) asks for `menuitem` roles, which
-    belong to the arrow-key model. Built as a disclosure: the button exposes
-    `aria-expanded` and controls a plain list of buttons, with no menu roles.
-    State "disclosure" in the spec so production does not copy Buckholt's
-    `role="menu"`. See C15.
-23. **Shift+Tab from the first item is unspecified.** Built: focus moves back
-    to the avatar and the menu stays open (Tab past the last item closes it).
-    Confirm, or say the menu closes when focus leaves the items in either
-    direction.
 
-### New from the revision 5 build
+### New from the revision 7 check
 
-24. **Open question 15: no card title wraps at the fixed width.** Inside a
-    284px card, Buckholt Card's 32px padding and 1px border leave 218px for
-    the title. In Card's `title-03` the titles measure (Proxima Soft / Arial
-    fallback): Third-Party Services 212 / 217px, User Management 196 / 197,
-    Onboarding Form 188 / 188, Policy Extensions 184 / 188, Audit Centre
-    134 / 133, AutoMATE 111 / 114. All six fit on one line in both fonts, so
-    OQ 15 can close as "no wrapping today". The margin is thin — 6px in
-    Proxima Soft, 1px in Arial — so any longer app name will wrap. Card height
-    is set by the descriptions (three lines in the tallest card), not the
-    titles: every card is 419px.
-25. **A17 and A18 no longer apply.** Revision 5's fixed 284px card and Card's
-    own `title-03` replace the revision 4 minimum-width rule and the
-    `title-02` workaround. A18's app-name limit still matters but changes: a
-    `title-03` title must stay within 218px, about 20 characters ("Third-Party
-    Services" is 20).
-26. **The capacities leave a 28–38px window for the page padding.** Five per
-    row at 1920 needs more than 28px each side; three at 992 needs at most
-    38px, and at most 29.5px if the 992 measurement included a classic 17px
-    Windows scrollbar. Built at 29px. Record production's actual horizontal
-    padding in the spec, and whether the UAT viewport widths were measured
-    with or without the scrollbar, so the table cannot drift from the
-    padding.
-27. **The grid's vertical spacing is unspecified.** The spec gives
-    production's horizontal gap (32px) but not the gap between rows or the
-    space above the first row. Built: 32px between rows, Buckholt's Frame
-    (64px) above. Add production's values.
-28. **"All cards share the height of the tallest card" is page-wide.** One
-    long description makes every card on the page taller, including rows
-    with short ones. CSS cannot do this and centre a part-filled final row at
-    the same time, so it is set by script. Confirm production does this, and
-    not "tallest in the row".
-29. **The capacity table goes below the designed width.** It lists 768px,
-    576px and below, but "Viewport" says layouts narrower than 1088px are not
-    designed. The grid meets the table down to 320px (with the side padding
-    reduced to 16px below 576px so a 284px card fits); the header does not —
-    it is 499px wide at 375px. Say whether the table is a requirement below
-    1088px or production behaviour noted for reference.
+34. **Two description copy rules sit under the App name length rule.** In
+    revision 7 the bullets "No jokes, hype or idioms…" and "'We/us' means
+    Open GI." follow the App name length rule, though they are rules for
+    card descriptions. They belong back under "Card description copy rules",
+    where revision 5 had them. Wording only; the build is unaffected.
+35. **Two small inconsistencies.** Open questions list 15 before 14. And
+    the source tag **[Build]** is still defined as a "finding from the Claude
+    Code build of revision 3", but it now marks findings from the revision 3
+    to 6 builds; "from a Claude Code build (`SPEC-CHANGES.md`)" would cover
+    them all.
 
 ## B. The Figma frames
 
@@ -202,3 +135,19 @@ revision 5 build"; nothing earlier was edited.
     card-grid or tile-grid layout (fixed item width, gap, centring, equal
     height), or confirm that column grids are the only Buckholt layout and
     that the CH home is an exception.
+
+### New from the revision 6 check
+
+18. **`title-03` is fluid in the runtime but documented as fixed.**
+    `foundations/typography/type-sets.md` gives `.title-03` as 24px / 1.5rem
+    on a 32px / 2rem line. `css/buckholt.css` sets
+    `font-size: calc(1.275rem + 0.3vw)` and
+    `line-height: calc(calc(1.275rem + 0.3vw) + 0.5rem)` below 1200px, and
+    24px / 32px only from 1200px up (Bootstrap's responsive font sizing).
+    Measured: 23.7px at 1088px, 21.5px at 375px. Anything sized to the
+    documented value — Card heights, text-fit rules like CH's app name
+    limit — changes below 1200px. Checked in the local build only; not
+    checked against the live build, so first classify it per
+    `verification/runtime-verification-framework.md` (local build regression
+    or upstream). Ask: document the fluid behaviour and its breakpoint in
+    the type sets, or make the documented size the runtime size.

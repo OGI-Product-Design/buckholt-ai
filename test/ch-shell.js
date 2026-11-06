@@ -437,108 +437,180 @@ const cardTitles = page => page.$$eval('.ch-app-card h2', hs => hs.map(h => h.te
     await p.context().close();
   }
 
-  /* ===== AC 14 · Open accessible names ================================= */
-  for (const seed of ['northgate', 'all-apps']) {
-    const p = await open(browser, HOME + '?seed=' + seed);
-    const names = await p.$$eval('.ch-app-card', cs => cs.map(c => [c.querySelector('h2').textContent.trim(), c.querySelector('.ch-open').getAttribute('aria-label'), c.querySelector('.ch-open').textContent.trim()]));
-    ok('AC14 every Open is "Open {App name}" (' + seed + ')', names.length && names.every(([n, label, visible]) => label === 'Open ' + n && visible === 'Open'));
+  /* ===== AC 14 · Shift+Tab and Tab from Logout ========================= */
+  {
+    const p = await open(browser, HOME);
+    const openOnLogout = async () => {
+      await p.focus('#ch-account-toggle');
+      await p.keyboard.press('Enter');
+      await p.waitForTimeout(300);
+    };
+    await openOnLogout();
+    is('AC14 menu open, focus on Logout', (await active(p)) + '/' + (await p.isVisible('#ch-account-panel')), 'ch-logout/true');
+    await p.keyboard.press('Shift+Tab');
+    await p.waitForTimeout(300);
+    is('AC14 Shift+Tab: focus on the avatar button', await active(p), 'ch-account-toggle');
+    is('AC14 Shift+Tab: menu still open', await p.isVisible('#ch-account-panel'), true);
+    is('AC14 Shift+Tab: button still says open', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'true');
+    /* From the avatar, Tab goes back to Logout; Tab past it closes. */
+    await p.keyboard.press('Tab');
+    await p.waitForTimeout(200);
+    is('AC14 Tab from the avatar returns to Logout', await active(p), 'ch-logout');
+    await p.keyboard.press('Tab');
+    await p.waitForTimeout(300);
+    is('AC14 Tab from Logout: menu closes', await p.isVisible('#ch-account-panel'), false);
+    is('AC14 Tab from Logout: button says closed', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'false');
+    /* Focus moving anywhere other than the menu or the avatar closes it. */
+    await openOnLogout();
+    await p.focus('#ch-mobius');
+    await p.waitForTimeout(300);
+    is('AC14 focus moved elsewhere: menu closes', await p.isVisible('#ch-account-panel'), false);
+    /* Revision 7, SH-02 step 4: switching to another application or browser
+       tab does not close the menu. When the window loses focus, focus leaves
+       Logout with no element receiving it (relatedTarget null), and the
+       window gets a blur event — reproduced here, since a headless browser
+       has no other window to switch to. */
+    await openOnLogout();
+    await p.evaluate(() => {
+      document.getElementById('ch-logout').dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+      window.dispatchEvent(new Event('blur'));
+    });
+    await p.waitForTimeout(300);
+    is('AC14 window loses focus: menu stays open', await p.isVisible('#ch-account-panel'), true);
+    is('AC14 window loses focus: button still says open', await p.getAttribute('#ch-account-toggle', 'aria-expanded'), 'true');
     await p.context().close();
   }
 
-  /* ===== AC 15 · Mobius and Logout are inert ========================== */
+  /* ===== Rule · App name length (spec, "App name length rule") ========= */
+  {
+    const p = await open(browser, HOME + '?seed=all-apps', { width: 1920, height: 1080 });
+    /* Every registry name, rendered as a card title at the fixed card width. */
+    const names = await p.evaluate(() => CHRegistry.apps.map(a => a.name));
+    is('Rule every registry app has a card in all-apps', (await cardTitles(p)).join(' / '), names.join(' / '));
+    const r = await p.evaluate(() => {
+      const ref = document.querySelector('.ch-app-card[data-app=third-party-services] h2');
+      const width = el => { const range = document.createRange(); range.selectNodeContents(el); return range.getBoundingClientRect().width; };
+      const refWidth = width(ref);
+      return [...document.querySelectorAll('.ch-app-card')].map(card => {
+        const h = card.querySelector('h2');
+        const body = card.querySelector('.card-body'), cs = getComputedStyle(body);
+        const room = body.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const lh = parseFloat(getComputedStyle(h).lineHeight);
+        return { name: h.textContent, chars: h.textContent.length, width: width(h), refWidth, room, lines: Math.round(h.getBoundingClientRect().height / lh) };
+      });
+    });
+    for (const n of r) {
+      ok('Rule "' + n.name + '" is 20 characters or fewer', n.chars <= 20);
+      ok('Rule "' + n.name + '" is no wider than "Third-Party Services"', n.width <= n.refWidth + 0.5);
+      ok('Rule "' + n.name + '" fits the card title width', n.width <= n.room);
+      is('Rule "' + n.name + '" renders on one line', n.lines, 1);
+    }
+    ok('Rule "Third-Party Services" still fits the title width', r.find(n => n.name === 'Third-Party Services').width <= r[0].room);
+    await p.context().close();
+  }
+
+  /* ===== AC 15 · Open accessible names ================================= */
+  for (const seed of ['northgate', 'all-apps']) {
+    const p = await open(browser, HOME + '?seed=' + seed);
+    const names = await p.$$eval('.ch-app-card', cs => cs.map(c => [c.querySelector('h2').textContent.trim(), c.querySelector('.ch-open').getAttribute('aria-label'), c.querySelector('.ch-open').textContent.trim()]));
+    ok('AC15 every Open is "Open {App name}" (' + seed + ')', names.length && names.every(([n, label, visible]) => label === 'Open ' + n && visible === 'Open'));
+    await p.context().close();
+  }
+
+  /* ===== AC 16 · Mobius and Logout are inert ========================== */
   {
     const p = await open(browser, HOME);
     const before = p.url();
     const pages = p.context().pages().length;
-    is('AC15 Mobius name', await p.getAttribute('#ch-mobius', 'aria-label'), 'Mobius (opens in a new tab)');
-    is('AC15 Mobius icon before label', await p.evaluate(() => { const a = document.getElementById('ch-mobius'); return a.firstElementChild.className + '|' + a.textContent.trim(); }), 'icon|Mobius');
-    is('AC15 Mobius uses External link icon', await p.evaluate(() => document.querySelector('#ch-mobius i').className), 'fa-regular fa-arrow-up-right-from-square');
+    is('AC16 Mobius name', await p.getAttribute('#ch-mobius', 'aria-label'), 'Mobius (opens in a new tab)');
+    is('AC16 Mobius icon before label', await p.evaluate(() => { const a = document.getElementById('ch-mobius'); return a.firstElementChild.className + '|' + a.textContent.trim(); }), 'icon|Mobius');
+    is('AC16 Mobius uses External link icon', await p.evaluate(() => document.querySelector('#ch-mobius i').className), 'fa-regular fa-arrow-up-right-from-square');
     await p.click('#ch-mobius');
     await p.waitForTimeout(400);
-    is('AC15 Mobius does not navigate', p.url(), before);
-    is('AC15 Mobius opens no tab', p.context().pages().length, pages);
+    is('AC16 Mobius does not navigate', p.url(), before);
+    is('AC16 Mobius opens no tab', p.context().pages().length, pages);
     await p.click('#ch-account-toggle');
     await p.waitForTimeout(300);
     await p.click('#ch-logout');
     await p.waitForTimeout(400);
-    is('AC15 Logout does not navigate', p.url(), before);
-    is('AC15 Logout closes the menu', await p.isVisible('#ch-account-panel'), false);
-    is('AC15 Logout returns focus to avatar', await active(p), 'ch-account-toggle');
+    is('AC16 Logout does not navigate', p.url(), before);
+    is('AC16 Logout closes the menu', await p.isVisible('#ch-account-panel'), false);
+    is('AC16 Logout returns focus to avatar', await active(p), 'ch-account-toggle');
     await p.context().close();
   }
 
-  /* ===== AC 16 · Open an app without a feature prototype =============== */
+  /* ===== AC 17 · Open an app without a feature prototype =============== */
   {
     const p = await open(browser, HOME);
     for (const [id, name] of [['onboarding-form', 'Onboarding Form'], ['third-party-services', 'Third-Party Services']]) {
       await p.goto(HOME, { waitUntil: 'networkidle' });
       await Promise.all([p.waitForNavigation(), p.click('.ch-app-card[data-app=' + id + '] .ch-open')]);
       await settle(p);
-      is('AC16 SH-03-01 URL ' + id, p.url(), APP(id));
-      is('AC16 breadcrumb ' + id, await text(p, '#ch-context .breadcrumb'), name);
-      is('AC16 crumb is current ' + id, await p.getAttribute('#ch-context .breadcrumb-item', 'aria-current'), 'page');
-      is('AC16 heading ' + id, await text(p, 'main h1'), name);
-      is('AC16 placeholder text ' + id, await text(p, 'main .text-block p'), 'This application isn’t part of this prototype yet.');
-      is('AC16 title ' + id, await p.title(), name + ' | Configuration Hub');
-      is('AC16 focus at the top after Open ' + id, await p.evaluate(() => document.activeElement === document.body), true);
-      is('AC16 heading not made focusable ' + id, await p.evaluate(() => document.querySelector('main h1').hasAttribute('tabindex')), false);
+      is('AC17 SH-03-01 URL ' + id, p.url(), APP(id));
+      is('AC17 breadcrumb ' + id, await text(p, '#ch-context .breadcrumb'), name);
+      is('AC17 crumb is current ' + id, await p.getAttribute('#ch-context .breadcrumb-item', 'aria-current'), 'page');
+      is('AC17 heading ' + id, await text(p, 'main h1'), name);
+      is('AC17 placeholder text ' + id, await text(p, 'main .text-block p'), 'This application isn’t part of this prototype yet.');
+      is('AC17 title ' + id, await p.title(), name + ' | Configuration Hub');
+      is('AC17 focus at the top after Open ' + id, await p.evaluate(() => document.activeElement === document.body), true);
+      is('AC17 heading not made focusable ' + id, await p.evaluate(() => document.querySelector('main h1').hasAttribute('tabindex')), false);
       await p.keyboard.press('Tab');
-      is('AC16 next Tab is the skip link ' + id, await active(p), 'Skip to main content');
+      is('AC17 next Tab is the skip link ' + id, await active(p), 'Skip to main content');
     }
     await Promise.all([p.waitForNavigation(), p.click('#ch-placeholder-back')]);
     await settle(p);
-    is('AC16 Back to applications goes home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
-    is('AC16 hidden home heading never focused', await p.evaluate(() => document.activeElement === document.body && !document.querySelector('main h1').hasAttribute('tabindex')), true);
+    is('AC17 Back to applications goes home', new URL(p.url()).pathname.endsWith('/CH-SHELL/index.html'), true);
+    is('AC17 hidden home heading never focused', await p.evaluate(() => document.activeElement === document.body && !document.querySelector('main h1').hasAttribute('tabindex')), true);
     await p.keyboard.press('Tab');
-    is('AC16 after Back, next Tab is the skip link', await active(p), 'Skip to main content');
+    is('AC17 after Back, next Tab is the skip link', await active(p), 'Skip to main content');
     await p.context().close();
   }
 
-  /* ===== AC 17 · unsaved changes confirmation ========================== */
+  /* ===== AC 18 · unsaved changes confirmation ========================== */
   {
     const p = await open(browser, APP('user-management'));
     await p.evaluate(() => CHShell.setUnsavedChanges(true));
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
-    is('AC17 modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
-    is('AC17 modal body', await text(p, '#ch-env-modal .modal-body'), 'You have unsaved changes on this page. If you switch now, they’ll be lost.');
-    is('AC17 actions, Primary last', (await p.$$eval('#ch-env-modal .modal-footer .btn', bs => bs.map(b => b.className.split(' ')[1] + ':' + b.textContent.trim()))).join(' | '),
+    is('AC18 modal title', await text(p, '#ch-env-modal-title'), 'Switch to Test without saving?');
+    is('AC18 modal body', await text(p, '#ch-env-modal .modal-body'), 'You have unsaved changes on this page. If you switch now, they’ll be lost.');
+    is('AC18 actions, Primary last', (await p.$$eval('#ch-env-modal .modal-footer .btn', bs => bs.map(b => b.className.split(' ')[1] + ':' + b.textContent.trim()))).join(' | '),
        'btn-secondary:Stay on this page | btn-primary:Switch to Test');
-    is('AC17 environment not yet switched', await checkedEnv(p), 'live');
+    is('AC18 environment not yet switched', await checkedEnv(p), 'live');
     await p.click('#ch-env-modal-stay');
     await p.waitForTimeout(500);
-    is('AC17 Stay closes the modal', await p.isVisible('#ch-env-modal'), false);
-    is('AC17 Stay keeps Live', await checkedEnv(p), 'live');
-    is('AC17 Stay returns focus to Live', await active(p), 'ch-env-live');
-    is('AC17 Stay keeps the page', p.url(), APP('user-management'));
+    is('AC18 Stay closes the modal', await p.isVisible('#ch-env-modal'), false);
+    is('AC18 Stay keeps Live', await checkedEnv(p), 'live');
+    is('AC18 Stay returns focus to Live', await active(p), 'ch-env-live');
+    is('AC18 Stay keeps the page', p.url(), APP('user-management'));
     /* Escape and the close control behave like Stay. */
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await p.keyboard.press('Escape');
     await p.waitForTimeout(500);
-    is('AC17 Escape keeps Live', await checkedEnv(p), 'live');
-    is('AC17 Escape returns focus to Live', await active(p), 'ch-env-live');
+    is('AC18 Escape keeps Live', await checkedEnv(p), 'live');
+    is('AC18 Escape returns focus to Live', await active(p), 'ch-env-live');
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await p.click('#ch-env-modal .btn-close');
     await p.waitForTimeout(500);
-    is('AC17 close control keeps Live', await checkedEnv(p), 'live');
+    is('AC18 close control keeps Live', await checkedEnv(p), 'live');
     /* Switch discards and continues. */
     await p.click('label[for=ch-env-test]');
     await p.waitForSelector('#ch-env-modal.show');
     await p.waitForTimeout(300);
     await Promise.all([p.waitForNavigation(), p.click('#ch-env-modal-switch')]);
     await settle(p);
-    is('AC17 Switch continues to Test', await checkedEnv(p), 'test');
-    is('AC17 Switch lands on base page', p.url(), APP('user-management'));
-    is('AC17 Switch shows alert', await text(p, '#ch-env-alert'), ALERT);
+    is('AC18 Switch continues to Test', await checkedEnv(p), 'test');
+    is('AC18 Switch lands on base page', p.url(), APP('user-management'));
+    is('AC18 Switch shows alert', await text(p, '#ch-env-alert'), ALERT);
     /* No unsaved changes, no modal. */
     await Promise.all([p.waitForNavigation(), p.click('label[for=ch-env-live]')]);
     await settle(p);
-    is('AC17 no modal without unsaved changes', await checkedEnv(p), 'live');
+    is('AC18 no modal without unsaved changes', await checkedEnv(p), 'live');
     await p.context().close();
   }
 
