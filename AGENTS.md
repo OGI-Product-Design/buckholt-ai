@@ -54,18 +54,6 @@ Each prototype folder carries a `PROTOTYPE.md` recording what was built and
 every deviation, and most carry a `SPEC-CHANGES.md` feeding findings back to
 the spec, the designs and Buckholt itself. Read them before changing one.
 
-Every prototype build or update registers the prototype **in the same PR**:
-
-- Add or update its live link, and its seed variants if it has any, in
-  `PROTOTYPES.md`, following the format of the existing entries.
-- Add or update its row in `prototypes/README.md`, following the format of
-  the existing rows.
-- Add or change only that prototype's own entries in those two files. Never
-  edit another prototype's entries.
-- This applies even when a brief limits changes to the prototype's folder:
-  registration is the standing exception.
-- After merge, check that the live link loads and report the result.
-
 ## Mandatory canonical-markup rule
 
 Read `CANONICAL-MARKUP.md` before implementing or modifying component markup.
