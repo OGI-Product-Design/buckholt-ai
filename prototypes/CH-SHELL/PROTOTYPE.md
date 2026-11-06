@@ -3,9 +3,45 @@
 > **Not Buckholt.** Application work built *with* Buckholt. Nothing here is
 > design-system guidance; see [`../README.md`](../README.md).
 
-Built from [`ch-shell-spec.md`](ch-shell-spec.md) **revision 5** (20 Oct 2026)
+Built from [`ch-shell-spec.md`](ch-shell-spec.md) **revision 7** (22 Oct 2026)
 and the four frames in [`screenshots/`](screenshots/). First built 20 Oct 2026
-against revision 3; updated to revisions 4 and 5 the same day.
+against revision 3; updated to revisions 4 and 5 the same day. Revisions 6
+and 7 needed no change to the build: they write down what revision 5 already
+did (see "Revision 6" and "Revision 7" below).
+
+## Revision 7
+
+Wording only; checked on 26 Oct 2026. The build already met all three items.
+
+| Revision 7 item | Already built as |
+|---|---|
+| Production's 396px card height is an observation, not a target; every card is the same height at each width | Gap 9 and judgement call 22. AC 7 checks equal height at every width; heights are 419px at 1200px and wider and down to 416px at 375px, because Buckholt's `title-03` is fluid below 1200px |
+| App name length rule measured in Proxima Soft at 1200px and wider | The rule's assertions run at 1920px; they pass in Proxima Soft and in the mirror's Arial |
+| The menu stays open when the browser window loses focus | The `focusout` handler closes the menu only when focus moves to another element (`relatedTarget` set); a window blur has none, and Bootstrap's dropdown ignores window blur |
+
+Test added for revision 7: in AC 14, the menu stays open when focus leaves
+with no element receiving it and the window blurs.
+
+## Revision 6
+
+Checked item by item against the "Revision 6" changes in the spec. The build
+already met every one; nothing in the shell or the pages changed.
+
+| Revision 6 item | Already built as |
+|---|---|
+| Avatar menu is a disclosure, not an ARIA menu | "Avatar menu semantics" below |
+| Shift+Tab from Logout returns to the avatar and the menu stays open; Tab past Logout, Escape, a click outside, or focus anywhere else closes it | Same section. The `focusout` handler on `.ch-account` closes the menu when focus leaves both the button and the list |
+| The avatar keeps Figma's Profile spacing (arrangement) | Judgement call 16 |
+| App name length rule (20 characters or fewer, no wider than "Third-Party Services") | All six registry names already comply; new assertions check every name |
+| The capacity table is the requirement, with and without a classic scrollbar | "Home page padding" |
+| 32px between rows, Buckholt Frame spacing above | "Home page padding" |
+| The capacity table applies below 1088px; the header may overflow there | The card grid meets it to 320px; the header overflows below about 506px |
+| Page-wide equal height | Gap 9 and judgement call 22 |
+| SH-01 step 6 scoped to the home page | "What was built", Focus on navigation |
+| "Changes from legacy" and Gap 4 wording | Wording only |
+
+Tests added for revision 6: AC 14 (Shift+Tab and Tab from Logout, and focus
+moving elsewhere) and the app name length rule.
 
 ## Open it
 
@@ -355,11 +391,13 @@ difference, once:
 
 ## Tests
 
-`test/ch-shell.js` — **301 assertions**, every acceptance criterion in
-revision 5 (blocks `AC 1` to `AC 17`, in the spec's order; AC 7 checks cards
+`test/ch-shell.js` — **337 assertions**, every acceptance criterion in
+revision 7 (blocks `AC 1` to `AC 18`, in the spec's order; AC 7 checks cards
 per row, fixed width, centring, gap, equal height and uncropped illustrations
 at 1920, 1440, 1280, 1088, 992, 768, 576 and 375px), the accessibility
-requirements, the feature contract and Gap 5. Passes against the offline
+requirements, the feature contract, Gap 5 and the app name length rule
+(every registry name: 20 characters or fewer, no wider than "Third-Party
+Services", inside the title width, on one line). Passes against the offline
 mirror and against the real build with Proxima Soft and the Pro kit. See
 [`../../test/README.md`](../../test/README.md).
 
@@ -377,9 +415,10 @@ mirror and against the real build with Proxima Soft and the Pro kit. See
 - **Scrollbars.** The capacities are derived for both overlay scrollbars
   (the test browser) and a classic 17px Windows scrollbar; the second was
   checked by arithmetic, not in a browser.
-- **Phone widths.** The card grid works down to 320px, but the header does
-  not (it is 499px wide at 375px); the spec does not design layouts below
-  1088px.
+- **Phone widths.** The card grid meets the capacity table down to 320px.
+  The header needs about 506px in Proxima Soft (499px in Arial), so it
+  overflows below that; revision 6 allows it, as the header is not designed
+  below 1088px.
 - **Not built:** Release Notes, the "app failed to load" modal, loading
   feedback, sign-in, the Open GI staff view and tenant dropdown, and any
   app-level header navigation content — all out of scope in the spec.

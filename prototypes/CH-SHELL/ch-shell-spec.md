@@ -8,11 +8,13 @@
 - **Shell:** this document is the shell. CH feature specs reference it as "Shell: `CH-SHELL` spec" and describe only their own content, breadcrumb trail and the items listed under "Contract for feature specs".
 - **Viewpoint:** a client user only. No Open GI staff view, no tenant dropdown, no OGI-only apps, fields or behaviour. The prototype should look as close as possible to what a client sees.
 - **Source tags:** **[Figma]** target design (Navigation file and User Management file, frames in the Screen index), **[Observed]** UAT build of 15 Oct 2026, **[Context]** Andrej's briefing recorded in the CH product context (baseline 17 Oct 2026), **[Decision]** agreed with Andrej (dated) or, where marked "spec", decided in this spec at Andrej's request and pending his review, **[Assumption]** to be validated, **[Build]** finding from the Claude Code build of revision 3 (`SPEC-CHANGES.md`, 20 Oct 2026).
-- **Revision:** 5, 20 Oct 2026. Home card grid now follows production CH (measured on UAT); card internals follow Buckholt.
+- **Revision:** 7, 22 Oct 2026. Wording clarifications from the revision 6 check. No behaviour changes. The shell is stable: CH feature specs can reference this revision.
 
 ## What changed in this revision
 | Area | Change |
 |---|---|
+| Revision 7 | Production's 396px card height marked as an observation, not a target; card height defined as equal across the page at each width. App name length rule given its measurement condition. Menu stays open when the browser window loses focus. |
+| Revision 6 | Open question 15 closed (no title wraps; 6px to spare). App-name length rule added. Avatar menu named as a disclosure; Shift+Tab rule defined. Avatar spacing stated as arrangement. Vertical grid spacing, page-wide equal height and the scope of the capacity table defined. Two revision 3 leftovers corrected. SH-01 step 6 scoped to the home page. |
 | Revision 5: card grid | Replaces the revision 4 card rule. The grid keeps production CH behaviour, measured by Andrej on UAT on 20 Oct 2026: fixed-width cards that wrap and are centred, with set cards-per-row capacities. Each card's internals follow Buckholt Card. Illustrations keep their own proportions (no cropping). Card grid added as Gap 9. |
 | Revision 4: sources of truth | New rule: Figma decides arrangement; Buckholt decides sizes, spacing, colours, icons and component styling. Resolves the Figma vs Buckholt differences found in the build (avatar, menu panel, card spacing, icons, environment control styling). |
 | Revision 4: focus and announcements | Navigation now relies on the normal page-load behaviour (focus at the top, document title announced) instead of moving focus to the level 1 heading. Resolves the invisible focus on the home page heading. |
@@ -99,6 +101,10 @@ Checked against the Brand Language and Tone of Voice guide (Human, Clear; "be co
 - One sentence, 65 characters or fewer, ending with a full stop. No exclamation marks or questions.
 - Starts with a verb that says what the user can do, addresses the user as "you/your", and names the benefit, not the technology.
 - British English. App names, "Mobius" and "Configuration Hub" keep their product casing; everything else is sentence case.
+
+### App name length rule **[Decision]** spec, 21 Oct 2026
+- An app name must fit on one line in the card title at the fixed card width: 20 characters or fewer, and never wider than "Third-Party Services" when rendered. Measured in Proxima Soft at 1200px and wider, where the card title is at its largest (Buckholt's title size shrinks slightly below 1200px). The longest current name has 6px to spare there. **[Build]**
+- A longer name wraps rather than truncates, and makes every card on the page one title line taller (cards share the tallest card's height). Any new app with a longer name needs a shorter display name or a deliberate decision to accept the taller cards.
 - No jokes, hype or idioms. The guide's playful register suits marketing; a card description has to explain the app to someone who has never opened it, so clarity wins. This replaces copy such as "Your all-in-one tool for automating workflows, enhancing collaboration, and driving results" (vague, hype) and "Your friendly neighborhood Webhooks" (joke, US spelling). **[Figma]**, **[Observed]**
 - "We/us" means Open GI.
 
@@ -144,7 +150,7 @@ Notes
 | Test alert | Alert | Informational, not dismissible, no live-region role, message as plain text (not a heading) | Placement and role choice are Gap 3. |
 | Mobius link | Link | External link common action (icon before label, as in Figma) | Opens in a new tab in production. |
 | Avatar button | Avatar inside Menu button | Initials, circular | Accessible name and Tooltip required (icon-only control). |
-| Avatar menu | Menu button / Menu | Identity header (avatar, name, email; non-interactive), divider, one item | Non-interactive identity header is Gap 4. Keyboard per Buckholt Menu guidance. |
+| Avatar menu | Menu button / Menu | Identity header (avatar, name, email; non-interactive), divider, one item | Behaves as a disclosure: a button that shows and hides a list of actions, not an ARIA menu. Keyboard per Buckholt Menu guidance. Non-interactive identity header is Gap 4. **[Build]** |
 | Logout | Menu item using the Logout common action | Buckholt label and icon | Label as fixed by Buckholt. |
 | Breadcrumb band | Breadcrumb | Single item (current, plain text); multi-item (links plus current) | Full-width band between header and content per Figma; truncation is Gap 5. |
 | Home heading | Heading | Level 1, visually hidden | |
@@ -160,10 +166,10 @@ Not in `buckholt-reference.md` (commit `211e365`, 19 Oct 2026). Claude Code: con
 
 | # | Need | Why | Closest Buckholt option | Precedent (if any) | Expected behaviour |
 |---|---|---|---|---|---|
-| 1 | Application chrome: CH top bar with lockup, organisation area, external link and avatar | Every CH page needs it; Buckholt has a Header region but no top-bar component | Page layout Header region | `prototypes/shared/app-shell` (Mobius PAS chrome; structural precedent only, not CH's design) | Single row. Left: lockup as one link to home. Right, in order: organisation name with environment control, Mobius link, avatar. Reserved space after the lockup for app-level navigation (Gap 8). Sticky at the top on scroll **[Assumption]** |
+| 1 | Application chrome: CH top bar with lockup, organisation area, external link and avatar | Every CH page needs it; Buckholt has a Header region but no top-bar component | Page layout Header region | `prototypes/shared/app-shell` (Mobius PAS chrome; structural precedent only, not CH's design) | Single row. Left: lockup as one link to home. Right, in order: organisation name with environment control, Mobius link, avatar. The avatar keeps the space either side of it shown in Figma's Profile frame: this is arrangement (it sets how much room the organisation name has, and AC for Long names depends on it), so it is not replaced by Buckholt spacing. **[Build]** Reserved space after the lockup for app-level navigation (Gap 8). Sticky at the top on scroll **[Assumption]** |
 | 2 | Two-option environment switch (Live / Test) | The client control is a segmented either/or choice in the header. Switch is wrong (on/off, not two named states); Tabs and Page navigation change content or pages, not context; Dropdown would hide the current choice behind a click | Response button (radio, single-select) | Audit Centre Grouped / Individual (same gap) | Radio-group semantics; selection takes effect immediately; selected option shown by the outlined pill and not by colour alone |
 | 3 | Global environment alert | Persistent safety indicator for Test on every page, including inside apps | Alert | None | Full width, directly under the header and above the breadcrumb band, on every page while Test is current; not dismissible; not announced on page load, so no live-region role; message is not a heading, so it does not come before the page's level 1 heading in the outline. **[Build]** |
-| 4 | Menu with a non-interactive identity header | Avatar menu shows avatar, name and email above the actions | Menu button / Menu | None | Identity header is plain content, not focusable, not a menu item; separated from the actions by a divider; arrow keys move only between items |
+| 4 | Menu with a non-interactive identity header | Avatar menu shows avatar, name and email above the actions | Menu button / Menu | None | Identity header is plain content, not focusable, not a menu item; separated from the actions by a divider; Tab never stops on the identity header |
 | 5 | Truncating one long crumb label | Buckholt's overflow approach collapses a long trail (many crumbs) but says nothing about a single long label; CH trails are at most three crumbs, so the overflow approach never triggers. This is not custom truncation of trails. **[Build]** | Breadcrumb plus Tooltip | None | A crumb label longer than about 32 characters truncates with an ellipsis. Linked crumbs show the full text in a Tooltip on hover and focus. The current-page crumb is plain text: Tooltip on hover only, not focusable (inside apps its full text is also the visible page heading). Accessible name is always the full text. Threshold is an **[Assumption]** |
 | 6 | App card illustrations | Each card has an illustration; Buckholt has no illustration set | Card media area | Supplied SVG assets | Shown full card width at the top of the card at the illustration's own proportions, never cropped (Buckholt's fixed-height media box would crop it, see build finding C6); decorative (no alternative text). **[Decision]** spec, 20 Oct 2026 |
 | 7 | Skip link | Keyboard users need to bypass the header on every page | None | None | First focusable element; hidden until focused; text "Skip to main content"; moves focus to Main |
@@ -215,8 +221,10 @@ Each card, top to bottom **[Figma]**: illustration (decorative), title (heading 
     |---|---|---|---|---|---|---|---|
     | Cards per row | 5 | 4 | 3 | 3 | 3 | 2 | 1 |
 
-  - Spacing values inside and around this grid come from production, not Buckholt's Frame padding; Claude Code adjusts whatever page padding is needed to hit these capacities and records it in `PROTOTYPE.md`.
-- **Card internals:** follow Buckholt Card (padding, title style, image treatment, description style, button placement, border and shape). Illustration at its own proportions, never cropped (Gap 6). Titles and descriptions wrap rather than truncate. All cards on the page share the height of the tallest card, and Open buttons sit at the bottom of each card, so buttons line up across a row.
+  - The capacity table is the requirement, not a padding value. It holds with and without a classic (non-overlay) scrollbar. Production's own side padding was not measured; the build's choice (29px either side, 16px below 576px) meets every capacity and is recorded in `PROTOTYPE.md`. **[Build]**
+  - Vertical spacing: 32px between rows (the same as the horizontal gap) and Buckholt's Frame spacing above the first row. Production's vertical values were not measured. **[Assumption]**
+  - The capacity table applies to the card grid at every listed width, including below 1088px. The header is not designed below 1088px and is allowed to overflow there. **[Decision]** spec, 21 Oct 2026.
+- **Card internals:** follow Buckholt Card (padding, title style, image treatment, description style, button placement, border and shape). Illustration at its own proportions, never cropped (Gap 6). Titles and descriptions wrap rather than truncate. All cards on the page share the height of the tallest card on the page, not just the tallest in their row; production does the same (every card measured 396px at every width, including one card per row). **[Observed]** The 396px is evidence of the page-wide rule, not a height to match: with Buckholt Card internals the prototype's cards are taller (about 419px), and the height can change slightly between widths because Buckholt's title size is fluid below 1200px. The requirement is that every card is the same height at each width. **[Build]** Open buttons sit at the bottom of each card, so buttons line up across a row.
 - **Organisation name:** plain text; truncates with an ellipsis when space runs out; full name in a Tooltip on hover; full name always in its accessible name. It is never focusable, truncated or not: a tab stop that appears only at some widths is more confusing than helpful, and the name is the user's own organisation. **[Decision]** spec, 20 Oct 2026.
 - **Header:** visible on every page; sticky on scroll. **[Assumption]**
 - **Document title:** "Applications | Configuration Hub".
@@ -269,7 +277,7 @@ Differences from SH-00-02:
 3. On the home page: the user stays on the home page; the Test alert appears; cards update to the Test set; the document title updates.
 4. Inside an app: the user is taken to that app's base page in the new environment. Filters, search, open drawers and selections reset. The breadcrumb shows the base page trail.
 5. Screen readers hear a polite announcement: "Test environment selected." or "Live environment selected."
-6. Focus stays on the selected option.
+6. On the home page, which updates in place, focus stays on the selected option. Inside an app the switch loads the base page, so focus follows "Focus on navigation". **[Build]**
 7. If the app is not visible in the new environment (seed variant only), the user is taken to the home page and the announcement is "Live environment selected. {App name} isn't available in Live." (or the Test equivalent). **[Decision]** spec.
 
 ### Unsaved changes confirmation (Modal)
@@ -297,7 +305,8 @@ Only when a feature prototype reports unsaved changes (see Contract for feature 
    - Divider.
    - Menu item: the Buckholt Logout common action (label and icon as Buckholt fixes them; Figma shows "Logout"). **[Decision]** Andrej, 19 Oct 2026.
 3. Activating Logout closes the menu. Nothing else happens in the prototype.
-4. Keyboard follows Buckholt's Menu guidance: Tab and Shift+Tab move between items; Tab past the last item, Escape or a click outside closes the menu. Escape and item activation return focus to the avatar button. The menu's accessibility semantics must match this keyboard model (see Buckholt ticket on Menu semantics). **[Decision]** spec, 20 Oct 2026, replacing arrow keys **[Build]**.
+4. Keyboard follows Buckholt's Menu guidance: Tab and Shift+Tab move between items. Shift+Tab from the first item returns focus to the avatar button and the menu stays open (the button is its own toggle). Tab past the last item, Escape, a click outside, or focus moving to any other element on the page closes the menu. Switching to another application or browser tab does not close it. **[Decision]** spec, 22 Oct 2026, confirming the build. Escape and item activation return focus to the avatar button. **[Decision]** spec, 21 Oct 2026, confirming the build.
+5. The menu is a disclosure: the avatar button says whether the list is shown, and the list is a plain list of actions, not an ARIA menu. A production build must not copy Buckholt's canonical menu markup, which describes a different keyboard model. **[Build]**
 
 ### Rules
 - No "Release notes" item, no second divider, and no unread indicator on the avatar.
@@ -382,6 +391,7 @@ What every CH feature spec can rely on without redescribing it, and what it must
 - Given a direct link to an app not visible in the current environment, when it opens, then the home page shows.
 - Given any page, when the user presses Tab once from the top, then "Skip to main content" is focused and activating it moves focus into Main.
 - Given the avatar button is focused, when the user presses Enter, then the menu opens showing the avatar, name, email and the Logout item (and no Release notes item), and focus is on Logout; when the user presses Escape, then the menu closes and focus returns to the avatar button.
+- Given the avatar menu is open and focus is on Logout, when the user presses Shift+Tab, then focus is on the avatar button and the menu is still open; and when focus is on Logout and the user presses Tab, then the menu closes.
 - Given any card, then its Open button's accessible name is "Open {App name}".
 - Given the user activates the Mobius link or Logout, then the page does not navigate.
 - Given an app without a feature prototype, when the user selects Open, then SH-03-01 shows with breadcrumb "{App name}" and heading "{App name}", the document title is "{App name} | Configuration Hub", and the next Tab focuses the skip link.
@@ -403,7 +413,7 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | 11 | ~~Card order~~ Resolved: Figma order. | | |
 | 12 | ~~Primary Open buttons on every card~~ Resolved: Primary confirmed with the design system designer. | | |
 | 13 | ~~1440px home frame~~ Resolved: the grid follows production behaviour measured on UAT, 20 Oct 2026. | | |
-| 15 | With Buckholt's larger card padding and title style inside a fixed 284px card, longer titles (for example "Third-Party Services") may wrap to two lines, making every card taller. Accept, or widen the fixed card width? Prototype accepts wrapping. | Andrej | No |
+| 15 | ~~Card titles wrapping~~ Resolved: no title wraps at any width; "Third-Party Services" has 6px to spare. Covered from now on by the App name length rule. | | |
 | 14 | Should the Live-only state exist in production at all (a client with no Test tenant)? Seeded so it can be tested. | PM | No |
 
 ## Known screenshot differences
@@ -429,7 +439,7 @@ What every CH feature spec can rely on without redescribing it, and what it must
 | Avatar menu | Name, email, Release Notes, Logout | Avatar, name, email, Logout (Release Notes specced separately) |
 | Accessible names | Open buttons, tenant selector and avatar unlabelled | Named as in Accessibility requirements |
 | Card copy | Inconsistent tone and spelling | One rule set, final copy |
-| Keyboard | No skip link | Skip link; focus moves to the heading after navigation |
+| Keyboard | No skip link | Skip link; focus starts at the top of the page after navigation |
 
 ## Screen index
 Export each frame as PNG into `screenshots/` under its screen ID before handoff.
