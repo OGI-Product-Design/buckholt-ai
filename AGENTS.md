@@ -1,9 +1,9 @@
 # Buckholt AI instructions
 
-> **Master index: [`project-context.md`](project-context.md).** It lists every project
-> artefact link (discovery summary, design worklist, success measures, rationale, build spec,
-> prototype, product spec) and the Buckholt sources. Read it before any design, discovery or
-> prototype task, and update its links when you create or move an artefact.
+> **Master index: [`project-context.md`](project-context.md).** It holds the repository-wide
+> values: Buckholt paths, the prototype root and the output convention. Each project's own context
+> (its artefact links) is in `design/<project-id>/project-context.md`, a dated export of that
+> project's claude.ai project context Doc. Read both before any design, discovery or prototype task.
 
 ## Purpose
 
@@ -67,7 +67,7 @@ Each living output (discovery summary, design worklist, success measures, design
 
 Never keep two masters. A Markdown export of a Doc is a snapshot: put the export date and the source Doc link at the top, and keep it in `design/<project-id>/`.
 
-**Project context** lists every artefact link. In this repository it is `project-context.md` at the root. In a claude.ai Project, Project knowledge is read-only to Claude, so keep project context as a Claude Doc linked from the Project instructions. If you cannot write to project context, give the user the exact line to add.
+**Project context** lists every artefact link. Each project's master is a claude.ai project context Doc, linked from the Project instructions, because Project knowledge is read-only to Claude. In this repository, read it from `design/<project-id>/project-context.md`, a dated export of that Doc with the export date and source Doc link at the top. The root `project-context.md` holds only repository-wide values. Change project context in the Doc, then refresh the export; if you cannot write to the Doc, give the user the exact line to add.
 
 **Repository handoff.** `/build-prototype` works in this repository, in `prototypes/<prototype-folder>/`. Unless that Claude Code session has verified access to the Docs, the build spec and build request must also exist in the repository as dated Markdown exports in `design/<project-id>/`.
 
@@ -103,7 +103,8 @@ asked to change it.
 ```text
 buckholt-ai/
 ├── AGENTS.md        the rules, for every agent: this file
-├── project-context.md  master index of project artefacts
+├── CLAUDE.md        loads AGENTS.md into Claude Code
+├── project-context.md  master index: repository-wide values
 ├── README.md  CANONICAL-MARKUP.md
 │
 ├── css/  components/  foundations/  patterns/        ← BUCKHOLT
@@ -113,8 +114,9 @@ buckholt-ai/
 ├── test/            passes or fails, from the CLI    ← checks over both
 ├── tools/           style guide, runtime harness        and tools
 │
-├── design/          design/<project-id>/ outputs      ← NOT BUCKHOLT
-│                    and dated Doc exports               workflow outputs
+├── design/          design/<project-id>/: project-    ← NOT BUCKHOLT
+│                    context export, outputs, dated      workflow outputs
+│                    Doc exports
 │
 └── prototypes/                                       ← NOT BUCKHOLT
     ├── shared/        app chrome, blade, calendar/      application work
