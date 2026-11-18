@@ -60,7 +60,7 @@ Use these prefixes across all outputs so links survive renames. Never renumber a
 | S | Screen (for example S-03) | /design-in-figma |
 
 ### Where outputs live
-Each living output (discovery summary, design worklist, success measures, design rationale, build spec, product spec) has exactly one master copy, in one of two homes. `project-context.md` records which.
+Each living output (discovery summary, design worklist, success measures, design rationale, build spec, product spec) has exactly one master copy, in one of two homes. The project's context (`design/<project-id>/project-context.md`) records which.
 
 - **Claude Doc.** The default when Claude Docs tools are available, for example in a claude.ai Project. Find the Doc's link in project context, read it, and update only the affected sections in place. Keep other people's edits and comments; never rewrite the whole Doc to change one part. If no Doc exists yet, create one and add its link to project context.
 - **Repository file.** The default in Claude Code without verified Docs access: `design/<project-id>/<output>.md`.
