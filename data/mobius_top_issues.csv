@@ -1,0 +1,6 @@
+cause,count
+Slow save request (POST),1800
+Recurring screen error (nativeElement),1800
+Slow amended-document download,1300
+Slow general data request (GET),615
+Permission refused on policy details (403),406

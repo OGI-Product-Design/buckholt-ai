@@ -1,0 +1,5 @@
+measure,value,unit,source
+Core sites on record,1346,sites,UserInfo (certified): MSG_USERINFO
+Core sites reporting in 2026,485,sites,UserInfo (certified): Last UserInfo Date
+Average daily Core program runs,226256,runs,Core Program Average Usage
+Daily runs of problem-flagged programs,1603,runs,Core Program Average Usage: problem_indicator (mostly TW21 and MB21)

@@ -336,33 +336,6 @@
       <p class="cmv-source">Source: Mobius 2.0 wiki, Customers page, customer profiles and Environments &amp; Tenants register (November 2026); LogRocket segment &ldquo;Known live Mobius customers (UI users)&rdquo;.</p>
   </section>
 
-  <section class="cmv-sec" id="estate">
-    <h2>How big the live estate is</h2>
-    <p class="cmv-sub">Core installations report in nightly; a site that has stopped reporting is likely dormant or decommissioned. Mobius is one hosted platform, so its size shows in users and customers instead.</p>
-    <p class="cmv-insight"><b>Insight:</b> Only about 500 of 1,346 Core sites still report, so the real migration estate is roughly 500 sites.</p>
-    <div class="cmv-pair">
-      <div class="cmv-panel" id="estate-core">
-        <span class="cmv-tag">Core</span>
-        <div class="cmv-stats">
-          <div class="cmv-stat"><span>Sites reporting in 2026</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Core sites reporting in 2026" data-fmt="int">—</span></div>
-          <div class="cmv-stat"><span>Sites on record</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Core sites on record" data-fmt="int">—</span></div>
-        </div>
-        <h3>Sites by the year they last reported</h3>
-        <p>From Core's own nightly health log (the certified UserInfo model). Most records are sites that have not reported for years.</p>
-        <div class="cmv-chart" data-draw="hbar" data-source="core_sites" data-label="last_reported" data-series="sites:Sites" data-fmt="int" data-aria="Core sites by the year they last reported"></div>
-      </div>
-      <div class="cmv-panel" id="estate-mobius">
-        <span class="cmv-tag">Mobius</span>
-        <div class="cmv-stats">
-          <div class="cmv-stat"><span>Active users, last 3 months</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Active users" data-fmt="int">—</span></div>
-          <div class="cmv-stat"><span>Sessions, last 3 months</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Sessions" data-fmt="int">—</span></div>
-        </div>
-        <p>LogRocket, UI users of known live customers. Core does not report user counts in a usable form today; its user log needs parsing.</p>
-      </div>
-    </div>
-      <p class="cmv-source">Source: Power BI, UserInfo certified model (Core sites); LogRocket Platform Health with the known live customers segment (Mobius).</p>
-  </section>
-
   <section class="cmv-sec" id="reliability">
     <h2>When the system stops the user</h2>
     <p class="cmv-sub">The nearest like-for-like: Core logs program aborts, Mobius logs browser crashes and failed requests. Both mean a user was interrupted mid-task, but they are counted differently.</p>

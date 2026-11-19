@@ -1,0 +1,7 @@
+nfr,meaning,core,mobius,headline,ready_for_record
+Performance (speed),How fast screens respond,Not available,Measured,Mobius: 3 in 4 pages load within 1.6s. Core: no timing data at all.,Partly
+Reliability,How often things go wrong in use,Measured,Measured,Core errors down 70%. Mobius: 46% of MTA and 39% of payment sessions hit a failure.,Yes
+Availability and recovery,"Is it up, and how fast does it come back",Not available,Partial,Neither product reports uptime. Mobius designed for 99.98%; a customer expects 99.99%.,No
+Security,How well data and access are protected,Partial,Partial,"Mobius 2025 pen test: 6 issues, all still open. No agreed threshold yet.",Partly
+Usability,Can people finish what they start,Not available,Measured,Mobius: 80% of MTAs and 62% of payment summaries complete. Core: not recorded.,Partly
+Supportability,How much help customers need,Measured,Measured,Mobius needs 2.8 times as much support per transaction; 40% of its tickets are code defects.,Yes

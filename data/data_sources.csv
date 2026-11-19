@@ -1,0 +1,28 @@
+source,tool,covers,status,used_for
+Core MI,Power BI,Core,Current (daily),"Core volume, GWP, customers, work mix"
+Mobius Transactions,Power BI,Mobius,Current,"Mobius volume, GWP, customers, EDI"
+ITSYS,Power BI,Core,Current (daily),Core system errors
+UI Aborts,Power BI,Core,Stale since June 2026,Core program aborts and causes
+UserInfo (certified),Power BI,Core,Current (daily),"Live sites; backups, restarts and versions need parsing"
+Core Program Average Usage,Power BI,Core,Current,Core usage by area; problem-flagged programs
+Core BackOffice Quote MI,Power BI,Core,Current,Core quotes and active brokers
+Customer Compass New,Power BI,Core and Mobius,Current,Support tickets by product and month
+JSM,Power BI,Core and Mobius,Current,Support satisfaction (few tickets tagged by product)
+ADO Daily Data,Power BI,Core and Mobius,Current,Bugs and fix time
+MEND,Power BI,Core and Mobius,Stale since Dec 2025,Open security vulnerabilities
+Broker Policy Transactional,Power BI,Core and Mobius,Stale since June 2026,Policies in force
+Policy MI,Power BI,Core and V only,Current (daily),Not used: no Mobius facts
+EDI Customer Health,Power BI,Core and V only,Current,Not used: billing view with no Mobius
+Botwatch 3000,Power BI,All (support chatbot),Broken gateway,Not used: data unavailable
+Core Customers Feed Check,Power BI,Core,Stale since Oct 2025,Not used: empty report
+SupportCentre,Power BI,Core and Mobius,Stale since Feb 2026,Not used: duplicates Customer Compass
+EDI,Power BI,Core and V only,Current,Core straight-through processing (STP); no Mobius rows
+Quote MI,Power BI,Rating platform channels,Current,"Not used: quotes by channel (aggregator, eBroker, hosted e-quotes), not by PAS"
+CSAT / NPS / SUS / survey,Power BI,None,Not found,No product satisfaction or usability data exists
+Platform Health,LogRocket,Mobius,Current (fixed),"Users, sessions, load, API, errors"
+Key Journey Metrics,LogRocket,Mobius,Current (fixed),Journey funnel and completion rates
+Core vs Mobius NFR comparison,LogRocket,Mobius,Current,Journey reliability and speed
+"Mobius 2.0 wiki: CFRs, ADRs, principles",Azure DevOps wiki,Mobius,Partly current (CFRs marked for replacement),"Defined standards, architecture mechanisms"
+"Mobius 2.0 wiki: pen tests, disaster recovery",Azure DevOps wiki,Mobius,Current (2025),Security findings and DR status
+Mobius 2.0 wiki: customers and tenant register,Azure DevOps wiki,Mobius,Current (Nov 2026),Customer types and LogRocket segment
+Azure Application Insights,Azure,Mobius,Not accessible,"Would give uptime, error rates and response-time distributions"

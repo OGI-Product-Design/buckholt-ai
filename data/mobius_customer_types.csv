@@ -1,0 +1,22 @@
+customer,tenant,type,in_ui_baseline,how_they_use_mobius,power_bi_label,status
+Islands,IS01,UI-led,Yes,About 270 staff (incl. B2B) work directly in Mobius,Islands Insurance,Live since Feb 2025
+Greenlight,BR01,UI-led,Yes,About 20 staff work directly in Mobius,Greenlight Insurance Services,Live since Jun 2022
+Lawshield (VW),VW01,UI-led,Yes,About 20 staff sell VW extended warranty and Ensurance in Mobius,No broker recorded,Live since Aug 2025
+Lawshield (Velosure and Carbon),LS01,UI-led,Yes,"About 10 staff; pedal cycle, motor and household",No broker recorded,Live since Apr 2025
+Custodian Club,CC01,UI-led,Yes,About 10 staff; not headless,No broker recorded,Live 2026
+CETA,CE01,Hybrid,Yes,Own quote and buy site and portal via Mobius APIs; staff service in Mobius call centre,No broker recorded,Live since Mar 2025
+Urban Jungle,UJ01,Hybrid,Yes,Headless sales via own site and aggregators; staff service in Mobius,No broker recorded,Live since Aug 2025
+Jaunt (Markerstudy / Swinton Go),JN01,Hybrid,Yes,Short-term motor sold online; call centre services in Mobius,Possibly Markerstudy Distribution (to confirm),Live since Dec 2024
+Lloyd Latchford Group,SC01,Hybrid,Yes,"Salary-sacrifice motor via lease partners, API (APIM)",Supercover Insurance (shared tenant SC01),Live since Feb 2026
+Alfred,AL01,Hybrid,Yes,"Own digital agent journeys via Developer Portal; most NB, MTA and renewal off-system",No broker recorded,Live 2026
+Utility Warehouse,UW01,Headless,No,Own PAS (William) calls Mobius via APIs; no Mobius UI,Not yet trading,Onboarding (Nov 2026)
+I'm Insured,II01,Headless,No,Chatbot and WhatsApp journeys via Developer Portal,Not yet trading,Onboarding
+Beloy,BL01,Headless,No,Embedded partner journeys; payments off-system,Not yet trading,On hold
+Policywave,PW01,Headless,No,Developer Portal; data migration by IDS,Not yet trading,Onboarding
+Pizza,PZ01,Not in baseline,No,Piloted Mobius from Nov 2025; staying on Core,No broker recorded,Staying on Core
+Supercover (Markerstudy),SC01,Not in baseline,No,Not trading; shares tenant SC01 with LLG,Supercover Insurance,Not trading
+Footman James,FJ01,Not in baseline,No,Core customer migrating to Mobius; tenant used for testing (POC on FM01),Not yet trading,Migration from Core in progress
+Got You Covered,GM01,Not in baseline,No,"Core customer (about 98,000 Core transactions in 2026); migration proof of concept",Not yet trading,Migration from Core: proof of concept
+Stanhope Cooper (Everywhen),SH01,Not in baseline,No,Core customer (Everywhen) onboarding to Mobius,Not yet trading,Onboarding (Dec 2026)
+Markerstudy Pet,MP01,Not in baseline,No,"Staff would work in Mobius screens (not headless); 350 users; 150,000-policy migration",Not yet trading,On hold
+Bluegreen Holdings,(none yet),Headless,No,"Travel insurance with partner medical screening via APIs; 350 users; 150,000-policy migration",Not yet trading,Onboarding (Nov 2026)

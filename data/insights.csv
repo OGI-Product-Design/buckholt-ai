@@ -1,0 +1,12 @@
+area,core,mobius,insight
+Scale,Core carries about 38 times the work,"Small, growing; about 10 live customers, two (Islands, Lawshield VW) carry most UI and volume","Migration risk sits in scale and a narrow Mobius customer base (two customers are about 70% of volume), not in value per transaction (about £440 vs £461)."
+Reliability,Errors down about 70% since early 2025,17.6% of UI sessions hit a failed request; 36 to 46% in transactional journeys,"Core is stabilising; Mobius errors concentrate where users save, price and pay."
+Speed,Not measured,P75 load 1.56s overall; fastest on client records (1.11s),Mobius is fast on screen; Core speed is the biggest evidence gap.
+Support,"1.3 tickets per 1,000 transactions","About 3.5 per 1,000","Mobius needs more help per transaction, and 4 in 10 of its tickets are code defects."
+Satisfaction,4.8 out of 5 (support only),Too few ratings,Neither product has a product satisfaction or usability score; this is the clearest UX gap to close.
+Journeys,Start and end only,Full funnel; MTA 80% and payment summary 62% complete,Mobius drop-off concentrates at MTA confirmation and before payment.
+Friction,Ticket signals only,"18.4% rage clicks, 26.4% dead clicks",Generic View controls appear in both click data and the navigation audit: a fixable cause.
+Security,"One scan, 10 critical",34 to 49 critical on average,"Mobius carries more open vulnerabilities, but scanning is not like for like and stopped in Dec 2025."
+Retention,77.6% renewal rate,82.2% renewal rate,"Mobius retains slightly better, with identical cancellation rates."
+Customer types,One way of working (desktop UI),"UI-led, hybrid (own site via API) and headless customers","LogRocket measures the Mobius UI only, so hybrid and headless customers’ own-site sales are invisible to it; Power BI volume includes them."
+Migration pipeline,"Footman James, Got You Covered and Everywhen are moving",Three Core customers in migration or onboarding,The NFR baseline should protect these customers first: their Core experience today is the bar Mobius has to meet.

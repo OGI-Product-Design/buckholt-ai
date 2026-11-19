@@ -1,0 +1,11 @@
+journey,sessions,failed_request_pct,p75_load_s
+MTA,4957,46.0,1.39
+Payments,6915,39.4,
+New business quote,6252,38.1,1.54
+Renewal,4728,36.7,1.36
+Diary,,32.0,
+Policy history,,30.5,
+Accounts,10571,28.5,1.39
+Client records,23225,22.7,1.11
+Correspondence,21352,22.0,1.31
+Client search,24813,21.6,

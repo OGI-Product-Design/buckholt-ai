@@ -1,0 +1,14 @@
+customer,product,request,nfr
+Lloyd and Whyte,Core,Speed improvements to Open Attach (document storage); noted as a satisfaction issue affecting a large customer base,Performance
+CTH,Core,Launch from a hotkey in calls and the client area,Usability
+uDrive,Core,Document portal creates excessive diary notes,Usability
+Brokers (various),Core,Smart Renew feedback: not suitable in its current state,Usability
+Jan Yost,Core,Remove policies from the portal to honour right-to-be-forgotten requests,Security and privacy
+Open GI (regulation),Core,Purge prospect records to meet data retention rules,Security and privacy
+Lloyd and Whyte,Core,Secure card payments by phone (PCI) through Webex,Security and privacy
+SBISL,Core,Read and write APIs into Core,Interoperability
+Lawshield,Mobius,Functions not covered by the current Mobius API,Interoperability
+BlueGreen Holdings,Mobius,Improve the API and proxy integration; blocking go-live with Zurich,Interoperability
+Utility Warehouse,Mobius,Annualised premium not visible in the screens or the API,Usability
+Islands,Mobius,Disentanglement: the request states Islands plans to leave Open GI by December 2028 (to be confirmed with the account team),Business risk
+Principal Insurance,V platform,Urgent dedicated environment after stability problems with the platform and aggregators cost policy sales,Reliability

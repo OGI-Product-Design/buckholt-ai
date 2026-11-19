@@ -1,0 +1,5 @@
+product,component,critical,high,medium,low,snapshots
+Core,"Core",10.0,27.0,35.0,0.0,1
+Mobius,"Mobius",5.3,708.9,792.0,13.8,468
+Mobius,"Mobius 2.0",34.2,310.8,354.4,43.2,469
+Mobius,"Mobius 2.0 (Azure platform repo)",49.4,506.1,294.4,35.7,365

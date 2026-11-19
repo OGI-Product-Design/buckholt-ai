@@ -1,0 +1,20 @@
+pillar,measure,core,mobius,source
+Friction,Sessions with a rage click,Not measured,18.4%,LogRocket (Mobius)
+Friction,Sessions with a dead click (click that does nothing),Not measured,26.4%,LogRocket (Mobius)
+Friction,Pages most often refreshed by users,Not measured,"Home, search results, record summary (about 500 sessions each)",LogRocket (Mobius)
+Success,New business quotes reaching a quote summary,Not measured,89%,LogRocket (Mobius)
+Success,MTA quotes confirmed,Not measured,80.1%,LogRocket (Mobius)
+Success,Payment summary reaching a confirmed sale,Not measured,61.7%,LogRocket (Mobius)
+Success,Payments started that complete,Not measured,100%,LogRocket (Mobius)
+Success,Searches leading to a next step,Not measured,90%,LogRocket (Mobius)
+Effort,Time from starting a quote to its summary,Not measured,5m 6s,LogRocket (Mobius)
+Effort,Median time from MTA quote to confirmation,Not measured,48s,LogRocket (Mobius)
+Effort,Median time from payment summary to confirmed sale,Not measured,22m,LogRocket (Mobius)
+Effort,Average session length,Not measured,1h 10m,LogRocket (Mobius)
+Effort,Transactions completed straight through to the insurer (STP),14.8% (all logged history),Not in the EDI model,EDI (Core)
+Stability,"System errors per 1,000 transactions",10.4,Not measured,ITSYS (Core)
+Stability,Sessions hitting a failed request,Not measured,17.6%,LogRocket (Mobius)
+Stability,Crashes or aborts,At least 398 a year (capped log),Crash reporting not switched on,UI Aborts; LogRocket
+Satisfaction,Support satisfaction (out of 5),4.8 from 92 ratings,1 rating only,JSM
+Satisfaction,"Product satisfaction or usability score (CSAT, SUS)",Not collected,Not collected,None found
+Navigation,Navigation audit findings,Not audited,"Several navigation models in one journey; Cancel and Back lose client context; generic View opens a page, wizard or panel","Mobius navigation audit, Oct 2026"

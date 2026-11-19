@@ -1,0 +1,10 @@
+step,order,sessions
+Client searches,1,24813
+Existing record opened or next step,2,22178
+Quote started,3,3621
+New business quote summary reached,4,3231
+Saved as prospect,5,4518
+Conversion to policy started,6,1730
+Payment summary reached,7,6915
+Payment started (card),8,2757
+Payment started (monthly),9,1312

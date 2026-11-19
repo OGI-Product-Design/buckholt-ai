@@ -1,0 +1,10 @@
+metric_id,measure,core,mobius,unit,period,source
+transactions,Policy transactions,10157149,266781,transactions,Nov 2025 to Oct 2026,Power BI: Core MI (Core); Mobius Transactions (Mobius)
+pif,Policies in force,6275255,131559,policies,Latest quarter end (model refreshed 1 Jun 2026),Power BI: Broker Policy Transactional
+tickets,Support tickets (PAS-tagged),12878,947,tickets,Nov 2025 to Oct 2026,Power BI: Customer Compass New (Jira); Open GI internal tickets excluded; Mobius = Mobius + Mobius 2 + Mobius Rating
+cat_a,Category A (highest priority) tickets,119,39,tickets,Nov 2025 to Oct 2026,Power BI: Customer Compass New (Jira); before Open GI internal exclusion; categories not yet confirmed as P1
+sla_met,Tickets resolved within SLA,99,87,%,Nov 2025 to Oct 2026,Power BI: Customer Compass New; Mobius figure is Mobius 2
+first_response,First response within SLA,99,99,%,Nov 2025 to Oct 2026,Power BI: Customer Compass New; Mobius figure is Mobius 2
+bugs,Bugs raised in Azure DevOps,557,2596,bugs,Nov 2025 to Oct 2026,Power BI: ADO Daily Data; Mobius figure is Mobius 2; includes pre-release bugs
+cycle_time,Average bug cycle time,7.06,9.82,days,Nov 2025 to Oct 2026,Power BI: ADO Daily Data
+code_defect_share,Tickets that are code defects,4,40,%,Nov 2025 to Oct 2026,Power BI: Customer Compass New; Mobius figure is Mobius 2

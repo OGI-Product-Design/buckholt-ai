@@ -1,0 +1,16 @@
+measure,value,unit
+Active users,373,users
+Sessions,31253,sessions
+P75 page load (all pages),1.56,s
+P75 page load (quote pages),1.54,s
+Average page load (all pages),1.33,s
+Average system response,198,ms
+Sessions hitting a failed request (all),17.6,%
+Quote sessions hitting a failed request,38.1,%
+Crash rate,0,%
+Client searches leading to a next step,90,%
+Quotes started that reach a new business quote summary,89,%
+MTA quotes that are confirmed,80.1,%
+Quotes where conversion to policy is started,27,%
+Payment pages reaching a confirmed sale,61.7,%
+Payments started that reach a confirmed sale,100,%
