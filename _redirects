@@ -36,4 +36,4 @@
 # `prototype/` was renamed to `shared/` in the move.
 /prototype/*             /prototypes/shared/:splat                  301
 /calendar/*              /prototypes/calendar/:splat                301
-/data/*                  /prototypes/data/:splat                    301
+/data/calendar.js        /prototypes/shared/data/calendar.js        301
