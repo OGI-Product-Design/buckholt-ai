@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core vs Mobius: side by side</title>
+<script src="d3.min.js"></script>
+<script src="data.js"></script>
+<script>
+(function () {
+  var raw = window.DATA, calcs = {}, draws = {}, hooks = [];
+  var params = { period: 'last12', customer: '' };
+  var dash = {
+    colors: ['#4C8DF6', '#E8833A', '#3FB68B', '#C678DD', '#E5C07B', '#56B6C2'],
+    params: function () { return Object.assign({}, params); },
+    setParams: function (p) { params = Object.assign({}, params, p); render(); },
+    calc: function (id, def) { calcs[id] = def; },
+    draw: function (name, fn) { draws[name] = fn; },
+    onData: function (fn) { hooks.push(fn); },
+    data: function (id) {
+      if (raw[id]) return { status: 'ok', data: raw[id] };
+      var c = calcs[id];
+      if (c) {
+        try { return { status: 'ok', data: c.fn.apply(null, c.inputs.map(function (i) { return dash.data(i).data || []; })) }; }
+        catch (e) { console.error('calc ' + id, e); return { status: 'error', error: String(e) }; }
+      }
+      return { status: 'error', error: 'unknown source ' + id };
+    }
+  };
+  function render() {
+    hooks.forEach(function (f) { try { f(); } catch (e) { console.error(e); } });
+    Object.keys(draws).forEach(function (n) {
+      document.querySelectorAll('[data-draw="' + n + '"]').forEach(function (el) {
+        try { draws[n](el); } catch (e) { console.error('draw ' + n, e); }
+      });
+    });
+  }
+  dash._render = render;
+  window.dash = dash;
+  var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(render, 200); });
+})();
+</script>
+<style>
+:root{--font-anthropic-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--font-anthropic-serif:Georgia,"Times New Roman",serif;
+--cds-font-size-title:1.75rem;--cds-font-size-heading:1.2rem;--cds-font-size-body:.95rem;--cds-font-size-caption:.8rem;--cds-font-weight-medium:600;
+--cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:12px;--cds-gap-lg:20px;--cds-gap-xl:36px;--cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:16px;--cds-radius:10px;
+--color-ok:#4ADE80;--color-bad:#F87171;--cds-chart-muted:#4B4844;--cds-chart-reference:#D97757}
+*{box-sizing:border-box}html,body{margin:0;background:#121110}body{padding:24px;max-width:1400px;margin:0 auto}
+.dash-skeleton{opacity:.6}
+.dash-select{background:#1E1D1B;color:#ECE9E4;border:1px solid #3A3835;border-radius:6px;padding:6px 8px;font:inherit}
+</style>
+<style>
+.cmv{font-family:var(--font-anthropic-sans);color:var(--color-fg);display:flex;flex-direction:column;gap:var(--cds-gap-xl)}
+.cmv-title{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0}
+.cmv-lede{font-size:var(--cds-font-size-heading);line-height:1.45;margin:var(--cds-gap-sm) 0 0;max-width:64ch}
+.cmv-lede b{font-family:var(--font-anthropic-serif);font-weight:400;font-variant-numeric:tabular-nums}
+.cmv-note{color:var(--color-fg-muted);font-size:var(--cds-font-size-caption);margin:var(--cds-gap-sm) 0 0;max-width:72ch}
+.cmv-controls{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);align-items:flex-end;margin-top:var(--cds-gap-md)}
+.cmv-controls label{display:flex;flex-direction:column;gap:4px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.cmv-controls select{min-width:220px;max-width:100%}
+.cmv-sec h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0 0 var(--cds-gap-xs)}
+.cmv-sub{color:var(--color-fg-muted);margin:0 0 var(--cds-gap-md);font-size:var(--cds-font-size-body);max-width:72ch}
+.cmv-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--cds-gap-lg)}
+.cmv-panel{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:flex;flex-direction:column;gap:var(--cds-gap-sm);min-width:0}
+.cmv-tag{display:inline-block;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);letter-spacing:.04em;text-transform:uppercase;color:var(--color-fg-muted)}
+.cmv-panel h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0}
+.cmv-panel p{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0}
+.cmv-big{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;line-height:1.1}
+.cmv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:var(--cds-gap-md)}
+.cmv-stat{display:flex;flex-direction:column;gap:2px}
+.cmv-stat span:first-child{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.cmv-chart{position:relative;min-height:160px;width:100%}
+.cmv-chart svg{display:block;overflow:visible}
+.cmv-ax text,.cmv-val{fill:var(--cds-text-secondary);font-size:var(--cds-font-size-caption);font-family:var(--font-anthropic-sans)}
+.cmv-lab{fill:var(--color-fg);font-size:var(--cds-font-size-caption);font-family:var(--font-anthropic-sans)}
+.cmv-ax line,.cmv-ax path{stroke:var(--cds-chart-axis)}
+.cmv-grid line{stroke:var(--cds-chart-grid)}
+.cmv-band{fill:var(--cds-chart-reference);opacity:.12}
+.cmv-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);box-shadow:var(--cds-shadow-popover);border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);color:var(--color-fg);white-space:nowrap;z-index:2}
+.cmv-legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.cmv-sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.cmv-tablewrap{overflow-x:auto}
+.cmv-table{border-collapse:collapse;width:100%;font-size:var(--cds-font-size-body)}
+.cmv-table th{text-align:left;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);font-size:var(--cds-font-size-caption);padding:var(--cds-pad-xs) var(--cds-pad-sm);border-bottom:1px solid var(--color-border-line);white-space:nowrap}
+.cmv-table th.cmv-r{text-align:right}
+.cmv-table td{padding:var(--cds-pad-xs) var(--cds-pad-sm);border-bottom:1px solid var(--color-border-line);vertical-align:top}
+.cmv-num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cmv-gap{border:1px dashed var(--color-border-line);background:transparent}
+.cmv-details summary{cursor:pointer;font-weight:var(--cds-font-weight-medium)}
+.cmv-details ul{color:var(--color-fg-muted);font-size:var(--cds-font-size-body);line-height:1.5;max-width:78ch}
+[data-dash-source-state=refreshing]{opacity:.5}
+.cmv-insight{border-left:3px solid var(--cds-chart-reference);padding:var(--cds-pad-xs) var(--cds-pad-md);margin:0 0 var(--cds-gap-md);font-size:var(--cds-font-size-body);max-width:78ch}
+.cmv-insight b{font-weight:var(--cds-font-weight-medium)}
+.cmv{--color-fg:#ECE9E4;--color-fg-muted:#A9A39B;--color-panel:#1E1D1B;--color-border-line:#34322F;--cds-text-secondary:#B7B1A9;--cds-chart-grid:#2B2927;--cds-chart-axis:#55524E;--cds-surface-popover:#2A2826;--cds-border:#3A3835;--cds-chart-reference:#D97757;background:#121110;color:var(--color-fg);color-scheme:dark;padding:var(--cds-pad-lg);border-radius:var(--cds-radius)}
+.cmv-chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);white-space:nowrap}
+.cmv-chip-m{background:#14532D;color:#86EFAC}.cmv-chip-p{background:#713F12;color:#FDE68A}.cmv-chip-n{background:#5B1F1F;color:#FCA5A5}.cmv-chip-x{background:#2E2C2A;color:#A9A39B}
+.cmv-source{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:var(--cds-gap-sm) 0 0;border-top:1px solid var(--color-border-line);padding-top:var(--cds-pad-xs)}
+.cmv-score{display:flex;gap:var(--cds-gap-sm);align-items:baseline}
+.cmv-score .cmv-big{font-size:var(--cds-font-size-title)}
+.cmv-cov td{vertical-align:middle}
+.cmv-cov td.cmv-srccell{color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)}
+.cmv-exp{cursor:pointer}.cmv-exp:hover td{background:#26241F}
+.cmv-exp td:first-child::before{content:"\25B8  ";color:var(--color-fg-muted)}
+.cmv-exp.cmv-open td:first-child::before{content:"\25BE  "}
+.cmv-detail{display:none}.cmv-exp.cmv-open + .cmv-detail{display:table-row}
+.cmv-detail td{background:#191816;color:var(--color-fg);font-size:var(--cds-font-size-body);line-height:1.5;padding:var(--cds-pad-sm) var(--cds-pad-md)}
+.cmv-cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--cds-gap-md)}
+.cmv-cards3 .cmv-panel h3{color:#D97757}
+</style>
+</head>
+<body>
+
+
+<div class="cmv">
+  <header id="top">
+    <h1 class="cmv-title">Core vs Mobius: side by side</h1>
+    <p class="cmv-lede">In the selected period Core handled <b class="dash-skeleton" data-draw="num" data-source="period_volume" data-field="transactions" data-where="product=Core" data-fmt="int">—</b> transactions and Mobius <b class="dash-skeleton" data-draw="num" data-source="period_volume" data-field="transactions" data-where="product=Mobius" data-fmt="int">—</b>. Per transaction, Mobius needs <b class="dash-skeleton" data-draw="num" data-source="ratios" data-field="value" data-where="metric=support_x" data-fmt="dec1">—</b> times as much support as Core.</p>
+    <p class="cmv-note">Mobius on-screen figures cover UI users of ten known live customers (see Types of Mobius customer). Each section pairs Core and Mobius on the same measure. Where one product has no equivalent data, the panel says so rather than leaving it out. Figures are as gathered from Power BI and LogRocket on 13 to 14 November 2026.</p>
+    <div class="cmv-controls" id="controls">
+      <label>Period
+        <select class="dash-select" id="period-select" aria-label="Period">
+          <option value="last12">Last 12 full months (Nov 2025 to Oct 2026)</option>
+          <option value="ytd2026">2026 so far (Jan to Oct)</option>
+          <option value="2025-11">November 2025</option>
+          <option value="2025-12">December 2025</option>
+          <option value="2026-01">January 2026</option>
+          <option value="2026-02">February 2026</option>
+          <option value="2026-03">March 2026</option>
+          <option value="2026-04">April 2026</option>
+          <option value="2026-05">May 2026</option>
+          <option value="2026-06">June 2026</option>
+          <option value="2026-07">July 2026</option>
+          <option value="2026-08">August 2026</option>
+          <option value="2026-09">September 2026</option>
+          <option value="2026-10">October 2026</option>
+        </select>
+      </label>
+      <label>Customer
+        <select class="dash-select" id="customer-select" aria-label="Customer" data-draw="customers" data-source="core_customers mobius_broker_monthly"></select>
+      </label>
+    </div>
+  </header>
+
+  <section class="cmv-sec" id="summary">
+    <h2>Summary: where we stand on the NFRs</h2>
+    <div class="cmv-cards3">
+      <div class="cmv-panel"><h3>What Deloitte asked for</h3><p>Requirement records for each product journey, each covering one quality attribute (performance, reliability, availability, security and so on), linked to a measurable outcome, the architecture that delivers it and the evidence today. Pilot a few journeys first, then align them to the target architecture.</p></div>
+      <div class="cmv-panel"><h3>What Jim asked for</h3><p>Measure around six NFRs across both Mobius and Core, so the two products can be compared on the same terms and migration decisions rest on evidence.</p></div>
+      <div class="cmv-panel"><h3>Where we are</h3><p>Evidence is in place for <b>reliability</b> and <b>supportability</b> on both products, and for <b>performance</b> and <b>usability</b> on Mobius only. <b>Availability</b> is missing on both, and <b>security</b> is partial. Mobius has written but unratified targets; Core has none. The architecture links Deloitte needs already exist in the Mobius wiki (21 principles, 78 decisions).</p></div>
+    </div>
+    <p class="cmv-insight" style="margin-top:var(--cds-gap-md)"><b>Insight:</b> We can draft Deloitte records now for reliability and supportability on MTA, payments, quotes and renewals, where both data sources agree those journeys struggle. Availability, Core speed and Core usability need new instruments first: uptime reporting from Application Insights and a benchmark study on Core.</p>
+    <div class="cmv-panel cmv-tablewrap" style="margin-top:var(--cds-gap-md)">
+      <h3>The six NFRs, Core and Mobius</h3>
+      <table class="cmv-table cmv-cov" id="nfr-summary-table" data-source="nfr_summary" data-row-key="nfr">
+        <thead><tr>
+          <th data-field="nfr">NFR</th>
+          <th data-field="meaning">What it means</th>
+          <th data-field="core" data-chip="1">Core</th>
+          <th data-field="mobius" data-chip="1">Mobius</th>
+          <th data-field="headline">What the evidence says</th>
+          <th data-field="ready_for_record" data-chip="ready">Ready for a Deloitte record?</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+    <p class="cmv-source">Source: summarised from every section below (Power BI, LogRocket with the known live customers segment, and the Mobius wiki); Deloitte&rsquo;s request by email; Jim&rsquo;s ask to compare around six NFRs.</p>
+  </section>
+
+  <section class="cmv-sec" id="coverage">
+    <h2>What we have, and what we don&rsquo;t</h2>
+    <p class="cmv-sub">Every area we looked at, whether it is an NFR, and whether each product has evidence today. Click a row for the detail. <span class="cmv-chip cmv-chip-m">Measured</span> real data in hand. <span class="cmv-chip cmv-chip-p">Partial</span> some data, stale, capped or indirect. <span class="cmv-chip cmv-chip-n">Not available</span> no data found.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="coverage-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Measured</span><span class="cmv-big dash-skeleton" style="color:#86EFAC" data-draw="num" data-source="coverage_summary" data-field="measured" data-where="product=Core" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Partial</span><span class="cmv-big dash-skeleton" style="color:#FDE68A" data-draw="num" data-source="coverage_summary" data-field="partial" data-where="product=Core" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Not available</span><span class="cmv-big dash-skeleton" style="color:#FCA5A5" data-draw="num" data-source="coverage_summary" data-field="none" data-where="product=Core" data-fmt="int">—</span></div>
+        </div>
+        <p>Strong on volume, errors, support and delivery; blind on anything the user sees on screen.</p>
+      </div>
+      <div class="cmv-panel" id="coverage-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Measured</span><span class="cmv-big dash-skeleton" style="color:#86EFAC" data-draw="num" data-source="coverage_summary" data-field="measured" data-where="product=Mobius" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Partial</span><span class="cmv-big dash-skeleton" style="color:#FDE68A" data-draw="num" data-source="coverage_summary" data-field="partial" data-where="product=Mobius" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Not available</span><span class="cmv-big dash-skeleton" style="color:#FCA5A5" data-draw="num" data-source="coverage_summary" data-field="none" data-where="product=Mobius" data-fmt="int">—</span></div>
+        </div>
+        <p>Strong on screen behaviour and journeys; weak on uptime, crashes, satisfaction, accessibility and the API experience.</p>
+      </div>
+    </div>
+    <p class="cmv-insight"><b>Insight:</b> Neither product has uptime, recovery-time or product satisfaction evidence, and Mobius fails an initial accessibility scan. These three gaps matter most for migration and need new instruments, not more analysis.</p>
+    <div class="cmv-panel cmv-tablewrap" style="margin-top:var(--cds-gap-md)">
+      <table class="cmv-table cmv-cov" id="coverage-table" data-source="coverage" data-row-key="area" data-expand="detail">
+        <thead><tr>
+          <th data-field="area">Area</th>
+          <th data-field="is_nfr" data-chip="nfr">Is it an NFR?</th>
+          <th data-field="nfr_type">Type</th>
+          <th data-field="core_status" data-chip="1">Core</th>
+          <th data-field="core_source" data-src="1">Core source</th>
+          <th data-field="mobius_status" data-chip="1">Mobius</th>
+          <th data-field="mobius_source" data-src="1">Mobius source</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cmv-sec" id="at-a-glance">
+    <h2>At a glance</h2>
+    <p class="cmv-sub">The headline for each area, with what it means for moving customers from Core to Mobius.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="insights-table" data-source="insights" data-row-key="area">
+        <thead><tr>
+          <th data-field="area">Area</th>
+          <th data-field="core">Core</th>
+          <th data-field="mobius">Mobius</th>
+          <th data-field="insight">What it means</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+      <p class="cmv-source">Source: summarised from the sections below.</p>
+  </section>
+
+  <section class="cmv-sec" id="volume">
+    <h2>How much work each product does</h2>
+    <p class="cmv-sub">Policy transactions by month. The shaded months are the selected period. Choosing a Mobius customer shows that customer's line on the Mobius chart.</p>
+    <p class="cmv-insight"><b>Insight:</b> Core carries about 38 times the work, and its volume is stable. Mobius stepped up in June 2026 when Lloyd Latchford Group began trading on tenant SC01 (shown as Supercover in Power BI), much of it through APIs.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="volume-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-big dash-skeleton" data-draw="num" data-source="period_volume" data-field="transactions" data-where="product=Core" data-fmt="int">—</div>
+        <p>transactions in the selected period</p>
+        <div class="cmv-chart" data-draw="trend" data-source="core_monthly" data-x="month" data-y="transactions" data-aria="Core monthly policy transactions"></div>
+      </div>
+      <div class="cmv-panel" id="volume-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-big dash-skeleton" data-draw="num" data-source="period_volume" data-field="transactions" data-where="product=Mobius" data-fmt="int">—</div>
+        <p>transactions in the selected period, for the selected customer where one is chosen</p>
+        <div class="cmv-chart" data-draw="trend" data-source="mobius_trend" data-x="month" data-y="transactions" data-aria="Mobius monthly policy transactions"></div>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core MI (Core) and Mobius Transactions (Mobius); November 2025 to October 2026.</p>
+  </section>
+
+  <section class="cmv-sec" id="value">
+    <h2>How much business each product carries</h2>
+    <p class="cmv-sub">Gross written premium (GWP) for the selected period, and the average premium per transaction. Customer selection does not apply here.</p>
+    <p class="cmv-insight"><b>Insight:</b> Business value per transaction is almost identical (about £440 on Core, £461 on Mobius), so Mobius is handling comparable business, not simpler work.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="value-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>GWP, £ millions</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_value" data-field="gwp_m" data-where="product=Core" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Average premium per transaction, £</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_value" data-field="per_txn" data-where="product=Core" data-fmt="int">—</span></div>
+        </div>
+        <div class="cmv-chart" data-draw="trend" data-source="value_monthly" data-x="month" data-y="core_gwp" data-aria="Core GWP by month"></div>
+        <p>Core sends insurer messages through EDI programs (about 6,500 runs a day) but does not count individual messages.</p>
+      </div>
+      <div class="cmv-panel" id="value-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>GWP, £ millions</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_value" data-field="gwp_m" data-where="product=Mobius" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Average premium per transaction, £</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_value" data-field="per_txn" data-where="product=Mobius" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>EDI messages to insurers</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_value" data-field="edi" data-where="product=Mobius" data-fmt="int">—</span></div>
+        </div>
+        <div class="cmv-chart" data-draw="trend" data-source="value_monthly" data-x="month" data-y="mobius_gwp" data-aria="Mobius GWP by month"></div>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core MI and Mobius Transactions (GWP, EDI messages).</p>
+  </section>
+
+  <section class="cmv-sec" id="customers">
+    <h2>Who uses each product</h2>
+    <p class="cmv-sub">Core serves hundreds of brokers. Mobius has about ten live customers, but Power BI names only some of them: most activity with no broker recorded is Lawshield&rsquo;s VW tenant (VW01) and API-led customers, and the &ldquo;Supercover&rdquo; tenant is now Lloyd Latchford Group. See Types of Mobius customer. The selected customer is highlighted.</p>
+    <p class="cmv-insight"><b>Insight:</b> Both products are concentrated: Somerset Bridge is about a fifth of Core; on Mobius, Islands is about half of volume and Lawshield&rsquo;s VW schemes most of the unattributed fifth.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="customers-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Largest customers, 2026 so far</h3>
+        <p>Top 30 by transactions. Customer figures are available by year.</p>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_top" data-label="customer" data-series="transactions:2026 so far" data-fmt="int" data-aria="Core largest customers by transactions in 2026"></div>
+      </div>
+      <div class="cmv-panel" id="customers-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Customers in the selected period</h3>
+        <p>The June 2026 jump is Lloyd Latchford Group on tenant SC01 (labelled Supercover in Power BI).</p>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_customers" data-label="customer" data-series="transactions:Selected period" data-fmt="int" data-aria="Mobius customers by transactions in the selected period"></div>
+      </div>
+    </div>
+    <div class="cmv-panel" id="customer-focus" style="margin-top:var(--cds-gap-lg)">
+      <span class="cmv-tag">Selected customer</span>
+      <div class="cmv-tablewrap">
+        <table class="cmv-table" data-source="customer_focus" data-row-key="customer">
+          <thead><tr>
+            <th data-field="customer">Customer</th>
+            <th data-field="product">Product</th>
+            <th class="cmv-r" data-field="selected_period" data-fmt="int">Selected period</th>
+            <th class="cmv-r" data-field="y2025" data-fmt="int">2025</th>
+            <th class="cmv-r" data-field="y2026" data-fmt="int">2026 so far</th>
+          </tr></thead>
+          <tbody data-draw="tbody"></tbody>
+        </table>
+      </div>
+      <p>Choose a customer above to see their figures. The selected period applies to Mobius customers only, as Core customer figures are held by year.</p>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core MI (customers by year) and Mobius Transactions (by broker); labels corrected from the Mobius wiki customer pages.</p>
+  </section>
+
+  <section class="cmv-sec" id="customer-types">
+    <h2>Types of Mobius customer</h2>
+    <p class="cmv-sub">Mobius customers use the platform in three different ways, and this decides what each data source can see. LogRocket records only the Mobius screens; Power BI records every transaction, however it arrived.</p>
+    <div class="cmv-stats" style="margin-bottom:var(--cds-gap-md)">
+      <div class="cmv-panel"><h3>UI-led</h3><p>Staff do everything in the Mobius screens. Fully visible in LogRocket and Power BI.</p></div>
+      <div class="cmv-panel"><h3>Hybrid</h3><p>Customers buy through the customer&rsquo;s own website or app, which talks to Mobius through its APIs; staff then service policies in Mobius. LogRocket sees the staff servicing only; Power BI sees all the sales.</p></div>
+      <div class="cmv-panel"><h3>Headless</h3><p>The customer&rsquo;s own system calls Mobius through APIs and nobody uses the Mobius screens. Invisible to LogRocket; visible in Power BI once trading.</p></div>
+      <div class="cmv-panel"><h3>Not in baseline</h3><p>Tenants that should not shape the Mobius picture yet: Pizza (staying on Core), Supercover (not trading), Markerstudy Pet (on hold), and Core customers migrating or onboarding (Footman James, Got You Covered, Stanhope Cooper / Everywhen).</p></div>
+    </div>
+    <p class="cmv-insight"><b>Insight:</b> Every Mobius figure from LogRocket describes <b>UI users of the ten known live tenants</b> (a saved segment built from the Mobius wiki tenant register). Hybrid and headless customers&rsquo; own-site sales are not in those figures, so LogRocket understates how much business flows through Mobius, while Power BI volumes include it.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="customer-types-table" data-source="mobius_customer_types" data-row-key="customer">
+        <thead><tr>
+          <th data-field="customer">Customer</th>
+          <th data-field="tenant">Tenant</th>
+          <th data-field="type">Type</th>
+          <th data-field="in_ui_baseline">In LogRocket baseline</th>
+          <th data-field="how_they_use_mobius">How they use Mobius</th>
+          <th data-field="power_bi_label">Shown in Power BI as</th>
+          <th data-field="status">Status</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+      <p>Sources: Mobius wiki Customers page, customer profiles and Environments &amp; Tenants register (November 2026); Pizza status from Open GI.</p>
+    </div>
+      <p class="cmv-source">Source: Mobius 2.0 wiki, Customers page, customer profiles and Environments &amp; Tenants register (November 2026); LogRocket segment &ldquo;Known live Mobius customers (UI users)&rdquo;.</p>
+  </section>
+
+  <section class="cmv-sec" id="estate">
+    <h2>How big the live estate is</h2>
+    <p class="cmv-sub">Core installations report in nightly; a site that has stopped reporting is likely dormant or decommissioned. Mobius is one hosted platform, so its size shows in users and customers instead.</p>
+    <p class="cmv-insight"><b>Insight:</b> Only about 500 of 1,346 Core sites still report, so the real migration estate is roughly 500 sites.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="estate-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Sites reporting in 2026</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Core sites reporting in 2026" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Sites on record</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Core sites on record" data-fmt="int">—</span></div>
+        </div>
+        <h3>Sites by the year they last reported</h3>
+        <p>From Core's own nightly health log (the certified UserInfo model). Most records are sites that have not reported for years.</p>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_sites" data-label="last_reported" data-series="sites:Sites" data-fmt="int" data-aria="Core sites by the year they last reported"></div>
+      </div>
+      <div class="cmv-panel" id="estate-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Active users, last 3 months</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Active users" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Sessions, last 3 months</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Sessions" data-fmt="int">—</span></div>
+        </div>
+        <p>LogRocket, UI users of known live customers. Core does not report user counts in a usable form today; its user log needs parsing.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, UserInfo certified model (Core sites); LogRocket Platform Health with the known live customers segment (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="reliability">
+    <h2>When the system stops the user</h2>
+    <p class="cmv-sub">The nearest like-for-like: Core logs program aborts, Mobius logs browser crashes and failed requests. Both mean a user was interrupted mid-task, but they are counted differently.</p>
+    <p class="cmv-insight"><b>Insight:</b> Both products interrupt users in normal use; neither has a clean crash measure (Core aborts are capped, Mobius crash reporting is off).</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="reliability-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Program aborts per month</h3>
+        <p>July 2025 to June 2026 (the source stopped refreshing in June). Core keeps only the last eight aborts per site, so these are a minimum.</p>
+        <div class="cmv-chart" data-draw="trend" data-source="core_aborts" data-x="month" data-y="aborts" data-aria="Core program aborts per month"></div>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Daily runs of problem-flagged programs</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Daily runs of problem-flagged programs" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Out of all daily program runs</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="core_ops" data-field="value" data-where="measure=Average daily Core program runs" data-fmt="int">—</span></div>
+        </div>
+        <p>The problem flag marks particular programs (mostly TW21 and MB21), not failed runs. Its meaning needs confirming with Core engineering.</p>
+      </div>
+      <div class="cmv-panel" id="reliability-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Sessions interrupted, last 3 months</h3>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Crash rate</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Crash rate" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Sessions with a failed request</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Sessions hitting a failed request (all)" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Quote sessions with a failed request</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Quote sessions hitting a failed request" data-fmt="raw" data-suffix="%">—</span></div>
+        </div>
+        <p>A failed request includes background calls users may not see, so the user-visible rate will be lower.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, UI Aborts and Core Program Average Usage (Core); LogRocket Platform Health (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="errors">
+    <h2>System errors logged</h2>
+    <p class="cmv-sub">Every error each product records as it runs. Core logs system errors from every site nightly; Mobius logs failed requests in users' sessions. Different instruments, but both measure how often the system goes wrong in normal use.</p>
+    <p class="cmv-insight"><b>Insight:</b> Core system errors have fallen by about 70% since early 2025. Mobius errors are measured differently, so compare trends rather than levels.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="errors-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>System errors in the selected period</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_errors" data-field="errors" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Errors per 1,000 transactions</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="period_errors" data-field="per1000" data-fmt="dec1">—</span></div>
+        </div>
+        <div class="cmv-chart" data-draw="trend" data-source="core_errors_monthly" data-x="month" data-y="errors" data-aria="Core system errors by month"></div>
+        <h3>Errors by group, since November 2024</h3>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_error_groups" data-label="group" data-series="errors:Errors" data-fmt="int" data-aria="Core system errors by group"></div>
+        <p>From the ITSYS model in Power BI, refreshed daily. Errors have fallen by about 70% since early 2025.</p>
+      </div>
+      <div class="cmv-panel" id="errors-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Sessions with a failed request</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Sessions hitting a failed request (all)" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Crash rate</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Crash rate" data-fmt="raw" data-suffix="%">—</span></div>
+        </div>
+        <p>LogRocket, last 3 months. Mobius does not yet send an error count per transaction to Power BI, which would make this directly comparable.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, ITSYS error log (Core); LogRocket (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="journeys-scorecard">
+    <h2>Journey by journey</h2>
+    <p class="cmv-sub">Each main Mobius journey, with the share of its sessions that hit a failed request and how quickly its pages load (the slowest 1 in 4). LogRocket, last 3 months, UI users of known live customers.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius errors cluster in transactional journeys (MTA, payments, quote, renewal), which is where reliability work should focus.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel cmv-gap" id="journeys-scorecard-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Not measured by journey today</h3>
+        <p>Core logs program aborts with a task code, which could be mapped to functional areas. It does not log page load or failed requests per journey.</p>
+      </div>
+      <div class="cmv-panel" id="journeys-scorecard-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Sessions hitting a failed request</h3>
+        <div class="cmv-chart" data-draw="hbar" data-source="journeys" data-label="journey" data-series="failed_request_pct:Failed request" data-fmt="dec1" data-suffix="%" data-aria="Share of Mobius sessions hitting a failed request, by journey"></div>
+        <h3>Page load, slowest 1 in 4 (seconds)</h3>
+        <div class="cmv-chart" data-draw="hbar" data-source="journeys" data-label="journey" data-series="p75_load_s:P75 load" data-fmt="dec2" data-suffix="s" data-aria="Mobius P75 page load by journey"></div>
+        <p>Transactional journeys (MTA, payments, quote, renewal) fail far more often than browsing ones (search, records, correspondence). Mobius has no standalone claims or cancellation screens in the most-used pages, so those journeys are not measured.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: LogRocket, Core vs Mobius NFR comparison dashboard, known live customers segment, last 3 months.</p>
+  </section>
+
+  <section class="cmv-sec" id="causes">
+    <h2>What causes the interruptions</h2>
+    <p class="cmv-sub">The most frequent causes on each product. Both have a short list of root causes that account for a large share of problems.</p>
+    <p class="cmv-insight"><b>Insight:</b> Both products have a short list of root causes: three Core abort codes are 40% of aborts; three Mobius issues dominate its error list.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="causes-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Program aborts by error code, all logged history</h3>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_abort_codes" data-label="cause" data-series="count:Aborts" data-fmt="int" data-aria="Core program aborts by error code"></div>
+        <p>From the UI Aborts model. What each code means needs confirming with Core engineering.</p>
+      </div>
+      <div class="cmv-panel" id="causes-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Top issues by sessions affected, last 3 months</h3>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_top_issues" data-label="cause" data-series="count:Sessions" data-fmt="int" data-aria="Mobius top issues by sessions affected"></div>
+        <p>From LogRocket's issue list, UI users of known live customers (approximate).</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, UI Aborts (Core); LogRocket Platform Health issue list (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="security">
+    <h2>How secure the code is</h2>
+    <p class="cmv-sub">Open security vulnerabilities found by the MEND scanning tool, averaged across its daily snapshots. MEND last refreshed in December 2025.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius shows more open vulnerabilities, but Core was scanned once and only partly, so this is not yet a fair comparison.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="security-table" data-source="security" data-row-key="component">
+        <thead><tr>
+          <th data-field="product">Product</th>
+          <th data-field="component">Component scanned</th>
+          <th class="cmv-r" data-field="critical" data-fmt="dec1">Critical</th>
+          <th class="cmv-r" data-field="high" data-fmt="dec1">High</th>
+          <th class="cmv-r" data-field="medium" data-fmt="dec1">Medium</th>
+          <th class="cmv-r" data-field="low" data-fmt="dec1">Low</th>
+          <th class="cmv-r" data-field="snapshots" data-fmt="int">Snapshots</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+      <p>Core was scanned once, and only the parts MEND can read; Core's core programs are written in a language MEND does not scan. Mobius is scanned daily across several repositories. The two are not yet a like-for-like comparison.</p>
+    </div>
+      <p class="cmv-source">Source: Power BI, MEND (to December 2025); Mobius 2.0 wiki, PEN Test 2025.</p>
+  </section>
+
+  <section class="cmv-sec" id="speed">
+    <h2>How fast it feels</h2>
+    <div class="cmv-pair">
+      <div class="cmv-panel cmv-gap" id="speed-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Not measured today</h3>
+        <p>Core is a desktop application with no session analytics. A timestamp extract through Core's network control could fill this gap, subject to GDPR review.</p>
+      </div>
+      <div class="cmv-panel" id="speed-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Page load, slowest 1 in 4 (all pages)</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=P75 page load (all pages)" data-fmt="raw" data-suffix="s">—</span></div>
+          <div class="cmv-stat"><span>Page load, slowest 1 in 4 (quote pages)</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=P75 page load (quote pages)" data-fmt="raw" data-suffix="s">—</span></div>
+          <div class="cmv-stat"><span>Average system response</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Average system response" data-fmt="raw" data-suffix=" ms">—</span></div>
+        </div>
+        <p>LogRocket, last 3 months, UI users of known live customers.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: LogRocket, Platform Health and comparison dashboard, known live customers segment.</p>
+  </section>
+
+  <section class="cmv-sec" id="support">
+    <h2>How much help customers need</h2>
+    <p class="cmv-sub">Last 12 full months. Rates per 1,000 transactions so the two compare fairly. Only tickets tagged to a product, with Open GI's internal tickets excluded.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius needs about 2.8 times as much support per transaction, driven by code defects rather than how-to questions alone.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="support-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Tickets per 1,000 transactions</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="per1000" data-field="core" data-where="metric=tickets" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Highest-priority per 1,000</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="per1000" data-field="core" data-where="metric=cat_a" data-fmt="dec3">—</span></div>
+          <div class="cmv-stat"><span>Resolved within SLA</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="core" data-where="metric_id=sla_met" data-fmt="int" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>First reply within SLA</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="core" data-where="metric_id=first_response" data-fmt="int" data-suffix="%">—</span></div>
+        </div>
+      </div>
+      <div class="cmv-panel" id="support-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Tickets per 1,000 transactions</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="per1000" data-field="mobius" data-where="metric=tickets" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Highest-priority per 1,000</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="per1000" data-field="mobius" data-where="metric=cat_a" data-fmt="dec3">—</span></div>
+          <div class="cmv-stat"><span>Resolved within SLA (Mobius 2)</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="mobius" data-where="metric_id=sla_met" data-fmt="int" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>First reply within SLA (Mobius 2)</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="mobius" data-where="metric_id=first_response" data-fmt="int" data-suffix="%">—</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cmv-pair" style="margin-top:var(--cds-gap-lg)">
+      <div class="cmv-panel" id="support-trend-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Tickets per 1,000 transactions in the selected period</h3>
+        <span class="cmv-big dash-skeleton" data-draw="num" data-source="period_support" data-field="per1000" data-where="product=Core" data-fmt="dec1">—</span>
+        <div class="cmv-chart" data-draw="trend" data-source="support_monthly" data-x="month" data-y="core_tickets" data-aria="Core support tickets by month"></div>
+        <p>Monthly counts include Open GI's own internal tickets (about 3%), so they run slightly above the headline figures.</p>
+      </div>
+      <div class="cmv-panel" id="support-trend-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Tickets per 1,000 transactions in the selected period</h3>
+        <span class="cmv-big dash-skeleton" data-draw="num" data-source="period_support" data-field="per1000" data-where="product=Mobius" data-fmt="dec1">—</span>
+        <div class="cmv-chart" data-draw="trend" data-source="support_monthly" data-x="month" data-y="mobius_tickets" data-aria="Mobius support tickets by month"></div>
+        <p>Mobius 2 and Mobius Rating tickets combined.</p>
+      </div>
+    </div>
+    <div class="cmv-panel" id="categories" style="margin-top:var(--cds-gap-lg)">
+      <h3>What customers raise tickets about</h3>
+      <p>Share of each product's tickets by support category.</p>
+      <div class="cmv-legend"><span><i class="cmv-sw" data-i="0"></i>Core</span><span><i class="cmv-sw" data-i="1"></i>Mobius 2</span></div>
+      <div class="cmv-chart" data-draw="hbar" data-source="cat_share" data-label="category" data-series="core_share:Core,mobius2_share:Mobius 2" data-fmt="dec1" data-suffix="%" data-aria="Share of support tickets by category, Core compared with Mobius 2"></div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Customer Compass New (Jira tickets, SLA), last 12 full months.</p>
+  </section>
+
+  <section class="cmv-sec" id="satisfaction">
+    <h2>How satisfied customers are with support</h2>
+    <p class="cmv-sub">Ratings customers give when a support ticket closes, on a scale of 1 to 5, from Jira Service Management. Only tickets tagged to a product can be split, and very few are.</p>
+    <p class="cmv-insight"><b>Insight:</b> Customers rate Core support highly; Mobius has too few tagged ratings to compare.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="satisfaction-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Average rating out of 5</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="sat" data-field="average" data-where="product=Core" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Rated 4 or 5</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="sat" data-field="pct_satisfied" data-where="product=Core" data-fmt="int" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Ratings</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="sat" data-field="rated" data-where="product=Core" data-fmt="int">—</span></div>
+        </div>
+        <p>All rated tickets together average <span class="dash-skeleton" data-draw="num" data-source="sat" data-field="average" data-where="product=All tickets" data-fmt="dec1">—</span> from <span class="dash-skeleton" data-draw="num" data-source="sat" data-field="rated" data-where="product=All tickets" data-fmt="int">—</span> ratings.</p>
+      </div>
+      <div class="cmv-panel cmv-gap" id="satisfaction-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Not enough ratings to measure</h3>
+        <p>Only <span class="dash-skeleton" data-draw="num" data-source="sat" data-field="rated" data-where="product=Mobius 2" data-fmt="int">—</span> rated ticket is tagged to Mobius. Tagging every satisfaction survey with its product would make this comparable from now on.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, JSM model (support satisfaction ratings).</p>
+  </section>
+
+  <section class="cmv-sec" id="mix">
+    <h2>What work each product does</h2>
+    <p class="cmv-sub">Share of transactions by type. Core covers the last 12 full months; Mobius covers all activity since October 2023. MTA in Mobius is the equivalent of Endorsement in Core.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="mix-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_mix" data-label="type" data-series="share:Share" data-fmt="dec1" data-suffix="%" data-aria="Core transactions by type, share"></div>
+      </div>
+      <div class="cmv-panel" id="mix-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_mix" data-label="type" data-series="share:Share" data-fmt="dec1" data-suffix="%" data-aria="Mobius transactions by type, share"></div>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core MI (Core) and Mobius Transactions (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="retention">
+    <h2>How many policies renew</h2>
+    <p class="cmv-sub">Renewals as a share of renewals plus lapses: a business outcome the platform supports by making renewal easy and reliable. Core covers the last 12 full months; Mobius covers all activity since October 2023.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius renews slightly better (82% vs 78%) with the same cancellation rate.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="retention-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Renewal rate</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="retention" data-field="renewal_rate" data-where="product=Core" data-fmt="dec1" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Cancellations per 100 new business</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="retention" data-field="cancel_per_100_nb" data-where="product=Core" data-fmt="int">—</span></div>
+        </div>
+      </div>
+      <div class="cmv-panel" id="retention-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Renewal rate</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="retention" data-field="renewal_rate" data-where="product=Mobius" data-fmt="dec1" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Cancellations per 100 new business</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="retention" data-field="cancel_per_100_nb" data-where="product=Mobius" data-fmt="int">—</span></div>
+        </div>
+        <p>Mobius records lapses as "No Premium Lapse".</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core MI and Mobius Transactions.</p>
+  </section>
+
+  <section class="cmv-sec" id="usage">
+    <h2>Which parts get used most</h2>
+    <p class="cmv-sub">Core counts average program runs a day; Mobius counts sessions over 3 months that visit each area. Different units, so compare the order, not the numbers.</p>
+    <p class="cmv-insight"><b>Insight:</b> Client records are the most used area on both products, so that journey should move first and be protected most.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="usage-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-chart" data-draw="hbar" data-source="core_usage" data-label="area" data-series="avg_daily_runs:Runs a day" data-fmt="int" data-aria="Core average daily program runs by functional area"></div>
+      </div>
+      <div class="cmv-panel" id="usage-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_usage" data-label="area" data-series="sessions:Sessions" data-fmt="int" data-aria="Mobius sessions by area, last 3 months"></div>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, Core Program Average Usage (Core); LogRocket comparison dashboard (Mobius).</p>
+  </section>
+
+  <section class="cmv-sec" id="delivery">
+    <h2>How the products are improved</h2>
+    <p class="cmv-sub">Azure DevOps, last 12 full months. Mobius is in heavier development, so bug counts reflect engineering load as well as quality.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius raises more bugs and takes longer to close them, reflecting heavier active development.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel" id="delivery-core">
+        <span class="cmv-tag">Core</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Bugs raised</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="core" data-where="metric_id=bugs" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Average days to close a bug</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="core" data-where="metric_id=cycle_time" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Tickets that are code defects</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="core" data-where="metric_id=code_defect_share" data-fmt="int" data-suffix="%">—</span></div>
+        </div>
+      </div>
+      <div class="cmv-panel" id="delivery-mobius">
+        <span class="cmv-tag">Mobius 2</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Bugs raised</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="mobius" data-where="metric_id=bugs" data-fmt="int">—</span></div>
+          <div class="cmv-stat"><span>Average days to close a bug</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="mobius" data-where="metric_id=cycle_time" data-fmt="dec1">—</span></div>
+          <div class="cmv-stat"><span>Tickets that are code defects</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="kpi" data-field="mobius" data-where="metric_id=code_defect_share" data-fmt="int" data-suffix="%">—</span></div>
+        </div>
+      </div>
+    </div>
+      <p class="cmv-source">Source: Power BI, ADO Daily Data (Azure DevOps bugs).</p>
+  </section>
+
+  <section class="cmv-sec" id="journeys">
+    <h2>Can users finish what they start</h2>
+    <div class="cmv-pair">
+      <div class="cmv-panel cmv-gap" id="journeys-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Not measured today</h3>
+        <p>Core does not record whether a user completes a journey. A benchmark study running the same tasks on Core and Mobius would give a direct comparison.</p>
+      </div>
+      <div class="cmv-panel" id="journeys-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-stats">
+          <div class="cmv-stat"><span>Quotes started that reach a new business quote summary</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Quotes started that reach a new business quote summary" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>MTA quotes that are confirmed</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=MTA quotes that are confirmed" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Client searches leading to a next step</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Client searches leading to a next step" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Payment pages reaching a confirmed sale</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Payment pages reaching a confirmed sale" data-fmt="raw" data-suffix="%">—</span></div>
+          <div class="cmv-stat"><span>Payments started that reach a confirmed sale</span><span class="cmv-big dash-skeleton" data-draw="num" data-source="mobius_ux" data-field="value" data-where="measure=Payments started that reach a confirmed sale" data-fmt="raw" data-suffix="%">—</span></div>
+        </div>
+        <p>LogRocket, last 3 months, UI users of known live customers.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: LogRocket, Key Journey Metrics and comparison dashboard funnels, known live customers segment.</p>
+  </section>
+
+  <section class="cmv-sec" id="funnel">
+    <h2>From search to sale</h2>
+    <p class="cmv-sub">The steps a broker takes from finding a client to taking payment, as sessions reaching each step over the last 3 months.</p>
+    <p class="cmv-insight"><b>Insight:</b> The biggest Mobius drop-offs are MTA confirmation and the step before payment.</p>
+    <div class="cmv-pair">
+      <div class="cmv-panel cmv-gap" id="funnel-core">
+        <span class="cmv-tag">Core</span>
+        <h3>Start and end only</h3>
+        <p>Core records quotes (back office, motor and home) and completed policy transactions, but not the steps between, so its drop-off points cannot be seen. A benchmark study on the same journeys would close this gap.</p>
+      </div>
+      <div class="cmv-panel" id="funnel-mobius">
+        <span class="cmv-tag">Mobius</span>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_funnel" data-label="step" data-series="sessions:Sessions" data-fmt="int" data-aria="Mobius sessions reaching each step from search to sale"></div>
+        <p>LogRocket, UI users of known live customers. Steps are not a single strict funnel: saving as a prospect and payment can also start from earlier quotes, so later steps can exceed earlier ones.</p>
+      </div>
+    </div>
+      <p class="cmv-source">Source: LogRocket, Key Journey Metrics, known live customers segment.</p>
+  </section>
+
+  <section class="cmv-sec" id="ux">
+    <h2>User experience</h2>
+    <p class="cmv-sub">Every user experience signal available for each product, grouped by the four Happiness Index pillars (friction, success, effort and stability) plus satisfaction and navigation. Mobius is measured directly in the browser; Core only through support tickets and system logs.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius is rich in behavioural evidence and Core is almost blind on it, so most UX comparisons today rest on support tickets. Neither product has a product satisfaction or usability score, which is the single most valuable UX measure to add.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="ux-signals-table" data-source="ux_signals" data-row-key="measure">
+        <thead><tr>
+          <th data-field="pillar">Pillar</th>
+          <th data-field="measure">Signal</th>
+          <th data-field="core">Core</th>
+          <th data-field="mobius">Mobius</th>
+          <th data-field="source">Source</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+    <div class="cmv-panel" id="ux-tickets" style="margin-top:var(--cds-gap-lg)">
+      <h3>UX signals in support tickets, per 1,000 transactions</h3>
+      <p>The one UX lens both products share: tickets raised for how-to questions, slowness, frozen screens, access and user error. Last 12 full months.</p>
+      <div class="cmv-legend"><span><i class="cmv-sw" data-i="0"></i>Core</span><span><i class="cmv-sw" data-i="1"></i>Mobius</span></div>
+      <div class="cmv-chart" data-draw="hbar" data-source="ux_ticket_rates" data-label="signal" data-series="core:Core,mobius:Mobius" data-fmt="dec3" data-aria="UX-related support tickets per 1,000 transactions, Core compared with Mobius"></div>
+      <p class="cmv-insight"><b>Insight:</b> Mobius users ask more how-to questions and make more operator errors per transaction (learnability), while Core alone generates password-reset and frozen-screen tickets (desktop-era friction that migration should remove). Slowness complaints are level.</p>
+    </div>
+    <div class="cmv-pair" style="margin-top:var(--cds-gap-lg)">
+      <div class="cmv-panel" id="ux-rage">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Most rage-clicked elements</h3>
+        <p>Sessions with repeated angry clicks on an element, last 3 months.</p>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_rage" data-label="element" data-series="sessions:Sessions" data-fmt="int" data-aria="Mobius most rage-clicked elements"></div>
+      </div>
+      <div class="cmv-panel" id="ux-dead">
+        <span class="cmv-tag">Mobius</span>
+        <h3>Most dead-clicked elements</h3>
+        <p>Clicks that produced no response, last 3 months.</p>
+        <div class="cmv-chart" data-draw="hbar" data-source="mobius_dead" data-label="element" data-series="sessions:Sessions" data-fmt="int" data-aria="Mobius most dead-clicked elements"></div>
+      </div>
+    </div>
+    <p class="cmv-insight" style="margin-top:var(--cds-gap-md)"><b>Insight:</b> "View" is the top dead click and a top rage click, matching the navigation audit finding that View opens a page, a wizard or a panel unpredictably. "Convert To Policy" and "Save as prospect" not responding sit on the path to revenue. Core has no equivalent click data.</p>
+      <p class="cmv-source">Source: LogRocket (UX Insights, friction chart); Power BI (Customer Compass, ITSYS, JSM, EDI); Mobius navigation audit (October 2026).</p>
+  </section>
+
+  <section class="cmv-sec" id="customer-asks">
+    <h2>What customers are asking for</h2>
+    <p class="cmv-sub">Customer requests (SOL tickets) that are about quality rather than new features: 13 of the 68 open requests in the demand-to-capability workbook.</p>
+    <p class="cmv-insight"><b>Insight:</b> Core customers ask for <b>speed, ease of use and privacy</b>; Mobius customers ask for <b>better APIs</b>, one of them blocking a go-live. One request also states that Islands, about half of Mobius screen use, plans to leave Open GI by December 2028; this is unconfirmed and should be checked with the account team, as it would shift the Mobius baseline.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="customer-asks-table" data-source="customer_asks" data-row-key="request">
+        <thead><tr>
+          <th data-field="customer">Customer</th>
+          <th data-field="product">Product</th>
+          <th data-field="request">What they asked for</th>
+          <th data-field="nfr">NFR it relates to</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+    <p class="cmv-source">Source: Demand to Capability Unified View workbook (David Ball), SOL Mapping sheet, November 2026.</p>
+  </section>
+
+  <section class="cmv-sec" id="standards">
+    <h2>Defined standards vs evidence</h2>
+    <p class="cmv-sub">What Open GI has already written down about how Mobius should perform, where it is written, how much standing it has, and what the evidence shows today. These are existing statements, not targets set by this dashboard.</p>
+    <p class="cmv-insight"><b>Insight:</b> Mobius has defined NFRs (its &ldquo;CFRs&rdquo;), an availability design target and a working architecture decision process, but nobody reports against them: the CFR page is marked for replacement, availability and recovery are not measured, the tender left those answers blank, and the 2025 penetration test findings are all still open. No equivalent standards were found for Core.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="standards-table" data-source="standards" data-row-key="area">
+        <thead><tr>
+          <th data-field="area">Area</th>
+          <th data-field="mobius_standard">Mobius standard</th>
+          <th data-field="source">Where it is written</th>
+          <th data-field="standing">Standing</th>
+          <th data-field="mobius_evidence_today">Mobius evidence today</th>
+          <th data-field="core_equivalent">Core equivalent</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+      <p>Source: Mobius 2.0 wiki (CFRs, ADR073, PEN Test 2025, Disaster Recovery, Bug Priority, Architectural Principles, John Lewis tender), November 2026.</p>
+    </div>
+      <p class="cmv-source">Source: Mobius 2.0 wiki (CFRs, ADR073, Architectural Principles, PEN Test 2025, Disaster Recovery, Bug Priority, Cat A, API Strategy, John Lewis tender).</p>
+  </section>
+
+  <section class="cmv-sec" id="pilot">
+    <h2>NFR pilot records</h2>
+    <p class="cmv-sub">Draft journey-level requirements for the Deloitte pilot, with today's baseline. Click a record for the evidence and linked architecture. What good looks like is for the team to agree.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="nfr-table" data-source="nfr_records" data-row-key="record" data-expand="detail">
+        <thead><tr>
+          <th data-field="record">Record</th>
+          <th data-field="journey">Journey</th>
+          <th data-field="attribute">Quality attribute</th>
+          <th data-field="requirement">Requirement</th>
+          <th data-field="baseline">Baseline today</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+      <p class="cmv-source">Source: baselines from LogRocket and Power BI as above; records from the Deloitte pilot pack.</p>
+  </section>
+
+  <section class="cmv-sec" id="sources-checked">
+    <h2>Sources checked</h2>
+    <p class="cmv-sub">Every source examined for this comparison, what it covers and whether it is used. Stale or unusable sources are listed so no one needs to re-check them.</p>
+    <div class="cmv-panel cmv-tablewrap">
+      <table class="cmv-table" id="sources-table" data-source="data_sources" data-row-key="source">
+        <thead><tr>
+          <th data-field="source">Source</th>
+          <th data-field="tool">Tool</th>
+          <th data-field="covers">Covers</th>
+          <th data-field="status">Status</th>
+          <th data-field="used_for">Used for</th>
+        </tr></thead>
+        <tbody data-draw="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details class="cmv-details" id="caveats">
+    <summary>How to read these figures</summary>
+    <ul>
+      <li>Core handles about 38 times as much work as Mobius, so compare rates and shares, not raw counts.</li>
+      <li>Core customer figures are by year (2025, and 2026 to date including part of November); Mobius customer figures are by month.</li>
+      <li>Core aborts and Mobius crashes both mean a user was stopped mid-task, but Core keeps only the last eight aborts per site and the source stopped refreshing in June 2026.</li>
+      <li>Only about 14% of support tickets are tagged to a product, so support figures are a sample. serious (Category A) (highest priority) is defined in the Mobius wiki as the system unavailable or severely degraded, or a material adverse impact on the customer&rsquo;s business (recent examples: payments not processing, documents not sending, quoting or renewals not working). Categories B to F are not defined there. For Mobius, tickets raised at too low a category are given an &ldquo;Expedite A/B&rdquo; label rather than re-categorised, to avoid affecting SLAs, and SLAs pause while waiting for the customer or in UAT, so Category A counts and SLA-met rates understate urgent work.</li>
+      <li>Bug counts include bugs caught before release.</li>
+      <li>LogRocket counts sessions that reach a page; Core counts completed transactions.</li>
+      <li>Mobius transactions with no broker recorded are mostly Lawshield&rsquo;s VW tenant (VW01) plus API-led customers that Power BI does not name; the &ldquo;Supercover&rdquo; tenant (SC01) now carries Lloyd Latchford Group.</li>
+      <li>Mobius journey rates were checked against how each LogRocket chart is built, and corrected where needed. "Client searches leading to a next step" includes searches that end in creating a new client. Quote completion now counts only the new business quote summary. Once a payment is started it almost always completes; the drop-off happens earlier, between the payment summary and choosing to pay.</li>
+      <li>Mobius "crash rate" counts sessions where a crash report is sent to LogRocket. None have been recorded in three months, which most likely means crash reporting is not switched on in Mobius, so 0% should not be read as proof of stability.</li>
+      <li>Every Mobius figure from LogRocket uses the saved segment &ldquo;Known live Mobius customers (UI users)&rdquo;: an include list of ten live tenants (IS01, BR01, VW01, LS01, JN01, UJ01, AL01, CC01, CE01, SC01) from the Mobius wiki register. Test, demo, migration, headless and non-baseline tenants are out by design. These figures describe Mobius screen use only; hybrid and headless customers&rsquo; API sales appear in Power BI but not in LogRocket.</li>
+      <li>Core site counts come from the UserInfo health log; a site that has not reported in 2026 may be dormant, decommissioned or simply not sending its log.</li>
+    </ul>
+  </details>
+</div>
+
+<script>
+window.cmv = {};
+cmv.fmtFn = function (f) {
+  if (f === 'int') return d3.format(',.0f');
+  if (f === 'dec1') return d3.format(',.1f');
+  if (f === 'dec2') return d3.format(',.2f');
+  if (f === 'dec3') return d3.format(',.3f');
+  return function (v) { return d3.format(',')(v); };
+};
+cmv.cell = function (v, f) {
+  if (v === null || v === undefined || v === '') return '—';
+  if (!f || f === 'text') return String(v);
+  const n = +v;
+  return isNaN(n) ? String(v) : cmv.fmtFn(f)(n);
+};
+cmv.tip = function (el) {
+  let t = el.querySelector(':scope > .cmv-tip');
+  if (!t) { t = document.createElement('div'); t.className = 'cmv-tip'; t.hidden = true; el.appendChild(t); }
+  return t;
+};
+cmv.show = function (el, ev, text) {
+  const t = cmv.tip(el), box = el.getBoundingClientRect();
+  t.textContent = text; t.hidden = false;
+  let x = ev.clientX - box.left + 12;
+  const w = t.offsetWidth;
+  if (x + w > box.width) x = Math.max(0, ev.clientX - box.left - w - 12);
+  t.style.left = x + 'px'; t.style.top = Math.max(0, ev.clientY - box.top - 30) + 'px';
+};
+cmv.hide = function (el) { const t = el.querySelector(':scope > .cmv-tip'); if (t) t.hidden = true; };
+cmv.empty = function (el, status) {
+  el.replaceChildren();
+  if (status === 'error') { const p = document.createElement('p'); p.textContent = 'Failed to load'; el.appendChild(p); }
+};
+cmv.periodMonths = function (period) {
+  const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+  if (!period || period === 'last12') return all;
+  if (period === 'ytd2026') return all.filter((m) => m.startsWith('2026'));
+  return [period];
+};
+
+dash.calc('period_volume', {
+  inputs: ['core_monthly', 'mobius_broker_monthly'],
+  title: 'Transactions in the selected period',
+  description: 'Core and Mobius transactions summed over the selected months; Mobius narrows to the selected customer when one is chosen.',
+  fn: (coreMonthly, mobiusByCustomer) => {
+    const p = dash.params();
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const inPeriod = (d) => months.includes(String(d).slice(0, 7));
+    const mobiusNames = new Set(mobiusByCustomer.map((r) => r.customer));
+    const cust = p.customer && mobiusNames.has(p.customer) ? p.customer : '';
+    const core = coreMonthly.filter((r) => inPeriod(r.month)).reduce((s, r) => s + +r.transactions, 0);
+    const mob = mobiusByCustomer.filter((r) => inPeriod(r.month) && (!cust || r.customer === cust)).reduce((s, r) => s + +r.transactions, 0);
+    return [{ product: 'Core', transactions: core }, { product: 'Mobius', transactions: mob }];
+  }
+});
+
+dash.calc('mobius_trend', {
+  inputs: ['mobius_broker_monthly'],
+  title: 'Mobius transactions by month',
+  description: 'Mobius transactions per month, for the selected customer when one is chosen, otherwise all customers.',
+  fn: (rows) => {
+    const p = dash.params();
+    const names = new Set(rows.map((r) => r.customer));
+    const cust = p.customer && names.has(p.customer) ? p.customer : '';
+    const byMonth = new Map();
+    rows.forEach((r) => { if (!cust || r.customer === cust) byMonth.set(r.month, (byMonth.get(r.month) || 0) + +r.transactions); });
+    return Array.from(byMonth, ([month, transactions]) => ({ month: month, transactions: transactions })).sort((a, b) => (a.month < b.month ? -1 : 1));
+  }
+});
+
+dash.calc('mobius_customers', {
+  inputs: ['mobius_broker_monthly'],
+  title: 'Mobius customers in the selected period',
+  description: 'Mobius transactions per customer, summed over the selected months.',
+  fn: (rows) => {
+    const p = dash.params();
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const sums = new Map();
+    rows.filter((r) => months.includes(String(r.month).slice(0, 7))).forEach((r) => sums.set(r.customer, (sums.get(r.customer) || 0) + +r.transactions));
+    return Array.from(sums, ([customer, transactions]) => ({ customer: customer, transactions: transactions })).sort((a, b) => b.transactions - a.transactions);
+  }
+});
+
+dash.calc('core_top', {
+  inputs: ['core_customers'],
+  title: 'Core largest customers, 2026 so far',
+  description: 'Core customers ranked by transactions in 2026 to date.',
+  fn: (rows) => rows.filter((r) => r.y2026_to_date !== null && r.y2026_to_date !== '').map((r) => ({ customer: r.customer, transactions: +r.y2026_to_date })).sort((a, b) => b.transactions - a.transactions)
+});
+
+dash.calc('customer_focus', {
+  inputs: ['core_customers', 'mobius_broker_monthly'],
+  title: 'Selected customer',
+  description: 'Figures for the customer chosen in the filter.',
+  fn: (core, mobius) => {
+    const p = dash.params();
+    if (!p.customer) return [];
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const c = core.find((r) => r.customer === p.customer);
+    if (c) return [{ customer: c.customer, product: 'Core', selected_period: null, y2025: c.y2025 === '' || c.y2025 === null ? null : +c.y2025, y2026: c.y2026_to_date === '' || c.y2026_to_date === null ? null : +c.y2026_to_date }];
+    const m = mobius.filter((r) => r.customer === p.customer);
+    if (!m.length) return [];
+    const sum = (f) => m.filter(f).reduce((s, r) => s + +r.transactions, 0);
+    return [{ customer: p.customer, product: 'Mobius', selected_period: sum((r) => months.includes(String(r.month).slice(0, 7))), y2025: sum((r) => String(r.month).startsWith('2025')), y2026: sum((r) => String(r.month).startsWith('2026')) }];
+  }
+});
+
+dash.calc('ratios', {
+  inputs: ['kpi'],
+  title: 'Support ratio',
+  description: 'How many times more support tickets per transaction Mobius raises than Core, last 12 full months.',
+  fn: (kpi) => {
+    const get = (id) => kpi.find((r) => r.metric_id === id);
+    const t = get('transactions'), s = get('tickets');
+    if (!t || !s) return [];
+    const corePer = (+s.core / +t.core) * 1000, mobPer = (+s.mobius / +t.mobius) * 1000;
+    return [{ metric: 'support_x', value: Math.round((mobPer / corePer) * 10) / 10 }];
+  }
+});
+
+dash.calc('per1000', {
+  inputs: ['kpi'],
+  title: 'Tickets per 1,000 transactions',
+  description: 'Support tickets and highest-priority tickets divided by policy transactions, per 1,000, last 12 full months.',
+  fn: (kpi) => {
+    const get = (id) => kpi.find((r) => r.metric_id === id);
+    const t = get('transactions'), s = get('tickets'), a = get('cat_a');
+    if (!t || !s || !a) return [];
+    const rate = (n, d, dp) => Math.round((+n / +d) * 1000 * Math.pow(10, dp)) / Math.pow(10, dp);
+    return [
+      { metric: 'tickets', core: rate(s.core, t.core, 1), mobius: rate(s.mobius, t.mobius, 1) },
+      { metric: 'cat_a', core: rate(a.core, t.core, 3), mobius: rate(a.mobius, t.mobius, 3) }
+    ];
+  }
+});
+
+dash.calc('cat_share', {
+  inputs: ['ticket_categories'],
+  title: 'Share of tickets by category',
+  description: 'Each category as a percentage of all of that product\u2019s tagged tickets.',
+  fn: (cats) => {
+    const total = cats.find((r) => r.category === 'All categories');
+    if (!total) return [];
+    const pct = (n, d) => Math.round((+n / +d) * 1000) / 10;
+    return cats.filter((r) => r !== total).map((r) => ({ category: r.category, core_share: pct(r.core, total.core), mobius2_share: pct(r.mobius2, total.mobius2) }));
+  }
+});
+
+dash.calc('core_mix', {
+  inputs: ['core_types'],
+  title: 'Core transactions by type, share',
+  description: 'Each transaction type as a share of Core transactions, last 12 full months.',
+  fn: (rows) => {
+    const tot = rows.reduce((s, r) => s + +r.transactions, 0);
+    return rows.map((r) => ({ type: r.type, share: Math.round((+r.transactions / tot) * 1000) / 10 }));
+  }
+});
+
+dash.calc('mobius_mix', {
+  inputs: ['mobius_types'],
+  title: 'Mobius transactions by type, share',
+  description: 'Each transaction type as a share of Mobius transactions since October 2023.',
+  fn: (rows) => {
+    const tot = rows.reduce((s, r) => s + +r.transactions, 0);
+    return rows.map((r) => ({ type: r.type, share: Math.round((+r.transactions / tot) * 1000) / 10 }));
+  }
+});
+
+dash.calc('period_value', {
+  inputs: ['value_monthly'],
+  title: 'Premium in the selected period',
+  description: 'GWP in millions of pounds, average premium per transaction and Mobius EDI messages over the selected months.',
+  fn: (rows) => {
+    const p = dash.params();
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const sel = rows.filter((r) => months.includes(String(r.month).slice(0, 7)));
+    const sum = (k) => sel.reduce((t, r) => t + +r[k], 0);
+    const cg = sum('core_gwp'), ct = sum('core_transactions'), mg = sum('mobius_gwp'), mt = sum('mobius_transactions');
+    return [
+      { product: 'Core', gwp_m: Math.round(cg / 1e5) / 10, per_txn: ct ? Math.round(cg / ct) : null, edi: null },
+      { product: 'Mobius', gwp_m: Math.round(mg / 1e5) / 10, per_txn: mt ? Math.round(mg / mt) : null, edi: sum('mobius_edi_messages') }
+    ];
+  }
+});
+
+dash.calc('period_support', {
+  inputs: ['support_monthly', 'value_monthly'],
+  title: 'Support rate in the selected period',
+  description: 'Support tickets per 1,000 transactions over the selected months, including Open GI internal tickets.',
+  fn: (tickets, value) => {
+    const p = dash.params();
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const inP = (r) => months.includes(String(r.month).slice(0, 7));
+    const s = (rows, k) => rows.filter(inP).reduce((t, r) => t + +r[k], 0);
+    const rate = (n, d) => (d ? Math.round((n / d) * 10000) / 10 : null);
+    return [
+      { product: 'Core', tickets: s(tickets, 'core_tickets'), per1000: rate(s(tickets, 'core_tickets'), s(value, 'core_transactions')) },
+      { product: 'Mobius', tickets: s(tickets, 'mobius_tickets'), per1000: rate(s(tickets, 'mobius_tickets'), s(value, 'mobius_transactions')) }
+    ];
+  }
+});
+
+dash.calc('sat', {
+  inputs: ['satisfaction'],
+  title: 'Support satisfaction',
+  description: 'Average rating out of 5 and share of ratings that are 4 or 5, by product.',
+  fn: (rows) => rows.map((r) => {
+    const n = [1, 2, 3, 4, 5].map((i) => +r['score_' + i]);
+    const rated = n.reduce((a, b) => a + b, 0);
+    const total = n.reduce((a, b, i) => a + b * (i + 1), 0);
+    return { product: r.product, rated: rated, average: rated ? Math.round((total / rated) * 10) / 10 : null, pct_satisfied: rated ? Math.round(((n[3] + n[4]) / rated) * 100) : null };
+  })
+});
+
+dash.calc('retention', {
+  inputs: ['core_types', 'mobius_types'],
+  title: 'Renewal and cancellation rates',
+  description: 'Renewals as a share of renewals plus lapses, and cancellations per 100 new business transactions, for each product.',
+  fn: (core, mob) => {
+    const g = (rows, t) => { const r = rows.find((x) => x.type === t); return r ? +r.transactions : 0; };
+    const rate = (ren, lap) => (ren + lap ? Math.round((ren / (ren + lap)) * 1000) / 10 : null);
+    const per = (c, nb) => (nb ? Math.round((c / nb) * 100) : null);
+    return [
+      { product: 'Core', renewal_rate: rate(g(core, 'Renewal'), g(core, 'Lapse')), cancel_per_100_nb: per(g(core, 'Cancellation'), g(core, 'New Business')) },
+      { product: 'Mobius', renewal_rate: rate(g(mob, 'Renewal'), g(mob, 'No Premium Lapse')), cancel_per_100_nb: per(g(mob, 'Cancellation'), g(mob, 'New Business')) }
+    ];
+  }
+});
+
+dash.calc('period_errors', {
+  inputs: ['core_errors_monthly', 'value_monthly'],
+  title: 'Core system errors in the selected period',
+  description: 'Core system errors summed over the selected months, and per 1,000 Core transactions.',
+  fn: (errs, value) => {
+    const p = dash.params();
+    const all = ['2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+    const months = !p.period || p.period === 'last12' ? all : p.period === 'ytd2026' ? all.filter((m) => m.startsWith('2026')) : [p.period];
+    const inP = (r) => months.includes(String(r.month).slice(0, 7));
+    const e = errs.filter(inP).reduce((t, r) => t + +r.errors, 0);
+    const t = value.filter(inP).reduce((x, r) => x + +r.core_transactions, 0);
+    return [{ product: 'Core', errors: e, per1000: t ? Math.round((e / t) * 10000) / 10 : null }];
+  }
+});
+
+dash.calc('ux_ticket_rates', {
+  inputs: ['ux_tickets', 'value_monthly'],
+  title: 'UX-related support tickets per 1,000 transactions',
+  description: 'Tickets in each UX-related support category divided by each product\u2019s transactions over the last 12 full months, per 1,000.',
+  fn: (t, v) => {
+    const ct = v.reduce((a, r) => a + +r.core_transactions, 0), mt = v.reduce((a, r) => a + +r.mobius_transactions, 0);
+    const rate = (n, d) => (d ? Math.round((n / d) * 1000 * 1000) / 1000 : null);
+    return t.map((r) => ({ signal: r.signal, core: rate(+r.core_tickets, ct), mobius: rate(+r.mobius_tickets, mt) }));
+  }
+});
+
+dash.calc('mobius_rage', {
+  inputs: ['mobius_clicks'],
+  title: 'Mobius most rage-clicked elements',
+  description: 'Elements with rage clicks, by sessions affected.',
+  fn: (rows) => rows.filter((r) => r.kind === 'Rage click').map((r) => ({ element: r.element, sessions: +r.sessions }))
+});
+
+dash.calc('mobius_dead', {
+  inputs: ['mobius_clicks'],
+  title: 'Mobius most dead-clicked elements',
+  description: 'Elements with dead clicks, by sessions affected.',
+  fn: (rows) => rows.filter((r) => r.kind === 'Dead click').map((r) => ({ element: r.element, sessions: +r.sessions }))
+});
+
+dash.calc('coverage_summary', {
+  inputs: ['coverage'],
+  title: 'Evidence coverage by product',
+  description: 'Count of NFR areas where each product has measured, partial or no evidence.',
+  fn: (rows) => ['Core', 'Mobius'].map((p) => {
+    const k = p === 'Core' ? 'core_status' : 'mobius_status';
+    const c = (v) => rows.filter((r) => r[k] === v).length;
+    return { product: p, measured: c('Measured'), partial: c('Partial'), none: c('Not available') };
+  })
+});
+
+document.addEventListener('click', (e) => {
+  const tr = e.target.closest && e.target.closest('tr.cmv-exp');
+  if (tr) tr.classList.toggle('cmv-open');
+});
+
+dash.onData(() => {
+  document.querySelectorAll('.cmv-sw').forEach((s) => { s.style.background = dash.colors[(+s.dataset.i) % dash.colors.length]; });
+  const p = dash.params();
+  document.querySelectorAll('#period-select').forEach((sel) => { sel.value = p.period || 'last12'; });
+});
+
+document.querySelectorAll('#period-select').forEach((sel) => {
+  sel.addEventListener('change', () => dash.setParams({ period: sel.value }));
+});
+
+dash.draw('customers', (sel) => {
+  const core = dash.data('core_customers'), mob = dash.data('mobius_broker_monthly');
+  const opts = [new Option('All customers', '')];
+  if (mob.status === 'ok' && Array.isArray(mob.data)) {
+    const g = document.createElement('optgroup'); g.label = 'Mobius';
+    Array.from(new Set(mob.data.map((r) => r.customer))).sort().forEach((n) => g.appendChild(new Option(n, n)));
+    opts.push(g);
+  }
+  if (core.status === 'ok' && Array.isArray(core.data)) {
+    const g = document.createElement('optgroup'); g.label = 'Core (largest 30)';
+    core.data.map((r) => r.customer).sort().forEach((n) => g.appendChild(new Option(n, n)));
+    opts.push(g);
+  }
+  sel.replaceChildren(...opts);
+  sel.value = dash.params().customer || '';
+  sel.onchange = () => dash.setParams({ customer: sel.value });
+});
+
+dash.draw('num', (el) => {
+  const res = dash.data(el.dataset.source);
+  if (res.status === 'loading') { el.textContent = '—'; return; }
+  el.classList.remove('dash-skeleton');
+  if (res.status !== 'ok' || !Array.isArray(res.data)) { el.textContent = '—'; return; }
+  const w = el.dataset.where || '';
+  const i = w.indexOf('=');
+  const row = i > 0 ? res.data.find((d) => String(d[w.slice(0, i)]) === decodeURIComponent(w.slice(i + 1))) : res.data[0];
+  if (!row || row[el.dataset.field] === null || row[el.dataset.field] === undefined) { el.textContent = '—'; return; }
+  el.textContent = cmv.cell(row[el.dataset.field], el.dataset.fmt || 'raw') + (el.dataset.suffix || '');
+});
+
+dash.draw('tbody', (tb) => {
+  const table = tb.closest('table');
+  if (!table) return;
+  const id = table.dataset.source;
+  const res = dash.data(id);
+  tb.replaceChildren();
+  if (res.status !== 'ok' || !Array.isArray(res.data)) return;
+  const ths = Array.from(table.querySelectorAll('thead th'));
+  res.data.forEach((r) => {
+    const tr = document.createElement('tr');
+    ths.forEach((th) => {
+      const td = document.createElement('td');
+      const val = r[th.dataset.field];
+      const f = th.dataset.fmt;
+      td.textContent = cmv.cell(val, f) + (val !== null && val !== undefined && val !== '' && th.dataset.suffix ? th.dataset.suffix : '');
+      if (f && f !== 'text') td.className = 'cmv-num';
+      if (th.dataset.chip && typeof val === 'string') {
+        const chip = document.createElement('span');
+        const good = val === 'Measured' || val === 'Yes';
+        const mid = val === 'Partial' || val === 'Partly';
+        chip.className = 'cmv-chip ' + (th.dataset.chip === 'nfr' ? (val === 'Yes' ? 'cmv-chip-m' : val === 'Partly' ? 'cmv-chip-p' : 'cmv-chip-x') : good ? 'cmv-chip-m' : mid ? 'cmv-chip-p' : 'cmv-chip-n');
+        chip.textContent = val;
+        td.replaceChildren(chip);
+      }
+      if (th.dataset.src) td.className = 'cmv-srccell';
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+    if (table.dataset.expand && r[table.dataset.expand]) {
+      tr.className = 'cmv-exp';
+      const dr = document.createElement('tr');
+      dr.className = 'cmv-detail';
+      const dt = document.createElement('td');
+      dt.colSpan = ths.length;
+      dt.textContent = r[table.dataset.expand];
+      dr.appendChild(dt);
+      tb.appendChild(dr);
+    }
+  });
+});
+
+dash.draw('hbar', (el) => {
+  const res = dash.data(el.dataset.source);
+  if (res.status !== 'ok' || !Array.isArray(res.data) || !res.data.length) { cmv.empty(el, res.status); return; }
+  const rows = res.data, labelKey = el.dataset.label;
+  const chosen = dash.params().customer || '';
+  const isMob = !!el.closest('[id$="-mobius"], #ux-rage, #ux-dead');
+  const series = el.dataset.series.split(',').map((s, i, arr) => {
+    const parts = s.split(':');
+    const color = arr.length === 1 ? (isMob ? dash.colors[1] : dash.colors[0]) : dash.colors[i % dash.colors.length];
+    return { key: parts[0], name: parts[1], color: color };
+  });
+  const fmt = cmv.fmtFn(el.dataset.fmt), suf = el.dataset.suffix || '';
+  const W = Math.max(260, el.clientWidth || 260);
+  const barH = series.length > 1 ? 11 : 14, gap = 3, groupGap = series.length > 1 ? 12 : 7;
+  const groupH = series.length * barH + (series.length - 1) * gap;
+  el.replaceChildren();
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('role', 'img').attr('aria-label', el.dataset.aria || 'Bar chart');
+  const meas = svg.append('g');
+  let lw = 0, vw = 0;
+  rows.forEach((r) => {
+    const t = meas.append('text').attr('class', 'cmv-lab').text(r[labelKey]);
+    lw = Math.max(lw, t.node().getComputedTextLength());
+    series.forEach((s) => {
+      const tv = meas.append('text').attr('class', 'cmv-val').text(fmt(+r[s.key]) + suf);
+      vw = Math.max(vw, tv.node().getComputedTextLength());
+    });
+  });
+  meas.remove();
+  lw = Math.min(lw + 10, W * 0.48);
+  vw = vw + 8;
+  const H = rows.length * (groupH + groupGap);
+  svg.attr('viewBox', '0 0 ' + W + ' ' + H).attr('height', H);
+  const max = d3.max(rows, (r) => d3.max(series, (s) => +r[s.key])) || 1;
+  const x = d3.scaleLinear().domain([0, max]).range([0, Math.max(10, W - lw - vw)]);
+  const muted = 'var(--cds-chart-muted)';
+  rows.forEach((r, i) => {
+    const g = svg.append('g').attr('transform', 'translate(0,' + i * (groupH + groupGap) + ')');
+    const isChosen = chosen && r[labelKey] === chosen;
+    const label = g.append('text').attr('class', 'cmv-lab').attr('x', lw - 10).attr('y', groupH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').text(r[labelKey]);
+    if (isChosen) label.style('font-weight', '600');
+    series.forEach((s, j) => {
+      const raw = r[s.key], v = +raw, y = j * (barH + gap);
+      if (raw === null || raw === undefined || raw === '' || isNaN(v)) {
+        g.append('text').attr('class', 'cmv-val').attr('x', lw + 4).attr('y', y + barH / 2).attr('dy', '0.35em').text('not yet measured');
+        return;
+      }
+      const fill = chosen && series.length === 1 && !isChosen ? muted : s.color;
+      g.append('rect').attr('x', lw).attr('y', y).attr('height', barH).attr('width', Math.max(1, x(v))).attr('rx', 2).style('fill', fill)
+        .on('pointermove', (ev) => cmv.show(el, ev, r[labelKey] + ' · ' + s.name + ': ' + fmt(v) + suf))
+        .on('pointerleave', () => cmv.hide(el));
+      g.append('text').attr('class', 'cmv-val').attr('x', lw + x(v) + 4).attr('y', y + barH / 2).attr('dy', '0.35em').text(fmt(v) + suf);
+    });
+  });
+});
+
+dash.draw('trend', (el) => {
+  const res = dash.data(el.dataset.source);
+  if (res.status !== 'ok' || !Array.isArray(res.data) || !res.data.length) { cmv.empty(el, res.status); return; }
+  const xk = el.dataset.x, yk = el.dataset.y;
+  const pts = res.data.map((r) => ({ d: new Date(String(r[xk]).slice(0, 10) + 'T00:00:00Z'), v: +r[yk] })).sort((a, b) => a.d - b.d);
+  const months = cmv.periodMonths(dash.params().period);
+  const W = Math.max(260, el.clientWidth || 260), H = 200;
+  const m = { t: 14, r: 12, b: 26, l: 46 };
+  el.replaceChildren();
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H)
+    .attr('role', 'img').attr('aria-label', (el.dataset.aria || 'Trend') + ', ' + pts.length + ' months');
+  const x = d3.scaleUtc().domain(d3.extent(pts, (p) => p.d)).range([m.l, W - m.r]);
+  const y = d3.scaleLinear().domain([0, d3.max(pts, (p) => p.v) * 1.12 || 1]).nice().range([H - m.b, m.t]);
+  const step = pts.length > 1 ? (x(pts[1].d) - x(pts[0].d)) : 20;
+  pts.forEach((p) => {
+    if (months.includes(d3.utcFormat('%Y-%m')(p.d))) {
+      svg.append('rect').attr('class', 'cmv-band').attr('x', x(p.d) - step / 2).attr('y', m.t).attr('width', step).attr('height', H - m.t - m.b);
+    }
+  });
+  svg.append('g').attr('class', 'cmv-grid').attr('transform', 'translate(' + m.l + ',0)')
+    .call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+  svg.append('g').attr('class', 'cmv-ax').attr('transform', 'translate(' + m.l + ',0)')
+    .call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('~s'))).call((g) => g.select('.domain').remove());
+  svg.append('g').attr('class', 'cmv-ax').attr('transform', 'translate(0,' + (H - m.b) + ')')
+    .call(d3.axisBottom(x).ticks(d3.utcMonth.every(W < 420 ? 4 : 3)).tickFormat(d3.utcFormat('%b %y')));
+  const lineColor = el.closest('[id$="-mobius"]') ? dash.colors[1] : dash.colors[0];
+  svg.append('path').datum(pts).attr('fill', 'none').style('stroke', lineColor).attr('stroke-width', 2)
+    .attr('d', d3.line().x((p) => x(p.d)).y((p) => y(p.v)));
+  const fmt = d3.format(',.0f'), mf = d3.utcFormat('%B %Y');
+  svg.selectAll('circle.cmv-pt').data(pts).join('circle').attr('class', 'cmv-pt')
+    .attr('cx', (p) => x(p.d)).attr('cy', (p) => y(p.v)).attr('r', 2.5).style('fill', lineColor);
+  svg.selectAll('circle.cmv-hit').data(pts).join('circle').attr('class', 'cmv-hit')
+    .attr('cx', (p) => x(p.d)).attr('cy', (p) => y(p.v)).attr('r', 12).style('fill', 'transparent')
+    .on('pointermove', (ev, p) => cmv.show(el, ev, mf(p.d) + ': ' + fmt(p.v)))
+    .on('pointerleave', () => cmv.hide(el));
+  const last = pts[pts.length - 1];
+  svg.append('text').attr('class', 'cmv-val').attr('x', x(last.d)).attr('y', y(last.v) - 8).attr('text-anchor', 'end').text(fmt(last.v));
+});
+</script>
+
+<script>dash._render();</script>
+</body>
+</html>
