@@ -25,7 +25,7 @@ these rules. The Buckholt rules in the rest of this file still apply in full to 
 ### Operating model
 - Claude holds project context and reads or writes authorised project artefacts. People own decisions, review and sharing.
 - Discovery is the usual entry point. After that, move between discovery, design and prototype in any order, and revisit earlier outputs as evidence changes. No skill is a stage gate.
-- Buckholt is the single source of truth for OGI Home Style across tokens, documentation, Figma, HTML/CSS and Angular Storybook. Claude reads Buckholt; it never writes to the master. In this repository that means the Buckholt half (everything outside `prototypes/`, `design/` and `project-context.md`) is read-only unless the user explicitly asks for a change in this session.
+- Buckholt is the single source of truth for OGI Home Style across tokens, documentation, Figma, HTML/CSS and Angular Storybook. Claude reads Buckholt; it never writes to the master. In this repository that means the Buckholt half (everything outside `prototypes/`, `design/`, `.claude/skills/` and `project-context.md`) is read-only unless the user explicitly asks for a change in this session.
 - Engineering contributes feasibility, constraints and feedback throughout. If engineering works in another tool, confirm which instruction files that tool reads; do not assume it loads this file or these skills.
 
 ### Eight principles
@@ -96,7 +96,7 @@ End with: output location, what changed, remaining gaps, and linked artefacts af
 
 ## The two halves of this repository
 
-Everything at the root **except `prototypes/`, `design/` and `project-context.md`** is Buckholt: the single
+Everything at the root **except `prototypes/`, `design/`, `.claude/skills/` and `project-context.md`** is Buckholt: the single
 source of truth. Treat it as read-only evidence unless you are explicitly
 asked to change it.
 
@@ -104,6 +104,7 @@ asked to change it.
 buckholt-ai/
 ├── AGENTS.md        the rules, for every agent: this file
 ├── CLAUDE.md        loads AGENTS.md into Claude Code
+├── .claude/skills/  team skills: /prototype builds a prototype from a build spec
 ├── project-context.md  master index: repository-wide values
 ├── README.md  CANONICAL-MARKUP.md
 │
