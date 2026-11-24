@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en-GB" data-bs-theme="buckholt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in to BrokerHub</title>
+
+<!-- Buckholt runtime contract. Order is fixed; no separate Bootstrap stylesheet. -->
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../css/buckholt.css">
+<link rel="stylesheet" href="../../css/buckholt-ai-fixes.css">
+<!-- Prototype-only: page layout (background, header placeholder, card width). No component styling. -->
+<link rel="stylesheet" href="brokerhub-login.css">
+</head>
+<body>
+
+<!--
+  BrokerHub login — synthetic demo. Not Buckholt; see PROTOTYPE.md.
+  Built from prototype-build-spec.md (UX spec revision 8, 24 Nov 2026).
+  D13 decided: option A (recovery link below the password field), Laurence, 24 Nov 2026.
+  No request is made, nothing is stored and no email is sent.
+  Four screens live in this one page; brokerhub-login.js shows one at a time.
+-->
+<div class="layout bh-layout" data-layout="layout-03">
+
+  <!-- Portal header. The ogi portal logo is not in this repository: labelled placeholder (spec §11). -->
+  <header class="bh-header">
+    <span class="bh-placeholder" role="img" aria-label="ogi portal">[Placeholder: ogi portal logo, asset not in repository]</span>
+  </header>
+
+  <main id="main">
+    <section class="page-body">
+      <div class="page-frame">
+        <div class="container">
+          <div class="page-pane">
+            <div class="page-panel bh-panel">
+
+              <!-- ================================================================
+                   SCR-01 · Sign in (frames 10:640, 10:1903, 11:1094)
+                   ================================================================ -->
+              <div class="card bh-card" data-screen="SCR-01" data-title="Sign in to BrokerHub">
+                <form class="card-body" id="signin-form" novalidate>
+                  <div class="bh-alert-slot" id="signin-alert-slot"></div>
+
+                  <div class="text-block">
+                    <h1 class="headline-02" tabindex="-1">Sign in to BrokerHub</h1>
+                  </div>
+
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="signin-email" class="form-label">Work email address</label>
+                      <small class="form-helper" id="signin-email-hint">
+                        Use the address registered for BrokerHub
+                      </small>
+                    </div>
+                    <div class="response text-input">
+                      <input type="email" class="form-control" id="signin-email" name="email"
+                             autocomplete="username" spellcheck="false"
+                             aria-describedby="signin-email-hint">
+                    </div>
+                    <div class="invalid-feedback" id="signin-email-error"></div>
+                  </div>
+
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="signin-password" class="form-label">Password</label>
+                    </div>
+                    <div class="response text-input">
+                      <input type="password" class="form-control" id="signin-password" name="password"
+                             autocomplete="current-password">
+                      <button type="button" class="input-btn" id="signin-password-toggle"
+                              aria-label="Show password" aria-pressed="false" aria-controls="signin-password">
+                        <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="invalid-feedback" id="signin-password-error"></div>
+                  </div>
+
+                  <!-- D13 option A: Standalone link directly below the password field. -->
+                  <a class="link-standalone" href="#forgotten-password" data-go="SCR-02">
+                    Forgotten your password?
+                  </a>
+
+                  <div class="button-set button-set-stacked">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                      <span class="button-label">Sign in</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- ================================================================
+                   SCR-02 · Forgotten password request (frames 12:1029, 12:1196)
+                   ================================================================ -->
+              <div class="card bh-card" data-screen="SCR-02" data-title="Reset your password – BrokerHub" hidden>
+                <form class="card-body" id="reset-form" novalidate>
+                  <a class="link-standalone" href="#sign-in" data-go="SCR-01">
+                    Back to sign in
+                  </a>
+
+                  <div class="bh-alert-slot" id="reset-alert-slot"></div>
+
+                  <div class="text-block">
+                    <h1 class="headline-02" tabindex="-1">Reset your password</h1>
+                    <p>Enter your registered work email address and we will send you a link to reset your password.</p>
+                  </div>
+
+                  <div class="input">
+                    <div class="input-label">
+                      <label for="reset-email" class="form-label">Work email address</label>
+                    </div>
+                    <div class="response text-input">
+                      <input type="email" class="form-control" id="reset-email" name="email"
+                             autocomplete="username" spellcheck="false">
+                    </div>
+                    <div class="invalid-feedback" id="reset-email-error"></div>
+                  </div>
+
+                  <div class="button-set button-set-stacked">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                      <span class="button-label">Send reset link</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- ================================================================
+                   SCR-03 · Recovery request confirmation (frame 12:1331)
+                   Wording is identical for every address (REV04, D12, D15).
+                   ================================================================ -->
+              <div class="card bh-card" data-screen="SCR-03" data-title="Check your email – BrokerHub" hidden>
+                <div class="card-body">
+                  <div class="text-block">
+                    <h1 class="headline-02" tabindex="-1">Check your email</h1>
+                    <p>If an account exists for <span id="confirm-address"></span>, we’ll send password reset instructions to it. Check your inbox and junk folder.</p>
+                  </div>
+
+                  <div class="alert alert-info" role="alert">
+                    <div class="alert-content">
+                      <span class="alert-icon">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                      </span>
+                      <div class="alert-body">
+                        <div class="alert-message">
+                          <h6>Demo only: no email has been sent.</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-block">
+                    <h2 class="title-01">Not received it?</h2>
+                  </div>
+
+                  <a class="link-standalone" href="#forgotten-password" data-go="SCR-02">
+                    Try a different email address
+                  </a>
+
+                  <!-- Q3 open: shown literally. No support address, phone, resend or timing (REV05). -->
+                  <div class="text-block">
+                    <p>Still having trouble, or cannot access this inbox? [Route pending Q3]</p>
+                  </div>
+
+                  <div class="button-set button-set-stacked">
+                    <button type="button" class="btn btn-primary btn-lg" data-go="SCR-01">
+                      <span class="button-label">Back to sign in</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================================================================
+                   SCR-04 · Demo success destination (frame 12:1433)
+                   ================================================================ -->
+              <div class="card bh-card" data-screen="SCR-04" data-title="You are signed in – BrokerHub demo" hidden>
+                <div class="card-body">
+                  <div class="alert alert-info" role="alert">
+                    <div class="alert-content">
+                      <span class="alert-icon">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                      </span>
+                      <div class="alert-body">
+                        <div class="alert-message">
+                          <h6>Demo destination</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-block">
+                    <h1 class="headline-02" tabindex="-1">You are signed in</h1>
+                    <p>This simulated page confirms a successful sign in. No real client or policy information is shown in this demo.</p>
+                  </div>
+
+                  <div class="button-set button-set-stacked">
+                    <button type="button" class="btn btn-primary btn-lg" id="restart-demo">
+                      <span class="button-label">Sign out and restart demo</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Alert templates. Markup follows components/alert/examples.html ("Alert status" error, with "Alert note"). -->
+<template id="tpl-error-summary">
+  <div class="alert alert-error" role="alert" tabindex="-1">
+    <div class="alert-content">
+      <span class="alert-icon">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      </span>
+      <div class="alert-body">
+        <div class="alert-message">
+          <h6>There is a problem</h6>
+        </div>
+        <div class="alert-note">
+          <ul class="list-unstyled mb-0" data-error-list></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-signin-failure">
+  <div class="alert alert-error" role="alert" tabindex="-1">
+    <div class="alert-content">
+      <span class="alert-icon">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      </span>
+      <div class="alert-body">
+        <div class="alert-message">
+          <h6>We could not sign you in</h6>
+        </div>
+        <div class="alert-note">
+          Check you are using your registered work email address, not a personal one, and try your password again. Not sure of your password? <a href="#forgotten-password" data-go="SCR-02">Reset it</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="brokerhub-login.js"></script>
+</body>
+</html>
