@@ -1,0 +1,52 @@
+/* BrokerHub login prototype — page layout only.
+   Not Buckholt; see PROTOTYPE.md. Nothing here styles a Buckholt component:
+   Card, Text input, Alert, Link and Button come from css/buckholt.css as they are. */
+
+/* Portal background. The portal background artwork is not in this repository
+   (spec §11), so only its base colour is used, from the Buckholt palette
+   (--primary-100, foundations/colour/palette.md). The artwork arcs are omitted. */
+.bh-layout {
+  background-color: var(--primary-100);
+}
+
+/* Header: one row, header region of layout-03, no sidebar. */
+.bh-header {
+  grid-area: header;
+  padding: 1rem var(--page-body-spacing-x);
+}
+
+/* Labelled placeholder for the ogi portal logo. Deliberately not a lookalike. */
+.bh-placeholder {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border: 1px dashed var(--ui-border-04);
+  color: var(--ui-border-04);
+  font-size: 0.75rem;
+}
+
+#main {
+  grid-area: main;
+}
+
+/* layout-03 reserves a sidebar column; this page has none, so Main spans it. */
+.bh-layout #main,
+.bh-layout .bh-header {
+  grid-column: 1 / -1;
+}
+
+/* Centre the card in the Panel. */
+.bh-panel {
+  align-items: center;
+}
+
+/* Figma: Card Size=Medium is 384px wide. Buckholt's runtime Card has no width,
+   so the width is set here as layout. It shrinks with the viewport (spec §9,
+   assumption, not reviewed). */
+.bh-card {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.bh-alert-slot:empty {
+  display: none;
+}
