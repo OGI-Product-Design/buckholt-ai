@@ -114,6 +114,24 @@ body {
   align-self: center;
 }
 
+/* x-icon: the menu and close icons in the ghost menu Button, drawn inline so
+   they show even where the icon kit cannot load. */
+.x-icon {
+  width: var(--spacer-05);
+  height: var(--spacer-05);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.x-nav-toggle .x-icon-close,
+.x-nav-toggle[aria-expanded="true"] .x-icon-open {
+  display: none;
+}
+.x-nav-toggle[aria-expanded="true"] .x-icon-close {
+  display: block;
+}
+
 .x-site-sidebar {
   width: calc(var(--spacer-09) * 2);
   padding: var(--padding-07) var(--padding-05);
@@ -217,6 +235,19 @@ body {
 /* ------------------------------------------------------------------ */
 /* Page content helpers                                                */
 /* ------------------------------------------------------------------ */
+
+/* Content rhythm. Each panel's content sits in Buckholt's .content-group
+   (1.5rem between items). Trailing paragraph and list margins are removed so
+   they do not add to that gap, and prose keeps Buckholt's text measure. */
+#main .content-group > *,
+#main .x-prose > *,
+#main .text-block > :last-child {
+  margin-bottom: 0;
+}
+.x-prose,
+#main .content-group > .list {
+  max-width: var(--text-max-width);
+}
 
 /* Buckholt body text is Light (300), so the browser's "bolder" lands on
    Regular and barely shows. Emphasis in content uses Semibold. */
@@ -446,6 +477,11 @@ body {
   --x-soft: var(--feedback-border-error);
   --x-deep: var(--feedback-border-error);
 }
+.x-d-tone-warning {
+  --x-pale: var(--feedback-background-warning);
+  --x-soft: var(--feedback-border-warning);
+  --x-deep: var(--feedback-border-warning);
+}
 .x-d-tone-bridge {
   --x-pale: var(--ui-background-04);
   --x-soft: var(--ui-border-01);
@@ -494,11 +530,36 @@ body {
   stroke-width: 3;
 }
 
+.x-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+.x-diagram-scroll {
+  overflow-x: auto;
+}
+.x-diagram-scroll:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--focus-01);
+  outline-offset: calc(var(--border-width) * 2);
+}
+.x-diagram-hint {
+  display: none;
+  margin: 0;
+  color: var(--text-tertiary);
+}
 .x-diagram-fallback {
   display: none;
 }
-.x-diagram-fallback-title {
-  font-weight: var(--font-weight-sb);
+.x-diagram-fallback summary {
+  cursor: pointer;
+  color: var(--action-text-01);
+}
+.x-diagram-fallback summary:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--focus-01);
+  outline-offset: calc(var(--border-width) * 2);
+}
+.x-diagram-fallback[open] summary {
+  margin-bottom: var(--spacer-04);
 }
 .x-diagram-list,
 .x-diagram-list-loops {
@@ -528,10 +589,13 @@ body {
   color: var(--text-secondary);
 }
 
+/* Narrow screens: the diagram keeps a readable size and scrolls sideways,
+   and the list version is offered as well. */
 @media (max-width: 895.98px) {
   .x-diagram-svg {
-    display: none;
+    min-width: calc(var(--spacer-09) * 5.5);
   }
+  .x-diagram-hint,
   .x-diagram-fallback {
     display: block;
   }
@@ -648,6 +712,22 @@ body {
 .x-alert-title {
   margin: 0;
   font-weight: var(--font-weight-md);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-tool: tool name with its logo (Toolset page)                      */
+/* ------------------------------------------------------------------ */
+
+.x-tool {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-03);
+}
+.x-tool-logo {
+  flex: none;
+  width: var(--spacer-05);
+  height: var(--spacer-05);
+  color: var(--text-primary);
 }
 
 /* ------------------------------------------------------------------ */

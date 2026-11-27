@@ -13,11 +13,9 @@
   var sidebar = document.getElementById('sidebar');
   if (toggle && sidebar) {
     toggle.hidden = false;
-    var label = toggle.querySelector('.button-label');
     var setOpen = function (open) {
       sidebar.classList.toggle('x-is-open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (label) label.textContent = open ? 'Close menu' : 'Menu';
     };
     toggle.addEventListener('click', function () {
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');

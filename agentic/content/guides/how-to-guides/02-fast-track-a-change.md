@@ -24,4 +24,6 @@ On the fast track, the feature goes from Discover straight to Design. Explore is
 - Prototype and handoff, including {{agent:audit}}'s checks.
 - Handoff by {{agent:relay}}.
 
-> To come: Whether fast-tracked changes need new anchor screens, and any other differences, will be added from the source doc.
+## Anchor screens on the fast track
+
+The proposal: because only existing screens change, the current screens act as the anchors. Designers mark the frames being changed as anchors in Figma, update them where the change needs a new decision, and move the status to Anchors ready. {{agent:extend}} then works as usual.

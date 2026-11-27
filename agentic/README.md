@@ -94,19 +94,14 @@ Add a numbered Markdown file, for example
 top. The site lists it, numbers it, shows set-up progress ("Guide 3 of 9") and
 links it to the guides either side.
 
-## What is still to come
+## Where the content comes from
 
-The source doc ("UX agentic design workflow") has not been exported yet. Until
-it is, these are marked "To come" on the site rather than guessed:
+- Agents, stages, gates and statuses: `data/agents.json`.
+- The workflow, the agents' rules and the diagrams: the brief and the reference diagrams in `content/diagrams/`.
+- Templates: built from what each agent's rules say it must produce.
+- Set-up guides, cadence, swimlanes, Delivery Plans, rollout phases, workflow measures and the legacy onboarding steps: written as proposals for review. They describe what will be set up and why, not exact technical steps, because the site explains a proposed workflow.
 
-- the nine set-up guides
-- template contents
-- cadence under scaled agile, swimlanes and Delivery Plans
-- rollout phases and workflow measures
-- the onboarding procedure for a legacy product
-
-Everything else is written from `data/agents.json`, the brief and the reference
-diagrams.
+When the source doc ("UX agentic design workflow") is exported to `content/source/`, compare it with these pages and update them.
 
 ## Deploying
 

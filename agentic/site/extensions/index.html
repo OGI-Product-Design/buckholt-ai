@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -61,53 +62,56 @@
         <div class="container">
         <div class="page-pane">
           <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Extensions on this site</h1>
     <p class="body-02 x-lead">This site is built with Buckholt as it is. These parts are not in Buckholt, so they are extensions: prefixed <code>x-</code>, marked <code>data-buckholt="false"</code>, styled only with Buckholt tokens, and listed in the extensions register.</p>
 </div>
+</div>
           </div>
           <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01">Agent tag</h2>
     <p>The tag is the Buckholt Tag in its stage colour. The extension is the link around it, with its hover and focus states.</p>
 </div>
 <div class="x-tag-set" data-buckholt="false">
   <div class="tag-set">
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Range</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Critic</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
 </span></a>
-    <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a>
   </div>
@@ -115,19 +119,21 @@
 <div class="x-code-block" data-buckholt="false">
   <div class="x-code-block-header">
     <span class="x-code-block-label">Agent tag markup</span>
-    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-16" hidden>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-27" hidden>
         <div class="btn-icon">
             <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </div>
         <span class="button-label">Copy<span class="visually-hidden"> Agent tag markup</span></span>
     </button>
   </div>
-  <pre class="x-code-block-body" tabindex="0" aria-label="Agent tag markup"><code id="code-16" data-language="html">&lt;a class=&quot;x-agent-tag&quot; data-buckholt=&quot;false&quot; href=&quot;../agents/range/&quot;&gt;&lt;span class=&quot;tag expressive-light expressive-tertiary&quot;&gt;
+  <pre class="x-code-block-body" tabindex="0" aria-label="Agent tag markup"><code id="code-27" data-language="html">&lt;a class=&quot;x-agent-tag&quot; data-buckholt=&quot;false&quot; href=&quot;../agents/range/&quot;&gt;&lt;span class=&quot;tag tag-sm expressive-light expressive-tertiary&quot;&gt;
     &lt;span class=&quot;tag-label&quot;&gt;Range&lt;/span&gt;
 &lt;/span&gt;&lt;/a&gt;</code></pre>
 </div>
+</div>
           </div>
           <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01">Stage colours and contrast</h2>
     <p>Buckholt has four expressive colour families, so Foundation uses the neutral tag and Handoff shares Prototype’s family. The stage is always named in text as well.</p>
@@ -135,28 +141,30 @@
 </div>
 <div class="x-tag-set" data-buckholt="false">
   <div class="tag-set">
-    <span class="tag">
+    <span class="tag tag-sm">
         <span class="tag-label">Foundation</span>
     </span>
-    <span class="tag expressive-light">
+    <span class="tag tag-sm expressive-light">
         <span class="tag-label">Discover</span>
     </span>
-    <span class="tag expressive-light expressive-tertiary">
+    <span class="tag tag-sm expressive-light expressive-tertiary">
         <span class="tag-label">Explore</span>
     </span>
-    <span class="tag expressive-light expressive-quaternary">
+    <span class="tag tag-sm expressive-light expressive-quaternary">
         <span class="tag-label">Design</span>
     </span>
-    <span class="tag expressive-light expressive-secondary">
+    <span class="tag tag-sm expressive-light expressive-secondary">
         <span class="tag-label">Prototype</span>
     </span>
-    <span class="tag expressive-light expressive-secondary">
+    <span class="tag tag-sm expressive-light expressive-secondary">
         <span class="tag-label">Handoff</span>
     </span>
   </div>
 </div>
+</div>
           </div>
           <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01">Code block with copy</h2>
     <p>Buckholt has no code block. The copy control is a Buckholt ghost Button with the Common actions copy icon, shown only when JavaScript is available.</p>
@@ -164,18 +172,20 @@
 <div class="x-code-block" data-buckholt="false">
   <div class="x-code-block-header">
     <span class="x-code-block-label">Build and preview the site</span>
-    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-17" hidden>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-28" hidden>
         <div class="btn-icon">
             <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </div>
         <span class="button-label">Copy<span class="visually-hidden"> Build and preview the site</span></span>
     </button>
   </div>
-  <pre class="x-code-block-body" tabindex="0" aria-label="Build and preview the site"><code id="code-17" data-language="shell">npm run build:site
+  <pre class="x-code-block-body" tabindex="0" aria-label="Build and preview the site"><code id="code-28" data-language="shell">npm run build:site
 npm run dev:site</code></pre>
+</div>
 </div>
           </div>
           <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01">Everything else</h2>
     <p>The full list, with the tokens each one uses, is in <code>agentic/extensions-register.md</code>.</p>
@@ -186,6 +196,7 @@ npm run dev:site</code></pre>
     <li class="list-item">“On this page” contents, previous and next links, and the “Never” constraint list.</li>
     <li class="list-item">Search results.</li>
 </ul>
+</div>
           </div>
         </div>
         </div>

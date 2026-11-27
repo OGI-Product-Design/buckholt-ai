@@ -50,17 +50,34 @@ Every feature has success measures.
 3. {{agent:observe}} compares test results with the baselines.
 4. After release, {{agent:relay}} compares LogRocket data with the success measures and posts the report.
 
-> To come: Measures for the workflow itself, such as time from Ready for design to Handed over, will be added from the source doc.
+For the workflow itself, the proposed measures are:
+
+| Measure | What it tells us | Source |
+|---|---|---|
+| Time from Ready for design to Handed over | Whether design keeps one sprint ahead | Azure DevOps |
+| Time in each status | Where work waits | Azure DevOps |
+| Gates passed first time | Whether evidence is ready when the gate meets | Decision log |
+| Findings sent back by the test loop | How much rework testing finds | {{agent:observe}} findings |
+| Critical issues found by {{agent:audit}} | Quality before people see a prototype | Audit reports |
+| Extensions reused against created | Whether the register is working | Extensions register |
 
 ## Rollout phases
 
-> To come: The rollout phases will be added from the source doc.
+The proposed rollout adds the agents in workflow order, one phase at a time, with a pilot feature first.
+
+| Phase | What is set up | Ready to move on when |
+|---|---|---|
+| 1. Foundations | Repo and locks, product packs, the design board, the SharePoint site. {{agent:archive}} starts. | A pack exists for the pilot product and the board runs on stage statuses. |
+| 2. Discover | Connectors for Copilot, Azure DevOps and Lucid. {{agent:brief}}, {{agent:insight}} and {{agent:map}}. | One pilot feature reaches Discovery approved. |
+| 3. Explore and Design | The sandbox, Figma MCP and Lucid MCP. {{agent:range}}, {{agent:critic}}, {{agent:extend}} and {{agent:align}}. | The pilot passes the design sign-off gate. |
+| 4. Prototype and handoff | `/tests`, LogRocket MCP and the Azure DevOps MCP. {{agent:build}}, {{agent:audit}}, {{agent:observe}} and {{agent:relay}}. | The pilot is Handed over and the release check is posted. |
+| 5. All features | Every new feature goes through the workflow. | Reviewed after one planning increment. |
 
 ## Open questions
 
-These came up while building this site:
-
+- Which product and feature should be the pilot?
+- How many Figma Full seats are needed for {{agent:extend}}'s write access?
+- Where should the extensions register live: one in `/context`, or one per product?
+- Who approves changes to `/.cursor/rules`?
+- Do fast-tracked changes need new anchor screens, or do the current screens act as anchors?
 - The `/agents` rules files do not exist yet. Until they do, each agent page shows rules generated from `agents.json`.
-- Buckholt has four expressive colour families for six stages, so Handoff shares Prototype's colour. Is that acceptable?
-- Two of Buckholt's light expressive Tags are below WCAG AA contrast. This site darkens the label as an extension; the finding should go to the Buckholt owners.
-- Where should the extensions register live: `/context`, as the brief says, or with each product?

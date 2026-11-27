@@ -119,8 +119,12 @@ export function renderMarkdown(body, ctx, { diagrams = {}, blocks = {} } = {}) {
   const sections = [{ id: null, title: null, items: [] }];
   let textBlock = [];
   const cur = () => sections[sections.length - 1];
+  // Prose (text, lists, notes) is grouped so it flows at Buckholt's content
+  // spacing; diagrams, tables and code sit at the panel's wider spacing.
+  const prose = html => cur().items.push({ html, prose: true });
+  const wide = html => cur().items.push({ html, prose: false });
   const flushText = () => {
-    if (textBlock.length) cur().items.push(`<div class="text-block">\n    ${textBlock.join('\n    ')}\n</div>`);
+    if (textBlock.length) prose(`<div class="text-block">\n    ${textBlock.join('\n    ')}\n</div>`);
     textBlock = [];
   };
 
@@ -143,18 +147,18 @@ export function renderMarkdown(body, ctx, { diagrams = {}, blocks = {} } = {}) {
       textBlock.push(`<h3 class="title-02" id="${slugify(m[1])}">${inline(m[1], ctx)}</h3>`);
       i++; continue;
     }
-    if ((m = line.match(/^\{\{diagram:([a-z-]+)(?:\s+([a-z]+))?\}\}$/))) {
+    if ((m = line.match(/^\{\{diagram:([a-z0-9-]+)(?:\s+([a-z]+))?\}\}$/))) {
       flushText();
       const make = diagrams[m[1]];
       if (!make) throw new Error(`Unknown diagram ${m[1]}`);
-      cur().items.push(make(ctx, m[2] ? { highlight: m[2] } : {}));
+      wide(make(ctx, m[2] ? { highlight: m[2] } : {}));
       i++; continue;
     }
-    if ((m = line.match(/^\{\{block:([a-z-]+)\}\}$/))) {
+    if ((m = line.match(/^\{\{block:([a-z0-9-]+)\}\}$/))) {
       flushText();
       const make = blocks[m[1]];
       if (!make) throw new Error(`Unknown block ${m[1]}`);
-      cur().items.push(make(ctx));
+      wide(make(ctx));
       i++; continue;
     }
     if ((m = line.match(/^```(\w*)\s*(?:"([^"]*)")?\s*$/))) {
@@ -163,37 +167,51 @@ export function renderMarkdown(body, ctx, { diagrams = {}, blocks = {} } = {}) {
       i++;
       while (i < lines.length && !lines[i].startsWith('```')) code.push(lines[i++]);
       i++;
-      cur().items.push(codeBlock(code.join('\n'), { label: m[2] || '', language: m[1] }));
+      wide(codeBlock(code.join('\n'), { label: m[2] || '', language: m[1] }));
       continue;
     }
     if (line.startsWith('|')) {
       flushText();
       const rows = [];
       while (i < lines.length && lines[i].startsWith('|')) rows.push(lines[i++]);
-      cur().items.push(table(rows, ctx));
+      wide(table(rows, ctx));
       continue;
     }
     if (/^(?:[-*]|\d+\.)\s+/.test(line)) {
       flushText();
       const items = [];
       while (i < lines.length && (/^\s*(?:[-*]|\d+\.)\s+/.test(lines[i]))) items.push(lines[i++]);
-      cur().items.push(list(items, ctx));
+      prose(list(items, ctx));
       continue;
     }
     if (line.startsWith('> ')) {
       flushText();
       const parts = [];
       while (i < lines.length && lines[i].startsWith('> ')) parts.push(lines[i++].slice(2));
-      cur().items.push(note(parts.join(' '), ctx));
+      prose(note(parts.join(' '), ctx));
       continue;
     }
     // Paragraph: consecutive plain lines.
     const para = [];
+    // Always take the current line, so a line no other rule claims can never
+    // stop the renderer from moving on.
+    para.push(lines[i++]);
     while (i < lines.length && lines[i].trim() && !/^(#{2,3}\s|```|\||>\s|\{\{(diagram|block):|\s*(?:[-*]|\d+\.)\s)/.test(lines[i])) para.push(lines[i++]);
     textBlock.push(`<p>${inline(para.join(' '), ctx)}</p>`);
   }
   flushText();
 
-  const out = sections.filter(s => s.items.length).map(s => ({ id: s.id, title: s.title, html: s.items.join('\n') }));
+  const group = items => {
+    const out = [];
+    for (const it of items) {
+      const last = out[out.length - 1];
+      if (it.prose && last && last.prose) last.parts.push(it.html);
+      else out.push({ prose: it.prose, parts: [it.html] });
+    }
+    return out.map(g => (g.prose
+      ? `<div class="content-group x-prose" data-buckholt="false">\n${g.parts.join('\n')}\n</div>`
+      : g.parts[0])).join('\n');
+  };
+  const out = sections.filter(s => s.items.length).map(s => ({ id: s.id, title: s.title, html: group(s.items) }));
   return { sections: out, toc: out.filter(s => s.id).map(s => ({ id: s.id, title: s.title })) };
 }

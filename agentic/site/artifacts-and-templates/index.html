@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,17 +64,24 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Artifacts and templates</h1>
     <p class="body-02 x-lead">Seven artifacts carry the work between agents. Each has one writer, one home, and named readers.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-seven-artifacts">The seven artifacts</h2>
 </div>
+</div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Artifact flow: seven artifacts carry the work between agents">
   <svg class="x-diagram-svg" viewBox="0 0 1100 734" role="group" aria-labelledby="af4-title af4-desc" focusable="false">
   <title id="af4-title">Artifact flow: seven artifacts carry the work between agents</title>
   <desc id="af4-desc">Product pack, in Repo /context, copy in SharePoint, read by All agents. UX brief, in SharePoint, linked on the design item, read by Insight, Map, PM. Discovery summary, in SharePoint, summary copy in repo, read by Range, Critic, Build, Observe. Decision log, in Repo /context, read by All agents, Jim, PMs. Extensions register, in Repo /context, read by Align, Audit, Relay. Migration map, in Repo /context, read by Build, Align. Agent definition, in Repo /agents, read by The agent itself.</desc>
@@ -121,10 +129,11 @@
   <path class="x-d-line" d="M 302 676 L 337 676" fill="none" marker-end="url(#af4-head)"/>
   <path class="x-d-line" d="M 762 676 L 797 676" fill="none" marker-end="url(#af4-head)"/>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Artifact flow: seven artifacts carry the work between agents</p>
-    <ul class="x-diagram-list"><li><strong>Product pack</strong>, in Repo /context, copy in SharePoint. Written by Archive (Laurence approves); read by All agents.</li><li><strong>UX brief</strong>, in SharePoint, linked on the design item. Written by Brief; read by Insight, Map, PM.</li><li><strong>Discovery summary</strong>, in SharePoint, summary copy in repo. Written by Insight and Map; read by Range, Critic, Build, Observe.</li><li><strong>Decision log</strong>, in Repo /context. Written by Archive (from gate outcomes); read by All agents, Jim, PMs.</li><li><strong>Extensions register</strong>, in Repo /context. Written by Extend and Build; read by Align, Audit, Relay.</li><li><strong>Migration map</strong>, in Repo /context. Written by Archive; read by Build, Align.</li><li><strong>Agent definition</strong>, in Repo /agents. Written by Laurence; read by The agent itself.</li></ul>
   </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
+    <ul class="x-diagram-list"><li><strong>Product pack</strong>, in Repo /context, copy in SharePoint. Written by Archive (Laurence approves); read by All agents.</li><li><strong>UX brief</strong>, in SharePoint, linked on the design item. Written by Brief; read by Insight, Map, PM.</li><li><strong>Discovery summary</strong>, in SharePoint, summary copy in repo. Written by Insight and Map; read by Range, Critic, Build, Observe.</li><li><strong>Decision log</strong>, in Repo /context. Written by Archive (from gate outcomes); read by All agents, Jim, PMs.</li><li><strong>Extensions register</strong>, in Repo /context. Written by Extend and Build; read by Align, Audit, Relay.</li><li><strong>Migration map</strong>, in Repo /context. Written by Archive; read by Build, Align.</li><li><strong>Agent definition</strong>, in Repo /agents. Written by Laurence; read by The agent itself.</li></ul>
+  </details>
 </figure>
 <div class="table-container">
   <div class="table-content" tabindex="0" role="region" aria-label="Artifact, Written by, Where it lives, Read by, table">
@@ -141,7 +150,7 @@
         <tr class="table-gap"><td colspan="4"></td></tr>
         <tr>
           <td>Product pack</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a>, with Laurence's approval</td>
           <td>Repo <code>/context</code>, copy in SharePoint</td>
@@ -149,37 +158,37 @@
         </tr>
         <tr>
           <td>UX brief</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a></td>
           <td>SharePoint, linked on the design item</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a>, the PM</td>
         </tr>
         <tr>
           <td>Discovery summary</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a></td>
           <td>SharePoint, summary copy in the repo</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Range</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Critic</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
 </span></a></td>
         </tr>
         <tr>
           <td>Decision log</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a>, from gate outcomes</td>
           <td>Repo <code>/context</code></td>
@@ -187,29 +196,29 @@
         </tr>
         <tr>
           <td>Extensions register</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a></td>
           <td>Repo <code>/context</code></td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a></td>
         </tr>
         <tr>
           <td>Migration map</td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a></td>
           <td>Repo <code>/context</code></td>
-          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
-</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a></td>
         </tr>
@@ -223,65 +232,336 @@
     </table>
   </div>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="where-each-one-comes-from">Where each one comes from</h2>
 </div>
 <ul class="list">
-    <li class="list-item"><strong>Product pack</strong>: one per product, including its styling mode. A change is merged in the repo, then <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <li class="list-item"><strong>Product pack</strong>: one per product, including its styling mode. A change is merged in the repo, then <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> updates the SharePoint copy. Laurence or Jon approves every change.</li>
-    <li class="list-item"><strong>UX brief</strong>: <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item"><strong>UX brief</strong>: <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> writes it from the template once the feature has everything it needs, and links it on the design item.</li>
-    <li class="list-item"><strong>Discovery summary</strong>: <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <li class="list-item"><strong>Discovery summary</strong>: <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
-</span></a> lists every source, anonymises personal details and groups findings into themes with evidence. On Discovery approved, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+</span></a> lists every source, anonymises personal details and groups findings into themes with evidence. On Discovery approved, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> writes the repo copy to <code>/context/discovery/[feature].md</code>.</li>
-    <li class="list-item"><strong>Decision log</strong>: after each gate, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <li class="list-item"><strong>Decision log</strong>: after each gate, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> adds the decision to <code>decision-log.md</code> from the gate notes.</li>
     <li class="list-item"><strong>Extensions register</strong>: one entry per extension, with a Figma half and a code half.</li>
     <li class="list-item"><strong>Agent definition</strong>: one file per agent in <code>/agents</code>, changed by pull request.</li>
 </ul>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="templates">Templates</h2>
-    <p>The agents work from shared templates. These are named in the agents' rules:</p>
+    <p>The agents work from shared templates. Each one below follows what the agent's rules say it must contain. Copy a template to use it.</p>
 </div>
-<ul class="list">
-    <li class="list-item"><strong>UX brief template</strong>, used by <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+<div class="text-block">
+    <h3 class="title-02" id="ux-brief">UX brief</h3>
+    <p>Written by <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
-</span></a></li>
-    <li class="list-item"><strong>Extensions register template</strong>, used by <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
-    <span class="tag-label">Extend</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
-    <span class="tag-label">Build</span>
-</span></a></li>
-    <li class="list-item"><strong>Prototype build spec</strong>, read by <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
-    <span class="tag-label">Build</span>
-</span></a></li>
-    <li class="list-item"><strong>Greybox stylesheet</strong> (<code>greybox.css</code>), the only styling <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
-    <span class="tag-label">Range</span>
-</span></a> may use</li>
-</ul>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                The template contents, each with a copy button, will be added from the source doc.
-            </div>
+</span></a>, saved to SharePoint and linked on the design item.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">UX brief template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-14" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </div>
-    </div>
+        <span class="button-label">Copy<span class="visually-hidden"> UX brief template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="UX brief template"><code id="code-14" data-language="markdown"># UX brief: [feature name]
+
+Design item: [link]   Feature: [link]   Date: [date]
+
+## Problem
+[The user problem, in one or two sentences.]
+
+## Outcome
+[What changes for users and the business when this is done.]
+
+## Products and styling mode
+- [Product]: [Buckholt, Hybrid or Legacy]
+
+## Users
+[Who this is for.]
+
+## Priority and quarter
+[Priority] · [Quarter]
+
+## Constraints
+- [Constraint]
+
+## Route
+[Full or Fast track]
+Why: [No new flow? No new research needed? Only existing screens change?]
+
+## Success measures
+| Measure | Baseline (from Insight) | Target |
+|---|---|---|
+| Completion | [to request] | [target] |
+| Drop-off | [to request] | [target] |
+| Errors | [to request] | [target] |
+
+## Scope confirmed by the PM
+[Name, date]</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="discovery-summary">Discovery summary</h3>
+    <p>Written by <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a>, saved to SharePoint, then copied into the repo by <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a>.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Discovery summary template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-15" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Discovery summary template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Discovery summary template"><code id="code-15" data-language="markdown"># Discovery summary: [feature name]
+
+## Sources
+- [SRC-01] [Source, link, date]
+
+## Themes
+### [Theme]
+Evidence: [SRC-01, SRC-02]   Products: [product]
+[What we found.]
+
+## Pain points, ranked
+| Pain point | How often | How badly | Evidence |
+|---|---|---|---|
+
+## Baselines (LogRocket)
+| Flow | Completion | Drop-off | Errors | Rage clicks |
+|---|---|---|---|---|
+
+## Evidence gaps
+- [Gap]: [research that would fill it]
+
+All personal data removed: [yes]</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="critique">Critique</h3>
+    <p>Written by <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a> as <code>critique.md</code> in the sandbox feature folder.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Critique template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-16" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Critique template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Critique template"><code id="code-16" data-language="markdown"># Critique: [feature name]
+
+## Direction [n]: [name]
+- User needs served: [themes]
+- User needs missed: [themes]
+- Edge cases: empty [ ] error [ ] loading [ ] permissions [ ] heavy data [ ] long text [ ]
+- Consistency with product patterns and styling mode: [notes]
+- Build effort: [low, medium or high], because [reason]
+- Risks: [risks]
+
+## Recommendation (for the shortlist gate to decide)
+1. [Direction], because [reason]</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="decision-log-entry">Decision log entry</h3>
+    <p>Added to <code>decision-log.md</code> by <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a> after each gate.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Decision log entry template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-17" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Decision log entry template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Decision log entry template"><code id="code-17" data-language="markdown">## [Date] · [Feature] · [Shortlist gate or Design sign-off gate]
+People: [designers, PM, engineer]
+Decision: [what was decided]
+Evidence: [links]
+Status set to: [Shortlist agreed or Design signed off]</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="extensions-register-entry">Extensions register entry</h3>
+    <p>Added by <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> (Figma half) and <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> (code half).</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Extensions register entry template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-18" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Extensions register entry template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Extensions register entry template"><code id="code-18" data-language="markdown">| ID | Component | Product | Why Buckholt does not cover it | Figma (x/ name, link) | Code (x- class, path) | Tokens used | Status |
+|---|---|---|---|---|---|---|---|
+| X-[n] | [name] | [product] | [reason] | [x/name] | [x-name, /extensions/product/] | [tokens] | [draft, reviewed, approved] |</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="align-and-audit-reports">Align and Audit reports</h3>
+    <p>Posted on the design item, issues listed by severity.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Report template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-19" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Report template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Report template"><code id="code-19" data-language="markdown"># [Align or Audit] report: [feature name], [date]
+
+| Severity | Issue | Where (frame or page link) | Rule |
+|---|---|---|---|
+| Critical | [issue] | [link] | [rule] |
+| Serious | [issue] | [link] | [rule] |
+| Minor | [issue] | [link] | [rule] |</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="test-findings">Test findings</h3>
+    <p>Written by <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a> after the sessions.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Test findings template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-20" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Test findings template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Test findings template"><code id="code-20" data-language="markdown"># Test findings: [feature name]
+
+| Task | Success | Compared with baseline |
+|---|---|---|
+
+## Findings
+| Issue | Participants | Severity | Suggested change | Goes back to |
+|---|---|---|---|---|
+| [issue] | [n of n] | [severity] | [change] | [Extend or Build] |</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="ux-section-on-a-story">UX section on a story</h3>
+    <p>Added to each engineering story by <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a>.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Story UX section template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-21" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Story UX section template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Story UX section template"><code id="code-21" data-language="markdown">## UX
+Figma: [link]   Prototype: [link]   Spec: [link]
+
+### UX acceptance criteria
+- Given [context], when [action], then [result].
+
+### States
+Empty · Loading · Error · Success · Permissions
+
+### Components
+- [Element]: [Storybook component or flagged extension]</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h3 class="title-02" id="agent-definition">Agent definition</h3>
+    <p>One file per agent in <code>/agents</code>, written by Laurence and changed by pull request. Each agent page on this site shows its file in this shape.</p>
+</div>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Agent definition template</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-22" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Agent definition template</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Agent definition template"><code id="code-22" data-language="markdown"># [Agent name]
+
+Stage: [stage]
+Tool: [tool]
+Job: [one sentence]
+
+## Triggered by
+## Reads
+## Steps
+## Produces
+## Human gate
+## Never
+## Done when</code></pre>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <p>The sandbox uses one more shared file: <code>greybox.css</code>, the only styling <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a> may use, so explorations stay deliberately rough.</p>
+</div>
+</div>
 </div>
                 </div>
               </div>

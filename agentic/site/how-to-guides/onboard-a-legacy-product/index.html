@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -59,8 +60,11 @@
     <div class="page-body">
       <div class="page-frame">
         <div class="container">
-        <div class="page-pane">
-          <div class="page-panel">
+          <div class="row">
+            <div class="col-12 col-xl-9">
+              <div class="page-pane">
+                <div class="page-panel">
+<div class="content-group">
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -69,70 +73,95 @@
         <li class="breadcrumb-item active" aria-current="page">Onboard a legacy product</li>
     </ol>
 </nav>
-          </div>
-          <div class="page-panel">
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <span class="eyebrow">How-to guide 4 of 5</span>
     <h1 class="display-02">Onboard a legacy product</h1>
     <p class="body-02 x-lead">Bring a product that is not on Buckholt into the workflow without changing how it looks.</p>
 </div>
-          </div>
-          <div class="page-panel">
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="what-a-legacy-product-needs">What a legacy product needs</h2>
 </div>
 <ul class="list">
     <li class="list-item"><strong>Captured legacy CSS</strong> in <code>/legacy/[product]</code>. It is locked like Buckholt: no agent writes to it, and changing it needs the owner's approval.</li>
     <li class="list-item"><strong>A product pack</strong> that records the product's styling mode: Legacy or Hybrid.</li>
-    <li class="list-item"><strong>Its legacy Figma library</strong>, connected so designers can make anchor screens and <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item"><strong>Its legacy Figma library</strong>, connected so designers can make anchor screens and <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a> can use it.</li>
-    <li class="list-item"><strong>A migration map</strong> in <code>/context</code>, which <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag">
+    <li class="list-item"><strong>A migration map</strong> in <code>/context</code>, which <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
-</span></a> keeps and <a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> keeps and <a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a> read.</li>
 </ul>
-          </div>
-          <div class="page-panel">
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="how-the-agents-treat-it">How the agents treat it</h2>
 </div>
 <ul class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> stops if a product pack is missing.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a> uses the legacy CSS in Legacy mode. In Hybrid mode it follows the pack and labels every Buckholt element.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a> flags styling-mode mismatches, such as Buckholt parts in a legacy screen.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a> checks markup against the legacy CSS instead of the Buckholt reference.</li>
 </ul>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                The step-by-step onboarding procedure will be added from the source doc.
-            </div>
-        </div>
-    </div>
 </div>
-          </div>
-          <div class="page-panel">
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="steps">Steps</h2>
+    <p>The proposed procedure:</p>
+</div>
+<ol class="list">
+    <li class="list-item"><strong>Capture the legacy CSS</strong> into <code>/legacy/[product]</code>, and add the folder to the locks so no agent can write to it. The product owner approves the capture.</li>
+    <li class="list-item"><strong>Write the product pack</strong> in <code>/context</code>: the styling mode (Legacy or Hybrid), the product's terms, its navigation pattern and its key screens. Laurence or Jon approves it, and <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a> copies it to SharePoint.</li>
+    <li class="list-item"><strong>Connect the legacy Figma library</strong>, so designers can make anchor screens and <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a> can use it.</li>
+    <li class="list-item"><strong>Start the migration map</strong>: each legacy component and its Buckholt equivalent, or &quot;none yet&quot;.</li>
+    <li class="list-item"><strong>Run one feature as a pilot.</strong> Use <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a>'s styling-mode checks and <a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a>'s checks against the legacy CSS to find gaps in the pack and the map.</li>
+    <li class="list-item"><strong>Fix the gaps</strong>, then open the workflow to every feature for that product.</li>
+</ol>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
 <nav class="x-pager" data-buckholt="false" aria-label="Previous and next how-to guide">
   <a class="link-standalone" href="../../how-to-guides/add-a-non-buckholt-component/index.html" rel="prev">
     <span class="icon">
@@ -147,8 +176,21 @@
     <span><span class="x-pager-label">Next how-to guide</span> Update a product pack</span>
 </a>
 </nav>
+</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 d-none d-xl-block">
+<nav class="x-on-this-page" data-buckholt="false" aria-label="On this page">
+  <p class="label-01 x-on-this-page-title">On this page</p>
+  <ul>
+    <li><a href="#what-a-legacy-product-needs">What a legacy product needs</a></li>
+    <li><a href="#how-the-agents-treat-it">How the agents treat it</a></li>
+    <li><a href="#steps">Steps</a></li>
+  </ul>
+</nav>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

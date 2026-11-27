@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,17 +64,24 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Repo and Buckholt</h1>
     <p class="body-02 x-lead">Buckholt never changes. Agents create only in three folders, and everything they make outside Buckholt is flagged and registered.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="repo-zones">Repo zones</h2>
 </div>
+</div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Repo zones: two folders are locked; agents create only in three">
   <svg class="x-diagram-svg" viewBox="0 0 1100 544" role="group" aria-labelledby="rz3-title rz3-desc" focusable="false">
   <title id="rz3-title">Repo zones: two folders are locked; agents create only in three</title>
   <desc id="rz3-desc">Locked, no agent writes: /buckholt (Buckholt core) and /legacy (captured legacy CSS), both changed only with owner approval. Agents create in /extensions, /sandbox and /prototypes. Context and control: /context, /agents, /.cursor/rules and /tests.</desc>
@@ -86,7 +94,7 @@
 <text class="x-d-group-title" x="24" y="34">Locked: no agent writes</text>
   <g><rect class="x-d-box x-d-tone-plain" x="20" y="56" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="172.66666666666666" y="90" text-anchor="middle">/buckholt</text><text class="x-d-sub" x="172.66666666666666" y="114" text-anchor="middle">Buckholt core</text><text class="x-d-sub" x="172.66666666666666" y="138" text-anchor="middle">Owner approval to change</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="20" y="176" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="172.66666666666666" y="210" text-anchor="middle">/legacy/[product]</text><text class="x-d-sub" x="172.66666666666666" y="234" text-anchor="middle">Captured legacy CSS</text><text class="x-d-sub" x="172.66666666666666" y="258" text-anchor="middle">Owner approval to change</text></g>
-  <rect class="x-d-group x-d-tone-tertiary" x="377.3333333333333" y="0" width="345.3333333333333" height="544" rx="12"/>
+  <rect class="x-d-group x-d-tone-warning" x="377.3333333333333" y="0" width="345.3333333333333" height="544" rx="12"/>
 <text class="x-d-group-title" x="401.3333333333333" y="34">Agents create here</text>
   <g><rect class="x-d-box x-d-tone-plain" x="397.3333333333333" y="56" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="550" y="90" text-anchor="middle">/extensions/[product]</text><text class="x-d-sub" x="550" y="114" text-anchor="middle">Build, Extend; tokens only</text><text class="x-d-sub" x="550" y="138" text-anchor="middle">Flagged and registered</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="397.3333333333333" y="176" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="550" y="210" text-anchor="middle">/sandbox/[product]</text><text class="x-d-sub" x="550" y="234" text-anchor="middle">Range; greybox only</text><text class="x-d-sub" x="550" y="258" text-anchor="middle">Never promoted</text></g>
@@ -98,11 +106,13 @@
   <g><rect class="x-d-box x-d-tone-plain" x="774.6666666666666" y="296" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="927.3333333333333" y="330" text-anchor="middle">/.cursor/rules</text><text class="x-d-sub" x="927.3333333333333" y="354" text-anchor="middle">Rules every agent follows</text><text class="x-d-sub" x="927.3333333333333" y="378" text-anchor="middle">Changed by pull request</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="774.6666666666666" y="416" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="927.3333333333333" y="450" text-anchor="middle">/tests</text><text class="x-d-sub" x="927.3333333333333" y="474" text-anchor="middle">Playwright and axe</text><text class="x-d-sub" x="927.3333333333333" y="498" text-anchor="middle">Run by Audit</text></g>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Repo zones: two folders are locked; agents create only in three</p>
-    <ul class="x-diagram-list"><li><strong>Locked: no agent writes</strong><ul><li><code>/buckholt</code>: Buckholt core. Owner approval to change.</li><li><code>/legacy/[product]</code>: Captured legacy CSS. Owner approval to change.</li></ul></li><li><strong>Agents create here</strong><ul><li><code>/extensions/[product]</code>: Build, Extend; tokens only. Flagged and registered.</li><li><code>/sandbox/[product]</code>: Range; greybox only. Never promoted.</li><li><code>/prototypes/[product]</code>: Build; by styling mode. Checked by Audit, Align.</li></ul></li><li><strong>Context and control</strong><ul><li><code>/context</code>: Archive: packs, logs,. register, migration map.</li><li><code>/agents</code>: One file per agent. Changed by pull request.</li><li><code>/.cursor/rules</code>: Rules every agent follows. Changed by pull request.</li><li><code>/tests</code>: Playwright and axe. Run by Audit.</li></ul></li></ul>
   </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
+    <ul class="x-diagram-list"><li><strong>Locked: no agent writes</strong><ul><li><code>/buckholt</code>: Buckholt core. Owner approval to change.</li><li><code>/legacy/[product]</code>: Captured legacy CSS. Owner approval to change.</li></ul></li><li><strong>Agents create here</strong><ul><li><code>/extensions/[product]</code>: Build, Extend; tokens only. Flagged and registered.</li><li><code>/sandbox/[product]</code>: Range; greybox only. Never promoted.</li><li><code>/prototypes/[product]</code>: Build; by styling mode. Checked by Audit, Align.</li></ul></li><li><strong>Context and control</strong><ul><li><code>/context</code>: Archive: packs, logs,. register, migration map.</li><li><code>/agents</code>: One file per agent. Changed by pull request.</li><li><code>/.cursor/rules</code>: Rules every agent follows. Changed by pull request.</li><li><code>/tests</code>: Playwright and axe. Run by Audit.</li></ul></li></ul>
+  </details>
 </figure>
+<div class="content-group x-prose" data-buckholt="false">
 <div class="alert alert-info" role="note">
     <div class="alert-content">
         <span class="alert-icon">
@@ -118,28 +128,36 @@
         </div>
     </div>
 </div>
-                </div>
-                <div class="page-panel">
-<div class="text-block">
-    <h2 class="headline-01" id="locks">Locks</h2>
-    <p><code>/buckholt</code> holds Buckholt core and <code>/legacy/[product]</code> holds captured legacy CSS. No agent writes to either. Changing them needs the owner's approval.</p>
-    <p>Every agent that touches code is told so in its rules: <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
-    <span class="tag-label">Archive</span>
-</span></a> never edits them, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
-    <span class="tag-label">Build</span>
-</span></a> never writes to them.</p>
+</div>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="locks">Locks</h2>
+    <p><code>/buckholt</code> holds Buckholt core and <code>/legacy/[product]</code> holds captured legacy CSS. No agent writes to either. Changing them needs the owner's approval.</p>
+    <p>Every agent that touches code is told so in its rules: <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a> never edits them, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> never writes to them.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="extensions">Extensions</h2>
     <p>When Buckholt has no component for what a design needs, it becomes an extension.</p>
 </div>
 <ul class="list">
-    <li class="list-item">In code, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">In code, <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a> first reuses an existing register entry. If there is none, it builds the component in <code>/extensions/[product]/</code>.</li>
-    <li class="list-item">In Figma, <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item">In Figma, <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
 </span></a> builds it on the Extensions page with an <code>x/</code> prefix.</li>
 </ul>
@@ -152,13 +170,14 @@
     <li class="list-item">One entry per component in the extensions register, with both halves: Figma and code.</li>
 </ul>
 <div class="text-block">
-    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
-</span></a> checks that extension components are flagged and register entries have both halves. <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> checks that extension components are flagged and register entries have both halves. <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
-</span></a> flags <code>x-</code> components with no register entry. <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+</span></a> flags <code>x-</code> components with no register entry. <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> flags register entries missing a half in its weekly check.</p>
+</div>
 </div>
 <div class="x-code-block" data-buckholt="false">
   <div class="x-code-block-header">
@@ -174,26 +193,34 @@
   ...
 &lt;/div&gt;</code></pre>
 </div>
-                </div>
-                <div class="page-panel">
-<div class="text-block">
-    <h2 class="headline-01" id="sandbox">Sandbox</h2>
-    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
-    <span class="tag-label">Range</span>
-</span></a> works only in <code>/sandbox/[product]/[feature]/</code>. Explorations are clickable greybox HTML using <code>greybox.css</code> only, with an &quot;Exploration, not for build&quot; banner on every page. They never use Buckholt, brand colours or tokens.</p>
-    <p>Nothing in the sandbox is ever promoted. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
-    <span class="tag-label">Build</span>
-</span></a> never imports from it, and <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
-    <span class="tag-label">Audit</span>
-</span></a> does not check it.</p>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="sandbox">Sandbox</h2>
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a> works only in <code>/sandbox/[product]/[feature]/</code>. Explorations are clickable greybox HTML using <code>greybox.css</code> only, with an &quot;Exploration, not for build&quot; banner on every page. They never use Buckholt, brand colours or tokens.</p>
+    <p>Nothing in the sandbox is ever promoted. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> never imports from it, and <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a> does not check it.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="styling-modes">Styling modes</h2>
-    <p>Each product pack records the product's styling mode. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <p>Each product pack records the product's styling mode. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a> follows it:</p>
+</div>
 </div>
 <div class="table-container">
   <div class="table-content" tabindex="0" role="region" aria-label="Mode, What Build uses, table">
@@ -222,13 +249,18 @@
     </table>
   </div>
 </div>
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
-    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a> checks for styling-mode mismatches, such as Buckholt parts in a legacy screen.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="rules-files">Rules files</h2>
 </div>
@@ -239,13 +271,19 @@
 <div class="text-block">
     <p>Both change only by pull request. Each agent page on this site shows its rules file.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="tests">Tests</h2>
-    <p><code>/tests</code> holds the Playwright and axe checks. <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <p><code>/tests</code> holds the Playwright and axe checks. <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a> runs them on every new or changed prototype.</p>
+</div>
+</div>
 </div>
                 </div>
               </div>

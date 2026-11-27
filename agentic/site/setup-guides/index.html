@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,17 +64,24 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Set-up guides</h1>
     <p class="body-02 x-lead">Set up the foundations first, then connectors and access, then the agents. Each guide builds on the one before.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-order">The order</h2>
 </div>
+</div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Dependencies: four foundations unblock everything else">
   <svg class="x-diagram-svg" viewBox="0 0 1100 752" role="group" aria-labelledby="dp7-title dp7-desc" focusable="false">
   <title id="dp7-title">Dependencies: four foundations unblock everything else</title>
   <desc id="dp7-desc">Foundations come first: the repo and its locks, product packs, the design board and the SharePoint site. They unblock connectors and access: Figma MCP write, LogRocket MCP, Lucid MCP, the Azure DevOps connector, legacy Figma libraries, and Figma read with Code Connect. Those unblock the agents, by stage.</desc>
@@ -105,65 +113,66 @@
   <path class="x-d-line" d="M 550 250 L 550 198" fill="none" marker-end="url(#dp7-head)"/>
   <path class="x-d-line" d="M 550 554 L 550 502" fill="none" marker-end="url(#dp7-head)"/>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Dependencies: four foundations unblock everything else</p>
+  </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
     <ol class="x-diagram-list">
     <li><strong>Foundations, set up first</strong><ul><li>Repo and locks: Buckholt core and legacy CSS locked</li><li>Product packs: One per product, with styling mode</li><li>Design board: Stage statuses trigger each agent</li><li>SharePoint site: Discovery master and pack copy</li></ul></li>
     <li><strong>Then connectors and access</strong><ul><li>Figma MCP, write: Extend; needs a Full seat</li><li>LogRocket MCP: Insight, Observe, Relay</li><li>Lucid MCP: Map, Range</li><li>ADO connector: Brief reads features</li><li>Legacy Figma libraries: Anchors, Extend, Align</li><li>Figma read, Code Connect: Align, Build, Relay</li></ul></li>
     <li><strong>Then the agents, by stage</strong><ul><li>Discover: Brief, Insight, Map</li><li>Explore: Range, Critic</li><li>Design: Extend, Align</li><li>Prototype: Build, Audit, Observe, Relay</li></ul></li>
   </ol>
-  </div>
+  </details>
 </figure>
+<div class="content-group x-prose" data-buckholt="false">
 <ol class="list">
     <li class="list-item"><strong>Foundations</strong>: the repo and its locks, product packs, the design board and the SharePoint site.</li>
-    <li class="list-item"><strong>Connectors and access</strong>: Figma MCP (write for <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item"><strong>Connectors and access</strong>: Figma MCP (write for <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
 </span></a>, read and Code Connect for the others), LogRocket MCP, Lucid MCP, the Azure DevOps connector and the legacy Figma libraries.</li>
     <li class="list-item"><strong>Agents</strong>, by stage.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-guides">The guides</h2>
 </div>
-<div class="text-block">
-    <p><span class="tag tag-status tag-status-info">
-        <span class="tag-label">Content to follow</span>
-    </span></p>
-    <p>No guides have been added yet.</p>
 </div>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                The nine set-up guides will be added from the source doc. Each one will have its own page, with numbered steps, code to copy, links to the documentation and videos, and your progress through the nine.
-            </div>
-        </div>
-    </div>
+<ol class="list">
+    <li class="list-item"><a href="../setup-guides/repo-and-locks/index.html">Repo and locks</a>: agents can only be trusted with the repo if the folders they must never change are locked.</li>
+    <li class="list-item"><a href="../setup-guides/product-packs/index.html">Product packs</a>: every agent reads the product pack, so each product needs one before any feature for it can start.</li>
+    <li class="list-item"><a href="../setup-guides/design-board/index.html">Design board</a>: the design board runs the workflow. Its stage statuses are what start each agent.</li>
+    <li class="list-item"><a href="../setup-guides/sharepoint-site/index.html">SharePoint site</a>: sharePoint holds the discovery master copy and a copy of every product pack, so people outside Cursor can read them.</li>
+    <li class="list-item"><a href="../setup-guides/figma-mcp/index.html">Figma MCP</a>: figma MCP lets agents read the designs, and lets one agent, Extend, build them out.</li>
+    <li class="list-item"><a href="../setup-guides/legacy-figma-libraries/index.html">Legacy Figma libraries</a>: products not yet on Buckholt need their own Figma library, so anchors and extended screens match how the product looks today.</li>
+    <li class="list-item"><a href="../setup-guides/logrocket-mcp/index.html">LogRocket MCP</a>: logRocket gives every feature real baselines, so success measures are based on what users actually do.</li>
+    <li class="list-item"><a href="../setup-guides/lucid-mcp/index.html">Lucid</a>: lucid holds the journey maps from Discover and the rough flows from Explore.</li>
+    <li class="list-item"><a href="../setup-guides/azure-devops-connectors/index.html">Azure DevOps connectors</a>: agents read features and write to stories through Azure DevOps, so the work and the record stay in one place.</li>
+</ol>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="adding-a-guide">Adding a guide</h2>
     <p>Each guide is a Markdown file in <code>agentic/content/guides/setup-guides/</code>, named with its position, for example <code>03-figma-mcp.md</code>. The site numbers them, shows progress and links each one to the next.</p>
 </div>
+</div>
 <div class="x-code-block" data-buckholt="false">
   <div class="x-code-block-header">
     <span class="x-code-block-label">Guide file template</span>
-    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-14" hidden>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-23" hidden>
         <div class="btn-icon">
             <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </div>
         <span class="button-label">Copy<span class="visually-hidden"> Guide file template</span></span>
     </button>
   </div>
-  <pre class="x-code-block-body" tabindex="0" aria-label="Guide file template"><code id="code-14" data-language="markdown">---
+  <pre class="x-code-block-body" tabindex="0" aria-label="Guide file template"><code id="code-23" data-language="markdown">---
 title: Connect Figma MCP
 lead: One sentence on why this matters.
 ---
@@ -180,6 +189,7 @@ lead: One sentence on why this matters.
 ## Watch
 
 - [Video title](https://example.com/video)</code></pre>
+</div>
 </div>
                 </div>
               </div>

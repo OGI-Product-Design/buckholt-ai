@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,6 +64,7 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -71,11 +73,13 @@
         <li class="breadcrumb-item active" aria-current="page">Archive</li>
     </ol>
 </nav>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <span class="eyebrow">Foundation stage</span>
-    <h1 class="display-02 x-agent-title" data-buckholt="false"><span class="x-agent-title-tag" aria-hidden="true"><span class="tag">
+    <h1 class="display-02 x-agent-title" data-buckholt="false"><span class="x-agent-title-tag" aria-hidden="true"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></span> Archive</h1>
     <p class="body-02 x-lead">Keeps design context accurate and the same in the repo and SharePoint.</p>
@@ -90,8 +94,10 @@
         <span class="value">Cursor, plus a weekly scheduled run</span>
     </div>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="at-a-glance">At a glance</h2>
 </div>
@@ -152,8 +158,10 @@
     </div>
   </div>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="steps">Steps</h2>
 </div>
@@ -164,8 +172,10 @@
     <li class="list-item">Weekly, flag packs older than 90 days, register entries missing their Figma or code half, and gates with no decision logged.</li>
     <li class="list-item">Track daily Figma MCP calls and warn the team at 80% of the limit.</li>
 </ol>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="x-constraint" data-buckholt="false">
   <div class="text-block">
       <h2 class="headline-01" id="never">Never</h2>
@@ -192,14 +202,18 @@
       </li>
   </ul>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="done-when">Done when</h2>
     <p>Repo and SharePoint copies match and the health report is posted.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="owner">Owner and backup</h2>
 </div>
@@ -213,8 +227,10 @@
         <span class="value">Jon</span>
     </div>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="rules-file">Rules file</h2>
     <p><code>/agents/archive.md</code> is not in the repo yet, so this is generated from <code>agentic/data/agents.json</code>. The rules file replaces it once it exists.</p>
@@ -276,13 +292,17 @@ Repo and SharePoint copies match and the health report is posted.
     </span>
     View in repo<span class="visually-hidden"> (external site)</span>
 </a>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <h2 class="headline-01" id="where-it-sits">Where it sits</h2>
     <p>Archive is outlined in the workflow below.</p>
 </div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Workflow: designers decide at two gates; agents do the work in between">
   <svg class="x-diagram-svg" viewBox="0 0 1100 1240" role="group" aria-labelledby="wf2-title wf2-desc" focusable="false">
   <title id="wf2-title">Workflow: designers decide at two gates; agents do the work in between</title>
   <desc id="wf2-desc">Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.</desc>
@@ -330,43 +350,44 @@ Repo and SharePoint copies match and the health report is posted.
   <path class="x-d-loop" d="M 56 1058 H 30 V 766 H 53" marker-end="url(#wf2-head)"/>
   <text class="x-d-loop-label" transform="translate(20 912) rotate(-90)" text-anchor="middle">Test loop</text>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Workflow: designers decide at two gates; agents do the work in between</p>
+  </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
     <ol class="x-diagram-list">
-    <li><strong>Foundations</strong>: SharePoint, Azure DevOps and the Archive agent.<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag">
+    <li><strong>Foundations</strong>: SharePoint, Azure DevOps and the Archive agent.<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> <span class="x-diagram-current">(this agent)</span></li></ul></li>
-    <li><strong>Discover</strong> (Copilot, Lucid)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag expressive-light">
+    <li><strong>Discover</strong> (Copilot, Lucid)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/insight/index.html"><span class="tag expressive-light">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/map/index.html"><span class="tag expressive-light">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a></li></ul></li>
-    <li><strong>Explore</strong> (Cursor sandbox)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <li><strong>Explore</strong> (Cursor sandbox)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Range</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Critic</span>
 </span></a></li></ul></li>
-    <li class="x-diagram-list-gate"><span class="tag tag-status tag-status-warning">
+    <li class="x-diagram-list-gate"><span class="tag tag-sm tag-status tag-status-warning">
         <span class="tag-label">Gate</span>
     </span> <strong>Shortlist gate</strong> (designers, PM, engineer). Decides: direction, scope and early feasibility.</li>
     <li><strong>Designers</strong> make the anchor screens in Figma.</li>
-    <li><strong>Design</strong> (Cursor and Figma MCP)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li><strong>Design</strong> (Cursor and Figma MCP)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a></li></ul></li>
-    <li class="x-diagram-list-gate"><span class="tag tag-status tag-status-warning">
+    <li class="x-diagram-list-gate"><span class="tag tag-sm tag-status tag-status-warning">
         <span class="tag-label">Gate</span>
     </span> <strong>Design sign-off gate</strong> (designers, PM, engineer). Decides: the design meets the success measures and is buildable.</li>
-    <li><strong>Prototype and handoff</strong> (Cursor)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <li><strong>Prototype and handoff</strong> (Cursor)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
-</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a></li></ul></li>
     <li><strong>Engineering stories</strong>, one sprint behind.</li>
@@ -375,10 +396,12 @@ Repo and SharePoint copies match and the health report is posted.
     <li><strong>Fast track</strong>: Discover can go straight to Design.</li>
     <li><strong>Test loop</strong>: Prototype can go back to Design.</li>
   </ul>
-  </div>
+  </details>
 </figure>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <nav class="x-pager" data-buckholt="false" aria-label="Previous and next agent">
   <span></span>
   <a class="link-standalone" href="../../agents/brief/index.html" rel="next">
@@ -388,6 +411,7 @@ Repo and SharePoint copies match and the health report is posted.
     <span><span class="x-pager-label">Next agent</span> Brief</span>
 </a>
 </nav>
+</div>
                 </div>
               </div>
             </div>

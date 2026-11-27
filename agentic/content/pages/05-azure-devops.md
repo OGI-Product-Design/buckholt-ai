@@ -51,6 +51,22 @@ See the [workflow](/workflow/) for what each status starts.
 
 {{agent:relay}} never changes engineering statuses or the PM's story text.
 
-## Swimlanes and Delivery Plans
+## Swimlanes
 
-> To come: How the design board uses swimlanes, and how design items appear in Delivery Plans, will be added from the source doc.
+The proposed swimlanes on the design board:
+
+| Swimlane | What goes in it |
+|---|---|
+| Full route | Features that go through Explore and both gates. |
+| Fast track | Features {{agent:brief}} has fast-tracked: from Discover straight to Design. |
+| Blocked | Items waiting on something outside UX, such as missing feature fields, a missing product pack or access. The item keeps its status; the swimlane shows why it is not moving. |
+
+## Delivery Plans
+
+One Delivery Plan shows the three boards together by sprint:
+
+- product features, from the product board
+- design items, from the UX design board
+- engineering stories, from the engineering boards
+
+Each design item's target date is the end of the sprint before its engineering stories start. That makes the one-sprint offset visible, and shows straight away when design is at risk of holding up engineering.

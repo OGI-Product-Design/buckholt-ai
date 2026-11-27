@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,17 +64,24 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Working with product</h1>
     <p class="body-02 x-lead">Product and UX meet through a contract, not through each other's agents.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-contract">The contract</h2>
 </div>
+</div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Product contract: product and UX meet through a contract, not through each other’s agents">
   <svg class="x-diagram-svg" viewBox="0 0 1100 422" role="group" aria-labelledby="pc6-title pc6-desc" focusable="false">
   <title id="pc6-title">Product contract: product and UX meet through a contract, not through each other’s agents</title>
   <desc id="pc6-desc">Product management owns epics and features, outcomes and criteria, story-writing agents and quarterly priorities. UX owns design items and the board, the UX brief and measures, agents and templates, and UX sprint capacity. Two things cross: Ready for design, from product to UX; and UX outputs on stories, from UX to product.</desc>
@@ -101,15 +109,16 @@
   <path class="x-d-line" d="M 758 314 L 703 314" fill="none" marker-end="url(#pc6-head)"/>
   <path class="x-d-line" d="M 398 314 L 343 314" fill="none" marker-end="url(#pc6-head)"/>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Product contract: product and UX meet through a contract, not through each other’s agents</p>
+  </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
     <ul class="x-diagram-list">
     <li><strong>Product management owns</strong><ul><li>Epics and features</li><li>Outcomes, criteria</li><li>Story-writing agents</li><li>Quarterly priorities</li></ul></li>
     <li><strong>UX owns</strong><ul><li>Design items and board</li><li>UX brief and measures</li><li>Agents and templates</li><li>UX sprint capacity</li></ul></li>
     <li><strong>Ready for design</strong> crosses from product to UX: the feature fields are complete, and the status is the trigger.</li>
     <li><strong>UX outputs on stories</strong> cross from UX to product: UX criteria, Figma and prototype links, and the status field on the feature.</li>
   </ul>
-  </div>
+  </details>
 </figure>
 <div class="table-container">
   <div class="table-content" tabindex="0" role="region" aria-label="Product management owns, UX owns, table">
@@ -142,26 +151,35 @@
     </table>
   </div>
 </div>
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <p>Two things cross between them: <strong>Ready for design</strong>, from product to UX, and <strong>UX outputs on stories</strong>, from UX to product.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="what-we-consume">What we consume</h2>
 </div>
 <ul class="list">
     <li class="list-item">A feature set to <strong>Ready for design</strong>. The status is the trigger.</li>
-    <li class="list-item">The feature fields: problem, outcome, products, users, priority, quarter and constraints. <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item">The feature fields: problem, outcome, products, users, priority, quarter and constraints. <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> will not start until they are complete.</li>
-    <li class="list-item">The feature's stories, SharePoint specs and related Teams and Outlook threads, which <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item">The feature's stories, SharePoint specs and related Teams and Outlook threads, which <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> reads.</li>
     <li class="list-item">The PM's confirmation of scope on the UX brief.</li>
 </ul>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="what-we-publish">What we publish</h2>
 </div>
@@ -169,34 +187,42 @@
     <li class="list-item">The UX brief and draft success measures, linked on the design item.</li>
     <li class="list-item">The <strong>Design status</strong> field on the feature, which shows where design is.</li>
     <li class="list-item">At handoff, a linked UX section on each engineering story: UX acceptance criteria (Given, When, Then), Figma and prototype links, and the predecessor link.</li>
-    <li class="list-item">After release, a check by <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">After release, a check by <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> of the build against the design, and of LogRocket data against the success measures.</li>
 </ul>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="working-alongside-other-agents">Working alongside other agents</h2>
     <p>Product has its own agents, including story-writing agents. Ours never do their work or change theirs:</p>
 </div>
 <ul class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> never rewrites the PM's feature or stories.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> never edits the PM's story text and never changes engineering statuses.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> never hands over anything that has not been signed off.</li>
 </ul>
 <div class="text-block">
-    <p>If a feature is missing fields, <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <p>If a feature is missing fields, <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> comments the gaps on the feature and stops. It does not fill them in.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="where-product-joins-in">Where product joins in</h2>
 </div>
@@ -205,6 +231,8 @@
     <li class="list-item">The PM sits on both gates, with designers and an engineer.</li>
     <li class="list-item">PMs read the UX brief and the decision log.</li>
 </ul>
+</div>
+</div>
                 </div>
               </div>
             </div>

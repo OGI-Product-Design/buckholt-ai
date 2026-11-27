@@ -64,6 +64,12 @@ Prototypes are tested with people. {{agent:observe}} writes up the findings, and
 
 ## Cadence under scaled agile
 
-Design runs one sprint ahead of engineering: engineering stories are ready only when the design is Handed over.
+Design runs one sprint ahead of engineering: engineering stories are ready only when the design is Handed over. The proposed rhythm:
 
-> To come: The full cadence under scaled agile, including how design work lines up with planning increments, will be added from the source doc.
+| When | What happens |
+|---|---|
+| Before PI planning | Product sets the features expected in the next planning increment to Ready for design. {{agent:brief}} writes their UX briefs and chooses each route. |
+| PI planning | UX commits its sprint capacity against those features, using the routes to size them: fast-track items need less than full-route items. |
+| Each sprint | Design items move through their statuses. A feature planned for engineering in a sprint should reach Handed over by the end of the sprint before it. |
+| Each week | Gates are held at a fixed time, so a design item never waits more than a week for a decision. {{agent:archive}} runs its weekly check. |
+| After release | {{agent:relay}} checks the build against the design and the success measures. Findings feed the next planning increment. |
