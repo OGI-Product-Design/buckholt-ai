@@ -28,6 +28,18 @@
     });
   }
 
+  // Tooltips: Buckholt's documented initialisation (Tooltip, Code & specs
+  // example 3). Needs the Bootstrap bundle; without it the accessible name
+  // still comes from aria-label.
+  if (window.bootstrap && window.bootstrap.Tooltip) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'), function (el) {
+      new window.bootstrap.Tooltip(el, {
+        offset: [0, 4],
+        delay: { show: 800, hide: 100 }
+      });
+    });
+  }
+
   // Copy buttons
   var live = document.createElement('div');
   live.className = 'visually-hidden';

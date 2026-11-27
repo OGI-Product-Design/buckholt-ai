@@ -49,6 +49,7 @@ export function renderPage(page, ctx) {
 <link rel="stylesheet" href="${root}assets/buckholt/buckholt.css">
 <link rel="stylesheet" href="${root}assets/buckholt/buckholt-ai-fixes.css">
 <link rel="stylesheet" href="${root}assets/extensions.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="${root}assets/site.js" defer></script>
 </head>
 <body>
@@ -68,12 +69,11 @@ export function renderPage(page, ctx) {
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
         <div class="btn-icon">
             <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
             <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
