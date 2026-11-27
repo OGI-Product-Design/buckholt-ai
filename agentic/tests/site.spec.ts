@@ -3,8 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Every page in the build, found by walking dist/.
-const DIST = path.resolve(process.cwd(), 'dist');
+// Every page in the build, found by walking site/.
+const DIST = path.resolve(process.cwd(), 'site');
 function pages(dir = DIST, rel = '/'): string[] {
   const out: string[] = [];
   for (const name of fs.readdirSync(dir)) {

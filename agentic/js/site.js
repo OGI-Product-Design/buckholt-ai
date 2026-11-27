@@ -79,7 +79,7 @@
 
   // Search
   var results = document.querySelector('.x-search-results');
-  if (results && window.fetch) {
+  if (results && window.X_SEARCH_INDEX) {
     var status = results.querySelector('.x-search-status');
     var list = results.querySelector('.x-search-list');
     var input = document.getElementById('search-input');
@@ -123,17 +123,13 @@
           '<p class="body-01">' + escapeHtml(snippet(h.page.text, words)) + '</p></li>';
       }).join('');
     };
-    status.textContent = 'Loading the search index…';
-    fetch(results.getAttribute('data-index')).then(function (r) { return r.json(); }).then(function (index) {
-      run(index, query);
-      document.querySelector('.x-search-form').addEventListener('submit', function (event) {
-        event.preventDefault();
-        var q = input.value.trim();
-        history.replaceState(null, '', '?q=' + encodeURIComponent(q));
-        run(index, q);
-      });
-    }, function () {
-      status.textContent = 'The search index could not be loaded. Every page is linked from the navigation.';
+    var index = window.X_SEARCH_INDEX;
+    run(index, query);
+    document.querySelector('.x-search-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var q = input.value.trim();
+      try { history.replaceState(null, '', '?q=' + encodeURIComponent(q)); } catch (e) { /* not allowed on some file:// pages */ }
+      run(index, q);
     });
   }
 })();

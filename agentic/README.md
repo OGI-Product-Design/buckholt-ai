@@ -13,6 +13,14 @@ listed in [`extensions-register.md`](extensions-register.md).
 
 The brief is [`CLAUDE-CODE-BRIEF.md`](CLAUDE-CODE-BRIEF.md).
 
+## Open it
+
+Open [`index.html`](index.html) in this folder, straight from a checkout. It
+goes to the built site in `site/`, which is committed so it opens without
+building anything. Every link names its `index.html` file, so the site works
+from disk as well as from any web server. Rebuild (below) after changing
+content, and commit `site/` with your change.
+
 ## Run it
 
 Needs Node 18 or later. Building needs no packages; the tests need the two
@@ -20,13 +28,14 @@ dev dependencies (`npm install` once).
 
 ```sh
 cd agentic
-npm run build:site     # writes agentic/dist
+npm run build:site     # writes agentic/site
 npm run dev:site       # local preview with live reload, http://localhost:8080
 npm run check:site     # extension CSS uses tokens only; nothing outside agentic/ changed
 npm run test:site      # every page: axe, one H1, no sideways scroll; keyboard checks
 ```
 
-`dist/` is not committed (the repository's `.gitignore` ignores `dist/`).
+The build scripts are in `scripts/`, not `build/`: the repository's
+`.gitignore` ignores every folder called `build/`.
 
 The tests use Playwright 1.63.0. If your browser is elsewhere, set
 `CHROMIUM=/path/to/chrome`. They block the external font and icon kits, so the
@@ -46,7 +55,9 @@ back to Arial and shows no icons; every icon has a text label beside it.
 | `content/source/` | For the Markdown exports of the source doc's three tabs. |
 | `content/diagrams/` | Reference images for the seven diagrams. Layout and content only: never published. |
 | `assets/` | The Agentic UX logo. |
-| `build/` | The build, the Markdown renderer, page templates, components and diagrams. |
+| `scripts/` | The build, the Markdown renderer, page templates, components, diagrams, checks and the dev server. |
+| `site/` | The built site. Generated: do not edit by hand. |
+| `index.html` | Opens `site/index.html`. |
 | `css/extensions.css` | Styles for the extensions. Buckholt tokens only. |
 | `js/site.js` | Progressive enhancement: mobile menu, copy buttons, "On this page" highlighting and search. |
 | `tests/site.spec.ts` | Playwright and axe tests. |
@@ -71,7 +82,7 @@ back to Arial and shows no icons; every icon has a text label beside it.
 1. Add it to `data/agents.json` with its `stage`, `order` and the same fields as
    the others.
 2. If it should appear in the workflow diagram, add it to the right group in
-   `build/diagrams/workflow.mjs`.
+   `scripts/diagrams/workflow.mjs`.
 3. Add its rules file at the path in `rulesFile` (for example
    `/agents/[id].md`). Until that file exists, the agent page shows rules
    generated from `agents.json`.
@@ -106,7 +117,7 @@ The plan (brief, section 11) is a Cloudflare Pages project:
 | Project name | `ogi-ux-agents` |
 | Root directory | `agentic` |
 | Build command | `npm run build:site` |
-| Output directory | `dist` |
+| Output directory | `site` |
 
 Connect it to the GitHub repo so each merge to `main` deploys and each pull
 request gets a preview. Protect it with Cloudflare Access so only OGI accounts
