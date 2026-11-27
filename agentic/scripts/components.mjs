@@ -27,18 +27,18 @@ export const STAGE_FAMILY = {
 };
 
 // Buckholt Tag classes for a stage (Tag: Code & specs examples 1 and 8).
+// Every tag on this site is Buckholt's small Tag (`tag-sm`).
 export function stageTagClass(stageId) {
   const family = STAGE_FAMILY[stageId];
-  if (!family) return 'tag';
-  if (family === 'primary') return 'tag expressive-light';
-  return `tag expressive-light expressive-${family}`;
+  if (!family) return 'tag tag-sm';
+  if (family === 'primary') return 'tag tag-sm expressive-light';
+  return `tag tag-sm expressive-light expressive-${family}`;
 }
 
 // Agent tag. The inner span is the canonical Buckholt Tag, unchanged; the
 // link around it is the extension (Buckholt Tags are not links).
-export function agentTag(agent, ctx, { link = true, size = '' } = {}) {
-  const sizeClass = size === 'sm' ? ' tag-sm' : '';
-  const tag = `<span class="${stageTagClass(agent.stage)}${sizeClass}">
+export function agentTag(agent, ctx, { link = true } = {}) {
+  const tag = `<span class="${stageTagClass(agent.stage)}">
     <span class="tag-label">${esc(agent.name)}</span>
 </span>`;
   if (!link) return tag;
@@ -81,7 +81,7 @@ export function codeBlock(code, { label = '', language = '' } = {}) {
 // source doc. Buckholt Tag, status info (Tag: Code & specs example 4).
 export function pendingNote(text) {
   return `<div class="text-block">
-    <p><span class="tag tag-status tag-status-info">
+    <p><span class="tag tag-sm tag-status tag-status-info">
         <span class="tag-label">Content to follow</span>
     </span></p>
     <p>${text}</p>

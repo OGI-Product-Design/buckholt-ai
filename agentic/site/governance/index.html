@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,15 +64,20 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Governance and rollout</h1>
     <p class="body-02 x-lead">People own every decision. This page says who owns what, how work is reviewed and how we will know the workflow is working.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="ownership">Ownership</h2>
+</div>
 </div>
 <div class="table-container">
   <div class="table-content" tabindex="0" role="region" aria-label="What, Owner, table">
@@ -116,42 +122,49 @@
     </table>
   </div>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="reviews">Reviews</h2>
     <p>Every agent stops at a human check. The main ones:</p>
 </div>
 <ul class="list">
-    <li class="list-item">Designers validate <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <li class="list-item">Designers validate <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
-</span></a>'s insights and approve <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+</span></a>'s insights and approve <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a>'s flows and worklist.</li>
-    <li class="list-item">Designers review every <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item">Designers review every <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
 </span></a> batch.</li>
-    <li class="list-item">Designers decide which of <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item">Designers decide which of <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a>'s issues are mistakes and which are deliberate.</li>
-    <li class="list-item">Designers check <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">Designers check <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a>'s prototypes for fidelity and behaviour.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a> blocks testing when it finds a critical accessibility issue.</li>
-    <li class="list-item">Designers review before <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">Designers review before <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> hands over; engineering reviews feasibility.</li>
 </ul>
 <div class="text-block">
     <p>Each agent's page lists its human gate.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="keeping-the-system-healthy">Keeping the system healthy</h2>
-    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> runs a weekly check and posts a health report. It flags:</p>
 </div>
@@ -162,77 +175,183 @@
 </ul>
 <div class="text-block">
     <p>It also tracks daily Figma MCP calls and warns the team at 80% of the limit.</p>
-    <p>After each gate, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <p>After each gate, <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> adds the decision to the decision log.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="measures">Measures</h2>
     <p>Every feature has success measures.</p>
 </div>
 <ol class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> drafts them in the UX brief.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
 </span></a> pulls LogRocket baselines for them: completion, drop-off, errors and rage clicks on the flows in scope.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
 </span></a> compares test results with the baselines.</li>
-    <li class="list-item">After release, <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">After release, <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> compares LogRocket data with the success measures and posts the report.</li>
 </ol>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                Measures for the workflow itself, such as time from Ready for design to Handed over, will be added from the source doc.
-            </div>
-        </div>
-    </div>
+<div class="text-block">
+    <p>For the workflow itself, the proposed measures are:</p>
+</div>
+</div>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Measure, What it tells us, Source, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Measure</div></th>
+          <th scope="col"><div class="table-header-label">What it tells us</div></th>
+          <th scope="col"><div class="table-header-label">Source</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="3"></td></tr>
+        <tr>
+          <td>Time from Ready for design to Handed over</td>
+          <td>Whether design keeps one sprint ahead</td>
+          <td>Azure DevOps</td>
+        </tr>
+        <tr>
+          <td>Time in each status</td>
+          <td>Where work waits</td>
+          <td>Azure DevOps</td>
+        </tr>
+        <tr>
+          <td>Gates passed first time</td>
+          <td>Whether evidence is ready when the gate meets</td>
+          <td>Decision log</td>
+        </tr>
+        <tr>
+          <td>Findings sent back by the test loop</td>
+          <td>How much rework testing finds</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a> findings</td>
+        </tr>
+        <tr>
+          <td>Critical issues found by <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a></td>
+          <td>Quality before people see a prototype</td>
+          <td>Audit reports</td>
+        </tr>
+        <tr>
+          <td>Extensions reused against created</td>
+          <td>Whether the register is working</td>
+          <td>Extensions register</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="rollout-phases">Rollout phases</h2>
+    <p>The proposed rollout adds the agents in workflow order, one phase at a time, with a pilot feature first.</p>
 </div>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                The rollout phases will be added from the source doc.
-            </div>
-        </div>
-    </div>
+</div>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Phase, What is set up, Ready to move on when, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Phase</div></th>
+          <th scope="col"><div class="table-header-label">What is set up</div></th>
+          <th scope="col"><div class="table-header-label">Ready to move on when</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="3"></td></tr>
+        <tr>
+          <td>1. Foundations</td>
+          <td>Repo and locks, product packs, the design board, the SharePoint site. <a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a> starts.</td>
+          <td>A pack exists for the pilot product and the board runs on stage statuses.</td>
+        </tr>
+        <tr>
+          <td>2. Discover</td>
+          <td>Connectors for Copilot, Azure DevOps and Lucid. <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Map</span>
+</span></a>.</td>
+          <td>One pilot feature reaches Discovery approved.</td>
+        </tr>
+        <tr>
+          <td>3. Explore and Design</td>
+          <td>The sandbox, Figma MCP and Lucid MCP. <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a>.</td>
+          <td>The pilot passes the design sign-off gate.</td>
+        </tr>
+        <tr>
+          <td>4. Prototype and handoff</td>
+          <td><code>/tests</code>, LogRocket MCP and the Azure DevOps MCP. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a>.</td>
+          <td>The pilot is Handed over and the release check is posted.</td>
+        </tr>
+        <tr>
+          <td>5. All features</td>
+          <td>Every new feature goes through the workflow.</td>
+          <td>Reviewed after one planning increment.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="open-questions">Open questions</h2>
-    <p>These came up while building this site:</p>
 </div>
 <ul class="list">
+    <li class="list-item">Which product and feature should be the pilot?</li>
+    <li class="list-item">How many Figma Full seats are needed for <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a>'s write access?</li>
+    <li class="list-item">Where should the extensions register live: one in <code>/context</code>, or one per product?</li>
+    <li class="list-item">Who approves changes to <code>/.cursor/rules</code>?</li>
+    <li class="list-item">Do fast-tracked changes need new anchor screens, or do the current screens act as anchors?</li>
     <li class="list-item">The <code>/agents</code> rules files do not exist yet. Until they do, each agent page shows rules generated from <code>agents.json</code>.</li>
-    <li class="list-item">Buckholt has four expressive colour families for six stages, so Handoff shares Prototype's colour. Is that acceptable?</li>
-    <li class="list-item">Two of Buckholt's light expressive Tags are below WCAG AA contrast. This site darkens the label as an extension; the finding should go to the Buckholt owners.</li>
-    <li class="list-item">Where should the extensions register live: <code>/context</code>, as the brief says, or with each product?</li>
 </ul>
+</div>
+</div>
                 </div>
               </div>
             </div>

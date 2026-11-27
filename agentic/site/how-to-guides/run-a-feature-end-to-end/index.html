@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,6 +64,7 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -71,109 +73,137 @@
         <li class="breadcrumb-item active" aria-current="page">Run a feature end to end</li>
     </ol>
 </nav>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <span class="eyebrow">How-to guide 1 of 5</span>
     <h1 class="display-02">Run a feature end to end</h1>
     <p class="body-02 x-lead">From Ready for design to Handed over, on the full route.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="before-you-start">Before you start</h2>
     <p>The feature needs its fields complete: problem, outcome, products, users, priority, quarter and constraints. Each product it touches needs a product pack.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="discover">Discover</h2>
 </div>
 <ol class="list">
-    <li class="list-item">Product sets the feature to Ready for design. <a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag expressive-light">
+    <li class="list-item">Product sets the feature to Ready for design. <a class="x-agent-tag" data-buckholt="false" href="../../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> checks the fields, finds the product packs, chooses the route and writes the UX brief.</li>
     <li class="list-item">The PM confirms scope. A designer moves the status to Discovery.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/insight/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/insight/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Insight</span>
 </span></a> synthesises research and pulls LogRocket baselines. Designers validate the insights.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/map/index.html"><span class="tag expressive-light">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/map/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Map</span>
 </span></a> maps the journeys and writes the screen inventory and design worklist. Designers approve, then move the status to Discovery approved.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> writes the discovery summary into the repo.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="explore">Explore</h2>
 </div>
 <ol class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Range</span>
 </span></a> builds 5 to 10 greybox directions in the sandbox and posts an index.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Critic</span>
 </span></a> stress-tests each direction and recommends up to three.</li>
     <li class="list-item"><strong>Shortlist gate.</strong> Designers, the PM and an engineer agree direction, scope and early feasibility. Status: Shortlist agreed.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="design">Design</h2>
 </div>
 <ol class="list">
     <li class="list-item">Designers make the anchor screens in Figma. The status moves to Anchors ready.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
 </span></a> builds out the remaining screens in batches of up to five. Designers review every batch.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
 </span></a> checks each batch for consistency. Designers decide what to fix.</li>
     <li class="list-item"><strong>Design sign-off gate.</strong> Designers, the PM and an engineer agree the design meets the success measures and is buildable. Status: Design signed off.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="prototype-and-test">Prototype and test</h2>
 </div>
 <ol class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a> builds the prototype in the product's styling mode and posts the preview.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a> runs axe, keyboard, contrast and Buckholt checks. A critical accessibility issue blocks testing.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
-</span></a> drafts the test plan. Designers run the sessions; <a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> drafts the test plan. Designers run the sessions; <a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Observe</span>
 </span></a> tags the recordings and writes findings.</li>
-    <li class="list-item">Findings go back to <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <li class="list-item">Findings go back to <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
-</span></a> or <a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> or <a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a> until designers mark testing complete.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="hand-over">Hand over</h2>
 </div>
 <ol class="list">
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> writes the specs and UX acceptance criteria and adds them to each engineering story.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> sets Design status on the feature to Handed over.</li>
-    <li class="list-item">After release, <a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">After release, <a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> checks the build against the design and the success measures, and posts the report.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <nav class="x-pager" data-buckholt="false" aria-label="Previous and next how-to guide">
   <span></span>
   <a class="link-standalone" href="../../how-to-guides/fast-track-a-change/index.html" rel="next">
@@ -183,6 +213,7 @@
     <span><span class="x-pager-label">Next how-to guide</span> Fast-track a change</span>
 </a>
 </nav>
+</div>
                 </div>
               </div>
             </div>

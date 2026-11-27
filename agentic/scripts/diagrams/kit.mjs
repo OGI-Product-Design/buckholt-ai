@@ -60,8 +60,7 @@ export function arrow(id, points, { both = false, dashed = false } = {}) {
 // The SVG with its title, description and arrowhead marker, followed by the
 // list version shown on narrow screens.
 export function figure({ id, width, height, title, desc, parts, fallback }) {
-  return `<figure class="x-diagram" data-buckholt="false">
-  <svg class="x-diagram-svg" viewBox="0 0 ${width} ${height}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
+  const svg = `<svg class="x-diagram-svg" viewBox="0 0 ${width} ${height}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
   <title id="${id}-title">${esc(title)}</title>
   <desc id="${id}-desc">${esc(desc)}</desc>
   <defs>
@@ -70,10 +69,22 @@ export function figure({ id, width, height, title, desc, parts, fallback }) {
     </marker>
   </defs>
   ${parts.join('\n  ')}
-</svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">${esc(title)}</p>
-    ${fallback}
+</svg>`;
+  return diagramFigure({ title, svg, list: fallback });
+}
+
+// The figure around every diagram. On narrow screens the diagram keeps a
+// readable size and scrolls sideways (the scroll area takes keyboard focus),
+// and the same content is offered as a list behind a disclosure.
+export function diagramFigure({ title, svg, list }) {
+  return `<figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">
+  ${svg}
   </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
+    ${list}
+  </details>
 </figure>`;
 }

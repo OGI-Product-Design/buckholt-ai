@@ -68,11 +68,12 @@ export function renderPage(page, ctx) {
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -101,7 +102,7 @@ ${page.body}
 // panel HTML strings.
 export function frame(panes) {
   const paneHtml = panes.map(panels => `        <div class="page-pane">
-${panels.map(p => `          <div class="page-panel">\n${p}\n          </div>`).join('\n')}
+${panels.map(p => `          <div class="page-panel">\n<div class="content-group">\n${p}\n</div>\n          </div>`).join('\n')}
         </div>`).join('\n');
   return `      <div class="page-frame">
         <div class="container">

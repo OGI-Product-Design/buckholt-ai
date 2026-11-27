@@ -16,8 +16,6 @@ lead: Set up the foundations first, then connectors and access, then the agents.
 
 {{block:setup-guide-list}}
 
-> To come: The nine set-up guides will be added from the source doc. Each one will have its own page, with numbered steps, code to copy, links to the documentation and videos, and your progress through the nine.
-
 ## Adding a guide
 
 Each guide is a Markdown file in `agentic/content/guides/setup-guides/`, named with its position, for example `03-figma-mcp.md`. The site numbers them, shows progress and links each one to the next.

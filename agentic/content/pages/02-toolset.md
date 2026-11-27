@@ -10,20 +10,15 @@ lead: Discovery happens in Microsoft 365. Exploring, designing and prototyping h
 
 ## Microsoft 365 side
 
-- **Copilot** runs {{agent:brief}}, {{agent:insight}} and {{agent:map}}.
-- **SharePoint** holds the discovery master copy and a copy of each product pack.
-- **Teams** holds recordings and transcripts.
-- **Azure DevOps** holds the design board, the stage status and the links between work items.
-- **Lucid** holds journey and process maps. It is also reached from Cursor.
+Discovery happens here: {{agent:brief}}, {{agent:insight}} and {{agent:map}} run in Copilot.
+
+{{block:tools-m365}}
 
 ## Cursor side
 
-- **Cursor** runs the other nine agents.
-- **Figma MCP**: {{agent:extend}} writes; {{agent:align}}, {{agent:build}} and {{agent:relay}} only read.
-- **LogRocket MCP** is used by the {{agent:insight}} Cursor step, {{agent:observe}} and {{agent:relay}}.
-- **The Buckholt prototyping repo** holds Buckholt core, extensions, the sandbox and the context {{agent:archive}} maintains.
-- **Playwright and axe** run the automated checks for {{agent:audit}}.
-- **Lucid MCP** is used by {{agent:range}} for rough flows.
+Exploring, designing and prototyping happen here: the other nine agents run in Cursor.
+
+{{block:tools-cursor}}
 
 ## The bridge
 

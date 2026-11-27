@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,17 +64,24 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     
     <h1 class="display-02">Azure DevOps</h1>
     <p class="body-02 x-lead">Design has its own board in Azure DevOps. Each design item links into the product feature above it and the engineering stories after it.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="how-the-work-items-link">How the work items link</h2>
 </div>
+</div>
 <figure class="x-diagram" data-buckholt="false">
+  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Azure DevOps: design has its own board, linked into the product feature">
   <svg class="x-diagram-svg" viewBox="0 0 1100 388" role="group" aria-labelledby="ado5-title ado5-desc" focusable="false">
   <title id="ado5-title">Azure DevOps: design has its own board, linked into the product feature</title>
   <desc id="ado5-desc">Portfolio epic, parent of feature, parent of design item, predecessor of engineering stories. The design item's status rolls up to the feature, and the design item links to the SharePoint brief, the Figma file and the prototype.</desc>
@@ -105,24 +113,32 @@
   <path class="x-d-line" d="M 948 294 L 948 317" fill="none" marker-end="url(#ado5-head)"/>
   <g><rect class="x-d-box x-d-tone-plain" x="833" y="320" width="230" height="64" rx="8"/><text class="x-d-title" x="948" y="358" text-anchor="middle">Prototype link</text></g>
 </svg>
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">Azure DevOps: design has its own board, linked into the product feature</p>
+  </div>
+  <details class="x-diagram-fallback">
+    <summary>Show the diagram as a list</summary>
     <ol class="x-diagram-list">
     <li><strong>Portfolio epic</strong> on the product board, owned by product. It is the parent of the feature.</li>
     <li><strong>Feature</strong> on the product board, planned per quarter. It triggers design and is the parent of the design item.</li>
     <li><strong>Design item</strong> on the UX design board: UX owns it and its columns, one per feature. Its design status rolls up to the feature. It links to the SharePoint brief, the Figma file and the prototype, and is the predecessor of the engineering stories.</li>
     <li><strong>Engineering stories</strong> on the engineering boards, ready only when design is Handed over.</li>
   </ol>
-  </div>
+  </details>
 </figure>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-design-board">The design board</h2>
     <p>The UX design board belongs to the UX team. Its stage statuses trigger the agents, so the board is how the workflow runs, not just a record of it.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="the-design-item">The design item</h2>
     <p>There is one design item per feature. UX owns it and its columns.</p>
@@ -131,21 +147,25 @@
     <li class="list-item">Its parent is the product feature.</li>
     <li class="list-item">It is the predecessor of the engineering stories.</li>
     <li class="list-item">It links to the SharePoint UX brief, the Figma file and the prototype.</li>
-    <li class="list-item">Agents post their outputs on it: the <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <li class="list-item">Agents post their outputs on it: the <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Range</span>
-</span></a> index, the <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+</span></a> index, the <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
     <span class="tag-label">Critic</span>
-</span></a> review, <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+</span></a> review, <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Align</span>
-</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Audit</span>
 </span></a> reports, and the prototype preview.</li>
 </ul>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="fields">Fields</h2>
-    <p>Before design starts, <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <p>Before design starts, <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
     <span class="tag-label">Brief</span>
 </span></a> checks the feature has these fields complete. If any are missing, it comments the gaps on the feature and stops.</p>
 </div>
@@ -159,15 +179,20 @@
     <li class="list-item">Constraints</li>
 </ul>
 <div class="text-block">
-    <p>The feature also carries a <strong>Design status</strong> field. The design item's status rolls up to it, and <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <p>The feature also carries a <strong>Design status</strong> field. The design item's status rolls up to it, and <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> sets it to Handed over.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="columns">Columns</h2>
     <p>The design item moves through the stage statuses:</p>
+</div>
 </div>
 <ol class="list">
     <li class="list-item">Intake</li>
@@ -181,45 +206,89 @@
     <li class="list-item">Prototyping and testing</li>
     <li class="list-item">Handed over</li>
 </ol>
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <p>See the <a href="../workflow/index.html">workflow</a> for what each status starts.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="links-to-product-and-engineering">Links to product and engineering</h2>
 </div>
 <ul class="list">
     <li class="list-item">The portfolio epic is the parent of the feature. Both belong to product.</li>
     <li class="list-item">The feature is planned per quarter and triggers design when it is set to Ready for design.</li>
-    <li class="list-item">Engineering stories are ready only when design is Handed over. <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <li class="list-item">Engineering stories are ready only when design is Handed over. <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> adds a linked UX section to each story, with UX acceptance criteria, Figma and prototype links, and sets the predecessor link.</li>
 </ul>
 <div class="text-block">
-    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Relay</span>
 </span></a> never changes engineering statuses or the PM's story text.</p>
 </div>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
-    <h2 class="headline-01" id="swimlanes-and-delivery-plans">Swimlanes and Delivery Plans</h2>
+    <h2 class="headline-01" id="swimlanes">Swimlanes</h2>
+    <p>The proposed swimlanes on the design board:</p>
 </div>
-<div class="alert alert-info" role="note">
-    <div class="alert-content">
-        <span class="alert-icon">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        </span>
-        <div class="alert-body">
-            <div class="alert-message">
-                <p class="x-alert-title">To come</p>
-            </div>
-            <div class="alert-note">
-                How the design board uses swimlanes, and how design items appear in Delivery Plans, will be added from the source doc.
-            </div>
-        </div>
-    </div>
+</div>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Swimlane, What goes in it, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Swimlane</div></th>
+          <th scope="col"><div class="table-header-label">What goes in it</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="2"></td></tr>
+        <tr>
+          <td>Full route</td>
+          <td>Features that go through Explore and both gates.</td>
+        </tr>
+        <tr>
+          <td>Fast track</td>
+          <td>Features <a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a> has fast-tracked: from Discover straight to Design.</td>
+        </tr>
+        <tr>
+          <td>Blocked</td>
+          <td>Items waiting on something outside UX, such as missing feature fields, a missing product pack or access. The item keeps its status; the swimlane shows why it is not moving.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="delivery-plans">Delivery Plans</h2>
+    <p>One Delivery Plan shows the three boards together by sprint:</p>
+</div>
+<ul class="list">
+    <li class="list-item">product features, from the product board</li>
+    <li class="list-item">design items, from the UX design board</li>
+    <li class="list-item">engineering stories, from the engineering boards</li>
+</ul>
+<div class="text-block">
+    <p>Each design item's target date is the end of the sprint before its engineering stories start. That makes the one-sprint offset visible, and shows straight away when design is at risk of holding up engineering.</p>
+</div>
+</div>
 </div>
                 </div>
               </div>
@@ -234,7 +303,8 @@
     <li><a href="#fields">Fields</a></li>
     <li><a href="#columns">Columns</a></li>
     <li><a href="#links-to-product-and-engineering">Links to product and engineering</a></li>
-    <li><a href="#swimlanes-and-delivery-plans">Swimlanes and Delivery Plans</a></li>
+    <li><a href="#swimlanes">Swimlanes</a></li>
+    <li><a href="#delivery-plans">Delivery Plans</a></li>
   </ul>
 </nav>
             </div>

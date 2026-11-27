@@ -101,7 +101,7 @@ export function repoZonesDiagram(ctx) {
   const id = uid('rz');
   const cols = [
     { title: 'Locked: no agent writes', tone: 'locked', items: [['/buckholt', 'Buckholt core', 'Owner approval to change'], ['/legacy/[product]', 'Captured legacy CSS', 'Owner approval to change']] },
-    { title: 'Agents create here', tone: 'tertiary', items: [['/extensions/[product]', 'Build, Extend; tokens only', 'Flagged and registered'], ['/sandbox/[product]', 'Range; greybox only', 'Never promoted'], ['/prototypes/[product]', 'Build; by styling mode', 'Checked by Audit, Align']] },
+    { title: 'Agents create here', tone: 'warning', items: [['/extensions/[product]', 'Build, Extend; tokens only', 'Flagged and registered'], ['/sandbox/[product]', 'Range; greybox only', 'Never promoted'], ['/prototypes/[product]', 'Build; by styling mode', 'Checked by Audit, Align']] },
     { title: 'Context and control', tone: 'primary', items: [['/context', 'Archive: packs, logs,', 'register, migration map'], ['/agents', 'One file per agent', 'Changed by pull request'], ['/.cursor/rules', 'Rules every agent follows', 'Changed by pull request'], ['/tests', 'Playwright and axe', 'Run by Audit']] }
   ];
   const cw = (W - 2 * 32) / 3, bh = 104, bg = 16, top = 56;

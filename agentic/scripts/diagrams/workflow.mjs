@@ -9,6 +9,7 @@
 // highlight: an agent id to mark, for the agent pages ("Where it sits").
 
 import { esc, agentTag } from '../components.mjs';
+import { diagramFigure } from './kit.mjs';
 
 const W = 1100;          // viewBox width
 const LOOP = 56;         // room either side for the fast track and test loop
@@ -152,7 +153,7 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
     const mark = id === highlight ? ' <span class="x-diagram-current">(this agent)</span>' : '';
     return `<li>${agentTag(A[id], ctx)}${mark}</li>`;
   }).join('');
-  const gateItem = g => `<li class="x-diagram-list-gate"><span class="tag tag-status tag-status-warning">
+  const gateItem = g => `<li class="x-diagram-list-gate"><span class="tag tag-sm tag-status tag-status-warning">
         <span class="tag-label">Gate</span>
     </span> <strong>${esc(g.name)}</strong> (${esc(peopleText(g))}). Decides: ${esc(g.decides.charAt(0).toLowerCase() + g.decides.slice(1))}.</li>`;
   const groupItem = g => `<li><strong>${esc(g.label)}</strong> (${esc(g.tools)})<ul class="x-diagram-list-tags">${tagsFor(g.items.map(i => i[0]))}</ul></li>`;
@@ -173,11 +174,5 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
     <li><strong>Test loop</strong>: Prototype can go back to Design.</li>
   </ul>`;
 
-  return `<figure class="x-diagram" data-buckholt="false">
-  ${svg}
-  <div class="x-diagram-fallback">
-    <p class="x-diagram-fallback-title">${esc(title)}</p>
-    ${list}
-  </div>
-</figure>`;
+  return diagramFigure({ title, svg, list });
 }

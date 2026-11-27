@@ -29,11 +29,186 @@ lead: Seven artifacts carry the work between agents. Each has one writer, one ho
 
 ## Templates
 
-The agents work from shared templates. These are named in the agents' rules:
+The agents work from shared templates. Each one below follows what the agent's rules say it must contain. Copy a template to use it.
 
-- **UX brief template**, used by {{agent:brief}}
-- **Extensions register template**, used by {{agent:extend}} and {{agent:build}}
-- **Prototype build spec**, read by {{agent:build}}
-- **Greybox stylesheet** (`greybox.css`), the only styling {{agent:range}} may use
+### UX brief
 
-> To come: The template contents, each with a copy button, will be added from the source doc.
+Written by {{agent:brief}}, saved to SharePoint and linked on the design item.
+
+```markdown "UX brief template"
+# UX brief: [feature name]
+
+Design item: [link]   Feature: [link]   Date: [date]
+
+## Problem
+[The user problem, in one or two sentences.]
+
+## Outcome
+[What changes for users and the business when this is done.]
+
+## Products and styling mode
+- [Product]: [Buckholt, Hybrid or Legacy]
+
+## Users
+[Who this is for.]
+
+## Priority and quarter
+[Priority] · [Quarter]
+
+## Constraints
+- [Constraint]
+
+## Route
+[Full or Fast track]
+Why: [No new flow? No new research needed? Only existing screens change?]
+
+## Success measures
+| Measure | Baseline (from Insight) | Target |
+|---|---|---|
+| Completion | [to request] | [target] |
+| Drop-off | [to request] | [target] |
+| Errors | [to request] | [target] |
+
+## Scope confirmed by the PM
+[Name, date]
+```
+
+### Discovery summary
+
+Written by {{agent:insight}}, saved to SharePoint, then copied into the repo by {{agent:archive}}.
+
+```markdown "Discovery summary template"
+# Discovery summary: [feature name]
+
+## Sources
+- [SRC-01] [Source, link, date]
+
+## Themes
+### [Theme]
+Evidence: [SRC-01, SRC-02]   Products: [product]
+[What we found.]
+
+## Pain points, ranked
+| Pain point | How often | How badly | Evidence |
+|---|---|---|---|
+
+## Baselines (LogRocket)
+| Flow | Completion | Drop-off | Errors | Rage clicks |
+|---|---|---|---|---|
+
+## Evidence gaps
+- [Gap]: [research that would fill it]
+
+All personal data removed: [yes]
+```
+
+### Critique
+
+Written by {{agent:critic}} as `critique.md` in the sandbox feature folder.
+
+```markdown "Critique template"
+# Critique: [feature name]
+
+## Direction [n]: [name]
+- User needs served: [themes]
+- User needs missed: [themes]
+- Edge cases: empty [ ] error [ ] loading [ ] permissions [ ] heavy data [ ] long text [ ]
+- Consistency with product patterns and styling mode: [notes]
+- Build effort: [low, medium or high], because [reason]
+- Risks: [risks]
+
+## Recommendation (for the shortlist gate to decide)
+1. [Direction], because [reason]
+```
+
+### Decision log entry
+
+Added to `decision-log.md` by {{agent:archive}} after each gate.
+
+```markdown "Decision log entry template"
+## [Date] · [Feature] · [Shortlist gate or Design sign-off gate]
+People: [designers, PM, engineer]
+Decision: [what was decided]
+Evidence: [links]
+Status set to: [Shortlist agreed or Design signed off]
+```
+
+### Extensions register entry
+
+Added by {{agent:extend}} (Figma half) and {{agent:build}} (code half).
+
+```markdown "Extensions register entry template"
+| ID | Component | Product | Why Buckholt does not cover it | Figma (x/ name, link) | Code (x- class, path) | Tokens used | Status |
+|---|---|---|---|---|---|---|---|
+| X-[n] | [name] | [product] | [reason] | [x/name] | [x-name, /extensions/product/] | [tokens] | [draft, reviewed, approved] |
+```
+
+### Align and Audit reports
+
+Posted on the design item, issues listed by severity.
+
+```markdown "Report template"
+# [Align or Audit] report: [feature name], [date]
+
+| Severity | Issue | Where (frame or page link) | Rule |
+|---|---|---|---|
+| Critical | [issue] | [link] | [rule] |
+| Serious | [issue] | [link] | [rule] |
+| Minor | [issue] | [link] | [rule] |
+```
+
+### Test findings
+
+Written by {{agent:observe}} after the sessions.
+
+```markdown "Test findings template"
+# Test findings: [feature name]
+
+| Task | Success | Compared with baseline |
+|---|---|---|
+
+## Findings
+| Issue | Participants | Severity | Suggested change | Goes back to |
+|---|---|---|---|---|
+| [issue] | [n of n] | [severity] | [change] | [Extend or Build] |
+```
+
+### UX section on a story
+
+Added to each engineering story by {{agent:relay}}.
+
+```markdown "Story UX section template"
+## UX
+Figma: [link]   Prototype: [link]   Spec: [link]
+
+### UX acceptance criteria
+- Given [context], when [action], then [result].
+
+### States
+Empty · Loading · Error · Success · Permissions
+
+### Components
+- [Element]: [Storybook component or flagged extension]
+```
+
+### Agent definition
+
+One file per agent in `/agents`, written by Laurence and changed by pull request. Each agent page on this site shows its file in this shape.
+
+```markdown "Agent definition template"
+# [Agent name]
+
+Stage: [stage]
+Tool: [tool]
+Job: [one sentence]
+
+## Triggered by
+## Reads
+## Steps
+## Produces
+## Human gate
+## Never
+## Done when
+```
+
+The sandbox uses one more shared file: `greybox.css`, the only styling {{agent:range}} may use, so explorations stay deliberately rough.

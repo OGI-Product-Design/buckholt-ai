@@ -7,7 +7,7 @@ import { esc, agentTag, codeBlock, stageTagClass, tagSet, pendingNote } from './
 import { frame, pageHeading, NAV } from './layout.mjs';
 import { workflowDiagram } from './diagrams/workflow.mjs';
 import { toolsetDiagram, dependenciesDiagram, repoZonesDiagram, artifactFlowDiagram, adoDiagram, contractDiagram } from './diagrams/others.mjs';
-import { parseFrontMatter, renderMarkdown } from './markdown.mjs';
+import { parseFrontMatter, renderMarkdown, inline } from './markdown.mjs';
 
 export const REPO_URL = 'https://github.com/OGI-Product-Design/buckholt-ai';
 
@@ -93,15 +93,59 @@ function onThisPage(toc) {
 </nav>`;
 }
 
+// Tool cards for the Toolset page (x-tool). Logos are single-colour brand
+// marks from Simple Icons (data/tool-logos.json), drawn in a Buckholt text
+// colour. Tools with no mark in that set show their name only.
+const TOOLS = {
+  m365: [
+    [null, 'Copilot', 'Runs {{agent:brief}}, {{agent:insight}} and {{agent:map}}.'],
+    ['microsoftsharepoint', 'SharePoint', 'Holds the discovery master copy and a copy of each product pack.'],
+    ['microsoftteams', 'Teams', 'Holds recordings and transcripts.'],
+    ['azuredevops', 'Azure DevOps', 'Holds the design board, the stage status and the links between work items.'],
+    ['lucid', 'Lucid', 'Holds journey and process maps. Also reached from Cursor.']
+  ],
+  cursor: [
+    ['cursor', 'Cursor', 'Runs the other nine agents.'],
+    ['figma', 'Figma MCP', '{{agent:extend}} writes; {{agent:align}}, {{agent:build}} and {{agent:relay}} only read.'],
+    [null, 'LogRocket MCP', 'Used by the {{agent:insight}} Cursor step, {{agent:observe}} and {{agent:relay}}.'],
+    ['github', 'Buckholt prototyping repo', 'Holds Buckholt core, extensions, the sandbox and the context {{agent:archive}} maintains.'],
+    ['playwright', 'Playwright and axe', 'Run the automated checks for {{agent:audit}}.'],
+    ['lucid', 'Lucid MCP', 'Used by {{agent:range}} for rough flows.']
+  ]
+};
+
+function toolCards(ctx, group) {
+  const logos = JSON.parse(fs.readFileSync(path.join(ctx.site, 'data/tool-logos.json'), 'utf8'));
+  return `<div class="row x-row-gap" data-buckholt="false">
+${TOOLS[group].map(([logo, name, text]) => {
+    const mark = logo
+      ? `<svg class="x-tool-logo" viewBox="${logos.viewBox}" aria-hidden="true" focusable="false">${logos.logos[logo].body}</svg>`
+      : '';
+    return `  <div class="col-12 col-md-6 col-xxl-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="text-block">
+                <h3 class="title-02 x-tool" data-buckholt="false">${mark}<span>${esc(name)}</span></h3>
+                <p>${inline(text, ctx)}</p>
+            </div>
+        </div>
+    </div>
+  </div>`;
+  }).join('\n')}
+</div>`;
+}
+
 // Generated blocks that Markdown content can place with {{block:name}}.
 const BLOCKS = {
   'agent-grid': ctx => agentGrid(ctx),
+  'tools-m365': ctx => toolCards(ctx, 'm365'),
+  'tools-cursor': ctx => toolCards(ctx, 'cursor'),
   gates: ctx => `<div class="row x-row-gap" data-buckholt="false">
 ${ctx.data.gates.map(g => `  <div class="col-12 col-lg-6">
     <div class="card h-100">
         <div class="card-body">
             <div class="text-block">
-                <p><span class="tag tag-status tag-status-warning">
+                <p><span class="tag tag-sm tag-status tag-status-warning">
                     <span class="tag-label">Gate</span>
                 </span></p>
                 <h3 class="title-03">${esc(g.name)}</h3>
@@ -154,7 +198,7 @@ function withToc(panels, toc) {
           <div class="row">
             <div class="col-12 col-xl-9">
               <div class="page-pane">
-${panels.map(p => `                <div class="page-panel">\n${p}\n                </div>`).join('\n')}
+${panels.map(p => `                <div class="page-panel">\n<div class="content-group">\n${p}\n</div>\n                </div>`).join('\n')}
               </div>
             </div>
             <div class="col-xl-3 d-none d-xl-block">

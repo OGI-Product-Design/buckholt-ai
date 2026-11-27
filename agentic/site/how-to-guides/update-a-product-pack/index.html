@@ -31,11 +31,12 @@
         </span>
         Search
     </a>
-    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
         <div class="btn-icon">
-            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </div>
-        <span class="button-label">Menu</span>
+        <span class="button-label visually-hidden">Menu</span>
     </button>
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
@@ -63,6 +64,7 @@
             <div class="col-12 col-xl-9">
               <div class="page-pane">
                 <div class="page-panel">
+<div class="content-group">
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -71,15 +73,20 @@
         <li class="breadcrumb-item active" aria-current="page">Update a product pack</li>
     </ol>
 </nav>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
 <div class="text-block">
     <span class="eyebrow">How-to guide 5 of 5</span>
     <h1 class="display-02">Update a product pack</h1>
     <p class="body-02 x-lead">Change a product pack in the repo, get it approved, and Archive updates the SharePoint copy.</p>
 </div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="steps">Steps</h2>
 </div>
@@ -87,12 +94,16 @@
     <li class="list-item">Change the pack in <code>/context</code> on a branch and open a pull request.</li>
     <li class="list-item">Laurence or Jon reviews and approves it. Every product pack change needs that approval.</li>
     <li class="list-item">Merge the pull request.</li>
-    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag">
+    <li class="list-item"><a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
 </span></a> updates the pack's SharePoint copy so the two match.</li>
 </ol>
+</div>
+</div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h2 class="headline-01" id="what-archive-never-does">What Archive never does</h2>
 </div>
@@ -100,16 +111,23 @@
     <li class="list-item">Change a pack without approval.</li>
     <li class="list-item">Delete history.</li>
 </ul>
-                </div>
-                <div class="page-panel">
-<div class="text-block">
-    <h2 class="headline-01" id="keeping-packs-current">Keeping packs current</h2>
-    <p>In its weekly check, <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag">
-    <span class="tag-label">Archive</span>
-</span></a> flags packs older than 90 days. Every agent reads the product pack, so an out-of-date pack affects every feature for that product.</p>
+</div>
 </div>
                 </div>
                 <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="keeping-packs-current">Keeping packs current</h2>
+    <p>In its weekly check, <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a> flags packs older than 90 days. Every agent reads the product pack, so an out-of-date pack affects every feature for that product.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
 <nav class="x-pager" data-buckholt="false" aria-label="Previous and next how-to guide">
   <a class="link-standalone" href="../../how-to-guides/onboard-a-legacy-product/index.html" rel="prev">
     <span class="icon">
@@ -119,6 +137,7 @@
 </a>
   <span></span>
 </nav>
+</div>
                 </div>
               </div>
             </div>
