@@ -5,10 +5,10 @@
   "description": "Documentation site for the proposed OGI UX agentic design workflow, built with Buckholt.",
   "type": "module",
   "scripts": {
-    "build:site": "node build/build.mjs",
-    "dev:site": "node build/dev.mjs",
-    "check:site": "node build/check-tokens.mjs && node build/check-locked.mjs",
-    "test:site": "node build/build.mjs && playwright test"
+    "build:site": "node scripts/build.mjs",
+    "dev:site": "node scripts/dev.mjs",
+    "check:site": "node scripts/check-tokens.mjs && node scripts/check-locked.mjs",
+    "test:site": "node scripts/build.mjs && playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow · Agentic UX</title>
+<meta name="description" content="Work moves through six stages and two gates. Agents do the work in each stage; designers, the PM and an engineer decide at the gates.">
+<meta name="robots" content="noindex, nofollow">
+<script>document.documentElement.classList.add('x-js');</script>
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../assets/buckholt/buckholt.css">
+<link rel="stylesheet" href="../assets/buckholt/buckholt-ai-fixes.css">
+<link rel="stylesheet" href="../assets/extensions.css">
+<script src="../assets/site.js" defer></script>
+</head>
+<body>
+<a class="visually-hidden-focusable x-skip-link" data-buckholt="false" href="#main">Skip to main content</a>
+<div class="layout x-site" data-layout="layout-03" data-layout-surface="flush">
+  <header class="x-site-header" data-buckholt="false">
+    <a class="x-site-name" href="../index.html">
+      <img class="x-site-logo" src="../assets/agentic-ux-logo.png" width="194" height="40" alt="Agentic UX, home">
+      <span class="body-01 x-site-name-sub">OGI agentic design workflow</span>
+    </a>
+    <span class="tag tag-sm tag-status tag-status-info">
+        <span class="tag-label">Proposed</span>
+    </span>
+    <a class="link-standalone x-header-search" href="../search/index.html">
+        <span class="icon">
+            <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+        </span>
+        Search
+    </a>
+    <button type="button" class="btn btn-secondary btn-sm x-nav-toggle" aria-expanded="false" aria-controls="sidebar" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-bars" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Menu</span>
+    </button>
+  </header>
+  <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
+    <nav class="x-site-nav" aria-label="Main">
+      <ul>
+          <li><a class="action-01 x-site-nav-link" href="../index.html">Home</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../workflow/index.html" aria-current="page">Workflow</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../agents/index.html">Agents</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../toolset/index.html">Toolset</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../repo-and-buckholt/index.html">Repo and Buckholt</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../artifacts-and-templates/index.html">Artifacts and templates</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../azure-devops/index.html">Azure DevOps</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../working-with-product/index.html">Working with product</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../setup-guides/index.html">Set-up guides</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../how-to-guides/index.html">How-to guides</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../governance/index.html">Governance and rollout</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main id="main" tabindex="-1">
+    <div class="page-body">
+      <div class="page-frame">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-xl-9">
+              <div class="page-pane">
+                <div class="page-panel">
+<div class="text-block">
+    
+    <h1 class="display-02">Workflow</h1>
+    <p class="body-02 x-lead">Work moves through six stages and two gates. Agents do the work in each stage; designers, the PM and an engineer decide at the gates.</p>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="the-workflow-at-a-glance">The workflow at a glance</h2>
+</div>
+<figure class="x-diagram" data-buckholt="false">
+  <svg class="x-diagram-svg" viewBox="0 0 1100 1240" role="group" aria-labelledby="wf14-title wf14-desc" focusable="false">
+  <title id="wf14-title">Workflow: designers decide at two gates; agents do the work in between</title>
+  <desc id="wf14-desc">Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.</desc>
+  <defs>
+    <marker id="wf14-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="x-d-head" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+  <g><rect class="x-d-box x-d-plain" x="56" y="0" width="318.6666666666667" height="76" rx="8"/><text class="x-d-title" x="215.33333333333334" y="33" text-anchor="middle">SharePoint</text><text class="x-d-sub" x="215.33333333333334" y="58" text-anchor="middle">Discovery and pack copy</text></g>
+  <g><rect class="x-d-box x-d-plain" x="390.6666666666667" y="0" width="318.6666666666667" height="76" rx="8"/><text class="x-d-title" x="550" y="33" text-anchor="middle">Azure DevOps</text><text class="x-d-sub" x="550" y="58" text-anchor="middle">Design board, stage status</text></g>
+  <a href="../agents/archive/index.html" class="x-d-link" aria-label="Archive: Design context in the repo"><rect class="x-d-box x-d-stage-foundation" x="725.3333333333334" y="0" width="318.6666666666667" height="76" rx="8"/><text class="x-d-title" x="884.6666666666667" y="33" text-anchor="middle">Archive</text><text class="x-d-sub" x="884.6666666666667" y="58" text-anchor="middle">Design context in the repo</text></a>
+  <line class="x-d-line" x1="550" y1="76" x2="550" y2="110" marker-end="url(#wf14-head)"/>
+  <rect class="x-d-group x-d-stage-discover" x="56" y="112" width="988" height="156" rx="12"/>
+  <text class="x-d-group-title" x="76" y="146">Discover <tspan class="x-d-group-tools">· Copilot, Lucid</tspan></text>
+  <a href="../agents/brief/index.html" class="x-d-link" aria-label="Brief: UX problem, route, measures"><rect class="x-d-box x-d-agent x-d-stage-discover" x="76" y="168" width="305.3333333333333" height="80" rx="8"/><text class="x-d-title" x="228.66666666666666" y="203" text-anchor="middle">Brief</text><text class="x-d-sub" x="228.66666666666666" y="228" text-anchor="middle">UX problem, route, measures</text></a>
+  <a href="../agents/insight/index.html" class="x-d-link" aria-label="Insight: Research and LogRocket evidence"><rect class="x-d-box x-d-agent x-d-stage-discover" x="397.3333333333333" y="168" width="305.3333333333333" height="80" rx="8"/><text class="x-d-title" x="550" y="203" text-anchor="middle">Insight</text><text class="x-d-sub" x="550" y="228" text-anchor="middle">Research and LogRocket evidence</text></a>
+  <a href="../agents/map/index.html" class="x-d-link" aria-label="Map: Flows and worklist in Lucid"><rect class="x-d-box x-d-agent x-d-stage-discover" x="718.6666666666666" y="168" width="305.3333333333333" height="80" rx="8"/><text class="x-d-title" x="871.3333333333333" y="203" text-anchor="middle">Map</text><text class="x-d-sub" x="871.3333333333333" y="228" text-anchor="middle">Flows and worklist in Lucid</text></a>
+  <line class="x-d-line" x1="550" y1="268" x2="550" y2="302" marker-end="url(#wf14-head)"/>
+  <rect class="x-d-group x-d-stage-explore" x="56" y="304" width="988" height="156" rx="12"/>
+  <text class="x-d-group-title" x="76" y="338">Explore <tspan class="x-d-group-tools">· Cursor sandbox</tspan></text>
+  <a href="../agents/range/index.html" class="x-d-link" aria-label="Range: Greybox explorations in the sandbox"><rect class="x-d-box x-d-agent x-d-stage-explore" x="76" y="360" width="466" height="80" rx="8"/><text class="x-d-title" x="309" y="395" text-anchor="middle">Range</text><text class="x-d-sub" x="309" y="420" text-anchor="middle">Greybox explorations in the sandbox</text></a>
+  <a href="../agents/critic/index.html" class="x-d-link" aria-label="Critic: Stress-tests the concepts"><rect class="x-d-box x-d-agent x-d-stage-explore" x="558" y="360" width="466" height="80" rx="8"/><text class="x-d-title" x="791" y="395" text-anchor="middle">Critic</text><text class="x-d-sub" x="791" y="420" text-anchor="middle">Stress-tests the concepts</text></a>
+  <line class="x-d-line" x1="550" y1="460" x2="550" y2="494" marker-end="url(#wf14-head)"/>
+  <g><rect class="x-d-box x-d-gate" x="270" y="496" width="560" height="64" rx="8"/><text class="x-d-title" x="550" y="535" text-anchor="middle">Gate: shortlist · designers, PM, engineer</text></g>
+  <line class="x-d-line" x1="550" y1="560" x2="550" y2="594" marker-end="url(#wf14-head)"/>
+  <g><rect class="x-d-box x-d-people" x="270" y="596" width="560" height="56" rx="8"/><text class="x-d-title" x="550" y="631" text-anchor="middle">Designers: anchor screens in Figma</text></g>
+  <line class="x-d-line" x1="550" y1="652" x2="550" y2="686" marker-end="url(#wf14-head)"/>
+  <rect class="x-d-group x-d-stage-design" x="56" y="688" width="988" height="156" rx="12"/>
+  <text class="x-d-group-title" x="76" y="722">Design <tspan class="x-d-group-tools">· Cursor and Figma MCP</tspan></text>
+  <a href="../agents/extend/index.html" class="x-d-link" aria-label="Extend: Builds out from anchors (Figma write)"><rect class="x-d-box x-d-agent x-d-stage-design" x="76" y="744" width="466" height="80" rx="8"/><text class="x-d-title" x="309" y="779" text-anchor="middle">Extend</text><text class="x-d-sub" x="309" y="804" text-anchor="middle">Builds out from anchors (Figma write)</text></a>
+  <a href="../agents/align/index.html" class="x-d-link" aria-label="Align: Consistency checks (Figma read)"><rect class="x-d-box x-d-agent x-d-stage-design" x="558" y="744" width="466" height="80" rx="8"/><text class="x-d-title" x="791" y="779" text-anchor="middle">Align</text><text class="x-d-sub" x="791" y="804" text-anchor="middle">Consistency checks (Figma read)</text></a>
+  <line class="x-d-line" x1="550" y1="844" x2="550" y2="878" marker-end="url(#wf14-head)"/>
+  <g><rect class="x-d-box x-d-gate" x="270" y="880" width="560" height="64" rx="8"/><text class="x-d-title" x="550" y="919" text-anchor="middle">Gate: design sign-off · designers, PM, engineer</text></g>
+  <line class="x-d-line" x1="550" y1="944" x2="550" y2="978" marker-end="url(#wf14-head)"/>
+  <rect class="x-d-group x-d-stage-prototype" x="56" y="980" width="988" height="156" rx="12"/>
+  <text class="x-d-group-title" x="76" y="1014">Prototype and handoff <tspan class="x-d-group-tools">· Cursor</tspan></text>
+  <a href="../agents/build/index.html" class="x-d-link" aria-label="Build: Prototypes in repo"><rect class="x-d-box x-d-agent x-d-stage-prototype" x="76" y="1036" width="225" height="80" rx="8"/><text class="x-d-title" x="188.5" y="1071" text-anchor="middle">Build</text><text class="x-d-sub" x="188.5" y="1096" text-anchor="middle">Prototypes in repo</text></a>
+  <a href="../agents/audit/index.html" class="x-d-link" aria-label="Audit: WCAG, Buckholt drift"><rect class="x-d-box x-d-agent x-d-stage-prototype" x="317" y="1036" width="225" height="80" rx="8"/><text class="x-d-title" x="429.5" y="1071" text-anchor="middle">Audit</text><text class="x-d-sub" x="429.5" y="1096" text-anchor="middle">WCAG, Buckholt drift</text></a>
+  <a href="../agents/observe/index.html" class="x-d-link" aria-label="Observe: Usability testing"><rect class="x-d-box x-d-agent x-d-stage-prototype" x="558" y="1036" width="225" height="80" rx="8"/><text class="x-d-title" x="670.5" y="1071" text-anchor="middle">Observe</text><text class="x-d-sub" x="670.5" y="1096" text-anchor="middle">Usability testing</text></a>
+  <a href="../agents/relay/index.html" class="x-d-link" aria-label="Relay: Handoff to stories"><rect class="x-d-box x-d-agent x-d-stage-handoff" x="799" y="1036" width="225" height="80" rx="8"/><text class="x-d-title" x="911.5" y="1071" text-anchor="middle">Relay</text><text class="x-d-sub" x="911.5" y="1096" text-anchor="middle">Handoff to stories</text></a>
+  <line class="x-d-line" x1="550" y1="1136" x2="550" y2="1170" marker-end="url(#wf14-head)"/>
+  <g><rect class="x-d-box x-d-plain" x="270" y="1172" width="560" height="64" rx="8"/><text class="x-d-title" x="550" y="1211" text-anchor="middle">Engineering stories (one sprint behind)</text></g>
+  <path class="x-d-loop" d="M 1044 190 H 1070 V 766 H 1047" marker-end="url(#wf14-head)"/>
+  <text class="x-d-loop-label" transform="translate(1088 478) rotate(90)" text-anchor="middle">Fast track</text>
+  <path class="x-d-loop" d="M 56 1058 H 30 V 766 H 53" marker-end="url(#wf14-head)"/>
+  <text class="x-d-loop-label" transform="translate(20 912) rotate(-90)" text-anchor="middle">Test loop</text>
+</svg>
+  <div class="x-diagram-fallback">
+    <p class="x-diagram-fallback-title">Workflow: designers decide at two gates; agents do the work in between</p>
+    <ol class="x-diagram-list">
+    <li><strong>Foundations</strong>: SharePoint, Azure DevOps and the Archive agent.<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <span class="tag-label">Archive</span>
+</span></a></li></ul></li>
+    <li><strong>Discover</strong> (Copilot, Lucid)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Map</span>
+</span></a></li></ul></li>
+    <li><strong>Explore</strong> (Cursor sandbox)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a></li></ul></li>
+    <li class="x-diagram-list-gate"><span class="tag tag-status tag-status-warning">
+        <span class="tag-label">Gate</span>
+    </span> <strong>Shortlist gate</strong> (designers, PM, engineer). Decides: direction, scope and early feasibility.</li>
+    <li><strong>Designers</strong> make the anchor screens in Figma.</li>
+    <li><strong>Design</strong> (Cursor and Figma MCP)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a></li></ul></li>
+    <li class="x-diagram-list-gate"><span class="tag tag-status tag-status-warning">
+        <span class="tag-label">Gate</span>
+    </span> <strong>Design sign-off gate</strong> (designers, PM, engineer). Decides: the design meets the success measures and is buildable.</li>
+    <li><strong>Prototype and handoff</strong> (Cursor)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a></li></ul></li>
+    <li><strong>Engineering stories</strong>, one sprint behind.</li>
+  </ol>
+  <ul class="x-diagram-list-loops">
+    <li><strong>Fast track</strong>: Discover can go straight to Design.</li>
+    <li><strong>Test loop</strong>: Prototype can go back to Design.</li>
+  </ul>
+  </div>
+</figure>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="stages">Stages</h2>
+    <p>Each stage has its own agents. An agent starts when the design item reaches the status that triggers it, and stops at a human check.</p>
+</div>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Stage, Agents, Where they run, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Stage</div></th>
+          <th scope="col"><div class="table-header-label">Agents</div></th>
+          <th scope="col"><div class="table-header-label">Where they run</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="3"></td></tr>
+        <tr>
+          <td>Foundation</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <span class="tag-label">Archive</span>
+</span></a></td>
+          <td>Cursor, plus a weekly scheduled run</td>
+        </tr>
+        <tr>
+          <td>Discover</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Map</span>
+</span></a></td>
+          <td>Microsoft 365 Copilot, with Lucid and a Cursor step for LogRocket</td>
+        </tr>
+        <tr>
+          <td>Explore</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a></td>
+          <td>Cursor, in the sandbox</td>
+        </tr>
+        <tr>
+          <td>Design</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a></td>
+          <td>Cursor and Figma MCP</td>
+        </tr>
+        <tr>
+          <td>Prototype</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/audit/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a> <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a></td>
+          <td>Cursor, with Playwright and axe</td>
+        </tr>
+        <tr>
+          <td>Handoff</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a></td>
+          <td>Cursor and the Azure DevOps MCP</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="text-block">
+    <p>Between Explore and Design, designers make the anchor screens in Figma. <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> builds out from them and never works without them.</p>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="gates">Gates</h2>
+    <p>There are two gates. At each one, designers, the PM and an engineer decide together, using the evidence the agents have produced.</p>
+</div>
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="text-block">
+                <p><span class="tag tag-status tag-status-warning">
+                    <span class="tag-label">Gate</span>
+                </span></p>
+                <h3 class="title-03">Shortlist gate</h3>
+                <p>After <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/critic/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a>.</p>
+            </div>
+            <div class="key-value-list">
+                <div class="key-value">
+                    <span class="key">Who decides</span>
+                    <span class="value">Designers, PM, Engineer</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Decides</span>
+                    <span class="value">Direction, scope and early feasibility</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Evidence</span>
+                    <span class="value">Sandbox explorations, Critic's review, Discovery summary</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Status when passed</span>
+                    <span class="value">Shortlist agreed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="text-block">
+                <p><span class="tag tag-status tag-status-warning">
+                    <span class="tag-label">Gate</span>
+                </span></p>
+                <h3 class="title-03">Design sign-off gate</h3>
+                <p>After <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../agents/align/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a>.</p>
+            </div>
+            <div class="key-value-list">
+                <div class="key-value">
+                    <span class="key">Who decides</span>
+                    <span class="value">Designers, PM, Engineer</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Decides</span>
+                    <span class="value">The design meets the success measures and is buildable</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Evidence</span>
+                    <span class="value">Figma designs, Align report, Success measures</span>
+                </div>
+                <div class="key-value">
+                    <span class="key">Status when passed</span>
+                    <span class="value">Design signed off</span>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="stage-statuses">Stage statuses</h2>
+    <p>The design item moves through these statuses in order. Some of them start an agent.</p>
+</div>
+<ol class="list">
+    <li class="list-item">Intake</li>
+    <li class="list-item">Discovery</li>
+    <li class="list-item">Discovery approved</li>
+    <li class="list-item">Exploring</li>
+    <li class="list-item">Shortlist agreed</li>
+    <li class="list-item">Anchors ready</li>
+    <li class="list-item">Designing</li>
+    <li class="list-item">Design signed off</li>
+    <li class="list-item">Prototyping and testing</li>
+    <li class="list-item">Handed over</li>
+</ol>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Status, What it starts, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Status</div></th>
+          <th scope="col"><div class="table-header-label">What it starts</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="2"></td></tr>
+        <tr>
+          <td>Discovery</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/insight/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a> synthesises research and behaviour evidence.</td>
+        </tr>
+        <tr>
+          <td>Discovery approved</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag">
+    <span class="tag-label">Archive</span>
+</span></a> writes the discovery summary into the repo. <a class="x-agent-tag" data-buckholt="false" href="../agents/range/index.html"><span class="tag expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a> starts on full-route items.</td>
+        </tr>
+        <tr>
+          <td>Shortlist agreed</td>
+          <td>Set when the shortlist gate passes. Designers make the anchor screens.</td>
+        </tr>
+        <tr>
+          <td>Anchors ready</td>
+          <td><a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> builds out the design from the anchors.</td>
+        </tr>
+        <tr>
+          <td>Design signed off</td>
+          <td>Set when the design sign-off gate passes. <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> starts the prototype.</td>
+        </tr>
+        <tr>
+          <td>Handed over</td>
+          <td>Set on the feature by <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a>. Engineering stories are ready.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="text-block">
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a> starts earlier, when product sets the feature to Ready for design. <a class="x-agent-tag" data-buckholt="false" href="../agents/map/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Map</span>
+</span></a>'s output is approved by designers, who then move the status to Discovery approved.</p>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="fast-track">Fast track</h2>
+    <p><a class="x-agent-tag" data-buckholt="false" href="../agents/brief/index.html"><span class="tag expressive-light">
+    <span class="tag-label">Brief</span>
+</span></a> chooses the route for every feature and records why. The fast track goes from Discover straight to Design, skipping Explore and the shortlist gate.</p>
+    <p>Use the fast track only when all three are true:</p>
+</div>
+<ul class="list">
+    <li class="list-item">there is no new flow</li>
+    <li class="list-item">no new research is needed</li>
+    <li class="list-item">only existing screens change</li>
+</ul>
+<div class="text-block">
+    <p>Otherwise the feature takes the full route.</p>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="test-loop">Test loop</h2>
+    <p>Prototypes are tested with people. <a class="x-agent-tag" data-buckholt="false" href="../agents/observe/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a> writes up the findings, and each finding says whether it goes back to <a class="x-agent-tag" data-buckholt="false" href="../agents/extend/index.html"><span class="tag expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a> (a design change) or <a class="x-agent-tag" data-buckholt="false" href="../agents/build/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a> (a prototype change). Designers decide what changes. The loop repeats until testing is complete; then <a class="x-agent-tag" data-buckholt="false" href="../agents/relay/index.html"><span class="tag expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a> hands over.</p>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="text-block">
+    <h2 class="headline-01" id="cadence-under-scaled-agile">Cadence under scaled agile</h2>
+    <p>Design runs one sprint ahead of engineering: engineering stories are ready only when the design is Handed over.</p>
+</div>
+<div class="alert alert-info" role="note">
+    <div class="alert-content">
+        <span class="alert-icon">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        </span>
+        <div class="alert-body">
+            <div class="alert-message">
+                <p class="x-alert-title">To come</p>
+            </div>
+            <div class="alert-note">
+                The full cadence under scaled agile, including how design work lines up with planning increments, will be added from the source doc.
+            </div>
+        </div>
+    </div>
+</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 d-none d-xl-block">
+<nav class="x-on-this-page" data-buckholt="false" aria-label="On this page">
+  <p class="label-01 x-on-this-page-title">On this page</p>
+  <ul>
+    <li><a href="#the-workflow-at-a-glance">The workflow at a glance</a></li>
+    <li><a href="#stages">Stages</a></li>
+    <li><a href="#gates">Gates</a></li>
+    <li><a href="#stage-statuses">Stage statuses</a></li>
+    <li><a href="#fast-track">Fast track</a></li>
+    <li><a href="#test-loop">Test loop</a></li>
+    <li><a href="#cadence-under-scaled-agile">Cadence under scaled agile</a></li>
+  </ul>
+</nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="body-01 x-site-footer" data-buckholt="false">
+    <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
+    <p>Last updated 27 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+  </footer>
+</div>
+</body>
+</html>

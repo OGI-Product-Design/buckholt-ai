@@ -1,0 +1,686 @@
+/* Agentic UX site: extensions
+ *
+ * Everything here is something Buckholt does not have. Rules:
+ *   - class prefix .x-, and data-buckholt="false" in the markup
+ *   - Buckholt tokens only (CSS custom properties from css/buckholt.css):
+ *     no hard-coded colours, spacing, radii or font families
+ *   - never restyles a Buckholt component; it only lays out around them
+ *   - one entry per extension in agentic/extensions-register.md
+ *
+ * Load after css/buckholt.css and css/buckholt-ai-fixes.css.
+ * Breakpoints in media queries follow the live Buckholt scale (896, 1088),
+ * because custom properties cannot be used in media queries.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Stage colours: one Buckholt expressive family per stage             */
+/* ------------------------------------------------------------------ */
+
+.x-d-stage-foundation {
+  --x-pale: var(--ui-background-03);
+  --x-soft: var(--ui-border-02);
+  --x-deep: var(--ui-border-01);
+}
+.x-d-stage-discover {
+  --x-pale: var(--expressive-pale);
+  --x-soft: var(--expressive-soft);
+  --x-deep: var(--expressive-deep);
+}
+.x-d-stage-explore {
+  --x-pale: var(--expressive-tertiary-pale);
+  --x-soft: var(--expressive-tertiary-soft);
+  --x-deep: var(--expressive-tertiary-deep);
+}
+.x-d-stage-design {
+  --x-pale: var(--expressive-quaternary-pale);
+  --x-soft: var(--expressive-quaternary-soft);
+  --x-deep: var(--expressive-quaternary-deep);
+}
+.x-d-stage-prototype,
+.x-d-stage-handoff {
+  --x-pale: var(--expressive-secondary-pale);
+  --x-soft: var(--expressive-secondary-soft);
+  --x-deep: var(--expressive-secondary-deep);
+}
+
+/* ------------------------------------------------------------------ */
+/* Site shell: x-skip-link, x-site-header, x-site-sidebar, x-site-nav, */
+/* x-site-footer. Buckholt base layout 03 places the regions.          */
+/* ------------------------------------------------------------------ */
+
+body {
+  background-color: var(--ui-background-01);
+  color: var(--text-primary);
+}
+
+.x-skip-link:focus {
+  position: absolute;
+  top: var(--spacer-03);
+  left: var(--spacer-03);
+  z-index: 1000;
+  padding: var(--padding-03) var(--padding-05);
+  background-color: var(--ui-background-01);
+  color: var(--action-text-01);
+  border-radius: var(--border-radius-md);
+  outline: calc(var(--border-width) * 2) solid var(--focus-01);
+}
+
+#main {
+  min-width: 0;
+}
+#main:focus {
+  outline: none;
+}
+
+.x-site-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-04);
+  padding: var(--padding-05) var(--padding-08);
+  background-color: var(--ui-background-01);
+  border-bottom: var(--border-width) solid var(--ui-border-02);
+}
+
+.x-site-name {
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.x-site-name {
+  gap: var(--spacer-02);
+}
+.x-site-logo {
+  display: block;
+  width: auto;
+  height: calc(var(--spacer-07) - var(--spacer-03));
+}
+.x-site-name-sub {
+  color: var(--text-tertiary);
+}
+.x-site-name:hover .x-site-name-sub {
+  text-decoration: underline;
+}
+.x-site-name:focus-visible,
+.x-site-nav-link:focus-visible,
+.x-agent-tag:focus-visible,
+.x-code-block-body:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--focus-01);
+  outline-offset: calc(var(--border-width) * 2);
+}
+
+.x-header-search {
+  margin-left: auto;
+  align-self: center;
+}
+
+.x-site-sidebar {
+  width: calc(var(--spacer-09) * 2);
+  padding: var(--padding-07) var(--padding-05);
+  background-color: var(--ui-background-02);
+  border-right: var(--border-width) solid var(--ui-border-02);
+}
+
+.x-site-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-01);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.x-site-nav-link {
+  display: block;
+  padding: var(--padding-03) var(--padding-05);
+  border-radius: var(--border-radius-md);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.x-site-nav-link:hover {
+  background-color: var(--ui-overlay-02);
+  color: var(--text-primary);
+}
+.x-site-nav-link[aria-current] {
+  background-color: var(--action-04);
+  color: var(--action-text-01);
+  font-weight: var(--font-weight-md);
+}
+
+.x-site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--spacer-03) var(--spacer-06);
+  padding: var(--padding-07) var(--padding-08);
+  border-top: var(--border-width) solid var(--ui-border-02);
+  color: var(--text-tertiary);
+}
+.x-site-footer p {
+  margin: 0;
+}
+
+/* Small phones: a smaller logo, and the status tag moves out of the bar
+   (the home page and footer still say the workflow is proposed). */
+@media (max-width: 559.98px) {
+  .x-site-header {
+    gap: var(--spacer-03);
+  }
+  .x-site-logo {
+    height: var(--spacer-06);
+  }
+  .x-site-name-sub,
+  .x-site-header > .tag {
+    display: none;
+  }
+}
+
+/* Desktop: the sidebar stays in view while the page scrolls. */
+@media (min-width: 1088px) {
+  .x-site-sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .x-nav-toggle {
+    display: none;
+  }
+}
+
+/* Narrow screens: one column. With JavaScript, the navigation folds behind
+   the Menu button; without it, the navigation stays open above the page. */
+@media (max-width: 1087.98px) {
+  .layout.x-site[data-layout] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "header" "sidebar" "main" "footer";
+  }
+  .x-site-header {
+    flex-wrap: wrap;
+    row-gap: var(--spacer-03);
+    padding: var(--padding-05);
+  }
+  .x-site-sidebar {
+    width: auto;
+    border-right: 0;
+    border-bottom: var(--border-width) solid var(--ui-border-02);
+  }
+  .x-js .x-site-sidebar:not(.x-is-open) {
+    display: none;
+  }
+  .x-site-footer {
+    padding: var(--padding-07) var(--padding-05);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Page content helpers                                                */
+/* ------------------------------------------------------------------ */
+
+/* Buckholt body text is Light (300), so the browser's "bolder" lands on
+   Regular and barely shows. Emphasis in content uses Semibold. */
+#main strong {
+  font-weight: var(--font-weight-sb);
+}
+
+.x-lead {
+  max-width: calc(var(--spacer-09) * 5);
+  color: var(--text-secondary);
+}
+
+/* Vertical gap between wrapped Bootstrap columns. */
+.x-row-gap {
+  row-gap: var(--page-panel-gap);
+}
+
+.x-stage-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+}
+.x-stage-group > * {
+  margin: 0;
+}
+
+/* x-tag-set: Buckholt's .tag-set has layout only inside Dropdown. */
+.x-tag-set > .tag-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacer-03);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-tag-contrast: light expressive Tag labels meet WCAG AA            */
+/* Buckholt's light expressive Tag sets its label to the family's      */
+/* "deep" colour. For tertiary (4.19:1) and quaternary (3.96:1) that   */
+/* is below the 4.5:1 AA needs at the Tag's 14px size (finding F-01).  */
+/* On this site every light expressive Tag uses the same family's      */
+/* "rich" colour instead, so all four families read alike. Buckholt's  */
+/* CSS is not changed; this only resets the Tag's own label variable.  */
+/* ------------------------------------------------------------------ */
+
+.x-site .tag.expressive-light {
+  --tag-label: var(--expressive-rich);
+  --tag-icon: var(--expressive-rich);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-agent-tag: a Buckholt Tag that links to the agent's page          */
+/* ------------------------------------------------------------------ */
+
+.x-agent-tag {
+  display: inline-flex;
+  border-radius: var(--tag-radius);
+  text-decoration: none;
+}
+.x-agent-tag .tag {
+  cursor: pointer;
+}
+.x-agent-tag:hover .tag-label {
+  text-decoration: underline;
+  text-underline-offset: var(--spacer-01);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-code-block: code with a copy button                               */
+/* ------------------------------------------------------------------ */
+
+.x-code-block {
+  border: var(--border-width) solid var(--ui-border-02);
+  border-radius: var(--border-radius-md);
+  background-color: var(--ui-background-03);
+  overflow: hidden;
+}
+.x-code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacer-04);
+  min-height: calc(var(--spacer-07) - var(--spacer-02));
+  padding: var(--padding-02) var(--padding-03) var(--padding-02) var(--padding-05);
+  border-bottom: var(--border-width) solid var(--ui-border-02);
+  background-color: var(--ui-background-01);
+}
+.x-code-block-label {
+  font-size: var(--typescale-02);
+  font-weight: var(--font-weight-md);
+  color: var(--text-secondary);
+}
+.x-code-block-body {
+  margin: 0;
+  padding: var(--padding-05);
+  overflow-x: auto;
+  /* This Buckholt build does not define --bs-font-monospace (see the
+     extensions register), so fall back to the generic monospace family. */
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: var(--typescale-02);
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* Buckholt styles inline code with a tint and padding; inside a block that
+   would mark every line, so reset it here. */
+.x-code-block-body code {
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ------------------------------------------------------------------ */
+/* x-diagram: inline SVG diagrams, with a list version on narrow       */
+/* screens                                                             */
+/* ------------------------------------------------------------------ */
+
+.x-diagram {
+  margin: 0;
+}
+.x-diagram-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.x-diagram-svg text {
+  font-family: var(--body-font-family);
+  fill: var(--text-primary);
+}
+
+.x-d-box {
+  fill: var(--ui-background-01);
+  stroke: var(--ui-border-02);
+  stroke-width: 1.5;
+}
+.x-d-group {
+  fill: var(--x-pale);
+  stroke: var(--x-deep);
+  stroke-width: 1.5;
+}
+.x-d-agent {
+  fill: var(--ui-background-01);
+  stroke: var(--x-soft);
+}
+.x-d-gate {
+  fill: var(--feedback-background-warning);
+  stroke: var(--feedback-border-warning);
+  stroke-width: 2;
+}
+.x-diagram-svg .x-d-gate + .x-d-title {
+  fill: var(--feedback-body-warning);
+}
+.x-d-people {
+  fill: none;
+  stroke: var(--ui-border-01);
+  stroke-dasharray: 6 5;
+}
+.x-d-title {
+  font-size: 19px;
+  font-weight: var(--font-weight-sb);
+}
+.x-diagram-svg .x-d-sub {
+  font-size: 16px;
+  font-weight: var(--font-weight-rg);
+  fill: var(--text-secondary);
+}
+.x-d-group-title {
+  font-size: 20px;
+  font-weight: var(--font-weight-sb);
+}
+.x-diagram-svg .x-d-group-tools {
+  font-weight: var(--font-weight-rg);
+  fill: var(--text-secondary);
+}
+.x-d-line {
+  stroke: var(--ui-border-01);
+  stroke-width: 1.5;
+}
+.x-d-loop {
+  fill: none;
+  stroke: var(--text-tertiary);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+}
+.x-diagram-svg .x-d-loop-label {
+  font-size: 15px;
+  fill: var(--text-secondary);
+}
+.x-d-head {
+  fill: var(--ui-border-01);
+}
+.x-d-dashed {
+  stroke-dasharray: 6 5;
+}
+
+/* Diagram tones (kit.mjs). Each sets the same three variables as the stage
+   classes; groups and toned boxes are filled and outlined from them. */
+.x-d-tone-neutral {
+  --x-pale: var(--ui-background-02);
+  --x-soft: var(--ui-border-02);
+  --x-deep: var(--ui-border-01);
+}
+.x-d-tone-primary {
+  --x-pale: var(--expressive-pale);
+  --x-soft: var(--expressive-soft);
+  --x-deep: var(--expressive-deep);
+}
+.x-d-tone-secondary {
+  --x-pale: var(--expressive-secondary-pale);
+  --x-soft: var(--expressive-secondary-soft);
+  --x-deep: var(--expressive-secondary-deep);
+}
+.x-d-tone-tertiary {
+  --x-pale: var(--expressive-tertiary-pale);
+  --x-soft: var(--expressive-tertiary-soft);
+  --x-deep: var(--expressive-tertiary-deep);
+}
+.x-d-tone-quaternary {
+  --x-pale: var(--expressive-quaternary-pale);
+  --x-soft: var(--expressive-quaternary-soft);
+  --x-deep: var(--expressive-quaternary-deep);
+}
+.x-d-tone-locked {
+  --x-pale: var(--feedback-background-error);
+  --x-soft: var(--feedback-border-error);
+  --x-deep: var(--feedback-border-error);
+}
+.x-d-tone-bridge {
+  --x-pale: var(--ui-background-04);
+  --x-soft: var(--ui-border-01);
+  --x-deep: var(--ui-border-01);
+}
+.x-d-box.x-d-tone-primary,
+.x-d-box.x-d-tone-bridge {
+  fill: var(--x-pale);
+  stroke: var(--x-deep);
+}
+.x-d-emphasis {
+  stroke-width: 2;
+}
+.x-diagram-svg .x-d-label {
+  font-size: 17px;
+  fill: var(--text-secondary);
+}
+.x-diagram-svg .x-d-label-sm {
+  font-size: 15px;
+}
+.x-diagram-svg .x-d-mono {
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 16px;
+}
+
+.x-d-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+.x-d-link:hover .x-d-box {
+  stroke: var(--x-deep);
+  stroke-width: 2;
+}
+.x-d-link:hover .x-d-title {
+  text-decoration: underline;
+}
+.x-d-link:focus {
+  outline: none;
+}
+.x-d-link:focus-visible .x-d-box {
+  stroke: var(--focus-01);
+  stroke-width: 3;
+}
+.x-d-current {
+  stroke: var(--x-deep);
+  stroke-width: 3;
+}
+
+.x-diagram-fallback {
+  display: none;
+}
+.x-diagram-fallback-title {
+  font-weight: var(--font-weight-sb);
+}
+.x-diagram-list,
+.x-diagram-list-loops {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+  margin: 0 0 var(--spacer-05);
+  padding-left: var(--padding-07);
+}
+.x-diagram-list ul:not(.x-diagram-list-tags) {
+  margin: var(--spacer-03) 0 0;
+  padding-left: var(--padding-07);
+}
+.x-diagram-list-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-03);
+  margin: var(--spacer-03) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.x-diagram-list strong,
+.x-diagram-list-loops strong {
+  font-weight: var(--font-weight-sb);
+}
+.x-diagram-current {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 895.98px) {
+  .x-diagram-svg {
+    display: none;
+  }
+  .x-diagram-fallback {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* x-on-this-page: contents for long pages (xl widths only)            */
+/* ------------------------------------------------------------------ */
+
+.x-on-this-page {
+  position: sticky;
+  top: var(--spacer-06);
+  padding-left: var(--padding-05);
+  border-left: var(--border-width) solid var(--ui-border-02);
+}
+.x-on-this-page-title {
+  margin: 0 0 var(--spacer-03);
+  color: var(--text-secondary);
+}
+.x-on-this-page ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-03);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--typescale-02);
+}
+.x-on-this-page a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.x-on-this-page a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+.x-on-this-page a[aria-current] {
+  color: var(--action-text-01);
+  font-weight: var(--font-weight-md);
+}
+.x-on-this-page a:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--focus-01);
+  outline-offset: calc(var(--border-width) * 2);
+}
+/* Headings land clear of the top edge when linked to. */
+#main [id] {
+  scroll-margin-top: var(--spacer-06);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* x-pager: previous and next                                          */
+/* ------------------------------------------------------------------ */
+
+.x-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacer-05);
+  padding-top: var(--padding-07);
+  border-top: var(--border-width) solid var(--ui-border-02);
+}
+.x-pager a[rel="next"] {
+  flex-direction: row-reverse;
+  text-align: right;
+  margin-left: auto;
+}
+.x-pager-label {
+  display: block;
+  font-size: var(--typescale-01);
+  color: var(--text-tertiary);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-constraint: the "Never" list on agent pages                       */
+/* ------------------------------------------------------------------ */
+
+.x-constraint {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+  padding: var(--padding-07);
+  border-left: calc(var(--border-width) * 4) solid var(--feedback-border-error);
+  border-radius: var(--border-radius-md);
+  background-color: var(--feedback-background-error);
+}
+.x-constraint .text-block > :last-child,
+.x-constraint .list {
+  margin-bottom: 0;
+}
+.x-constraint .list-item {
+  color: var(--feedback-body-error);
+}
+
+/* ------------------------------------------------------------------ */
+/* Agent page title and card details                                   */
+/* ------------------------------------------------------------------ */
+
+.x-agent-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacer-04);
+}
+.x-agent-title-tag {
+  display: inline-flex;
+}
+.x-card-meta {
+  color: var(--text-tertiary);
+}
+.x-alert-title {
+  margin: 0;
+  font-weight: var(--font-weight-md);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-search                                                            */
+/* ------------------------------------------------------------------ */
+
+.x-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-04);
+}
+.x-search-status {
+  margin: 0;
+  color: var(--text-secondary);
+}
+.x-search-list:empty {
+  display: none;
+}
+.x-search-list .list-item p {
+  margin: var(--spacer-02) 0 0;
+  color: var(--text-secondary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion                                                              */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .x-site *,
+  .x-site *::before,
+  .x-site *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

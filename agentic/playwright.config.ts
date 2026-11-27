@@ -16,7 +16,7 @@ export default defineConfig({
     launchOptions: process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {}
   },
   webServer: {
-    command: `SERVE_ONLY=1 PORT=${PORT} node build/dev.mjs`,
+    command: `SERVE_ONLY=1 PORT=${PORT} node scripts/dev.mjs`,
     url: `http://127.0.0.1:${PORT}/`,
     reuseExistingServer: false,
     timeout: 60_000
