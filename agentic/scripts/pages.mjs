@@ -151,7 +151,7 @@ ${ctx.data.gates.map(g => `  <div class="col-12 col-lg-6">
                 <h3 class="title-03">${esc(g.name)}</h3>
                 <p>After ${g.after.map(id => agentTag(ctx.agentsById[id], ctx)).join(' and ')}.</p>
             </div>
-            <div class="key-value-list">
+            <div class="key-value-list key-value-list-stacked">
                 <div class="key-value">
                     <span class="key">Who decides</span>
                     <span class="value">${esc(g.people.join(', '))}</span>
@@ -165,7 +165,7 @@ ${ctx.data.gates.map(g => `  <div class="col-12 col-lg-6">
                     <span class="value">${esc(g.evidence.join(', '))}</span>
                 </div>
                 <div class="key-value">
-                    <span class="key">Status when passed</span>
+                    <span class="key">Status set</span>
                     <span class="value">${esc(g.status)}</span>
                 </div>
             </div>
@@ -365,7 +365,7 @@ function agentPage(ctx, agent) {
     <h1 class="display-02 x-agent-title" data-buckholt="false"><span class="x-agent-title-tag" aria-hidden="true">${agentTag(agent, ctx, { link: false })}</span> ${esc(agent.name)}</h1>
     <p class="body-02 x-lead">${esc(agent.job)}</p>
 </div>
-<div class="key-value-list key-value-list-row">
+<div class="key-value-list key-value-list-stacked">
     <div class="key-value">
         <span class="key">Stage</span>
         <span class="value">${esc(stage.name)}</span>
@@ -419,7 +419,7 @@ ${agent.never.map(n => `      <li class="list-item">
     `<div class="text-block">
     <h2 class="headline-01" id="owner">Owner and backup</h2>
 </div>
-<div class="key-value-list key-value-list-row">
+<div class="key-value-list key-value-list-stacked">
     <div class="key-value">
         <span class="key">Owner</span>
         <span class="value">${esc(agent.owner || ctx.data.owner)}</span>
