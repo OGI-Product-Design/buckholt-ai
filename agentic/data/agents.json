@@ -1,0 +1,326 @@
+{
+  "version": "1.0",
+  "updated": "2026-11-27",
+  "owner": "Laurence Abbott",
+  "backup": "Jon",
+  "stages": [
+    { "id": "foundation", "name": "Foundation", "order": 0 },
+    { "id": "discover", "name": "Discover", "order": 1 },
+    { "id": "explore", "name": "Explore", "order": 2 },
+    { "id": "design", "name": "Design", "order": 3 },
+    { "id": "prototype", "name": "Prototype", "order": 4 },
+    { "id": "handoff", "name": "Handoff", "order": 5 }
+  ],
+  "gates": [
+    {
+      "id": "shortlist",
+      "name": "Shortlist gate",
+      "after": ["range", "critic"],
+      "people": ["Designers", "PM", "Engineer"],
+      "decides": "Direction, scope and early feasibility",
+      "evidence": ["Sandbox explorations", "Critic's review", "Discovery summary"],
+      "status": "Shortlist agreed"
+    },
+    {
+      "id": "signoff",
+      "name": "Design sign-off gate",
+      "after": ["extend", "align"],
+      "people": ["Designers", "PM", "Engineer"],
+      "decides": "The design meets the success measures and is buildable",
+      "evidence": ["Figma designs", "Align report", "Success measures"],
+      "status": "Design signed off"
+    }
+  ],
+  "statuses": [
+    "Intake",
+    "Discovery",
+    "Discovery approved",
+    "Exploring",
+    "Shortlist agreed",
+    "Anchors ready",
+    "Designing",
+    "Design signed off",
+    "Prototyping and testing",
+    "Handed over"
+  ],
+  "agents": [
+    {
+      "id": "archive",
+      "name": "Archive",
+      "stage": "foundation",
+      "order": 0,
+      "tool": "Cursor, plus a weekly scheduled run",
+      "job": "Keeps design context accurate and the same in the repo and SharePoint.",
+      "triggeredBy": [
+        "A design item reaching Discovery approved",
+        "A merged change to /context",
+        "The weekly check"
+      ],
+      "reads": ["/context", "SharePoint discovery site", "Figma exports", "Azure DevOps design items"],
+      "steps": [
+        "On Discovery approved, write /context/discovery/[feature].md with the key findings, worklist and links to the full SharePoint documents.",
+        "After a product pack change is merged, update its SharePoint copy.",
+        "After each gate, add the decision to decision-log.md from the gate notes.",
+        "Weekly, flag packs older than 90 days, register entries missing their Figma or code half, and gates with no decision logged.",
+        "Track daily Figma MCP calls and warn the team at 80% of the limit."
+      ],
+      "produces": ["Updated /context files", "SharePoint product pack copies", "Weekly health report"],
+      "gate": "Laurence (or Jon) approves every product pack change.",
+      "never": ["Edit /buckholt or /legacy", "Change a pack without approval", "Delete history"],
+      "doneWhen": "Repo and SharePoint copies match and the health report is posted.",
+      "rulesFile": "/agents/archive.md"
+    },
+    {
+      "id": "brief",
+      "name": "Brief",
+      "stage": "discover",
+      "order": 1,
+      "tool": "Microsoft 365 Copilot",
+      "job": "Turns a product feature into a UX problem and chooses the route.",
+      "triggeredBy": ["A feature set to Ready for design"],
+      "reads": ["Azure DevOps feature and stories", "SharePoint specs", "Product pack copy", "Related Teams and Outlook threads"],
+      "steps": [
+        "Check the feature has a problem, outcome, products, users, priority, quarter and constraints. If not, comment the gaps on the feature and stop.",
+        "Find the products and styling modes in the pack copies. Stop if a pack is missing.",
+        "Choose the route. Fast track only if there is no new flow, no new research is needed and only existing screens change. Otherwise full. Record why.",
+        "Write the UX brief from the template.",
+        "Draft success measures and request baselines from the Insight LogRocket step.",
+        "Save to SharePoint and link it on the design item."
+      ],
+      "produces": ["UX brief"],
+      "gate": "The PM confirms scope; a designer moves the status on.",
+      "never": ["Rewrite the PM's feature or stories", "Invent baselines", "Start without a product pack"],
+      "doneWhen": "The brief is linked and the PM has confirmed scope.",
+      "rulesFile": "/agents/brief.md"
+    },
+    {
+      "id": "insight",
+      "name": "Insight",
+      "stage": "discover",
+      "order": 2,
+      "tool": "Microsoft 365 Copilot, plus a Cursor step for LogRocket",
+      "job": "Synthesises research and behaviour evidence.",
+      "triggeredBy": ["Status Discovery"],
+      "reads": ["SharePoint research", "Teams transcripts", "Lucid boards", "UX brief", "LogRocket (Cursor step)"],
+      "steps": [
+        "List every source used.",
+        "Anonymise names, emails, account numbers and any customer details.",
+        "Group findings into themes, each with its evidence and product tag.",
+        "Rank pain points by how often and how badly they occur.",
+        "Cursor step: pull LogRocket baselines for the success measures (completion, drop-off, errors, rage clicks) on the flows in scope.",
+        "List evidence gaps and the research that would fill them.",
+        "Save the discovery summary to SharePoint."
+      ],
+      "produces": ["Discovery summary with baselines"],
+      "gate": "Designers validate the insights.",
+      "never": ["Present assumptions as findings", "Keep personal data", "Generalise from one user"],
+      "doneWhen": "The summary is saved and every theme cites evidence.",
+      "rulesFile": "/agents/insight.md"
+    },
+    {
+      "id": "map",
+      "name": "Map",
+      "stage": "discover",
+      "order": 3,
+      "tool": "Microsoft 365 Copilot and Lucid",
+      "job": "Turns findings into structure and a design worklist.",
+      "triggeredBy": ["The discovery summary being saved"],
+      "reads": ["Discovery summary", "Product pack copy", "Existing Lucid flows"],
+      "steps": [
+        "Map the current journey in Lucid.",
+        "Propose the future journey, or two options if the evidence splits.",
+        "Write the screen inventory: new, changed and unchanged screens.",
+        "Flag any clash with the product's navigation or patterns.",
+        "Write the design worklist: screens, states and edge cases to design.",
+        "Save to Lucid and SharePoint."
+      ],
+      "produces": ["Journey maps", "Screen inventory", "Design worklist"],
+      "gate": "Designers approve, then move the status to Discovery approved.",
+      "never": ["Break a product's navigation pattern without flagging it"],
+      "doneWhen": "Flows and worklist are approved.",
+      "rulesFile": "/agents/map.md"
+    },
+    {
+      "id": "range",
+      "name": "Range",
+      "stage": "explore",
+      "order": 4,
+      "tool": "Cursor, sandbox only",
+      "job": "Generates many quick, deliberately rough directions.",
+      "triggeredBy": ["Discovery approved on a full-route item"],
+      "reads": ["/context/discovery/[feature].md", "Design worklist", "Patterns from other products", "Lucid flows"],
+      "steps": [
+        "Write 3 or 4 \"how might we\" prompts from the worklist. A designer may replace them.",
+        "Generate 5 to 10 directions, including at least two that break the current pattern and opposing pairs (guided vs expert, minimal vs dense).",
+        "Build each as clickable greybox HTML in /sandbox/[product]/[feature]/ using greybox.css only.",
+        "Add an \"Exploration, not for build\" banner to every page.",
+        "Write an index page: each direction, its one-line idea and trade-offs.",
+        "Post the index link on the design item."
+      ],
+      "produces": ["Sandbox explorations", "Index page"],
+      "gate": null,
+      "never": ["Use Buckholt, brand colours or tokens", "Write outside the sandbox", "Polish"],
+      "doneWhen": "The index is posted.",
+      "rulesFile": "/agents/range.md"
+    },
+    {
+      "id": "critic",
+      "name": "Critic",
+      "stage": "explore",
+      "order": 5,
+      "tool": "Cursor",
+      "job": "Stress-tests the explorations before the shortlist gate.",
+      "triggeredBy": ["The Range index being posted"],
+      "reads": ["Sandbox explorations", "/context/discovery/[feature].md", "Product rules"],
+      "steps": [
+        "For each direction, assess user needs: which themes it serves and which it misses.",
+        "Check edge cases: empty, error, loading, permissions, heavy data, long text.",
+        "Check consistency with the product's patterns and styling mode.",
+        "Estimate build effort (low, medium or high) with the reason.",
+        "List risks.",
+        "Recommend up to three directions, labelled as a recommendation."
+      ],
+      "produces": ["critique.md in the sandbox feature folder, linked on the design item"],
+      "gate": "The shortlist gate (designers, PM, engineer) decides.",
+      "never": ["Make the decision", "Judge taste or brand"],
+      "doneWhen": "Every direction has a critique.",
+      "rulesFile": "/agents/critic.md"
+    },
+    {
+      "id": "extend",
+      "name": "Extend",
+      "stage": "design",
+      "order": 6,
+      "tool": "Cursor + Figma MCP (the only agent with write access)",
+      "job": "Builds out the design from the designers' anchor screens.",
+      "triggeredBy": ["Status Anchors ready"],
+      "reads": ["Frames labelled Anchor", "The product's Figma library", "Design worklist", "Figma usage log"],
+      "steps": [
+        "Read the anchors and list the layout rules, components, spacing and text styles used.",
+        "Work through the worklist in batches of up to 5 screens.",
+        "Use library components as instances; never detach them.",
+        "Add every state and edge case on the worklist.",
+        "If a component is missing, build it on the Extensions page with an x/ prefix and add a register entry.",
+        "After each batch, leave a note: what was built and what was assumed.",
+        "Apply feedback changes when asked."
+      ],
+      "produces": ["Remaining screens", "States and variants", "Flagged components"],
+      "gate": "Designers review every batch.",
+      "never": ["Detach or change library components", "Edit anchors", "Work without anchors"],
+      "doneWhen": "The worklist is covered and Align has run.",
+      "rulesFile": "/agents/extend.md"
+    },
+    {
+      "id": "align",
+      "name": "Align",
+      "stage": "design",
+      "order": 7,
+      "tool": "Cursor + Figma MCP (read only)",
+      "job": "Checks consistency across all Figma work, designers' work included.",
+      "triggeredBy": ["Each Extend batch", "A designer's request", "Weekly on active files"],
+      "reads": ["The named Figma pages only", "The product library", "The styling mode", "The extensions register"],
+      "steps": [
+        "Check for detached instances and styles not from the library.",
+        "Check spacing and sizes against the token scale.",
+        "Check for wrong or one-off text styles.",
+        "Check wording against the product pack's terms.",
+        "Check for styling-mode mismatches, such as Buckholt parts in a legacy screen.",
+        "Check extension components are flagged and register entries have both halves."
+      ],
+      "produces": ["Issue list by severity with frame links, posted on the design item"],
+      "gate": "Designers decide what is a mistake and what is deliberate.",
+      "never": ["Fix anything", "Change files"],
+      "doneWhen": "The report is posted.",
+      "rulesFile": "/agents/align.md"
+    },
+    {
+      "id": "build",
+      "name": "Build",
+      "stage": "prototype",
+      "order": 8,
+      "tool": "Cursor",
+      "job": "Turns signed-off designs into prototypes.",
+      "triggeredBy": ["Status Design signed off"],
+      "reads": ["Figma frames (read only)", "The product pack", "/buckholt or /legacy", "/extensions", "The prototype build spec"],
+      "steps": [
+        "Create /prototypes/[product]/[feature]/.",
+        "Buckholt mode: use Buckholt HTML and CSS. Legacy mode: use the legacy CSS. Hybrid: follow the pack, with every Buckholt element labelled.",
+        "For a missing component, reuse a register entry if one exists; otherwise build it in /extensions/[product]/ with tokens only, an x- prefix, data-buckholt=\"false\" and a register entry.",
+        "Wire the interactions the test tasks need.",
+        "Publish the preview and post the link on the design item."
+      ],
+      "produces": ["Prototype", "Extensions", "Preview link"],
+      "gate": "Designers check fidelity and behaviour.",
+      "never": ["Write to /buckholt or /legacy", "Import from /sandbox", "Hard-code values", "Edit Figma"],
+      "doneWhen": "The preview is posted and Audit has passed.",
+      "rulesFile": "/agents/build.md"
+    },
+    {
+      "id": "audit",
+      "name": "Audit",
+      "stage": "prototype",
+      "order": 9,
+      "tool": "Cursor + Playwright + axe",
+      "job": "Runs automated quality checks before people see a prototype.",
+      "triggeredBy": ["Any new or changed prototype"],
+      "reads": ["The prototype", "/tests", "The Buckholt HTML/CSS reference or legacy CSS"],
+      "steps": [
+        "Run axe on every page.",
+        "Check the keyboard path through each test task, focus order and visible focus.",
+        "Check contrast and labels.",
+        "Check markup and classes against the Buckholt reference (or legacy CSS).",
+        "Flag hard-coded colours, spacing and fonts.",
+        "Flag x- components missing a register entry."
+      ],
+      "produces": ["Audit report by severity, posted on the design item"],
+      "gate": "Blocks testing when a critical accessibility issue is found.",
+      "never": ["Fix code", "Check the sandbox"],
+      "doneWhen": "No critical issues remain.",
+      "rulesFile": "/agents/audit.md"
+    },
+    {
+      "id": "observe",
+      "name": "Observe",
+      "stage": "prototype",
+      "order": 10,
+      "tool": "Cursor",
+      "job": "Supports usability testing around the sessions.",
+      "triggeredBy": ["Audit passing and sessions being booked"],
+      "reads": ["The prototype", "Success measures", "Teams recordings", "LogRocket baselines"],
+      "steps": [
+        "Draft the test plan and script from the success measures and test tasks.",
+        "After sessions, tag recordings by task, success, hesitation, error and quote.",
+        "Summarise per task and compare with the LogRocket baselines.",
+        "Write findings: issue, how many participants, severity, suggested change, and whether it goes back to Extend or Build."
+      ],
+      "produces": ["Test plan", "Tagged clips", "Findings report"],
+      "gate": "Designers run the sessions and decide what changes.",
+      "never": ["Run sessions", "Treat one participant's comment as a finding", "Keep personal data"],
+      "doneWhen": "Findings are posted and routed.",
+      "rulesFile": "/agents/observe.md"
+    },
+    {
+      "id": "relay",
+      "name": "Relay",
+      "stage": "handoff",
+      "order": 11,
+      "tool": "Cursor + Azure DevOps MCP",
+      "job": "Hands over to engineering, then checks what was built.",
+      "triggeredBy": ["A designer marking testing complete"],
+      "reads": ["Final Figma screens", "The prototype", "Buckholt Storybook", "The extensions register"],
+      "steps": [
+        "Write a spec per screen: states, edge cases, interactions and content.",
+        "Map each element to a Storybook component or a flagged extension.",
+        "Write UX acceptance criteria (Given, When, Then) for each engineering story.",
+        "Add them to the stories as a linked UX section with Figma and prototype links, and set the predecessor link.",
+        "Update Design status on the feature to Handed over.",
+        "After release, compare the build with the design, and LogRocket data with the success measures. Post the report."
+      ],
+      "produces": ["Specs", "UX acceptance criteria", "Linked stories", "Release check"],
+      "gate": "Designers review before handoff; engineering reviews feasibility.",
+      "never": ["Hand over anything not signed off", "Edit the PM's story text", "Change engineering statuses"],
+      "doneWhen": "Every story has its UX section and the release check is posted.",
+      "rulesFile": "/agents/relay.md"
+    }
+  ]
+}

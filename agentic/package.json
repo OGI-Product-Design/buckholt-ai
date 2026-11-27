@@ -1,0 +1,17 @@
+{
+  "name": "ogi-ux-agents-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Documentation site for the proposed OGI UX agentic design workflow, built with Buckholt.",
+  "type": "module",
+  "scripts": {
+    "build:site": "node build/build.mjs",
+    "dev:site": "node build/dev.mjs",
+    "check:site": "node build/check-tokens.mjs && node build/check-locked.mjs",
+    "test:site": "node build/build.mjs && playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.63.0"
+  }
+}
