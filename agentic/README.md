@@ -54,7 +54,7 @@ back to Arial and shows no icons; every icon has a text label beside it.
 | `content/guides/setup-guides/`, `content/guides/how-to-guides/` | One Markdown file per guide, numbered in order. |
 | `content/source/` | For the Markdown exports of the source doc's three tabs. |
 | `content/diagrams/` | Reference images for the seven diagrams. Layout and content only: never published. |
-| `assets/` | The Agentic UX logo. |
+| `assets/` | The Agentic UX logo artwork (not used on the site: the header shows the name as text). |
 | `scripts/` | The build, the Markdown renderer, page templates, components, diagrams, checks and the dev server. |
 | `site/` | The built site. Generated: do not edit by hand. |
 | `index.html` | Opens `site/index.html`. |

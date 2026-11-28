@@ -10,6 +10,7 @@
 
 import { esc, agentTag } from '../components.mjs';
 import { diagramFigure } from './kit.mjs';
+import { stackSvg } from './stack.mjs';
 
 const W = 1100;          // viewBox width
 const LOOP = 56;         // room either side for the fast track and test loop
@@ -137,7 +138,7 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
   const title = 'Workflow: designers decide at two gates; agents do the work in between';
   const desc = 'Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.';
 
-  const svg = `<svg class="x-diagram-svg" viewBox="-4 -4 ${W + 8} ${H + 8}" role="group" aria-labelledby="${uid}-title ${uid}-desc" focusable="false">
+  const svg = `<svg class="x-diagram-svg x-diagram-wide" viewBox="-4 -4 ${W + 8} ${H + 8}" role="group" aria-labelledby="${uid}-title ${uid}-desc" focusable="false">
   <title id="${uid}-title">${esc(title)}</title>
   <desc id="${uid}-desc">${esc(desc)}</desc>
   <defs>
@@ -174,5 +175,28 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
     <li><strong>Test loop</strong>: Prototype can go back to Design.</li>
   </ul>`;
 
-  return diagramFigure({ title, svg, list });
+  // One-column version for phones.
+  const agentBox = (id, sub) => ({ title: A[id].name, lines: [sub], stage: A[id].stage, agent: true, href: href(id), current: id === highlight });
+  const groupNode = g => ({ group: { title: `${g.label} · ${g.tools}`, stage: g.id, items: g.items.map(([id, sub]) => agentBox(id, sub)) } });
+  const narrow = [
+    { group: { title: 'Foundations', items: [
+      { title: 'SharePoint', lines: ['Discovery and pack copy'] },
+      { title: 'Azure DevOps', lines: ['Design board, stage status'] },
+      agentBox('archive', 'Design context in the repo')
+    ] } },
+    { arrow: {} }, groupNode(GROUPS[0]),
+    { arrow: {} }, groupNode(GROUPS[1]),
+    { arrow: {} }, { box: { title: `Gate: shortlist · ${peopleText(gates.shortlist)}`, gate: true } },
+    { arrow: {} }, { box: { title: 'Designers: anchor screens in Figma', dashed: true } },
+    { arrow: {} }, groupNode(GROUPS[2]),
+    { arrow: {} }, { box: { title: `Gate: design sign-off · ${peopleText(gates.signoff)}`, gate: true } },
+    { arrow: {} }, groupNode(GROUPS[3]),
+    { arrow: {} }, { box: { title: 'Engineering stories (one sprint behind)' } },
+    { space: 20 },
+    { box: { title: 'Fast track', lines: ['Discover can go straight to Design'], dashed: true } },
+    { space: 12 },
+    { box: { title: 'Test loop', lines: ['Prototype can go back to Design'], dashed: true } }
+  ];
+  const narrowSvg = stackSvg({ id: `${uid}n`, title, desc, nodes: narrow });
+  return diagramFigure({ title, svg, narrowSvg, list });
 }

@@ -57,7 +57,7 @@ export function renderPage(page, ctx) {
 <div class="layout x-site" data-layout="layout-03" data-layout-surface="flush">
   <header class="x-site-header" data-buckholt="false">
     <a class="x-site-name" href="${root}">
-      <img class="x-site-logo" src="${root}assets/agentic-ux-logo.png" width="194" height="40" alt="${SITE_NAME}, home">
+      <span class="title-02 x-site-name-title">${SITE_NAME}</span>
       <span class="body-01 x-site-name-sub">OGI agentic design workflow</span>
     </a>
     <span class="tag tag-sm tag-status tag-status-info">

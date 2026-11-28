@@ -52,11 +52,20 @@
       button.hidden = false;
       button.addEventListener('click', function () {
         var figure = button.closest('.x-diagram');
-        var svg = figure.querySelector('.x-diagram-svg');
+        var svg = figure.querySelector('.x-diagram-wide');
         var copy = svg.cloneNode(true);
-        // The copy must not repeat the page's ids.
+        // The copy must not repeat the page's ids. Its arrowheads get ids of
+        // their own: the originals sit inside a hidden diagram and would not
+        // draw.
         Array.prototype.forEach.call(copy.querySelectorAll('[id]'), function (el) {
-          if (el.tagName.toLowerCase() !== 'marker') el.removeAttribute('id');
+          if (el.tagName.toLowerCase() === 'marker') el.id = el.id + '-full';
+          else el.removeAttribute('id');
+        });
+        Array.prototype.forEach.call(copy.querySelectorAll('[marker-end], [marker-start]'), function (el) {
+          ['marker-end', 'marker-start'].forEach(function (attr) {
+            var v = el.getAttribute(attr);
+            if (v) el.setAttribute(attr, v.replace(/\)$/, '-full)'));
+          });
         });
         copy.removeAttribute('aria-labelledby');
         copy.setAttribute('aria-label', svg.querySelector('title').textContent);
