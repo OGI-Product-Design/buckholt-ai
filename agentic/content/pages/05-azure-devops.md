@@ -12,6 +12,22 @@ lead: Design has its own board in Azure DevOps. Each design item links into the 
 
 The UX design board belongs to the UX team. Its stage statuses trigger the agents, so the board is how the workflow runs, not just a record of it.
 
+## One board for the whole team
+
+All six designers share one UX design board. One board means one view of everything in design, one Delivery Plan, and one place the agents watch for status changes. Separate boards would split all three.
+
+The proposal for making one board work for six people:
+
+| Setting | How it is used |
+|---|---|
+| Assigned to | The lead designer for the design item. Filter the board by person to see one designer's work. |
+| Reviewing designer | A field on the design item naming the second designer. |
+| Area path | One per product, so the board can be filtered by product, and product teams see their own design items. |
+| Swimlanes | By route: Full route, Fast track and Blocked (below). |
+| Work in progress limits | On Designing and on Prototyping and testing, so no one carries too many items at once. |
+
+At stand-up, walk the board right to left: items closest to Handed over first.
+
 ## The design item
 
 There is one design item per feature. UX owns it and its columns.

@@ -5,7 +5,7 @@ lead: Nine of the twelve agents run in Cursor. Each one is a rules file that poi
 
 ## Who does it
 
-Laurence writes and approves the agent definitions. Each designer sets up Cursor on their own machine.
+Laurence writes and approves the agent definitions. Each of the six designers sets up Cursor on their own machine; because the rules live in the repo, everyone runs the same agents.
 
 ## What you need
 

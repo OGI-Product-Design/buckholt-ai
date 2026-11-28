@@ -18,10 +18,12 @@ Laurence, with an Azure DevOps project administrator.
 2. Add a design item work item type, with one design item per feature.
 3. Set the board's columns to the ten stage statuses, in order: Intake, Discovery, Discovery approved, Exploring, Shortlist agreed, Anchors ready, Designing, Design signed off, Prototyping and testing, Handed over.
 4. Add the swimlanes: Full route, Fast track and Blocked.
-5. Add a Design status field to features, and roll the design item's status up to it.
-6. Set the links: the feature is the parent of the design item; the design item is the predecessor of the engineering stories.
-7. Add the hyperlinks on the design item: SharePoint brief, Figma file, prototype.
-8. Create a Delivery Plan with the product, design and engineering boards.
+5. Add all six designers to the UX team, add a Reviewing designer field to the design item, and create one area path per product.
+6. Set work in progress limits on Designing and on Prototyping and testing.
+7. Add a Design status field to features, and roll the design item's status up to it.
+8. Set the links: the feature is the parent of the design item; the design item is the predecessor of the engineering stories.
+9. Add the hyperlinks on the design item: SharePoint brief, Figma file, prototype.
+10. Create a Delivery Plan with the product, design and engineering boards.
 
 ## Done when
 

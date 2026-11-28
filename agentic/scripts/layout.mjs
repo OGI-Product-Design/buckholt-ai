@@ -5,7 +5,7 @@
 // footer component (Page navigation is for sibling pages, not global
 // navigation).
 
-import { esc, formatDate } from './components.mjs';
+import { esc, formatDateTime } from './components.mjs';
 
 export const NAV = [
   { slug: '', title: 'Home' },
@@ -90,7 +90,7 @@ ${page.body}
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: ${esc(ctx.data.owner)}. Backup: ${esc(ctx.data.backup)}.</p>
-    <p>Last updated ${esc(formatDate(ctx.buildDate))}. <a href="${root}extensions/">Extensions on this site</a></p>
+    <p>Last updated <time datetime="${ctx.buildDate.toISOString()}">${esc(formatDateTime(ctx.buildDate))}</time></p>
   </footer>
 </div>
 <div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
