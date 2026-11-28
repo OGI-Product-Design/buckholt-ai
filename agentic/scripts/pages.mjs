@@ -395,6 +395,10 @@ function agentPage(ctx, agent) {
         <span class="key">Tool</span>
         <span class="value">${esc(agent.tool)}</span>
     </div>
+    <div class="key-value">
+        <span class="key">Set up</span>
+        <span class="value"><a href="${ctx.root}${agent.setUp}">${agent.setUp.includes('copilot') ? 'Create agents in Microsoft 365 Copilot' : 'Create agents in Cursor'}</a></span>
+    </div>
 </div>`,
     `<div class="text-block">
     <h2 class="headline-01" id="at-a-glance">At a glance</h2>

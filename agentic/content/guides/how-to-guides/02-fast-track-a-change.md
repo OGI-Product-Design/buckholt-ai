@@ -26,4 +26,4 @@ On the fast track, the feature goes from Discover straight to Design. Explore is
 
 ## Anchor screens on the fast track
 
-The proposal: because only existing screens change, the current screens act as the anchors. Designers mark the frames being changed as anchors in Figma, update them where the change needs a new decision, and move the status to Anchors ready. {{agent:extend}} then works as usual.
+The proposal: because only existing screens change, the current screens act as the anchors. The lead designer marks the frames being changed as anchors in Figma, updates them where the change needs a new decision, and moves the status to Anchors ready. {{agent:extend}} then works as usual.
