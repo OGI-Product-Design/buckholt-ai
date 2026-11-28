@@ -177,19 +177,33 @@
                 </div>
                 <div class="page-panel">
 <div class="content-group">
-<nav class="x-pager" data-buckholt="false" aria-label="Previous and next guide">
-  <a class="link-standalone" href="../../setup-guides/design-board/index.html" rel="prev">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-left" aria-hidden="true"></i>
-    </span>
-    <span><span class="x-pager-label">Previous guide</span> Design board</span>
+<nav aria-label="Previous and next guide">
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-md-6">
+<a href="../../setup-guides/design-board/index.html" class="card card-clickable h-100" rel="prev">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Previous guide</span>
+            <h2 class="title-03">Design board</h2>
+            
+            
+        </div>
+    </div>
 </a>
-  <a class="link-standalone" href="../../setup-guides/figma-mcp/index.html" rel="next">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-    </span>
-    <span><span class="x-pager-label">Next guide</span> Figma MCP</span>
+  </div>
+  <div class="col-12 col-md-6">
+<a href="../../setup-guides/figma-mcp/index.html" class="card card-clickable h-100" rel="next">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Next guide</span>
+            <h2 class="title-03">Figma MCP</h2>
+            
+            
+        </div>
+    </div>
 </a>
+  </div>
+</div>
 </nav>
 </div>
                 </div>
@@ -215,8 +229,25 @@
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="../../extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="../../extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

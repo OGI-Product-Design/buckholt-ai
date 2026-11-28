@@ -40,6 +40,39 @@
     });
   }
 
+  // Diagrams full screen, in a Buckholt Modal. Needs the Bootstrap bundle;
+  // without it the button stays hidden and the diagram still scrolls.
+  var modalEl = document.getElementById('x-diagram-modal');
+  if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+    var modal = new window.bootstrap.Modal(modalEl);
+    var modalTitle = document.getElementById('x-diagram-modal-title');
+    var modalBody = modalEl.querySelector('.x-diagram-modal-body');
+    var opener = null;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-x-fullscreen]'), function (button) {
+      button.hidden = false;
+      button.addEventListener('click', function () {
+        var figure = button.closest('.x-diagram');
+        var svg = figure.querySelector('.x-diagram-svg');
+        var copy = svg.cloneNode(true);
+        // The copy must not repeat the page's ids.
+        Array.prototype.forEach.call(copy.querySelectorAll('[id]'), function (el) {
+          if (el.tagName.toLowerCase() !== 'marker') el.removeAttribute('id');
+        });
+        copy.removeAttribute('aria-labelledby');
+        copy.setAttribute('aria-label', svg.querySelector('title').textContent);
+        modalTitle.textContent = svg.querySelector('title').textContent;
+        modalBody.innerHTML = '';
+        modalBody.appendChild(copy);
+        opener = button;
+        modal.show();
+      });
+    });
+    modalEl.addEventListener('hidden.bs.modal', function () {
+      modalBody.innerHTML = '';
+      if (opener) opener.focus();
+    });
+  }
+
   // Copy buttons
   var live = document.createElement('div');
   live.className = 'visually-hidden';

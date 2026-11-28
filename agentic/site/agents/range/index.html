@@ -297,7 +297,12 @@ The index is posted.
     <p>Range is outlined in the workflow below.</p>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: Workflow: designers decide at two gates; agents do the work in between</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Workflow: designers decide at two gates; agents do the work in between">
   <svg class="x-diagram-svg" viewBox="0 0 1100 1240" role="group" aria-labelledby="wf6-title wf6-desc" focusable="false">
   <title id="wf6-title">Workflow: designers decide at two gates; agents do the work in between</title>
@@ -398,19 +403,33 @@ The index is posted.
                 </div>
                 <div class="page-panel">
 <div class="content-group">
-<nav class="x-pager" data-buckholt="false" aria-label="Previous and next agent">
-  <a class="link-standalone" href="../../agents/map/index.html" rel="prev">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-left" aria-hidden="true"></i>
-    </span>
-    <span><span class="x-pager-label">Previous agent</span> Map</span>
+<nav aria-label="Previous and next agent">
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-md-6">
+<a href="../../agents/map/index.html" class="card card-clickable h-100" rel="prev">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Previous agent</span>
+            <h2 class="title-03">Map</h2>
+            
+            
+        </div>
+    </div>
 </a>
-  <a class="link-standalone" href="../../agents/critic/index.html" rel="next">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-    </span>
-    <span><span class="x-pager-label">Next agent</span> Critic</span>
+  </div>
+  <div class="col-12 col-md-6">
+<a href="../../agents/critic/index.html" class="card card-clickable h-100" rel="next">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Next agent</span>
+            <h2 class="title-03">Critic</h2>
+            
+            
+        </div>
+    </div>
 </a>
+  </div>
+</div>
 </nav>
 </div>
                 </div>
@@ -437,8 +456,25 @@ The index is posted.
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="../../extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="../../extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

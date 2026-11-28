@@ -78,7 +78,12 @@ export function figure({ id, width, height, title, desc, parts, fallback }) {
 // and the same content is offered as a list behind a disclosure.
 export function diagramFigure({ title, svg, list }) {
   return `<figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: ${esc(title)}</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">
   ${svg}
   </div>

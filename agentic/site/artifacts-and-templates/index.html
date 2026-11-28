@@ -80,7 +80,12 @@
 </div>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: Artifact flow: seven artifacts carry the work between agents</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Artifact flow: seven artifacts carry the work between agents">
   <svg class="x-diagram-svg" viewBox="0 0 1100 734" role="group" aria-labelledby="af4-title af4-desc" focusable="false">
   <title id="af4-title">Artifact flow: seven artifacts carry the work between agents</title>
@@ -583,8 +588,25 @@ Job: [one sentence]
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

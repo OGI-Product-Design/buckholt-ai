@@ -80,7 +80,12 @@
 </div>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: Dependencies: four foundations unblock everything else</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Dependencies: four foundations unblock everything else">
   <svg class="x-diagram-svg" viewBox="0 0 1100 752" role="group" aria-labelledby="dp7-title dp7-desc" focusable="false">
   <title id="dp7-title">Dependencies: four foundations unblock everything else</title>
@@ -141,17 +146,116 @@
     <h2 class="headline-01" id="the-guides">The guides</h2>
 </div>
 </div>
-<ol class="list">
-    <li class="list-item"><a href="../setup-guides/repo-and-locks/index.html">Repo and locks</a>: agents can only be trusted with the repo if the folders they must never change are locked.</li>
-    <li class="list-item"><a href="../setup-guides/product-packs/index.html">Product packs</a>: every agent reads the product pack, so each product needs one before any feature for it can start.</li>
-    <li class="list-item"><a href="../setup-guides/design-board/index.html">Design board</a>: the design board runs the workflow. Its stage statuses are what start each agent.</li>
-    <li class="list-item"><a href="../setup-guides/sharepoint-site/index.html">SharePoint site</a>: sharePoint holds the discovery master copy and a copy of every product pack, so people outside Cursor can read them.</li>
-    <li class="list-item"><a href="../setup-guides/figma-mcp/index.html">Figma MCP</a>: figma MCP lets agents read the designs, and lets one agent, Extend, build them out.</li>
-    <li class="list-item"><a href="../setup-guides/legacy-figma-libraries/index.html">Legacy Figma libraries</a>: products not yet on Buckholt need their own Figma library, so anchors and extended screens match how the product looks today.</li>
-    <li class="list-item"><a href="../setup-guides/logrocket-mcp/index.html">LogRocket MCP</a>: logRocket gives every feature real baselines, so success measures are based on what users actually do.</li>
-    <li class="list-item"><a href="../setup-guides/lucid-mcp/index.html">Lucid</a>: lucid holds the journey maps from Discover and the rough flows from Explore.</li>
-    <li class="list-item"><a href="../setup-guides/azure-devops-connectors/index.html">Azure DevOps connectors</a>: agents read features and write to stories through Azure DevOps, so the work and the record stay in one place.</li>
-</ol>
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/repo-and-locks/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 1 of 9</span>
+            <h3 class="title-03">Repo and locks</h3>
+            <p>Agents can only be trusted with the repo if the folders they must never change are locked.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/product-packs/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 2 of 9</span>
+            <h3 class="title-03">Product packs</h3>
+            <p>Every agent reads the product pack, so each product needs one before any feature for it can start.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/design-board/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 3 of 9</span>
+            <h3 class="title-03">Design board</h3>
+            <p>The design board runs the workflow. Its stage statuses are what start each agent.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/sharepoint-site/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 4 of 9</span>
+            <h3 class="title-03">SharePoint site</h3>
+            <p>SharePoint holds the discovery master copy and a copy of every product pack, so people outside Cursor can read them.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/figma-mcp/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 5 of 9</span>
+            <h3 class="title-03">Figma MCP</h3>
+            <p>Figma MCP lets agents read the designs, and lets one agent, Extend, build them out.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/legacy-figma-libraries/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 6 of 9</span>
+            <h3 class="title-03">Legacy Figma libraries</h3>
+            <p>Products not yet on Buckholt need their own Figma library, so anchors and extended screens match how the product looks today.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/logrocket-mcp/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 7 of 9</span>
+            <h3 class="title-03">LogRocket MCP</h3>
+            <p>LogRocket gives every feature real baselines, so success measures are based on what users actually do.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/lucid-mcp/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 8 of 9</span>
+            <h3 class="title-03">Lucid</h3>
+            <p>Lucid holds the journey maps from Discover and the rough flows from Explore.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6 col-xl-4">
+<a href="../setup-guides/azure-devops-connectors/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Guide 9 of 9</span>
+            <h3 class="title-03">Azure DevOps connectors</h3>
+            <p>Agents read features and write to stories through Azure DevOps, so the work and the record stay in one place.</p>
+            
+        </div>
+    </div>
+</a>
+  </div>
+</div>
 </div>
                 </div>
                 <div class="page-panel">
@@ -211,8 +315,25 @@ lead: One sentence on why this matters.
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
