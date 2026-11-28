@@ -75,19 +75,20 @@ export function renderPage(page, ctx) {
         </div>
       </div>
     </form>
-    <div class="button-set x-search-btn-set" data-buckholt="false">
+    <div class="button-set x-header-actions" data-buckholt="false">
       <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
         <div class="btn-icon">
           <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
         </div>
       </button>
+  <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
+          <div class="btn-icon">
+              <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </div>
+      </button>
     </div>
-    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
-        <div class="btn-icon">
-            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </div>
-    </button>
+
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
     <nav class="x-site-nav" aria-label="Main">
@@ -129,7 +130,7 @@ ${page.body}
                             <div class="input-group">
                                 <div class="response text-input">
                                     <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search the site" enterkeyhint="search">
                                 </div>
                                 <button type="submit" class="btn btn-response">
                                     <span class="button-label">Search</span>

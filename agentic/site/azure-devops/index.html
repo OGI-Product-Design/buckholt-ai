@@ -38,19 +38,20 @@
         </div>
       </div>
     </form>
-    <div class="button-set x-search-btn-set" data-buckholt="false">
+    <div class="button-set x-header-actions" data-buckholt="false">
       <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
         <div class="btn-icon">
           <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
         </div>
       </button>
+  <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
+          <div class="btn-icon">
+              <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </div>
+      </button>
     </div>
-    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
-        <div class="btn-icon">
-            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </div>
-    </button>
+
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
     <nav class="x-site-nav" aria-label="Main">
@@ -124,7 +125,7 @@
   <path class="x-d-line" d="M 948 294 L 948 317" fill="none" marker-end="url(#ado5-head)"/>
   <g><rect class="x-d-box x-d-tone-plain" x="833" y="320" width="230" height="64" rx="8"/><text class="x-d-title" x="948" y="358" text-anchor="middle">Prototype link</text></g>
 </svg>
-  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 586" role="group" aria-labelledby="ado5n-title ado5n-desc" focusable="false">
+  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 604" role="group" aria-labelledby="ado5n-title ado5n-desc" focusable="false">
   <title id="ado5n-title">Azure DevOps: design has its own board, linked into the product feature</title>
   <desc id="ado5n-desc">Portfolio epic, parent of feature, parent of design item, predecessor of engineering stories. The design item's status rolls up to the feature, and the design item links to the SharePoint brief, the Figma file and the prototype.</desc>
   <defs>
@@ -135,18 +136,18 @@
   <g><rect class="x-d-box x-d-tone-plain" x="0" y="0" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="26" text-anchor="middle">Portfolio epic</text><text class="x-d-sub" x="180" y="44" text-anchor="middle">Product board · owned by product</text></g>
   <path class="x-d-line" d="M 180 60 L 180 85" fill="none" marker-end="url(#ado5n-head)"/>
   <text class="x-d-label x-d-label-sm" x="192" y="78">parent of</text>
-  <g><rect class="x-d-box x-d-tone-plain" x="0" y="88" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="114" text-anchor="middle">Feature</text><text class="x-d-sub" x="180" y="132" text-anchor="middle">Product board · planned per quarter</text><text class="x-d-sub" x="180" y="150" text-anchor="middle">Triggers design · design status rolls up here</text></g>
-  <path class="x-d-line" d="M 180 166 L 180 191" fill="none" marker-end="url(#ado5n-head)"/>
-  <text class="x-d-label x-d-label-sm" x="192" y="184">parent of</text>
-  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="194" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="220" text-anchor="middle">Design item</text><text class="x-d-sub" x="180" y="238" text-anchor="middle">UX design board · UX owns, our columns</text><text class="x-d-sub" x="180" y="256" text-anchor="middle">One per feature</text></g>
-  <path class="x-d-line" d="M 180 272 L 180 297" fill="none" marker-end="url(#ado5n-head)"/>
-  <text class="x-d-label x-d-label-sm" x="192" y="290">predecessor of</text>
-  <g><rect class="x-d-box x-d-tone-plain" x="0" y="300" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="326" text-anchor="middle">Engineering stories</text><text class="x-d-sub" x="180" y="344" text-anchor="middle">Engineering boards · ready only when design is</text><text class="x-d-sub" x="180" y="362" text-anchor="middle">Handed over</text></g>
-  <rect class="x-d-group x-d-tone-neutral" x="0" y="392" width="360" height="186" rx="12"/>
-  <text class="x-d-group-title" x="16" y="419">The design item links to</text>
-  <g><rect class="x-d-box x-d-tone-plain" x="12" y="430" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="456" text-anchor="middle">SharePoint brief</text></g>
-  <g><rect class="x-d-box x-d-tone-plain" x="12" y="478" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="504" text-anchor="middle">Figma file</text></g>
-  <g><rect class="x-d-box x-d-tone-plain" x="12" y="526" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="552" text-anchor="middle">Prototype link</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="88" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="114" text-anchor="middle">Feature</text><text class="x-d-sub" x="180" y="132" text-anchor="middle">Product board · planned per quarter</text><text class="x-d-sub" x="180" y="150" text-anchor="middle">Triggers design · design status rolls up</text><text class="x-d-sub" x="180" y="168" text-anchor="middle">here</text></g>
+  <path class="x-d-line" d="M 180 184 L 180 209" fill="none" marker-end="url(#ado5n-head)"/>
+  <text class="x-d-label x-d-label-sm" x="192" y="202">parent of</text>
+  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="212" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="238" text-anchor="middle">Design item</text><text class="x-d-sub" x="180" y="256" text-anchor="middle">UX design board · UX owns, our columns</text><text class="x-d-sub" x="180" y="274" text-anchor="middle">One per feature</text></g>
+  <path class="x-d-line" d="M 180 290 L 180 315" fill="none" marker-end="url(#ado5n-head)"/>
+  <text class="x-d-label x-d-label-sm" x="192" y="308">predecessor of</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="318" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="344" text-anchor="middle">Engineering stories</text><text class="x-d-sub" x="180" y="362" text-anchor="middle">Engineering boards · ready only when design</text><text class="x-d-sub" x="180" y="380" text-anchor="middle">is Handed over</text></g>
+  <rect class="x-d-group x-d-tone-neutral" x="0" y="410" width="360" height="186" rx="12"/>
+  <text class="x-d-group-title" x="16" y="437">The design item links to</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="448" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="474" text-anchor="middle">SharePoint brief</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="496" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="522" text-anchor="middle">Figma file</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="544" width="336" height="40" rx="8"/><text class="x-d-title" x="180" y="570" text-anchor="middle">Prototype link</text></g>
 </svg>
   <div class="x-diagram-tools">
     <div class="button-set">
@@ -408,7 +409,7 @@
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
-    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
+    <p>Last updated <time datetime="2026-11-28T09:39:14.178Z">28 November 2026 at 09:39 GMT</time></p>
   </footer>
 </div>
 <div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../assets/search-index.js" data-root="../">
@@ -434,7 +435,7 @@
                             <div class="input-group">
                                 <div class="response text-input">
                                     <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search the site" enterkeyhint="search">
                                 </div>
                                 <button type="submit" class="btn btn-response">
                                     <span class="button-label">Search</span>

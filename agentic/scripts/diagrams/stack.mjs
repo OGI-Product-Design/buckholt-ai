@@ -37,8 +37,8 @@ function wrap(text, maxChars) {
 }
 
 function boxLines(b, width) {
-  const titleLines = b.title ? wrap(b.title, Math.floor((width - 24) / 8.2)) : [];
-  const subLines = (b.lines || []).flatMap(l => wrap(l, Math.floor((width - 24) / 6.9)));
+  const titleLines = b.title ? wrap(b.title, Math.floor((width - 32) / 8.8)) : [];
+  const subLines = (b.lines || []).flatMap(l => wrap(l, Math.floor((width - 32) / 7.4)));
   return { titleLines, subLines };
 }
 
