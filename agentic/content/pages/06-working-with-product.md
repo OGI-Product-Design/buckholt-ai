@@ -8,13 +8,6 @@ lead: Product and UX meet through a contract, not through each other's agents.
 
 {{diagram:product-contract}}
 
-| Product management owns | UX owns |
-|---|---|
-| Epics and features | Design items and the design board |
-| Outcomes and criteria | The UX brief and success measures |
-| Story-writing agents | UX agents and templates |
-| Quarterly priorities | UX sprint capacity |
-
 Two things cross between them: **Ready for design**, from product to UX, and **UX outputs on stories**, from UX to product.
 
 ## What we consume
