@@ -488,12 +488,18 @@ function guidePage(ctx, kind, guides, i) {
   const panels = [
     breadcrumb([[nav.title, `${ctx.root}${kind}/`], [g.title]]),
     `<div class="text-block">
-    <span class="eyebrow">${setup ? 'Guide' : 'How-to guide'} ${i + 1} of ${guides.length}</span>
+    ${setup ? '' : `<span class="eyebrow">How-to guide ${i + 1} of ${guides.length}</span>`}
     <h1 class="display-02">${esc(g.title)}</h1>
     ${meta.lead ? `<p class="body-02 x-lead">${esc(meta.lead)}</p>` : ''}
 </div>${setup ? `
-<div class="progress" role="progressbar" aria-label="Guide ${i + 1} of ${guides.length}" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
-    <div class="progress-bar" style="width: ${progress}%"></div>
+<div class="progress-container">
+    <div class="progress-header">
+        <label for="guide-progress" class="progress-label">Set-up guides</label>
+        <span class="progress-note">Guide ${i + 1} of ${guides.length}</span>
+    </div>
+    <div id="guide-progress" class="progress" role="progressbar" aria-label="Set-up guides: guide ${i + 1} of ${guides.length}" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: ${progress}%"></div>
+    </div>
 </div>` : ''}`,
     ...sections.map(s => s.html),
     pager(link(guides[i - 1]), link(guides[i + 1]), noun)

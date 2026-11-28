@@ -664,6 +664,17 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+/* x-progress-fit: Buckholt's .progress has min-width: 22rem, wider    */
+/* than a phone's content area, so it overflows the page margin. This  */
+/* is recorded as open in discrepancies/known-issues.md. Here the bar  */
+/* fits its Progress container instead; nothing else is changed.      */
+/* ------------------------------------------------------------------ */
+
+.x-site .progress-container .progress {
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ */
 /* x-constraint: the "Never" list on agent pages                       */
 /* ------------------------------------------------------------------ */
 

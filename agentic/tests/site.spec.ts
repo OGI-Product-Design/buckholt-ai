@@ -129,3 +129,14 @@ test('the site reads without JavaScript', async ({ browser }) => {
   await expect(page.locator('[data-x-copy]').first()).toBeHidden();
   await context.close();
 });
+
+test('the set-up progress bar stays inside the page margins on a phone', async ({ page }) => {
+  await blockExternal(page);
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/setup-guides/repo-and-locks/');
+  const [bar, box] = await Promise.all([
+    page.locator('.progress').boundingBox(),
+    page.locator('.progress-container').boundingBox()
+  ]);
+  expect(bar!.x + bar!.width).toBeLessThanOrEqual(box!.x + box!.width + 0.5);
+});
