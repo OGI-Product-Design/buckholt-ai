@@ -23,6 +23,7 @@ The model is a shared spreadsheet. Anyone it is shared with can open it; editors
 - working hours per week, per designer
 - the share of time usable for feature work
 - weeks off per designer per quarter
+- designers in the team
 
 **Human hours per feature, by step**, for the full workflow, the fast track, and the full workflow without agents. The steps follow the workflow, from reviewing the brief with the PM to reviewing the handoff from {{agent:relay}}.
 
@@ -35,12 +36,12 @@ The model is a shared spreadsheet. Anyone it is shared with can open it; editors
 - usable hours per designer per quarter
 - **designers needed**, exactly and rounded up
 - **designers needed without agents**, to show what the agents save
-- how many features two designers could handle
+- how many features per quarter the team could handle
 - the biggest human step on the full workflow
 
 ## Using it
 
 - Change only the input and hours cells. The results are formulas.
 - Use the step hours to see where designer time goes, and which agent would save the most if it improved.
-- Compare "designers needed" with the six designers in the team.
+- Compare "designers needed" with the designers in the team, and the features the team could handle with the features planned.
 - Version history in the spreadsheet shows who changed what, and can restore an earlier version.
