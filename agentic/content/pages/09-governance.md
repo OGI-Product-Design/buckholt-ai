@@ -8,7 +8,7 @@ lead: People own every decision. This page says who owns what, how work is revie
 
 | What | Owner |
 |---|---|
-| The workflow and this site | Owners: Laurence Abbott and Jon. Delegate: Marijana |
+| The workflow and this site | Owners: Laurence and Jon. Delegate: Marijana |
 | The design team | Laurence and Jon (owners), Marijana (delegate), Katerina, Andrej and Mark (contributors) |
 | Agent definitions in `/agents` | Laurence and Jon, changed by pull request |
 | Rules in `/.cursor/rules` | Changed by pull request |
