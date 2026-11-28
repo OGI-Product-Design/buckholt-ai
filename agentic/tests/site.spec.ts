@@ -35,7 +35,7 @@ test('the build has every section in the navigation', async ({ page }) => {
   await blockExternal(page);
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Main' });
-  for (const name of ['Home', 'Workflow', 'Agents', 'Toolset', 'Repo and Buckholt', 'Artifacts and templates', 'Azure DevOps', 'Working with product', 'Set-up guides', 'How-to guides', 'Governance and rollout']) {
+  for (const name of ['Home', 'Workflow', 'Agents', 'Toolset', 'Repo and Buckholt', 'Artifacts and templates', 'Azure DevOps', 'Working with product', 'Set-up guides', 'How-to guides', 'Team capacity', 'Governance and rollout']) {
     await expect(nav.getByRole('link', { name, exact: true })).toBeVisible();
   }
   expect(ALL.filter(p => p.startsWith('/agents/') && p !== '/agents/')).toHaveLength(12);
@@ -81,7 +81,7 @@ test.describe('keyboard', () => {
       const text = await page.evaluate(() => (document.activeElement?.closest('.x-site-nav') ? document.activeElement.textContent?.trim() : null));
       if (text) reached.add(text);
     }
-    expect(reached.size).toBe(11);
+    expect(reached.size).toBe(12);
   });
 
   test('the mobile menu opens and closes from the keyboard', async ({ page }) => {

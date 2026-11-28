@@ -18,6 +18,7 @@ export const NAV = [
   { slug: 'working-with-product/', title: 'Working with product' },
   { slug: 'setup-guides/', title: 'Set-up guides' },
   { slug: 'how-to-guides/', title: 'How-to guides' },
+  { slug: 'team-capacity/', title: 'Team capacity' },
   { slug: 'governance/', title: 'Governance and rollout' }
 ];
 

@@ -10,6 +10,7 @@ import { toolsetDiagram, dependenciesDiagram, repoZonesDiagram, artifactFlowDiag
 import { parseFrontMatter, renderMarkdown, inline } from './markdown.mjs';
 
 export const REPO_URL = 'https://github.com/OGI-Product-Design/buckholt-ai';
+export const CAPACITY_SHEET_URL = 'https://claude.ai/artifact/WbZc19qMsbdLUmYirHkEq8';
 
 export const DIAGRAMS = {
   workflow: workflowDiagram,
@@ -152,6 +153,12 @@ ${TOOLS[group].map(([logo, name, text]) => {
 // Generated blocks that Markdown content can place with {{block:name}}.
 const BLOCKS = {
   'agent-grid': ctx => agentGrid(ctx),
+  // The live capacity model: a shared Sheet that saves as people edit it.
+  'capacity-link': ctx => `<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-lg-8">
+${clickCard(CAPACITY_SHEET_URL, { eyebrow: 'Live model · opens in Claude', title: 'UX team capacity model', text: 'Edit the inputs and step hours. Changes save as you type, and everyone who opens it sees the latest version.' })}
+  </div>
+</div>`,
   'tools-m365': ctx => toolCards(ctx, 'm365'),
   'tools-cursor': ctx => toolCards(ctx, 'cursor'),
   gates: ctx => `<div class="row x-row-gap" data-buckholt="false">
