@@ -21,8 +21,14 @@ const ALL = pages();
 
 // External font and icon kits are blocked so results do not depend on the
 // network; the site must work without them.
+// The Bootstrap 5.1.3 bundle, which Buckholt needs for Modal and Tooltip, is
+// served from the local dev dependency so the tests do not need the network.
+const BOOTSTRAP = path.resolve(process.cwd(), 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js');
 async function blockExternal(page: Page) {
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, route => route.abort());
+  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, route =>
+    route.request().url().includes('bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js')
+      ? route.fulfill({ path: BOOTSTRAP, contentType: 'text/javascript' })
+      : route.abort());
 }
 
 test('the build has every section in the navigation', async ({ page }) => {
@@ -92,18 +98,34 @@ test.describe('keyboard', () => {
     await expect(toggle).toBeFocused();
   });
 
-  test('search works from the keyboard', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Search', exact: true }).focus();
-    await page.keyboard.press('Enter');
-    await page.getByLabel('Search the site').focus();
+  test('"/" opens search from anywhere and it works from the keyboard', async ({ page }) => {
+    await page.goto('/workflow/');
+    await page.keyboard.press('/');
+    const field = page.locator('#x-search-modal-field');
+    await expect(field).toBeFocused();
+    await expect(field).toHaveAttribute('type', 'text');
     await page.keyboard.type('figma');
     await page.keyboard.press('Enter');
-    await expect(page.getByRole('status')).toContainText('match');
-    await expect(page.locator('.x-search-list a').first()).toBeVisible();
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await expect(page.locator(':focus')).toHaveAttribute('href', /.+/);
+    const modal = page.locator('#x-search-modal');
+    await expect(modal.getByRole('status')).toContainText('match');
+    await expect(modal.locator('.x-search-list a').first()).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+  });
+
+  test('typing in the header field opens search with what was typed', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    await page.locator('#x-search-field').focus();
+    await page.keyboard.type('gate');
+    await expect(page.locator('#x-search-modal-field')).toHaveValue('gate');
+  });
+
+  test('the phone search button opens search', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Search', exact: true }).click();
+    await expect(page.locator('#x-search-modal-field')).toBeFocused();
   });
 
   test('copy buttons work from the keyboard', async ({ page, context }) => {

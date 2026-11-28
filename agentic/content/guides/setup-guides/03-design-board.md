@@ -5,7 +5,7 @@ lead: The design board runs the workflow. Its stage statuses are what start each
 
 ## Who does it
 
-Laurence, with an Azure DevOps project administrator.
+Laurence or Jon, with an Azure DevOps project administrator.
 
 ## What you need
 

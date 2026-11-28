@@ -1,32 +1,35 @@
 {
   "version": "1.0",
   "updated": "2026-11-27",
-  "owner": "Laurence Abbott",
-  "backup": "Jon",
+  "owners": [
+    "Laurence Abbott",
+    "Jon"
+  ],
+  "delegate": "Marijana",
   "team": [
     {
       "name": "Laurence",
-      "role": "Designer. Owns the workflow and the agent definitions."
+      "role": "Owner. Owns the workflow and the agent definitions with Jon."
     },
     {
       "name": "Jon",
-      "role": "Designer. Backup owner of the workflow."
+      "role": "Owner. Owns the workflow and the agent definitions with Laurence."
     },
     {
       "name": "Marijana",
-      "role": "Designer."
+      "role": "Delegate. Acts for the owners."
     },
     {
       "name": "Katerina",
-      "role": "Designer."
+      "role": "Contributor. Proposes changes by pull request."
     },
     {
       "name": "Andrej",
-      "role": "Designer."
+      "role": "Contributor. Proposes changes by pull request."
     },
     {
       "name": "Mark",
-      "role": "Designer."
+      "role": "Contributor. Proposes changes by pull request."
     }
   ],
   "stages": [

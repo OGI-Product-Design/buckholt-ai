@@ -129,59 +129,151 @@
     targets.forEach(function (t) { observer.observe(t); });
   }
 
-  // Search
-  var results = document.querySelector('.x-search-results');
-  if (results && window.X_SEARCH_INDEX) {
-    var status = results.querySelector('.x-search-status');
-    var list = results.querySelector('.x-search-list');
-    var input = document.getElementById('search-input');
-    var root = results.getAttribute('data-root');
+  // Search: one routine for the search Modal and the search page.
+  var escapeHtml = function (t) {
+    return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  };
+  var snippet = function (text, words) {
+    var lower = text.toLowerCase();
+    var at = lower.indexOf(words[0]);
+    if (at < 0) return text.slice(0, 160);
+    var start = Math.max(0, at - 60);
+    if (start) start = text.indexOf(' ', start) + 1;
+    var end = text.lastIndexOf(' ', start + 180);
+    if (end <= at) end = start + 180;
+    return (start ? '… ' : '') + text.slice(start, end) + (end < text.length ? ' …' : '');
+  };
+  var runSearch = function (box, root, q) {
+    var index = window.X_SEARCH_INDEX || [];
+    var status = box.querySelector('.x-search-status');
+    var list = box.querySelector('.x-search-list');
+    var words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    list.innerHTML = '';
+    if (!words.length) { status.textContent = 'Type a word to search, for example “gate” or “Figma”.'; return; }
+    var hits = index.map(function (page) {
+      var title = page.title.toLowerCase();
+      var body = (page.description + ' ' + page.text).toLowerCase();
+      var score = 0;
+      for (var i = 0; i < words.length; i++) {
+        var inTitle = title.indexOf(words[i]) >= 0;
+        var inBody = body.indexOf(words[i]) >= 0;
+        if (!inTitle && !inBody) return null;
+        score += (inTitle ? 10 : 0) + (inBody ? 1 : 0);
+      }
+      return { page: page, score: score };
+    }).filter(Boolean).sort(function (a, b) { return b.score - a.score; });
+    status.textContent = hits.length
+      ? hits.length + (hits.length === 1 ? ' page matches ' : ' pages match ') + '“' + q + '”.'
+      : 'No pages match “' + q + '”. Try a shorter or different word.';
+    list.innerHTML = hits.map(function (h) {
+      return '<li class="list-item"><a href="' + root + h.page.url + '">' + escapeHtml(h.page.title) + '</a>' +
+        '<p class="body-01">' + escapeHtml(snippet(h.page.text, words)) + '</p></li>';
+    }).join('');
+  };
+
+  // The search page (works without the Modal).
+  var pageBox = document.querySelector('main .x-search-results');
+  if (pageBox && window.X_SEARCH_INDEX) {
+    var pageInput = document.getElementById('search-input');
+    var pageRoot = pageBox.getAttribute('data-root');
     var query = new URLSearchParams(location.search).get('q') || '';
-    input.value = query;
-    var escapeHtml = function (t) {
-      return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
-    };
-    var snippet = function (text, words) {
-      var lower = text.toLowerCase();
-      var at = lower.indexOf(words[0]);
-      if (at < 0) return text.slice(0, 160);
-      var start = Math.max(0, at - 60);
-      if (start) start = text.indexOf(' ', start) + 1;
-      var end = text.lastIndexOf(' ', start + 180);
-      if (end <= at) end = start + 180;
-      return (start ? '… ' : '') + text.slice(start, end) + (end < text.length ? ' …' : '');
-    };
-    var run = function (index, q) {
-      var words = q.toLowerCase().split(/\s+/).filter(Boolean);
-      list.innerHTML = '';
-      if (!words.length) { status.textContent = 'Type a word to search, for example “gate” or “Figma”.'; return; }
-      var hits = index.map(function (page) {
-        var title = page.title.toLowerCase();
-        var body = (page.description + ' ' + page.text).toLowerCase();
-        var score = 0;
-        for (var i = 0; i < words.length; i++) {
-          var inTitle = title.indexOf(words[i]) >= 0;
-          var inBody = body.indexOf(words[i]) >= 0;
-          if (!inTitle && !inBody) return null;
-          score += (inTitle ? 10 : 0) + (inBody ? 1 : 0);
-        }
-        return { page: page, score: score };
-      }).filter(Boolean).sort(function (a, b) { return b.score - a.score; });
-      status.textContent = hits.length
-        ? hits.length + (hits.length === 1 ? ' page matches ' : ' pages match ') + '“' + q + '”.'
-        : 'No pages match “' + q + '”. Try a shorter or different word.';
-      list.innerHTML = hits.map(function (h) {
-        return '<li class="list-item"><a href="' + root + h.page.url + '">' + escapeHtml(h.page.title) + '</a>' +
-          '<p class="body-01">' + escapeHtml(snippet(h.page.text, words)) + '</p></li>';
-      }).join('');
-    };
-    var index = window.X_SEARCH_INDEX;
-    run(index, query);
-    document.querySelector('.x-search-form').addEventListener('submit', function (event) {
+    pageInput.value = query;
+    runSearch(pageBox, pageRoot, query);
+    document.querySelector('main .x-search-form').addEventListener('submit', function (event) {
       event.preventDefault();
-      var q = input.value.trim();
+      var q = pageInput.value.trim();
       try { history.replaceState(null, '', '?q=' + encodeURIComponent(q)); } catch (e) { /* not allowed on some file:// pages */ }
-      run(index, q);
+      runSearch(pageBox, pageRoot, q);
+    });
+  }
+
+  // The search Modal, opened from the header field, the phone Button or "/"
+  // from anywhere (as in the Mobius navigation prototype). Needs Bootstrap;
+  // without it the header field submits to the search page instead.
+  var searchModalEl = document.getElementById('x-search-modal');
+  if (searchModalEl && window.bootstrap && window.bootstrap.Modal) {
+    var searchModal = new window.bootstrap.Modal(searchModalEl);
+    var modalBox = searchModalEl.querySelector('.x-search-results');
+    var modalInput = document.getElementById('x-search-modal-field');
+    var modalRoot = searchModalEl.getAttribute('data-root');
+    var headerForm = document.querySelector('.x-header-search');
+    var headerInput = document.getElementById('x-search-field');
+    var searchBtn = document.getElementById('x-search-btn');
+    var trigger = null;
+    var seedText = '';
+    var opening = false;
+
+    var loadIndex = function (done) {
+      if (window.X_SEARCH_INDEX) { done(); return; }
+      var script = document.createElement('script');
+      script.src = searchModalEl.getAttribute('data-index');
+      script.onload = done;
+      script.onerror = function () {
+        modalBox.querySelector('.x-search-status').textContent = 'Search could not load. Every page is linked from the navigation.';
+      };
+      document.head.appendChild(script);
+    };
+    var openSearch = function (seed, from) {
+      trigger = from || null;
+      seedText = seed || '';
+      modalInput.value = seedText;
+      opening = true;
+      loadIndex(function () { runSearch(modalBox, modalRoot, modalInput.value.trim()); });
+      searchModal.show();
+    };
+    // Keys typed while the Modal is still fading in go into its field, as in
+    // the Mobius navigation prototype; otherwise they are lost.
+    document.addEventListener('keydown', function (event) {
+      if (!opening || event.target === modalInput || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key.length === 1) {
+        event.preventDefault();
+        modalInput.value += event.key;
+      } else if (event.key === 'Backspace') {
+        event.preventDefault();
+        modalInput.value = modalInput.value.slice(0, -1);
+      }
+    }, true);
+    searchModalEl.addEventListener('shown.bs.modal', function () {
+      opening = false;
+      modalInput.focus();
+      var n = modalInput.value.length;
+      modalInput.setSelectionRange(n, n);
+    });
+    searchModalEl.addEventListener('hidden.bs.modal', function () {
+      if (headerInput) headerInput.value = '';
+      if (trigger && document.contains(trigger)) trigger.focus();
+      trigger = null;
+    });
+    modalBox.querySelector('.x-search-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      runSearch(modalBox, modalRoot, modalInput.value.trim());
+    });
+
+    if (headerForm && headerInput) {
+      headerForm.addEventListener('mousedown', function (event) {
+        event.preventDefault();
+        openSearch('', null);
+      });
+      headerInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Tab' || event.key === 'Shift' || event.key === 'Escape' || event.metaKey || event.ctrlKey || event.altKey) return;
+        event.preventDefault();
+        if (opening) return;
+        openSearch(event.key.length === 1 && event.key !== '/' ? event.key : '', headerInput);
+      });
+      headerForm.addEventListener('submit', function (event) { event.preventDefault(); openSearch(headerInput.value, headerInput); });
+    }
+    if (searchBtn) {
+      searchBtn.hidden = false;
+      searchBtn.addEventListener('click', function () { openSearch('', searchBtn); });
+    }
+    // "/" opens search from anywhere, except while typing in a field.
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) return;
+      var t = event.target;
+      if (t && (t.isContentEditable || /^(input|textarea|select)$/i.test(t.tagName))) return;
+      if (searchModalEl.classList.contains('show')) return;
+      event.preventDefault();
+      openSearch('', document.activeElement && document.activeElement !== document.body ? document.activeElement : null);
     });
   }
 })();

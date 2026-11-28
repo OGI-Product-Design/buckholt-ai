@@ -20,7 +20,7 @@ The proposal for sharing the work:
 - **A second designer reviews.** Each design item also names a reviewing designer, who reviews agent output alongside the lead, such as batches from {{agent:extend}} and reports from {{agent:align}}.
 - **"Designers" at a gate means at least two of the six**: the lead and the reviewing designer, with the PM and an engineer.
 - **The agents are shared.** The Cursor agents come from the repo, so all six designers run exactly the same rules; changes go through a pull request. The Copilot agents are created once and shared with the team.
-- **One owner for the system.** Laurence owns the workflow and the agent definitions, with Jon as backup. Anyone can propose a change by pull request.
+- **Two owners, a delegate and contributors.** Laurence and Jon own the workflow and the agent definitions. Marijana is their delegate and acts for them. Katerina, Andrej and Mark are contributors: anyone can propose a change by pull request.
 
 ## Stages
 

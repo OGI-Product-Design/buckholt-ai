@@ -5,7 +5,7 @@ lead: Nine of the twelve agents run in Cursor. Each one is a rules file that poi
 
 ## Who does it
 
-Laurence writes and approves the agent definitions. Each of the six designers sets up Cursor on their own machine; because the rules live in the repo, everyone runs the same agents.
+Laurence and Jon write and approve the agent definitions; Marijana can approve as their delegate. Each of the six designers sets up Cursor on their own machine; because the rules live in the repo, everyone runs the same agents.
 
 ## What you need
 
@@ -24,7 +24,7 @@ The nine Cursor agents are {{agent:archive}}, {{agent:range}}, {{agent:critic}},
 
 ## Steps
 
-1. **Write the agent definition** in `/agents/[agent].md` from the [agent definition template](/artifacts-and-templates/), and open a pull request. Laurence approves it.
+1. **Write the agent definition** in `/agents/[agent].md` from the [agent definition template](/artifacts-and-templates/), and open a pull request. Laurence or Jon approves it.
 2. **Add the shared rule** once, in `/.cursor/rules/workflow.mdc`, set to always apply.
 3. **Add a project rule for the agent** in `/.cursor/rules/[agent].mdc`. Give it a clear description, so Agent knows when it is relevant, and point it at the definition file. You can type `/create-rule` in Agent and describe the rule to have Cursor draft it.
 4. **Scope it** where that helps. {{agent:range}}'s rule, for example, applies to files in `/sandbox`.

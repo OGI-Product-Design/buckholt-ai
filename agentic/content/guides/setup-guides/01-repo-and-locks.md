@@ -5,7 +5,7 @@ lead: Agents can only be trusted with the repo if the folders they must never ch
 
 ## Who does it
 
-Laurence, with a GitHub organisation admin.
+Laurence or Jon, with a GitHub organisation admin.
 
 ## What you need
 
@@ -24,8 +24,8 @@ Laurence, with a GitHub organisation admin.
 ```text "CODEOWNERS"
 /buckholt/   [Buckholt owners team]
 /legacy/     [Buckholt owners team]
-/agents/     [workflow owner]
-/.cursor/    [workflow owner]
+/agents/     [workflow owners]
+/.cursor/    [workflow owners]
 ```
 
 ## Done when

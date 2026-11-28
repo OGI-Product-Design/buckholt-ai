@@ -10,13 +10,13 @@ lead: Seven artifacts carry the work between agents. Each has one writer, one ho
 
 | Artifact | Written by | Where it lives | Read by |
 |---|---|---|---|
-| Product pack | {{agent:archive}}, with Laurence's approval | Repo `/context`, copy in SharePoint | All agents |
+| Product pack | {{agent:archive}}, with Laurence or Jon approving | Repo `/context`, copy in SharePoint | All agents |
 | UX brief | {{agent:brief}} | SharePoint, linked on the design item | {{agent:insight}}, {{agent:map}}, the PM |
 | Discovery summary | {{agent:insight}} and {{agent:map}} | SharePoint, summary copy in the repo | {{agent:range}}, {{agent:critic}}, {{agent:build}}, {{agent:observe}} |
 | Decision log | {{agent:archive}}, from gate outcomes | Repo `/context` | All agents, Jim, PMs |
 | Extensions register | {{agent:extend}} and {{agent:build}} | Repo `/context` | {{agent:align}}, {{agent:audit}}, {{agent:relay}} |
 | Migration map | {{agent:archive}} | Repo `/context` | {{agent:build}}, {{agent:align}} |
-| Agent definition | Laurence | Repo `/agents` | The agent itself |
+| Agent definition | Laurence and Jon | Repo `/agents` | The agent itself |
 
 ## Where each one comes from
 
@@ -193,7 +193,7 @@ Empty · Loading · Error · Success · Permissions
 
 ### Agent definition
 
-One file per agent in `/agents`, written by Laurence and changed by pull request. Each agent page on this site shows its file in this shape.
+One file per agent in `/agents`, written by Laurence and Jon and changed by pull request. Each agent page on this site shows its file in this shape.
 
 ```markdown "Agent definition template"
 # [Agent name]

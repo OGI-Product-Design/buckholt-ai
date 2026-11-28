@@ -26,12 +26,25 @@
     <span class="tag tag-sm tag-status tag-status-info">
         <span class="tag-label">Proposed</span>
     </span>
-    <a class="link-standalone x-header-search" href="../search/index.html">
-        <span class="icon">
-            <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-        </span>
-        Search
-    </a>
+    <form class="x-header-search" data-buckholt="false" role="search" action="../search/index.html" method="get" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="x-search-field" class="form-label visually-hidden">Search this site</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" class="form-control" id="x-search-field" name="q" placeholder="Type / to search" enterkeyhint="search"
+            aria-haspopup="dialog" aria-controls="x-search-modal" aria-keyshortcuts="/">
+        </div>
+      </div>
+    </form>
+    <div class="button-set x-search-btn-set" data-buckholt="false">
+      <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
+        <div class="btn-icon">
+          <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+        </div>
+      </button>
+    </div>
     <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
         <div class="btn-icon">
             <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -394,9 +407,47 @@
     </div>
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
-    <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated <time datetime="2026-11-28T09:28:40.834Z">28 November 2026 at 09:28 GMT</time></p>
+    <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
+    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
   </footer>
+</div>
+<div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../assets/search-index.js" data-root="../">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-search-modal-title">Search this site</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="x-search-results">
+                    <form class="x-search-form" role="search" autocomplete="off">
+                        <div class="input">
+                            <div class="input-label">
+                                <label for="x-search-modal-field" class="form-label visually-hidden">Search this site</label>
+                            </div>
+                            <div class="input-group">
+                                <div class="response text-input">
+                                    <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                </div>
+                                <button type="submit" class="btn btn-response">
+                                    <span class="button-label">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="x-search-status" role="status"></p>
+                    <ol class="list x-search-list"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
     <div class="modal-dialog modal-fullscreen">

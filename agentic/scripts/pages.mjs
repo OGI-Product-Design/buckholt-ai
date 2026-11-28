@@ -431,16 +431,16 @@ ${agent.never.map(n => `      <li class="list-item">
     <p>${esc(agent.doneWhen)}</p>
 </div>`,
     `<div class="text-block">
-    <h2 class="headline-01" id="owner">Owner and backup</h2>
+    <h2 class="headline-01" id="owner">Owners and delegate</h2>
 </div>
 <div class="key-value-list key-value-list-stacked">
     <div class="key-value">
-        <span class="key">Owner</span>
-        <span class="value">${esc(agent.owner || ctx.data.owner)}</span>
+        <span class="key">Owners</span>
+        <span class="value">${esc(ctx.data.owners.join(' and '))}</span>
     </div>
     <div class="key-value">
-        <span class="key">Backup</span>
-        <span class="value">${esc(agent.backup || ctx.data.backup)}</span>
+        <span class="key">Delegate</span>
+        <span class="value">${esc(ctx.data.delegate)}</span>
     </div>
 </div>`,
     `<div class="text-block">
@@ -463,7 +463,7 @@ ${codeBlock(rules.text, { label: agent.rulesFile, language: 'markdown' })}
 ${workflowDiagram(ctx, { highlight: agent.id })}`,
     pager(link(all[i - 1]), link(all[i + 1]), 'agent')
   ];
-  const toc = [['at-a-glance', 'At a glance'], ['steps', 'Steps'], ['never', 'Never'], ['done-when', 'Done when'], ['owner', 'Owner and backup'], ['rules-file', 'Rules file'], ['where-it-sits', 'Where it sits']].map(([id, title]) => ({ id, title }));
+  const toc = [['at-a-glance', 'At a glance'], ['steps', 'Steps'], ['never', 'Never'], ['done-when', 'Done when'], ['owner', 'Owners and delegate'], ['rules-file', 'Rules file'], ['where-it-sits', 'Where it sits']].map(([id, title]) => ({ id, title }));
   return {
     slug: `agents/${agent.id}/`, section: 'agents/', title: agent.name, description: agent.job,
     body: withToc(panels, toc),
@@ -542,7 +542,8 @@ function searchPage(ctx) {
     </div>
     <div class="input-group">
         <div class="response text-input">
-            <input type="search" class="form-control" id="search-input" name="q" autocomplete="off">
+            <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="text" class="form-control" id="search-input" name="q" autocomplete="off" enterkeyhint="search">
         </div>
         <button type="submit" class="btn btn-response">
             <span class="button-label">Search</span>

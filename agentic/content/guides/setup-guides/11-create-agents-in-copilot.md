@@ -5,7 +5,7 @@ lead: Brief, Insight and Map run in Microsoft 365 Copilot, close to the SharePoi
 
 ## Who does it
 
-Laurence creates the three agents and shares them with the UX team.
+Laurence or Jon creates the three agents and shares them with the UX team. Marijana can do it as their delegate.
 
 ## What you need
 
