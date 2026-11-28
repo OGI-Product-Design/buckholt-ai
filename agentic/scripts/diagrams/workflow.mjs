@@ -108,7 +108,7 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
   function centreBox(h, opts) {
     arrowDown(y);
     y += ARROW;
-    const w = 560;
+    const w = opts.cls === 'x-d-gate' ? 760 : 560;
     parts.push(box(X0 + (CW - w) / 2, y, w, h, opts));
     y += h;
   }

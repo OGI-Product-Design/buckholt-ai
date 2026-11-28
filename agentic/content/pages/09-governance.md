@@ -22,12 +22,12 @@ lead: People own every decision. This page says who owns what, how work is revie
 
 Every agent stops at a human check. The main ones:
 
-- Designers validate {{agent:insight}}'s insights and approve {{agent:map}}'s flows and worklist.
-- Designers review every {{agent:extend}} batch.
-- Designers decide which of {{agent:align}}'s issues are mistakes and which are deliberate.
-- Designers check {{agent:build}}'s prototypes for fidelity and behaviour.
+- The lead and reviewing designers validate the insights from {{agent:insight}}, and approve the flows and worklist from {{agent:map}}.
+- The lead and reviewing designers review every batch from {{agent:extend}}.
+- The lead designer decides which issues from {{agent:align}} are mistakes and which are deliberate.
+- The lead designer checks prototypes from {{agent:build}} for fidelity and behaviour.
 - {{agent:audit}} blocks testing when it finds a critical accessibility issue.
-- Designers review before {{agent:relay}} hands over; engineering reviews feasibility.
+- The lead and reviewing designers review before {{agent:relay}} hands over; engineering reviews feasibility.
 
 Each agent's page lists its human gate.
 

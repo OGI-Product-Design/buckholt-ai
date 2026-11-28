@@ -106,7 +106,11 @@
     </div>
     <div class="key-value">
         <span class="key">Tool</span>
-        <span class="value">Microsoft 365 Copilot and Lucid</span>
+        <span class="value">Microsoft 365 Copilot (Agent Builder) and Lucid</span>
+    </div>
+    <div class="key-value">
+        <span class="key">Set up</span>
+        <span class="value"><a href="../../setup-guides/create-agents-in-copilot/index.html">Create agents in Microsoft 365 Copilot</a></span>
     </div>
 </div>
 </div>
@@ -163,7 +167,7 @@
             <div class="text-block">
                 <h3 class="title-01">Human gate</h3>
                 <ul class="list">
-                    <li class="list-item">Designers approve, then move the status to Discovery approved.</li>
+                    <li class="list-item">The lead and reviewing designers approve, then the lead moves the status to Discovery approved.</li>
                 </ul>
             </div>
         </div>
@@ -249,7 +253,7 @@
   <pre class="x-code-block-body" tabindex="0" aria-label="/agents/map.md"><code id="code-4" data-language="markdown"># Map
 
 Stage: Discover
-Tool: Microsoft 365 Copilot and Lucid
+Tool: Microsoft 365 Copilot (Agent Builder) and Lucid
 Job: Turns findings into structure and a design worklist.
 
 ## Triggered by
@@ -274,7 +278,7 @@ Job: Turns findings into structure and a design worklist.
 - Design worklist
 
 ## Human gate
-Designers approve, then move the status to Discovery approved.
+The lead and reviewing designers approve, then the lead moves the status to Discovery approved.
 
 ## Never
 - Break a product's navigation pattern without flagging it
@@ -321,7 +325,7 @@ Flows and worklist are approved.
   <a href="../../agents/range/index.html" class="x-d-link" aria-label="Range: Greybox explorations in the sandbox"><rect class="x-d-box x-d-agent x-d-stage-explore" x="76" y="360" width="466" height="80" rx="8"/><text class="x-d-title" x="309" y="395" text-anchor="middle">Range</text><text class="x-d-sub" x="309" y="420" text-anchor="middle">Greybox explorations in the sandbox</text></a>
   <a href="../../agents/critic/index.html" class="x-d-link" aria-label="Critic: Stress-tests the concepts"><rect class="x-d-box x-d-agent x-d-stage-explore" x="558" y="360" width="466" height="80" rx="8"/><text class="x-d-title" x="791" y="395" text-anchor="middle">Critic</text><text class="x-d-sub" x="791" y="420" text-anchor="middle">Stress-tests the concepts</text></a>
   <line class="x-d-line" x1="550" y1="460" x2="550" y2="494" marker-end="url(#wf5-head)"/>
-  <g><rect class="x-d-box x-d-gate" x="270" y="496" width="560" height="64" rx="8"/><text class="x-d-title" x="550" y="535" text-anchor="middle">Gate: shortlist · designers, PM, engineer</text></g>
+  <g><rect class="x-d-box x-d-gate" x="170" y="496" width="760" height="64" rx="8"/><text class="x-d-title" x="550" y="535" text-anchor="middle">Gate: shortlist · lead and reviewing designers, PM, engineer</text></g>
   <line class="x-d-line" x1="550" y1="560" x2="550" y2="594" marker-end="url(#wf5-head)"/>
   <g><rect class="x-d-box x-d-people" x="270" y="596" width="560" height="56" rx="8"/><text class="x-d-title" x="550" y="631" text-anchor="middle">Designers: anchor screens in Figma</text></g>
   <line class="x-d-line" x1="550" y1="652" x2="550" y2="686" marker-end="url(#wf5-head)"/>
@@ -330,7 +334,7 @@ Flows and worklist are approved.
   <a href="../../agents/extend/index.html" class="x-d-link" aria-label="Extend: Builds out from anchors (Figma write)"><rect class="x-d-box x-d-agent x-d-stage-design" x="76" y="744" width="466" height="80" rx="8"/><text class="x-d-title" x="309" y="779" text-anchor="middle">Extend</text><text class="x-d-sub" x="309" y="804" text-anchor="middle">Builds out from anchors (Figma write)</text></a>
   <a href="../../agents/align/index.html" class="x-d-link" aria-label="Align: Consistency checks (Figma read)"><rect class="x-d-box x-d-agent x-d-stage-design" x="558" y="744" width="466" height="80" rx="8"/><text class="x-d-title" x="791" y="779" text-anchor="middle">Align</text><text class="x-d-sub" x="791" y="804" text-anchor="middle">Consistency checks (Figma read)</text></a>
   <line class="x-d-line" x1="550" y1="844" x2="550" y2="878" marker-end="url(#wf5-head)"/>
-  <g><rect class="x-d-box x-d-gate" x="270" y="880" width="560" height="64" rx="8"/><text class="x-d-title" x="550" y="919" text-anchor="middle">Gate: design sign-off · designers, PM, engineer</text></g>
+  <g><rect class="x-d-box x-d-gate" x="170" y="880" width="760" height="64" rx="8"/><text class="x-d-title" x="550" y="919" text-anchor="middle">Gate: design sign-off · lead and reviewing designers, PM, engineer</text></g>
   <line class="x-d-line" x1="550" y1="944" x2="550" y2="978" marker-end="url(#wf5-head)"/>
   <rect class="x-d-group x-d-stage-prototype" x="56" y="980" width="988" height="156" rx="12"/>
   <text class="x-d-group-title" x="76" y="1014">Prototype and handoff <tspan class="x-d-group-tools">· Cursor</tspan></text>
@@ -370,7 +374,7 @@ Flows and worklist are approved.
   <a href="../../agents/range/index.html" class="x-d-link" aria-label="Range, Greybox explorations in the sandbox"><rect class="x-d-box x-d-stage-explore x-d-agent" x="12" y="578" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="604" text-anchor="middle">Range</text><text class="x-d-sub" x="180" y="622" text-anchor="middle">Greybox explorations in the sandbox</text></a>
   <a href="../../agents/critic/index.html" class="x-d-link" aria-label="Critic, Stress-tests the concepts"><rect class="x-d-box x-d-stage-explore x-d-agent" x="12" y="644" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="670" text-anchor="middle">Critic</text><text class="x-d-sub" x="180" y="688" text-anchor="middle">Stress-tests the concepts</text></a>
   <path class="x-d-line" d="M 180 716 L 180 741" fill="none" marker-end="url(#wf5n-head)"/>
-  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="744" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="770" text-anchor="middle">Gate: shortlist · designers, PM,</text><text class="x-d-title" x="180" y="790" text-anchor="middle">engineer</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="744" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="770" text-anchor="middle">Gate: shortlist · lead and reviewing</text><text class="x-d-title" x="180" y="790" text-anchor="middle">designers, PM, engineer</text></g>
   <path class="x-d-line" d="M 180 806 L 180 831" fill="none" marker-end="url(#wf5n-head)"/>
   <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="834" width="360" height="40" rx="8"/><text class="x-d-title" x="180" y="860" text-anchor="middle">Designers: anchor screens in Figma</text></g>
   <path class="x-d-line" d="M 180 876 L 180 901" fill="none" marker-end="url(#wf5n-head)"/>
@@ -379,7 +383,7 @@ Flows and worklist are approved.
   <a href="../../agents/extend/index.html" class="x-d-link" aria-label="Extend, Builds out from anchors (Figma write)"><rect class="x-d-box x-d-stage-design x-d-agent" x="12" y="942" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="968" text-anchor="middle">Extend</text><text class="x-d-sub" x="180" y="986" text-anchor="middle">Builds out from anchors (Figma write)</text></a>
   <a href="../../agents/align/index.html" class="x-d-link" aria-label="Align, Consistency checks (Figma read)"><rect class="x-d-box x-d-stage-design x-d-agent" x="12" y="1008" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1034" text-anchor="middle">Align</text><text class="x-d-sub" x="180" y="1052" text-anchor="middle">Consistency checks (Figma read)</text></a>
   <path class="x-d-line" d="M 180 1080 L 180 1105" fill="none" marker-end="url(#wf5n-head)"/>
-  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="1108" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1134" text-anchor="middle">Gate: design sign-off · designers,</text><text class="x-d-title" x="180" y="1154" text-anchor="middle">PM, engineer</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="1108" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1134" text-anchor="middle">Gate: design sign-off · lead and</text><text class="x-d-title" x="180" y="1154" text-anchor="middle">reviewing designers, PM, engineer</text></g>
   <path class="x-d-line" d="M 180 1170 L 180 1195" fill="none" marker-end="url(#wf5n-head)"/>
   <rect class="x-d-group x-d-stage-prototype" x="0" y="1198" width="360" height="306" rx="12"/>
   <text class="x-d-group-title" x="16" y="1225">Prototype and handoff · Cursor</text>
@@ -419,7 +423,7 @@ Flows and worklist are approved.
 </span></a></li></ul></li>
     <li class="x-diagram-list-gate"><span class="tag tag-sm tag-status tag-status-warning">
         <span class="tag-label">Gate</span>
-    </span> <strong>Shortlist gate</strong> (designers, PM, engineer). Decides: direction, scope and early feasibility.</li>
+    </span> <strong>Shortlist gate</strong> (lead and reviewing designers, PM, engineer). Decides: direction, scope and early feasibility.</li>
     <li><strong>Designers</strong> make the anchor screens in Figma.</li>
     <li><strong>Design</strong> (Cursor and Figma MCP)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
     <span class="tag-label">Extend</span>
@@ -428,7 +432,7 @@ Flows and worklist are approved.
 </span></a></li></ul></li>
     <li class="x-diagram-list-gate"><span class="tag tag-sm tag-status tag-status-warning">
         <span class="tag-label">Gate</span>
-    </span> <strong>Design sign-off gate</strong> (designers, PM, engineer). Decides: the design meets the success measures and is buildable.</li>
+    </span> <strong>Design sign-off gate</strong> (lead and reviewing designers, PM, engineer). Decides: the design meets the success measures and is buildable.</li>
     <li><strong>Prototype and handoff</strong> (Cursor)<ul class="x-diagram-list-tags"><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
     <span class="tag-label">Build</span>
 </span></a></li><li><a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
@@ -503,10 +507,10 @@ Flows and worklist are approved.
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owners: Laurence and Jon. Delegate: Marijana.</p>
-    <p>Last updated <time datetime="2026-11-28T09:49:30.170Z">28 November 2026 at 09:49 GMT</time></p>
+    <p>Last updated <time datetime="2026-11-28T09:53:58.390Z">28 November 2026 at 09:53 GMT</time></p>
   </footer>
 </div>
-<div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../../assets/search-index.js?v=99ffc4dcaa" data-root="../../">
+<div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../../assets/search-index.js?v=57a0620171" data-root="../../">
     <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
         <div class="modal-content">
             <div class="modal-header">

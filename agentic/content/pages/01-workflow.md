@@ -39,7 +39,7 @@ Between Explore and Design, designers make the anchor screens in Figma. {{agent:
 
 ## Gates
 
-There are two gates. At each one, designers, the PM and an engineer decide together, using the evidence the agents have produced.
+There are two gates. At each one, the lead and reviewing designers, the PM and an engineer decide together, using the evidence the agents have produced.
 
 {{block:gates}}
 
@@ -53,12 +53,12 @@ The design item moves through these statuses in order. Some of them start an age
 |---|---|
 | Discovery | {{agent:insight}} synthesises research and behaviour evidence. |
 | Discovery approved | {{agent:archive}} writes the discovery summary into the repo. {{agent:range}} starts on full-route items. |
-| Shortlist agreed | Set when the shortlist gate passes. Designers make the anchor screens. |
+| Shortlist agreed | Set when the shortlist gate passes. The lead designer makes or agrees the anchor screens. |
 | Anchors ready | {{agent:extend}} builds out the design from the anchors. |
 | Design signed off | Set when the design sign-off gate passes. {{agent:build}} starts the prototype. |
 | Handed over | Set on the feature by {{agent:relay}}. Engineering stories are ready. |
 
-{{agent:brief}} starts earlier, when product sets the feature to Ready for design. {{agent:map}}'s output is approved by designers, who then move the status to Discovery approved.
+{{agent:brief}} starts earlier, when product sets the feature to Ready for design. The lead and reviewing designers approve the output from {{agent:map}}, then the lead moves the status to Discovery approved.
 
 ## Fast track
 
@@ -74,7 +74,7 @@ Otherwise the feature takes the full route.
 
 ## Test loop
 
-Prototypes are tested with people. {{agent:observe}} writes up the findings, and each finding says whether it goes back to {{agent:extend}} (a design change) or {{agent:build}} (a prototype change). Designers decide what changes. The loop repeats until testing is complete; then {{agent:relay}} hands over.
+Prototypes are tested with people. {{agent:observe}} writes up the findings, and each finding says whether it goes back to {{agent:extend}} (a design change) or {{agent:build}} (a prototype change). The lead designer decides what changes, with the reviewing designer. The loop repeats until the lead designer marks testing complete; then {{agent:relay}} hands over.
 
 ## Cadence under scaled agile
 
