@@ -30,4 +30,5 @@ A test feature runs from Ready for design to Handed over, with {{agent:brief}} r
 
 ## Docs (external sites)
 
+- [Model Context Protocol (MCP), Cursor Docs](https://cursor.com/docs/mcp)
 - [Azure DevOps documentation, Microsoft Learn](https://learn.microsoft.com/en-us/azure/devops/)

@@ -29,4 +29,5 @@ Each person who runs {{agent:insight}}'s Cursor step, {{agent:observe}} or {{age
 
 ## Docs (external sites)
 
+- [Model Context Protocol (MCP), Cursor Docs](https://cursor.com/docs/mcp)
 - [LogRocket documentation](https://docs.logrocket.com/)

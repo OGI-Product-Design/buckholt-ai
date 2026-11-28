@@ -31,4 +31,5 @@ Cursor can read a named Figma page, and the people running {{agent:extend}} can 
 
 ## Docs (external sites)
 
+- [Model Context Protocol (MCP), Cursor Docs](https://cursor.com/docs/mcp)
 - [Figma Help Center](https://help.figma.com/)

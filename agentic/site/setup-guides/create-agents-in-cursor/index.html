@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create agents in Cursor · Agentic UX</title>
+<meta name="description" content="Nine of the twelve agents run in Cursor. Each one is a rules file that points Cursor's Agent at that agent's definition.">
+<meta name="robots" content="noindex, nofollow">
+<script>document.documentElement.classList.add('x-js');</script>
+<link rel="stylesheet" href="https://use.typekit.net/vtl2xbn.css">
+<script src="https://kit.fontawesome.com/ca92816a31.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../../assets/buckholt/buckholt.css">
+<link rel="stylesheet" href="../../assets/buckholt/buckholt-ai-fixes.css">
+<link rel="stylesheet" href="../../assets/extensions.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body>
+<a class="visually-hidden-focusable x-skip-link" data-buckholt="false" href="#main">Skip to main content</a>
+<div class="layout x-site" data-layout="layout-03" data-layout-surface="flush">
+  <header class="x-site-header" data-buckholt="false">
+    <a class="x-site-name" href="../../index.html">
+      <span class="title-02 x-site-name-title">Agentic UX</span>
+      <span class="body-01 x-site-name-sub">OGI agentic design workflow</span>
+    </a>
+    <span class="tag tag-sm tag-status tag-status-info">
+        <span class="tag-label">Proposed</span>
+    </span>
+    <a class="link-standalone x-header-search" href="../../search/index.html">
+        <span class="icon">
+            <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+        </span>
+        Search
+    </a>
+    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
+        <div class="btn-icon">
+            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </div>
+    </button>
+  </header>
+  <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
+    <nav class="x-site-nav" aria-label="Main">
+      <ul>
+          <li><a class="action-01 x-site-nav-link" href="../../index.html">Home</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../workflow/index.html">Workflow</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../agents/index.html">Agents</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../toolset/index.html">Toolset</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../repo-and-buckholt/index.html">Repo and Buckholt</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../artifacts-and-templates/index.html">Artifacts and templates</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../azure-devops/index.html">Azure DevOps</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../working-with-product/index.html">Working with product</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../setup-guides/index.html" aria-current="true">Set-up guides</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../how-to-guides/index.html">How-to guides</a></li>
+          <li><a class="action-01 x-site-nav-link" href="../../governance/index.html">Governance and rollout</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main id="main" tabindex="-1">
+    <div class="page-body">
+      <div class="page-frame">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-xl-9">
+              <div class="page-pane">
+                <div class="page-panel">
+<div class="content-group">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="../../setup-guides/index.html">Set-up guides</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Create agents in Cursor</li>
+    </ol>
+</nav>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="text-block">
+    
+    <h1 class="display-02">Create agents in Cursor</h1>
+    <p class="body-02 x-lead">Nine of the twelve agents run in Cursor. Each one is a rules file that points Cursor's Agent at that agent's definition.</p>
+</div>
+<div class="progress-container">
+    <div class="progress-header">
+        <label for="guide-progress" class="progress-label">Set-up guides</label>
+        <span class="progress-note">Guide 10 of 11</span>
+    </div>
+    <div id="guide-progress" class="progress" role="progressbar" aria-label="Set-up guides: guide 10 of 11" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: 91%"></div>
+    </div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="who-does-it">Who does it</h2>
+    <p>Laurence writes and approves the agent definitions. Each designer sets up Cursor on their own machine.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="what-you-need">What you need</h2>
+</div>
+<ul class="list">
+    <li class="list-item">Cursor installed, signed in to the OGI team account</li>
+    <li class="list-item">The repo set up, with <code>/agents</code> and <code>/.cursor/rules</code> in place (<a href="../../setup-guides/repo-and-locks/index.html">guide 1</a>)</li>
+    <li class="list-item">The connectors the agent uses (guides 5 to 9)</li>
+</ul>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="how-it-fits-together">How it fits together</h2>
+</div>
+<ul class="list">
+    <li class="list-item"><strong>The agent definition</strong> lives in <code>/agents/[agent].md</code>. It is the source of truth: job, triggers, what it reads, steps, never, done when. Each agent page on this site shows it.</li>
+    <li class="list-item"><strong>A project rule</strong> in <code>/.cursor/rules/[agent].mdc</code> tells Cursor's Agent when to use that definition. Project rules are <code>.mdc</code> files, kept in git with the code.</li>
+    <li class="list-item"><strong>A shared rule</strong> in <code>/.cursor/rules</code> applies to every agent, every time: the locks, Buckholt first, and the extension rules.</li>
+    <li class="list-item"><strong>MCP servers</strong> in <code>/.cursor/mcp.json</code> give the agents their tools: Figma, LogRocket, Lucid and Azure DevOps.</li>
+</ul>
+<div class="text-block">
+    <p>The nine Cursor agents are <a class="x-agent-tag" data-buckholt="false" href="../../agents/archive/index.html"><span class="tag tag-sm">
+    <span class="tag-label">Archive</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/critic/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Critic</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/extend/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Extend</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/align/index.html"><span class="tag tag-sm expressive-light expressive-quaternary">
+    <span class="tag-label">Align</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/build/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Build</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/audit/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Audit</span>
+</span></a>, <a class="x-agent-tag" data-buckholt="false" href="../../agents/observe/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Observe</span>
+</span></a> and <a class="x-agent-tag" data-buckholt="false" href="../../agents/relay/index.html"><span class="tag tag-sm expressive-light expressive-secondary">
+    <span class="tag-label">Relay</span>
+</span></a>. <a class="x-agent-tag" data-buckholt="false" href="../../agents/insight/index.html"><span class="tag tag-sm expressive-light">
+    <span class="tag-label">Insight</span>
+</span></a> also has a Cursor step for LogRocket.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="steps">Steps</h2>
+</div>
+<ol class="list">
+    <li class="list-item"><strong>Write the agent definition</strong> in <code>/agents/[agent].md</code> from the <a href="../../artifacts-and-templates/index.html">agent definition template</a>, and open a pull request. Laurence approves it.</li>
+    <li class="list-item"><strong>Add the shared rule</strong> once, in <code>/.cursor/rules/workflow.mdc</code>, set to always apply.</li>
+    <li class="list-item"><strong>Add a project rule for the agent</strong> in <code>/.cursor/rules/[agent].mdc</code>. Give it a clear description, so Agent knows when it is relevant, and point it at the definition file. You can type <code>/create-rule</code> in Agent and describe the rule to have Cursor draft it.</li>
+    <li class="list-item"><strong>Scope it</strong> where that helps. <a class="x-agent-tag" data-buckholt="false" href="../../agents/range/index.html"><span class="tag tag-sm expressive-light expressive-tertiary">
+    <span class="tag-label">Range</span>
+</span></a>'s rule, for example, applies to files in <code>/sandbox</code>.</li>
+    <li class="list-item"><strong>Add the MCP servers</strong> the agent needs to <code>/.cursor/mcp.json</code>, using each provider's own set-up instructions.</li>
+    <li class="list-item"><strong>Try it</strong> on a test design item: open Agent, name the agent and the design item, and check it follows its steps and stops at its human gate.</li>
+    <li class="list-item"><strong>Change it only by pull request</strong>, so every change to an agent is reviewed and recorded.</li>
+</ol>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Shared rule: /.cursor/rules/workflow.mdc</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-26" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Shared rule: /.cursor/rules/workflow.mdc</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Shared rule: /.cursor/rules/workflow.mdc"><code id="code-26" data-language="markdown">---
+description: Rules every UX agent follows
+alwaysApply: true
+---
+
+- Never edit /buckholt or /legacy.
+- Check Buckholt core and its documentation before making anything new.
+- Anything Buckholt does not have goes in /extensions/[product]/:
+  Buckholt tokens only, class prefix x-, data-buckholt=&quot;false&quot;,
+  and an entry in the extensions register.
+- Stop at your human gate. Post what you produced on the design item.</code></pre>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">Agent rule: /.cursor/rules/range.mdc</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-27" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> Agent rule: /.cursor/rules/range.mdc</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="Agent rule: /.cursor/rules/range.mdc"><code id="code-27" data-language="markdown">---
+description: Range agent. Use when a full-route design item reaches Discovery approved and needs rough directions explored.
+globs: sandbox/**
+alwaysApply: false
+---
+
+You are the Range agent. Follow @agents/range.md exactly.
+Work only in /sandbox/[product]/[feature]/ and use greybox.css only.</code></pre>
+</div>
+<div class="x-code-block" data-buckholt="false">
+  <div class="x-code-block-header">
+    <span class="x-code-block-label">MCP servers: /.cursor/mcp.json</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-x-copy="code-28" hidden>
+        <div class="btn-icon">
+            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        </div>
+        <span class="button-label">Copy<span class="visually-hidden"> MCP servers: /.cursor/mcp.json</span></span>
+    </button>
+  </div>
+  <pre class="x-code-block-body" tabindex="0" aria-label="MCP servers: /.cursor/mcp.json"><code id="code-28" data-language="json">{
+  &quot;mcpServers&quot;: {
+    &quot;figma&quot;: { &quot;url&quot;: &quot;[server address from Figma's set-up instructions]&quot; },
+    &quot;logrocket&quot;: { &quot;url&quot;: &quot;[server address from LogRocket's set-up instructions]&quot; },
+    &quot;lucid&quot;: { &quot;url&quot;: &quot;[server address from Lucid's set-up instructions]&quot; },
+    &quot;azure-devops&quot;: { &quot;command&quot;: &quot;[command from the Azure DevOps MCP set-up instructions]&quot; }
+  }
+}</code></pre>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="done-when">Done when</h2>
+    <p>Each Cursor agent has a definition in <code>/agents</code>, a project rule in <code>/.cursor/rules</code>, and has run once on a test design item, stopping at its human gate.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="docs-external-sites">Docs (external sites)</h2>
+</div>
+<ul class="list">
+    <li class="list-item"><a href="https://cursor.com/docs/rules" rel="noopener">Rules, Cursor Docs<span class="visually-hidden"> (external site)</span></a></li>
+    <li class="list-item"><a href="https://cursor.com/docs/mcp" rel="noopener">Model Context Protocol (MCP), Cursor Docs<span class="visually-hidden"> (external site)</span></a></li>
+</ul>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="learn-external-sites">Learn (external sites)</h2>
+</div>
+<ul class="list">
+    <li class="list-item"><a href="https://cursor.com/learn/customizing-agents" rel="noopener">Customizing agents, Cursor Learn<span class="visually-hidden"> (external site)</span></a></li>
+</ul>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<nav aria-label="Previous and next guide">
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-md-6">
+<a href="../../setup-guides/azure-devops-connectors/index.html" class="card card-clickable h-100" rel="prev">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Previous guide</span>
+            <h2 class="title-03">Azure DevOps connectors</h2>
+            
+            
+        </div>
+    </div>
+</a>
+  </div>
+  <div class="col-12 col-md-6">
+<a href="../../setup-guides/create-agents-in-copilot/index.html" class="card card-clickable h-100" rel="next">
+    <div class="card-body">
+        <div class="text-block">
+            <span class="eyebrow">Next guide</span>
+            <h2 class="title-03">Create agents in Microsoft 365 Copilot</h2>
+            
+            
+        </div>
+    </div>
+</a>
+  </div>
+</div>
+</nav>
+</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 d-none d-xl-block">
+<nav class="x-on-this-page" data-buckholt="false" aria-label="On this page">
+  <p class="label-01 x-on-this-page-title">On this page</p>
+  <ul>
+    <li><a href="#who-does-it">Who does it</a></li>
+    <li><a href="#what-you-need">What you need</a></li>
+    <li><a href="#how-it-fits-together">How it fits together</a></li>
+    <li><a href="#steps">Steps</a></li>
+    <li><a href="#done-when">Done when</a></li>
+    <li><a href="#docs-external-sites">Docs (external sites)</a></li>
+    <li><a href="#learn-external-sites">Learn (external sites)</a></li>
+  </ul>
+</nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="body-01 x-site-footer" data-buckholt="false">
+    <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
+    <p>Last updated 28 November 2026. <a href="../../extensions/index.html">Extensions on this site</a></p>
+  </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

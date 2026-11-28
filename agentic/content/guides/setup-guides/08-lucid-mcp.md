@@ -29,4 +29,5 @@ Each designer.
 
 ## Docs (external sites)
 
+- [Model Context Protocol (MCP), Cursor Docs](https://cursor.com/docs/mcp)
 - [Lucid Help Center](https://help.lucid.co/)

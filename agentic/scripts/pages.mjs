@@ -276,7 +276,7 @@ ${agentGrid(ctx)}`
 </div>
 ${cardRow([
   clickCard(`${ctx.root}workflow/`, { title: 'Workflow', text: 'Stages, gates and statuses: how work moves from Ready for design to Handed over.' }),
-  clickCard(`${ctx.root}setup-guides/`, { title: 'Set-up guides', text: 'Nine guides, in order, to get the tools and access in place.' }),
+  clickCard(`${ctx.root}setup-guides/`, { title: 'Set-up guides', text: 'Eleven guides, in order: foundations, connectors, then creating the agents in Cursor and Copilot.' }),
   clickCard(`${ctx.root}agents/`, { title: 'Agent rules', text: 'What each of the twelve agents does, and what it must never do.' })
 ], 'col-12 col-md-4')}`
     ]
