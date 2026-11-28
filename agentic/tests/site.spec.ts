@@ -129,3 +129,33 @@ test('the site reads without JavaScript', async ({ browser }) => {
   await expect(page.locator('[data-x-copy]').first()).toBeHidden();
   await context.close();
 });
+
+test('the set-up progress bar stays inside the page margins on a phone', async ({ page }) => {
+  await blockExternal(page);
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/setup-guides/repo-and-locks/');
+  const [bar, box] = await Promise.all([
+    page.locator('.progress').boundingBox(),
+    page.locator('.progress-container').boundingBox()
+  ]);
+  expect(bar!.x + bar!.width).toBeLessThanOrEqual(box!.x + box!.width + 0.5);
+});
+
+test('every diagram shows whole on a phone', async ({ page }) => {
+  await blockExternal(page);
+  await page.setViewportSize({ width: 390, height: 800 });
+  for (const url of ['/', '/workflow/', '/toolset/', '/repo-and-buckholt/', '/artifacts-and-templates/', '/azure-devops/', '/working-with-product/', '/setup-guides/', '/agents/extend/']) {
+    await page.goto(url);
+    const figures = page.locator('.x-diagram');
+    const count = await figures.count();
+    expect(count, `${url} has a diagram`).toBeGreaterThan(0);
+    for (let i = 0; i < count; i++) {
+      const fig = figures.nth(i);
+      await expect(fig.locator('.x-diagram-wide')).toBeHidden();
+      const svg = fig.locator('.x-diagram-narrow');
+      await expect(svg).toBeVisible();
+      const [s, f] = await Promise.all([svg.boundingBox(), fig.boundingBox()]);
+      expect(s!.x + s!.width, `${url} diagram ${i + 1} fits`).toBeLessThanOrEqual(f!.x + f!.width + 0.5);
+    }
+  }
+});

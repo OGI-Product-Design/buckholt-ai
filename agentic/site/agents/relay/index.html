@@ -20,7 +20,7 @@
 <div class="layout x-site" data-layout="layout-03" data-layout-surface="flush">
   <header class="x-site-header" data-buckholt="false">
     <a class="x-site-name" href="../../index.html">
-      <img class="x-site-logo" src="../../assets/agentic-ux-logo.png" width="194" height="40" alt="Agentic UX, home">
+      <span class="title-02 x-site-name-title">Agentic UX</span>
       <span class="body-01 x-site-name-sub">OGI agentic design workflow</span>
     </a>
     <span class="tag tag-sm tag-status tag-status-info">
@@ -301,14 +301,7 @@ Every story has its UX section and the release check is posted.
     <p>Relay is outlined in the workflow below.</p>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <div class="x-diagram-tools">
-    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
-    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
-        <span class="button-label">View full screen<span class="visually-hidden">: Workflow: designers decide at two gates; agents do the work in between</span></span>
-    </button>
-  </div>
-  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Workflow: designers decide at two gates; agents do the work in between">
-  <svg class="x-diagram-svg" viewBox="-4 -4 1108 1248" role="group" aria-labelledby="wf13-title wf13-desc" focusable="false">
+  <svg class="x-diagram-svg x-diagram-wide" viewBox="-4 -4 1108 1248" role="group" aria-labelledby="wf13-title wf13-desc" focusable="false">
   <title id="wf13-title">Workflow: designers decide at two gates; agents do the work in between</title>
   <desc id="wf13-desc">Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.</desc>
   <defs>
@@ -355,6 +348,59 @@ Every story has its UX section and the release check is posted.
   <path class="x-d-loop" d="M 56 1058 H 30 V 766 H 53" marker-end="url(#wf13-head)"/>
   <text class="x-d-loop-label" transform="translate(20 912) rotate(-90)" text-anchor="middle">Test loop</text>
 </svg>
+  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 1730" role="group" aria-labelledby="wf13n-title wf13n-desc" focusable="false">
+  <title id="wf13n-title">Workflow: designers decide at two gates; agents do the work in between</title>
+  <desc id="wf13n-desc">Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.</desc>
+  <defs>
+    <marker id="wf13n-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="x-d-head" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+  <rect class="x-d-group x-d-tone-neutral" x="0" y="0" width="360" height="240" rx="12"/>
+  <text class="x-d-group-title" x="16" y="27">Foundations</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="38" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="64" text-anchor="middle">SharePoint</text><text class="x-d-sub" x="180" y="82" text-anchor="middle">Discovery and pack copy</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="104" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="130" text-anchor="middle">Azure DevOps</text><text class="x-d-sub" x="180" y="148" text-anchor="middle">Design board, stage status</text></g>
+  <a href="../../agents/archive/index.html" class="x-d-link" aria-label="Archive, Design context in the repo"><rect class="x-d-box x-d-stage-foundation x-d-agent" x="12" y="170" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="196" text-anchor="middle">Archive</text><text class="x-d-sub" x="180" y="214" text-anchor="middle">Design context in the repo</text></a>
+  <path class="x-d-line" d="M 180 242 L 180 267" fill="none" marker-end="url(#wf13n-head)"/>
+  <rect class="x-d-group x-d-stage-discover" x="0" y="270" width="360" height="240" rx="12"/>
+  <text class="x-d-group-title" x="16" y="297">Discover · Copilot, Lucid</text>
+  <a href="../../agents/brief/index.html" class="x-d-link" aria-label="Brief, UX problem, route, measures"><rect class="x-d-box x-d-stage-discover x-d-agent" x="12" y="308" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="334" text-anchor="middle">Brief</text><text class="x-d-sub" x="180" y="352" text-anchor="middle">UX problem, route, measures</text></a>
+  <a href="../../agents/insight/index.html" class="x-d-link" aria-label="Insight, Research and LogRocket evidence"><rect class="x-d-box x-d-stage-discover x-d-agent" x="12" y="374" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="400" text-anchor="middle">Insight</text><text class="x-d-sub" x="180" y="418" text-anchor="middle">Research and LogRocket evidence</text></a>
+  <a href="../../agents/map/index.html" class="x-d-link" aria-label="Map, Flows and worklist in Lucid"><rect class="x-d-box x-d-stage-discover x-d-agent" x="12" y="440" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="466" text-anchor="middle">Map</text><text class="x-d-sub" x="180" y="484" text-anchor="middle">Flows and worklist in Lucid</text></a>
+  <path class="x-d-line" d="M 180 512 L 180 537" fill="none" marker-end="url(#wf13n-head)"/>
+  <rect class="x-d-group x-d-stage-explore" x="0" y="540" width="360" height="174" rx="12"/>
+  <text class="x-d-group-title" x="16" y="567">Explore · Cursor sandbox</text>
+  <a href="../../agents/range/index.html" class="x-d-link" aria-label="Range, Greybox explorations in the sandbox"><rect class="x-d-box x-d-stage-explore x-d-agent" x="12" y="578" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="604" text-anchor="middle">Range</text><text class="x-d-sub" x="180" y="622" text-anchor="middle">Greybox explorations in the sandbox</text></a>
+  <a href="../../agents/critic/index.html" class="x-d-link" aria-label="Critic, Stress-tests the concepts"><rect class="x-d-box x-d-stage-explore x-d-agent" x="12" y="644" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="670" text-anchor="middle">Critic</text><text class="x-d-sub" x="180" y="688" text-anchor="middle">Stress-tests the concepts</text></a>
+  <path class="x-d-line" d="M 180 716 L 180 741" fill="none" marker-end="url(#wf13n-head)"/>
+  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="744" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="770" text-anchor="middle">Gate: shortlist · designers, PM,</text><text class="x-d-title" x="180" y="790" text-anchor="middle">engineer</text></g>
+  <path class="x-d-line" d="M 180 806 L 180 831" fill="none" marker-end="url(#wf13n-head)"/>
+  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="834" width="360" height="40" rx="8"/><text class="x-d-title" x="180" y="860" text-anchor="middle">Designers: anchor screens in Figma</text></g>
+  <path class="x-d-line" d="M 180 876 L 180 901" fill="none" marker-end="url(#wf13n-head)"/>
+  <rect class="x-d-group x-d-stage-design" x="0" y="904" width="360" height="174" rx="12"/>
+  <text class="x-d-group-title" x="16" y="931">Design · Cursor and Figma MCP</text>
+  <a href="../../agents/extend/index.html" class="x-d-link" aria-label="Extend, Builds out from anchors (Figma write)"><rect class="x-d-box x-d-stage-design x-d-agent" x="12" y="942" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="968" text-anchor="middle">Extend</text><text class="x-d-sub" x="180" y="986" text-anchor="middle">Builds out from anchors (Figma write)</text></a>
+  <a href="../../agents/align/index.html" class="x-d-link" aria-label="Align, Consistency checks (Figma read)"><rect class="x-d-box x-d-stage-design x-d-agent" x="12" y="1008" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1034" text-anchor="middle">Align</text><text class="x-d-sub" x="180" y="1052" text-anchor="middle">Consistency checks (Figma read)</text></a>
+  <path class="x-d-line" d="M 180 1080 L 180 1105" fill="none" marker-end="url(#wf13n-head)"/>
+  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="1108" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1134" text-anchor="middle">Gate: design sign-off · designers, PM,</text><text class="x-d-title" x="180" y="1154" text-anchor="middle">engineer</text></g>
+  <path class="x-d-line" d="M 180 1170 L 180 1195" fill="none" marker-end="url(#wf13n-head)"/>
+  <rect class="x-d-group x-d-stage-prototype" x="0" y="1198" width="360" height="306" rx="12"/>
+  <text class="x-d-group-title" x="16" y="1225">Prototype and handoff · Cursor</text>
+  <a href="../../agents/build/index.html" class="x-d-link" aria-label="Build, Prototypes in repo"><rect class="x-d-box x-d-stage-prototype x-d-agent" x="12" y="1236" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1262" text-anchor="middle">Build</text><text class="x-d-sub" x="180" y="1280" text-anchor="middle">Prototypes in repo</text></a>
+  <a href="../../agents/audit/index.html" class="x-d-link" aria-label="Audit, WCAG, Buckholt drift"><rect class="x-d-box x-d-stage-prototype x-d-agent" x="12" y="1302" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1328" text-anchor="middle">Audit</text><text class="x-d-sub" x="180" y="1346" text-anchor="middle">WCAG, Buckholt drift</text></a>
+  <a href="../../agents/observe/index.html" class="x-d-link" aria-label="Observe, Usability testing"><rect class="x-d-box x-d-stage-prototype x-d-agent" x="12" y="1368" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1394" text-anchor="middle">Observe</text><text class="x-d-sub" x="180" y="1412" text-anchor="middle">Usability testing</text></a>
+  <a href="../../agents/relay/index.html" class="x-d-link" aria-label="Relay, Handoff to stories (this agent)" aria-current="page"><rect class="x-d-box x-d-stage-handoff x-d-agent x-d-current" x="12" y="1434" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1460" text-anchor="middle">Relay</text><text class="x-d-sub" x="180" y="1478" text-anchor="middle">Handoff to stories</text></a>
+  <path class="x-d-line" d="M 180 1506 L 180 1531" fill="none" marker-end="url(#wf13n-head)"/>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="1534" width="360" height="40" rx="8"/><text class="x-d-title" x="180" y="1560" text-anchor="middle">Engineering stories (one sprint behind)</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1594" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1620" text-anchor="middle">Fast track</text><text class="x-d-sub" x="180" y="1638" text-anchor="middle">Discover can go straight to Design</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1664" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1690" text-anchor="middle">Test loop</text><text class="x-d-sub" x="180" y="1708" text-anchor="middle">Prototype can go back to Design</text></g>
+</svg>
+  <div class="x-diagram-tools">
+    <div class="button-set">
+        <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+            <span class="button-label">View full screen<span class="visually-hidden">: Workflow: designers decide at two gates; agents do the work in between</span></span>
+        </button>
+    </div>
   </div>
   <details class="x-diagram-fallback">
     <summary>Show the diagram as a list</summary>

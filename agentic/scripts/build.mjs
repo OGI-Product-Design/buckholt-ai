@@ -95,7 +95,6 @@ export function build({ quiet = false } = {}) {
   // block fetch() on file:// pages).
   fs.writeFileSync(path.join(assets, 'search-index.js'), `window.X_SEARCH_INDEX = ${JSON.stringify(searchIndex)};\n`);
   fs.copyFileSync(path.join(SITE, 'js/site.js'), path.join(assets, 'site.js'));
-  fs.copyFileSync(path.join(SITE, 'assets/agentic-ux-logo.png'), path.join(assets, 'agentic-ux-logo.png'));
 
   if (!quiet) console.log(`Built ${written.length} pages into ${path.relative(process.cwd(), DIST) || DIST}`);
   return written;

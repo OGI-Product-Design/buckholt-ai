@@ -90,15 +90,14 @@ body {
 .x-site-name {
   gap: var(--spacer-02);
 }
-.x-site-logo {
-  display: block;
-  width: auto;
-  height: calc(var(--spacer-07) - var(--spacer-03));
+/* .x-site-name-title uses Buckholt's title-02 type set; colour only here. */
+.x-site-name-title {
+  color: var(--text-primary);
 }
 .x-site-name-sub {
   color: var(--text-tertiary);
 }
-.x-site-name:hover .x-site-name-sub {
+.x-site-name:hover .x-site-name-title {
   text-decoration: underline;
 }
 .x-site-name:focus-visible,
@@ -186,9 +185,6 @@ body {
 @media (max-width: 559.98px) {
   .x-site-header {
     gap: var(--spacer-03);
-  }
-  .x-site-logo {
-    height: var(--spacer-06);
   }
   .x-site-name-sub,
   .x-site-header > .tag {
@@ -538,25 +534,16 @@ body {
   flex-direction: column;
   gap: var(--spacer-03);
 }
-.x-diagram-scroll {
-  overflow-x: auto;
-}
-.x-diagram-scroll:focus-visible {
-  outline: calc(var(--border-width) * 2) solid var(--focus-01);
-  outline-offset: calc(var(--border-width) * 2);
-}
+/* The hint, then the full-screen Button underneath in a Button set, so
+   the label stays on one line as Buckholt prefers. */
 .x-diagram-tools {
   display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacer-04);
-}
-.x-diagram-hint {
-  margin: 0;
-  color: var(--text-tertiary);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacer-03);
 }
 .x-diagram-modal-body {
-  overflow: auto;
+  overflow: hidden;
 }
 .x-diagram-fallback {
   display: none;
@@ -600,11 +587,26 @@ body {
   color: var(--text-secondary);
 }
 
-/* Narrow screens: the diagram keeps a readable size and scrolls sideways,
-   and the list version is offered as well. */
+/* Narrow screens: the one-column diagram replaces the wide one, with the
+   full-screen button and the list version underneath. */
+.x-diagram-narrow {
+  display: none;
+}
+.x-diagram-narrow .x-d-title {
+  font-size: 15px;
+}
+.x-diagram-svg.x-diagram-narrow .x-d-sub {
+  font-size: 13px;
+}
+.x-diagram-narrow .x-d-group-title {
+  font-size: 15px;
+}
 @media (max-width: 895.98px) {
-  .x-diagram-svg {
-    min-width: calc(var(--spacer-09) * 5.5);
+  .x-diagram-wide {
+    display: none;
+  }
+  .x-diagram-narrow {
+    display: block;
   }
   .x-diagram-tools {
     display: flex;
@@ -612,6 +614,13 @@ body {
   .x-diagram-fallback {
     display: block;
   }
+}
+
+/* Full screen: the wide diagram, fitted inside the screen. */
+.x-diagram-modal-body .x-diagram-wide {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* ------------------------------------------------------------------ */
@@ -661,6 +670,17 @@ body {
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* x-progress-fit: Buckholt's .progress has min-width: 22rem, wider    */
+/* than a phone's content area, so it overflows the page margin. This  */
+/* is recorded as open in discrepancies/known-issues.md. Here the bar  */
+/* fits its Progress container instead; nothing else is changed.      */
+/* ------------------------------------------------------------------ */
+
+.x-site .progress-container .progress {
+  min-width: 0;
 }
 
 /* ------------------------------------------------------------------ */

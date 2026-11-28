@@ -20,7 +20,7 @@
 <div class="layout x-site" data-layout="layout-03" data-layout-surface="flush">
   <header class="x-site-header" data-buckholt="false">
     <a class="x-site-name" href="../index.html">
-      <img class="x-site-logo" src="../assets/agentic-ux-logo.png" width="194" height="40" alt="Agentic UX, home">
+      <span class="title-02 x-site-name-title">Agentic UX</span>
       <span class="body-01 x-site-name-sub">OGI agentic design workflow</span>
     </a>
     <span class="tag tag-sm tag-status tag-status-info">
@@ -80,14 +80,7 @@
 </div>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <div class="x-diagram-tools">
-    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
-    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
-        <span class="button-label">View full screen<span class="visually-hidden">: Repo zones: two folders are locked; agents create only in three</span></span>
-    </button>
-  </div>
-  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Repo zones: two folders are locked; agents create only in three">
-  <svg class="x-diagram-svg" viewBox="-4 -4 1108 552" role="group" aria-labelledby="rz3-title rz3-desc" focusable="false">
+  <svg class="x-diagram-svg x-diagram-wide" viewBox="-4 -4 1108 552" role="group" aria-labelledby="rz3-title rz3-desc" focusable="false">
   <title id="rz3-title">Repo zones: two folders are locked; agents create only in three</title>
   <desc id="rz3-desc">Locked, no agent writes: /buckholt (Buckholt core) and /legacy (captured legacy CSS), both changed only with owner approval. Agents create in /extensions, /sandbox and /prototypes. Context and control: /context, /agents, /.cursor/rules and /tests.</desc>
   <defs>
@@ -111,6 +104,36 @@
   <g><rect class="x-d-box x-d-tone-plain" x="774.6666666666666" y="296" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="927.3333333333333" y="330" text-anchor="middle">/.cursor/rules</text><text class="x-d-sub" x="927.3333333333333" y="354" text-anchor="middle">Rules every agent follows</text><text class="x-d-sub" x="927.3333333333333" y="378" text-anchor="middle">Changed by pull request</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="774.6666666666666" y="416" width="305.3333333333333" height="104" rx="8"/><text class="x-d-title x-d-mono" x="927.3333333333333" y="450" text-anchor="middle">/tests</text><text class="x-d-sub" x="927.3333333333333" y="474" text-anchor="middle">Playwright and axe</text><text class="x-d-sub" x="927.3333333333333" y="498" text-anchor="middle">Run by Audit</text></g>
 </svg>
+  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 922" role="group" aria-labelledby="rz3n-title rz3n-desc" focusable="false">
+  <title id="rz3n-title">Repo zones: two folders are locked; agents create only in three</title>
+  <desc id="rz3n-desc">Locked, no agent writes: /buckholt (Buckholt core) and /legacy (captured legacy CSS), both changed only with owner approval. Agents create in /extensions, /sandbox and /prototypes. Context and control: /context, /agents, /.cursor/rules and /tests.</desc>
+  <defs>
+    <marker id="rz3n-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="x-d-head" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+  <rect class="x-d-group x-d-tone-locked" x="0" y="0" width="360" height="210" rx="12"/>
+  <text class="x-d-group-title" x="16" y="27">Locked: no agent writes</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="38" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="64" text-anchor="middle">/buckholt</text><text class="x-d-sub" x="180" y="82" text-anchor="middle">Buckholt core</text><text class="x-d-sub" x="180" y="100" text-anchor="middle">Owner approval to change</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="122" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="148" text-anchor="middle">/legacy/[product]</text><text class="x-d-sub" x="180" y="166" text-anchor="middle">Captured legacy CSS</text><text class="x-d-sub" x="180" y="184" text-anchor="middle">Owner approval to change</text></g>
+  <rect class="x-d-group x-d-tone-warning" x="0" y="226" width="360" height="294" rx="12"/>
+  <text class="x-d-group-title" x="16" y="253">Agents create here</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="264" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="290" text-anchor="middle">/extensions/[product]</text><text class="x-d-sub" x="180" y="308" text-anchor="middle">Build, Extend; tokens only</text><text class="x-d-sub" x="180" y="326" text-anchor="middle">Flagged and registered</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="348" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="374" text-anchor="middle">/sandbox/[product]</text><text class="x-d-sub" x="180" y="392" text-anchor="middle">Range; greybox only</text><text class="x-d-sub" x="180" y="410" text-anchor="middle">Never promoted</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="432" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="458" text-anchor="middle">/prototypes/[product]</text><text class="x-d-sub" x="180" y="476" text-anchor="middle">Build; by styling mode</text><text class="x-d-sub" x="180" y="494" text-anchor="middle">Checked by Audit, Align</text></g>
+  <rect class="x-d-group x-d-tone-primary" x="0" y="536" width="360" height="378" rx="12"/>
+  <text class="x-d-group-title" x="16" y="563">Context and control</text>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="574" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="600" text-anchor="middle">/context</text><text class="x-d-sub" x="180" y="618" text-anchor="middle">Archive: packs, logs,</text><text class="x-d-sub" x="180" y="636" text-anchor="middle">register, migration map</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="658" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="684" text-anchor="middle">/agents</text><text class="x-d-sub" x="180" y="702" text-anchor="middle">One file per agent</text><text class="x-d-sub" x="180" y="720" text-anchor="middle">Changed by pull request</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="742" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="768" text-anchor="middle">/.cursor/rules</text><text class="x-d-sub" x="180" y="786" text-anchor="middle">Rules every agent follows</text><text class="x-d-sub" x="180" y="804" text-anchor="middle">Changed by pull request</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="12" y="826" width="336" height="76" rx="8"/><text class="x-d-title x-d-mono" x="180" y="852" text-anchor="middle">/tests</text><text class="x-d-sub" x="180" y="870" text-anchor="middle">Playwright and axe</text><text class="x-d-sub" x="180" y="888" text-anchor="middle">Run by Audit</text></g>
+</svg>
+  <div class="x-diagram-tools">
+    <div class="button-set">
+        <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+            <span class="button-label">View full screen<span class="visually-hidden">: Repo zones: two folders are locked; agents create only in three</span></span>
+        </button>
+    </div>
   </div>
   <details class="x-diagram-fallback">
     <summary>Show the diagram as a list</summary>

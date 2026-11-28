@@ -49,7 +49,7 @@ export function toolsetDiagram(ctx) {
     id, width: W, height: by + 96,
     title: 'Toolset: two platforms, joined by one bridge',
     desc: 'Microsoft 365 (Copilot, SharePoint, Teams, Azure DevOps, Lucid) handles discovery. Cursor (Cursor, Figma MCP, LogRocket MCP, the Buckholt prototyping repo, Playwright and axe, Lucid MCP) handles explore, design and prototype. The bridge between them is kept in sync by the Archive agent.',
-    parts, fallback
+    parts, fallback, narrow: narrow_toolset(ctx)
   });
 }
 
@@ -92,7 +92,7 @@ export function dependenciesDiagram(ctx) {
     id, width: W, height: fy + 196,
     title: 'Dependencies: four foundations unblock everything else',
     desc: 'Foundations come first: the repo and its locks, product packs, the design board and the SharePoint site. They unblock connectors and access: Figma MCP write, LogRocket MCP, Lucid MCP, the Azure DevOps connector, legacy Figma libraries, and Figma read with Code Connect. Those unblock the agents, by stage.',
-    parts, fallback
+    parts, fallback, narrow: narrow_dependencies(ctx)
   });
 }
 
@@ -117,7 +117,7 @@ export function repoZonesDiagram(ctx) {
     id, width: W, height: h,
     title: 'Repo zones: two folders are locked; agents create only in three',
     desc: 'Locked, no agent writes: /buckholt (Buckholt core) and /legacy (captured legacy CSS), both changed only with owner approval. Agents create in /extensions, /sandbox and /prototypes. Context and control: /context, /agents, /.cursor/rules and /tests.',
-    parts, fallback
+    parts, fallback, narrow: narrow_repoZones(ctx)
   });
 }
 
@@ -159,7 +159,7 @@ export function artifactFlowDiagram(ctx) {
     id, width: W, height: top + ARTIFACTS.length * (rh + rg),
     title: 'Artifact flow: seven artifacts carry the work between agents',
     desc: ARTIFACTS.map(a => `${a.name}, in ${a.where}, read by ${a.readBy}`).join('. ') + '.',
-    parts, fallback
+    parts, fallback, narrow: narrow_artifacts(ctx)
   });
 }
 
@@ -208,7 +208,7 @@ export function adoDiagram(ctx) {
     id, width: W, height: ly + lh + 4,
     title: 'Azure DevOps: design has its own board, linked into the product feature',
     desc: 'Portfolio epic, parent of feature, parent of design item, predecessor of engineering stories. The design item\'s status rolls up to the feature, and the design item links to the SharePoint brief, the Figma file and the prototype.',
-    parts, fallback
+    parts, fallback, narrow: narrow_ado(ctx)
   });
 }
 
@@ -243,6 +243,111 @@ export function contractDiagram(ctx) {
     id, width: W, height: h,
     title: 'Product contract: product and UX meet through a contract, not through each other’s agents',
     desc: 'Product management owns epics and features, outcomes and criteria, story-writing agents and quarterly priorities. UX owns design items and the board, the UX brief and measures, agents and templates, and UX sprint capacity. Two things cross: Ready for design, from product to UX; and UX outputs on stories, from UX to product.',
-    parts, fallback
+    parts, fallback, narrow: narrow_contract(ctx)
   });
+}
+
+// Narrow (one-column) versions, for phones. See stack.mjs.
+function narrow_toolset(ctx) {
+  return [
+    { group: { title: 'Microsoft 365 · discovery', tone: 'primary', items: [
+      { title: 'Copilot', lines: ['Runs Brief, Insight and Map'] },
+      { title: 'SharePoint', lines: ['Discovery master copy, product pack copy'] },
+      { title: 'Teams', lines: ['Recordings and transcripts'] },
+      { title: 'Azure DevOps', lines: ['Design board, stage status, links'] },
+      { title: 'Lucid', lines: ['Journey and process maps (also in Cursor)'] }
+    ] } },
+    { arrow: { both: true } },
+    { box: { title: 'The bridge', lines: ['Archive copies product packs into SharePoint and pulls approved discovery into the repo'], tone: 'bridge' } },
+    { arrow: { both: true } },
+    { group: { title: 'Cursor · explore, design, prototype', tone: 'quaternary', items: [
+      { title: 'Cursor', lines: ['Runs the other nine agents'] },
+      { title: 'Figma MCP', lines: ['Extend writes; Align, Build, Relay read'] },
+      { title: 'LogRocket MCP', lines: ['Insight step, Observe, Relay'] },
+      { title: 'Buckholt prototyping repo', lines: ['Core, extensions, sandbox, Archive'] },
+      { title: 'Playwright and axe', lines: ['Automated checks run by Audit'] },
+      { title: 'Lucid MCP', lines: ['Used by Range for rough flows'] }
+    ] } }
+  ];
+}
+
+function narrow_dependencies(ctx) {
+  return [
+    { group: { title: 'Agents, by stage', items: [
+      { title: 'Discover', lines: ['Brief, Insight, Map'] },
+      { title: 'Explore', lines: ['Range, Critic'] },
+      { title: 'Design', lines: ['Extend, Align'] },
+      { title: 'Prototype', lines: ['Build, Audit, Observe, Relay'] }
+    ] } },
+    { arrow: { up: true, label: 'unblock' } },
+    { group: { title: 'Connectors and access', items: [
+      { title: 'Figma MCP, write', lines: ['Extend; needs a Full seat'] },
+      { title: 'LogRocket MCP', lines: ['Insight, Observe, Relay'] },
+      { title: 'Lucid MCP', lines: ['Map, Range'] },
+      { title: 'ADO connector', lines: ['Brief reads features'] },
+      { title: 'Legacy Figma libraries', lines: ['Anchors, Extend, Align'] },
+      { title: 'Figma read, Code Connect', lines: ['Align, Build, Relay'] }
+    ] } },
+    { arrow: { up: true, label: 'unblock' } },
+    { group: { title: 'Foundations, set up first', tone: 'primary', items: [
+      { title: 'Repo and locks', lines: ['Buckholt core and legacy CSS locked'] },
+      { title: 'Product packs', lines: ['One per product, with styling mode'] },
+      { title: 'Design board', lines: ['Stage statuses trigger each agent'] },
+      { title: 'SharePoint site', lines: ['Discovery master and pack copy'] }
+    ] } }
+  ];
+}
+
+function narrow_repoZones(ctx) {
+  const g = (title, tone, items) => ({ group: { title, tone, items: items.map(([t, a, b]) => ({ title: t, lines: [a, b], mono: true })) } });
+  return [
+    g('Locked: no agent writes', 'locked', [['/buckholt', 'Buckholt core', 'Owner approval to change'], ['/legacy/[product]', 'Captured legacy CSS', 'Owner approval to change']]),
+    { space: 16 },
+    g('Agents create here', 'warning', [['/extensions/[product]', 'Build, Extend; tokens only', 'Flagged and registered'], ['/sandbox/[product]', 'Range; greybox only', 'Never promoted'], ['/prototypes/[product]', 'Build; by styling mode', 'Checked by Audit, Align']]),
+    { space: 16 },
+    g('Context and control', 'primary', [['/context', 'Archive: packs, logs,', 'register, migration map'], ['/agents', 'One file per agent', 'Changed by pull request'], ['/.cursor/rules', 'Rules every agent follows', 'Changed by pull request'], ['/tests', 'Playwright and axe', 'Run by Audit']])
+  ];
+}
+
+function narrow_artifacts(ctx) {
+  const A = ctx.agentsById;
+  const nodes = [];
+  ARTIFACTS.forEach((a, i) => {
+    const writer = a.writtenBy.length ? a.writtenBy.map(w => A[w].name).join(' and ') + (a.writtenNote ? ` (${a.writtenNote})` : '') : a.writtenNote;
+    if (i) nodes.push({ space: 12 });
+    nodes.push({ box: { title: a.name, lines: [a.where, `Written by ${writer}`, `Read by ${a.readBy}`], tone: 'primary', emphasis: true } });
+  });
+  return nodes;
+}
+
+function narrow_ado(ctx) {
+  return [
+    { box: { title: 'Portfolio epic', lines: ['Product board · owned by product'] } },
+    { arrow: { label: 'parent of' } },
+    { box: { title: 'Feature', lines: ['Product board · planned per quarter', 'Triggers design · design status rolls up here'] } },
+    { arrow: { label: 'parent of' } },
+    { box: { title: 'Design item', lines: ['UX design board · UX owns, our columns', 'One per feature'], tone: 'primary', emphasis: true } },
+    { arrow: { label: 'predecessor of' } },
+    { box: { title: 'Engineering stories', lines: ['Engineering boards · ready only when design is Handed over'] } },
+    { space: 16 },
+    { group: { title: 'The design item links to', items: [
+      { title: 'SharePoint brief' }, { title: 'Figma file' }, { title: 'Prototype link' }
+    ] } }
+  ];
+}
+
+function narrow_contract(ctx) {
+  return [
+    { group: { title: 'Product management owns', tone: 'primary', items: [
+      { title: 'Epics and features' }, { title: 'Outcomes, criteria' }, { title: 'Story-writing agents' }, { title: 'Quarterly priorities' }
+    ] } },
+    { arrow: {} },
+    { box: { title: 'Ready for design', lines: ['Feature fields complete', 'Status is the trigger'], tone: 'bridge' } },
+    { arrow: {} },
+    { group: { title: 'UX owns', tone: 'quaternary', items: [
+      { title: 'Design items and board' }, { title: 'UX brief and measures' }, { title: 'Agents and templates' }, { title: 'UX sprint capacity' }
+    ] } },
+    { arrow: {} },
+    { box: { title: 'UX outputs on stories', lines: ['UX criteria, Figma, prototype', 'Status field on the feature', 'Back to product'], tone: 'bridge' } }
+  ];
 }

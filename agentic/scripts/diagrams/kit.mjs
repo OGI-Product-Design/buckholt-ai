@@ -8,6 +8,7 @@
 //   bridge                                              (UI background 04)
 
 import { esc } from '../components.mjs';
+import { stackSvg } from './stack.mjs';
 
 let count = 0;
 export function uid(prefix) {
@@ -59,10 +60,10 @@ export function arrow(id, points, { both = false, dashed = false } = {}) {
 
 // The SVG with its title, description and arrowhead marker, followed by the
 // list version shown on narrow screens.
-export function figure({ id, width, height, title, desc, parts, fallback }) {
+export function figure({ id, width, height, title, desc, parts, fallback, narrow }) {
   // A small margin round the drawing, so outlines on the edge are not cut.
   const m = 4;
-  const svg = `<svg class="x-diagram-svg" viewBox="${-m} ${-m} ${width + 2 * m} ${height + 2 * m}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
+  const svg = `<svg class="x-diagram-svg x-diagram-wide" viewBox="${-m} ${-m} ${width + 2 * m} ${height + 2 * m}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
   <title id="${id}-title">${esc(title)}</title>
   <desc id="${id}-desc">${esc(desc)}</desc>
   <defs>
@@ -72,22 +73,24 @@ export function figure({ id, width, height, title, desc, parts, fallback }) {
   </defs>
   ${parts.join('\n  ')}
 </svg>`;
-  return diagramFigure({ title, svg, list: fallback });
+  const narrowSvg = narrow ? stackSvg({ id: `${id}n`, title, desc, nodes: narrow }) : '';
+  return diagramFigure({ title, svg, narrowSvg, list: fallback });
 }
 
-// The figure around every diagram. On narrow screens the diagram keeps a
-// readable size and scrolls sideways (the scroll area takes keyboard focus),
-// and the same content is offered as a list behind a disclosure.
-export function diagramFigure({ title, svg, list }) {
+// The figure around every diagram. Wide screens get the full diagram; narrow
+// screens get the one-column version, which fits the width and is readable
+// as it is. "View full screen" opens the full diagram, fitted to the screen.
+// The same content is offered as a list behind a disclosure.
+export function diagramFigure({ title, svg, narrowSvg = '', list }) {
   return `<figure class="x-diagram" data-buckholt="false">
-  <div class="x-diagram-tools">
-    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
-    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
-        <span class="button-label">View full screen<span class="visually-hidden">: ${esc(title)}</span></span>
-    </button>
-  </div>
-  <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">
   ${svg}
+  ${narrowSvg}
+  <div class="x-diagram-tools">
+    <div class="button-set">
+        <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+            <span class="button-label">View full screen<span class="visually-hidden">: ${esc(title)}</span></span>
+        </button>
+    </div>
   </div>
   <details class="x-diagram-fallback">
     <summary>Show the diagram as a list</summary>
