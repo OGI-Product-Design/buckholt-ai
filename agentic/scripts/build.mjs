@@ -6,6 +6,7 @@
 // Buckholt stylesheets in the repository's css/ folder, which are copied into
 // the output unchanged. It writes only to agentic/site.
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,6 +50,7 @@ export function build({ quiet = false } = {}) {
   };
 
   const written = [];
+  const pagesOut = [];
   const searchIndex = [];
   for (const make of allPages(baseCtx)) {
     const page = make(baseCtx);
@@ -70,9 +72,7 @@ export function build({ quiet = false } = {}) {
     // opened straight from disk, where a folder link would show a listing.
     html = html.replace(/(href|action)="((?:\.\.?\/)+(?:[^"#?:]*\/)?)"/g, '$1="$2index.html"');
 
-    const out = path.join(DIST, file);
-    fs.mkdirSync(path.dirname(out), { recursive: true });
-    fs.writeFileSync(out, html);
+    pagesOut.push({ file, html });
     written.push(file);
     if (!page.noIndex) {
       searchIndex.push({
@@ -95,6 +95,20 @@ export function build({ quiet = false } = {}) {
   // block fetch() on file:// pages).
   fs.writeFileSync(path.join(assets, 'search-index.js'), `window.X_SEARCH_INDEX = ${JSON.stringify(searchIndex)};\n`);
   fs.copyFileSync(path.join(SITE, 'js/site.js'), path.join(assets, 'site.js'));
+
+  // Each asset link carries a fingerprint of the file, so a browser that
+  // has an older copy fetches the new one as soon as it changes.
+  const versions = {};
+  for (const name of ['buckholt/buckholt.css', 'buckholt/buckholt-ai-fixes.css', 'extensions.css', 'site.js', 'search-index.js']) {
+    versions[name] = crypto.createHash('sha256').update(fs.readFileSync(path.join(assets, name))).digest('hex').slice(0, 10);
+  }
+  for (const { file, html } of pagesOut) {
+    const versioned = html.replace(/(["'])((?:\.\.?\/)*assets\/)(buckholt\/buckholt\.css|buckholt\/buckholt-ai-fixes\.css|extensions\.css|site\.js|search-index\.js)\1/g,
+      (m, q, prefix, name) => `${q}${prefix}${name}?v=${versions[name]}${q}`);
+    const out = path.join(DIST, file);
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, versioned);
+  }
 
   if (!quiet) console.log(`Built ${written.length} pages into ${path.relative(process.cwd(), DIST) || DIST}`);
   return written;
