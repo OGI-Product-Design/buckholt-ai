@@ -65,21 +65,35 @@ function breadcrumb(items) {
 </nav>`;
 }
 
-// Previous and next links (x-pager).
-function pager(prev, next, noun) {
-  const side = (item, dir) => {
-    if (!item) return '<span></span>';
-    const icon = dir === 'prev' ? 'fa-arrow-left' : 'fa-arrow-right';
-    return `<a class="link-standalone" href="${item.href}" rel="${dir}">
-    <span class="icon">
-        <i class="fa-regular ${icon}" aria-hidden="true"></i>
-    </span>
-    <span><span class="x-pager-label">${dir === 'prev' ? 'Previous' : 'Next'} ${noun}</span> ${esc(item.title)}</span>
+// Clickable Card (Card: Code & specs, "card card-clickable"). The whole card
+// is one link, so nothing inside it is interactive.
+function clickCard(href, { title, eyebrow = '', text = '', meta = '', level = 3, rel = '' }) {
+  return `<a href="${href}" class="card card-clickable h-100"${rel ? ` rel="${rel}"` : ''}>
+    <div class="card-body">
+        <div class="text-block">
+            ${eyebrow ? `<span class="eyebrow">${esc(eyebrow)}</span>` : ''}
+            <h${level} class="title-03">${esc(title)}</h${level}>
+            ${text ? `<p>${esc(text)}</p>` : ''}
+            ${meta ? `<p class="support-01 x-card-meta">${esc(meta)}</p>` : ''}
+        </div>
+    </div>
 </a>`;
-  };
-  return `<nav class="x-pager" data-buckholt="false" aria-label="Previous and next ${noun}">
-  ${side(prev, 'prev')}
-  ${side(next, 'next')}
+}
+
+function cardRow(cards, cols = 'col-12 col-md-6 col-xl-4') {
+  return `<div class="row x-row-gap" data-buckholt="false">
+${cards.map(c => `  <div class="${cols}">\n${c}\n  </div>`).join('\n')}
+</div>`;
+}
+
+// Previous and next, as two clickable Cards.
+function pager(prev, next, noun) {
+  const cards = [];
+  if (prev) cards.push(clickCard(prev.href, { eyebrow: `Previous ${noun}`, title: prev.title, rel: 'prev', level: 2 }));
+  else cards.push('');
+  if (next) cards.push(clickCard(next.href, { eyebrow: `Next ${noun}`, title: next.title, rel: 'next', level: 2 }));
+  return `<nav aria-label="Previous and next ${noun}">
+${cardRow(cards, 'col-12 col-md-6')}
 </nav>`;
 }
 
@@ -260,17 +274,11 @@ ${agentGrid(ctx)}`
       `<div class="text-block">
     <h2 class="headline-01">Start here</h2>
 </div>
-<ul class="link-set link-set-stacked">
-    <li class="linkset-item">
-        ${arrowLink(`${ctx.root}workflow/`, 'Workflow: stages, gates and statuses')}
-    </li>
-    <li class="linkset-item">
-        ${arrowLink(`${ctx.root}setup-guides/`, 'Set-up guides: get your tools ready')}
-    </li>
-    <li class="linkset-item">
-        ${arrowLink(`${ctx.root}agents/`, 'Agent rules: what each agent does and never does')}
-    </li>
-</ul>`
+${cardRow([
+  clickCard(`${ctx.root}workflow/`, { title: 'Workflow', text: 'Stages, gates and statuses: how work moves from Ready for design to Handed over.' }),
+  clickCard(`${ctx.root}setup-guides/`, { title: 'Set-up guides', text: 'Nine guides, in order, to get the tools and access in place.' }),
+  clickCard(`${ctx.root}agents/`, { title: 'Agent rules', text: 'What each of the twelve agents does, and what it must never do.' })
+], 'col-12 col-md-4')}`
     ]
   ]);
   return { slug: '', section: '', title: 'Home', body, searchText: principles.flat().join(' ') };
@@ -282,20 +290,7 @@ function agentsIndex(ctx) {
   const groups = agentsByStage(ctx).map(({ stage, agents }) => `<div class="text-block">
     <h2 class="headline-01" id="${stage.id}">${esc(stage.name)}</h2>
 </div>
-<div class="row x-row-gap" data-buckholt="false">
-${agents.map(a => `  <div class="col-12 col-md-6 col-xl-4">
-    <div class="card h-100">
-        <div class="card-body">
-            <div class="text-block">
-                <p>${agentTag(a, ctx, { link: false })}</p>
-                <h3 class="title-03"><a href="${ctx.root}agents/${a.id}/">${esc(a.name)}</a></h3>
-                <p>${esc(a.job)}</p>
-                <p class="support-01 x-card-meta">Tool: ${esc(a.tool)}</p>
-            </div>
-        </div>
-    </div>
-  </div>`).join('\n')}
-</div>`);
+${cardRow(agents.map(a => clickCard(`${ctx.root}agents/${a.id}/`, { title: a.name, text: a.job, meta: `Tool: ${a.tool}` })))}`);
   const body = frame([[
     pageHeading({ title: 'Agents', lead: 'Twelve agents, grouped by stage. Each one has a single job, reads defined sources, and stops at a human check.' }),
     ...groups
@@ -473,9 +468,12 @@ function loadGuides(ctx, kind) {
 function guideList(ctx, kind) {
   const guides = loadGuides(ctx, kind);
   if (!guides.length) return pendingNote('No guides have been added yet.');
-  return `<ol class="list">
-${guides.map(g => `    <li class="list-item"><a href="${ctx.root}${g.slug}">${esc(g.title)}</a>${g.lead ? `: ${esc(g.lead.charAt(0).toLowerCase() + g.lead.slice(1))}` : ''}</li>`).join('\n')}
-</ol>`;
+  const setup = kind === 'setup-guides';
+  return cardRow(guides.map((g, i) => clickCard(`${ctx.root}${g.slug}`, {
+    eyebrow: setup ? `Guide ${i + 1} of ${guides.length}` : '',
+    title: g.title,
+    text: g.lead || ''
+  })));
 }
 
 function guidePage(ctx, kind, guides, i) {

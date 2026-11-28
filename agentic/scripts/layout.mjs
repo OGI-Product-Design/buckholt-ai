@@ -93,6 +93,23 @@ ${page.body}
     <p>Last updated ${esc(formatDate(ctx.buildDate))}. <a href="${root}extensions/">Extensions on this site</a></p>
   </footer>
 </div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
 `;

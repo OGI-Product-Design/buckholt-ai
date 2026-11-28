@@ -77,7 +77,12 @@
     <p>Work moves down the page. The two gates are where designers, the PM and an engineer decide; agents do everything between them.</p>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: Workflow: designers decide at two gates; agents do the work in between</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Workflow: designers decide at two gates; agents do the work in between">
   <svg class="x-diagram-svg" viewBox="0 0 1100 1240" role="group" aria-labelledby="wf1-title wf1-desc" focusable="false">
   <title id="wf1-title">Workflow: designers decide at two gates; agents do the work in between</title>
@@ -326,32 +331,44 @@
 <div class="text-block">
     <h2 class="headline-01">Start here</h2>
 </div>
-<ul class="link-set link-set-stacked">
-    <li class="linkset-item">
-        <a class="link-standalone" href="./workflow/index.html">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-    </span>
-    Workflow: stages, gates and statuses
+<div class="row x-row-gap" data-buckholt="false">
+  <div class="col-12 col-md-4">
+<a href="./workflow/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            
+            <h3 class="title-03">Workflow</h3>
+            <p>Stages, gates and statuses: how work moves from Ready for design to Handed over.</p>
+            
+        </div>
+    </div>
 </a>
-    </li>
-    <li class="linkset-item">
-        <a class="link-standalone" href="./setup-guides/index.html">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-    </span>
-    Set-up guides: get your tools ready
+  </div>
+  <div class="col-12 col-md-4">
+<a href="./setup-guides/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            
+            <h3 class="title-03">Set-up guides</h3>
+            <p>Nine guides, in order, to get the tools and access in place.</p>
+            
+        </div>
+    </div>
 </a>
-    </li>
-    <li class="linkset-item">
-        <a class="link-standalone" href="./agents/index.html">
-    <span class="icon">
-        <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-    </span>
-    Agent rules: what each agent does and never does
+  </div>
+  <div class="col-12 col-md-4">
+<a href="./agents/index.html" class="card card-clickable h-100">
+    <div class="card-body">
+        <div class="text-block">
+            
+            <h3 class="title-03">Agent rules</h3>
+            <p>What each of the twelve agents does, and what it must never do.</p>
+            
+        </div>
+    </div>
 </a>
-    </li>
-</ul>
+  </div>
+</div>
 </div>
           </div>
         </div>
@@ -361,8 +378,25 @@
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="./extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="./extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

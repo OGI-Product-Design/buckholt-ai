@@ -80,7 +80,12 @@
 </div>
 </div>
 <figure class="x-diagram" data-buckholt="false">
-  <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+  <div class="x-diagram-tools">
+    <p class="support-01 x-diagram-hint" aria-hidden="true">Scroll sideways to see the whole diagram.</p>
+    <button type="button" class="btn btn-secondary btn-sm x-diagram-full" data-x-fullscreen hidden>
+        <span class="button-label">View full screen<span class="visually-hidden">: Repo zones: two folders are locked; agents create only in three</span></span>
+    </button>
+  </div>
   <div class="x-diagram-scroll" tabindex="0" role="region" aria-label="Repo zones: two folders are locked; agents create only in three">
   <svg class="x-diagram-svg" viewBox="0 0 1100 544" role="group" aria-labelledby="rz3-title rz3-desc" focusable="false">
   <title id="rz3-title">Repo zones: two folders are locked; agents create only in three</title>
@@ -309,8 +314,25 @@
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 27 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+    <p>Last updated 28 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
   </footer>
+</div>
+<div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-diagram-modal-title">Diagram</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body x-diagram-modal-body"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
