@@ -90,9 +90,11 @@ body {
 .x-site-name {
   gap: var(--spacer-02);
 }
-/* .x-site-name-title uses Buckholt's title-02 type set; colour only here. */
+/* .x-site-name-title uses Buckholt's title-02 type set; only its colour and
+   its line height (none, so it centres on the header's buttons) are set here. */
 .x-site-name-title {
   color: var(--text-primary);
+  line-height: 1;
 }
 .x-site-name-sub {
   color: var(--text-tertiary);
@@ -122,8 +124,11 @@ body {
 .x-header-search .input-label {
   margin: 0;
 }
-.x-header-actions {
+/* Buckholt's Button set adds a top margin to space it from content above.
+   In the header it sits beside the name, so it takes none. */
+.x-site-header > .button-set.x-header-actions {
   flex-wrap: nowrap;
+  margin-top: 0;
 }
 #x-search-btn {
   display: none;
