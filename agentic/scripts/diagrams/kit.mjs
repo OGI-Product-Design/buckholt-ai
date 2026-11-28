@@ -60,7 +60,9 @@ export function arrow(id, points, { both = false, dashed = false } = {}) {
 // The SVG with its title, description and arrowhead marker, followed by the
 // list version shown on narrow screens.
 export function figure({ id, width, height, title, desc, parts, fallback }) {
-  const svg = `<svg class="x-diagram-svg" viewBox="0 0 ${width} ${height}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
+  // A small margin round the drawing, so outlines on the edge are not cut.
+  const m = 4;
+  const svg = `<svg class="x-diagram-svg" viewBox="${-m} ${-m} ${width + 2 * m} ${height + 2 * m}" role="group" aria-labelledby="${id}-title ${id}-desc" focusable="false">
   <title id="${id}-title">${esc(title)}</title>
   <desc id="${id}-desc">${esc(desc)}</desc>
   <defs>

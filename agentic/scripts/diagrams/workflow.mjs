@@ -137,7 +137,7 @@ export function workflowDiagram(ctx, { highlight = null } = {}) {
   const title = 'Workflow: designers decide at two gates; agents do the work in between';
   const desc = 'Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.';
 
-  const svg = `<svg class="x-diagram-svg" viewBox="0 0 ${W} ${H}" role="group" aria-labelledby="${uid}-title ${uid}-desc" focusable="false">
+  const svg = `<svg class="x-diagram-svg" viewBox="-4 -4 ${W + 8} ${H + 8}" role="group" aria-labelledby="${uid}-title ${uid}-desc" focusable="false">
   <title id="${uid}-title">${esc(title)}</title>
   <desc id="${uid}-desc">${esc(desc)}</desc>
   <defs>
