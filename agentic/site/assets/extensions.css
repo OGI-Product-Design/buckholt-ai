@@ -122,8 +122,21 @@ body {
 .x-header-search .input-label {
   margin: 0;
 }
-.x-search-btn-set {
+.x-header-actions {
+  flex-wrap: nowrap;
+}
+#x-search-btn {
   display: none;
+}
+
+/* The search Modal's body scrolls, so it clips at its edge, and the field's
+   focus ring sat on that edge. The body reaches a few pixels into the
+   Modal's padding, with the same padding inside, so the ring shows and the
+   content does not move. */
+.x-search-modal .modal-body {
+  margin-inline: calc(var(--spacer-02) * -1);
+  padding-inline: var(--spacer-02);
+  padding-top: var(--spacer-02);
 }
 .x-search-modal .x-search-results {
   min-height: calc(var(--spacer-09) * 2);
@@ -207,9 +220,11 @@ body {
   .x-header-search {
     display: none;
   }
-  .x-search-btn-set {
-    display: flex;
+  .x-header-actions {
     margin-left: auto;
+  }
+  #x-search-btn:not([hidden]) {
+    display: inline-flex;
   }
 }
 

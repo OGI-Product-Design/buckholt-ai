@@ -38,19 +38,20 @@
         </div>
       </div>
     </form>
-    <div class="button-set x-search-btn-set" data-buckholt="false">
+    <div class="button-set x-header-actions" data-buckholt="false">
       <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
         <div class="btn-icon">
           <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
         </div>
       </button>
+  <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
+          <div class="btn-icon">
+              <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </div>
+      </button>
     </div>
-    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
-        <div class="btn-icon">
-            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </div>
-    </button>
+
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
     <nav class="x-site-nav" aria-label="Main">
@@ -136,7 +137,7 @@
   <g><rect class="x-d-box x-d-tone-plain" x="12" y="236" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="262" text-anchor="middle">Azure DevOps</text><text class="x-d-sub" x="180" y="280" text-anchor="middle">Design board, stage status, links</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="12" y="302" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="328" text-anchor="middle">Lucid</text><text class="x-d-sub" x="180" y="346" text-anchor="middle">Journey and process maps (also in Cursor)</text></g>
   <path class="x-d-line" d="M 180 374 L 180 399" fill="none" marker-end="url(#tb1n-head)" marker-start="url(#tb1n-head)"/>
-  <g><rect class="x-d-box x-d-tone-bridge" x="0" y="402" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="428" text-anchor="middle">The bridge</text><text class="x-d-sub" x="180" y="446" text-anchor="middle">Archive copies product packs into SharePoint and</text><text class="x-d-sub" x="180" y="464" text-anchor="middle">pulls approved discovery into the repo</text></g>
+  <g><rect class="x-d-box x-d-tone-bridge" x="0" y="402" width="360" height="76" rx="8"/><text class="x-d-title" x="180" y="428" text-anchor="middle">The bridge</text><text class="x-d-sub" x="180" y="446" text-anchor="middle">Archive copies product packs into SharePoint</text><text class="x-d-sub" x="180" y="464" text-anchor="middle">and pulls approved discovery into the repo</text></g>
   <path class="x-d-line" d="M 180 480 L 180 505" fill="none" marker-end="url(#tb1n-head)" marker-start="url(#tb1n-head)"/>
   <rect class="x-d-group x-d-tone-quaternary" x="0" y="508" width="360" height="438" rx="12"/>
   <text class="x-d-group-title" x="16" y="535">Cursor · explore, design, prototype</text>
@@ -528,7 +529,7 @@
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
-    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
+    <p>Last updated <time datetime="2026-11-28T09:39:14.178Z">28 November 2026 at 09:39 GMT</time></p>
   </footer>
 </div>
 <div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../assets/search-index.js" data-root="../">
@@ -554,7 +555,7 @@
                             <div class="input-group">
                                 <div class="response text-input">
                                     <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search the site" enterkeyhint="search">
                                 </div>
                                 <button type="submit" class="btn btn-response">
                                     <span class="button-label">Search</span>

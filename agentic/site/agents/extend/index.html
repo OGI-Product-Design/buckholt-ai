@@ -38,19 +38,20 @@
         </div>
       </div>
     </form>
-    <div class="button-set x-search-btn-set" data-buckholt="false">
+    <div class="button-set x-header-actions" data-buckholt="false">
       <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
         <div class="btn-icon">
           <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
         </div>
       </button>
+  <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
+          <div class="btn-icon">
+              <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </div>
+      </button>
     </div>
-    <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
-        <div class="btn-icon">
-            <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            <svg class="x-icon x-icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </div>
-    </button>
+
   </header>
   <aside id="sidebar" class="x-site-sidebar" data-buckholt="false">
     <nav class="x-site-nav" aria-label="Main">
@@ -361,7 +362,7 @@ The worklist is covered and Align has run.
   <path class="x-d-loop" d="M 56 1058 H 30 V 766 H 53" marker-end="url(#wf8-head)"/>
   <text class="x-d-loop-label" transform="translate(20 912) rotate(-90)" text-anchor="middle">Test loop</text>
 </svg>
-  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 1730" role="group" aria-labelledby="wf8n-title wf8n-desc" focusable="false">
+  <svg class="x-diagram-svg x-diagram-narrow" viewBox="-4 -4 368 1750" role="group" aria-labelledby="wf8n-title wf8n-desc" focusable="false">
   <title id="wf8n-title">Workflow: designers decide at two gates; agents do the work in between</title>
   <desc id="wf8n-desc">Foundations (SharePoint, Azure DevOps and the Archive agent) feed Discover (Brief, Insight, Map), then Explore (Range, Critic), then the shortlist gate, then designers make anchor screens, then Design (Extend, Align), then the design sign-off gate, then Prototype and handoff (Build, Audit, Observe, Relay), then engineering stories. A fast track goes from Discover straight to Design. A test loop goes from Prototype back to Design.</desc>
   <defs>
@@ -395,7 +396,7 @@ The worklist is covered and Align has run.
   <a href="../../agents/extend/index.html" class="x-d-link" aria-label="Extend, Builds out from anchors (Figma write) (this agent)" aria-current="page"><rect class="x-d-box x-d-stage-design x-d-agent x-d-current" x="12" y="942" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="968" text-anchor="middle">Extend</text><text class="x-d-sub" x="180" y="986" text-anchor="middle">Builds out from anchors (Figma write)</text></a>
   <a href="../../agents/align/index.html" class="x-d-link" aria-label="Align, Consistency checks (Figma read)"><rect class="x-d-box x-d-stage-design x-d-agent" x="12" y="1008" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1034" text-anchor="middle">Align</text><text class="x-d-sub" x="180" y="1052" text-anchor="middle">Consistency checks (Figma read)</text></a>
   <path class="x-d-line" d="M 180 1080 L 180 1105" fill="none" marker-end="url(#wf8n-head)"/>
-  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="1108" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1134" text-anchor="middle">Gate: design sign-off · designers, PM,</text><text class="x-d-title" x="180" y="1154" text-anchor="middle">engineer</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-gate" x="0" y="1108" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1134" text-anchor="middle">Gate: design sign-off · designers,</text><text class="x-d-title" x="180" y="1154" text-anchor="middle">PM, engineer</text></g>
   <path class="x-d-line" d="M 180 1170 L 180 1195" fill="none" marker-end="url(#wf8n-head)"/>
   <rect class="x-d-group x-d-stage-prototype" x="0" y="1198" width="360" height="306" rx="12"/>
   <text class="x-d-group-title" x="16" y="1225">Prototype and handoff · Cursor</text>
@@ -404,9 +405,9 @@ The worklist is covered and Align has run.
   <a href="../../agents/observe/index.html" class="x-d-link" aria-label="Observe, Usability testing"><rect class="x-d-box x-d-stage-prototype x-d-agent" x="12" y="1368" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1394" text-anchor="middle">Observe</text><text class="x-d-sub" x="180" y="1412" text-anchor="middle">Usability testing</text></a>
   <a href="../../agents/relay/index.html" class="x-d-link" aria-label="Relay, Handoff to stories"><rect class="x-d-box x-d-stage-handoff x-d-agent" x="12" y="1434" width="336" height="58" rx="8"/><text class="x-d-title" x="180" y="1460" text-anchor="middle">Relay</text><text class="x-d-sub" x="180" y="1478" text-anchor="middle">Handoff to stories</text></a>
   <path class="x-d-line" d="M 180 1506 L 180 1531" fill="none" marker-end="url(#wf8n-head)"/>
-  <g><rect class="x-d-box x-d-tone-plain" x="0" y="1534" width="360" height="40" rx="8"/><text class="x-d-title" x="180" y="1560" text-anchor="middle">Engineering stories (one sprint behind)</text></g>
-  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1594" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1620" text-anchor="middle">Fast track</text><text class="x-d-sub" x="180" y="1638" text-anchor="middle">Discover can go straight to Design</text></g>
-  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1664" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1690" text-anchor="middle">Test loop</text><text class="x-d-sub" x="180" y="1708" text-anchor="middle">Prototype can go back to Design</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="1534" width="360" height="60" rx="8"/><text class="x-d-title" x="180" y="1560" text-anchor="middle">Engineering stories (one sprint</text><text class="x-d-title" x="180" y="1580" text-anchor="middle">behind)</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1614" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1640" text-anchor="middle">Fast track</text><text class="x-d-sub" x="180" y="1658" text-anchor="middle">Discover can go straight to Design</text></g>
+  <g><rect class="x-d-box x-d-tone-plain x-d-people" x="0" y="1684" width="360" height="58" rx="8"/><text class="x-d-title" x="180" y="1710" text-anchor="middle">Test loop</text><text class="x-d-sub" x="180" y="1728" text-anchor="middle">Prototype can go back to Design</text></g>
 </svg>
   <div class="x-diagram-tools">
     <div class="button-set">
@@ -519,7 +520,7 @@ The worklist is covered and Align has run.
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
     <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
-    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
+    <p>Last updated <time datetime="2026-11-28T09:39:14.178Z">28 November 2026 at 09:39 GMT</time></p>
   </footer>
 </div>
 <div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../../assets/search-index.js" data-root="../../">
@@ -545,7 +546,7 @@ The worklist is covered and Align has run.
                             <div class="input-group">
                                 <div class="response text-input">
                                     <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search the site" enterkeyhint="search">
                                 </div>
                                 <button type="submit" class="btn btn-response">
                                     <span class="button-label">Search</span>
