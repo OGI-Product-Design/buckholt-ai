@@ -26,12 +26,25 @@
     <span class="tag tag-sm tag-status tag-status-info">
         <span class="tag-label">Proposed</span>
     </span>
-    <a class="link-standalone x-header-search" href="../search/index.html">
-        <span class="icon">
-            <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-        </span>
-        Search
-    </a>
+    <form class="x-header-search" data-buckholt="false" role="search" action="../search/index.html" method="get" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="x-search-field" class="form-label visually-hidden">Search this site</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" class="form-control" id="x-search-field" name="q" placeholder="Type / to search" enterkeyhint="search"
+            aria-haspopup="dialog" aria-controls="x-search-modal" aria-keyshortcuts="/">
+        </div>
+      </div>
+    </form>
+    <div class="button-set x-search-btn-set" data-buckholt="false">
+      <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
+        <div class="btn-icon">
+          <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+        </div>
+      </button>
+    </div>
     <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
         <div class="btn-icon">
             <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -160,6 +173,57 @@
 <div class="text-block">
     <h2 class="headline-01" id="the-design-board">The design board</h2>
     <p>The UX design board belongs to the UX team. Its stage statuses trigger the agents, so the board is how the workflow runs, not just a record of it.</p>
+</div>
+</div>
+</div>
+                </div>
+                <div class="page-panel">
+<div class="content-group">
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <h2 class="headline-01" id="one-board-for-the-whole-team">One board for the whole team</h2>
+    <p>All six designers share one UX design board. One board means one view of everything in design, one Delivery Plan, and one place the agents watch for status changes. Separate boards would split all three.</p>
+    <p>The proposal for making one board work for six people:</p>
+</div>
+</div>
+<div class="table-container">
+  <div class="table-content" tabindex="0" role="region" aria-label="Setting, How it is used, table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><div class="table-header-label">Setting</div></th>
+          <th scope="col"><div class="table-header-label">How it is used</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-gap"><td colspan="2"></td></tr>
+        <tr>
+          <td>Assigned to</td>
+          <td>The lead designer for the design item. Filter the board by person to see one designer's work.</td>
+        </tr>
+        <tr>
+          <td>Reviewing designer</td>
+          <td>A field on the design item naming the second designer.</td>
+        </tr>
+        <tr>
+          <td>Area path</td>
+          <td>One per product, so the board can be filtered by product, and product teams see their own design items.</td>
+        </tr>
+        <tr>
+          <td>Swimlanes</td>
+          <td>By route: Full route, Fast track and Blocked (below).</td>
+        </tr>
+        <tr>
+          <td>Work in progress limits</td>
+          <td>On Designing and on Prototyping and testing, so no one carries too many items at once.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="content-group x-prose" data-buckholt="false">
+<div class="text-block">
+    <p>At stand-up, walk the board right to left: items closest to Handed over first.</p>
 </div>
 </div>
 </div>
@@ -327,6 +391,7 @@
   <ul>
     <li><a href="#how-the-work-items-link">How the work items link</a></li>
     <li><a href="#the-design-board">The design board</a></li>
+    <li><a href="#one-board-for-the-whole-team">One board for the whole team</a></li>
     <li><a href="#the-design-item">The design item</a></li>
     <li><a href="#fields">Fields</a></li>
     <li><a href="#columns">Columns</a></li>
@@ -342,9 +407,47 @@
     </div>
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
-    <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 28 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+    <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
+    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
   </footer>
+</div>
+<div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../assets/search-index.js" data-root="../">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-search-modal-title">Search this site</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="x-search-results">
+                    <form class="x-search-form" role="search" autocomplete="off">
+                        <div class="input">
+                            <div class="input-label">
+                                <label for="x-search-modal-field" class="form-label visually-hidden">Search this site</label>
+                            </div>
+                            <div class="input-group">
+                                <div class="response text-input">
+                                    <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                </div>
+                                <button type="submit" class="btn btn-response">
+                                    <span class="button-label">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="x-search-status" role="status"></p>
+                    <ol class="list x-search-list"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
     <div class="modal-dialog modal-fullscreen">

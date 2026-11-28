@@ -108,9 +108,25 @@ body {
   outline-offset: calc(var(--border-width) * 2);
 }
 
+/* x-header-search: Buckholt Text input in the header that opens the search
+   Modal ("Type / to search"), as in the Mobius navigation prototype. On
+   phones an icon-only ghost Button takes its place. */
 .x-header-search {
+  flex: 0 1 calc(var(--spacer-09) * 2.5);
+  min-width: 0;
   margin-left: auto;
-  align-self: center;
+}
+.x-header-search .input {
+  gap: 0;
+}
+.x-header-search .input-label {
+  margin: 0;
+}
+.x-search-btn-set {
+  display: none;
+}
+.x-search-modal .x-search-results {
+  min-height: calc(var(--spacer-09) * 2);
 }
 
 /* x-icon: the menu and close icons in the ghost menu Button, drawn inline so
@@ -187,8 +203,13 @@ body {
     gap: var(--spacer-03);
   }
   .x-site-name-sub,
-  .x-site-header > .tag {
+  .x-site-header > .tag,
+  .x-header-search {
     display: none;
+  }
+  .x-search-btn-set {
+    display: flex;
+    margin-left: auto;
   }
 }
 
@@ -739,6 +760,16 @@ body {
   width: var(--spacer-05);
   height: var(--spacer-05);
   color: var(--text-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* x-person: a team member's Avatar beside their name (Card body)      */
+/* ------------------------------------------------------------------ */
+
+.x-person {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacer-04);
 }
 
 /* ------------------------------------------------------------------ */

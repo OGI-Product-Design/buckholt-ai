@@ -8,11 +8,13 @@ lead: People own every decision. This page says who owns what, how work is revie
 
 | What | Owner |
 |---|---|
-| The workflow and this site | Laurence Abbott (backup: Jon) |
-| Agent definitions in `/agents` | Laurence, changed by pull request |
+| The workflow and this site | Owners: Laurence Abbott and Jon. Delegate: Marijana |
+| The design team | Laurence and Jon (owners), Marijana (delegate), Katerina, Andrej and Mark (contributors) |
+| Agent definitions in `/agents` | Laurence and Jon, changed by pull request |
 | Rules in `/.cursor/rules` | Changed by pull request |
 | Product packs | Laurence or Jon approves every change |
 | Buckholt core and legacy CSS | Their owners; no agent writes to them |
+| Each design item | Its lead designer, set in Assigned to, with a reviewing designer |
 | Direction and scope | The shortlist gate: designers, PM, engineer |
 | Design sign-off | The sign-off gate: designers, PM, engineer |
 

@@ -3,7 +3,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { esc, agentTag, codeBlock, stageTagClass, tagSet, pendingNote } from './components.mjs';
+import { esc, agentTag, codeBlock, tagSet, pendingNote } from './components.mjs';
 import { frame, pageHeading, NAV } from './layout.mjs';
 import { workflowDiagram } from './diagrams/workflow.mjs';
 import { toolsetDiagram, dependenciesDiagram, repoZonesDiagram, artifactFlowDiagram, adoDiagram, contractDiagram } from './diagrams/others.mjs';
@@ -182,6 +182,25 @@ ${ctx.data.gates.map(g => `  <div class="col-12 col-lg-6">
                     <span class="key">Status set</span>
                     <span class="value">${esc(g.status)}</span>
                 </div>
+            </div>
+        </div>
+    </div>
+  </div>`).join('\n')}
+</div>`,
+  // The design team: Buckholt Card with Avatar (initials) and Text block.
+  // The Avatar is hidden from screen readers, because the name follows it.
+  team: ctx => `<div class="row x-row-gap" data-buckholt="false">
+${ctx.data.team.map(p => `  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="card h-100">
+        <div class="card-body x-person" data-buckholt="false">
+            <div class="avatar" aria-hidden="true">
+                <div class="avatar-initials">
+                    ${esc(p.name.charAt(0))}
+                </div>
+            </div>
+            <div class="text-block">
+                <h3 class="title-02">${esc(p.name)}</h3>
+                <p>${esc(p.role)}</p>
             </div>
         </div>
     </div>
@@ -412,16 +431,16 @@ ${agent.never.map(n => `      <li class="list-item">
     <p>${esc(agent.doneWhen)}</p>
 </div>`,
     `<div class="text-block">
-    <h2 class="headline-01" id="owner">Owner and backup</h2>
+    <h2 class="headline-01" id="owner">Owners and delegate</h2>
 </div>
 <div class="key-value-list key-value-list-stacked">
     <div class="key-value">
-        <span class="key">Owner</span>
-        <span class="value">${esc(agent.owner || ctx.data.owner)}</span>
+        <span class="key">Owners</span>
+        <span class="value">${esc(ctx.data.owners.join(' and '))}</span>
     </div>
     <div class="key-value">
-        <span class="key">Backup</span>
-        <span class="value">${esc(agent.backup || ctx.data.backup)}</span>
+        <span class="key">Delegate</span>
+        <span class="value">${esc(ctx.data.delegate)}</span>
     </div>
 </div>`,
     `<div class="text-block">
@@ -444,7 +463,7 @@ ${codeBlock(rules.text, { label: agent.rulesFile, language: 'markdown' })}
 ${workflowDiagram(ctx, { highlight: agent.id })}`,
     pager(link(all[i - 1]), link(all[i + 1]), 'agent')
   ];
-  const toc = [['at-a-glance', 'At a glance'], ['steps', 'Steps'], ['never', 'Never'], ['done-when', 'Done when'], ['owner', 'Owner and backup'], ['rules-file', 'Rules file'], ['where-it-sits', 'Where it sits']].map(([id, title]) => ({ id, title }));
+  const toc = [['at-a-glance', 'At a glance'], ['steps', 'Steps'], ['never', 'Never'], ['done-when', 'Done when'], ['owner', 'Owners and delegate'], ['rules-file', 'Rules file'], ['where-it-sits', 'Where it sits']].map(([id, title]) => ({ id, title }));
   return {
     slug: `agents/${agent.id}/`, section: 'agents/', title: agent.name, description: agent.job,
     body: withToc(panels, toc),
@@ -523,7 +542,8 @@ function searchPage(ctx) {
     </div>
     <div class="input-group">
         <div class="response text-input">
-            <input type="search" class="form-control" id="search-input" name="q" autocomplete="off">
+            <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="text" class="form-control" id="search-input" name="q" autocomplete="off" enterkeyhint="search">
         </div>
         <button type="submit" class="btn btn-response">
             <span class="button-label">Search</span>
@@ -538,47 +558,6 @@ function searchPage(ctx) {
 </div>`
   ]]);
   return { slug: 'search/', section: null, title: 'Search', body, noIndex: true };
-}
-
-function extensionsPage(ctx) {
-  const sample = ctx.agentsById.range;
-  const tagMarkup = agentTag(sample, { ...ctx, root: '../' });
-  const body = frame([[
-    pageHeading({
-      title: 'Extensions on this site',
-      lead: 'This site is built with Buckholt as it is. These parts are not in Buckholt, so they are extensions: prefixed <code>x-</code>, marked <code>data-buckholt="false"</code>, styled only with Buckholt tokens, and listed in the extensions register.'
-    }),
-    `<div class="text-block">
-    <h2 class="headline-01">Agent tag</h2>
-    <p>The tag is the Buckholt Tag in its stage colour. The extension is the link around it, with its hover and focus states.</p>
-</div>
-${tagSet(orderedAgents(ctx).map(a => agentTag(a, ctx)))}
-${codeBlock(tagMarkup, { label: 'Agent tag markup', language: 'html' })}`,
-    `<div class="text-block">
-    <h2 class="headline-01">Stage colours and contrast</h2>
-    <p>Buckholt has four expressive colour families, so Foundation uses the neutral tag and Handoff shares Prototype’s family. The stage is always named in text as well.</p>
-    <p>Buckholt’s light expressive Tag colours its label with the family’s deep colour, which is below WCAG AA contrast for two families. On this site the label uses the same family’s rich colour instead. Buckholt’s CSS is not changed.</p>
-</div>
-${tagSet(ctx.data.stages.map(s => `<span class="${stageTagClass(s.id)}">
-        <span class="tag-label">${esc(s.name)}</span>
-    </span>`))}`,
-    `<div class="text-block">
-    <h2 class="headline-01">Code block with copy</h2>
-    <p>Buckholt has no code block. The copy control is a Buckholt ghost Button with the Common actions copy icon, shown only when JavaScript is available.</p>
-</div>
-${codeBlock('npm run build:site\nnpm run dev:site', { label: 'Build and preview the site', language: 'shell' })}`,
-    `<div class="text-block">
-    <h2 class="headline-01">Everything else</h2>
-    <p>The full list, with the tokens each one uses, is in <code>agentic/extensions-register.md</code>.</p>
-</div>
-<ul class="list">
-    <li class="list-item">Site header, sidebar navigation and footer.</li>
-    <li class="list-item">Diagrams: inline SVG coloured with Buckholt tokens, with a list version on narrow screens.</li>
-    <li class="list-item">“On this page” contents, previous and next links, and the “Never” constraint list.</li>
-    <li class="list-item">Search results.</li>
-</ul>`
-  ]]);
-  return { slug: 'extensions/', section: null, title: 'Extensions on this site', body, searchText: 'extensions agent tag code block diagram contrast' };
 }
 
 function notFound(ctx) {
@@ -602,6 +581,6 @@ export function allPages(ctx) {
     const guides = loadGuides(ctx, kind);
     guides.forEach((g, i) => makers.push(c => guidePage(c, kind, guides, i)));
   }
-  makers.push(searchPage, extensionsPage, notFound);
+  makers.push(searchPage, notFound);
   return makers;
 }

@@ -5,7 +5,7 @@ lead: Agents read features and write to stories through Azure DevOps, so the wor
 
 ## Who does it
 
-Laurence, with an Azure DevOps project administrator, then each person who runs {{agent:relay}}.
+Laurence or Jon, with an Azure DevOps project administrator, then each person who runs {{agent:relay}}.
 
 ## What you need
 

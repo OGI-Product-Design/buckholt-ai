@@ -26,12 +26,25 @@
     <span class="tag tag-sm tag-status tag-status-info">
         <span class="tag-label">Proposed</span>
     </span>
-    <a class="link-standalone x-header-search" href="../search/index.html">
-        <span class="icon">
-            <i class="fa-regular fa-magnifying-glass" aria-hidden="true"></i>
-        </span>
-        Search
-    </a>
+    <form class="x-header-search" data-buckholt="false" role="search" action="../search/index.html" method="get" autocomplete="off">
+      <div class="input">
+        <div class="input-label">
+          <label for="x-search-field" class="form-label visually-hidden">Search this site</label>
+        </div>
+        <div class="response text-input">
+          <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" class="form-control" id="x-search-field" name="q" placeholder="Type / to search" enterkeyhint="search"
+            aria-haspopup="dialog" aria-controls="x-search-modal" aria-keyshortcuts="/">
+        </div>
+      </div>
+    </form>
+    <div class="button-set x-search-btn-set" data-buckholt="false">
+      <button type="button" class="btn btn-ghost" id="x-search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="x-search-modal" data-bs-toggle="tooltip" data-bs-title="Search" hidden>
+        <div class="btn-icon">
+          <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+        </div>
+      </button>
+    </div>
     <button type="button" class="btn btn-ghost x-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar" data-bs-toggle="tooltip" data-bs-title="Menu" hidden>
         <div class="btn-icon">
             <svg class="x-icon x-icon-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -91,7 +104,7 @@
   <text class="x-d-label" x="150" y="24" text-anchor="middle">Written by</text>
   <text class="x-d-label" x="550" y="24" text-anchor="middle">Artifact and where it lives</text>
   <text class="x-d-label" x="950" y="24" text-anchor="middle">Read by</text>
-  <g><rect class="x-d-box x-d-tone-plain" x="0" y="48" width="300" height="80" rx="8"/><text class="x-d-title" x="150" y="82" text-anchor="middle">Archive</text><text class="x-d-sub" x="150" y="106" text-anchor="middle">Laurence approves</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="48" width="300" height="80" rx="8"/><text class="x-d-title" x="150" y="82" text-anchor="middle">Archive</text><text class="x-d-sub" x="150" y="106" text-anchor="middle">Laurence or Jon approves</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="340" y="48" width="420" height="80" rx="8"/><text class="x-d-title" x="550" y="82" text-anchor="middle">Product pack</text><text class="x-d-sub" x="550" y="106" text-anchor="middle">Repo /context, copy in SharePoint</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="800" y="48" width="300" height="80" rx="8"/><text class="x-d-title" x="950" y="94" text-anchor="middle">All agents</text></g>
   <path class="x-d-line" d="M 302 88 L 337 88" fill="none" marker-end="url(#af4-head)"/>
@@ -121,7 +134,7 @@
   <g><rect class="x-d-box x-d-tone-plain" x="800" y="538" width="300" height="80" rx="8"/><text class="x-d-title" x="950" y="584" text-anchor="middle">Build, Align</text></g>
   <path class="x-d-line" d="M 302 578 L 337 578" fill="none" marker-end="url(#af4-head)"/>
   <path class="x-d-line" d="M 762 578 L 797 578" fill="none" marker-end="url(#af4-head)"/>
-  <g><rect class="x-d-box x-d-tone-plain" x="0" y="636" width="300" height="80" rx="8"/><text class="x-d-title" x="150" y="682" text-anchor="middle">Laurence</text></g>
+  <g><rect class="x-d-box x-d-tone-plain" x="0" y="636" width="300" height="80" rx="8"/><text class="x-d-title" x="150" y="682" text-anchor="middle">Laurence and Jon</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="340" y="636" width="420" height="80" rx="8"/><text class="x-d-title" x="550" y="670" text-anchor="middle">Agent definition</text><text class="x-d-sub" x="550" y="694" text-anchor="middle">Repo /agents</text></g>
   <g><rect class="x-d-box x-d-tone-plain" x="800" y="636" width="300" height="80" rx="8"/><text class="x-d-title" x="950" y="682" text-anchor="middle">The agent itself</text></g>
   <path class="x-d-line" d="M 302 676 L 337 676" fill="none" marker-end="url(#af4-head)"/>
@@ -135,13 +148,13 @@
       <path class="x-d-head" d="M 0 0 L 10 5 L 0 10 z"/>
     </marker>
   </defs>
-  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="0" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="26" text-anchor="middle">Product pack</text><text class="x-d-sub" x="180" y="44" text-anchor="middle">Repo /context, copy in SharePoint</text><text class="x-d-sub" x="180" y="62" text-anchor="middle">Written by Archive (Laurence approves)</text><text class="x-d-sub" x="180" y="80" text-anchor="middle">Read by All agents</text></g>
+  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="0" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="26" text-anchor="middle">Product pack</text><text class="x-d-sub" x="180" y="44" text-anchor="middle">Repo /context, copy in SharePoint</text><text class="x-d-sub" x="180" y="62" text-anchor="middle">Written by Archive (Laurence or Jon approves)</text><text class="x-d-sub" x="180" y="80" text-anchor="middle">Read by All agents</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="106" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="132" text-anchor="middle">UX brief</text><text class="x-d-sub" x="180" y="150" text-anchor="middle">SharePoint, linked on the design item</text><text class="x-d-sub" x="180" y="168" text-anchor="middle">Written by Brief</text><text class="x-d-sub" x="180" y="186" text-anchor="middle">Read by Insight, Map, PM</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="212" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="238" text-anchor="middle">Discovery summary</text><text class="x-d-sub" x="180" y="256" text-anchor="middle">SharePoint, summary copy in repo</text><text class="x-d-sub" x="180" y="274" text-anchor="middle">Written by Insight and Map</text><text class="x-d-sub" x="180" y="292" text-anchor="middle">Read by Range, Critic, Build, Observe</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="318" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="344" text-anchor="middle">Decision log</text><text class="x-d-sub" x="180" y="362" text-anchor="middle">Repo /context</text><text class="x-d-sub" x="180" y="380" text-anchor="middle">Written by Archive (from gate outcomes)</text><text class="x-d-sub" x="180" y="398" text-anchor="middle">Read by All agents, Jim, PMs</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="424" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="450" text-anchor="middle">Extensions register</text><text class="x-d-sub" x="180" y="468" text-anchor="middle">Repo /context</text><text class="x-d-sub" x="180" y="486" text-anchor="middle">Written by Extend and Build</text><text class="x-d-sub" x="180" y="504" text-anchor="middle">Read by Align, Audit, Relay</text></g>
   <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="530" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="556" text-anchor="middle">Migration map</text><text class="x-d-sub" x="180" y="574" text-anchor="middle">Repo /context</text><text class="x-d-sub" x="180" y="592" text-anchor="middle">Written by Archive</text><text class="x-d-sub" x="180" y="610" text-anchor="middle">Read by Build, Align</text></g>
-  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="636" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="662" text-anchor="middle">Agent definition</text><text class="x-d-sub" x="180" y="680" text-anchor="middle">Repo /agents</text><text class="x-d-sub" x="180" y="698" text-anchor="middle">Written by Laurence</text><text class="x-d-sub" x="180" y="716" text-anchor="middle">Read by The agent itself</text></g>
+  <g><rect class="x-d-box x-d-tone-primary x-d-emphasis" x="0" y="636" width="360" height="94" rx="8"/><text class="x-d-title" x="180" y="662" text-anchor="middle">Agent definition</text><text class="x-d-sub" x="180" y="680" text-anchor="middle">Repo /agents</text><text class="x-d-sub" x="180" y="698" text-anchor="middle">Written by Laurence and Jon</text><text class="x-d-sub" x="180" y="716" text-anchor="middle">Read by The agent itself</text></g>
 </svg>
   <div class="x-diagram-tools">
     <div class="button-set">
@@ -152,7 +165,7 @@
   </div>
   <details class="x-diagram-fallback">
     <summary>Show the diagram as a list</summary>
-    <ul class="x-diagram-list"><li><strong>Product pack</strong>, in Repo /context, copy in SharePoint. Written by Archive (Laurence approves); read by All agents.</li><li><strong>UX brief</strong>, in SharePoint, linked on the design item. Written by Brief; read by Insight, Map, PM.</li><li><strong>Discovery summary</strong>, in SharePoint, summary copy in repo. Written by Insight and Map; read by Range, Critic, Build, Observe.</li><li><strong>Decision log</strong>, in Repo /context. Written by Archive (from gate outcomes); read by All agents, Jim, PMs.</li><li><strong>Extensions register</strong>, in Repo /context. Written by Extend and Build; read by Align, Audit, Relay.</li><li><strong>Migration map</strong>, in Repo /context. Written by Archive; read by Build, Align.</li><li><strong>Agent definition</strong>, in Repo /agents. Written by Laurence; read by The agent itself.</li></ul>
+    <ul class="x-diagram-list"><li><strong>Product pack</strong>, in Repo /context, copy in SharePoint. Written by Archive (Laurence or Jon approves); read by All agents.</li><li><strong>UX brief</strong>, in SharePoint, linked on the design item. Written by Brief; read by Insight, Map, PM.</li><li><strong>Discovery summary</strong>, in SharePoint, summary copy in repo. Written by Insight and Map; read by Range, Critic, Build, Observe.</li><li><strong>Decision log</strong>, in Repo /context. Written by Archive (from gate outcomes); read by All agents, Jim, PMs.</li><li><strong>Extensions register</strong>, in Repo /context. Written by Extend and Build; read by Align, Audit, Relay.</li><li><strong>Migration map</strong>, in Repo /context. Written by Archive; read by Build, Align.</li><li><strong>Agent definition</strong>, in Repo /agents. Written by Laurence and Jon; read by The agent itself.</li></ul>
   </details>
 </figure>
 <div class="table-container">
@@ -172,7 +185,7 @@
           <td>Product pack</td>
           <td><a class="x-agent-tag" data-buckholt="false" href="../agents/archive/index.html"><span class="tag tag-sm">
     <span class="tag-label">Archive</span>
-</span></a>, with Laurence's approval</td>
+</span></a>, with Laurence or Jon approving</td>
           <td>Repo <code>/context</code>, copy in SharePoint</td>
           <td>All agents</td>
         </tr>
@@ -244,7 +257,7 @@
         </tr>
         <tr>
           <td>Agent definition</td>
-          <td>Laurence</td>
+          <td>Laurence and Jon</td>
           <td>Repo <code>/agents</code></td>
           <td>The agent itself</td>
         </tr>
@@ -548,7 +561,7 @@ Empty · Loading · Error · Success · Permissions
 <div class="content-group x-prose" data-buckholt="false">
 <div class="text-block">
     <h3 class="title-02" id="agent-definition">Agent definition</h3>
-    <p>One file per agent in <code>/agents</code>, written by Laurence and changed by pull request. Each agent page on this site shows its file in this shape.</p>
+    <p>One file per agent in <code>/agents</code>, written by Laurence and Jon and changed by pull request. Each agent page on this site shows its file in this shape.</p>
 </div>
 </div>
 <div class="x-code-block" data-buckholt="false">
@@ -602,9 +615,47 @@ Job: [one sentence]
     </div>
   </main>
   <footer class="body-01 x-site-footer" data-buckholt="false">
-    <p>Proposed workflow, for review. Owner: Laurence Abbott. Backup: Jon.</p>
-    <p>Last updated 28 November 2026. <a href="../extensions/index.html">Extensions on this site</a></p>
+    <p>Proposed workflow, for review. Owners: Laurence Abbott and Jon. Delegate: Marijana.</p>
+    <p>Last updated <time datetime="2026-11-28T09:32:50.126Z">28 November 2026 at 09:32 GMT</time></p>
   </footer>
+</div>
+<div class="modal fade x-search-modal" id="x-search-modal" tabindex="-1" aria-labelledby="x-search-modal-title" data-buckholt="false" data-index="../assets/search-index.js" data-root="../">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-block">
+                    <div class="heading">
+                        <div class="heading-content">
+                            <h2 class="headline-02" id="x-search-modal-title">Search this site</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="x-search-results">
+                    <form class="x-search-form" role="search" autocomplete="off">
+                        <div class="input">
+                            <div class="input-label">
+                                <label for="x-search-modal-field" class="form-label visually-hidden">Search this site</label>
+                            </div>
+                            <div class="input-group">
+                                <div class="response text-input">
+                                    <i class="input-icon fa-regular fa-magnifying-glass" aria-hidden="true"></i>
+                                    <input type="text" class="form-control" id="x-search-modal-field" placeholder="Search agents, guides and pages" enterkeyhint="search">
+                                </div>
+                                <button type="submit" class="btn btn-response">
+                                    <span class="button-label">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="x-search-status" role="status"></p>
+                    <ol class="list x-search-list"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade x-diagram-modal" id="x-diagram-modal" tabindex="-1" aria-labelledby="x-diagram-modal-title" aria-hidden="true" data-buckholt="false">
     <div class="modal-dialog modal-fullscreen">

@@ -5,7 +5,7 @@ lead: SharePoint holds the discovery master copy and a copy of every product pac
 
 ## Who does it
 
-Laurence, with a SharePoint site owner.
+Laurence or Jon, with a SharePoint site owner.
 
 ## What you need
 

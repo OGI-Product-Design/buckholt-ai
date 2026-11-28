@@ -8,6 +8,20 @@ lead: Work moves through six stages and two gates. Agents do the work in each st
 
 {{diagram:workflow}}
 
+## Six designers, one workflow
+
+The UX team is six designers. Everyone works through the same workflow, on the same board, with the same agents.
+
+{{block:team}}
+
+The proposal for sharing the work:
+
+- **Every design item has one lead designer**, set in Assigned to on the design board. The lead moves the item through its statuses, makes or agrees the anchor screens, and brings the item to each gate.
+- **A second designer reviews.** Each design item also names a reviewing designer, who reviews agent output alongside the lead, such as batches from {{agent:extend}} and reports from {{agent:align}}.
+- **"Designers" at a gate means at least two of the six**: the lead and the reviewing designer, with the PM and an engineer.
+- **The agents are shared.** The Cursor agents come from the repo, so all six designers run exactly the same rules; changes go through a pull request. The Copilot agents are created once and shared with the team.
+- **Two owners, a delegate and contributors.** Laurence and Jon own the workflow and the agent definitions. Marijana is their delegate and acts for them. Katerina, Andrej and Mark are contributors: anyone can propose a change by pull request.
+
 ## Stages
 
 Each stage has its own agents. An agent starts when the design item reaches the status that triggers it, and stops at a human check.

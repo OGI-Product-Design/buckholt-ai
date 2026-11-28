@@ -123,13 +123,13 @@ export function repoZonesDiagram(ctx) {
 
 // 5. Artifact flow ---------------------------------------------------------------
 export const ARTIFACTS = [
-  { name: 'Product pack', where: 'Repo /context, copy in SharePoint', writtenBy: ['archive'], writtenNote: 'Laurence approves', readBy: 'All agents' },
+  { name: 'Product pack', where: 'Repo /context, copy in SharePoint', writtenBy: ['archive'], writtenNote: 'Laurence or Jon approves', readBy: 'All agents' },
   { name: 'UX brief', where: 'SharePoint, linked on the design item', writtenBy: ['brief'], readBy: 'Insight, Map, PM', readIds: ['insight', 'map'] },
   { name: 'Discovery summary', where: 'SharePoint, summary copy in repo', writtenBy: ['insight', 'map'], readBy: 'Range, Critic, Build, Observe', readIds: ['range', 'critic', 'build', 'observe'] },
   { name: 'Decision log', where: 'Repo /context', writtenBy: ['archive'], writtenNote: 'from gate outcomes', readBy: 'All agents, Jim, PMs' },
   { name: 'Extensions register', where: 'Repo /context', writtenBy: ['extend', 'build'], readBy: 'Align, Audit, Relay', readIds: ['align', 'audit', 'relay'] },
   { name: 'Migration map', where: 'Repo /context', writtenBy: ['archive'], readBy: 'Build, Align', readIds: ['build', 'align'] },
-  { name: 'Agent definition', where: 'Repo /agents', writtenBy: [], writtenNote: 'Laurence', readBy: 'The agent itself' }
+  { name: 'Agent definition', where: 'Repo /agents', writtenBy: [], writtenNote: 'Laurence and Jon', readBy: 'The agent itself' }
 ];
 
 export function artifactFlowDiagram(ctx) {

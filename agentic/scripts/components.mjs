@@ -89,7 +89,13 @@ export function pendingNote(text) {
 }
 
 export function formatDate(date) {
-  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/London' });
+}
+
+// UK date and time in UK time, for example "28 November 2026 at 09:26 GMT".
+export function formatDateTime(date) {
+  const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', timeZoneName: 'short' });
+  return `${formatDate(date)} at ${time}`;
 }
 
 // Grouped tags. Buckholt documents `.tag-set` (Tag: Code & specs example 9)

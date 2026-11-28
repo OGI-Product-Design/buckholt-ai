@@ -57,7 +57,7 @@ Each product pack records the product's styling mode. {{agent:build}} follows it
 
 ## Rules files
 
-- `/agents` holds one file per agent: its job, triggers, steps, limits and when it is done. Laurence writes them.
+- `/agents` holds one file per agent: its job, triggers, steps, limits and when it is done. Laurence and Jon write them.
 - `/.cursor/rules` holds the rules every agent follows.
 
 Both change only by pull request. Each agent page on this site shows its rules file.

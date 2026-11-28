@@ -5,7 +5,7 @@ lead: Brief, Insight and Map run in Microsoft 365 Copilot, close to the SharePoi
 
 ## Who does it
 
-Laurence creates the three agents and shares them with the UX team.
+Laurence or Jon creates the three agents and shares them with the UX team. Marijana can do it as their delegate.
 
 ## What you need
 
@@ -30,7 +30,7 @@ The proposal is to build {{agent:brief}}, {{agent:insight}} and {{agent:map}} in
 5. **Add knowledge**: the SharePoint libraries it reads (UX briefs, Discovery, Product packs) and the Azure DevOps connection for {{agent:brief}}.
 6. **Add starter prompts**, such as "Write the UX brief for feature [number]".
 7. **Test it** in the preview on a test feature, and check it stops where its human gate says.
-8. **Create it and share it** with the UX team.
+8. **Create it and share it** with the UX team: Laurence, Jon, Marijana, Katerina, Andrej and Mark.
 9. **Repeat** for {{agent:insight}} and {{agent:map}}. The LogRocket step of {{agent:insight}} runs in Cursor ([guide 10](/setup-guides/create-agents-in-cursor/)).
 
 ```markdown "Instructions outline for a Copilot agent"
